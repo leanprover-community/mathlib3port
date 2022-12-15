@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Ashvni Narayanan
 
 ! This file was ported from Lean 3 source module number_theory.function_field
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,9 +76,9 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] F
         AlgEquiv.commutes, ← IsScalarTower.algebra_map_apply]
   constructor <;> intro h <;> skip
   · let b := FiniteDimensional.finBasis (Ratfunc Fq) F
-    exact FiniteDimensional.ofFintypeBasis (b.map_coeffs e this)
+    exact FiniteDimensional.of_fintype_basis (b.map_coeffs e this)
   · let b := FiniteDimensional.finBasis Fqt F
-    refine' FiniteDimensional.ofFintypeBasis (b.map_coeffs e.symm _)
+    refine' FiniteDimensional.of_fintype_basis (b.map_coeffs e.symm _)
     intro c x
     convert (this (e.symm c) x).symm
     simp only [e.apply_symm_apply]
@@ -172,7 +172,7 @@ theorem InftyValuation.map_zero' : inftyValuationDef Fq 0 = 0 :=
 #align function_field.infty_valuation.map_zero' FunctionField.InftyValuation.map_zero'
 
 theorem InftyValuation.map_one' : inftyValuationDef Fq 1 = 1 :=
-  (if_neg one_ne_zero).trans <| by rw [Ratfunc.int_degree_one, of_add_zero, WithZero.coe_one]
+  (if_neg one_ne_zero).trans <| by rw [Ratfunc.int_degree_one, ofAdd_zero, WithZero.coe_one]
 #align function_field.infty_valuation.map_one' FunctionField.InftyValuation.map_one'
 
 theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
@@ -184,7 +184,7 @@ theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
     · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
     ·
       rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ←
-        of_add_add, Ratfunc.int_degree_mul hx hy]
+        ofAdd_add, Ratfunc.int_degree_mul hx hy]
 #align function_field.infty_valuation.map_mul' FunctionField.InftyValuation.map_mul'
 
 theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
@@ -204,8 +204,8 @@ theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
         exact zero_le'
       · rw [infty_valuation_def, infty_valuation_def, infty_valuation_def, if_neg hx, if_neg hy,
           if_neg hxy]
-        rw [le_max_iff, WithZero.coe_le_coe, Multiplicative.of_add_le, WithZero.coe_le_coe,
-          Multiplicative.of_add_le, ← le_max_iff]
+        rw [le_max_iff, WithZero.coe_le_coe, Multiplicative.ofAdd_le, WithZero.coe_le_coe,
+          Multiplicative.ofAdd_le, ← le_max_iff]
         exact Ratfunc.int_degree_add_le hy hxy
 #align function_field.infty_valuation.map_add_le_max' FunctionField.InftyValuation.map_add_le_max'
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.partition_of_unity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -304,7 +304,7 @@ theorem exists_is_subordinate_of_locally_finite_of_prop [NormalSpace X] (p : (X 
       hsV with
     ⟨W, hsW, hWo, hWV⟩
   choose f hfp hf0 hf1 hf01 using fun i =>
-    h01 _ _ (is_closed_compl_iff.2 <| hVo i) isClosedClosure
+    h01 _ _ (is_closed_compl_iff.2 <| hVo i) is_closed_closure
       (disjoint_right.2 fun x hx => not_not.2 (hWV i hx))
   have hsupp : ∀ i, support (f i) ⊆ V i := fun i => support_subset_iff'.2 (hf0 i)
   refine'

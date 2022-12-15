@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.simply_connected
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,13 +76,13 @@ theorem pathsHomotopic {x y : X} (p₁ p₂ : Path x y) : Path.Homotopic p₁ p�
   simpa using @Subsingleton.elim (Path.Homotopic.Quotient x y) _ ⟦p₁⟧ ⟦p₂⟧
 #align simply_connected_space.paths_homotopic SimplyConnectedSpace.pathsHomotopic
 
-instance (priority := 100) of_contractible (Y : Type _) [TopologicalSpace Y] [ContractibleSpace Y] :
+instance (priority := 100) ofContractible (Y : Type _) [TopologicalSpace Y] [ContractibleSpace Y] :
     SimplyConnectedSpace
       Y where equiv_unit :=
     let H : TopCat.of Y ≃ₕ TopCat.of Unit := (ContractibleSpace.hequiv_unit Y).some
     ⟨(FundamentalGroupoidFunctor.equivOfHomotopyEquiv H).trans
         FundamentalGroupoid.punitEquivDiscretePunit⟩
-#align simply_connected_space.of_contractible SimplyConnectedSpace.of_contractible
+#align simply_connected_space.of_contractible SimplyConnectedSpace.ofContractible
 
 end SimplyConnectedSpace
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.semidirect_product
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,7 +218,7 @@ def lift (f₁ : N →* H) (f₂ : G →* H)
   map_one' := by simp
   map_mul' a b := by 
     have := fun n g => MonoidHom.ext_iff.1 (h n) g
-    simp only [MulAut.conj_apply, MonoidHom.comp_apply, MulEquiv.coe_to_monoid_hom] at this
+    simp only [MulAut.conj_apply, MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom] at this
     simp [this, mul_assoc]
 #align semidirect_product.lift SemidirectProduct.lift
 

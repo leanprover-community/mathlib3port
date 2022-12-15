@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.monge_point
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -406,12 +406,12 @@ theorem vector_span_le_altitude_direction_orthogonal {n : ℕ} (s : Simplex ℝ 
 open FiniteDimensional
 
 /-- An altitude is finite-dimensional. -/
-instance finiteDimensionalDirectionAltitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2)) :
+instance finite_dimensional_direction_altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2)) :
     FiniteDimensional ℝ (s.altitude i).direction := by
   rw [direction_altitude]
   infer_instance
 #align
-  affine.simplex.finite_dimensional_direction_altitude Affine.Simplex.finiteDimensionalDirectionAltitude
+  affine.simplex.finite_dimensional_direction_altitude Affine.Simplex.finite_dimensional_direction_altitude
 
 /-- An altitude is one-dimensional (i.e., a line). -/
 @[simp]

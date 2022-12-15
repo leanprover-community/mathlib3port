@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.free_non_unital_non_assoc_algebra
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ def of : X → FreeNonUnitalNonAssocAlgebra R X :=
 
 variable {A : Type w} [NonUnitalNonAssocSemiring A]
 
-variable [Module R A] [IsScalarTower R A A] [SmulCommClass R A A]
+variable [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The functor `X ↦ free_non_unital_non_assoc_algebra R X` from the category of types to the
 category of non-unital, non-associative algebras over `R` is adjoint to the forgetful functor in the

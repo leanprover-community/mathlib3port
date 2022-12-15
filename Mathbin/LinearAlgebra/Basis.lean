@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.basis
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -362,7 +362,7 @@ variable {R' : Type _} [Semiring R'] [Module R' M] (f : R ≃+* R')
 
 include f h b
 
-attribute [local instance] HasSmul.comp.is_scalar_tower
+attribute [local instance] SMul.comp.isScalarTower
 
 /-- If `R` and `R'` are isomorphic rings that act identically on a module `M`,
 then a basis for `M` as `R`-module is also a basis for `M` as `R'`-module.
@@ -580,7 +580,7 @@ section Constr
 
 variable (S : Type _) [Semiring S] [Module S M']
 
-variable [SmulCommClass R S M']
+variable [SMulCommClass R S M']
 
 /-- Construct a linear map given the value at the basis.
 
@@ -814,7 +814,7 @@ theorem singleton_repr (ι R : Type _) [Unique ι] [Semiring R] (x i) :
     (Basis.singleton ι R).repr x i = x := by simp [Basis.singleton, Unique.eq_default i]
 #align basis.singleton_repr Basis.singleton_repr
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 theorem basis_singleton_iff {R M : Type _} [Ring R] [Nontrivial R] [AddCommGroup M] [Module R M]
     [NoZeroSmulDivisors R M] (ι : Type _) [Unique ι] :
     Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y := by
@@ -968,7 +968,7 @@ theorem Basis.of_equiv_fun_equiv_fun (v : Basis ι R M) : Basis.ofEquivFun v.equ
 
 variable (S : Type _) [Semiring S] [Module S M']
 
-variable [SmulCommClass R S M']
+variable [SMulCommClass R S M']
 
 @[simp]
 theorem Basis.constr_apply_fintype (f : ι → M') (x : M) :
@@ -1202,13 +1202,13 @@ theorem group_smul_span_eq_top {G : Type _} [Group G] [DistribMulAction G R] [Di
 /-- Given a basis `v` and a map `w` such that for all `i`, `w i` are elements of a group,
 `group_smul` provides the basis corresponding to `w • v`. -/
 def groupSmul {G : Type _} [Group G] [DistribMulAction G R] [DistribMulAction G M]
-    [IsScalarTower G R M] [SmulCommClass G R M] (v : Basis ι R M) (w : ι → G) : Basis ι R M :=
+    [IsScalarTower G R M] [SMulCommClass G R M] (v : Basis ι R M) (w : ι → G) : Basis ι R M :=
   @Basis.mk ι R M (w • v) _ _ _ (v.LinearIndependent.group_smul w)
     (group_smul_span_eq_top v.span_eq).ge
 #align basis.group_smul Basis.groupSmul
 
 theorem group_smul_apply {G : Type _} [Group G] [DistribMulAction G R] [DistribMulAction G M]
-    [IsScalarTower G R M] [SmulCommClass G R M] {v : Basis ι R M} {w : ι → G} (i : ι) :
+    [IsScalarTower G R M] [SMulCommClass G R M] {v : Basis ι R M} {w : ι → G} (i : ι) :
     v.group_smul w i = (w • v : ι → M) i :=
   mk_apply (v.LinearIndependent.group_smul w) (group_smul_span_eq_top v.span_eq).ge i
 #align basis.group_smul_apply Basis.group_smul_apply
@@ -1587,7 +1587,7 @@ theorem LinearMap.exists_extend {p : Submodule K V} (f : p →ₗ[K] V') :
 
 open Submodule LinearMap
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (f «expr ≠ » (0 : «expr →ₗ[ ] »(V, K, K))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (f «expr ≠ » (0 : «expr →ₗ[ ] »(V, K, K))) -/
 /-- If `p < ⊤` is a subspace of a vector space `V`, then there exists a nonzero linear map
 `f : V →ₗ[K] K` such that `p ≤ ker f`. -/
 theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :

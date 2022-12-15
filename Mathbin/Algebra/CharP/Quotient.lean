@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.char_p.quotient
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,7 @@ theorem quotient (R : Type u) [CommRing R] (p : ℕ) [hp1 : Fact p.Prime] (hp2 :
   ringChar.of_eq <|
     (Or.resolve_left ((Nat.dvd_prime hp1.1).1 <| ringChar.dvd hp0)) fun h1 =>
       hp2 <|
-        is_unit_iff_dvd_one.2 <|
+        isUnit_iff_dvd_one.2 <|
           Ideal.mem_span_singleton.1 <|
             Ideal.Quotient.eq_zero_iff_mem.1 <|
               @Subsingleton.elim (@CharP.subsingleton _ <| ringChar.of_eq h1) _ _

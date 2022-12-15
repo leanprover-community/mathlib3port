@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.rational_root
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ if `r : f.codomain` is a root of a monic polynomial over the ufd `A`,
 then `r` is an integer -/
 theorem is_integer_of_is_root_of_monic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) :
     IsInteger A r :=
-  is_integer_of_is_unit_denom (is_unit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
+  is_integer_of_is_unit_denom (isUnit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
 #align is_integer_of_is_root_of_monic is_integer_of_is_root_of_monic
 
 namespace UniqueFactorizationMonoid

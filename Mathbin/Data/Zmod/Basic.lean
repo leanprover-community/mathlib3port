@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.zmod.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -256,7 +256,7 @@ theorem coe_add_eq_ite {n : ℕ} (a b : Zmod n) :
     (↑(a + b) : ℤ) = if (n : ℤ) ≤ a + b then a + b - n else a + b := by
   cases n
   · simp
-  simp only [coe_coe, Fin.coe_add_eq_ite, ← Int.ofNat_add, ← Int.ofNat_succ, Int.coe_nat_le]
+  simp only [coe_coe, Fin.coe_add_eq_ite, ← Int.ofNat_add, ← Int.ofNat_succ, Int.ofNat_le]
   split_ifs with h
   · exact Int.ofNat_sub h
   · rfl
@@ -429,10 +429,10 @@ def ringEquivCongr {m n : ℕ} (h : m = n) : Zmod m ≃+* Zmod n := by
     exact
       { Fin.cast h with
         map_mul' := fun a b => by 
-          rw [OrderIso.to_fun_eq_coe]; ext
+          rw [OrderIso.toFun_eq_coe]; ext
           rw [Fin.coe_cast, Fin.coe_mul, Fin.coe_mul, Fin.coe_cast, Fin.coe_cast, ← h]
         map_add' := fun a b => by 
-          rw [OrderIso.to_fun_eq_coe]; ext
+          rw [OrderIso.toFun_eq_coe]; ext
           rw [Fin.coe_cast, Fin.coe_add, Fin.coe_add, Fin.coe_cast, Fin.coe_cast, ← h] }
 #align zmod.ring_equiv_congr Zmod.ringEquivCongr
 
@@ -906,14 +906,14 @@ theorem injective_val_min_abs {n : ℕ} : (valMinAbs : Zmod n → ℤ).Injective
 #align zmod.injective_val_min_abs Zmod.injective_val_min_abs
 
 theorem Nat.le_div_two_iff_mul_two_le {n m : ℕ} : m ≤ n / 2 ↔ (m : ℤ) * 2 ≤ n := by
-  rw [Nat.le_div_iff_mul_le zero_lt_two, ← Int.coe_nat_le, Int.ofNat_mul, Nat.cast_two]
+  rw [Nat.le_div_iff_mul_le zero_lt_two, ← Int.ofNat_le, Int.ofNat_mul, Nat.cast_two]
 #align nat.le_div_two_iff_mul_two_le Nat.le_div_two_iff_mul_two_le
 
 theorem val_min_abs_nonneg_iff {n : ℕ} [NeZero n] (x : Zmod n) : 0 ≤ x.valMinAbs ↔ x.val ≤ n / 2 :=
   by 
   rw [val_min_abs_def_pos]; split_ifs
   · exact iff_of_true (Nat.cast_nonneg _) h
-  · exact iff_of_false (sub_lt_zero.2 <| Int.coe_nat_lt.2 x.val_lt).not_le h
+  · exact iff_of_false (sub_lt_zero.2 <| Int.ofNat_lt.2 x.val_lt).not_le h
 #align zmod.val_min_abs_nonneg_iff Zmod.val_min_abs_nonneg_iff
 
 theorem val_min_abs_mul_two_eq_iff {n : ℕ} (a : Zmod n) : a.valMinAbs * 2 = n ↔ 2 * a.val = n := by
@@ -934,7 +934,7 @@ theorem val_min_abs_mem_Ioc {n : ℕ} [NeZero n] (x : Zmod n) :
     exacts[Nat.cast_nonneg _, zero_le_two]
   · refine' ⟨_, trans (mul_nonpos_of_nonpos_of_nonneg _ zero_le_two) <| Nat.cast_nonneg _⟩
     · linarith only [h]
-    · rw [sub_nonpos, Int.coe_nat_le]
+    · rw [sub_nonpos, Int.ofNat_le]
       exact x.val_lt.le
 #align zmod.val_min_abs_mem_Ioc Zmod.val_min_abs_mem_Ioc
 
@@ -977,7 +977,7 @@ theorem val_min_abs_eq_zero {n : ℕ} (x : Zmod n) : x.valMinAbs = 0 ↔ x = 0 :
 theorem nat_cast_nat_abs_val_min_abs {n : ℕ} [NeZero n] (a : Zmod n) :
     (a.valMinAbs.natAbs : Zmod n) = if a.val ≤ (n : ℕ) / 2 then a else -a := by
   have : (a.val : ℤ) - n ≤ 0 := by 
-    erw [sub_nonpos, Int.coe_nat_le]
+    erw [sub_nonpos, Int.ofNat_le]
     exact a.val_le
   rw [val_min_abs_def_pos]
   split_ifs
@@ -1083,7 +1083,7 @@ instance (p : ℕ) [hp : Fact p.Prime] : IsDomain (Zmod p) :=
   -- We need `cases p` here in order to resolve which `comm_ring` instance is being used.
   cases p
   · exact (Nat.not_prime_zero hp.out).elim
-  exact @Field.is_domain (Zmod _) (Zmod.field _)
+  exact @Field.IsDomain (Zmod _) (Zmod.field _)
 
 end Zmod
 

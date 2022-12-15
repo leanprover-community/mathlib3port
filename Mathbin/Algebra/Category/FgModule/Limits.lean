@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.fgModule.limits
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ instance {J : Type} [Fintype J] (Z : J → ModuleCat.{v} k) [∀ j, FiniteDimens
   haveI : FiniteDimensional k (ModuleCat.of k (∀ j, Z j)) := by
     dsimp
     infer_instance
-  FiniteDimensional.ofInjective (ModuleCat.piIsoPi _).Hom
+  FiniteDimensional.of_injective (ModuleCat.piIsoPi _).Hom
     ((ModuleCat.mono_iff_injective _).1 (by infer_instance))
 
 /-- Finite limits of finite dimensional vectors spaces are finite dimensional,
@@ -60,7 +60,7 @@ instance (F : J ⥤ FgModule k) :
     intro j
     change FiniteDimensional k (F.obj j).obj
     infer_instance
-  FiniteDimensional.ofInjective
+  FiniteDimensional.of_injective
     (limit_subobject_product (F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)))
     ((ModuleCat.mono_iff_injective _).1 (by infer_instance))
 

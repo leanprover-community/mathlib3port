@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module data.complex.exponential
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ section
 variable {α : Type _} {β : Type _} [Ring β] [LinearOrderedField α] [Archimedean α] {abv : β → α}
   [IsAbsoluteValue abv]
 
-theorem isCauOfDecreasingBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, |f n| ≤ a)
+theorem is_cau_of_decreasing_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, |f n| ≤ a)
     (hnm : ∀ n ≥ m, f n.succ ≤ f n) : IsCauSeq abs f := fun ε ε0 => by
   let ⟨k, hk⟩ := Archimedean.arch a ε0
   have h : ∃ l, ∀ n ≥ m, a - l • ε < f n :=
@@ -70,17 +70,17 @@ theorem isCauOfDecreasingBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ 
           add_sub_cancel]
     _ < f j + ε := add_lt_add_right (hl j (le_trans hi.1 hj)) _
     
-#align is_cau_of_decreasing_bounded isCauOfDecreasingBounded
+#align is_cau_of_decreasing_bounded is_cau_of_decreasing_bounded
 
-theorem isCauOfMonoBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, |f n| ≤ a)
+theorem is_cau_of_mono_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, |f n| ≤ a)
     (hnm : ∀ n ≥ m, f n ≤ f n.succ) : IsCauSeq abs f := by
   refine'
     @Eq.recOn (ℕ → α) _ (IsCauSeq abs) _ _
-      (-⟨_, @isCauOfDecreasingBounded _ _ _ (fun n => -f n) a m (by simpa) (by simpa)⟩ :
+      (-⟨_, @is_cau_of_decreasing_bounded _ _ _ (fun n => -f n) a m (by simpa) (by simpa)⟩ :
           CauSeq α abs).2
   ext
   exact neg_neg _
-#align is_cau_of_mono_bounded isCauOfMonoBounded
+#align is_cau_of_mono_bounded is_cau_of_mono_bounded
 
 end
 
@@ -89,7 +89,7 @@ section NoArchimedean
 variable {α : Type _} {β : Type _} [Ring β] [LinearOrderedField α] {abv : β → α}
   [IsAbsoluteValue abv]
 
-theorem isCauSeriesOfAbvLeCau {f : ℕ → β} {g : ℕ → α} (n : ℕ) :
+theorem is_cau_series_of_abv_le_cau {f : ℕ → β} {g : ℕ → α} (n : ℕ) :
     (∀ m, n ≤ m → abv (f m) ≤ g m) →
       (IsCauSeq abs fun n => ∑ i in range n, g i) → IsCauSeq abv fun n => ∑ i in range n, f i :=
   by 
@@ -115,12 +115,12 @@ theorem isCauSeriesOfAbvLeCau {f : ℕ → β} {g : ℕ → α} (n : ℕ) :
     refine' le_trans (abv_add _ _ _) _
     simp only [sub_eq_add_neg] at hi
     exact add_le_add (hm _ (le_add_of_nonneg_of_le (Nat.zero_le _) (le_max_left _ _))) hi
-#align is_cau_series_of_abv_le_cau isCauSeriesOfAbvLeCau
+#align is_cau_series_of_abv_le_cau is_cau_series_of_abv_le_cau
 
-theorem isCauSeriesOfAbvCau {f : ℕ → β} :
+theorem is_cau_series_of_abv_cau {f : ℕ → β} :
     (IsCauSeq abs fun m => ∑ n in range m, abv (f n)) → IsCauSeq abv fun m => ∑ n in range m, f n :=
-  isCauSeriesOfAbvLeCau 0 fun n h => le_rfl
-#align is_cau_series_of_abv_cau isCauSeriesOfAbvCau
+  is_cau_series_of_abv_le_cau 0 fun n h => le_rfl
+#align is_cau_series_of_abv_cau is_cau_series_of_abv_cau
 
 end NoArchimedean
 
@@ -128,14 +128,14 @@ section
 
 variable {α : Type _} [LinearOrderedField α] [Archimedean α]
 
-theorem isCauGeoSeries {β : Type _} [Ring β] [Nontrivial β] {abv : β → α} [IsAbsoluteValue abv]
+theorem is_cau_geo_series {β : Type _} [Ring β] [Nontrivial β] {abv : β → α} [IsAbsoluteValue abv]
     (x : β) (hx1 : abv x < 1) : IsCauSeq abv fun n => ∑ m in range n, x ^ m :=
   have hx1' : abv x ≠ 1 := fun h => by simpa [h, lt_irrefl] using hx1
-  isCauSeriesOfAbvCau
+  is_cau_series_of_abv_cau
     (by 
       simp only [abv_pow abv, geom_sum_eq hx1']
       conv in _ / _ => rw [← neg_div_neg_eq, neg_sub, neg_sub]
-      refine' @isCauOfMonoBounded _ _ _ _ ((1 : α) / (1 - abv x)) 0 _ _
+      refine' @is_cau_of_mono_bounded _ _ _ _ ((1 : α) / (1 - abv x)) 0 _ _
       · intro n hn
         rw [abs_of_nonneg]
         refine'
@@ -151,22 +151,24 @@ theorem isCauGeoSeries {β : Type _} [Ring β] [Nontrivial β] {abv : β → α}
         refine' div_le_div_of_le (le_of_lt <| sub_pos.2 hx1) (sub_le_sub_left _ _)
         rw [← one_mul (_ ^ n), pow_succ]
         exact mul_le_mul_of_nonneg_right (le_of_lt hx1) (pow_nonneg (abv_nonneg _ _) _))
-#align is_cau_geo_series isCauGeoSeries
+#align is_cau_geo_series is_cau_geo_series
 
-theorem isCauGeoSeriesConst (a : α) {x : α} (hx1 : |x| < 1) :
+theorem is_cau_geo_series_const (a : α) {x : α} (hx1 : |x| < 1) :
     IsCauSeq abs fun m => ∑ n in range m, a * x ^ n := by
   have : IsCauSeq abs fun m => a * ∑ n in range m, x ^ n :=
-    (CauSeq.const abs a * ⟨_, isCauGeoSeries x hx1⟩).2
+    (CauSeq.const abs a * ⟨_, is_cau_geo_series x hx1⟩).2
   simpa only [mul_sum]
-#align is_cau_geo_series_const isCauGeoSeriesConst
+#align is_cau_geo_series_const is_cau_geo_series_const
 
 variable {β : Type _} [Ring β] {abv : β → α} [IsAbsoluteValue abv]
 
-theorem seriesRatioTest {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (hr1 : r < 1)
+theorem series_ratio_test {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (hr1 : r < 1)
     (h : ∀ m, n ≤ m → abv (f m.succ) ≤ r * abv (f m)) : IsCauSeq abv fun m => ∑ n in range m, f n :=
   by 
   have har1 : |r| < 1 := by rwa [abs_of_nonneg hr0]
-  refine' isCauSeriesOfAbvLeCau n.succ _ (isCauGeoSeriesConst (abv (f n.succ) * r⁻¹ ^ n.succ) har1)
+  refine'
+    is_cau_series_of_abv_le_cau n.succ _
+      (is_cau_geo_series_const (abv (f n.succ) * r⁻¹ ^ n.succ) har1)
   intro m hmn
   cases' Classical.em (r = 0) with r_zero r_ne_zero
   · have m_pos := lt_of_lt_of_le (Nat.succ_pos n) hmn
@@ -184,7 +186,7 @@ theorem seriesRatioTest {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (hr1
     exact
       le_trans (by rw [mul_comm] <;> exact h _ (Nat.le_of_succ_le kn))
         (mul_le_mul_of_nonneg_right (ih (k + n.succ) n h kn rfl) hr0)
-#align series_ratio_test seriesRatioTest
+#align series_ratio_test series_ratio_test
 
 theorem sum_range_diag_flip {α : Type _} [AddCommMonoid α] (n : ℕ) (f : ℕ → ℕ → α) :
     (∑ m in range n, ∑ k in range (m + 1), f k (m - k)) =
@@ -362,10 +364,10 @@ open CauSeq
 
 namespace Complex
 
-theorem isCauAbsExp (z : ℂ) : IsCauSeq Abs.abs fun n => ∑ m in range n, abs (z ^ m / m !) :=
+theorem is_cau_abs_exp (z : ℂ) : IsCauSeq Abs.abs fun n => ∑ m in range n, abs (z ^ m / m !) :=
   let ⟨n, hn⟩ := exists_nat_gt (abs z)
   have hn0 : (0 : ℝ) < n := lt_of_le_of_lt (abs.Nonneg _) hn
-  seriesRatioTest n (Complex.abs z / n) (div_nonneg (abs.Nonneg _) (le_of_lt hn0))
+  series_ratio_test n (Complex.abs z / n) (div_nonneg (abs.Nonneg _) (le_of_lt hn0))
     (by rwa [div_lt_iff hn0, one_mul]) fun m hm => by
     rw [abs_abs, abs_abs, Nat.factorial_succ, pow_succ, mul_comm m.succ, Nat.cast_mul, ← div_div,
         mul_div_assoc, mul_div_right_comm, abs.map_mul, map_div₀, abs_cast_nat] <;>
@@ -373,19 +375,19 @@ theorem isCauAbsExp (z : ℂ) : IsCauSeq Abs.abs fun n => ∑ m in range n, abs 
         mul_le_mul_of_nonneg_right
           (div_le_div_of_le_left (abs.nonneg _) hn0 (Nat.cast_le.2 (le_trans hm (Nat.le_succ _))))
           (abs.nonneg _)
-#align complex.is_cau_abs_exp Complex.isCauAbsExp
+#align complex.is_cau_abs_exp Complex.is_cau_abs_exp
 
 noncomputable section
 
-theorem isCauExp (z : ℂ) : IsCauSeq abs fun n => ∑ m in range n, z ^ m / m ! :=
-  isCauSeriesOfAbvCau (isCauAbsExp z)
-#align complex.is_cau_exp Complex.isCauExp
+theorem is_cau_exp (z : ℂ) : IsCauSeq abs fun n => ∑ m in range n, z ^ m / m ! :=
+  is_cau_series_of_abv_cau (is_cau_abs_exp z)
+#align complex.is_cau_exp Complex.is_cau_exp
 
 /-- The Cauchy sequence consisting of partial sums of the Taylor series of
 the complex exponential function -/
 @[pp_nodot]
 def exp' (z : ℂ) : CauSeq ℂ Complex.abs :=
-  ⟨fun n => ∑ m in range n, z ^ m / m !, isCauExp z⟩
+  ⟨fun n => ∑ m in range n, z ^ m / m !, is_cau_exp z⟩
 #align complex.exp' Complex.exp'
 
 /-- The complex exponential function, defined via its Taylor series -/
@@ -502,8 +504,9 @@ theorem exp_zero : exp 0 = 1 :=
 
 theorem exp_add : exp (x + y) = exp x * exp y :=
   show
-    lim (⟨_, isCauExp (x + y)⟩ : CauSeq ℂ abs) =
-      lim (show CauSeq ℂ abs from ⟨_, isCauExp x⟩) * lim (show CauSeq ℂ abs from ⟨_, isCauExp y⟩)
+    lim (⟨_, is_cau_exp (x + y)⟩ : CauSeq ℂ abs) =
+      lim (show CauSeq ℂ abs from ⟨_, is_cau_exp x⟩) *
+        lim (show CauSeq ℂ abs from ⟨_, is_cau_exp y⟩)
     by
     have hj :
       ∀ j : ℕ,
@@ -1461,7 +1464,7 @@ open IsAbsoluteValue
 instead. -/
 theorem add_one_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : x + 1 ≤ exp x :=
   calc
-    x + 1 ≤ lim (⟨fun n : ℕ => ((exp' x) n).re, isCauSeqRe (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
+    x + 1 ≤ lim (⟨fun n : ℕ => ((exp' x) n).re, is_cau_seq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
       le_lim
         (CauSeq.le_of_exists
           ⟨2, fun j hj =>

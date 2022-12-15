@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.abel
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -246,7 +246,7 @@ theorem zero_smulg {α} [AddCommGroup α] (c) : smulg c (0 : α) = 0 := by simp 
 
 theorem term_smul {α} [AddCommMonoid α] (c n x a n' a') (h₁ : c * n = n') (h₂ : smul c a = a') :
     smul c (@term α _ n x a) = term n' x a' := by
-  simp [h₂.symm, h₁.symm, term, smul, nsmul_add, mul_nsmul]
+  simp [h₂.symm, h₁.symm, term, smul, nsmul_add, mul_nsmul']
 #align tactic.abel.term_smul Tactic.Abel.term_smul
 
 theorem term_smulg {α} [AddCommGroup α] (c n x a n' a') (h₁ : c * n = n') (h₂ : smulg c a = a') :
@@ -382,7 +382,7 @@ unsafe
             let ( e' , p ) ← eval <| c . iapp ` ` smul [ e₁ , e₂ ]
             return ( e' , c ` ` unfold_zsmul c [ e₁ , e₂ , e' , p ] )
       |
-        e @ q( @ HasSmul.smul Nat _ AddMonoid.hasSmulNat $ ( e₁ ) $ ( e₂ ) )
+        e @ q( @ HasSmul.smul Nat _ AddMonoid.SMul $ ( e₁ ) $ ( e₂ ) )
         =>
         eval_smul' c eval false e e₁ e₂
       |

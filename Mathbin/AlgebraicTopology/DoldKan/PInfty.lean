@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.p_infty
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,43 +98,43 @@ theorem Q_infty_f (n : ℕ) : (qInfty.f n : X _[n] ⟶ X _[n]) = (q n).f n :=
   rfl
 #align algebraic_topology.dold_kan.Q_infty_f AlgebraicTopology.DoldKan.Q_infty_f
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_f_naturality (n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ pInfty.f n = pInfty.f n ≫ f.app (op [n]) :=
   P_f_naturality n n f
 #align
   algebraic_topology.dold_kan.P_infty_f_naturality AlgebraicTopology.DoldKan.P_infty_f_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Q_infty_f_naturality (n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ qInfty.f n = qInfty.f n ≫ f.app (op [n]) :=
   Q_f_naturality n n f
 #align
   algebraic_topology.dold_kan.Q_infty_f_naturality AlgebraicTopology.DoldKan.Q_infty_f_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_f_idem (n : ℕ) : (pInfty.f n : X _[n] ⟶ _) ≫ pInfty.f n = pInfty.f n := by
   simp only [P_infty_f, P_f_idem]
 #align algebraic_topology.dold_kan.P_infty_f_idem AlgebraicTopology.DoldKan.P_infty_f_idem
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_idem : (pInfty : K[X] ⟶ _) ≫ P_infty = P_infty := by
   ext n
   exact P_infty_f_idem n
 #align algebraic_topology.dold_kan.P_infty_idem AlgebraicTopology.DoldKan.P_infty_idem
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Q_infty_f_idem (n : ℕ) : (qInfty.f n : X _[n] ⟶ _) ≫ qInfty.f n = qInfty.f n :=
   Q_f_idem _ _
 #align algebraic_topology.dold_kan.Q_infty_f_idem AlgebraicTopology.DoldKan.Q_infty_f_idem
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Q_infty_idem : (qInfty : K[X] ⟶ _) ≫ Q_infty = Q_infty := by
   ext n
   exact Q_infty_f_idem n
 #align algebraic_topology.dold_kan.Q_infty_idem AlgebraicTopology.DoldKan.Q_infty_idem
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_f_comp_Q_infty_f (n : ℕ) : (pInfty.f n : X _[n] ⟶ _) ≫ qInfty.f n = 0 := by
   dsimp only [Q_infty]
   simp only [HomologicalComplex.sub_f_apply, HomologicalComplex.id_f, comp_sub, comp_id,
@@ -142,14 +142,14 @@ theorem P_infty_f_comp_Q_infty_f (n : ℕ) : (pInfty.f n : X _[n] ⟶ _) ≫ qIn
 #align
   algebraic_topology.dold_kan.P_infty_f_comp_Q_infty_f AlgebraicTopology.DoldKan.P_infty_f_comp_Q_infty_f
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_comp_Q_infty : (pInfty : K[X] ⟶ _) ≫ Q_infty = 0 := by
   ext n
   apply P_infty_f_comp_Q_infty_f
 #align
   algebraic_topology.dold_kan.P_infty_comp_Q_infty AlgebraicTopology.DoldKan.P_infty_comp_Q_infty
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Q_infty_f_comp_P_infty_f (n : ℕ) : (qInfty.f n : X _[n] ⟶ _) ≫ pInfty.f n = 0 := by
   dsimp only [Q_infty]
   simp only [HomologicalComplex.sub_f_apply, HomologicalComplex.id_f, sub_comp, id_comp,
@@ -157,7 +157,7 @@ theorem Q_infty_f_comp_P_infty_f (n : ℕ) : (qInfty.f n : X _[n] ⟶ _) ≫ pIn
 #align
   algebraic_topology.dold_kan.Q_infty_f_comp_P_infty_f AlgebraicTopology.DoldKan.Q_infty_f_comp_P_infty_f
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Q_infty_comp_P_infty : (qInfty : K[X] ⟶ _) ≫ P_infty = 0 := by
   ext n
   apply Q_infty_f_comp_P_infty_f

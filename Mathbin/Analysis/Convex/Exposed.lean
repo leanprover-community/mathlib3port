@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.exposed
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,11 +197,11 @@ protected theorem convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Conve
           ⟨mem_univ _, hx₂.2 y hy⟩ ha hb hab).2⟩
 #align is_exposed.convex IsExposed.convex
 
-protected theorem isClosed [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsClosed A) :
+protected theorem is_closed [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsClosed A) :
     IsClosed B := by 
   obtain ⟨l, a, rfl⟩ := hAB.eq_inter_halfspace
   exact hA.is_closed_le continuous_on_const l.continuous.continuous_on
-#align is_exposed.is_closed IsExposed.isClosed
+#align is_exposed.is_closed IsExposed.is_closed
 
 protected theorem is_compact [OrderClosedTopology 𝕜] [T2Space E] (hAB : IsExposed 𝕜 A B)
     (hA : IsCompact A) : IsCompact B :=

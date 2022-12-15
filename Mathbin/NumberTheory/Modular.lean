@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module number_theory.modular
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,7 +167,7 @@ theorem tendsto_norm_sq_coprime_pair :
   have hf' : ClosedEmbedding f :=
     by
     -- for some reason we get a timeout if we try and apply this lemma in a more sensible way
-    have := @LinearEquiv.closedEmbeddingOfInjective ℝ _ (Fin 2 → ℝ) _ (id _) ℂ _ _ _ _
+    have := @LinearEquiv.closed_embedding_of_injective ℝ _ (Fin 2 → ℝ) _ (id _) ℂ _ _ _ _
     rotate_left 2
     exact f
     exact this hf
@@ -377,8 +377,8 @@ theorem coe_T_inv :
   by simp [coe_inv, coe_T, adjugate_fin_two]
 #align modular_group.coe_T_inv ModularGroup.coe_T_inv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 theorem coe_T_zpow (n : ℤ) :
@@ -390,11 +390,11 @@ theorem coe_T_zpow (n : ℤ) :
   · rw [zpow_zero, coe_one, Matrix.one_fin_two]
   · simp_rw [zpow_add, zpow_one, coe_mul, h, coe_T, Matrix.mul_fin_two]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]"
     rw [mul_one, mul_one, add_comm]
   · simp_rw [zpow_sub, zpow_one, coe_mul, h, coe_T_inv, Matrix.mul_fin_two]
     trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
       ring
 #align modular_group.coe_T_zpow ModularGroup.coe_T_zpow
 
@@ -459,7 +459,7 @@ theorem exists_eq_T_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
     fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
 #align modular_group.exists_eq_T_zpow_of_c_eq_zero ModularGroup.exists_eq_T_zpow_of_c_eq_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
 -- If `c = 1`, then `g` factorises into a product terms involving only `T` and `S`.
 theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ ↑ₘg 1 1 := by
   have hg := g.det_coe.symm
@@ -471,7 +471,7 @@ theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ 
   rw [hc, hg]
   simp only [coe_mul, coe_T_zpow, coe_S, mul_fin_two]
   trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
     ring
 #align modular_group.g_eq_of_c_eq_one ModularGroup.g_eq_of_c_eq_one
 

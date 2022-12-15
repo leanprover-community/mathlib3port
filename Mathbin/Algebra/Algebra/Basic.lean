@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -379,7 +379,7 @@ protected theorem smul_mul_assoc (r : R) (x y : A) : r • x * y = r • (x * y)
 #align algebra.smul_mul_assoc Algebra.smul_mul_assoc
 
 @[simp]
-theorem smul_algebra_map {α : Type _} [Monoid α] [MulDistribMulAction α A] [SmulCommClass α R A]
+theorem smul_algebra_map {α : Type _} [Monoid α] [MulDistribMulAction α A] [SMulCommClass α R A]
     (a : α) (r : R) : a • algebraMap R A r = algebraMap R A r := by
   rw [algebra_map_eq_smul_one, smul_comm a r (1 : A), smul_one]
 #align smul_algebra_map smul_algebra_map
@@ -918,15 +918,15 @@ theorem NoZeroSmulDivisors.trans (R A M : Type _) [CommRing R] [Ring A] [IsDomai
 variable {A}
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsScalarTower.to_smul_comm_class : SmulCommClass R A M :=
+instance (priority := 100) IsScalarTower.to_smul_comm_class : SMulCommClass R A M :=
   ⟨fun r a m => by
     rw [algebra_compatible_smul A r (a • m), smul_smul, Algebra.commutes, mul_smul, ←
       algebra_compatible_smul]⟩
 #align is_scalar_tower.to_smul_comm_class IsScalarTower.to_smul_comm_class
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsScalarTower.to_smul_comm_class' : SmulCommClass A R M :=
-  SmulCommClass.symm _ _ _
+instance (priority := 100) IsScalarTower.to_smul_comm_class' : SMulCommClass A R M :=
+  SMulCommClass.symm _ _ _
 #align is_scalar_tower.to_smul_comm_class' IsScalarTower.to_smul_comm_class'
 
 theorem smul_algebra_smul_comm (r : R) (a : A) (m : M) : a • r • m = r • a • m :=
@@ -1010,7 +1010,7 @@ theorem span_eq_restrict_scalars (X : Set M) (hsur : Function.Surjective (algebr
 
 end Submodule
 
-example {R A} [CommSemiring R] [Semiring A] [Module R A] [SmulCommClass R A A]
+example {R A} [CommSemiring R] [Semiring A] [Module R A] [SMulCommClass R A A]
     [IsScalarTower R A A] : Algebra R A :=
   Algebra.ofModule smul_mul_assoc mul_smul_comm
 

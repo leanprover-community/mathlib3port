@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.additive
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,7 +202,7 @@ theorem NatTrans.map_homological_complex_comp (c : ComplexShape ι) {F G H : V �
 #align
   category_theory.nat_trans.map_homological_complex_comp CategoryTheory.NatTrans.map_homological_complex_comp
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem NatTrans.map_homological_complex_naturality {c : ComplexShape ι} {F G : V ⥤ W} [F.Additive]
     [G.Additive] (α : F ⟶ G) {C D : HomologicalComplex V c} (f : C ⟶ D) :
     (F.mapHomologicalComplex c).map f ≫ (NatTrans.mapHomologicalComplex α c).app D =

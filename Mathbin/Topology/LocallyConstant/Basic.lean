@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.locally_constant.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -731,12 +731,12 @@ theorem is_open_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsOpen 
   hf {y}
 #align is_locally_constant.is_open_fiber IsLocallyConstant.is_open_fiber
 
-theorem isClosedFiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClosed { x | f x = y } :=
+theorem is_closed_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClosed { x | f x = y } :=
   ⟨hf ({y}ᶜ)⟩
-#align is_locally_constant.is_closed_fiber IsLocallyConstant.isClosedFiber
+#align is_locally_constant.is_closed_fiber IsLocallyConstant.is_closed_fiber
 
 theorem is_clopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClopen { x | f x = y } :=
-  ⟨is_open_fiber hf _, isClosedFiber hf _⟩
+  ⟨is_open_fiber hf _, is_closed_fiber hf _⟩
 #align is_locally_constant.is_clopen_fiber IsLocallyConstant.is_clopen_fiber
 
 theorem iff_exists_open (f : X → Y) :

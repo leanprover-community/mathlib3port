@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.norm
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -312,7 +312,7 @@ theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlg
     algebraMap K E (norm K x) = ∏ σ : L →ₐ[K] E, σ x := by
   have hx := IsSeparable.is_integral K x
   rw [norm_eq_norm_adjoin K x, RingHom.map_pow, ← adjoin.power_basis_gen hx,
-    norm_eq_prod_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splitsCodomain _)]
+    norm_eq_prod_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splits_codomain _)]
   · exact (prod_embeddings_eq_finrank_pow L E (adjoin.power_basis hx)).symm
   · haveI := is_separable_tower_bot_of_is_separable K K⟮⟯ L
     exact IsSeparable.separable K _
@@ -340,7 +340,7 @@ theorem is_integral_norm [Algebra S L] [Algebra S K] [IsScalarTower S K L] [IsSe
     use minpoly S x, minpoly.monic hx
     rw [← aeval_def] at hy⊢
     exact minpoly.aeval_of_is_scalar_tower S x y hy
-  · apply IsAlgClosed.splitsCodomain
+  · apply IsAlgClosed.splits_codomain
   · infer_instance
 #align algebra.is_integral_norm Algebra.is_integral_norm
 

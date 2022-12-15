@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.add_character
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,19 +102,19 @@ instance monoidHomClass : MonoidHomClass (AddChar R R') (Multiplicative R) R' :=
 
 /-- An additive character maps `0` to `1`. -/
 @[simp]
-theorem map_zero_one (ψ : AddChar R R') : ψ 0 = 1 := by rw [coe_to_fun_apply, of_add_zero, map_one]
+theorem map_zero_one (ψ : AddChar R R') : ψ 0 = 1 := by rw [coe_to_fun_apply, ofAdd_zero, map_one]
 #align add_char.map_zero_one AddChar.map_zero_one
 
 /-- An additive character maps sums to products. -/
 @[simp]
 theorem map_add_mul (ψ : AddChar R R') (x y : R) : ψ (x + y) = ψ x * ψ y := by
-  rw [coe_to_fun_apply, coe_to_fun_apply _ x, coe_to_fun_apply _ y, of_add_add, map_mul]
+  rw [coe_to_fun_apply, coe_to_fun_apply _ x, coe_to_fun_apply _ y, ofAdd_add, map_mul]
 #align add_char.map_add_mul AddChar.map_add_mul
 
 /-- An additive character maps multiples by natural numbers to powers. -/
 @[simp]
 theorem map_nsmul_pow (ψ : AddChar R R') (n : ℕ) (x : R) : ψ (n • x) = ψ x ^ n := by
-  rw [coe_to_fun_apply, coe_to_fun_apply _ x, of_add_nsmul, map_pow]
+  rw [coe_to_fun_apply, coe_to_fun_apply _ x, ofAdd_nsmul, map_pow]
 #align add_char.map_nsmul_pow AddChar.map_nsmul_pow
 
 end CoeToFun
@@ -140,7 +140,7 @@ theorem inv_apply (ψ : AddChar R R') (x : R) : ψ⁻¹ x = ψ (-x) :=
 /-- An additive character maps multiples by integers to powers. -/
 @[simp]
 theorem map_zsmul_zpow {R' : Type v} [CommGroup R'] (ψ : AddChar R R') (n : ℤ) (x : R) :
-    ψ (n • x) = ψ x ^ n := by rw [coe_to_fun_apply, coe_to_fun_apply _ x, of_add_zsmul, map_zpow]
+    ψ (n • x) = ψ x ^ n := by rw [coe_to_fun_apply, coe_to_fun_apply _ x, ofAdd_zsmul, map_zpow]
 #align add_char.map_zsmul_zpow AddChar.map_zsmul_zpow
 
 /-- The additive characters on a commutative additive group form a commutative group. -/
@@ -273,9 +273,9 @@ def zmodChar (n : ℕ+) {ζ : C} (hζ : ζ ^ ↑n = 1) :
     AddChar (Zmod n)
       C where 
   toFun := fun a : Multiplicative (Zmod n) => ζ ^ a.toAdd.val
-  map_one' := by simp only [to_add_one, Zmod.val_zero, pow_zero]
+  map_one' := by simp only [toAdd_one, Zmod.val_zero, pow_zero]
   map_mul' x y := by
-    rw [to_add_mul, ← pow_add, Zmod.val_add (to_add x) (to_add y), ← pow_eq_pow_mod _ hζ]
+    rw [toAdd_mul, ← pow_add, Zmod.val_add (to_add x) (to_add y), ← pow_eq_pow_mod _ hζ]
 #align add_char.zmod_char AddChar.zmodChar
 
 /-- The additive character on `zmod n` defined using `ζ` sends `a` to `ζ^a`. -/
@@ -388,7 +388,7 @@ theorem sum_eq_zero_of_is_nontrivial [IsDomain R'] {ψ : AddChar R R'} (hψ : Is
     (∑ a, ψ a) = 0 := by 
   rcases hψ with ⟨b, hb⟩
   have h₁ : (∑ a : R, ψ (b + a)) = ∑ a : R, ψ a :=
-    Fintype.sum_bijective _ (AddGroup.add_left_bijective b) _ _ fun x => rfl
+    Fintype.sum_bijective _ (AddGroup.addLeft_bijective b) _ _ fun x => rfl
   simp_rw [map_add_mul] at h₁
   have h₂ : (∑ a : R, ψ a) = finset.univ.sum ⇑ψ := rfl
   rw [← Finset.mul_sum, h₂] at h₁

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow, Kexing Ying
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_form
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -207,7 +207,7 @@ theorem add_apply (x y : M) : (B + D) x y = B x y + D x y :=
 multiplication.
 
 When `R` itself is commutative, this provides an `R`-action via `algebra.id`. -/
-instance {α} [Monoid α] [DistribMulAction α R] [SmulCommClass α R R] :
+instance {α} [Monoid α] [DistribMulAction α R] [SMulCommClass α R R] :
     HasSmul α
       (BilinForm R
         M) where smul c B :=
@@ -218,13 +218,13 @@ instance {α} [Monoid α] [DistribMulAction α R] [SmulCommClass α R R] :
       bilin_smul_right := fun a x y => by rw [smul_right, ← mul_smul_comm] }
 
 @[simp]
-theorem coe_smul {α} [Monoid α] [DistribMulAction α R] [SmulCommClass α R R] (a : α)
+theorem coe_smul {α} [Monoid α] [DistribMulAction α R] [SMulCommClass α R R] (a : α)
     (B : BilinForm R M) : ⇑(a • B) = a • B :=
   rfl
 #align bilin_form.coe_smul BilinForm.coe_smul
 
 @[simp]
-theorem smul_apply {α} [Monoid α] [DistribMulAction α R] [SmulCommClass α R R] (a : α)
+theorem smul_apply {α} [Monoid α] [DistribMulAction α R] [SMulCommClass α R R] (a : α)
     (B : BilinForm R M) (x y : M) : (a • B) x y = a • B x y :=
   rfl
 #align bilin_form.smul_apply BilinForm.smul_apply
@@ -285,11 +285,11 @@ def coeFnAddMonoidHom : BilinForm R M →+
   map_add' := coe_add
 #align bilin_form.coe_fn_add_monoid_hom BilinForm.coeFnAddMonoidHom
 
-instance {α} [Monoid α] [DistribMulAction α R] [SmulCommClass α R R] :
+instance {α} [Monoid α] [DistribMulAction α R] [SMulCommClass α R R] :
     DistribMulAction α (BilinForm R M) :=
   Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
 
-instance {α} [Semiring α] [Module α R] [SmulCommClass α R R] : Module α (BilinForm R M) :=
+instance {α} [Semiring α] [Module α R] [SMulCommClass α R R] : Module α (BilinForm R M) :=
   Function.Injective.module _ coeFnAddMonoidHom coe_injective coe_smul
 
 section flip

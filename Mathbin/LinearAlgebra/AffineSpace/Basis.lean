@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.basis
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -404,10 +404,10 @@ variable [DivisionRing k] [Module k V]
 
 include V
 
-protected theorem finiteDimensional [Finite ι] (b : AffineBasis ι k P) : FiniteDimensional k V :=
+protected theorem finite_dimensional [Finite ι] (b : AffineBasis ι k P) : FiniteDimensional k V :=
   let ⟨i⟩ := b.Nonempty
-  FiniteDimensional.ofFintypeBasis (b.basisOf i)
-#align affine_basis.finite_dimensional AffineBasis.finiteDimensional
+  FiniteDimensional.of_fintype_basis (b.basisOf i)
+#align affine_basis.finite_dimensional AffineBasis.finite_dimensional
 
 protected theorem finite [FiniteDimensional k V] (b : AffineBasis ι k P) : Finite ι :=
   finite_of_fin_dim_affine_independent k b.ind
@@ -432,7 +432,7 @@ theorem card_eq_finrank_add_one [Fintype ι] (b : AffineBasis ι k P) :
   b.ind.affine_span_eq_top_iff_card_eq_finrank_add_one.mp b.tot
 #align affine_basis.card_eq_finrank_add_one AffineBasis.card_eq_finrank_add_one
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
     ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), b.points = coe := by
   obtain ⟨s, hst, h_tot, h_ind⟩ := exists_affine_independent k V t

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_embedding
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,14 +248,14 @@ theorem UniformEmbedding.dense_embedding {f : α → β} (h : UniformEmbedding f
     induced := h.Embedding.induced }
 #align uniform_embedding.dense_embedding UniformEmbedding.dense_embedding
 
-theorem closedEmbeddingOfSpacedOut {α} [TopologicalSpace α] [DiscreteTopology α] [SeparatedSpace β]
-    {f : α → β} {s : Set (β × β)} (hs : s ∈ 𝓤 β) (hf : Pairwise fun x y => (f x, f y) ∉ s) :
-    ClosedEmbedding f := by 
+theorem closed_embedding_of_spaced_out {α} [TopologicalSpace α] [DiscreteTopology α]
+    [SeparatedSpace β] {f : α → β} {s : Set (β × β)} (hs : s ∈ 𝓤 β)
+    (hf : Pairwise fun x y => (f x, f y) ∉ s) : ClosedEmbedding f := by
   rcases DiscreteTopology.eq_bot α with rfl; letI : UniformSpace α := ⊥
   exact
     { (uniform_embedding_of_spaced_out hs hf).Embedding with
-      closedRange := isClosedRangeOfSpacedOut hs hf }
-#align closed_embedding_of_spaced_out closedEmbeddingOfSpacedOut
+      closed_range := is_closed_range_of_spaced_out hs hf }
+#align closed_embedding_of_spaced_out closed_embedding_of_spaced_out
 
 theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α → β} (b : β)
     (he₁ : UniformInducing e) (he₂ : DenseInducing e) (hs : s ∈ 𝓤 α) :

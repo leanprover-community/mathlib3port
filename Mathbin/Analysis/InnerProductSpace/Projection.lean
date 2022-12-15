@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -809,7 +809,7 @@ theorem Submodule.orthogonal_orthogonal_eq_closure [CompleteSpace E] : Kᗮᗮ =
     haveI : CompleteSpace K.topological_closure :=
       K.is_closed_topological_closure.complete_space_coe
     rw [K.topological_closure.orthogonal_orthogonal]
-  · exact K.topological_closure_minimal K.le_orthogonal_orthogonal Kᗮ.isClosedOrthogonal
+  · exact K.topological_closure_minimal K.le_orthogonal_orthogonal Kᗮ.is_closed_orthogonal
 #align submodule.orthogonal_orthogonal_eq_closure Submodule.orthogonal_orthogonal_eq_closure
 
 variable {K}
@@ -1087,7 +1087,7 @@ orthogonal subspace with `K₂` add to that of `K₂`. -/
 theorem Submodule.finrank_add_inf_finrank_orthogonal {K₁ K₂ : Submodule 𝕜 E}
     [FiniteDimensional 𝕜 K₂] (h : K₁ ≤ K₂) :
     finrank 𝕜 K₁ + finrank 𝕜 (K₁ᗮ ⊓ K₂ : Submodule 𝕜 E) = finrank 𝕜 K₂ := by
-  haveI := Submodule.finiteDimensionalOfLe h
+  haveI := Submodule.finite_dimensional_of_le h
   haveI := proper_is_R_or_C 𝕜 K₁
   have hd := Submodule.dim_sup_add_dim_inf_eq K₁ (K₁ᗮ ⊓ K₂)
   rw [← inf_assoc, (Submodule.orthogonal_disjoint K₁).eq_bot, bot_inf_eq, finrank_bot,
@@ -1272,7 +1272,7 @@ variable {𝕜 E} {v : Set E}
 
 open FiniteDimensional Submodule Set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (u «expr ⊇ » v) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 /-- An orthonormal set in an `inner_product_space` is maximal, if and only if the orthogonal
 complement of its span is empty. -/
 theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal 𝕜 (coe : v → E)) :
@@ -1340,7 +1340,7 @@ theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal �
 
 variable [FiniteDimensional 𝕜 E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (u «expr ⊇ » v) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 /-- An orthonormal set in a finite-dimensional `inner_product_space` is maximal, if and only if it
 is a basis. -/
 theorem maximal_orthonormal_iff_basis_of_finite_dimensional (hv : Orthonormal 𝕜 (coe : v → E)) :

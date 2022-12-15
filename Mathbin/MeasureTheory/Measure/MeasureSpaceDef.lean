@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space_def
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -493,12 +493,12 @@ theorem ae_eq_set {s t : Set α} : s =ᵐ[μ] t ↔ μ (s \ t) = 0 ∧ μ (t \ s
 
 @[simp]
 theorem measure_symm_diff_eq_zero_iff {s t : Set α} : μ (s ∆ t) = 0 ↔ s =ᵐ[μ] t := by
-  simp [ae_eq_set, symm_diff_def]
+  simp [ae_eq_set, symmDiff_def]
 #align measure_theory.measure_symm_diff_eq_zero_iff MeasureTheory.measure_symm_diff_eq_zero_iff
 
 @[simp]
 theorem ae_eq_set_compl_compl {s t : Set α} : sᶜ =ᵐ[μ] tᶜ ↔ s =ᵐ[μ] t := by
-  simp only [← measure_symm_diff_eq_zero_iff, compl_symm_diff_compl]
+  simp only [← measure_symm_diff_eq_zero_iff, compl_symmDiff_compl]
 #align measure_theory.ae_eq_set_compl_compl MeasureTheory.ae_eq_set_compl_compl
 
 theorem ae_eq_set_compl {s t : Set α} : sᶜ =ᵐ[μ] t ↔ s =ᵐ[μ] tᶜ := by
@@ -509,6 +509,11 @@ theorem ae_eq_set_inter {s' t' : Set α} (h : s =ᵐ[μ] t) (h' : s' =ᵐ[μ] t'
     (s ∩ s' : Set α) =ᵐ[μ] (t ∩ t' : Set α) :=
   h.inter h'
 #align measure_theory.ae_eq_set_inter MeasureTheory.ae_eq_set_inter
+
+theorem ae_eq_set_union {s' t' : Set α} (h : s =ᵐ[μ] t) (h' : s' =ᵐ[μ] t') :
+    (s ∪ s' : Set α) =ᵐ[μ] (t ∪ t' : Set α) :=
+  h.union h'
+#align measure_theory.ae_eq_set_union MeasureTheory.ae_eq_set_union
 
 @[to_additive]
 theorem Set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α}
@@ -540,8 +545,8 @@ theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
   nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
 #align measure_theory.measure_mono_null_ae MeasureTheory.measure_mono_null_ae
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊇ » s) -/
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisfies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u` if `μ s ≠ ∞`, see `measure_to_measurable_inter`.
 (This property holds without the assumption `μ s ≠ ∞` when the space is sigma-finite,
@@ -630,7 +635,7 @@ function. We define this property, called `ae_measurable f μ`. It's properties 
 
 variable {m : MeasurableSpace α} [MeasurableSpace β] {f g : α → β} {μ ν : Measure α}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic measure_theory.volume_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic measure_theory.volume_tac -/
 /-- A function is almost everywhere measurable if it coincides almost everywhere with a measurable
 function. -/
 def AeMeasurable {m : MeasurableSpace α} (f : α → β)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -260,8 +260,8 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
     exact Or.cases_on (hI.mem_or_mem H) id ih
 #align ideal.is_prime.mem_of_pow_mem Ideal.IsPrime.mem_of_pow_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ∉ » I) -/
 theorem not_is_prime_iff {I : Ideal α} :
     ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I := by
   simp_rw [Ideal.is_prime_iff, not_and_or, Ne.def, not_not, not_forall, not_or]
@@ -484,7 +484,7 @@ theorem span_singleton_mul_left_unit {a : α} (h2 : IsUnit a) (x : α) :
 #align ideal.span_singleton_mul_left_unit Ideal.span_singleton_mul_left_unit
 
 theorem span_singleton_eq_top {x} : span ({x} : Set α) = ⊤ ↔ IsUnit x := by
-  rw [is_unit_iff_dvd_one, ← span_singleton_le_span_singleton, span_singleton_one, eq_top_iff]
+  rw [isUnit_iff_dvd_one, ← span_singleton_le_span_singleton, span_singleton_one, eq_top_iff]
 #align ideal.span_singleton_eq_top Ideal.span_singleton_eq_top
 
 theorem span_singleton_prime {p : α} (hp : p ≠ 0) : IsPrime (span ({p} : Set α)) ↔ Prime p := by
@@ -523,7 +523,7 @@ theorem factors_decreasing [CommRing β] [IsDomain β] (b₁ b₂ : β) (h₁ : 
       (Ideal.span_le.2 <| singleton_subset_iff.2 <| Ideal.mem_span_singleton.2 ⟨b₂, rfl⟩))
     fun h =>
     h₂ <|
-      is_unit_of_dvd_one _ <|
+      isUnit_of_dvd_one _ <|
         (mul_dvd_mul_iff_left h₁).1 <| by rwa [mul_one, ← Ideal.span_singleton_le_span_singleton]
 #align ideal.factors_decreasing Ideal.factors_decreasing
 
@@ -706,7 +706,7 @@ theorem not_is_field_of_subsingleton {R : Type _} [Ring R] [Subsingleton R] : ¬
   fun ⟨⟨x, y, hxy⟩, _, _⟩ => hxy (Subsingleton.elim x y)
 #align ring.not_is_field_of_subsingleton Ring.not_is_field_of_subsingleton
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
 theorem exists_not_is_unit_of_not_is_field [Nontrivial R] (hf : ¬IsField R) :
     ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x := by
   have : ¬_ := fun h => hf ⟨exists_pair_ne R, mul_comm, h⟩

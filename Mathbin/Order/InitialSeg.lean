@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.initial_seg
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,7 +149,7 @@ theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] :
 instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
   ⟨fun a =>
     @Subsingleton.elim _
-      (unique_of_trichotomous_of_irrefl (@RelEmbedding.well_founded _ _ r s a IsWellFounded.wf)) a⟩
+      (unique_of_trichotomous_of_irrefl (@RelEmbedding.wellFounded _ _ r s a IsWellFounded.wf)) a⟩
 
 protected theorem eq [IsWellOrder β s] (f g : r ≼i s) (a) : f a = g a := by
   rw [Subsingleton.elim f g]
@@ -270,9 +270,9 @@ theorem down (f : r ≺i s) : ∀ {b : β}, s b f.top ↔ ∃ a, f a = b :=
   f.down'
 #align principal_seg.down PrincipalSeg.down
 
-theorem ltTop (f : r ≺i s) (a : α) : s (f a) f.top :=
+theorem lt_top (f : r ≺i s) (a : α) : s (f a) f.top :=
   f.down.2 ⟨_, rfl⟩
-#align principal_seg.lt_top PrincipalSeg.ltTop
+#align principal_seg.lt_top PrincipalSeg.lt_top
 
 theorem init [IsTrans β s] (f : r ≺i s) {a : α} {b : β} (h : s b (f a)) : ∃ a', f a' = b :=
   f.down.1 <| trans h <| f.lt_top _
@@ -379,11 +379,11 @@ theorem top_eq [IsWellOrder γ t] (e : r ≃r s) (f : r ≺i t) (g : s ≺i t) :
   rw [Subsingleton.elim f (PrincipalSeg.equivLt e g)] <;> rfl
 #align principal_seg.top_eq PrincipalSeg.top_eq
 
-theorem topLtTop {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t]
+theorem top_lt_top {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t]
     (f : PrincipalSeg r s) (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top := by
   rw [Subsingleton.elim h (f.trans g)]
-  apply PrincipalSeg.ltTop
-#align principal_seg.top_lt_top PrincipalSeg.topLtTop
+  apply PrincipalSeg.lt_top
+#align principal_seg.top_lt_top PrincipalSeg.top_lt_top
 
 /-- Any element of a well order yields a principal segment -/
 def ofElement {α : Type _} (r : α → α → Prop) (a : α) : Subrel r { b | r b a } ≺i r :=
@@ -483,7 +483,7 @@ namespace RelEmbedding
 gaps, to obtain an initial segment. Here, we construct the collapsed order embedding pointwise,
 but the proof of the fact that it is an initial segment will be given in `collapse`. -/
 noncomputable def collapseF [IsWellOrder β s] (f : r ↪r s) : ∀ a, { b // ¬s (f a) b } :=
-  (RelEmbedding.well_founded f <| IsWellFounded.wf).fix fun a IH => by
+  (RelEmbedding.wellFounded f <| IsWellFounded.wf).fix fun a IH => by
     let S := { b | ∀ a h, s (IH a h).1 b }
     have : f a ∈ S := fun a' h =>
       ((trichotomous _ _).resolve_left fun h' =>
@@ -510,7 +510,7 @@ theorem collapseF.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b}
 /-- Construct an initial segment from an order embedding into a well order, by collapsing it
 to fill the gaps. -/
 noncomputable def collapse [IsWellOrder β s] (f : r ↪r s) : r ≼i s :=
-  haveI := RelEmbedding.is_well_order f
+  haveI := RelEmbedding.isWellOrder f
   ⟨RelEmbedding.ofMonotone (fun a => (collapse_F f a).1) fun a b => collapse_F.lt f, fun a b =>
     Acc.recOn (is_well_founded.wf.apply b : Acc s b)
       (fun b H IH a h => by 

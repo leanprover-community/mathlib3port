@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_equiv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -587,7 +587,7 @@ theorem injective_point_reflection_left_of_module [Invertible (2 : k)] :
     ∀ y, Injective fun x : P₁ => pointReflection k x y :=
   (injective_point_reflection_left_of_injective_bit0 k) fun x y h => by
     rwa [bit0, bit0, ← two_smul k x, ← two_smul k y,
-      (is_unit_of_invertible (2 : k)).smul_left_cancel] at h
+      (isUnit_of_invertible (2 : k)).smul_left_cancel] at h
 #align
   affine_equiv.injective_point_reflection_left_of_module AffineEquiv.injective_point_reflection_left_of_module
 

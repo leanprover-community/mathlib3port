@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_lebesgue
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ theorem add_haar_submodule {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ 
     bounded_range_of_tendsto _ this
   apply
     add_haar_eq_zero_of_disjoint_translates μ _ A _
-      (Submodule.closedOfFiniteDimensional s).MeasurableSet
+      (Submodule.closed_of_finite_dimensional s).MeasurableSet
   intro m n hmn
   simp only [Function.onFun, image_add_left, singleton_add, disjoint_left, mem_preimage,
     SetLike.mem_coe]
@@ -617,7 +617,7 @@ variable {ι G : Type _} [Fintype ι] [DecidableEq ι] [NormedAddCommGroup G] [N
 
 theorem add_haar_parallelepiped (b : Basis ι ℝ G) (v : ι → G) :
     b.addHaar (parallelepiped v) = Ennreal.ofReal (|b.det v|) := by
-  have : FiniteDimensional ℝ G := FiniteDimensional.ofFintypeBasis b
+  have : FiniteDimensional ℝ G := FiniteDimensional.of_fintype_basis b
   have A : parallelepiped v = b.constr ℕ v '' parallelepiped b := by
     rw [image_parallelepiped]
     congr 1 with i

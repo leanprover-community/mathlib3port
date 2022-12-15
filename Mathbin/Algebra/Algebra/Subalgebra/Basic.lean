@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -679,10 +679,10 @@ def equalizer (ϕ ψ : A →ₐ[R] B) :
     Subalgebra R A where 
   carrier := { a | ϕ a = ψ a }
   add_mem' x y (hx : ϕ x = ψ x) (hy : ϕ y = ψ y) := by
-    rw [Set.mem_set_of_eq, ϕ.map_add, ψ.map_add, hx, hy]
+    rw [Set.mem_setOf_eq, ϕ.map_add, ψ.map_add, hx, hy]
   mul_mem' x y (hx : ϕ x = ψ x) (hy : ϕ y = ψ y) := by
-    rw [Set.mem_set_of_eq, ϕ.map_mul, ψ.map_mul, hx, hy]
-  algebra_map_mem' x := by rw [Set.mem_set_of_eq, AlgHom.commutes, AlgHom.commutes]
+    rw [Set.mem_setOf_eq, ϕ.map_mul, ψ.map_mul, hx, hy]
+  algebra_map_mem' x := by rw [Set.mem_setOf_eq, AlgHom.commutes, AlgHom.commutes]
 #align alg_hom.equalizer AlgHom.equalizer
 
 @[simp]
@@ -1266,13 +1266,13 @@ theorem smul_def [HasSmul A α] {S : Subalgebra R A} (g : S) (m : α) : g • m 
   rfl
 #align subalgebra.smul_def Subalgebra.smul_def
 
-instance smul_comm_class_left [HasSmul A β] [HasSmul α β] [SmulCommClass A α β]
-    (S : Subalgebra R A) : SmulCommClass S α β :=
+instance smul_comm_class_left [HasSmul A β] [HasSmul α β] [SMulCommClass A α β]
+    (S : Subalgebra R A) : SMulCommClass S α β :=
   S.toSubsemiring.smul_comm_class_left
 #align subalgebra.smul_comm_class_left Subalgebra.smul_comm_class_left
 
-instance smul_comm_class_right [HasSmul α β] [HasSmul A β] [SmulCommClass α A β]
-    (S : Subalgebra R A) : SmulCommClass α S β :=
+instance smul_comm_class_right [HasSmul α β] [HasSmul A β] [SMulCommClass α A β]
+    (S : Subalgebra R A) : SMulCommClass α S β :=
   S.toSubsemiring.smul_comm_class_right
 #align subalgebra.smul_comm_class_right Subalgebra.smul_comm_class_right
 
@@ -1288,7 +1288,7 @@ instance is_scalar_tower_mid {R S T : Type _} [CommSemiring R] [Semiring S] [Add
   ⟨fun x y z => (smul_assoc _ (y : S) _ : _)⟩
 #align subalgebra.is_scalar_tower_mid Subalgebra.is_scalar_tower_mid
 
-instance [HasSmul A α] [HasFaithfulSmul A α] (S : Subalgebra R A) : HasFaithfulSmul S α :=
+instance [HasSmul A α] [FaithfulSMul A α] (S : Subalgebra R A) : FaithfulSMul S α :=
   S.toSubsemiring.HasFaithfulSmul
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/

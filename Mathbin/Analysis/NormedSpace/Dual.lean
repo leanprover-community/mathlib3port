@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.dual
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ instance : NormedAddCommGroup (Dual 𝕜 F) :=
   ContinuousLinearMap.toNormedAddCommGroup
 
 instance [FiniteDimensional 𝕜 E] : FiniteDimensional 𝕜 (Dual 𝕜 E) :=
-  ContinuousLinearMap.finiteDimensional
+  ContinuousLinearMap.finite_dimensional
 
 /-- The inclusion of a normed space in its double (topological) dual, considered
    as a bounded linear map. -/
@@ -191,12 +191,12 @@ theorem polar_univ : polar 𝕜 (univ : Set E) = {(0 : dual 𝕜 E)} :=
     (LinearMap.flip_separating_right.mpr (dualPairingSeparatingLeft 𝕜 E))
 #align normed_space.polar_univ NormedSpace.polar_univ
 
-theorem isClosedPolar (s : Set E) : IsClosed (polar 𝕜 s) := by
+theorem is_closed_polar (s : Set E) : IsClosed (polar 𝕜 s) := by
   dsimp only [NormedSpace.polar]
   simp only [LinearMap.polar_eq_Inter, LinearMap.flip_apply]
-  refine' isClosedBInter fun z hz => _
+  refine' is_closed_bInter fun z hz => _
   exact is_closed_Iic.preimage (ContinuousLinearMap.apply 𝕜 𝕜 z).Continuous.norm
-#align normed_space.is_closed_polar NormedSpace.isClosedPolar
+#align normed_space.is_closed_polar NormedSpace.is_closed_polar
 
 @[simp]
 theorem polar_closure (s : Set E) : polar 𝕜 (closure s) = polar 𝕜 s :=

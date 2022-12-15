@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.embedding.set
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,11 +23,17 @@ section Equiv
 
 variable {α : Sort u} {β : Sort v} (f : α ≃ β)
 
+/- warning: equiv.as_embedding_range -> Equiv.asEmbedding_range is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Type.{u2}} {p : β -> Prop} (e : Equiv.{u1, succ u2} α (Subtype.{succ u2} β p)), Eq.{succ u2} (Set.{u2} β) (Set.range.{u2, u1} β α (coeFn.{max 1 u1 (succ u2), max u1 (succ u2)} (Function.Embedding.{u1, succ u2} α β) (fun (_x : Function.Embedding.{u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{u1, succ u2} α β) (Equiv.asEmbedding.{u1, succ u2} α β p e))) (setOf.{u2} β p)
+but is expected to have type
+  forall {α : Sort.{u2}} {β : Type.{u1}} {p : β -> Prop} (e : Equiv.{u2, succ u1} α (Subtype.{succ u1} β p)), Eq.{succ u1} (Set.{u1} β) (Set.range.{u1, u2} β α (FunLike.coe.{max (max 1 u2) (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (max 1 u2) (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{u2, succ u1} α β)) (Equiv.asEmbedding.{succ u1, u2} β α p e))) (setOf.{u1} β p)
+Case conversion may be inaccurate. Consider using '#align equiv.as_embedding_range Equiv.asEmbedding_rangeₓ'. -/
 @[simp]
-theorem Equiv.as_embedding_range {α β : Sort _} {p : β → Prop} (e : α ≃ Subtype p) :
+theorem Equiv.asEmbedding_range {α β : Sort _} {p : β → Prop} (e : α ≃ Subtype p) :
     Set.range e.asEmbedding = setOf p :=
   Set.ext fun x => ⟨fun ⟨y, h⟩ => h ▸ Subtype.coe_prop (e y), fun hs => ⟨e.symm ⟨x, hs⟩, by simp⟩⟩
-#align equiv.as_embedding_range Equiv.as_embedding_range
+#align equiv.as_embedding_range Equiv.asEmbedding_range
 
 end Equiv
 
@@ -35,19 +41,29 @@ namespace Function
 
 namespace Embedding
 
+#print Function.Embedding.coeWithTop /-
 /-- Embedding into `with_top α`. -/
 @[simps]
 def coeWithTop {α} : α ↪ WithTop α :=
   { Embedding.some with toFun := coe }
 #align function.embedding.coe_with_top Function.Embedding.coeWithTop
+-/
 
+#print Function.Embedding.optionElim /-
 /-- Given an embedding `f : α ↪ β` and a point outside of `set.range f`, construct an embedding
 `option α ↪ β`. -/
 @[simps]
 def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.range f) : Option α ↪ β :=
   ⟨Option.elim' x f, Option.injective_iff.2 ⟨f.2, h⟩⟩
 #align function.embedding.option_elim Function.Embedding.optionElim
+-/
 
+/- warning: function.embedding.option_embedding_equiv -> Function.Embedding.optionEmbeddingEquiv is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) (β : Type.{u2}), Equiv.{max 1 (succ u1) (succ u2), max (succ (max u1 u2)) (succ u2)} (Function.Embedding.{succ u1, succ u2} (Option.{u1} α) β) (Sigma.{max u1 u2, u2} (Function.Embedding.{succ u1, succ u2} α β) (fun (f : Function.Embedding.{succ u1, succ u2} α β) => coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (_x : Function.Embedding.{succ u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} α β) f)))))
+but is expected to have type
+  forall (α : Type.{u1}) (β : Type.{u2}), Equiv.{max (succ u2) (succ u1), max (succ u2) (succ (max u1 u2))} (Function.Embedding.{succ u1, succ u2} (Option.{u1} α) β) (Sigma.{max u1 u2, u2} (Function.Embedding.{succ u1, succ u2} α β) (fun (f : Function.Embedding.{succ u1, succ u2} α β) => Set.Elem.{u2} β (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.range.{u2, succ u1} β α (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) f)))))
+Case conversion may be inaccurate. Consider using '#align function.embedding.option_embedding_equiv Function.Embedding.optionEmbeddingEquivₓ'. -/
 /-- Equivalence between embeddings of `option α` and a sigma type over the embeddings of `α`. -/
 @[simps]
 def optionEmbeddingEquiv (α β) :
@@ -61,23 +77,33 @@ def optionEmbeddingEquiv (α β) :
   right_inv := fun ⟨f, y, hy⟩ => by ext <;> simp [Option.coe_def]
 #align function.embedding.option_embedding_equiv Function.Embedding.optionEmbeddingEquiv
 
+#print Function.Embedding.codRestrict /-
 /-- Restrict the codomain of an embedding. -/
 def codRestrict {α β} (p : Set β) (f : α ↪ β) (H : ∀ a, f a ∈ p) : α ↪ p :=
   ⟨fun a => ⟨f a, H a⟩, fun a b h => f.Injective (@congr_arg _ _ _ _ Subtype.val h)⟩
 #align function.embedding.cod_restrict Function.Embedding.codRestrict
+-/
 
+/- warning: function.embedding.cod_restrict_apply -> Function.Embedding.codRestrict_apply is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Type.{u2}} (p : Set.{u2} β) (f : Function.Embedding.{u1, succ u2} α β) (H : forall (a : α), Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (coeFn.{max 1 u1 (succ u2), max u1 (succ u2)} (Function.Embedding.{u1, succ u2} α β) (fun (_x : Function.Embedding.{u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{u1, succ u2} α β) f a) p) (a : α), Eq.{succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p) (coeFn.{max 1 u1 (succ u2), max u1 (succ u2)} (Function.Embedding.{u1, succ u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p)) (fun (_x : Function.Embedding.{u1, succ u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p)) => α -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p)) (Function.Embedding.hasCoeToFun.{u1, succ u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p)) (Function.Embedding.codRestrict.{u1, u2} α β p f H) a) (Subtype.mk.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x p) (coeFn.{max 1 u1 (succ u2), max u1 (succ u2)} (Function.Embedding.{u1, succ u2} α β) (fun (_x : Function.Embedding.{u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{u1, succ u2} α β) f a) (H a))
+but is expected to have type
+  forall {α : Sort.{u2}} {β : Type.{u1}} (p : Set.{u1} β) (f : Function.Embedding.{u2, succ u1} α β) (H : forall (a : α), Membership.mem.{u1, u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) a) (Set.{u1} β) (Set.instMembershipSet.{u1} β) (FunLike.coe.{max (succ u1) u2, u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) u2, u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{u2, succ u1} α β)) f a) p) (a : α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => Set.Elem.{u1} β p) a) (FunLike.coe.{max u2 (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α (Set.Elem.{u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => Set.Elem.{u1} β p) _x) (EmbeddingLike.toFunLike.{max u2 (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α (Set.Elem.{u1} β p)) α (Set.Elem.{u1} β p) (Function.instEmbeddingLikeEmbedding.{u2, succ u1} α (Set.Elem.{u1} β p))) (Function.Embedding.codRestrict.{u2, u1} α β p f H) a) (Subtype.mk.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x p) (FunLike.coe.{max u2 (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max u2 (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{u2, succ u1} α β)) f a) (H a))
+Case conversion may be inaccurate. Consider using '#align function.embedding.cod_restrict_apply Function.Embedding.codRestrict_applyₓ'. -/
 @[simp]
-theorem cod_restrict_apply {α β} (p) (f : α ↪ β) (H a) : codRestrict p f H a = ⟨f a, H a⟩ :=
+theorem codRestrict_apply {α β} (p) (f : α ↪ β) (H a) : codRestrict p f H a = ⟨f a, H a⟩ :=
   rfl
-#align function.embedding.cod_restrict_apply Function.Embedding.cod_restrict_apply
+#align function.embedding.cod_restrict_apply Function.Embedding.codRestrict_apply
 
 open Set
 
+#print Function.Embedding.image /-
 /-- `set.image` as an embedding `set α ↪ set β`. -/
 @[simps apply]
 protected def image {α β} (f : α ↪ β) : Set α ↪ Set β :=
   ⟨image f, f.2.image_injective⟩
 #align function.embedding.image Function.Embedding.image
+-/
 
 end Embedding
 
@@ -85,6 +111,7 @@ end Function
 
 namespace Set
 
+#print Set.embeddingOfSubset /-
 /-- The injection map is an embedding between subsets. -/
 @[simps apply]
 def embeddingOfSubset {α} (s t : Set α) (h : s ⊆ t) : s ↪ t :=
@@ -92,6 +119,7 @@ def embeddingOfSubset {α} (s t : Set α) (h : s ⊆ t) : s ↪ t :=
     congr
     injection h⟩
 #align set.embedding_of_subset Set.embeddingOfSubset
+-/
 
 end Set
 
@@ -99,6 +127,12 @@ section Subtype
 
 variable {α : Type _}
 
+/- warning: subtype_or_equiv -> subtypeOrEquiv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], (Disjoint.{u1} (α -> Prop) (Pi.partialOrder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => PropCat.partialOrder)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => PropCat.partialOrder) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop (Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => PropCat.partialOrder) i)) i)) Prop.boundedOrder)) p q) -> (Equiv.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))))
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], (Disjoint.{u1} (α -> Prop) (instPartialOrderForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => instPartialOrderProp)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => Prop) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => instPartialOrderProp) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop instLEProp Prop.boundedOrder)) p q) -> (Equiv.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))))
+Case conversion may be inaccurate. Consider using '#align subtype_or_equiv subtypeOrEquivₓ'. -/
 /-- A subtype `{x // p x ∨ q x}` over a disjunction of `p q : α → Prop` is equivalent to a sum of
 subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to the right, when
 `disjoint p q`.
@@ -133,17 +167,29 @@ def subtypeOrEquiv (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) :
         simpa using h.le_bot x ⟨hp, x.prop⟩
 #align subtype_or_equiv subtypeOrEquiv
 
+/- warning: subtype_or_equiv_symm_inl -> subtypeOrEquiv_symm_inl is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (h : Disjoint.{u1} (α -> Prop) (Pi.partialOrder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => PropCat.partialOrder)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => PropCat.partialOrder) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop (Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => PropCat.partialOrder) i)) i)) Prop.boundedOrder)) p q) (x : Subtype.{succ u1} α (fun (x : α) => p x)), Eq.{succ u1} (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (fun (_x : Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) => (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) -> (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Equiv.hasCoeToFun.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Equiv.symm.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (subtypeOrEquiv.{u1} α p q (fun (a : α) => _inst_1 a) h)) (Sum.inl.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x)) x)) (Subtype.mk.{succ u1} α (fun (x : α) => Or (p x) (q x)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => p x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => p x) x))))) x) (Or.inl (p ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => p x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => p x) x))))) x)) (q ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => p x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => p x) x))))) x)) (Subtype.prop.{succ u1} α (fun (x : α) => p x) x)))
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (h : Disjoint.{u1} (α -> Prop) (instPartialOrderForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => instPartialOrderProp)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => Prop) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => instPartialOrderProp) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop instLEProp Prop.boundedOrder)) p q) (x : Subtype.{succ u1} α (fun (x : α) => p x)), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) => Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Sum.inl.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x)) x)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (fun (_x : Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) => Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))))) (Equiv.symm.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (subtypeOrEquiv.{u1} α p q (fun (a : α) => _inst_1 a) h)) (Sum.inl.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x)) x)) (Subtype.mk.{succ u1} α (fun (x : α) => Or (p x) (q x)) (Subtype.val.{succ u1} α (fun (x : α) => p x) x) (Or.inl (p (Subtype.val.{succ u1} α (fun (x : α) => p x) x)) (q (Subtype.val.{succ u1} α (fun (x : α) => p x) x)) (Subtype.prop.{succ u1} α (fun (x : α) => p x) x)))
+Case conversion may be inaccurate. Consider using '#align subtype_or_equiv_symm_inl subtypeOrEquiv_symm_inlₓ'. -/
 @[simp]
-theorem subtype_or_equiv_symm_inl (p q : α → Prop) [DecidablePred p] (h : Disjoint p q)
+theorem subtypeOrEquiv_symm_inl (p q : α → Prop) [DecidablePred p] (h : Disjoint p q)
     (x : { x // p x }) : (subtypeOrEquiv p q h).symm (Sum.inl x) = ⟨x, Or.inl x.Prop⟩ :=
   rfl
-#align subtype_or_equiv_symm_inl subtype_or_equiv_symm_inl
+#align subtype_or_equiv_symm_inl subtypeOrEquiv_symm_inl
 
+/- warning: subtype_or_equiv_symm_inr -> subtypeOrEquiv_symm_inr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (h : Disjoint.{u1} (α -> Prop) (Pi.partialOrder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => PropCat.partialOrder)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => PropCat.partialOrder) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop (Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => PropCat.partialOrder) i)) i)) Prop.boundedOrder)) p q) (x : Subtype.{succ u1} α (fun (x : α) => q x)), Eq.{succ u1} (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (fun (_x : Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) => (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) -> (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Equiv.hasCoeToFun.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Equiv.symm.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (subtypeOrEquiv.{u1} α p q (fun (a : α) => _inst_1 a) h)) (Sum.inr.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x)) x)) (Subtype.mk.{succ u1} α (fun (x : α) => Or (p x) (q x)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => q x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => q x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => q x)) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => q x)) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => q x) x))))) x) (Or.inr (p ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => q x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => q x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => q x)) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => q x)) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => q x) x))))) x)) (q ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => q x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => q x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => q x)) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => q x)) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => q x) x))))) x)) (Subtype.prop.{succ u1} α (fun (x : α) => q x) x)))
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (h : Disjoint.{u1} (α -> Prop) (instPartialOrderForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => instPartialOrderProp)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => Prop) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => instPartialOrderProp) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop instLEProp Prop.boundedOrder)) p q) (x : Subtype.{succ u1} α (fun (x : α) => q x)), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) => Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Sum.inr.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x)) x)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (fun (_x : Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) => Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x)))))) (Equiv.symm.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Or (p x) (q x))) (Sum.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x))) (subtypeOrEquiv.{u1} α p q (fun (a : α) => _inst_1 a) h)) (Sum.inr.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.{succ u1} α (fun (x : α) => q x)) x)) (Subtype.mk.{succ u1} α (fun (x : α) => Or (p x) (q x)) (Subtype.val.{succ u1} α (fun (x : α) => q x) x) (Or.inr (p (Subtype.val.{succ u1} α (fun (x : α) => q x) x)) (q (Subtype.val.{succ u1} α (fun (x : α) => q x) x)) (Subtype.prop.{succ u1} α (fun (x : α) => q x) x)))
+Case conversion may be inaccurate. Consider using '#align subtype_or_equiv_symm_inr subtypeOrEquiv_symm_inrₓ'. -/
 @[simp]
-theorem subtype_or_equiv_symm_inr (p q : α → Prop) [DecidablePred p] (h : Disjoint p q)
+theorem subtypeOrEquiv_symm_inr (p q : α → Prop) [DecidablePred p] (h : Disjoint p q)
     (x : { x // q x }) : (subtypeOrEquiv p q h).symm (Sum.inr x) = ⟨x, Or.inr x.Prop⟩ :=
   rfl
-#align subtype_or_equiv_symm_inr subtype_or_equiv_symm_inr
+#align subtype_or_equiv_symm_inr subtypeOrEquiv_symm_inr
 
 end Subtype
 

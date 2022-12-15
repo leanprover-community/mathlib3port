@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.prod
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,8 +32,8 @@ instance [OrderedCancelCommMonoid M] [OrderedCancelCommMonoid N] :
       ⟨le_of_mul_le_mul_left' h.1, le_of_mul_le_mul_left' h.2⟩ }
 
 @[to_additive]
-instance [LE α] [LE β] [Mul α] [Mul β] [HasExistsMulOfLe α] [HasExistsMulOfLe β] :
-    HasExistsMulOfLe (α × β) :=
+instance [LE α] [LE β] [Mul α] [Mul β] [ExistsMulOfLE α] [ExistsMulOfLE β] :
+    ExistsMulOfLE (α × β) :=
   ⟨fun a b h =>
     let ⟨c, hc⟩ := exists_mul_of_le h.1
     let ⟨d, hd⟩ := exists_mul_of_le h.2

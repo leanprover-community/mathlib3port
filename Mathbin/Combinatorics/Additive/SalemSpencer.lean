@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.additive.salem_spencer
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,7 +309,7 @@ section Monoid
 
 variable [Monoid α] [DecidableEq β] [Monoid β] (s t : Finset α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- The multiplicative Roth number of a finset is the cardinality of its biggest multiplicative
 Salem-Spencer subset. -/
 @[to_additive
@@ -320,21 +320,21 @@ def mulRothNumber : Finset α →o ℕ :=
       s.card,
     by 
     rintro t u htu
-    refine' Nat.find_greatest_mono (fun m => _) (card_le_of_subset htu)
+    refine' Nat.findGreatest_mono (fun m => _) (card_le_of_subset htu)
     rintro ⟨v, hvt, hv⟩
     exact ⟨v, hvt.trans htu, hv⟩⟩
 #align mul_roth_number mulRothNumber
 
 @[to_additive]
-theorem mul_roth_number_le : mulRothNumber s ≤ s.card := by convert Nat.find_greatest_le s.card
+theorem mul_roth_number_le : mulRothNumber s ≤ s.card := by convert Nat.findGreatest_le s.card
 #align mul_roth_number_le mul_roth_number_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 @[to_additive]
 theorem mul_roth_number_spec :
     ∃ (t : _)(_ : t ⊆ s), t.card = mulRothNumber s ∧ MulSalemSpencer (t : Set α) :=
-  @Nat.find_greatest_spec _ _
+  @Nat.findGreatest_spec _ _
     (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α)) _ (Nat.zero_le _)
     ⟨∅, empty_subset _, card_empty, mul_salem_spencer_empty⟩
 #align mul_roth_number_spec mul_roth_number_spec
@@ -344,7 +344,7 @@ variable {s t} {n : ℕ}
 @[to_additive]
 theorem MulSalemSpencer.le_mul_roth_number (hs : MulSalemSpencer (s : Set α)) (h : s ⊆ t) :
     s.card ≤ mulRothNumber t :=
-  le_find_greatest (card_le_of_subset h) ⟨s, h, rfl, hs⟩
+  le_findGreatest (card_le_of_subset h) ⟨s, h, rfl, hs⟩
 #align mul_salem_spencer.le_mul_roth_number MulSalemSpencer.le_mul_roth_number
 
 @[to_additive]
@@ -460,7 +460,7 @@ theorem roth_number_nat_le (N : ℕ) : rothNumberNat N ≤ N :=
   (add_roth_number_le _).trans (card_range _).le
 #align roth_number_nat_le roth_number_nat_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » range[finset.range] n) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » range[finset.range] n) -/
 theorem roth_number_nat_spec (n : ℕ) :
     ∃ (t : _)(_ : t ⊆ range n), t.card = rothNumberNat n ∧ AddSalemSpencer (t : Set ℕ) :=
   add_roth_number_spec _

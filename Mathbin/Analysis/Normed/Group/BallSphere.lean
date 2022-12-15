@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed.group.ball_sphere
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,7 @@ variable {E : Type _} [SeminormedAddCommGroup E] {r : ℝ}
 /-- We equip the sphere, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
 instance :
-    HasInvolutiveNeg
+    InvolutiveNeg
       (sphere (0 : E)
         r) where 
   neg := (Subtype.map Neg.neg) fun w => by simp
@@ -42,7 +42,7 @@ instance : HasContinuousNeg (sphere (0 : E) r) :=
 /-- We equip the ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
 instance {r : ℝ} :
-    HasInvolutiveNeg
+    InvolutiveNeg
       (ball (0 : E) r) where 
   neg := (Subtype.map Neg.neg) fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
@@ -58,7 +58,7 @@ instance : HasContinuousNeg (ball (0 : E) r) :=
 /-- We equip the closed ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
 instance {r : ℝ} :
-    HasInvolutiveNeg
+    InvolutiveNeg
       (closedBall (0 : E)
         r) where 
   neg := (Subtype.map Neg.neg) fun w => by simp

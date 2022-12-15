@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.over
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,11 +44,11 @@ variable {X : C}
 
 namespace CategoryTheory.Over
 
-instance has_colimit_of_has_colimit_comp_forget (F : J ⥤ Over X) [i : HasColimit (F ⋙ forget X)] :
+instance hasColimitOfHasColimitCompForget (F : J ⥤ Over X) [i : HasColimit (F ⋙ forget X)] :
     HasColimit F :=
-  @CostructuredArrow.has_colimit _ _ _ _ i _
+  @CostructuredArrow.hasColimit _ _ _ _ i _
 #align
-  category_theory.over.has_colimit_of_has_colimit_comp_forget CategoryTheory.Over.has_colimit_of_has_colimit_comp_forget
+  category_theory.over.has_colimit_of_has_colimit_comp_forget CategoryTheory.Over.hasColimitOfHasColimitCompForget
 
 instance [HasColimitsOfShape J C] : HasColimitsOfShape J (Over X) where
 
@@ -136,11 +136,11 @@ end CategoryTheory.Over
 
 namespace CategoryTheory.Under
 
-instance has_limit_of_has_limit_comp_forget (F : J ⥤ Under X) [i : HasLimit (F ⋙ forget X)] :
+instance hasLimitOfHasLimitCompForget (F : J ⥤ Under X) [i : HasLimit (F ⋙ forget X)] :
     HasLimit F :=
-  @StructuredArrow.has_limit _ _ _ _ i _
+  @StructuredArrow.hasLimit _ _ _ _ i _
 #align
-  category_theory.under.has_limit_of_has_limit_comp_forget CategoryTheory.Under.has_limit_of_has_limit_comp_forget
+  category_theory.under.has_limit_of_has_limit_comp_forget CategoryTheory.Under.hasLimitOfHasLimitCompForget
 
 instance [HasLimitsOfShape J C] : HasLimitsOfShape J (Under X) where
 

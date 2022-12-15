@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.encodable.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -207,7 +207,7 @@ theorem decode₂_encode [Encodable α] (a : α) : decode₂ α (encode a) = som
 
 theorem decode₂_ne_none_iff [Encodable α] {n : ℕ} :
     decode₂ α n ≠ none ↔ n ∈ Set.range (encode : α → ℕ) := by
-  simp_rw [Set.range, Set.mem_set_of_eq, Ne.def, Option.eq_none_iff_forall_not_mem,
+  simp_rw [Set.range, Set.mem_setOf_eq, Ne.def, Option.eq_none_iff_forall_not_mem,
     Encodable.mem_decode₂, not_forall, not_not]
 #align encodable.decode₂_ne_none_iff Encodable.decode₂_ne_none_iff
 

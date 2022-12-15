@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.chain
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -229,7 +229,7 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
     · exact h₂.trans subset_succ_chain
   case union s hs ih => 
     apply Or.imp_left h.antisymm'
-    apply Classical.by_contradiction
+    apply by_contradiction
     simp [not_or, sUnion_subset_iff, not_forall]
     intro c₃ hc₃ h₁ h₂
     obtain h | h := chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) fun c₄ => ih _ hc₃
@@ -273,7 +273,7 @@ theorem ChainClosure.is_chain (hc : ChainClosure r c) : IsChain r c := by
 There exists a maximal totally ordered set of `α`.
 Note that we do not require `α` to be partially ordered by `r`. -/
 theorem max_chain_spec : IsMaxChain r (maxChain r) :=
-  Classical.by_contradiction fun h =>
+  by_contradiction fun h =>
     let ⟨h₁, H⟩ := chain_closure_max_chain.IsChain.super_chain_succ_chain h
     H.Ne (chain_closure_max_chain.succ_fixpoint_iff.mpr rfl).symm
 #align max_chain_spec max_chain_spec

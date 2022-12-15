@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.upcrossing
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -611,7 +611,7 @@ theorem upcrossings_before_mono (hab : a < b) : Monotone fun N ω => upcrossings
   simp only [upcrossings_before]
   by_cases hemp : { n : ℕ | upper_crossing_time a b f N n ω < N }.Nonempty
   · refine' cSup_le_cSup (upper_crossing_time_lt_bdd_above hab) hemp fun n hn => _
-    rw [Set.mem_set_of_eq, upper_crossing_time_eq_upper_crossing_time_of_lt hNM hn]
+    rw [Set.mem_setOf_eq, upper_crossing_time_eq_upper_crossing_time_of_lt hNM hn]
     exact lt_of_lt_of_le hn hNM
   · rw [Set.not_nonempty_iff_eq_empty] at hemp
     simp [hemp, cSup_empty, bot_eq_zero', zero_le']
@@ -621,7 +621,7 @@ theorem upcrossings_before_lt_of_exists_upcrossing (hab : a < b) {N₁ N₂ : �
     (hN₁' : f N₁ ω < a) (hN₂ : N₁ ≤ N₂) (hN₂' : b < f N₂ ω) :
     upcrossingsBefore a b f N ω < upcrossingsBefore a b f (N₂ + 1) ω := by
   refine' lt_of_lt_of_le (Nat.lt_succ_self _) (le_cSup (upper_crossing_time_lt_bdd_above hab) _)
-  rw [Set.mem_set_of_eq, upper_crossing_time_succ_eq, hitting_lt_iff _ le_rfl]
+  rw [Set.mem_setOf_eq, upper_crossing_time_succ_eq, hitting_lt_iff _ le_rfl]
   swap
   · infer_instance
   · refine' ⟨N₂, ⟨_, Nat.lt_succ_self _⟩, hN₂'.le⟩
@@ -907,7 +907,7 @@ theorem upcrossings_before_eq_sum (hab : a < b) :
     rintro k hk
     rw [Finset.mem_Ico, Nat.succ_le_iff] at hk
     rw [Set.indicator_of_not_mem]
-    simp only [Set.mem_set_of_eq, not_lt]
+    simp only [Set.mem_setOf_eq, not_lt]
     exact (upper_crossing_time_eq_of_upcrossings_before_lt hab hk.1).symm.le
   rw [Finset.sum_congr rfl h₁, Finset.sum_congr rfl h₂, Finset.sum_const, Finset.sum_const,
     smul_eq_mul, mul_one, smul_eq_mul, mul_zero, Nat.card_Ico, Nat.add_succ_sub_one, add_zero,

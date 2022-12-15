@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.sort
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,7 @@ theorem range_order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) :
     Set.range (s.orderEmbOfFin h) = s := by
   simp only [order_emb_of_fin, Set.range_comp coe (s.order_iso_of_fin h), RelEmbedding.coe_trans,
     Set.image_univ, Finset.orderEmbOfFin.equations._eqn_1, RelIso.range_eq,
-    OrderEmbedding.subtype_apply, OrderIso.coe_to_order_embedding, eq_self_iff_true,
+    OrderEmbedding.subtype_apply, OrderIso.coe_toOrderEmbedding, eq_self_iff_true,
     Subtype.range_coe_subtype, Finset.set_of_mem, Finset.coe_inj]
 #align finset.range_order_emb_of_fin Finset.range_order_emb_of_fin
 

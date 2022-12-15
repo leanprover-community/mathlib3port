@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.wide_equalizers
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -215,12 +215,12 @@ theorem Cotrident.π_eq_app_one (t : Cotrident f) : t.π = t.ι.app one :=
   rfl
 #align category_theory.limits.cotrident.π_eq_app_one CategoryTheory.Limits.Cotrident.π_eq_app_one
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Trident.app_zero (s : Trident f) (j : J) : s.π.app zero ≫ f j = s.π.app one := by
   rw [← s.w (line j), parallel_family_map_left]
 #align category_theory.limits.trident.app_zero CategoryTheory.Limits.Trident.app_zero
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Cotrident.app_one (s : Cotrident f) (j : J) : f j ≫ s.ι.app one = s.ι.app zero := by
   rw [← s.w (line j), parallel_family_map_left]
 #align category_theory.limits.cotrident.app_one CategoryTheory.Limits.Cotrident.app_one
@@ -268,12 +268,12 @@ theorem Cotrident.π_of_π [Nonempty J] {P : C} (π : Y ⟶ P) (w : ∀ j₁ j�
   rfl
 #align category_theory.limits.cotrident.π_of_π CategoryTheory.Limits.Cotrident.π_of_π
 
-@[reassoc]
+@[reassoc.1]
 theorem Trident.condition (j₁ j₂ : J) (t : Trident f) : t.ι ≫ f j₁ = t.ι ≫ f j₂ := by
   rw [t.app_zero, t.app_zero]
 #align category_theory.limits.trident.condition CategoryTheory.Limits.Trident.condition
 
-@[reassoc]
+@[reassoc.1]
 theorem Cotrident.condition (j₁ j₂ : J) (t : Cotrident f) : f j₁ ≫ t.π = f j₂ ≫ t.π := by
   rw [t.app_one, t.app_one]
 #align category_theory.limits.cotrident.condition CategoryTheory.Limits.Cotrident.condition
@@ -592,7 +592,7 @@ theorem wideEqualizer.trident_π_app_zero :
 #align
   category_theory.limits.wide_equalizer.trident_π_app_zero CategoryTheory.Limits.wideEqualizer.trident_π_app_zero
 
-@[reassoc]
+@[reassoc.1]
 theorem wideEqualizer.condition (j₁ j₂ : J) : wideEqualizer.ι f ≫ f j₁ = wideEqualizer.ι f ≫ f j₂ :=
   Trident.condition j₁ j₂ <| limit.cone <| parallelFamily f
 #align category_theory.limits.wide_equalizer.condition CategoryTheory.Limits.wideEqualizer.condition
@@ -613,7 +613,7 @@ abbrev wideEqualizer.lift [Nonempty J] {W : C} (k : W ⟶ X) (h : ∀ j₁ j₂,
   limit.lift (parallelFamily f) (Trident.ofι k h)
 #align category_theory.limits.wide_equalizer.lift CategoryTheory.Limits.wideEqualizer.lift
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem wideEqualizer.lift_ι [Nonempty J] {W : C} (k : W ⟶ X) (h : ∀ j₁ j₂, k ≫ f j₁ = k ≫ f j₂) :
     wideEqualizer.lift k h ≫ wideEqualizer.ι f = k :=
   limit.lift_π _ _
@@ -697,7 +697,7 @@ theorem wideCoequalizer.cotrident_ι_app_one :
 #align
   category_theory.limits.wide_coequalizer.cotrident_ι_app_one CategoryTheory.Limits.wideCoequalizer.cotrident_ι_app_one
 
-@[reassoc]
+@[reassoc.1]
 theorem wideCoequalizer.condition (j₁ j₂ : J) :
     f j₁ ≫ wideCoequalizer.π f = f j₂ ≫ wideCoequalizer.π f :=
   Cotrident.condition j₁ j₂ <| colimit.cocone <| parallelFamily f
@@ -720,7 +720,7 @@ abbrev wideCoequalizer.desc [Nonempty J] {W : C} (k : Y ⟶ W) (h : ∀ j₁ j�
   colimit.desc (parallelFamily f) (Cotrident.ofπ k h)
 #align category_theory.limits.wide_coequalizer.desc CategoryTheory.Limits.wideCoequalizer.desc
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem wideCoequalizer.π_desc [Nonempty J] {W : C} (k : Y ⟶ W) (h : ∀ j₁ j₂, f j₁ ≫ k = f j₂ ≫ k) :
     wideCoequalizer.π f ≫ wideCoequalizer.desc k h = k :=
   colimit.ι_desc _ _
@@ -777,7 +777,7 @@ abbrev HasWideCoequalizers :=
 theorem has_wide_equalizers_of_has_limit_parallel_family
     [∀ {J : Type w} {X Y : C} {f : J → (X ⟶ Y)}, HasLimit (parallelFamily f)] :
     HasWideEqualizers.{w} C := fun J =>
-  { HasLimit := fun F => has_limit_of_iso (diagramIsoParallelFamily F).symm }
+  { HasLimit := fun F => hasLimitOfIso (diagramIsoParallelFamily F).symm }
 #align
   category_theory.limits.has_wide_equalizers_of_has_limit_parallel_family CategoryTheory.Limits.has_wide_equalizers_of_has_limit_parallel_family
 
@@ -785,19 +785,19 @@ theorem has_wide_equalizers_of_has_limit_parallel_family
 theorem has_wide_coequalizers_of_has_colimit_parallel_family
     [∀ {J : Type w} {X Y : C} {f : J → (X ⟶ Y)}, HasColimit (parallelFamily f)] :
     HasWideCoequalizers.{w} C := fun J =>
-  { HasColimit := fun F => has_colimit_of_iso (diagramIsoParallelFamily F) }
+  { HasColimit := fun F => hasColimitOfIso (diagramIsoParallelFamily F) }
 #align
   category_theory.limits.has_wide_coequalizers_of_has_colimit_parallel_family CategoryTheory.Limits.has_wide_coequalizers_of_has_colimit_parallel_family
 
 instance (priority := 10) has_equalizers_of_has_wide_equalizers [HasWideEqualizers.{w} C] :
     HasEqualizers C :=
-  has_limits_of_shape_of_equivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
+  hasLimitsOfShapeOfEquivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
 #align
   category_theory.limits.has_equalizers_of_has_wide_equalizers CategoryTheory.Limits.has_equalizers_of_has_wide_equalizers
 
 instance (priority := 10) has_coequalizers_of_has_wide_coequalizers [HasWideCoequalizers.{w} C] :
     HasCoequalizers C :=
-  has_colimits_of_shape_of_equivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
+  hasColimitsOfShapeOfEquivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
 #align
   category_theory.limits.has_coequalizers_of_has_wide_coequalizers CategoryTheory.Limits.has_coequalizers_of_has_wide_coequalizers
 

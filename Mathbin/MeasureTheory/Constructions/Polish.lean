@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.polish
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,9 +155,10 @@ theorem AnalyticSet.Inter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : �
   let γ := ∀ n, β n
   let t : Set γ := ⋂ n, { x | f n (x n) = f i₀ (x i₀) }
   have t_closed : IsClosed t := by 
-    apply isClosedInter
+    apply is_closed_Inter
     intro n
-    exact isClosedEq ((f_cont n).comp (continuous_apply n)) ((f_cont i₀).comp (continuous_apply i₀))
+    exact
+      is_closed_eq ((f_cont n).comp (continuous_apply n)) ((f_cont i₀).comp (continuous_apply i₀))
   haveI : PolishSpace t := t_closed.polish_space
   let F : t → α := fun x => f i₀ ((x : γ) i₀)
   have F_cont : Continuous F := (f_cont i₀).comp ((continuous_apply i₀).comp continuous_subtype_coe)

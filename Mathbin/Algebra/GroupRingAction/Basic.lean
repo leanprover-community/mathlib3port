@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.group_ring_action.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ def MulSemiringAction.toRingHom [MulSemiringAction M R] (x : M) : R →+* R :=
   { MulDistribMulAction.toMonoidHom R x, DistribMulAction.toAddMonoidHom R x with }
 #align mul_semiring_action.to_ring_hom MulSemiringAction.toRingHom
 
-theorem to_ring_hom_injective [MulSemiringAction M R] [HasFaithfulSmul M R] :
+theorem to_ring_hom_injective [MulSemiringAction M R] [FaithfulSMul M R] :
     Function.Injective (MulSemiringAction.toRingHom M R) := fun m₁ m₂ h =>
   eq_of_smul_eq_smul fun r => RingHom.ext_iff.1 h r
 #align to_ring_hom_injective to_ring_hom_injective
@@ -80,7 +80,7 @@ variable {M N}
 See note [reducible non-instances]. -/
 @[reducible]
 def MulSemiringAction.compHom (f : N →* M) [MulSemiringAction M R] : MulSemiringAction N R :=
-  { DistribMulAction.compHom R f, MulDistribMulAction.compHom R f with smul := HasSmul.Comp.smul f }
+  { DistribMulAction.compHom R f, MulDistribMulAction.compHom R f with smul := SMul.comp.smul f }
 #align mul_semiring_action.comp_hom MulSemiringAction.compHom
 
 end

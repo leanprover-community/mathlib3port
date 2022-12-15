@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.free_groupoid
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,7 @@ theorem congr_reverse {X Y : paths <| Quiver.Symmetrify V} (p q : X ⟶ Y) :
     apply quotient.comp_closure.intro
     apply red_step.step
   simpa only [category_struct.comp, category_struct.id, Quiver.Path.reverse, Quiver.Path.nil_comp,
-    Quiver.Path.reverse_comp, Quiver.reverse_reverse, Quiver.Path.reverse_to_path,
+    Quiver.Path.reverse_comp, Quiver.reverse_reverse, Quiver.Path.reverse_toPath,
     Quiver.Path.comp_assoc] using this
 #align category_theory.groupoid.free.congr_reverse CategoryTheory.Groupoid.Free.congr_reverse
 

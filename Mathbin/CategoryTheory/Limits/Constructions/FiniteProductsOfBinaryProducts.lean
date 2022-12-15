@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.finite_products_of_binary_products
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,13 +111,13 @@ private theorem has_product_fin : ∀ (n : ℕ) (f : Fin n → C), HasProduct f
 #align category_theory.has_product_fin category_theory.has_product_fin
 
 /-- If `C` has a terminal object and binary products, then it has finite products. -/
-theorem has_finite_products_of_has_binary_and_terminal : HasFiniteProducts C := by
+theorem hasFiniteProductsOfHasBinaryAndTerminal : HasFiniteProducts C := by
   refine' ⟨fun n => ⟨fun K => _⟩⟩
   letI := has_product_fin n fun n => K.obj ⟨n⟩
   let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
   apply has_limit_of_iso this
 #align
-  category_theory.has_finite_products_of_has_binary_and_terminal CategoryTheory.has_finite_products_of_has_binary_and_terminal
+  category_theory.has_finite_products_of_has_binary_and_terminal CategoryTheory.hasFiniteProductsOfHasBinaryAndTerminal
 
 end
 
@@ -131,12 +131,6 @@ variable [PreservesLimitsOfShape (Discrete.{0} PEmpty) F]
 
 variable [HasFiniteProducts.{v} C]
 
-/- warning: category_theory.preserves_fin_of_preserves_binary_and_terminal -> CategoryTheory.preservesFinOfPreservesBinaryAndTerminal is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesLimitsOfShape.{0, 0, u1, u2, u3, u4} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesLimitsOfShape.{0, 0, u1, u2, u3, u4} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteProducts.{u1, u3} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesLimit.{0, 0, u1, u2, u3, u4} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{u1, 0, u3} C _inst_2 (Fin n) f) F
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u3, u1} C] {D : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u4, u2} D] (F : CategoryTheory.Functor.{u3, u4, u1, u2} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesLimitsOfShape.{0, 0, u3, u4, u1, u2} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesLimitsOfShape.{0, 0, u3, u4, u1, u2} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteProducts.{u3, u1} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesLimit.{0, 0, u3, u4, u1, u2} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{u3, 0, u1} C _inst_2 (Fin n) f) F
-Case conversion may be inaccurate. Consider using '#align category_theory.preserves_fin_of_preserves_binary_and_terminal CategoryTheory.preservesFinOfPreservesBinaryAndTerminalₓ'. -/
 /-- If `F` preserves the terminal object and binary products, then it preserves products indexed by
 `fin n` for any `n`.
 -/
@@ -266,13 +260,13 @@ private theorem has_coproduct_fin : ∀ (n : ℕ) (f : Fin n → C), HasCoproduc
 #align category_theory.has_coproduct_fin category_theory.has_coproduct_fin
 
 /-- If `C` has an initial object and binary coproducts, then it has finite coproducts. -/
-theorem has_finite_coproducts_of_has_binary_and_initial : HasFiniteCoproducts C := by
+theorem hasFiniteCoproductsOfHasBinaryAndInitial : HasFiniteCoproducts C := by
   refine' ⟨fun n => ⟨fun K => _⟩⟩
   letI := has_coproduct_fin n fun n => K.obj ⟨n⟩
   let this : K ≅ discrete.functor fun n => K.obj ⟨n⟩ := discrete.nat_iso fun ⟨i⟩ => iso.refl _
   apply has_colimit_of_iso this
 #align
-  category_theory.has_finite_coproducts_of_has_binary_and_initial CategoryTheory.has_finite_coproducts_of_has_binary_and_initial
+  category_theory.has_finite_coproducts_of_has_binary_and_initial CategoryTheory.hasFiniteCoproductsOfHasBinaryAndInitial
 
 end
 
@@ -286,12 +280,6 @@ variable [PreservesColimitsOfShape (Discrete.{0} PEmpty) F]
 
 variable [HasFiniteCoproducts.{v} C]
 
-/- warning: category_theory.preserves_fin_of_preserves_binary_and_initial -> CategoryTheory.preservesFinOfPreservesBinaryAndInitial is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesColimitsOfShape.{0, 0, u1, u2, u3, u4} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfShape.{0, 0, u1, u2, u3, u4} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteCoproducts.{u1, u3} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesColimit.{0, 0, u1, u2, u3, u4} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{u1, 0, u3} C _inst_2 (Fin n) f) F
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u3, u1} C] {D : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u4, u2} D] (F : CategoryTheory.Functor.{u3, u4, u1, u2} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesColimitsOfShape.{0, 0, u3, u4, u1, u2} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfShape.{0, 0, u3, u4, u1, u2} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteCoproducts.{u3, u1} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesColimit.{0, 0, u3, u4, u1, u2} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{u3, 0, u1} C _inst_2 (Fin n) f) F
-Case conversion may be inaccurate. Consider using '#align category_theory.preserves_fin_of_preserves_binary_and_initial CategoryTheory.preservesFinOfPreservesBinaryAndInitialₓ'. -/
 /-- If `F` preserves the initial object and binary coproducts, then it preserves products indexed by
 `fin n` for any `n`.
 -/

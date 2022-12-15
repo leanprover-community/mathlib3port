@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.arithmetic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -368,7 +368,7 @@ theorem measurableSetEqFun {m : MeasurableSpace α} {E} [MeasurableSpace E] [Add
   · rw [h_set_eq]
     exact (hf.sub hg) measurableSetEq
   ext
-  simp_rw [Set.mem_set_of_eq, Pi.sub_apply, sub_eq_zero]
+  simp_rw [Set.mem_setOf_eq, Pi.sub_apply, sub_eq_zero]
 #align measurable_set_eq_fun measurableSetEqFun
 
 theorem measurableSetEqFunOfCountable {m : MeasurableSpace α} {E} [MeasurableSpace E]
@@ -376,7 +376,7 @@ theorem measurableSetEqFunOfCountable {m : MeasurableSpace α} {E} [MeasurableSp
     (hg : Measurable g) : MeasurableSet { x | f x = g x } := by
   have : { x | f x = g x } = ⋃ j, { x | f x = j } ∩ { x | g x = j } := by
     ext1 x
-    simp only [Set.mem_set_of_eq, Set.mem_Union, Set.mem_inter_iff, exists_eq_right']
+    simp only [Set.mem_setOf_eq, Set.mem_Union, Set.mem_inter_iff, exists_eq_right']
   rw [this]
   refine' MeasurableSet.union fun j => MeasurableSet.inter _ _
   · exact hf (measurable_set_singleton j)
@@ -486,9 +486,9 @@ instance DivInvMonoid.hasMeasurableZpow (G : Type u) [DivInvMonoid G] [Measurabl
     [HasMeasurableMul₂ G] [HasMeasurableInv G] : HasMeasurablePow G ℤ :=
   ⟨measurableFromProdCountable fun n => by 
       cases' n with n n
-      · simp_rw [zpow_of_nat]
+      · simp_rw [zpow_ofNat]
         exact measurable_id.pow_const _
-      · simp_rw [zpow_neg_succ_of_nat]
+      · simp_rw [zpow_negSucc]
         exact (measurable_id.pow_const (n + 1)).inv⟩
 #align div_inv_monoid.has_measurable_zpow DivInvMonoid.hasMeasurableZpow
 
@@ -502,7 +502,7 @@ instance (priority := 100) hasMeasurableDiv₂OfMulInv (G : Type _) [MeasurableS
 
 /-- We say that the action of `M` on `α` `has_measurable_vadd` if for each `c` the map `x ↦ c +ᵥ x`
 is a measurable function and for each `x` the map `c ↦ c +ᵥ x` is a measurable function. -/
-class HasMeasurableVadd (M α : Type _) [HasVadd M α] [MeasurableSpace M] [MeasurableSpace α] :
+class HasMeasurableVadd (M α : Type _) [VAdd M α] [MeasurableSpace M] [MeasurableSpace α] :
   Prop where
   measurableConstVadd : ∀ c : M, Measurable ((· +ᵥ ·) c : α → α)
   measurableVaddConst : ∀ x : α, Measurable fun c : M => c +ᵥ x
@@ -519,7 +519,7 @@ class HasMeasurableSmul (M α : Type _) [HasSmul M α] [MeasurableSpace M] [Meas
 
 /-- We say that the action of `M` on `α` `has_measurable_vadd₂` if the map
 `(c, x) ↦ c +ᵥ x` is a measurable function. -/
-class HasMeasurableVadd₂ (M α : Type _) [HasVadd M α] [MeasurableSpace M] [MeasurableSpace α] :
+class HasMeasurableVadd₂ (M α : Type _) [VAdd M α] [MeasurableSpace M] [MeasurableSpace α] :
   Prop where
   measurableVadd : Measurable (Function.uncurry (· +ᵥ ·) : M × α → α)
 #align has_measurable_vadd₂ HasMeasurableVadd₂

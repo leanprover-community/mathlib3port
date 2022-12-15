@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.squarefree
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ def Squarefree [Monoid R] (r : R) : Prop :=
 
 @[simp]
 theorem IsUnit.squarefree [CommMonoid R] {x : R} (h : IsUnit x) : Squarefree x := fun y hdvd =>
-  isUnit_of_mul_isUnit_left (is_unit_of_dvd_unit hdvd h)
+  isUnit_of_mul_isUnit_left (isUnit_of_dvd_unit hdvd h)
 #align is_unit.squarefree IsUnit.squarefree
 
 @[simp]
@@ -194,7 +194,7 @@ variable [CancelCommMonoidWithZero R]
 theorem IsRadical.squarefree {x : R} (h0 : x ≠ 0) (h : IsRadical x) : Squarefree x := by
   rintro z ⟨w, rfl⟩
   specialize h 2 (z * w) ⟨w, by simp_rw [pow_two, mul_left_comm, ← mul_assoc]⟩
-  rwa [← one_mul (z * w), mul_assoc, mul_dvd_mul_iff_right, ← is_unit_iff_dvd_one] at h
+  rwa [← one_mul (z * w), mul_assoc, mul_dvd_mul_iff_right, ← isUnit_iff_dvd_one] at h
   rw [mul_assoc, mul_ne_zero_iff] at h0; exact h0.2
 #align is_radical.squarefree IsRadical.squarefree
 
@@ -210,7 +210,7 @@ theorem Squarefree.is_radical {x : R} (hx : Squarefree x) : IsRadical x :=
             apply dvd_zero
           replace hy := ((dvd_gcd_iff x x _).2 ⟨dvd_rfl, hy⟩).trans gcd_pow_right_dvd_pow_gcd
           obtain ⟨z, hz⟩ := gcd_dvd_left x y
-          nth_rw 1 [hz]  at hy⊢
+          nth_rw 1 [hz] at hy⊢
           rw [pow_two, mul_dvd_mul_iff_left h] at hy
           obtain ⟨w, hw⟩ := hy
           exact (hx z ⟨w, by rwa [mul_right_comm, ← hw]⟩).mul_right_dvd.2 dvd_rfl)

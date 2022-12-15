@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.images
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,19 +56,19 @@ def iso {X Y : A} (f : X ⟶ Y) : image (L.map f) ≅ L.obj (image f) :=
   IsImage.isoExt (Image.isImage (L.map f)) aux1.toMonoIsImage
 #align category_theory.preserves_image.iso CategoryTheory.PreservesImage.iso
 
-@[reassoc]
+@[reassoc.1]
 theorem factor_thru_image_comp_hom {X Y : A} (f : X ⟶ Y) :
     factorThruImage (L.map f) ≫ (iso L f).Hom = L.map (factorThruImage f) := by simp
 #align
   category_theory.preserves_image.factor_thru_image_comp_hom CategoryTheory.PreservesImage.factor_thru_image_comp_hom
 
-@[reassoc]
+@[reassoc.1]
 theorem hom_comp_map_image_ι {X Y : A} (f : X ⟶ Y) :
     (iso L f).Hom ≫ L.map (image.ι f) = image.ι (L.map f) := by simp
 #align
   category_theory.preserves_image.hom_comp_map_image_ι CategoryTheory.PreservesImage.hom_comp_map_image_ι
 
-@[reassoc]
+@[reassoc.1]
 theorem inv_comp_image_ι_map {X Y : A} (f : X ⟶ Y) :
     (iso L f).inv ≫ image.ι (L.map f) = L.map (image.ι f) := by simp
 #align

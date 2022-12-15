@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.sheafed_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,7 +218,7 @@ noncomputable instance [HasLimits C] :
         (colimit.iso_colimit_cocone ⟨_, PresheafedSpace.colimit_cocone_is_colimit _⟩).symm⟩⟩
 
 instance [HasLimits C] : HasColimits (SheafedSpaceCat C) :=
-  has_colimits_of_has_colimits_creates_colimits forgetToPresheafedSpace
+  hasColimitsOfHasColimitsCreatesColimits forgetToPresheafedSpace
 
 noncomputable instance [HasLimits C] : PreservesColimits (forget C) :=
   Limits.compPreservesColimits forgetToPresheafedSpace (PresheafedSpaceCat.forget C)

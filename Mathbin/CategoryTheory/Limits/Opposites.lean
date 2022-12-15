@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Floris van Doorn
 
 ! This file was ported from Lean 3 source module category_theory.limits.opposites
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -262,33 +262,33 @@ def isColimitConeOfCoconeUnop (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cone F.unop} (hc : 
 
 /-- If `F.left_op : Jᵒᵖ ⥤ C` has a colimit, we can construct a limit for `F : J ⥤ Cᵒᵖ`.
 -/
-theorem has_limit_of_has_colimit_left_op (F : J ⥤ Cᵒᵖ) [HasColimit F.leftOp] : HasLimit F :=
+theorem hasLimitOfHasColimitLeftOp (F : J ⥤ Cᵒᵖ) [HasColimit F.leftOp] : HasLimit F :=
   HasLimit.mk
     { Cone := coneOfCoconeLeftOp (Colimit.cocone F.leftOp)
       IsLimit := isLimitConeOfCoconeLeftOp _ (colimit.isColimit _) }
 #align
-  category_theory.limits.has_limit_of_has_colimit_left_op CategoryTheory.Limits.has_limit_of_has_colimit_left_op
+  category_theory.limits.has_limit_of_has_colimit_left_op CategoryTheory.Limits.hasLimitOfHasColimitLeftOp
 
-theorem has_limit_of_has_colimit_op (F : J ⥤ C) [HasColimit F.op] : HasLimit F :=
+theorem hasLimitOfHasColimitOp (F : J ⥤ C) [HasColimit F.op] : HasLimit F :=
   HasLimit.mk
     { Cone := (Colimit.cocone F.op).unop
       IsLimit := isLimitCoconeUnop _ (colimit.isColimit _) }
 #align
-  category_theory.limits.has_limit_of_has_colimit_op CategoryTheory.Limits.has_limit_of_has_colimit_op
+  category_theory.limits.has_limit_of_has_colimit_op CategoryTheory.Limits.hasLimitOfHasColimitOp
 
 /-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/
-theorem has_limits_of_shape_op_of_has_colimits_of_shape [HasColimitsOfShape Jᵒᵖ C] :
+theorem hasLimitsOfShapeOpOfHasColimitsOfShape [HasColimitsOfShape Jᵒᵖ C] :
     HasLimitsOfShape J Cᵒᵖ :=
-  { HasLimit := fun F => has_limit_of_has_colimit_left_op F }
+  { HasLimit := fun F => hasLimitOfHasColimitLeftOp F }
 #align
-  category_theory.limits.has_limits_of_shape_op_of_has_colimits_of_shape CategoryTheory.Limits.has_limits_of_shape_op_of_has_colimits_of_shape
+  category_theory.limits.has_limits_of_shape_op_of_has_colimits_of_shape CategoryTheory.Limits.hasLimitsOfShapeOpOfHasColimitsOfShape
 
-theorem has_limits_of_shape_of_has_colimits_of_shape_op [HasColimitsOfShape Jᵒᵖ Cᵒᵖ] :
+theorem hasLimitsOfShapeOfHasColimitsOfShapeOp [HasColimitsOfShape Jᵒᵖ Cᵒᵖ] :
     HasLimitsOfShape J C :=
-  { HasLimit := fun F => has_limit_of_has_colimit_op F }
+  { HasLimit := fun F => hasLimitOfHasColimitOp F }
 #align
-  category_theory.limits.has_limits_of_shape_of_has_colimits_of_shape_op CategoryTheory.Limits.has_limits_of_shape_of_has_colimits_of_shape_op
+  category_theory.limits.has_limits_of_shape_of_has_colimits_of_shape_op CategoryTheory.Limits.hasLimitsOfShapeOfHasColimitsOfShapeOp
 
 attribute [local instance] has_limits_of_shape_op_of_has_colimits_of_shape
 
@@ -304,46 +304,46 @@ theorem has_limits_of_has_colimits_op [HasColimits Cᵒᵖ] : HasLimits C :=
 #align
   category_theory.limits.has_limits_of_has_colimits_op CategoryTheory.Limits.has_limits_of_has_colimits_op
 
-instance has_cofiltered_limits_op_of_has_filtered_colimits [HasFilteredColimitsOfSize.{v₂, u₂} C] :
+instance hasCofilteredLimitsOpOfHasFilteredColimits [HasFilteredColimitsOfSize.{v₂, u₂} C] :
     HasCofilteredLimitsOfSize.{v₂, u₂}
       Cᵒᵖ where HasLimitsOfShape I hI₁ hI₂ := has_limits_of_shape_op_of_has_colimits_of_shape
 #align
-  category_theory.limits.has_cofiltered_limits_op_of_has_filtered_colimits CategoryTheory.Limits.has_cofiltered_limits_op_of_has_filtered_colimits
+  category_theory.limits.has_cofiltered_limits_op_of_has_filtered_colimits CategoryTheory.Limits.hasCofilteredLimitsOpOfHasFilteredColimits
 
-theorem has_cofiltered_limits_of_has_filtered_colimits_op [HasFilteredColimitsOfSize.{v₂, u₂} Cᵒᵖ] :
+theorem hasCofilteredLimitsOfHasFilteredColimitsOp [HasFilteredColimitsOfSize.{v₂, u₂} Cᵒᵖ] :
     HasCofilteredLimitsOfSize.{v₂, u₂} C :=
   { HasLimitsOfShape := fun I hI₂ hI₂ => has_limits_of_shape_of_has_colimits_of_shape_op }
 #align
-  category_theory.limits.has_cofiltered_limits_of_has_filtered_colimits_op CategoryTheory.Limits.has_cofiltered_limits_of_has_filtered_colimits_op
+  category_theory.limits.has_cofiltered_limits_of_has_filtered_colimits_op CategoryTheory.Limits.hasCofilteredLimitsOfHasFilteredColimitsOp
 
 /-- If `F.left_op : Jᵒᵖ ⥤ C` has a limit, we can construct a colimit for `F : J ⥤ Cᵒᵖ`.
 -/
-theorem has_colimit_of_has_limit_left_op (F : J ⥤ Cᵒᵖ) [HasLimit F.leftOp] : HasColimit F :=
+theorem hasColimitOfHasLimitLeftOp (F : J ⥤ Cᵒᵖ) [HasLimit F.leftOp] : HasColimit F :=
   HasColimit.mk
     { Cocone := coconeOfConeLeftOp (Limit.cone F.leftOp)
       IsColimit := isColimitCoconeOfConeLeftOp _ (limit.isLimit _) }
 #align
-  category_theory.limits.has_colimit_of_has_limit_left_op CategoryTheory.Limits.has_colimit_of_has_limit_left_op
+  category_theory.limits.has_colimit_of_has_limit_left_op CategoryTheory.Limits.hasColimitOfHasLimitLeftOp
 
-theorem has_colimit_of_has_limit_op (F : J ⥤ C) [HasLimit F.op] : HasColimit F :=
+theorem hasColimitOfHasLimitOp (F : J ⥤ C) [HasLimit F.op] : HasColimit F :=
   HasColimit.mk
     { Cocone := (Limit.cone F.op).unop
       IsColimit := isColimitConeUnop _ (limit.isLimit _) }
 #align
-  category_theory.limits.has_colimit_of_has_limit_op CategoryTheory.Limits.has_colimit_of_has_limit_op
+  category_theory.limits.has_colimit_of_has_limit_op CategoryTheory.Limits.hasColimitOfHasLimitOp
 
 /-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/
-instance has_colimits_of_shape_op_of_has_limits_of_shape [HasLimitsOfShape Jᵒᵖ C] :
-    HasColimitsOfShape J Cᵒᵖ where HasColimit F := has_colimit_of_has_limit_left_op F
+instance hasColimitsOfShapeOpOfHasLimitsOfShape [HasLimitsOfShape Jᵒᵖ C] :
+    HasColimitsOfShape J Cᵒᵖ where HasColimit F := hasColimitOfHasLimitLeftOp F
 #align
-  category_theory.limits.has_colimits_of_shape_op_of_has_limits_of_shape CategoryTheory.Limits.has_colimits_of_shape_op_of_has_limits_of_shape
+  category_theory.limits.has_colimits_of_shape_op_of_has_limits_of_shape CategoryTheory.Limits.hasColimitsOfShapeOpOfHasLimitsOfShape
 
-theorem has_colimits_of_shape_of_has_limits_of_shape_op [HasLimitsOfShape Jᵒᵖ Cᵒᵖ] :
+theorem hasColimitsOfShapeOfHasLimitsOfShapeOp [HasLimitsOfShape Jᵒᵖ Cᵒᵖ] :
     HasColimitsOfShape J C :=
-  { HasColimit := fun F => has_colimit_of_has_limit_op F }
+  { HasColimit := fun F => hasColimitOfHasLimitOp F }
 #align
-  category_theory.limits.has_colimits_of_shape_of_has_limits_of_shape_op CategoryTheory.Limits.has_colimits_of_shape_of_has_limits_of_shape_op
+  category_theory.limits.has_colimits_of_shape_of_has_limits_of_shape_op CategoryTheory.Limits.hasColimitsOfShapeOfHasLimitsOfShapeOp
 
 /-- If `C` has limits, we can construct colimits for `Cᵒᵖ`.
 -/
@@ -357,16 +357,16 @@ theorem has_colimits_of_has_limits_op [HasLimits Cᵒᵖ] : HasColimits C :=
 #align
   category_theory.limits.has_colimits_of_has_limits_op CategoryTheory.Limits.has_colimits_of_has_limits_op
 
-instance has_filtered_colimits_op_of_has_cofiltered_limits [HasCofilteredLimitsOfSize.{v₂, u₂} C] :
+instance hasFilteredColimitsOpOfHasCofilteredLimits [HasCofilteredLimitsOfSize.{v₂, u₂} C] :
     HasFilteredColimitsOfSize.{v₂, u₂} Cᵒᵖ where HasColimitsOfShape I hI₁ hI₂ := inferInstance
 #align
-  category_theory.limits.has_filtered_colimits_op_of_has_cofiltered_limits CategoryTheory.Limits.has_filtered_colimits_op_of_has_cofiltered_limits
+  category_theory.limits.has_filtered_colimits_op_of_has_cofiltered_limits CategoryTheory.Limits.hasFilteredColimitsOpOfHasCofilteredLimits
 
-theorem has_filtered_colimits_of_has_cofiltered_limits_op [HasCofilteredLimitsOfSize.{v₂, u₂} Cᵒᵖ] :
+theorem hasFilteredColimitsOfHasCofilteredLimitsOp [HasCofilteredLimitsOfSize.{v₂, u₂} Cᵒᵖ] :
     HasFilteredColimitsOfSize.{v₂, u₂} C :=
   { HasColimitsOfShape := fun I hI₁ hI₂ => has_colimits_of_shape_of_has_limits_of_shape_op }
 #align
-  category_theory.limits.has_filtered_colimits_of_has_cofiltered_limits_op CategoryTheory.Limits.has_filtered_colimits_of_has_cofiltered_limits_op
+  category_theory.limits.has_filtered_colimits_of_has_cofiltered_limits_op CategoryTheory.Limits.hasFilteredColimitsOfHasCofilteredLimitsOp
 
 variable (X : Type v₂)
 
@@ -421,25 +421,25 @@ theorem has_coproducts_of_opposite [HasProducts.{v₂} Cᵒᵖ] : HasCoproducts.
 #align
   category_theory.limits.has_coproducts_of_opposite CategoryTheory.Limits.has_coproducts_of_opposite
 
-instance has_finite_coproducts_opposite [HasFiniteProducts C] :
+instance hasFiniteCoproductsOpposite [HasFiniteProducts C] :
     HasFiniteCoproducts Cᵒᵖ where out n := Limits.has_coproducts_of_shape_opposite _
 #align
-  category_theory.limits.has_finite_coproducts_opposite CategoryTheory.Limits.has_finite_coproducts_opposite
+  category_theory.limits.has_finite_coproducts_opposite CategoryTheory.Limits.hasFiniteCoproductsOpposite
 
-theorem has_finite_coproducts_of_opposite [HasFiniteProducts Cᵒᵖ] : HasFiniteCoproducts C :=
+theorem hasFiniteCoproductsOfOpposite [HasFiniteProducts Cᵒᵖ] : HasFiniteCoproducts C :=
   { out := fun n => has_coproducts_of_shape_of_opposite _ }
 #align
-  category_theory.limits.has_finite_coproducts_of_opposite CategoryTheory.Limits.has_finite_coproducts_of_opposite
+  category_theory.limits.has_finite_coproducts_of_opposite CategoryTheory.Limits.hasFiniteCoproductsOfOpposite
 
-instance has_finite_products_opposite [HasFiniteCoproducts C] :
+instance hasFiniteProductsOpposite [HasFiniteCoproducts C] :
     HasFiniteProducts Cᵒᵖ where out n := inferInstance
 #align
-  category_theory.limits.has_finite_products_opposite CategoryTheory.Limits.has_finite_products_opposite
+  category_theory.limits.has_finite_products_opposite CategoryTheory.Limits.hasFiniteProductsOpposite
 
-theorem has_finite_products_of_opposite [HasFiniteCoproducts Cᵒᵖ] : HasFiniteProducts C :=
+theorem hasFiniteProductsOfOpposite [HasFiniteCoproducts Cᵒᵖ] : HasFiniteProducts C :=
   { out := fun n => has_products_of_shape_of_opposite _ }
 #align
-  category_theory.limits.has_finite_products_of_opposite CategoryTheory.Limits.has_finite_products_of_opposite
+  category_theory.limits.has_finite_products_of_opposite CategoryTheory.Limits.hasFiniteProductsOfOpposite
 
 instance has_equalizers_opposite [HasCoequalizers C] : HasEqualizers Cᵒᵖ := by
   haveI : has_colimits_of_shape walking_parallel_pairᵒᵖ C :=
@@ -454,19 +454,19 @@ instance has_coequalizers_opposite [HasEqualizers C] : HasCoequalizers Cᵒᵖ :
 #align
   category_theory.limits.has_coequalizers_opposite CategoryTheory.Limits.has_coequalizers_opposite
 
-instance has_finite_colimits_opposite [HasFiniteLimits C] :
+instance hasFiniteColimitsOpposite [HasFiniteLimits C] :
     HasFiniteColimits Cᵒᵖ where out J 𝒟 𝒥 := by 
     skip
     infer_instance
 #align
-  category_theory.limits.has_finite_colimits_opposite CategoryTheory.Limits.has_finite_colimits_opposite
+  category_theory.limits.has_finite_colimits_opposite CategoryTheory.Limits.hasFiniteColimitsOpposite
 
-instance has_finite_limits_opposite [HasFiniteColimits C] :
+instance hasFiniteLimitsOpposite [HasFiniteColimits C] :
     HasFiniteLimits Cᵒᵖ where out J 𝒟 𝒥 := by 
     skip
     infer_instance
 #align
-  category_theory.limits.has_finite_limits_opposite CategoryTheory.Limits.has_finite_limits_opposite
+  category_theory.limits.has_finite_limits_opposite CategoryTheory.Limits.hasFiniteLimitsOpposite
 
 instance has_pullbacks_opposite [HasPushouts C] : HasPullbacks Cᵒᵖ := by
   haveI : has_colimits_of_shape walking_cospanᵒᵖ C :=
@@ -717,7 +717,7 @@ noncomputable def pullbackIsoUnopPushout {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
     ((PushoutCocone.isColimitEquivIsLimitUnop _) (colimit.isColimit (span f.op g.op)))
 #align category_theory.limits.pullback_iso_unop_pushout CategoryTheory.Limits.pullbackIsoUnopPushout
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pullback_iso_unop_pushout_inv_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] :
     (pullbackIsoUnopPushout f g).inv ≫ pullback.fst = (pushout.inl : _ ⟶ pushout f.op g.op).unop :=
@@ -725,7 +725,7 @@ theorem pullback_iso_unop_pushout_inv_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z
 #align
   category_theory.limits.pullback_iso_unop_pushout_inv_fst CategoryTheory.Limits.pullback_iso_unop_pushout_inv_fst
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pullback_iso_unop_pushout_inv_snd {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] :
     (pullbackIsoUnopPushout f g).inv ≫ pullback.snd = (pushout.inr : _ ⟶ pushout f.op g.op).unop :=
@@ -733,7 +733,7 @@ theorem pullback_iso_unop_pushout_inv_snd {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z
 #align
   category_theory.limits.pullback_iso_unop_pushout_inv_snd CategoryTheory.Limits.pullback_iso_unop_pushout_inv_snd
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pullback_iso_unop_pushout_hom_inl {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] : pushout.inl ≫ (pullbackIsoUnopPushout f g).hom.op = pullback.fst.op :=
   by 
@@ -743,7 +743,7 @@ theorem pullback_iso_unop_pushout_hom_inl {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z
 #align
   category_theory.limits.pullback_iso_unop_pushout_hom_inl CategoryTheory.Limits.pullback_iso_unop_pushout_hom_inl
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pullback_iso_unop_pushout_hom_inr {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] : pushout.inr ≫ (pullbackIsoUnopPushout f g).hom.op = pullback.snd.op :=
   by 
@@ -765,7 +765,7 @@ noncomputable def pushoutIsoUnopPullback {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y)
     ((PullbackCone.isLimitEquivIsColimitUnop _) (limit.isLimit (cospan f.op g.op)))
 #align category_theory.limits.pushout_iso_unop_pullback CategoryTheory.Limits.pushoutIsoUnopPullback
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pushout_iso_unop_pullback_inl_hom {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y) [HasPushout f g]
     [HasPullback f.op g.op] :
     pushout.inl ≫ (pushoutIsoUnopPullback f g).hom = (pullback.fst : pullback f.op g.op ⟶ _).unop :=
@@ -773,7 +773,7 @@ theorem pushout_iso_unop_pullback_inl_hom {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y
 #align
   category_theory.limits.pushout_iso_unop_pullback_inl_hom CategoryTheory.Limits.pushout_iso_unop_pullback_inl_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pushout_iso_unop_pullback_inr_hom {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y) [HasPushout f g]
     [HasPullback f.op g.op] :
     pushout.inr ≫ (pushoutIsoUnopPullback f g).hom = (pullback.snd : pullback f.op g.op ⟶ _).unop :=

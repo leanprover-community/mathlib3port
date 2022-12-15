@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Johan Commelin
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.limits
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,35 +154,35 @@ example (E : C ⥤ D) [IsEquivalence E] (c : Cocone K) (h : IsColimit c) :
     IsColimit (E.mapCocone c) :=
   PreservesColimit.preserves h
 
-theorem has_colimit_comp_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit K] :
+theorem hasColimitCompEquivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit K] :
     HasColimit (K ⋙ E) :=
   HasColimit.mk
     { Cocone := E.mapCocone (Colimit.cocone K)
       IsColimit := PreservesColimit.preserves (colimit.isColimit K) }
 #align
-  category_theory.adjunction.has_colimit_comp_equivalence CategoryTheory.Adjunction.has_colimit_comp_equivalence
+  category_theory.adjunction.has_colimit_comp_equivalence CategoryTheory.Adjunction.hasColimitCompEquivalence
 
-theorem has_colimit_of_comp_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit (K ⋙ E)] :
+theorem hasColimitOfCompEquivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit (K ⋙ E)] :
     HasColimit K :=
-  @has_colimit_of_iso _ _ _ _ (K ⋙ E ⋙ inv E) K
-    (@has_colimit_comp_equivalence _ _ _ _ _ _ (K ⋙ E) (inv E) _ _)
+  @hasColimitOfIso _ _ _ _ (K ⋙ E ⋙ inv E) K
+    (@hasColimitCompEquivalence _ _ _ _ _ _ (K ⋙ E) (inv E) _ _)
     ((Functor.rightUnitor _).symm ≪≫ isoWhiskerLeft K E.asEquivalence.unitIso)
 #align
-  category_theory.adjunction.has_colimit_of_comp_equivalence CategoryTheory.Adjunction.has_colimit_of_comp_equivalence
+  category_theory.adjunction.has_colimit_of_comp_equivalence CategoryTheory.Adjunction.hasColimitOfCompEquivalence
 
 /-- Transport a `has_colimits_of_shape` instance across an equivalence. -/
-theorem has_colimits_of_shape_of_equivalence (E : C ⥤ D) [IsEquivalence E]
-    [HasColimitsOfShape J D] : HasColimitsOfShape J C :=
+theorem hasColimitsOfShapeOfEquivalence (E : C ⥤ D) [IsEquivalence E] [HasColimitsOfShape J D] :
+    HasColimitsOfShape J C :=
   ⟨fun F => has_colimit_of_comp_equivalence F E⟩
 #align
-  category_theory.adjunction.has_colimits_of_shape_of_equivalence CategoryTheory.Adjunction.has_colimits_of_shape_of_equivalence
+  category_theory.adjunction.has_colimits_of_shape_of_equivalence CategoryTheory.Adjunction.hasColimitsOfShapeOfEquivalence
 
 /-- Transport a `has_colimits` instance across an equivalence. -/
-theorem has_colimits_of_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimitsOfSize.{v, u} D] :
+theorem hasColimitsOfEquivalence (E : C ⥤ D) [IsEquivalence E] [HasColimitsOfSize.{v, u} D] :
     HasColimitsOfSize.{v, u} C :=
   ⟨fun J hJ => has_colimits_of_shape_of_equivalence E⟩
 #align
-  category_theory.adjunction.has_colimits_of_equivalence CategoryTheory.Adjunction.has_colimits_of_equivalence
+  category_theory.adjunction.has_colimits_of_equivalence CategoryTheory.Adjunction.hasColimitsOfEquivalence
 
 end PreservationColimits
 
@@ -288,34 +288,33 @@ instance (priority := 100) isEquivalenceCreatesLimits (H : D ⥤ C) [IsEquivalen
 example (E : D ⥤ C) [IsEquivalence E] (c : Cone K) [h : IsLimit c] : IsLimit (E.mapCone c) :=
   PreservesLimit.preserves h
 
-theorem has_limit_comp_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit K] : HasLimit (K ⋙ E) :=
+theorem hasLimitCompEquivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit K] : HasLimit (K ⋙ E) :=
   HasLimit.mk
     { Cone := E.mapCone (Limit.cone K)
       IsLimit := PreservesLimit.preserves (limit.isLimit K) }
 #align
-  category_theory.adjunction.has_limit_comp_equivalence CategoryTheory.Adjunction.has_limit_comp_equivalence
+  category_theory.adjunction.has_limit_comp_equivalence CategoryTheory.Adjunction.hasLimitCompEquivalence
 
-theorem has_limit_of_comp_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit (K ⋙ E)] :
-    HasLimit K :=
-  @has_limit_of_iso _ _ _ _ (K ⋙ E ⋙ inv E) K
-    (@has_limit_comp_equivalence _ _ _ _ _ _ (K ⋙ E) (inv E) _ _)
+theorem hasLimitOfCompEquivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit (K ⋙ E)] : HasLimit K :=
+  @hasLimitOfIso _ _ _ _ (K ⋙ E ⋙ inv E) K
+    (@hasLimitCompEquivalence _ _ _ _ _ _ (K ⋙ E) (inv E) _ _)
     (isoWhiskerLeft K E.asEquivalence.unitIso.symm ≪≫ Functor.rightUnitor _)
 #align
-  category_theory.adjunction.has_limit_of_comp_equivalence CategoryTheory.Adjunction.has_limit_of_comp_equivalence
+  category_theory.adjunction.has_limit_of_comp_equivalence CategoryTheory.Adjunction.hasLimitOfCompEquivalence
 
 /-- Transport a `has_limits_of_shape` instance across an equivalence. -/
-theorem has_limits_of_shape_of_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimitsOfShape J C] :
+theorem hasLimitsOfShapeOfEquivalence (E : D ⥤ C) [IsEquivalence E] [HasLimitsOfShape J C] :
     HasLimitsOfShape J D :=
   ⟨fun F => has_limit_of_comp_equivalence F E⟩
 #align
-  category_theory.adjunction.has_limits_of_shape_of_equivalence CategoryTheory.Adjunction.has_limits_of_shape_of_equivalence
+  category_theory.adjunction.has_limits_of_shape_of_equivalence CategoryTheory.Adjunction.hasLimitsOfShapeOfEquivalence
 
 /-- Transport a `has_limits` instance across an equivalence. -/
-theorem has_limits_of_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimitsOfSize.{v, u} C] :
+theorem hasLimitsOfEquivalence (E : D ⥤ C) [IsEquivalence E] [HasLimitsOfSize.{v, u} C] :
     HasLimitsOfSize.{v, u} D :=
   ⟨fun J hJ => has_limits_of_shape_of_equivalence E⟩
 #align
-  category_theory.adjunction.has_limits_of_equivalence CategoryTheory.Adjunction.has_limits_of_equivalence
+  category_theory.adjunction.has_limits_of_equivalence CategoryTheory.Adjunction.hasLimitsOfEquivalence
 
 end PreservationLimits
 

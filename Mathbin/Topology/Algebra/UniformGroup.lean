@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_group
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,10 +128,10 @@ theorem uniform_continuous_pow_const (n : ℕ) : UniformContinuous fun x : α =>
 theorem UniformContinuous.zpow_const [UniformSpace β] {f : β → α} (hf : UniformContinuous f) :
     ∀ n : ℤ, UniformContinuous fun x => f x ^ n
   | (n : ℕ) => by 
-    simp_rw [zpow_coe_nat]
+    simp_rw [zpow_ofNat]
     exact hf.pow_const _
   | -[n+1] => by 
-    simp_rw [zpow_neg_succ_of_nat]
+    simp_rw [zpow_negSucc]
     exact (hf.pow_const _).inv
 #align uniform_continuous.zpow_const UniformContinuous.zpow_const
 
@@ -572,19 +572,19 @@ theorem topological_group_is_uniform_of_compact_space [CompactSpace G] : Uniform
 variable {G}
 
 @[to_additive]
-instance Subgroup.isClosedOfDiscrete [T2Space G] {H : Subgroup G} [DiscreteTopology H] :
+instance Subgroup.is_closed_of_discrete [T2Space G] {H : Subgroup G} [DiscreteTopology H] :
     IsClosed (H : Set G) := by
   obtain ⟨V, V_in, VH⟩ : ∃ (V : Set G)(hV : V ∈ 𝓝 (1 : G)), V ∩ (H : Set G) = {1}
   exact nhds_inter_eq_singleton_of_mem_discrete H.one_mem
   haveI : SeparatedSpace G := separated_iff_t2.mpr ‹_›
   have : (fun p : G × G => p.2 / p.1) ⁻¹' V ∈ 𝓤 G := preimage_mem_comap V_in
-  apply isClosedOfSpacedOut this
+  apply is_closed_of_spaced_out this
   intro h h_in h' h'_in
   contrapose!
   rintro (hyp : h' / h ∈ V)
   have : h' / h ∈ ({1} : Set G) := VH ▸ Set.mem_inter hyp (H.div_mem h'_in h_in)
   exact (eq_of_div_eq_one this).symm
-#align subgroup.is_closed_of_discrete Subgroup.isClosedOfDiscrete
+#align subgroup.is_closed_of_discrete Subgroup.is_closed_of_discrete
 
 @[to_additive]
 theorem TopologicalGroup.tendsto_uniformly_iff {ι α : Type _} (F : ι → α → G) (f : α → G)
@@ -774,7 +774,7 @@ variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x x' «expr ∈ » U₂) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x x' «expr ∈ » U₂) -/
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     ∃ U₂ ∈ comap e (𝓝 x₀), ∀ (x x') (_ : x ∈ U₂) (_ : x' ∈ U₂), Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
@@ -793,10 +793,10 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   exact lim W' W'_nhd
 #align dense_inducing.extend_Z_bilin_aux dense_inducing.extend_Z_bilin_aux
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y y' «expr ∈ » V₁) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y y' «expr ∈ » V) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y y' «expr ∈ » V₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y y' «expr ∈ » V) -/
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
       ∃ V ∈ comap f (𝓝 y₀),

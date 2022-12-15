@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.functor_gamma
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,7 @@ theorem map_mono_eq_zero (h₁ : Δ ≠ Δ') (h₂ : ¬Isδ₀ i) : mapMono K i 
 
 variable {K K'}
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem map_mono_naturality : mapMono K i ≫ f.f Δ'.len = f.f Δ.len ≫ mapMono K' i := by
   unfold map_mono
   split_ifs
@@ -150,7 +150,7 @@ theorem map_mono_naturality : mapMono K i ≫ f.f Δ'.len = f.f Δ.len ≫ mapMo
 
 variable (K)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem map_mono_comp : mapMono K i ≫ mapMono K i' = mapMono K (i' ≫ i) :=
   by
   -- case where i : Δ' ⟶ Δ is the identity
@@ -193,7 +193,7 @@ def map (K : ChainComplex C ℕ) {Δ' Δ : SimplexCategoryᵒᵖ} (θ : Δ ⟶ �
     Termwise.mapMono K (image.ι (θ.unop ≫ A.e)) ≫ Sigma.ι (summand K Δ') (A.pull θ)
 #align algebraic_topology.dold_kan.Γ₀.obj.map AlgebraicTopology.DoldKan.Γ₀.Obj.map
 
-@[reassoc]
+@[reassoc.1]
 theorem map_on_summand₀ {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) {θ : Δ ⟶ Δ'}
     {Δ'' : SimplexCategory} {e : Δ'.unop ⟶ Δ''} {i : Δ'' ⟶ A.1.unop} [Epi e] [Mono i]
     (fac : e ≫ i = θ.unop ≫ A.e) :
@@ -211,7 +211,7 @@ theorem map_on_summand₀ {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexS
 #align
   algebraic_topology.dold_kan.Γ₀.obj.map_on_summand₀ AlgebraicTopology.DoldKan.Γ₀.Obj.map_on_summand₀
 
-@[reassoc]
+@[reassoc.1]
 theorem map_on_summand₀' {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) (θ : Δ ⟶ Δ') :
     Sigma.ι (summand K Δ) A ≫ map K θ =
       Termwise.mapMono K (image.ι (θ.unop ≫ A.e)) ≫ Sigma.ι (summand K _) (A.pull θ) :=
@@ -246,7 +246,7 @@ def obj (K : ChainComplex C ℕ) :
       obj.termwise.map_mono_comp_assoc, obj.map_on_summand₀ K A fac]
 #align algebraic_topology.dold_kan.Γ₀.obj AlgebraicTopology.DoldKan.Γ₀.obj
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 theorem splitting_map_eq_id (Δ : SimplexCategoryᵒᵖ) :
     SimplicialObject.Splitting.map (Γ₀.obj K)
         (fun n : ℕ => Sigma.ι (Γ₀.Obj.summand K (op [n])) (Splitting.IndexSet.id (op [n]))) Δ =
@@ -254,7 +254,7 @@ theorem splitting_map_eq_id (Δ : SimplexCategoryᵒᵖ) :
   by 
   ext A
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
   induction Δ using Opposite.rec
   induction' Δ with n
   dsimp
@@ -283,7 +283,7 @@ theorem splitting_iso_hom_eq_id (Δ : SimplexCategoryᵒᵖ) : ((splitting K).Is
 #align
   algebraic_topology.dold_kan.Γ₀.splitting_iso_hom_eq_id AlgebraicTopology.DoldKan.Γ₀.splitting_iso_hom_eq_id
 
-@[reassoc]
+@[reassoc.1]
 theorem obj.map_on_summand {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) (θ : Δ ⟶ Δ')
     {Δ'' : SimplexCategory} {e : Δ'.unop ⟶ Δ''} {i : Δ'' ⟶ A.1.unop} [Epi e] [Mono i]
     (fac : e ≫ i = θ.unop ≫ A.e) :
@@ -296,7 +296,7 @@ theorem obj.map_on_summand {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.Index
 #align
   algebraic_topology.dold_kan.Γ₀.obj.map_on_summand AlgebraicTopology.DoldKan.Γ₀.obj.map_on_summand
 
-@[reassoc]
+@[reassoc.1]
 theorem obj.map_on_summand' {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) (θ : Δ ⟶ Δ') :
     (splitting K).ιSummand A ≫ (obj K).map θ =
       Obj.Termwise.mapMono K (image.ι (θ.unop ≫ A.e)) ≫ (splitting K).ιSummand (A.pull θ) :=
@@ -306,7 +306,7 @@ theorem obj.map_on_summand' {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.Inde
 #align
   algebraic_topology.dold_kan.Γ₀.obj.map_on_summand' AlgebraicTopology.DoldKan.Γ₀.obj.map_on_summand'
 
-@[reassoc]
+@[reassoc.1]
 theorem obj.map_mono_on_summand_id {Δ Δ' : SimplexCategory} (i : Δ' ⟶ Δ) [Mono i] :
     (splitting K).ιSummand (Splitting.IndexSet.id (op Δ)) ≫ (obj K).map i.op =
       Obj.Termwise.mapMono K i ≫ (splitting K).ιSummand (Splitting.IndexSet.id (op Δ')) :=
@@ -314,7 +314,7 @@ theorem obj.map_mono_on_summand_id {Δ Δ' : SimplexCategory} (i : Δ' ⟶ Δ) [
 #align
   algebraic_topology.dold_kan.Γ₀.obj.map_mono_on_summand_id AlgebraicTopology.DoldKan.Γ₀.obj.map_mono_on_summand_id
 
-@[reassoc]
+@[reassoc.1]
 theorem obj.map_epi_on_summand_id {Δ Δ' : SimplexCategory} (e : Δ' ⟶ Δ) [Epi e] :
     (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op Δ)) ≫ (Γ₀.obj K).map e.op =
       (Γ₀.splitting K).ιSummand (Splitting.IndexSet.mk e) :=
@@ -390,7 +390,7 @@ theorem HigherFacesVanish.on_Γ₀_summand_id (K : ChainComplex C ℕ) (n : ℕ)
 #align
   algebraic_topology.dold_kan.higher_faces_vanish.on_Γ₀_summand_id AlgebraicTopology.DoldKan.HigherFacesVanish.on_Γ₀_summand_id
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_on_Γ₀_splitting_summand_eq_self (K : ChainComplex C ℕ) {n : ℕ} :
     (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) ≫ (pInfty : K[Γ₀.obj K] ⟶ _).f n =
       (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) :=

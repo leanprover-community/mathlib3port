@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.antilipschitz
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,17 +185,17 @@ theorem is_complete_range [CompleteSpace α] (hf : AntilipschitzWith K f)
   (hf.UniformInducing hfc).is_complete_range
 #align antilipschitz_with.is_complete_range AntilipschitzWith.is_complete_range
 
-theorem isClosedRange {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace β] [CompleteSpace α]
+theorem is_closed_range {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace β] [CompleteSpace α]
     {f : α → β} {K : ℝ≥0} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     IsClosed (range f) :=
   (hf.is_complete_range hfc).IsClosed
-#align antilipschitz_with.is_closed_range AntilipschitzWith.isClosedRange
+#align antilipschitz_with.is_closed_range AntilipschitzWith.is_closed_range
 
-theorem closedEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0}
+theorem closed_embedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0}
     {f : α → β} [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     ClosedEmbedding f :=
-  { (hf.UniformEmbedding hfc).Embedding with closedRange := hf.isClosedRange hfc }
-#align antilipschitz_with.closed_embedding AntilipschitzWith.closedEmbedding
+  { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.is_closed_range hfc }
+#align antilipschitz_with.closed_embedding AntilipschitzWith.closed_embedding
 
 theorem subtypeCoe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
   AntilipschitzWith.id.restrict s

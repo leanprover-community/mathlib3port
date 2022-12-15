@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.group.add_circle
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,14 +109,14 @@ theorem isAddFundamentalDomainOfAeBall (I : Set <| AddCircle T) (u x : AddCircle
 #align add_circle.is_add_fundamental_domain_of_ae_ball AddCircle.isAddFundamentalDomainOfAeBall
 
 theorem volume_of_add_preimage_eq (s I : Set <| AddCircle T) (u x : AddCircle T)
-    (hu : IsOfFinAddOrder u) (hs : u +ᵥ s = s) (hI : I =ᵐ[volume] ball x (T / (2 * addOrderOf u))) :
+    (hu : IsOfFinAddOrder u) (hs : (u +ᵥ s : Set <| AddCircle T) =ᵐ[volume] s)
+    (hI : I =ᵐ[volume] ball x (T / (2 * addOrderOf u))) :
     volume s = addOrderOf u • volume (s ∩ I) := by
   let G := AddSubgroup.zmultiples u
   haveI : Fintype G := @Fintype.ofFinite _ hu.finite_zmultiples
   have hsG : ∀ g : G, (g +ᵥ s : Set <| AddCircle T) =ᵐ[volume] s := by
     rintro ⟨y, hy⟩
-    convert ae_eq_refl s
-    exact vadd_eq_self_of_mem_zmultiples hy hs
+    exact (vadd_ae_eq_self_of_mem_zmultiples hs hy : _)
   rw [(is_add_fundamental_domain_of_ae_ball I u x hu hI).measure_eq_card_smul_of_vadd_ae_eq_self s
       hsG,
     add_order_eq_card_zmultiples' u, Nat.card_eq_fintype_card]

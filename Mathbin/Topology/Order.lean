@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.order
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -333,9 +333,9 @@ theorem is_open_discrete [TopologicalSpace α] [DiscreteTopology α] (s : Set α
 #align is_open_discrete is_open_discrete
 
 @[simp]
-theorem isClosedDiscrete [TopologicalSpace α] [DiscreteTopology α] (s : Set α) : IsClosed s :=
+theorem is_closed_discrete [TopologicalSpace α] [DiscreteTopology α] (s : Set α) : IsClosed s :=
   is_open_compl_iff.1 <| (DiscreteTopology.eq_bot α).symm ▸ trivial
-#align is_closed_discrete isClosedDiscrete
+#align is_closed_discrete is_closed_discrete
 
 @[nontriviality]
 theorem continuous_of_discrete_topology [TopologicalSpace α] [DiscreteTopology α]
@@ -731,7 +731,7 @@ theorem is_open_singleton_nhds_adjoint {α : Type _} {a b : α} (f : Filter α) 
   exact nhds_adjoint_nhds_of_ne a f hb
 #align is_open_singleton_nhds_adjoint is_open_singleton_nhds_adjoint
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b := by
   rw [le_iff_nhds]
@@ -934,7 +934,7 @@ theorem continuous_id_of_le {t t' : tspace α} (h : t ≤ t') : cont t t' id :=
 -- 𝓝 in the induced topology
 theorem mem_nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) (s : Set β) :
     s ∈ @nhds β (TopologicalSpace.induced f T) a ↔ ∃ u ∈ 𝓝 (f a), f ⁻¹' u ⊆ s := by
-  simp only [mem_nhds_iff, is_open_induced_iff, exists_prop, Set.mem_set_of_eq]
+  simp only [mem_nhds_iff, is_open_induced_iff, exists_prop, Set.mem_setOf_eq]
   constructor
   · rintro ⟨u, usub, ⟨v, openv, ueq⟩, au⟩
     exact ⟨v, ⟨v, Set.Subset.refl v, openv, by rwa [← ueq] at au⟩, by rw [ueq] <;> exact usub⟩

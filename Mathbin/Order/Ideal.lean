@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.ideal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -194,7 +194,7 @@ variable [IsDirected P (· ≤ ·)] [Nonempty P] {I : Ideal P}
 /-- In a directed and nonempty order, the top ideal of a is `univ`. -/
 instance : OrderTop
       (Ideal P) where 
-  top := ⟨⊤, univ_nonempty, directed_on_univ⟩
+  top := ⟨⊤, univ_nonempty, directedOn_univ⟩
   le_top I := le_top
 
 @[simp]
@@ -378,8 +378,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∈ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ∈ » J) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∈ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ∈ » J) -/
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with 
     sup := (· ⊔ ·)

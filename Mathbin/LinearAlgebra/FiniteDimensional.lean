@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module linear_algebra.finite_dimensional
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,29 +103,29 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCom
   [Module K V₂]
 
 /-- If the codomain of an injective linear map is finite dimensional, the domain must be as well. -/
-theorem ofInjective (f : V →ₗ[K] V₂) (w : Function.Injective f) [FiniteDimensional K V₂] :
+theorem of_injective (f : V →ₗ[K] V₂) (w : Function.Injective f) [FiniteDimensional K V₂] :
     FiniteDimensional K V :=
   have : IsNoetherian K V₂ := IsNoetherian.iff_fg.mpr ‹_›
   Module.Finite.of_injective f w
-#align finite_dimensional.of_injective FiniteDimensional.ofInjective
+#align finite_dimensional.of_injective FiniteDimensional.of_injective
 
 /-- If the domain of a surjective linear map is finite dimensional, the codomain must be as well. -/
-theorem ofSurjective (f : V →ₗ[K] V₂) (w : Function.Surjective f) [FiniteDimensional K V] :
+theorem of_surjective (f : V →ₗ[K] V₂) (w : Function.Surjective f) [FiniteDimensional K V] :
     FiniteDimensional K V₂ :=
   Module.Finite.of_surjective f w
-#align finite_dimensional.of_surjective FiniteDimensional.ofSurjective
+#align finite_dimensional.of_surjective FiniteDimensional.of_surjective
 
 variable (K V)
 
-instance finiteDimensionalPi {ι : Type _} [Finite ι] : FiniteDimensional K (ι → K) :=
+instance finite_dimensional_pi {ι : Type _} [Finite ι] : FiniteDimensional K (ι → K) :=
   iff_fg.1 is_noetherian_pi
-#align finite_dimensional.finite_dimensional_pi FiniteDimensional.finiteDimensionalPi
+#align finite_dimensional.finite_dimensional_pi FiniteDimensional.finite_dimensional_pi
 
-instance finiteDimensionalPi' {ι : Type _} [Finite ι] (M : ι → Type _) [∀ i, AddCommGroup (M i)]
+instance finite_dimensional_pi' {ι : Type _} [Finite ι] (M : ι → Type _) [∀ i, AddCommGroup (M i)]
     [∀ i, Module K (M i)] [I : ∀ i, FiniteDimensional K (M i)] : FiniteDimensional K (∀ i, M i) :=
   haveI : ∀ i : ι, IsNoetherian K (M i) := fun i => iff_fg.2 (I i)
   iff_fg.1 is_noetherian_pi
-#align finite_dimensional.finite_dimensional_pi' FiniteDimensional.finiteDimensionalPi'
+#align finite_dimensional.finite_dimensional_pi' FiniteDimensional.finite_dimensional_pi'
 
 /-- A finite dimensional vector space over a finite field is finite -/
 noncomputable def fintypeOfFintype [Fintype K] [FiniteDimensional K V] : Fintype V :=
@@ -141,13 +141,13 @@ theorem finite_of_finite [Finite K] [FiniteDimensional K V] : Finite V := by
 variable {K V}
 
 /-- If a vector space has a finite basis, then it is finite-dimensional. -/
-theorem ofFintypeBasis {ι : Type w} [Finite ι] (h : Basis ι K V) : FiniteDimensional K V := by
+theorem of_fintype_basis {ι : Type w} [Finite ι] (h : Basis ι K V) : FiniteDimensional K V := by
   cases nonempty_fintype ι
   exact
     ⟨⟨finset.univ.image h, by 
         convert h.span_eq
         simp⟩⟩
-#align finite_dimensional.of_fintype_basis FiniteDimensional.ofFintypeBasis
+#align finite_dimensional.of_fintype_basis FiniteDimensional.of_fintype_basis
 
 /-- If a vector space is `finite_dimensional`, all bases are indexed by a finite type -/
 noncomputable def fintypeBasisIndex {ι : Type _} [FiniteDimensional K V] (b : Basis ι K V) :
@@ -164,27 +164,28 @@ noncomputable instance [FiniteDimensional K V] : Fintype (Basis.ofVectorSpaceInd
 
 /-- If a vector space has a basis indexed by elements of a finite set, then it is
 finite-dimensional. -/
-theorem ofFiniteBasis {ι : Type w} {s : Set ι} (h : Basis s K V) (hs : Set.Finite s) :
+theorem of_finite_basis {ι : Type w} {s : Set ι} (h : Basis s K V) (hs : Set.Finite s) :
     FiniteDimensional K V :=
   haveI := hs.fintype
   of_fintype_basis h
-#align finite_dimensional.of_finite_basis FiniteDimensional.ofFiniteBasis
+#align finite_dimensional.of_finite_basis FiniteDimensional.of_finite_basis
 
 /-- A subspace of a finite-dimensional space is also finite-dimensional. -/
-instance finiteDimensionalSubmodule [FiniteDimensional K V] (S : Submodule K V) :
+instance finite_dimensional_submodule [FiniteDimensional K V] (S : Submodule K V) :
     FiniteDimensional K S := by 
   letI : IsNoetherian K V := iff_fg.2 _
   exact
     iff_fg.1
       (IsNoetherian.iff_dim_lt_aleph_0.2 (lt_of_le_of_lt (dim_submodule_le _) (dim_lt_aleph_0 K V)))
   infer_instance
-#align finite_dimensional.finite_dimensional_submodule FiniteDimensional.finiteDimensionalSubmodule
+#align
+  finite_dimensional.finite_dimensional_submodule FiniteDimensional.finite_dimensional_submodule
 
 /-- A quotient of a finite-dimensional space is also finite-dimensional. -/
-instance finiteDimensionalQuotient [FiniteDimensional K V] (S : Submodule K V) :
+instance finite_dimensional_quotient [FiniteDimensional K V] (S : Submodule K V) :
     FiniteDimensional K (V ⧸ S) :=
   Module.Finite.of_surjective (Submodule.mkq S) <| surjective_quot_mk _
-#align finite_dimensional.finite_dimensional_quotient FiniteDimensional.finiteDimensionalQuotient
+#align finite_dimensional.finite_dimensional_quotient FiniteDimensional.finite_dimensional_quotient
 
 variable (K V)
 
@@ -203,24 +204,25 @@ theorem finrank_of_infinite_dimensional (h : ¬FiniteDimensional K V) : finrank 
 #align
   finite_dimensional.finrank_of_infinite_dimensional FiniteDimensional.finrank_of_infinite_dimensional
 
-theorem finiteDimensionalOfFinrank (h : 0 < finrank K V) : FiniteDimensional K V := by
+theorem finite_dimensional_of_finrank (h : 0 < finrank K V) : FiniteDimensional K V := by
   contrapose h
   simp [finrank_of_infinite_dimensional h]
-#align finite_dimensional.finite_dimensional_of_finrank FiniteDimensional.finiteDimensionalOfFinrank
+#align
+  finite_dimensional.finite_dimensional_of_finrank FiniteDimensional.finite_dimensional_of_finrank
 
-theorem finiteDimensionalOfFinrankEqSucc {n : ℕ} (hn : finrank K V = n.succ) :
+theorem finite_dimensional_of_finrank_eq_succ {n : ℕ} (hn : finrank K V = n.succ) :
     FiniteDimensional K V :=
   finite_dimensional_of_finrank <| by rw [hn] <;> exact n.succ_pos
 #align
-  finite_dimensional.finite_dimensional_of_finrank_eq_succ FiniteDimensional.finiteDimensionalOfFinrankEqSucc
+  finite_dimensional.finite_dimensional_of_finrank_eq_succ FiniteDimensional.finite_dimensional_of_finrank_eq_succ
 
 /-- We can infer `finite_dimensional K V` in the presence of `[fact (finrank K V = n + 1)]`. Declare
 this as a local instance where needed. -/
-theorem factFiniteDimensionalOfFinrankEqSucc (n : ℕ) [Fact (finrank K V = n + 1)] :
+theorem fact_finite_dimensional_of_finrank_eq_succ (n : ℕ) [Fact (finrank K V = n + 1)] :
     FiniteDimensional K V :=
   finite_dimensional_of_finrank <| by convert Nat.succ_pos n <;> apply Fact.out
 #align
-  finite_dimensional.fact_finite_dimensional_of_finrank_eq_succ FiniteDimensional.factFiniteDimensionalOfFinrankEqSucc
+  finite_dimensional.fact_finite_dimensional_of_finrank_eq_succ FiniteDimensional.fact_finite_dimensional_of_finrank_eq_succ
 
 theorem finite_dimensional_iff_of_rank_eq_nsmul {W} [AddCommGroup W] [Module K W] {n : ℕ}
     (hn : n ≠ 0) (hVW : Module.rank K V = n • Module.rank K W) :
@@ -389,23 +391,23 @@ theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V}
 
 variable (K)
 
-instance finiteDimensionalSelf : FiniteDimensional K K := by infer_instance
-#align finite_dimensional.finite_dimensional_self FiniteDimensional.finiteDimensionalSelf
+instance finite_dimensional_self : FiniteDimensional K K := by infer_instance
+#align finite_dimensional.finite_dimensional_self FiniteDimensional.finite_dimensional_self
 
 /-- The submodule generated by a finite set is finite-dimensional. -/
-theorem spanOfFinite {A : Set V} (hA : Set.Finite A) : FiniteDimensional K (Submodule.span K A) :=
+theorem span_of_finite {A : Set V} (hA : Set.Finite A) : FiniteDimensional K (Submodule.span K A) :=
   iff_fg.1 <| is_noetherian_span_of_finite K hA
-#align finite_dimensional.span_of_finite FiniteDimensional.spanOfFinite
+#align finite_dimensional.span_of_finite FiniteDimensional.span_of_finite
 
 /-- The submodule generated by a single element is finite-dimensional. -/
-instance spanSingleton (x : V) : FiniteDimensional K (K ∙ x) :=
-  spanOfFinite K <| Set.finite_singleton _
-#align finite_dimensional.span_singleton FiniteDimensional.spanSingleton
+instance span_singleton (x : V) : FiniteDimensional K (K ∙ x) :=
+  span_of_finite K <| Set.finite_singleton _
+#align finite_dimensional.span_singleton FiniteDimensional.span_singleton
 
 /-- The submodule generated by a finset is finite-dimensional. -/
-instance spanFinset (s : Finset V) : FiniteDimensional K (span K (s : Set V)) :=
-  spanOfFinite K <| s.finite_to_set
-#align finite_dimensional.span_finset FiniteDimensional.spanFinset
+instance span_finset (s : Finset V) : FiniteDimensional K (span K (s : Set V)) :=
+  span_of_finite K <| s.finite_to_set
+#align finite_dimensional.span_finset FiniteDimensional.span_finset
 
 /-- Pushforwards of finite-dimensional submodules are finite-dimensional. -/
 instance (f : V →ₗ[K] V₂) (p : Submodule K V) [h : FiniteDimensional K p] :
@@ -661,19 +663,20 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
 open FiniteDimensional
 
-theorem finiteDimensionalOfDimEqNat {n : ℕ} (h : Module.rank K V = n) : FiniteDimensional K V := by
+theorem finite_dimensional_of_dim_eq_nat {n : ℕ} (h : Module.rank K V = n) :
+    FiniteDimensional K V := by
   rw [FiniteDimensional, ← IsNoetherian.iff_fg, IsNoetherian.iff_dim_lt_aleph_0, h]
   exact nat_lt_aleph_0 n
-#align finite_dimensional_of_dim_eq_nat finiteDimensionalOfDimEqNat
+#align finite_dimensional_of_dim_eq_nat finite_dimensional_of_dim_eq_nat
 
 -- TODO: generalize to free modules over general rings.
-theorem finiteDimensionalOfDimEqZero (h : Module.rank K V = 0) : FiniteDimensional K V :=
-  finiteDimensionalOfDimEqNat <| h.trans Nat.cast_zero.symm
-#align finite_dimensional_of_dim_eq_zero finiteDimensionalOfDimEqZero
+theorem finite_dimensional_of_dim_eq_zero (h : Module.rank K V = 0) : FiniteDimensional K V :=
+  finite_dimensional_of_dim_eq_nat <| h.trans Nat.cast_zero.symm
+#align finite_dimensional_of_dim_eq_zero finite_dimensional_of_dim_eq_zero
 
-theorem finiteDimensionalOfDimEqOne (h : Module.rank K V = 1) : FiniteDimensional K V :=
-  finiteDimensionalOfDimEqNat <| h.trans Nat.cast_one.symm
-#align finite_dimensional_of_dim_eq_one finiteDimensionalOfDimEqOne
+theorem finite_dimensional_of_dim_eq_one (h : Module.rank K V = 1) : FiniteDimensional K V :=
+  finite_dimensional_of_dim_eq_nat <| h.trans Nat.cast_one.symm
+#align finite_dimensional_of_dim_eq_one finite_dimensional_of_dim_eq_one
 
 theorem finrank_eq_zero_of_dim_eq_zero [FiniteDimensional K V] (h : Module.rank K V = 0) :
     finrank K V = 0 := by 
@@ -683,14 +686,14 @@ theorem finrank_eq_zero_of_dim_eq_zero [FiniteDimensional K V] (h : Module.rank 
 
 variable (K V)
 
-instance finiteDimensionalBot : FiniteDimensional K (⊥ : Submodule K V) :=
-  finiteDimensionalOfDimEqZero <| by simp
-#align finite_dimensional_bot finiteDimensionalBot
+instance finite_dimensional_bot : FiniteDimensional K (⊥ : Submodule K V) :=
+  finite_dimensional_of_dim_eq_zero <| by simp
+#align finite_dimensional_bot finite_dimensional_bot
 
 variable {K V}
 
 theorem bot_eq_top_of_dim_eq_zero (h : Module.rank K V = 0) : (⊥ : Submodule K V) = ⊤ := by
-  haveI := finiteDimensionalOfDimEqZero h
+  haveI := finite_dimensional_of_dim_eq_zero h
   apply eq_top_of_finrank_eq
   rw [finrank_bot, finrank_eq_zero_of_dim_eq_zero h]
 #align bot_eq_top_of_dim_eq_zero bot_eq_top_of_dim_eq_zero
@@ -727,70 +730,70 @@ theorem fg_iff_finite_dimensional (s : Submodule K V) : s.Fg ↔ FiniteDimension
 
 /-- A submodule contained in a finite-dimensional submodule is
 finite-dimensional. -/
-theorem finiteDimensionalOfLe {S₁ S₂ : Submodule K V} [FiniteDimensional K S₂] (h : S₁ ≤ S₂) :
+theorem finite_dimensional_of_le {S₁ S₂ : Submodule K V} [FiniteDimensional K S₂] (h : S₁ ≤ S₂) :
     FiniteDimensional K S₁ :=
   haveI : IsNoetherian K S₂ := iff_fg.2 inferInstance
   iff_fg.1
     (IsNoetherian.iff_dim_lt_aleph_0.2
       (lt_of_le_of_lt (dim_le_of_submodule _ _ h) (dim_lt_aleph_0 K S₂)))
-#align submodule.finite_dimensional_of_le Submodule.finiteDimensionalOfLe
+#align submodule.finite_dimensional_of_le Submodule.finite_dimensional_of_le
 
 /-- The inf of two submodules, the first finite-dimensional, is
 finite-dimensional. -/
-instance finiteDimensionalInfLeft (S₁ S₂ : Submodule K V) [FiniteDimensional K S₁] :
+instance finite_dimensional_inf_left (S₁ S₂ : Submodule K V) [FiniteDimensional K S₁] :
     FiniteDimensional K (S₁ ⊓ S₂ : Submodule K V) :=
-  finiteDimensionalOfLe inf_le_left
-#align submodule.finite_dimensional_inf_left Submodule.finiteDimensionalInfLeft
+  finite_dimensional_of_le inf_le_left
+#align submodule.finite_dimensional_inf_left Submodule.finite_dimensional_inf_left
 
 /-- The inf of two submodules, the second finite-dimensional, is
 finite-dimensional. -/
-instance finiteDimensionalInfRight (S₁ S₂ : Submodule K V) [FiniteDimensional K S₂] :
+instance finite_dimensional_inf_right (S₁ S₂ : Submodule K V) [FiniteDimensional K S₂] :
     FiniteDimensional K (S₁ ⊓ S₂ : Submodule K V) :=
-  finiteDimensionalOfLe inf_le_right
-#align submodule.finite_dimensional_inf_right Submodule.finiteDimensionalInfRight
+  finite_dimensional_of_le inf_le_right
+#align submodule.finite_dimensional_inf_right Submodule.finite_dimensional_inf_right
 
 /-- The sup of two finite-dimensional submodules is
 finite-dimensional. -/
-instance finiteDimensionalSup (S₁ S₂ : Submodule K V) [h₁ : FiniteDimensional K S₁]
+instance finite_dimensional_sup (S₁ S₂ : Submodule K V) [h₁ : FiniteDimensional K S₁]
     [h₂ : FiniteDimensional K S₂] : FiniteDimensional K (S₁ ⊔ S₂ : Submodule K V) := by
   unfold FiniteDimensional at *
   rw [finite_def] at *
   exact (fg_top _).2 (((fg_top S₁).1 h₁).sup ((fg_top S₂).1 h₂))
-#align submodule.finite_dimensional_sup Submodule.finiteDimensionalSup
+#align submodule.finite_dimensional_sup Submodule.finite_dimensional_sup
 
 /-- The submodule generated by a finite supremum of finite dimensional submodules is
 finite-dimensional.
 
 Note that strictly this only needs `∀ i ∈ s, finite_dimensional K (S i)`, but that doesn't
 work well with typeclass search. -/
-instance finiteDimensionalFinsetSup {ι : Type _} (s : Finset ι) (S : ι → Submodule K V)
+instance finite_dimensional_finset_sup {ι : Type _} (s : Finset ι) (S : ι → Submodule K V)
     [∀ i, FiniteDimensional K (S i)] : FiniteDimensional K (s.sup S : Submodule K V) := by
   refine'
-    @Finset.sup_induction _ _ _ _ s S (fun i => FiniteDimensional K ↥i) (finiteDimensionalBot K V) _
-      fun i hi => by infer_instance
+    @Finset.sup_induction _ _ _ _ s S (fun i => FiniteDimensional K ↥i) (finite_dimensional_bot K V)
+      _ fun i hi => by infer_instance
   · intro S₁ hS₁ S₂ hS₂
-    exact Submodule.finiteDimensionalSup S₁ S₂
-#align submodule.finite_dimensional_finset_sup Submodule.finiteDimensionalFinsetSup
+    exact Submodule.finite_dimensional_sup S₁ S₂
+#align submodule.finite_dimensional_finset_sup Submodule.finite_dimensional_finset_sup
 
 /-- The submodule generated by a supremum of finite dimensional submodules, indexed by a finite
 type is finite-dimensional. -/
-instance finiteDimensionalSupr {ι : Type _} [Finite ι] (S : ι → Submodule K V)
+instance finite_dimensional_supr {ι : Type _} [Finite ι] (S : ι → Submodule K V)
     [∀ i, FiniteDimensional K (S i)] : FiniteDimensional K ↥(⨆ i, S i) := by
   cases nonempty_fintype ι
   rw [← Finset.sup_univ_eq_supr]
-  exact Submodule.finiteDimensionalFinsetSup _ _
-#align submodule.finite_dimensional_supr Submodule.finiteDimensionalSupr
+  exact Submodule.finite_dimensional_finset_sup _ _
+#align submodule.finite_dimensional_supr Submodule.finite_dimensional_supr
 
 /-- The submodule generated by a supremum indexed by a proposition is finite-dimensional if
 the submodule is. -/
-instance finiteDimensionalSuprProp {P : Prop} (S : P → Submodule K V)
+instance finite_dimensional_supr_prop {P : Prop} (S : P → Submodule K V)
     [∀ h, FiniteDimensional K (S h)] : FiniteDimensional K ↥(⨆ h, S h) := by
   by_cases hp : P
   · rw [supr_pos hp]
     infer_instance
   · rw [supr_neg hp]
     infer_instance
-#align submodule.finite_dimensional_supr_prop Submodule.finiteDimensionalSuprProp
+#align submodule.finite_dimensional_supr_prop Submodule.finite_dimensional_supr_prop
 
 /-- The dimension of a submodule is bounded by the dimension of the ambient space. -/
 theorem finrank_le [FiniteDimensional K V] (s : Submodule K V) : finrank K s ≤ finrank K V := by
@@ -863,10 +866,10 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCom
   [Module K V₂]
 
 /-- Finite dimensionality is preserved under linear equivalence. -/
-protected theorem finiteDimensional (f : V ≃ₗ[K] V₂) [FiniteDimensional K V] :
+protected theorem finite_dimensional (f : V ≃ₗ[K] V₂) [FiniteDimensional K V] :
     FiniteDimensional K V₂ :=
   Module.Finite.equiv f
-#align linear_equiv.finite_dimensional LinearEquiv.finiteDimensional
+#align linear_equiv.finite_dimensional LinearEquiv.finite_dimensional
 
 variable {R M M₂ : Type _} [Ring R] [AddCommGroup M] [AddCommGroup M₂]
 
@@ -878,10 +881,10 @@ section
 
 variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
-instance finiteDimensionalFinsupp {ι : Type _} [Finite ι] [h : FiniteDimensional K V] :
+instance finite_dimensional_finsupp {ι : Type _} [Finite ι] [h : FiniteDimensional K V] :
     FiniteDimensional K (ι →₀ V) :=
   (Finsupp.linearEquivFunOnFinite K V ι).symm.FiniteDimensional
-#align finite_dimensional_finsupp finiteDimensionalFinsupp
+#align finite_dimensional_finsupp finite_dimensional_finsupp
 
 end
 
@@ -989,16 +992,16 @@ theorem surjective_of_injective [FiniteDimensional K V] {f : V →ₗ[K] V} (hin
 #align linear_map.surjective_of_injective LinearMap.surjective_of_injective
 
 /-- The image under an onto linear map of a finite-dimensional space is also finite-dimensional. -/
-theorem finiteDimensionalOfSurjective [FiniteDimensional K V] (f : V →ₗ[K] V₂) (hf : f.range = ⊤) :
-    FiniteDimensional K V₂ :=
+theorem finite_dimensional_of_surjective [FiniteDimensional K V] (f : V →ₗ[K] V₂)
+    (hf : f.range = ⊤) : FiniteDimensional K V₂ :=
   Module.Finite.of_surjective f <| range_eq_top.1 hf
-#align linear_map.finite_dimensional_of_surjective LinearMap.finiteDimensionalOfSurjective
+#align linear_map.finite_dimensional_of_surjective LinearMap.finite_dimensional_of_surjective
 
 /-- The range of a linear map defined on a finite-dimensional space is also finite-dimensional. -/
-instance finiteDimensionalRange [FiniteDimensional K V] (f : V →ₗ[K] V₂) :
+instance finite_dimensional_range [FiniteDimensional K V] (f : V →ₗ[K] V₂) :
     FiniteDimensional K f.range :=
   f.quotKerEquivRange.FiniteDimensional
-#align linear_map.finite_dimensional_range LinearMap.finiteDimensionalRange
+#align linear_map.finite_dimensional_range LinearMap.finite_dimensional_range
 
 /-- On a finite-dimensional space, a linear map is injective if and only if it is surjective. -/
 theorem injective_iff_surjective [FiniteDimensional K V] {f : V →ₗ[K] V} :
@@ -1471,23 +1474,23 @@ theorem Subalgebra.finite_dimensional_to_submodule {S : Subalgebra F E} :
 #align subalgebra.finite_dimensional_to_submodule Subalgebra.finite_dimensional_to_submodule
 
 alias Subalgebra.finite_dimensional_to_submodule ↔
-  FiniteDimensional.ofSubalgebraToSubmodule FiniteDimensional.subalgebraToSubmodule
+  FiniteDimensional.of_subalgebra_to_submodule FiniteDimensional.subalgebra_to_submodule
 
-instance FiniteDimensional.finiteDimensionalSubalgebra [FiniteDimensional F E]
+instance FiniteDimensional.finite_dimensional_subalgebra [FiniteDimensional F E]
     (S : Subalgebra F E) : FiniteDimensional F S :=
-  FiniteDimensional.ofSubalgebraToSubmodule inferInstance
+  FiniteDimensional.of_subalgebra_to_submodule inferInstance
 #align
-  finite_dimensional.finite_dimensional_subalgebra FiniteDimensional.finiteDimensionalSubalgebra
+  finite_dimensional.finite_dimensional_subalgebra FiniteDimensional.finite_dimensional_subalgebra
 
-instance Subalgebra.finiteDimensionalBot : FiniteDimensional F (⊥ : Subalgebra F E) := by
+instance Subalgebra.finite_dimensional_bot : FiniteDimensional F (⊥ : Subalgebra F E) := by
   nontriviality E
-  exact finiteDimensionalOfDimEqOne Subalgebra.dim_bot
-#align subalgebra.finite_dimensional_bot Subalgebra.finiteDimensionalBot
+  exact finite_dimensional_of_dim_eq_one Subalgebra.dim_bot
+#align subalgebra.finite_dimensional_bot Subalgebra.finite_dimensional_bot
 
 theorem Subalgebra.eq_bot_of_dim_le_one {S : Subalgebra F E} (h : Module.rank F S ≤ 1) : S = ⊥ := by
   nontriviality E
   obtain ⟨m, hm, he⟩ := Cardinal.exists_nat_eq_of_le_nat (h.trans_eq nat.cast_one.symm)
-  haveI := finiteDimensionalOfDimEqNat he
+  haveI := finite_dimensional_of_dim_eq_nat he
   rw [← not_bot_lt_iff, ← subalgebra.to_submodule.lt_iff_lt]
   haveI := S.to_submodule_equiv.symm.FiniteDimensional
   refine' fun hl => (Submodule.finrank_lt_finrank_of_lt hl).not_le (nat_cast_le.1 _)
@@ -1538,7 +1541,7 @@ theorem Subalgebra.is_simple_order_of_finrank (hr : finrank F E = 2) :
     eq_bot_or_eq_top := by 
       intro S
       haveI : FiniteDimensional F E := finite_dimensional_of_finrank_eq_succ hr
-      haveI : FiniteDimensional F S := FiniteDimensional.finiteDimensionalSubmodule S.to_submodule
+      haveI : FiniteDimensional F S := FiniteDimensional.finite_dimensional_submodule S.to_submodule
       have : finrank F S ≤ 2 := hr ▸ S.to_submodule.finrank_le
       have : 0 < finrank F S := finrank_pos_iff.mpr inferInstance
       interval_cases finrank F S

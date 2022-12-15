@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.mul_action
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ export HasContinuousSmul (continuous_smul)
 /-- Class `has_continuous_vadd M X` says that the additive action `(+ᵥ) : M → X → X`
 is continuous in both arguments. We use the same class for all kinds of additive actions,
 including (semi)modules and algebras. -/
-class HasContinuousVadd (M X : Type _) [HasVadd M X] [TopologicalSpace M] [TopologicalSpace X] :
+class HasContinuousVadd (M X : Type _) [VAdd M X] [TopologicalSpace M] [TopologicalSpace X] :
   Prop where
   continuous_vadd : Continuous fun p : M × X => p.1 +ᵥ p.2
 #align has_continuous_vadd HasContinuousVadd

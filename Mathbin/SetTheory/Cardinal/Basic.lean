@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -461,7 +461,7 @@ instance : Pow Cardinal.{u} Cardinal.{u} :=
 local infixr:0 "^" => @Pow.pow Cardinal Cardinal Cardinal.hasPow
 
 -- mathport name: cardinal.pow.nat
-local infixr:80 " ^ℕ " => @Pow.pow Cardinal ℕ Monoid.hasPow
+local infixr:80 " ^ℕ " => @Pow.pow Cardinal ℕ Monoid.Pow
 
 theorem power_def (α β) : ((#α)^#β) = (#β → α) :=
   rfl
@@ -704,13 +704,13 @@ end OrderProperties
 
 protected theorem lt_wf : @WellFounded Cardinal.{u} (· < ·) :=
   ⟨fun a =>
-    Classical.by_contradiction fun h => by
+    by_contradiction fun h => by
       let ι := { c : Cardinal // ¬Acc (· < ·) c }
       let f : ι → Cardinal := Subtype.val
       haveI hι : Nonempty ι := ⟨⟨_, h⟩⟩
       obtain ⟨⟨c : Cardinal, hc : ¬Acc (· < ·) c⟩, ⟨h_1 : ∀ j, (f ⟨c, hc⟩).out ↪ (f j).out⟩⟩ :=
         embedding.min_injective fun i => (f i).out
-      apply hc (Acc.intro _ fun j h' => Classical.by_contradiction fun hj => h'.2 _)
+      apply hc (Acc.intro _ fun j h' => by_contradiction fun hj => h'.2 _)
       have : (#_) ≤ (#_) := ⟨h_1 ⟨j, hj⟩⟩
       simpa only [f, mk_out] using this⟩
 #align cardinal.lt_wf Cardinal.lt_wf

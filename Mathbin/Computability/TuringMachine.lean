@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.turing_machine
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -280,7 +280,7 @@ theorem ListBlank.exists_cons {Γ} [Inhabited Γ] (l : ListBlank Γ) :
 
 /-- The n-th element of a `list_blank` is well defined for all `n : ℕ`, unlike in a `list`. -/
 def ListBlank.nth {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : Γ :=
-  l.liftOn (fun l => List.inth l n)
+  l.liftOn (fun l => List.getI l n)
     (by 
       rintro l _ ⟨i, rfl⟩
       simp only
@@ -1309,11 +1309,11 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q => {Q}
 #align turing.TM1.stmts₁ Turing.TM1Cat.stmts₁
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr finset.mem_insert_self, ",", expr finset.mem_singleton_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr finset.mem_insert_self, ",", expr finset.mem_singleton_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
   cases q <;>
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr finset.mem_insert_self, \",\", expr finset.mem_singleton_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr finset.mem_insert_self, \",\", expr finset.mem_singleton_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align turing.TM1.stmts₁_self Turing.TM1Cat.stmts₁_self
 
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ := by
@@ -1724,7 +1724,7 @@ def trTape' (L R : ListBlank Γ) : Tape Bool := by
   refine'
       tape.mk' (L.bind (fun x => (enc x).toList.reverse) ⟨n, _⟩)
         (R.bind (fun x => (enc x).toList) ⟨n, _⟩) <;>
-    simp only [enc0, Vector.repeat, List.reverse_repeat, Bool.default_bool, Vector.to_list_mk]
+    simp only [enc0, Vector.repeat, List.reverse_repeat, Bool.default_bool, Vector.toList_mk]
 #align turing.TM1to1.tr_tape' Turing.TM1to1Cat.trTape'
 
 /-- The low level tape corresponding to the given tape over alphabet `Γ`. -/
@@ -2109,7 +2109,7 @@ parameter (σ : Type _)
   internal state based on the result). `peek` modifies the
   internal state but does not remove an element. -/
 inductive Stmt
-  | push : ∀ k, (σ → Γ k) → stmt → stmt
+  | Push : ∀ k, (σ → Γ k) → stmt → stmt
   | peek : ∀ k, (σ → Option (Γ k) → σ) → stmt → stmt
   | pop : ∀ k, (σ → Option (Γ k) → σ) → stmt → stmt
   | load : (σ → σ) → stmt → stmt
@@ -2142,7 +2142,7 @@ parameter {Γ Λ σ K}
 /-- The step function for the TM2 model. -/
 @[simp]
 def stepAux : stmt → σ → (∀ k, List (Γ k)) → cfg
-  | push k f q, v, S => step_aux q v (update S k (f v :: S k))
+  | Push k f q, v, S => step_aux q v (update S k (f v :: S k))
   | peek k f q, v, S => step_aux q (f v (S k).head') S
   | pop k f q, v, S => step_aux q (f v (S k).head') (update S k (S k).tail)
   | load a q, v, S => step_aux q (a v) S
@@ -2165,7 +2165,7 @@ def Reaches (M : Λ → stmt) : cfg → cfg → Prop :=
 
 /-- Given a set `S` of states, `support_stmt S q` means that `q` only jumps to states in `S`. -/
 def SupportsStmt (S : Finset Λ) : stmt → Prop
-  | push k f q => supports_stmt q
+  | Push k f q => supports_stmt q
   | peek k f q => supports_stmt q
   | pop k f q => supports_stmt q
   | load a q => supports_stmt q
@@ -2178,7 +2178,7 @@ open Classical
 
 /-- The set of subtree statements in a statement. -/
 noncomputable def stmts₁ : stmt → Finset stmt
-  | Q@(push k f q) => insert Q (stmts₁ q)
+  | Q@(Push k f q) => insert Q (stmts₁ q)
   | Q@(peek k f q) => insert Q (stmts₁ q)
   | Q@(pop k f q) => insert Q (stmts₁ q)
   | Q@(load a q) => insert Q (stmts₁ q)
@@ -2187,11 +2187,11 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@halt => {Q}
 #align turing.TM2.stmts₁ Turing.TM2Cat.stmts₁
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr finset.mem_insert_self, ",", expr finset.mem_singleton_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr finset.mem_insert_self, ",", expr finset.mem_singleton_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
   cases q <;>
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr finset.mem_insert_self, \",\", expr finset.mem_singleton_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr finset.mem_insert_self, \",\", expr finset.mem_singleton_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align turing.TM2.stmts₁_self Turing.TM2Cat.stmts₁_self
 
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ := by
@@ -2403,7 +2403,7 @@ theorem add_bottom_head_fst (L) : (add_bottom L).head.1 = tt := by
 is at the bottom of all the stacks, so we have to hold on to this action while going to the end
 to modify the stack. -/
 inductive StAct (k : K)
-  | push : (σ → Γ k) → st_act
+  | Push : (σ → Γ k) → st_act
   | peek : (σ → Option (Γ k) → σ) → st_act
   | pop : (σ → Option (Γ k) → σ) → st_act
 #align turing.TM2to1.st_act Turing.TM2to1Cat.StAct
@@ -2427,21 +2427,21 @@ Case conversion may be inaccurate. Consider using '#align turing.TM2to1.st_run T
 /-- The TM2 statement corresponding to a stack action. -/
 @[nolint unused_arguments]
 def stRun {k : K} : st_act k → stmt₂ → stmt₂
-  | push f => TM2Cat.Stmt.push k f
+  | Push f => TM2Cat.Stmt.push k f
   | peek f => TM2Cat.Stmt.peek k f
   | pop f => TM2Cat.Stmt.pop k f
 #align turing.TM2to1.st_run Turing.TM2to1Cat.stRun
 
 /-- The effect of a stack action on the local variables, given the value of the stack. -/
 def stVar {k : K} (v : σ) (l : List (Γ k)) : st_act k → σ
-  | push f => v
+  | Push f => v
   | peek f => f v l.head'
   | pop f => f v l.head'
 #align turing.TM2to1.st_var Turing.TM2to1Cat.stVar
 
 /-- The effect of a stack action on the stack. -/
 def stWrite {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
-  | push f => f v :: l
+  | Push f => f v :: l
   | peek f => l
   | pop f => l.tail
 #align turing.TM2to1.st_write Turing.TM2to1Cat.stWrite
@@ -2460,7 +2460,7 @@ def stmtStRec.{l} {C : stmt₂ → Sort l} (H₁ : ∀ (k) (s : st_act k) (q) (I
     (H₂ : ∀ (a q) (IH : C q), C (TM2Cat.Stmt.load a q))
     (H₃ : ∀ (p q₁ q₂) (IH₁ : C q₁) (IH₂ : C q₂), C (TM2Cat.Stmt.branch p q₁ q₂))
     (H₄ : ∀ l, C (TM2Cat.Stmt.goto l)) (H₅ : C TM2Cat.Stmt.halt) : ∀ n, C n
-  | TM2.stmt.push k f q => H₁ _ (push f) _ (stmt_st_rec q)
+  | TM2.stmt.push k f q => H₁ _ (Push f) _ (stmt_st_rec q)
   | TM2.stmt.peek k f q => H₁ _ (peek f) _ (stmt_st_rec q)
   | TM2.stmt.pop k f q => H₁ _ (pop f) _ (stmt_st_rec q)
   | TM2.stmt.load a q => H₂ _ _ (stmt_st_rec q)
@@ -2609,7 +2609,7 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
   case pop f => 
     cases e : S k
     · simp only [tape.mk'_head, list_blank.head_cons, tape.move_left_mk', List.length,
-        tape.write_mk', List.head', iterate_zero_apply, List.tail_nil]
+        tape.write_mk', List.head?, iterate_zero_apply, List.tail_nil]
       rw [← e, Function.update_eq_self]
       exact ⟨L, hL, by rw [add_bottom_head_fst, cond]⟩
     · refine'
@@ -2621,7 +2621,7 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
             stk_nth_val _ (hL k), e,
             show (List.cons hd tl).reverse.nth tl.length = some hd by
               rw [List.reverse_cons, ← List.length_reverse, List.nth_concat_length] <;> rfl,
-            List.head', List.tail]⟩
+            List.head?, List.tail]⟩
       refine' list_blank.ext fun i => _
       rw [list_blank.nth_map, list_blank.nth_modify_nth, proj, pointed_map.mk_val]
       by_cases h' : k' = k
@@ -2666,7 +2666,7 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
       tr_cfg ⟨q, v, S⟩ ⟨q.map normal, v, Tape.mk' ∅ (add_bottom L)⟩
 #align turing.TM2to1.tr_cfg Turing.TM2to1Cat.TrCfg
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
 theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) (n) (_ : n ≤ S.length) :
     Reaches₀ (TM1Cat.step tr) ⟨some (go k o q), v, Tape.mk' ∅ (add_bottom L)⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.sheaf_of_types
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -584,7 +584,7 @@ that the triangle below commutes, provided `P` is a sheaf for `S`
    yX
 
 -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem IsSheafFor.functor_inclusion_comp_extend {P : Cᵒᵖ ⥤ Type v₁} (h : IsSheafFor P S)
     (f : S.Functor ⟶ P) : S.functorInclusion ≫ h.extend f = f :=
   (is_sheaf_for_iff_yoneda_sheaf_condition.1 h f).exists.some_spec

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,8 +134,8 @@ instance {R : Type u} [Ring R] : Sub R[X] :=
 instance : Mul R[X] :=
   ⟨mul⟩
 
-instance {S : Type _} [SmulZeroClass S R] :
-    SmulZeroClass S R[X] where 
+instance {S : Type _} [SMulZeroClass S R] :
+    SMulZeroClass S R[X] where 
   smul r p := ⟨r • p.toFinsupp⟩
   smul_zero a := congr_arg of_finsupp (smul_zero a)
 
@@ -175,7 +175,7 @@ theorem of_finsupp_mul (a b) : (⟨a * b⟩ : R[X]) = ⟨a⟩ * ⟨b⟩ :=
 #align polynomial.of_finsupp_mul Polynomial.of_finsupp_mul
 
 @[simp]
-theorem of_finsupp_smul {S : Type _} [SmulZeroClass S R] (a : S) (b) :
+theorem of_finsupp_smul {S : Type _} [SMulZeroClass S R] (a : S) (b) :
     (⟨a • b⟩ : R[X]) = (a • ⟨b⟩ : R[X]) :=
   rfl
 #align polynomial.of_finsupp_smul Polynomial.of_finsupp_smul
@@ -226,7 +226,7 @@ theorem to_finsupp_mul (a b : R[X]) : (a * b).toFinsupp = a.toFinsupp * b.toFins
 #align polynomial.to_finsupp_mul Polynomial.to_finsupp_mul
 
 @[simp]
-theorem to_finsupp_smul {S : Type _} [SmulZeroClass S R] (a : S) (b : R[X]) :
+theorem to_finsupp_smul {S : Type _} [SMulZeroClass S R] (a : S) (b : R[X]) :
     (a • b).toFinsupp = a • b.toFinsupp :=
   rfl
 #align polynomial.to_finsupp_smul Polynomial.to_finsupp_smul
@@ -289,8 +289,8 @@ instance {S} [Monoid S] [DistribMulAction S R] : DistribMulAction S R[X] :=
   Function.Injective.distribMulAction ⟨toFinsupp, to_finsupp_zero, to_finsupp_add⟩
     to_finsupp_injective to_finsupp_smul
 
-instance {S} [Monoid S] [DistribMulAction S R] [HasFaithfulSmul S R] :
-    HasFaithfulSmul S
+instance {S} [Monoid S] [DistribMulAction S R] [FaithfulSMul S R] :
+    FaithfulSMul S
       R[X] where eq_of_smul_eq_smul s₁ s₂ h :=
     eq_of_smul_eq_smul fun a : ℕ →₀ R => congr_arg toFinsupp (h ⟨a⟩)
 
@@ -299,7 +299,7 @@ instance {S} [Semiring S] [Module S R] : Module S R[X] :=
     to_finsupp_smul
 
 instance {S₁ S₂} [Monoid S₁] [Monoid S₂] [DistribMulAction S₁ R] [DistribMulAction S₂ R]
-    [SmulCommClass S₁ S₂ R] : SmulCommClass S₁ S₂ R[X] :=
+    [SMulCommClass S₁ S₂ R] : SMulCommClass S₁ S₂ R[X] :=
   ⟨by 
     rintro _ _ ⟨⟩
     simp_rw [← of_finsupp_smul, smul_comm]⟩
@@ -310,7 +310,7 @@ instance {S₁ S₂} [HasSmul S₁ S₂] [Monoid S₁] [Monoid S₂] [DistribMul
     rintro _ _ ⟨⟩
     simp_rw [← of_finsupp_smul, smul_assoc]⟩
 
-instance is_scalar_tower_right {α K : Type _} [Semiring K] [DistribSmul α K] [IsScalarTower α K K] :
+instance is_scalar_tower_right {α K : Type _} [Semiring K] [DistribSMul α K] [IsScalarTower α K K] :
     IsScalarTower α K[X] K[X] :=
   ⟨by
     rintro _ ⟨⟩ ⟨⟩ <;>
@@ -1068,122 +1068,8 @@ theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.su
   rw [update_zero_eq_erase, support_erase]
 #align polynomial.support_update_zero Polynomial.support_update_zero
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [] [] [] [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `support_update_ne_zero [])
-      (Command.declSig
-       [(Term.explicitBinder
-         "("
-         [`p]
-         [":" (Polynomial.Data.Polynomial.Basic.polynomial `R "[X]")]
-         []
-         ")")
-        (Term.explicitBinder "(" [`n] [":" (termℕ "ℕ")] [] ")")
-        (Term.implicitBinder "{" [`a] [":" `R] "}")
-        (Term.explicitBinder "(" [`ha] [":" («term_≠_» `a "≠" (num "0"))] [] ")")]
-       (Term.typeSpec
-        ":"
-        («term_=_»
-         (Term.app `support [(Term.app (Term.proj `p "." `update) [`n `a])])
-         "="
-         (Term.app `insert [`n (Term.proj `p "." `support)]))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Tactic.rwSeq
-             "rw"
-             []
-             (Tactic.rwRuleSeq
-              "["
-              [(Tactic.rwRule [] `support_update) "," (Tactic.rwRule [] (Term.app `if_neg [`ha]))]
-              "]")
-             []))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.rwSeq
-            "rw"
-            []
-            (Tactic.rwRuleSeq
-             "["
-             [(Tactic.rwRule [] `support_update) "," (Tactic.rwRule [] (Term.app `if_neg [`ha]))]
-             "]")
-            []))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.rwSeq
-        "rw"
-        []
-        (Tactic.rwRuleSeq
-         "["
-         [(Tactic.rwRule [] `support_update) "," (Tactic.rwRule [] (Term.app `if_neg [`ha]))]
-         "]")
-        []))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.rwSeq
-       "rw"
-       []
-       (Tactic.rwRuleSeq
-        "["
-        [(Tactic.rwRule [] `support_update) "," (Tactic.rwRule [] (Term.app `if_neg [`ha]))]
-        "]")
-       [])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `if_neg [`ha])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `ha
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `if_neg
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `support_update
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  support_update_ne_zero
-  ( p : R [X] ) ( n : ℕ ) { a : R } ( ha : a ≠ 0 ) : support p . update n a = insert n p . support
-  := by skip <;> rw [ support_update , if_neg ha ]
+theorem support_update_ne_zero (p : R[X]) (n : ℕ) {a : R} (ha : a ≠ 0) :
+    support (p.update n a) = insert n p.support := by classical rw [support_update, if_neg ha]
 #align polynomial.support_update_ne_zero Polynomial.support_update_ne_zero
 
 end Update

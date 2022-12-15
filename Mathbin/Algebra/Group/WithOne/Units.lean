@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.with_one.units
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,6 +22,12 @@ This is here to keep `algebra.group_with_zero.units.basic` out of the import req
 
 namespace WithZero
 
+/- warning: with_zero.units_with_zero_equiv -> WithZero.unitsWithZeroEquiv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], MulEquiv.{u1, u1} (Units.{u1} (WithZero.{u1} α) (MonoidWithZero.toMonoid.{u1} (WithZero.{u1} α) (WithZero.monoidWithZero.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) α (MulOneClass.toHasMul.{u1} (Units.{u1} (WithZero.{u1} α) (MonoidWithZero.toMonoid.{u1} (WithZero.{u1} α) (WithZero.monoidWithZero.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Units.mulOneClass.{u1} (WithZero.{u1} α) (MonoidWithZero.toMonoid.{u1} (WithZero.{u1} α) (WithZero.monoidWithZero.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], MulEquiv.{u1, u1} (Units.{u1} (WithZero.{u1} α) (MonoidWithZero.toMonoid.{u1} (WithZero.{u1} α) (WithZero.monoidWithZero.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) α (MulOneClass.toMul.{u1} (Units.{u1} (WithZero.{u1} α) (MonoidWithZero.toMonoid.{u1} (WithZero.{u1} α) (WithZero.monoidWithZero.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Units.instMulOneClassUnits.{u1} (WithZero.{u1} α) (MonoidWithZero.toMonoid.{u1} (WithZero.{u1} α) (WithZero.monoidWithZero.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))
+Case conversion may be inaccurate. Consider using '#align with_zero.units_with_zero_equiv WithZero.unitsWithZeroEquivₓ'. -/
 /-- Any group is isomorphic to the units of itself adjoined with `0`. -/
 def unitsWithZeroEquiv {α : Type _} [Group α] :
     (WithZero α)ˣ ≃* α where 

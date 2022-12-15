@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.group.measure
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -358,9 +358,9 @@ theorem measurePreservingInv (μ : Measure G) [IsInvInvariant μ] : MeasurePrese
 
 end Inv
 
-section HasInvolutiveInv
+section InvolutiveInv
 
-variable [HasInvolutiveInv G] [HasMeasurableInv G]
+variable [InvolutiveInv G] [HasMeasurableInv G]
 
 @[simp, to_additive]
 theorem inv_apply (μ : Measure G) (s : Set G) : μ.inv s = μ s⁻¹ :=
@@ -387,7 +387,7 @@ theorem measure_preimage_inv (μ : Measure G) [IsInvInvariant μ] (A : Set G) :
 instance (μ : Measure G) [SigmaFinite μ] : SigmaFinite μ.inv :=
   (MeasurableEquiv.inv G).sigmaFiniteMap ‹_›
 
-end HasInvolutiveInv
+end InvolutiveInv
 
 section mul_inv
 

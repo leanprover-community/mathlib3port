@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.algebra_map
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,12 +46,12 @@ instance algebraOfAlgebra :
       A[X] where 
   smul_def' r p :=
     to_finsupp_injective <| by
-      dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
+      dsimp only [RingHom.toFun_eq_coe, RingHom.comp_apply]
       rw [to_finsupp_smul, to_finsupp_mul, to_finsupp_C]
       exact Algebra.smul_def' _ _
   commutes' r p :=
     to_finsupp_injective <| by
-      dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
+      dsimp only [RingHom.toFun_eq_coe, RingHom.comp_apply]
       simp_rw [to_finsupp_mul, to_finsupp_C]
       convert Algebra.commutes' r p.to_finsupp
   toRingHom := c.comp (algebraMap R A)
@@ -410,7 +410,7 @@ section CommRing
 
 variable [CommRing S] {f : R →+* S}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_eval : p ∣ f.eval z)
     (dvd_terms : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
   by_cases hi : i ∈ f.support
@@ -425,7 +425,7 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_ev
     simp [hi]
 #align polynomial.dvd_term_of_dvd_eval_of_dvd_terms Polynomial.dvd_term_of_dvd_eval_of_dvd_terms
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem dvd_term_of_is_root_of_dvd_terms {r p : S} {f : S[X]} (i : ℕ) (hr : f.IsRoot r)
     (h : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * r ^ j) : p ∣ f.coeff i * r ^ i :=
   dvd_term_of_dvd_eval_of_dvd_terms i (Eq.symm hr ▸ dvd_zero p) h

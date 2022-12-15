@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.stone_weierstrass
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -169,8 +169,8 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open TopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (f g «expr ∈ » L) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (f g «expr ∈ » L) -/
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊓ g ∈ L)
@@ -208,7 +208,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     intro x y
     refine' IsOpen.mem_nhds _ _
     · apply is_open_lt <;> continuity
-    · rw [Set.mem_set_of_eq, w₂]
+    · rw [Set.mem_setOf_eq, w₂]
       exact sub_lt_self _ Pos
   -- Fixing `x` for a moment, we have a family of functions `λ y, g x y`
   -- which on different patches (the `U x y`) are greater than `f z - ε`.
@@ -245,7 +245,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     intro x
     refine' IsOpen.mem_nhds _ _
     · apply is_open_lt <;> continuity
-    · dsimp only [W, Set.mem_set_of_eq]
+    · dsimp only [W, Set.mem_setOf_eq]
       rw [h_eq]
       exact lt_add_of_pos_right _ Pos
   -- Since `X` is compact, there is some finset `ys t`

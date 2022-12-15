@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.skew_adjoint
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ def skewAdjointMatricesLieSubalgebraEquiv (P : Matrix n n R) (h : Invertible P) 
         simp only [LieSubalgebra.mem_coe, Submodule.mem_map_equiv, LieSubalgebra.mem_map_submodule,
           coe_coe]
         exact this
-      simp [Matrix.IsSkewAdjoint, J.is_adjoint_pair_equiv' _ _ P (is_unit_of_invertible P)])
+      simp [Matrix.IsSkewAdjoint, J.is_adjoint_pair_equiv' _ _ P (isUnit_of_invertible P)])
 #align skew_adjoint_matrices_lie_subalgebra_equiv skewAdjointMatricesLieSubalgebraEquiv
 
 theorem skew_adjoint_matrices_lie_subalgebra_equiv_apply (P : Matrix n n R) (h : Invertible P)

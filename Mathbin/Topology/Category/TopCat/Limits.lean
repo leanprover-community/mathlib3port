@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.category.Top.limits
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ def limitConeInfiIsLimit (F : J ⥤ TopCat.{max v u}) : IsLimit (limitConeInfi F
           (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
 #align Top.limit_cone_infi_is_limit TopCat.limitConeInfiIsLimit
 
-instance Top_has_limits_of_size :
+instance topHasLimitsOfSize :
     HasLimitsOfSize.{v}
       TopCat.{max v
           u} where HasLimitsOfShape J 𝒥 :=
@@ -113,10 +113,10 @@ instance Top_has_limits_of_size :
         has_limit.mk
           { Cone := limit_cone F
             IsLimit := limit_cone_is_limit F } }
-#align Top.Top_has_limits_of_size TopCat.Top_has_limits_of_size
+#align Top.Top_has_limits_of_size TopCat.topHasLimitsOfSize
 
 instance Top_has_limits : HasLimits TopCat.{u} :=
-  TopCat.Top_has_limits_of_size.{u, u}
+  TopCat.topHasLimitsOfSize.{u, u}
 #align Top.Top_has_limits TopCat.Top_has_limits
 
 instance forgetPreservesLimitsOfSize :
@@ -166,7 +166,7 @@ def colimitCoconeIsColimit (F : J ⥤ TopCat.{max v u}) : IsColimit (colimitCoco
           (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
 #align Top.colimit_cocone_is_colimit TopCat.colimitCoconeIsColimit
 
-instance Top_has_colimits_of_size :
+instance topHasColimitsOfSize :
     HasColimitsOfSize.{v}
       TopCat.{max v
           u} where HasColimitsOfShape J 𝒥 :=
@@ -174,10 +174,10 @@ instance Top_has_colimits_of_size :
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
-#align Top.Top_has_colimits_of_size TopCat.Top_has_colimits_of_size
+#align Top.Top_has_colimits_of_size TopCat.topHasColimitsOfSize
 
 instance Top_has_colimits : HasColimits TopCat.{u} :=
-  TopCat.Top_has_colimits_of_size.{u, u}
+  TopCat.topHasColimitsOfSize.{u, u}
 #align Top.Top_has_colimits TopCat.Top_has_colimits
 
 instance forgetPreservesColimitsOfSize :
@@ -227,7 +227,7 @@ def piIsoPi {ι : Type v} (α : ι → TopCat.{max v u}) : ∏ α ≅ TopCat.of 
   (limit.isLimit _).conePointUniqueUpToIso (piFanIsLimit α)
 #align Top.pi_iso_pi TopCat.piIsoPi
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pi_iso_pi_inv_π {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) :
     (piIsoPi α).inv ≫ Pi.π α i = piπ α i := by simp [pi_iso_pi]
 #align Top.pi_iso_pi_inv_π TopCat.pi_iso_pi_inv_π
@@ -280,7 +280,7 @@ def sigmaIsoSigma {ι : Type v} (α : ι → TopCat.{max v u}) : ∐ α ≅ TopC
   (colimit.isColimit _).coconePointUniqueUpToIso (sigmaCofanIsColimit α)
 #align Top.sigma_iso_sigma TopCat.sigmaIsoSigma
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem sigma_iso_sigma_hom_ι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) :
     Sigma.ι α i ≫ (sigmaIsoSigma α).Hom = sigmaι α i := by simp [sigma_iso_sigma]
 #align Top.sigma_iso_sigma_hom_ι TopCat.sigma_iso_sigma_hom_ι
@@ -355,13 +355,13 @@ def prodIsoProd (X Y : TopCat.{u}) : X ⨯ Y ≅ TopCat.of (X × Y) :=
   (limit.isLimit _).conePointUniqueUpToIso (prodBinaryFanIsLimit X Y)
 #align Top.prod_iso_prod TopCat.prodIsoProd
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem prod_iso_prod_hom_fst (X Y : TopCat.{u}) :
     (prodIsoProd X Y).Hom ≫ prod_fst = limits.prod.fst := by
   simpa [← iso.eq_inv_comp, prod_iso_prod]
 #align Top.prod_iso_prod_hom_fst TopCat.prod_iso_prod_hom_fst
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem prod_iso_prod_hom_snd (X Y : TopCat.{u}) :
     (prodIsoProd X Y).Hom ≫ prod_snd = limits.prod.snd := by
   simpa [← iso.eq_inv_comp, prod_iso_prod]
@@ -376,12 +376,12 @@ theorem prod_iso_prod_hom_apply {X Y : TopCat.{u}} (x : X ⨯ Y) :
   · exact concrete_category.congr_hom (prod_iso_prod_hom_snd X Y) x
 #align Top.prod_iso_prod_hom_apply TopCat.prod_iso_prod_hom_apply
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem prod_iso_prod_inv_fst (X Y : TopCat.{u}) :
     (prodIsoProd X Y).inv ≫ limits.prod.fst = prod_fst := by simp [iso.inv_comp_eq]
 #align Top.prod_iso_prod_inv_fst TopCat.prod_iso_prod_inv_fst
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem prod_iso_prod_inv_snd (X Y : TopCat.{u}) :
     (prodIsoProd X Y).inv ≫ limits.prod.snd = prod_snd := by simp [iso.inv_comp_eq]
 #align Top.prod_iso_prod_inv_snd TopCat.prod_iso_prod_inv_snd
@@ -489,7 +489,7 @@ def pullbackIsoProdSubtype (f : X ⟶ Z) (g : Y ⟶ Z) :
   (limit.isLimit _).conePointUniqueUpToIso (pullbackConeIsLimit f g)
 #align Top.pullback_iso_prod_subtype TopCat.pullbackIsoProdSubtype
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pullback_iso_prod_subtype_inv_fst (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullbackIsoProdSubtype f g).inv ≫ pullback.fst = pullbackFst f g := by
   simpa [pullback_iso_prod_subtype]
@@ -502,7 +502,7 @@ theorem pullback_iso_prod_subtype_inv_fst_apply (f : X ⟶ Z) (g : Y ⟶ Z)
   ConcreteCategory.congr_hom (pullback_iso_prod_subtype_inv_fst f g) x
 #align Top.pullback_iso_prod_subtype_inv_fst_apply TopCat.pullback_iso_prod_subtype_inv_fst_apply
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pullback_iso_prod_subtype_inv_snd (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullbackIsoProdSubtype f g).inv ≫ pullback.snd = pullbackSnd f g := by
   simpa [pullback_iso_prod_subtype]
@@ -554,7 +554,7 @@ theorem range_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
   ext x
   constructor
   · rintro ⟨y, rfl⟩
-    simp only [← comp_apply, Set.mem_set_of_eq]
+    simp only [← comp_apply, Set.mem_setOf_eq]
     congr 1
     simp [pullback.condition]
   · intro h
@@ -1155,12 +1155,12 @@ theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
       ⋂ (f : finite_diagram_arrow G) (hf : f ∈ H), { u | F.map f.2.2.2.2 (u f.1) = u f.2.1 } :=
     by 
     ext1
-    simp only [Set.mem_Inter, Set.mem_set_of_eq]
+    simp only [Set.mem_Inter, Set.mem_setOf_eq]
     rfl
   rw [this]
-  apply isClosedBInter
+  apply is_closed_bInter
   intro f hf
-  apply isClosedEq
+  apply is_closed_eq
   continuity
 #align Top.partial_sections.closed TopCat.partialSections.closed
 

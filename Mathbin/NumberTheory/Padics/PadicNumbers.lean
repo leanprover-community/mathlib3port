@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_numbers
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -657,7 +657,7 @@ open PadicSeq Padic
 
 variable {p : ℕ} [Fact p.Prime] (f : CauSeq _ (@padicNormE p _))
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 theorem rat_dense' (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   (Quotient.induction_on q) fun q' =>
     have : ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
@@ -700,7 +700,7 @@ theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) :
     simpa
 #align padic.exi_rat_seq_conv Padic.exi_rat_seq_conv
 
-theorem exiRatSeqConvCauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε hε => by
+theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε hε => by
   have hε3 : 0 < ε / 3 := div_pos hε (by norm_num)
   let ⟨N, hN⟩ := exi_rat_seq_conv f hε3
   let ⟨N2, hN2⟩ := f.cauchy₂ hε3
@@ -729,10 +729,10 @@ theorem exiRatSeqConvCauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε hε =>
           · exact hN2 _ (le_of_max_le_right hj) _ (le_max_right _ _)
       · apply_mod_cast hN
         apply le_max_left
-#align padic.exi_rat_seq_conv_cauchy Padic.exiRatSeqConvCauchy
+#align padic.exi_rat_seq_conv_cauchy Padic.exi_rat_seq_conv_cauchy
 
 private def lim' : PadicSeq p :=
-  ⟨_, exiRatSeqConvCauchy f⟩
+  ⟨_, exi_rat_seq_conv_cauchy f⟩
 #align padic.lim' padic.lim'
 
 private def lim : ℚ_[p] :=
@@ -860,7 +860,7 @@ theorem norm_p_zpow (n : ℤ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n) := by
 #align padic_norm_e.norm_p_zpow padicNormE.norm_p_zpow
 
 @[simp]
-theorem norm_p_pow (n : ℕ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n : ℤ) := by rw [← norm_p_zpow, zpow_coe_nat]
+theorem norm_p_pow (n : ℕ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n : ℤ) := by rw [← norm_p_zpow, zpow_ofNat]
 #align padic_norm_e.norm_p_pow padicNormE.norm_p_pow
 
 instance : NontriviallyNormedField ℚ_[p] :=
@@ -911,7 +911,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ‖(q : ℚ_[p])
       rw [padicNorm.eq_zpow_of_nonzero hnz', padicValRat, neg_sub,
         padicValNat.eq_zero_of_not_dvd hq]
       norm_cast
-      rw [zero_sub, zpow_neg, zpow_coe_nat]
+      rw [zero_sub, zpow_neg, zpow_ofNat]
       apply inv_le_one
       · norm_cast
         apply one_le_pow

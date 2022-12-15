@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.affine
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -454,8 +454,8 @@ theorem collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi {p₁ p₂ p₃ :
     · exact Or.inl (h.angle₃₁₂_eq_zero_of_ne h₃₂)
     · exact Or.inl (h.angle₂₃₁_eq_zero_of_ne h₁₂)
   · rcases h with (rfl | rfl | h | h)
-    · simpa using collinearPair ℝ p₁ p₃
-    · simpa using collinearPair ℝ p₁ p₃
+    · simpa using collinear_pair ℝ p₁ p₃
+    · simpa using collinear_pair ℝ p₁ p₃
     · rw [angle_eq_zero_iff_ne_and_wbtw] at h
       rcases h with (⟨-, h⟩ | ⟨-, h⟩)
       · rw [Set.insert_comm]

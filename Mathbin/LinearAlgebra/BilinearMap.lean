@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_map
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,9 +70,9 @@ variable [Module R Pₗ] [Module S Pₗ]
 
 variable [Module R M'] [Module S N'] [Module R₂ P'] [Module S₂ P']
 
-variable [SmulCommClass S₂ R₂ P] [SmulCommClass S R Pₗ] [SmulCommClass S₂ R₂ P']
+variable [SMulCommClass S₂ R₂ P] [SMulCommClass S R Pₗ] [SMulCommClass S₂ R₂ P']
 
-variable [SmulCommClass S₂ R P₂]
+variable [SMulCommClass S₂ R P₂]
 
 variable {ρ₁₂ : R →+* R₂} {σ₁₂ : S →+* S₂}
 
@@ -132,7 +132,7 @@ theorem congr_fun₂ {f g : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (h : 
 
 section
 
-attribute [local instance] SmulCommClass.symm
+attribute [local instance] SMulCommClass.symm
 
 /-- Given a linear map from `M` to linear maps from `N` to `P`, i.e., a bilinear map from `M × N` to
 `P`, change the order of variables and get a linear map from `N` to linear maps from `M` to `P`. -/
@@ -150,7 +150,7 @@ theorem flip_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (m : M) (
 #align linear_map.flip_apply LinearMap.flip_apply
 
 @[simp]
-theorem flip_flip [SmulCommClass R₂ S₂ P] (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) : f.flip.flip = f :=
+theorem flip_flip [SMulCommClass R₂ S₂ P] (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) : f.flip.flip = f :=
   LinearMap.ext₂ fun x y => (f.flip.flip_apply _ _).trans (f.flip_apply _ _)
 #align linear_map.flip_flip LinearMap.flip_flip
 
@@ -450,7 +450,7 @@ variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
 
 variable [Module R Mₗ] [Module R Nₗ] [Module R Pₗ]
 
-variable [SmulCommClass S₂ R₂ P]
+variable [SMulCommClass S₂ R₂ P]
 
 variable {ρ₁₂ : R →+* R₂} {σ₁₂ : S →+* S₂}
 

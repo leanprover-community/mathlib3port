@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.classical
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,7 +291,7 @@ theorem JD_transform [Fintype l] : (pD l R)ᵀ ⬝ jD l R ⬝ pD l R = (2 : R) �
 
 theorem PD_inv [Fintype l] [Invertible (2 : R)] : pD l R * ⅟ (2 : R) • (pD l R)ᵀ = 1 := by
   have h : ⅟ (2 : R) • (1 : Matrix l l R) + ⅟ (2 : R) • 1 = 1 := by
-    rw [← smul_add, ← two_smul R _, smul_smul, inv_of_mul_self, one_smul]
+    rw [← smul_add, ← two_smul R _, smul_smul, invOf_mul_self, one_smul]
   erw [Matrix.from_blocks_transpose, Matrix.from_blocks_smul, Matrix.mul_eq_mul,
     Matrix.from_blocks_multiply]
   simp [h]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.terminates_iff_rat
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ theorem coe_stream_nth_rat_eq :
   generalized_continued_fraction.int_fract_pair.coe_stream_nth_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_stream_nth_rat_eq
 
 theorem coe_stream_rat_eq :
-    ((IntFractPair.stream q).map (Option.map (mapFr coe)) : Stream <| Option <| IntFractPair K) =
+    ((IntFractPair.stream q).map (Option.map (mapFr coe)) : Stream' <| Option <| IntFractPair K) =
       IntFractPair.stream v :=
   by 
   funext n
@@ -234,7 +234,7 @@ theorem coe_of_s_nth_rat_eq :
   simp only [Seq.nth]
   rw [← int_fract_pair.coe_stream_rat_eq v_eq_q]
   rcases succ_nth_stream_eq : int_fract_pair.stream q (n + 1) with (_ | ⟨_, _⟩) <;>
-    simp [Stream.map, Stream.nth, succ_nth_stream_eq]
+    simp [Stream'.map, Stream'.nth, succ_nth_stream_eq]
 #align
   generalized_continued_fraction.coe_of_s_nth_rat_eq GeneralizedContinuedFraction.coe_of_s_nth_rat_eq
 
@@ -358,7 +358,8 @@ end IntFractPair
 theorem terminatesOfRat (q : ℚ) : (of q).Terminates :=
   Exists.elim (IntFractPair.exists_nth_stream_eq_none_of_rat q) fun n stream_nth_eq_none =>
     Exists.intro n
-      (have : IntFractPair.stream q (n + 1) = none := IntFractPair.streamIsSeq q stream_nth_eq_none
+      (have : IntFractPair.stream q (n + 1) = none :=
+        IntFractPair.stream_is_seq q stream_nth_eq_none
       of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elimRight this)
 #align generalized_continued_fraction.terminates_of_rat GeneralizedContinuedFraction.terminatesOfRat
 

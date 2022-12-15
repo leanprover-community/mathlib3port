@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfun
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -502,7 +502,7 @@ theorem core_eq (f : α →. β) (s : Set β) : f.core s = f.Preimage s ∪ f.Do
 theorem preimage_as_subtype (f : α →. β) (s : Set β) :
     f.asSubtype ⁻¹' s = Subtype.val ⁻¹' f.Preimage s := by
   ext x
-  simp only [Set.mem_preimage, Set.mem_set_of_eq, Pfun.asSubtype, Pfun.mem_preimage]
+  simp only [Set.mem_preimage, Set.mem_setOf_eq, Pfun.asSubtype, Pfun.mem_preimage]
   show f.fn x.val _ ∈ s ↔ ∃ y ∈ s, y ∈ f x.val
   exact
     Iff.intro (fun h => ⟨_, h, Part.get_mem _⟩) fun ⟨y, ys, fxy⟩ =>

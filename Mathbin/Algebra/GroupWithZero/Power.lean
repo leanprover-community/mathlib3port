@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.power
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ attribute [local ematch] le_of_lt
 
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
   | (n : ℕ), h => by 
-    rw [zpow_coe_nat, zero_pow']
+    rw [zpow_ofNat, zero_pow']
     simpa using h
   | -[n+1], h => by simp
 #align zero_zpow zero_zpow
@@ -75,11 +75,11 @@ theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
 #align zero_zpow_eq zero_zpow_eq
 
 theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
-  | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_coe_nat, pow_succ']
-  | -[0+1] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, inv_mul_cancel ha]
+  | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_ofNat, pow_succ']
+  | -[0+1] => by erw [zpow_zero, zpow_negSucc, pow_one, inv_mul_cancel ha]
   | -[n + 1+1] => by
     rw [Int.negSucc_eq, zpow_neg, neg_add, neg_add_cancel_right, zpow_neg, ← Int.ofNat_succ,
-      zpow_coe_nat, zpow_coe_nat, pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha,
+      zpow_ofNat, zpow_ofNat, pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha,
       mul_one]
 #align zpow_add_one₀ zpow_add_one₀
 
@@ -151,10 +151,10 @@ theorem zpow_bit1₀ (a : G₀) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a := by
 
 theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z ≠ 0
   | (n : ℕ) => by 
-    rw [zpow_coe_nat]
+    rw [zpow_ofNat]
     exact pow_ne_zero _ ha
   | -[n+1] => by 
-    rw [zpow_neg_succ_of_nat]
+    rw [zpow_negSucc]
     exact inv_ne_zero (pow_ne_zero _ ha)
 #align zpow_ne_zero_of_ne_zero zpow_ne_zero_of_ne_zero
 
@@ -167,7 +167,7 @@ theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by
 #align zpow_bit1' zpow_bit1'
 
 theorem zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=
-  Classical.by_contradiction fun hx => zpow_ne_zero_of_ne_zero hx n h
+  by_contradiction fun hx => zpow_ne_zero_of_ne_zero hx n h
 #align zpow_eq_zero zpow_eq_zero
 
 theorem zpow_eq_zero_iff {a : G₀} {n : ℤ} (hn : n ≠ 0) : a ^ n = 0 ↔ a = 0 :=

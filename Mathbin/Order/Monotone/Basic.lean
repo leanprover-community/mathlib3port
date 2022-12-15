@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.monotone.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -717,7 +717,7 @@ variable [Preorder α] [Preorder β] {f g : α → β} {a : α}
 #print StrictMono.isMax_of_apply /-
 theorem StrictMono.isMax_of_apply (hf : StrictMono f) (ha : IsMax (f a)) : IsMax a :=
   of_not_not fun h =>
-    let ⟨b, hb⟩ := not_is_max_iff.1 h
+    let ⟨b, hb⟩ := not_isMax_iff.1 h
     (hf hb).not_is_max ha
 #align strict_mono.is_max_of_apply StrictMono.isMax_of_apply
 -/
@@ -725,7 +725,7 @@ theorem StrictMono.isMax_of_apply (hf : StrictMono f) (ha : IsMax (f a)) : IsMax
 #print StrictMono.isMin_of_apply /-
 theorem StrictMono.isMin_of_apply (hf : StrictMono f) (ha : IsMin (f a)) : IsMin a :=
   of_not_not fun h =>
-    let ⟨b, hb⟩ := not_is_min_iff.1 h
+    let ⟨b, hb⟩ := not_isMin_iff.1 h
     (hf hb).not_is_min ha
 #align strict_mono.is_min_of_apply StrictMono.isMin_of_apply
 -/
@@ -733,7 +733,7 @@ theorem StrictMono.isMin_of_apply (hf : StrictMono f) (ha : IsMin (f a)) : IsMin
 #print StrictAnti.isMax_of_apply /-
 theorem StrictAnti.isMax_of_apply (hf : StrictAnti f) (ha : IsMin (f a)) : IsMax a :=
   of_not_not fun h =>
-    let ⟨b, hb⟩ := not_is_max_iff.1 h
+    let ⟨b, hb⟩ := not_isMax_iff.1 h
     (hf hb).not_is_min ha
 #align strict_anti.is_max_of_apply StrictAnti.isMax_of_apply
 -/
@@ -741,7 +741,7 @@ theorem StrictAnti.isMax_of_apply (hf : StrictAnti f) (ha : IsMin (f a)) : IsMax
 #print StrictAnti.isMin_of_apply /-
 theorem StrictAnti.isMin_of_apply (hf : StrictAnti f) (ha : IsMax (f a)) : IsMin a :=
   of_not_not fun h =>
-    let ⟨b, hb⟩ := not_is_min_iff.1 h
+    let ⟨b, hb⟩ := not_isMin_iff.1 h
     (hf hb).not_is_max ha
 #align strict_anti.is_min_of_apply StrictAnti.isMin_of_apply
 -/
@@ -1141,6 +1141,7 @@ end PartialOrder
 
 variable [LinearOrder β] {f : α → β} {s : Set α} {x y : α}
 
+#print not_monotone_not_antitone_iff_exists_le_le /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
 theorem not_monotone_not_antitone_iff_exists_le_le :
@@ -1172,7 +1173,9 @@ theorem not_monotone_not_antitone_iff_exists_le_le :
     · exact ⟨a, b, d, hab, hbd, Or.inr ⟨hfba, hfbd⟩⟩
     · exact ⟨a, d, b, had, hdb, Or.inl ⟨hfac.trans_lt hfcd, hfbd⟩⟩
 #align not_monotone_not_antitone_iff_exists_le_le not_monotone_not_antitone_iff_exists_le_le
+-/
 
+#print not_monotone_not_antitone_iff_exists_lt_lt /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
 theorem not_monotone_not_antitone_iff_exists_lt_lt :
@@ -1186,6 +1189,7 @@ theorem not_monotone_not_antitone_iff_exists_lt_lt :
       rintro rfl <;>
     simpa using h
 #align not_monotone_not_antitone_iff_exists_lt_lt not_monotone_not_antitone_iff_exists_lt_lt
+-/
 
 /-!
 ### Strictly monotone functions and `cmp`
@@ -1258,35 +1262,23 @@ theorem Nat.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] 
 #align nat.rel_of_forall_rel_succ_of_le Nat.rel_of_forall_rel_succ_of_le
 -/
 
-/- warning: monotone_nat_of_le_succ -> monotone_nat_of_le_succ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (Monotone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (Monotone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align monotone_nat_of_le_succ monotone_nat_of_le_succₓ'. -/
+#print monotone_nat_of_le_succ /-
 theorem monotone_nat_of_le_succ {f : ℕ → α} (hf : ∀ n, f n ≤ f (n + 1)) : Monotone f :=
   Nat.rel_of_forall_rel_succ_of_le (· ≤ ·) hf
 #align monotone_nat_of_le_succ monotone_nat_of_le_succ
+-/
 
-/- warning: antitone_nat_of_succ_le -> antitone_nat_of_succ_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f n)) -> (Antitone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n)) -> (Antitone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align antitone_nat_of_succ_le antitone_nat_of_succ_leₓ'. -/
+#print antitone_nat_of_succ_le /-
 theorem antitone_nat_of_succ_le {f : ℕ → α} (hf : ∀ n, f (n + 1) ≤ f n) : Antitone f :=
   @monotone_nat_of_le_succ αᵒᵈ _ _ hf
 #align antitone_nat_of_succ_le antitone_nat_of_succ_le
+-/
 
-/- warning: strict_mono_nat_of_lt_succ -> strictMono_nat_of_lt_succ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (forall (n : Nat), LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (StrictMono.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (forall (n : Nat), LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (StrictMono.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align strict_mono_nat_of_lt_succ strictMono_nat_of_lt_succₓ'. -/
+#print strictMono_nat_of_lt_succ /-
 theorem strictMono_nat_of_lt_succ {f : ℕ → α} (hf : ∀ n, f n < f (n + 1)) : StrictMono f :=
   Nat.rel_of_forall_rel_succ_of_lt (· < ·) hf
 #align strict_mono_nat_of_lt_succ strictMono_nat_of_lt_succ
+-/
 
 theorem strict_anti_nat_of_succ_lt {f : ℕ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
   @strictMono_nat_of_lt_succ αᵒᵈ _ f hf
@@ -1294,12 +1286,7 @@ theorem strict_anti_nat_of_succ_lt {f : ℕ → α} (hf : ∀ n, f (n + 1) < f n
 
 namespace Nat
 
-/- warning: nat.exists_strict_mono' -> Nat.exists_strictMono' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Exists.{succ u1} (Nat -> α) (fun (f : Nat -> α) => And (StrictMono.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) (Eq.{succ u1} α (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Exists.{succ u1} (Nat -> α) (fun (f : Nat -> α) => And (StrictMono.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) _inst_1 f) (Eq.{succ u1} α (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a))
-Case conversion may be inaccurate. Consider using '#align nat.exists_strict_mono' Nat.exists_strictMono'ₓ'. -/
+#print Nat.exists_strictMono' /-
 /-- If `α` is a preorder with no maximal elements, then there exists a strictly monotone function
 `ℕ → α` with any prescribed value of `f 0`. -/
 theorem exists_strictMono' [NoMaxOrder α] (a : α) : ∃ f : ℕ → α, StrictMono f ∧ f 0 = a := by
@@ -1307,27 +1294,19 @@ theorem exists_strictMono' [NoMaxOrder α] (a : α) : ∃ f : ℕ → α, Strict
   choose g hg
   exact ⟨fun n => Nat.recOn n a fun _ => g, strictMono_nat_of_lt_succ fun n => hg _, rfl⟩
 #align nat.exists_strict_mono' Nat.exists_strictMono'
+-/
 
-/- warning: nat.exists_strict_anti' -> Nat.exists_strictAnti' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Exists.{succ u1} (Nat -> α) (fun (f : Nat -> α) => And (StrictAnti.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) (Eq.{succ u1} α (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Exists.{succ u1} (Nat -> α) (fun (f : Nat -> α) => And (StrictAnti.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) _inst_1 f) (Eq.{succ u1} α (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a))
-Case conversion may be inaccurate. Consider using '#align nat.exists_strict_anti' Nat.exists_strictAnti'ₓ'. -/
+#print Nat.exists_strictAnti' /-
 /-- If `α` is a preorder with no maximal elements, then there exists a strictly antitone function
 `ℕ → α` with any prescribed value of `f 0`. -/
 theorem exists_strictAnti' [NoMinOrder α] (a : α) : ∃ f : ℕ → α, StrictAnti f ∧ f 0 = a :=
   exists_strictMono' (OrderDual.toDual a)
 #align nat.exists_strict_anti' Nat.exists_strictAnti'
+-/
 
 variable (α)
 
-/- warning: nat.exists_strict_mono -> Nat.exists_strictMono is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Preorder.{u1} α] [_inst_2 : Nonempty.{succ u1} α] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Exists.{succ u1} (Nat -> α) (fun (f : Nat -> α) => StrictMono.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Preorder.{u1} α] [_inst_2 : Nonempty.{succ u1} α] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Exists.{succ u1} (Nat -> α) (fun (f : Nat -> α) => StrictMono.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align nat.exists_strict_mono Nat.exists_strictMonoₓ'. -/
+#print Nat.exists_strictMono /-
 /-- If `α` is a nonempty preorder with no maximal elements, then there exists a strictly monotone
 function `ℕ → α`. -/
 theorem exists_strictMono [Nonempty α] [NoMaxOrder α] : ∃ f : ℕ → α, StrictMono f :=
@@ -1335,18 +1314,15 @@ theorem exists_strictMono [Nonempty α] [NoMaxOrder α] : ∃ f : ℕ → α, St
   let ⟨f, hf, hfa⟩ := exists_strictMono' a
   ⟨f, hf⟩
 #align nat.exists_strict_mono Nat.exists_strictMono
+-/
 
-/- warning: nat.exists_strict_anti -> Nat.exists_strictAnti is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Preorder.{u1} α] [_inst_2 : Nonempty.{succ u1} α] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Exists.{succ u1} (Nat -> α) (fun (f : Nat -> α) => StrictAnti.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Preorder.{u1} α] [_inst_2 : Nonempty.{succ u1} α] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Exists.{succ u1} (Nat -> α) (fun (f : Nat -> α) => StrictAnti.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align nat.exists_strict_anti Nat.exists_strictAntiₓ'. -/
+#print Nat.exists_strictAnti /-
 /-- If `α` is a nonempty preorder with no minimal elements, then there exists a strictly antitone
 function `ℕ → α`. -/
 theorem exists_strictAnti [Nonempty α] [NoMinOrder α] : ∃ f : ℕ → α, StrictAnti f :=
   exists_strictMono αᵒᵈ
 #align nat.exists_strict_anti Nat.exists_strictAnti
+-/
 
 end Nat
 
@@ -1448,12 +1424,7 @@ theorem exists_strictAnti : ∃ f : ℤ → α, StrictAnti f :=
 
 end Int
 
-/- warning: monotone.ne_of_lt_of_lt_nat -> Monotone.ne_of_lt_of_lt_nat is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (Monotone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f n) x) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall (a : Nat), Ne.{succ u1} α (f a) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (Monotone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) _inst_1 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f n) x) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (forall (a : Nat), Ne.{succ u1} α (f a) x))
-Case conversion may be inaccurate. Consider using '#align monotone.ne_of_lt_of_lt_nat Monotone.ne_of_lt_of_lt_natₓ'. -/
+#print Monotone.ne_of_lt_of_lt_nat /-
 -- TODO@Yael: Generalize the following four to succ orders
 /-- If `f` is a monotone function from `ℕ` to a preorder such that `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
@@ -1462,13 +1433,9 @@ theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ)
   rintro rfl
   exact (hf.reflect_lt h1).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h2)
 #align monotone.ne_of_lt_of_lt_nat Monotone.ne_of_lt_of_lt_nat
+-/
 
-/- warning: antitone.ne_of_lt_of_lt_nat -> Antitone.ne_of_lt_of_lt_nat is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (Antitone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) x) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x (f n)) -> (forall (a : Nat), Ne.{succ u1} α (f a) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : Nat -> α}, (Antitone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) _inst_1 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x (f n)) -> (forall (a : Nat), Ne.{succ u1} α (f a) x))
-Case conversion may be inaccurate. Consider using '#align antitone.ne_of_lt_of_lt_nat Antitone.ne_of_lt_of_lt_natₓ'. -/
+#print Antitone.ne_of_lt_of_lt_nat /-
 /-- If `f` is an antitone function from `ℕ` to a preorder such that `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
 theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ) {x : α}
@@ -1476,6 +1443,7 @@ theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ)
   rintro rfl
   exact (hf.reflect_lt h2).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_nat Antitone.ne_of_lt_of_lt_nat
+-/
 
 /- warning: monotone.ne_of_lt_of_lt_int -> Monotone.ne_of_lt_of_lt_int is a dubious translation:
 lean 3 declaration is
@@ -1505,15 +1473,11 @@ theorem Antitone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Antitone f) (n : ℤ)
   exact (hf.reflect_lt h2).not_le (Int.le_of_lt_add_one <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_int Antitone.ne_of_lt_of_lt_int
 
-/- warning: strict_mono.id_le -> StrictMono.id_le is a dubious translation:
-lean 3 declaration is
-  forall {φ : Nat -> Nat}, (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) φ) -> (forall (n : Nat), LE.le.{0} Nat Nat.hasLe n (φ n))
-but is expected to have type
-  forall {φ : Nat -> Nat}, (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) φ) -> (forall (n : Nat), LE.le.{0} Nat instLENat n (φ n))
-Case conversion may be inaccurate. Consider using '#align strict_mono.id_le StrictMono.id_leₓ'. -/
+#print StrictMono.id_le /-
 theorem StrictMono.id_le {φ : ℕ → ℕ} (h : StrictMono φ) : ∀ n, n ≤ φ n := fun n =>
   Nat.recOn n (Nat.zero_le _) fun n hn => Nat.succ_le_of_lt (hn.trans_lt <| h <| Nat.lt_succ_self n)
 #align strict_mono.id_le StrictMono.id_le
+-/
 
 end Preorder
 

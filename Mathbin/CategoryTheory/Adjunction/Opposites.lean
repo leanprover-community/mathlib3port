@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Thomas Read, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.opposites
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem hom_equiv_left_adjoint_uniq_hom_app {F F' : C ⥤ D} {G : D ⥤ C} (adj1
 #align
   category_theory.adjunction.hom_equiv_left_adjoint_uniq_hom_app CategoryTheory.Adjunction.hom_equiv_left_adjoint_uniq_hom_app
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem unit_left_adjoint_uniq_hom {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G) :
     adj1.Unit ≫ whiskerRight (leftAdjointUniq adj1 adj2).Hom G = adj2.Unit := by
   ext x
@@ -129,7 +129,7 @@ theorem unit_left_adjoint_uniq_hom {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ 
 #align
   category_theory.adjunction.unit_left_adjoint_uniq_hom CategoryTheory.Adjunction.unit_left_adjoint_uniq_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem unit_left_adjoint_uniq_hom_app {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G)
     (x : C) : adj1.Unit.app x ≫ G.map ((leftAdjointUniq adj1 adj2).Hom.app x) = adj2.Unit.app x :=
   by 
@@ -138,7 +138,7 @@ theorem unit_left_adjoint_uniq_hom_app {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F 
 #align
   category_theory.adjunction.unit_left_adjoint_uniq_hom_app CategoryTheory.Adjunction.unit_left_adjoint_uniq_hom_app
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem left_adjoint_uniq_hom_counit {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G) :
     whiskerLeft G (leftAdjointUniq adj1 adj2).Hom ≫ adj2.counit = adj1.counit := by
   ext x
@@ -157,7 +157,7 @@ theorem left_adjoint_uniq_hom_counit {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F �
 #align
   category_theory.adjunction.left_adjoint_uniq_hom_counit CategoryTheory.Adjunction.left_adjoint_uniq_hom_counit
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem left_adjoint_uniq_hom_app_counit {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G)
     (x : D) :
     (leftAdjointUniq adj1 adj2).Hom.app (G.obj x) ≫ adj2.counit.app x = adj1.counit.app x := by
@@ -173,7 +173,7 @@ theorem left_adjoint_uniq_inv_app {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G
 #align
   category_theory.adjunction.left_adjoint_uniq_inv_app CategoryTheory.Adjunction.left_adjoint_uniq_inv_app
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem left_adjoint_uniq_trans {F F' F'' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G)
     (adj3 : F'' ⊣ G) :
     (leftAdjointUniq adj1 adj2).Hom ≫ (leftAdjointUniq adj2 adj3).Hom =
@@ -188,7 +188,7 @@ theorem left_adjoint_uniq_trans {F F' F'' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣
 #align
   category_theory.adjunction.left_adjoint_uniq_trans CategoryTheory.Adjunction.left_adjoint_uniq_trans
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem left_adjoint_uniq_trans_app {F F' F'' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G)
     (adj3 : F'' ⊣ G) (x : C) :
     (leftAdjointUniq adj1 adj2).Hom.app x ≫ (leftAdjointUniq adj2 adj3).Hom.app x =
@@ -228,7 +228,7 @@ theorem hom_equiv_symm_right_adjoint_uniq_hom_app {F : C ⥤ D} {G G' : D ⥤ C}
 #align
   category_theory.adjunction.hom_equiv_symm_right_adjoint_uniq_hom_app CategoryTheory.Adjunction.hom_equiv_symm_right_adjoint_uniq_hom_app
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem unit_right_adjoint_uniq_hom_app {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G')
     (x : C) : adj1.Unit.app x ≫ (rightAdjointUniq adj1 adj2).Hom.app (F.obj x) = adj2.Unit.app x :=
   by 
@@ -240,7 +240,7 @@ theorem unit_right_adjoint_uniq_hom_app {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F
 #align
   category_theory.adjunction.unit_right_adjoint_uniq_hom_app CategoryTheory.Adjunction.unit_right_adjoint_uniq_hom_app
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem unit_right_adjoint_uniq_hom {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G') :
     adj1.Unit ≫ whiskerLeft F (rightAdjointUniq adj1 adj2).Hom = adj2.Unit := by
   ext x
@@ -248,7 +248,7 @@ theorem unit_right_adjoint_uniq_hom {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣
 #align
   category_theory.adjunction.unit_right_adjoint_uniq_hom CategoryTheory.Adjunction.unit_right_adjoint_uniq_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem right_adjoint_uniq_hom_app_counit {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G')
     (x : D) :
     F.map ((rightAdjointUniq adj1 adj2).Hom.app x) ≫ adj2.counit.app x = adj1.counit.app x := by
@@ -260,7 +260,7 @@ theorem right_adjoint_uniq_hom_app_counit {F : C ⥤ D} {G G' : D ⥤ C} (adj1 :
 #align
   category_theory.adjunction.right_adjoint_uniq_hom_app_counit CategoryTheory.Adjunction.right_adjoint_uniq_hom_app_counit
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem right_adjoint_uniq_hom_counit {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G') :
     whiskerRight (rightAdjointUniq adj1 adj2).Hom F ≫ adj2.counit = adj1.counit := by
   ext
@@ -275,7 +275,7 @@ theorem right_adjoint_uniq_inv_app {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ 
 #align
   category_theory.adjunction.right_adjoint_uniq_inv_app CategoryTheory.Adjunction.right_adjoint_uniq_inv_app
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem right_adjoint_uniq_trans_app {F : C ⥤ D} {G G' G'' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G')
     (adj3 : F ⊣ G'') (x : D) :
     (rightAdjointUniq adj1 adj2).Hom.app x ≫ (rightAdjointUniq adj2 adj3).Hom.app x =
@@ -288,7 +288,7 @@ theorem right_adjoint_uniq_trans_app {F : C ⥤ D} {G G' G'' : D ⥤ C} (adj1 : 
 #align
   category_theory.adjunction.right_adjoint_uniq_trans_app CategoryTheory.Adjunction.right_adjoint_uniq_trans_app
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem right_adjoint_uniq_trans {F : C ⥤ D} {G G' G'' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G')
     (adj3 : F ⊣ G'') :
     (rightAdjointUniq adj1 adj2).Hom ≫ (rightAdjointUniq adj2 adj3).Hom =

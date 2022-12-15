@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek
 
 ! This file was ported from Lean 3 source module tactic.core
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,12 +165,12 @@ variable {σ : Type} {α : Type u}
 
 -- Note that this is a generalization of `tactic.read` in core.
 /-- `get_state` returns the underlying state inside an interaction monad, from within that monad. -/
-unsafe def get_state : interaction_monad σ σ := fun state => success State State
+unsafe def get_state : interaction_monad σ σ := fun state => success StateM StateM
 #align interaction_monad.get_state interaction_monad.get_state
 
 -- Note that this is a generalization of `tactic.write` in core.
 /-- `set_state` sets the underlying state inside an interaction monad, from within that monad. -/
-unsafe def set_state (state : σ) : interaction_monad σ Unit := fun _ => success () State
+unsafe def set_state (state : σ) : interaction_monad σ Unit := fun _ => success () StateM
 #align interaction_monad.set_state interaction_monad.set_state
 
 /-- `run_with_state state tac` applies `tac` to the given state `state` and returns the result,
@@ -179,7 +179,7 @@ If `tac` fails, then `run_with_state` does too.
 -/
 unsafe def run_with_state (state : σ) (tac : interaction_monad σ α) : interaction_monad σ α :=
   fun s =>
-  match tac State with
+  match tac StateM with
   | success val _ => success val s
   | exception fn Pos _ => exception fn Pos s
 #align interaction_monad.run_with_state interaction_monad.run_with_state

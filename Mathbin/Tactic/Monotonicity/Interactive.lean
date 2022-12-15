@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.monotonicity.interactive
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ unsafe inductive mono_function (elab : Bool := true)
   | assoc_comm : expr elab → expr elab → mono_function
 #align tactic.interactive.mono_function tactic.interactive.mono_function
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
 unsafe instance : DecidableEq mono_function := by
   run_tac
     mk_dec_eq_instance

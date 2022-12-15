@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.real
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ universe u v w
 variable {α : Type u} {β : Type v} {γ : Type w}
 
 instance : NoncompactSpace ℝ :=
-  Int.closedEmbeddingCoeReal.NoncompactSpace
+  Int.closed_embedding_coe_real.NoncompactSpace
 
 theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.1 + p.2 :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
@@ -177,7 +177,7 @@ section
 theorem closure_of_rat_image_lt {q : ℚ} :
     closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
   (Subset.antisymm
-      ((isClosedGe' _).closure_subset_iff.2
+      ((is_closed_ge' _).closure_subset_iff.2
         (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h)))
     fun x hx =>
     mem_closure_iff_nhds.2 fun t ht =>

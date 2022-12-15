@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module group_theory.free_abelian_group
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ section
 open Classical
 
 theorem of_injective : Function.Injective (of : α → FreeAbelianGroup α) := fun x y hoxy =>
-  Classical.by_contradiction fun hxy : x ≠ y =>
+  by_contradiction fun hxy : x ≠ y =>
     let f : FreeAbelianGroup α →+ ℤ := lift fun z => if x = z then (1 : ℤ) else 0
     have hfx1 : f (of x) = 1 := (lift.of _ _).trans <| if_pos rfl
     have hfy1 : f (of y) = 1 := hoxy ▸ hfx1
@@ -529,7 +529,7 @@ def liftMonoid :
   invFun F := MonoidHom.comp (↑F) ofMulHom
   left_inv f := MonoidHom.ext <| lift.of _
   right_inv F :=
-    RingHom.coe_add_monoid_hom_injective <| lift.apply_symm_apply (↑F : FreeAbelianGroup α →+ R)
+    RingHom.coe_addMonoidHom_injective <| lift.apply_symm_apply (↑F : FreeAbelianGroup α →+ R)
 #align free_abelian_group.lift_monoid FreeAbelianGroup.liftMonoid
 
 @[simp]

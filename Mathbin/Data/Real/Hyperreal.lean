@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module data.real.hyperreal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -628,7 +628,7 @@ theorem infinite_pos_of_tendsto_top {f : ℕ → ℝ} (hf : Tendsto f atTop atTo
     have hi' : ∀ a : ℕ, f a < r + 1 → a < i := fun a => by
       rw [← not_le, ← not_le] <;> exact not_imp_not.mpr (hi a)
     have hS : { a : ℕ | r < f a }ᶜ ⊆ { a : ℕ | a ≤ i } := by
-      simp only [Set.compl_set_of, not_lt] <;>
+      simp only [Set.compl_setOf, not_lt] <;>
         exact fun a har => le_of_lt (hi' a (lt_of_le_of_lt har (lt_add_one _)))
     Germ.coe_lt.2 <| mem_hyperfilter_of_finite_compl <| (Set.finite_le_nat _).Subset hS
 #align hyperreal.infinite_pos_of_tendsto_top Hyperreal.infinite_pos_of_tendsto_top
@@ -640,7 +640,7 @@ theorem infinite_neg_of_tendsto_bot {f : ℕ → ℝ} (hf : Tendsto f atTop atBo
     have hi' : ∀ a : ℕ, r - 1 < f a → a < i := fun a => by
       rw [← not_le, ← not_le] <;> exact not_imp_not.mpr (hi a)
     have hS : { a : ℕ | f a < r }ᶜ ⊆ { a : ℕ | a ≤ i } := by
-      simp only [Set.compl_set_of, not_lt] <;>
+      simp only [Set.compl_setOf, not_lt] <;>
         exact fun a har => le_of_lt (hi' a (lt_of_lt_of_le (sub_one_lt _) har))
     Germ.coe_lt.2 <| mem_hyperfilter_of_finite_compl <| (Set.finite_le_nat _).Subset hS
 #align hyperreal.infinite_neg_of_tendsto_bot Hyperreal.infinite_neg_of_tendsto_bot
@@ -865,7 +865,7 @@ theorem infinite_pos_iff_infinitesimal_inv_pos {x : ℝ*} :
           (inv_lt (coe_lt_coe.2 hr) (hip 0)).mp (by convert hip r⁻¹)⟩,
       inv_pos.2 <| hip 0⟩,
     fun ⟨hi, hp⟩ r =>
-    (@Classical.by_cases (r = 0) (↑r < x) fun h => Eq.substr h (inv_pos.mp hp)) fun h =>
+    (@by_cases (r = 0) (↑r < x) fun h => Eq.substr h (inv_pos.mp hp)) fun h =>
       lt_of_le_of_lt (coe_le_coe.2 (le_abs_self r))
         ((inv_lt_inv (inv_pos.mp hp) (coe_lt_coe.2 (abs_pos.2 h))).mp
           ((infinitesimal_def.mp hi) (|r|)⁻¹ (inv_pos.2 (abs_pos.2 h))).2)⟩

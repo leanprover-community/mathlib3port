@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.mul_character
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -531,7 +531,7 @@ theorem IsNontrivial.sum_eq_zero [Fintype R] [IsDomain R'] {χ : MulChar R R'}
   rcases hχ with ⟨b, hb⟩
   refine' eq_zero_of_mul_eq_self_left hb _
   simp only [Finset.mul_sum, ← map_mul]
-  exact Fintype.sum_bijective _ (Units.mul_left_bijective b) _ _ fun x => rfl
+  exact Fintype.sum_bijective _ (Units.mulLeft_bijective b) _ _ fun x => rfl
 #align mul_char.is_nontrivial.sum_eq_zero MulChar.IsNontrivial.sum_eq_zero
 
 /-- The sum over all values of the trivial multiplicative character on a finite ring is

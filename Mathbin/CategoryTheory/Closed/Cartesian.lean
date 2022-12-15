@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Edward Ayers, Thomas Read
 
 ! This file was ported from Lean 3 source module category_theory.closed.cartesian
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,12 +110,12 @@ notation:20 A " ⟹ " B:19 => (exp A).obj B
 -- mathport name: «expr ^^ »
 notation:30 B " ^^ " A:30 => (exp A).obj B
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ev_coev : Limits.prod.map (𝟙 A) ((coev A).app B) ≫ (ev A).app (A ⨯ B) = 𝟙 (A ⨯ B) :=
   ihom.ev_coev A B
 #align category_theory.exp.ev_coev CategoryTheory.exp.ev_coev
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem coev_ev : (coev A).app (A ⟹ B) ≫ (exp A).map ((ev A).app B) = 𝟙 (A ⟹ B) :=
   ihom.coev_ev A B
 #align category_theory.exp.coev_ev CategoryTheory.exp.coev_ev
@@ -153,28 +153,28 @@ theorem hom_equiv_symm_apply_eq (f : Y ⟶ A ⟹ X) :
 #align
   category_theory.cartesian_closed.hom_equiv_symm_apply_eq CategoryTheory.CartesianClosed.hom_equiv_symm_apply_eq
 
-@[reassoc]
+@[reassoc.1]
 theorem curry_natural_left (f : X ⟶ X') (g : A ⨯ X' ⟶ Y) :
     curry (Limits.prod.map (𝟙 _) f ≫ g) = f ≫ curry g :=
   Adjunction.hom_equiv_naturality_left _ _ _
 #align
   category_theory.cartesian_closed.curry_natural_left CategoryTheory.CartesianClosed.curry_natural_left
 
-@[reassoc]
+@[reassoc.1]
 theorem curry_natural_right (f : A ⨯ X ⟶ Y) (g : Y ⟶ Y') :
     curry (f ≫ g) = curry f ≫ (exp _).map g :=
   Adjunction.hom_equiv_naturality_right _ _ _
 #align
   category_theory.cartesian_closed.curry_natural_right CategoryTheory.CartesianClosed.curry_natural_right
 
-@[reassoc]
+@[reassoc.1]
 theorem uncurry_natural_right (f : X ⟶ A ⟹ Y) (g : Y ⟶ Y') :
     uncurry (f ≫ (exp _).map g) = uncurry f ≫ g :=
   Adjunction.hom_equiv_naturality_right_symm _ _ _
 #align
   category_theory.cartesian_closed.uncurry_natural_right CategoryTheory.CartesianClosed.uncurry_natural_right
 
-@[reassoc]
+@[reassoc.1]
 theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) :
     uncurry (f ≫ g) = Limits.prod.map (𝟙 _) f ≫ uncurry g :=
   Adjunction.hom_equiv_naturality_left_symm _ _ _

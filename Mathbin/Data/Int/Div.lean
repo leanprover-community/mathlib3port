@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.div
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,7 @@ theorem eq_mul_div_of_mul_eq_mul_of_dvd_left {a b c d : ℤ} (hb : b ≠ 0) (hbc
     (h : b * a = c * d) : a = c / b * d := by
   cases' hbc with k hk
   subst hk
-  rw [Int.mul_div_cancel_left _ hb]
+  rw [Int.mul_ediv_cancel_left _ hb]
   rw [mul_assoc] at h
   apply mul_left_cancel₀ hb h
 #align int.eq_mul_div_of_mul_eq_mul_of_dvd_left Int.eq_mul_div_of_mul_eq_mul_of_dvd_left
@@ -47,7 +47,7 @@ theorem eq_zero_of_dvd_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a < 
 they are equal. -/
 theorem eq_of_mod_eq_of_nat_abs_sub_lt_nat_abs {a b c : ℤ} (h1 : a % b = c)
     (h2 : natAbs (a - c) < natAbs b) : a = c :=
-  eq_of_sub_eq_zero (eq_zero_of_dvd_of_nat_abs_lt_nat_abs (dvd_sub_of_mod_eq h1) h2)
+  eq_of_sub_eq_zero (eq_zero_of_dvd_of_nat_abs_lt_nat_abs (dvd_sub_of_emod_eq h1) h2)
 #align int.eq_of_mod_eq_of_nat_abs_sub_lt_nat_abs Int.eq_of_mod_eq_of_nat_abs_sub_lt_nat_abs
 
 theorem of_nat_add_neg_succ_of_nat_of_ge {m n : ℕ} (h : n.succ ≤ m) :

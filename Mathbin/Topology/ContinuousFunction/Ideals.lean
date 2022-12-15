@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ideals
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,13 +95,13 @@ def idealOfSet (s : Set X) :
   smul_mem' c f hf x hx := mul_zero (c x) ▸ congr_arg (fun y => c x * y) (hf x hx)
 #align continuous_map.ideal_of_set ContinuousMap.idealOfSet
 
-theorem idealOfSetClosed [LocallyCompactSpace X] [T2Space R] (s : Set X) :
+theorem ideal_of_set_closed [LocallyCompactSpace X] [T2Space R] (s : Set X) :
     IsClosed (idealOfSet R s : Set C(X, R)) := by
   simp only [ideal_of_set, Submodule.coe_set_mk, Set.set_of_forall]
   exact
-    isClosedInter fun x =>
-      isClosedInter fun hx => isClosedEq (continuous_eval_const' x) continuous_const
-#align continuous_map.ideal_of_set_closed ContinuousMap.idealOfSetClosed
+    is_closed_Inter fun x =>
+      is_closed_Inter fun hx => is_closed_eq (continuous_eval_const' x) continuous_const
+#align continuous_map.ideal_of_set_closed ContinuousMap.ideal_of_set_closed
 
 variable {R}
 
@@ -124,19 +124,20 @@ def setOfIdeal (I : Ideal C(X, R)) : Set X :=
 
 theorem not_mem_set_of_ideal {I : Ideal C(X, R)} {x : X} :
     x ∉ setOfIdeal I ↔ ∀ ⦃f : C(X, R)⦄, f ∈ I → f x = 0 := by
-  rw [← Set.mem_compl_iff, set_of_ideal, compl_compl, Set.mem_set_of]
+  rw [← Set.mem_compl_iff, set_of_ideal, compl_compl, Set.mem_setOf]
 #align continuous_map.not_mem_set_of_ideal ContinuousMap.not_mem_set_of_ideal
 
 theorem mem_set_of_ideal {I : Ideal C(X, R)} {x : X} :
     x ∈ setOfIdeal I ↔ ∃ f ∈ I, (f : C(X, R)) x ≠ 0 := by
-  simp_rw [set_of_ideal, Set.mem_compl_iff, Set.mem_set_of, exists_prop]
+  simp_rw [set_of_ideal, Set.mem_compl_iff, Set.mem_setOf, exists_prop]
   push_neg
 #align continuous_map.mem_set_of_ideal ContinuousMap.mem_set_of_ideal
 
 theorem set_of_ideal_open [T2Space R] (I : Ideal C(X, R)) : IsOpen (setOfIdeal I) := by
   simp only [set_of_ideal, Set.set_of_forall, is_open_compl_iff]
   exact
-    isClosedInter fun f => isClosedInter fun hf => isClosedEq (map_continuous f) continuous_const
+    is_closed_Inter fun f =>
+      is_closed_Inter fun hf => is_closed_eq (map_continuous f) continuous_const
 #align continuous_map.set_of_ideal_open ContinuousMap.set_of_ideal_open
 
 /-- The open set `set_of_ideal I` realized as a term of `opens X`. -/
@@ -218,10 +219,10 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
   norm_cast
   -- Let `t := {x : X | ε / 2 ≤ ‖f x‖₊}}` which is closed and disjoint from `set_of_ideal I`.
   set t := { x : X | ε / 2 ≤ ‖f x‖₊ }
-  have ht : IsClosed t := isClosedLe continuous_const (map_continuous f).nnnorm
+  have ht : IsClosed t := is_closed_le continuous_const (map_continuous f).nnnorm
   have htI : Disjoint t (set_of_ideal Iᶜ) := by
     refine' set.subset_compl_iff_disjoint_left.mp fun x hx => _
-    simpa only [t, Set.mem_set_of, Set.mem_compl_iff, not_le] using
+    simpa only [t, Set.mem_setOf, Set.mem_compl_iff, not_le] using
       (nnnorm_eq_zero.mpr (mem_ideal_of_set.mp hf hx)).trans_lt (half_pos hε)
   /- It suffices to produce `g : C(X, ℝ≥0)` which takes values in `[0,1]` and is constantly `1` on
     `t` such that when composed with the natural embedding of `ℝ≥0` into `𝕜` lies in the ideal `I`.
@@ -342,7 +343,7 @@ theorem set_of_ideal_of_set_eq_interior (s : Set X) : setOfIdeal (idealOfSet �
   /- Apply Urysohn's lemma to get `g : C(X, ℝ)` which is zero on `sᶜ` and `g x ≠ 0`, then compose
     with the natural embedding `ℝ ↪ 𝕜` to produce the desired `f`. -/
   obtain ⟨g, hgs, hgx : Set.EqOn g 1 {x}, -⟩ :=
-    exists_continuous_zero_one_of_closed isClosedClosure isClosedSingleton
+    exists_continuous_zero_one_of_closed is_closed_closure is_closed_singleton
       (set.disjoint_singleton_right.mpr hx)
   exact
     ⟨⟨fun x => g x, continuous_of_real.comp (map_continuous g)⟩, by
@@ -371,7 +372,7 @@ def idealOpensGi :
     congr_arg _ <|
       Ideal.ext
         (Set.ext_iff.mp
-          (isClosedOfClosureSubset <|
+          (is_closed_of_closure_subset <|
               (ideal_of_set_of_ideal_eq_closure I ▸ hI : I.closure ≤ I)).closure_eq)
 #align continuous_map.ideal_opens_gi ContinuousMap.idealOpensGi
 
@@ -465,8 +466,8 @@ theorem continuous_map_eval_bijective : Bijective (continuousMapEval X 𝕜) := 
   refine' ⟨fun x y hxy => _, fun φ => _⟩
   · contrapose! hxy
     haveI := @normalOfCompactT2 X _ _ _
-    rcases exists_continuous_zero_one_of_closed (isClosedSingleton : _root_.is_closed {x})
-        (isClosedSingleton : _root_.is_closed {y}) (set.disjoint_singleton.mpr hxy) with
+    rcases exists_continuous_zero_one_of_closed (is_closed_singleton : _root_.is_closed {x})
+        (is_closed_singleton : _root_.is_closed {y}) (set.disjoint_singleton.mpr hxy) with
       ⟨f, fx, fy, -⟩
     rw [← Ne.def, FunLike.ne_iff]
     use (⟨coe, IsROrC.continuous_of_real⟩ : C(ℝ, 𝕜)).comp f

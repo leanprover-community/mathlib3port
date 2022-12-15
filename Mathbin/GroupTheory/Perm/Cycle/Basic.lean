@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,14 +103,14 @@ theorem same_cycle_pow_left_iff {n : ℕ} : SameCycle f ((f ^ n) x) y ↔ SameCy
     simp [zpow_add]
   · rintro ⟨k, rfl⟩
     use k - n
-    rw [← zpow_coe_nat, ← mul_apply, ← zpow_add, Int.sub_add_cancel]
+    rw [← zpow_ofNat, ← mul_apply, ← zpow_add, Int.sub_add_cancel]
 #align equiv.perm.same_cycle_pow_left_iff Equiv.Perm.same_cycle_pow_left_iff
 
 @[simp]
 theorem same_cycle_zpow_left_iff {n : ℤ} : SameCycle f ((f ^ n) x) y ↔ SameCycle f x y := by
   cases n
   · exact same_cycle_pow_left_iff
-  · rw [zpow_neg_succ_of_nat, ← inv_pow, ← same_cycle_inv, same_cycle_pow_left_iff, same_cycle_inv]
+  · rw [zpow_negSucc, ← inv_pow, ← same_cycle_inv, same_cycle_pow_left_iff, same_cycle_inv]
 #align equiv.perm.same_cycle_zpow_left_iff Equiv.Perm.same_cycle_zpow_left_iff
 
 theorem SameCycle.nat' [Finite α] : SameCycle f x y → ∃ i < orderOf f, (f ^ i) x = y := by
@@ -118,11 +118,11 @@ theorem SameCycle.nat' [Finite α] : SameCycle f x y → ∃ i < orderOf f, (f ^
     rintro ⟨k, rfl⟩
     use (k % orderOf f).natAbs
     have h₀ := int.coe_nat_pos.mpr (order_of_pos f)
-    have h₁ := Int.mod_nonneg k h₀.ne'
-    rw [← zpow_coe_nat, Int.natAbs_of_nonneg h₁, ← zpow_eq_mod_order_of]
+    have h₁ := Int.emod_nonneg k h₀.ne'
+    rw [← zpow_ofNat, Int.natAbs_of_nonneg h₁, ← zpow_eq_mod_order_of]
     refine' ⟨_, rfl⟩
-    rw [← Int.coe_nat_lt, Int.natAbs_of_nonneg h₁]
-    exact Int.mod_lt_of_pos _ h₀
+    rw [← Int.ofNat_lt, Int.natAbs_of_nonneg h₁]
+    exact Int.emod_lt_of_pos _ h₀
 #align equiv.perm.same_cycle.nat' Equiv.Perm.SameCycle.nat'
 
 theorem SameCycle.nat'' [Finite α] (h : SameCycle f x y) :
@@ -139,16 +139,16 @@ instance [Fintype α] [DecidableEq α] (f : Perm α) : DecidableRel (SameCycle f
     ⟨fun ⟨n, _, hn⟩ => ⟨n, hn⟩, fun ⟨i, hi⟩ =>
       ⟨(i % orderOf f).natAbs,
         List.mem_range.2
-          (Int.coe_nat_lt.1 <| by
+          (Int.ofNat_lt.1 <| by
             rw [Int.natAbs_of_nonneg
-                (Int.mod_nonneg _ <| Int.coe_nat_ne_zero.2 (order_of_pos _).ne')]
-            · refine' (Int.mod_lt _ <| Int.coe_nat_ne_zero_iff_pos.2 <| order_of_pos _).trans_le _
+                (Int.emod_nonneg _ <| Int.coe_nat_ne_zero.2 (order_of_pos _).ne')]
+            · refine' (Int.emod_lt _ <| Int.coe_nat_ne_zero_iff_pos.2 <| order_of_pos _).trans_le _
               simp [order_of_le_card_univ]
             infer_instance),
         by
-        rw [← zpow_coe_nat,
+        rw [← zpow_ofNat,
           Int.natAbs_of_nonneg
-            (Int.mod_nonneg _ <| Int.coe_nat_ne_zero_iff_pos.2 <| order_of_pos _),
+            (Int.emod_nonneg _ <| Int.coe_nat_ne_zero_iff_pos.2 <| order_of_pos _),
           ← zpow_eq_mod_order_of, hi]
         infer_instance⟩⟩
 
@@ -232,447 +232,13 @@ theorem IsCycle.same_cycle {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f x �
   hf.exists_zpow_eq hx hy
 #align equiv.perm.is_cycle.same_cycle Equiv.Perm.IsCycle.same_cycle
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [] [] [] [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `IsCycle.exists_pow_eq [])
-      (Command.declSig
-       [(Term.instBinder "[" [] (Term.app `Finite [`β]) "]")
-        (Term.implicitBinder "{" [`f] [":" (Term.app `Perm [`β])] "}")
-        (Term.explicitBinder "(" [`hf] [":" (Term.app `IsCycle [`f])] [] ")")
-        (Term.implicitBinder "{" [`x `y] [":" `β] "}")
-        (Term.explicitBinder "(" [`hx] [":" («term_≠_» (Term.app `f [`x]) "≠" `x)] [] ")")
-        (Term.explicitBinder "(" [`hy] [":" («term_≠_» (Term.app `f [`y]) "≠" `y)] [] ")")]
-       (Term.typeSpec
-        ":"
-        («term∃_,_»
-         "∃"
-         (Lean.explicitBinders
-          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] [":" (termℕ "ℕ")]))
-         ","
-         («term_=_» (Term.app («term_^_» `f "^" `i) [`x]) "=" `y))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letPatDecl
-              (Term.anonymousCtor "⟨" [`n "," `hn] "⟩")
-              []
-              []
-              ":="
-              (Term.app (Term.proj `hf "." `exists_zpow_eq) [`hx `hy]))))
-           []
-           (Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Tactic.exact
-             "exact"
-             (Term.anonymousCtor
-              "⟨"
-              [(Term.proj («term_%_» `n "%" (Term.app `orderOf [`f])) "." `toNat)
-               ","
-               (Term.byTactic
-                "by"
-                (Tactic.tacticSeq
-                 (Tactic.tacticSeq1Indented
-                  [(Tactic.tacticHave_
-                    "have"
-                    (Term.haveDecl
-                     (Term.haveIdDecl
-                      []
-                      []
-                      ":="
-                      (Term.app
-                       `n.mod_nonneg
-                       [(Term.app
-                         `int.coe_nat_ne_zero.mpr
-                         [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
-                   []
-                   (Std.Tactic.tacticRwa__
-                    "rwa"
-                    (Tactic.rwRuleSeq
-                     "["
-                     [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)
-                      ","
-                      (Tactic.rwRule [] (Term.app `Int.toNat_of_nonneg [`this]))
-                      ","
-                      (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_eq_mod_order_of)]
-                     "]")
-                    [])])))]
-              "⟩")))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.tacticLet_
-           "let"
-           (Term.letDecl
-            (Term.letPatDecl
-             (Term.anonymousCtor "⟨" [`n "," `hn] "⟩")
-             []
-             []
-             ":="
-             (Term.app (Term.proj `hf "." `exists_zpow_eq) [`hx `hy]))))
-          []
-          (Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.exact
-            "exact"
-            (Term.anonymousCtor
-             "⟨"
-             [(Term.proj («term_%_» `n "%" (Term.app `orderOf [`f])) "." `toNat)
-              ","
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(Tactic.tacticHave_
-                   "have"
-                   (Term.haveDecl
-                    (Term.haveIdDecl
-                     []
-                     []
-                     ":="
-                     (Term.app
-                      `n.mod_nonneg
-                      [(Term.app
-                        `int.coe_nat_ne_zero.mpr
-                        [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
-                  []
-                  (Std.Tactic.tacticRwa__
-                   "rwa"
-                   (Tactic.rwRuleSeq
-                    "["
-                    [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)
-                     ","
-                     (Tactic.rwRule [] (Term.app `Int.toNat_of_nonneg [`this]))
-                     ","
-                     (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_eq_mod_order_of)]
-                    "]")
-                   [])])))]
-             "⟩")))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.exact
-        "exact"
-        (Term.anonymousCtor
-         "⟨"
-         [(Term.proj («term_%_» `n "%" (Term.app `orderOf [`f])) "." `toNat)
-          ","
-          (Term.byTactic
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(Tactic.tacticHave_
-               "have"
-               (Term.haveDecl
-                (Term.haveIdDecl
-                 []
-                 []
-                 ":="
-                 (Term.app
-                  `n.mod_nonneg
-                  [(Term.app
-                    `int.coe_nat_ne_zero.mpr
-                    [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
-              []
-              (Std.Tactic.tacticRwa__
-               "rwa"
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)
-                 ","
-                 (Tactic.rwRule [] (Term.app `Int.toNat_of_nonneg [`this]))
-                 ","
-                 (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_eq_mod_order_of)]
-                "]")
-               [])])))]
-         "⟩")))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact
-       "exact"
-       (Term.anonymousCtor
-        "⟨"
-        [(Term.proj («term_%_» `n "%" (Term.app `orderOf [`f])) "." `toNat)
-         ","
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(Tactic.tacticHave_
-              "have"
-              (Term.haveDecl
-               (Term.haveIdDecl
-                []
-                []
-                ":="
-                (Term.app
-                 `n.mod_nonneg
-                 [(Term.app
-                   `int.coe_nat_ne_zero.mpr
-                   [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
-             []
-             (Std.Tactic.tacticRwa__
-              "rwa"
-              (Tactic.rwRuleSeq
-               "["
-               [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)
-                ","
-                (Tactic.rwRule [] (Term.app `Int.toNat_of_nonneg [`this]))
-                ","
-                (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_eq_mod_order_of)]
-               "]")
-              [])])))]
-        "⟩"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor
-       "⟨"
-       [(Term.proj («term_%_» `n "%" (Term.app `orderOf [`f])) "." `toNat)
-        ","
-        (Term.byTactic
-         "by"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(Tactic.tacticHave_
-             "have"
-             (Term.haveDecl
-              (Term.haveIdDecl
-               []
-               []
-               ":="
-               (Term.app
-                `n.mod_nonneg
-                [(Term.app
-                  `int.coe_nat_ne_zero.mpr
-                  [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
-            []
-            (Std.Tactic.tacticRwa__
-             "rwa"
-             (Tactic.rwRuleSeq
-              "["
-              [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)
-               ","
-               (Tactic.rwRule [] (Term.app `Int.toNat_of_nonneg [`this]))
-               ","
-               (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_eq_mod_order_of)]
-              "]")
-             [])])))]
-       "⟩")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.tacticHave_
-           "have"
-           (Term.haveDecl
-            (Term.haveIdDecl
-             []
-             []
-             ":="
-             (Term.app
-              `n.mod_nonneg
-              [(Term.app
-                `int.coe_nat_ne_zero.mpr
-                [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
-          []
-          (Std.Tactic.tacticRwa__
-           "rwa"
-           (Tactic.rwRuleSeq
-            "["
-            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)
-             ","
-             (Tactic.rwRule [] (Term.app `Int.toNat_of_nonneg [`this]))
-             ","
-             (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_eq_mod_order_of)]
-            "]")
-           [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Std.Tactic.tacticRwa__
-       "rwa"
-       (Tactic.rwRuleSeq
-        "["
-        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)
-         ","
-         (Tactic.rwRule [] (Term.app `Int.toNat_of_nonneg [`this]))
-         ","
-         (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_eq_mod_order_of)]
-        "]")
-       [])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `zpow_eq_mod_order_of
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `Int.toNat_of_nonneg [`this])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `this
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `Int.toNat_of_nonneg
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `zpow_coe_nat
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.tacticHave_
-       "have"
-       (Term.haveDecl
-        (Term.haveIdDecl
-         []
-         []
-         ":="
-         (Term.app
-          `n.mod_nonneg
-          [(Term.app
-            `int.coe_nat_ne_zero.mpr
-            [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       `n.mod_nonneg
-       [(Term.app `int.coe_nat_ne_zero.mpr [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `int.coe_nat_ne_zero.mpr [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `order_of_pos [`f])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `order_of_pos
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `order_of_pos [`f]) ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `ne_of_gt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.app `ne_of_gt [(Term.paren "(" (Term.app `order_of_pos [`f]) ")")])
-     ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `int.coe_nat_ne_zero.mpr
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.app
-      `int.coe_nat_ne_zero.mpr
-      [(Term.paren
-        "("
-        (Term.app `ne_of_gt [(Term.paren "(" (Term.app `order_of_pos [`f]) ")")])
-        ")")])
-     ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `n.mod_nonneg
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj («term_%_» `n "%" (Term.app `orderOf [`f])) "." `toNat)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_%_» `n "%" (Term.app `orderOf [`f]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `orderOf [`f])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `orderOf
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
-      `n
-[PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     («term_%_» `n "%" (Term.app `orderOf [`f]))
-     ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  IsCycle.exists_pow_eq
-  [ Finite β ] { f : Perm β } ( hf : IsCycle f ) { x y : β } ( hx : f x ≠ x ) ( hy : f y ≠ y )
-    : ∃ i : ℕ , f ^ i x = y
-  :=
-    by
-      let ⟨ n , hn ⟩ := hf . exists_zpow_eq hx hy
-        skip
-          <;>
-          exact
-            ⟨
-              n % orderOf f . toNat
-                ,
-                by
-                  have := n.mod_nonneg int.coe_nat_ne_zero.mpr ne_of_gt order_of_pos f
-                    rwa [ ← zpow_coe_nat , Int.toNat_of_nonneg this , ← zpow_eq_mod_order_of ]
-              ⟩
+theorem IsCycle.exists_pow_eq [Finite β] {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f x ≠ x)
+    (hy : f y ≠ y) : ∃ i : ℕ, (f ^ i) x = y := by
+  let ⟨n, hn⟩ := hf.exists_zpow_eq hx hy
+  classical exact
+      ⟨(n % orderOf f).toNat, by
+        have := n.mod_nonneg (int.coe_nat_ne_zero.mpr (ne_of_gt (order_of_pos f)))
+        rwa [← zpow_ofNat, Int.toNat_of_nonneg this, ← zpow_eq_mod_order_of]⟩
 #align equiv.perm.is_cycle.exists_pow_eq Equiv.Perm.IsCycle.exists_pow_eq
 
 theorem IsCycle.exists_pow_eq_one [Finite β] {f : Perm β} (hf : IsCycle f) :
@@ -769,15 +335,15 @@ theorem is_cycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
       have hb : (swap x (f⁻¹ x) * f⁻¹) (f⁻¹ b) ≠ f⁻¹ b := by
         rw [mul_apply, swap_apply_def]
         split_ifs <;>
-            simp only [inv_eq_iff_eq, perm.mul_apply, zpow_neg_succ_of_nat, Ne.def,
-              perm.apply_inv_self] at * <;>
+            simp only [inv_eq_iff_eq, perm.mul_apply, zpow_negSucc, Ne.def, perm.apply_inv_self] at
+              * <;>
           cc
       let ⟨i, hi⟩ :=
         is_cycle_swap_mul_aux₁ n hb
           (show (f⁻¹ ^ n) (f⁻¹ x) = f⁻¹ b by
-            rw [← zpow_coe_nat, ← h, ← mul_apply, ← mul_apply, ← mul_apply, zpow_neg_succ_of_nat, ←
-              inv_pow, pow_succ', mul_assoc, mul_assoc, inv_mul_self, mul_one, zpow_coe_nat, ←
-              pow_succ', ← pow_succ])
+            rw [← zpow_ofNat, ← h, ← mul_apply, ← mul_apply, ← mul_apply, zpow_negSucc, ← inv_pow,
+              pow_succ', mul_assoc, mul_assoc, inv_mul_self, mul_one, zpow_ofNat, ← pow_succ', ←
+              pow_succ])
       have h : (swap x (f⁻¹ x) * f⁻¹) (f x) = f⁻¹ x := by
         rw [mul_apply, inv_apply_self, swap_apply_left]
       ⟨-i, by
@@ -865,7 +431,7 @@ theorem is_cycle_of_is_cycle_zpow {σ : Perm α} {n : ℤ} (h1 : IsCycle (σ ^ n
     (h2 : σ.support ≤ (σ ^ n).support) : IsCycle σ := by
   cases n
   · exact is_cycle_of_is_cycle_pow h1 h2
-  · simp only [le_eq_subset, zpow_neg_succ_of_nat, perm.support_inv] at h1 h2
+  · simp only [le_eq_subset, zpow_negSucc, perm.support_inv] at h1 h2
     simpa using is_cycle_of_is_cycle_pow h1.inv h2
 #align equiv.perm.is_cycle_of_is_cycle_zpow Equiv.Perm.is_cycle_of_is_cycle_zpow
 
@@ -886,8 +452,8 @@ theorem IsCycle.extend_domain {α : Type _} {p : β → Prop} [DecidablePred p] 
       have hint : ∀ (k : ℤ) (a : α), (g.extend_domain f ^ k) ↑(f a) = f ((g ^ k) a) := by
         intro k a
         induction' k with k k
-        · rw [zpow_of_nat, zpow_of_nat, hnat]
-        rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, inv_eq_iff_eq, hnat, apply_inv_self]
+        · rw [zpow_ofNat, zpow_ofNat, hnat]
+        rw [zpow_negSucc, zpow_negSucc, inv_eq_iff_eq, hnat, apply_inv_self]
       rw [hint, hi, apply_symm_apply, Subtype.coe_mk]
     · rw [extend_domain_apply_subtype _ _ pb, Con, apply_symm_apply, Subtype.coe_mk]
   · exact (hb (extend_domain_apply_not_subtype _ _ pb)).elim
@@ -1025,7 +591,7 @@ theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b :
       · refine' ⟨(f ^ a) x, mem_support.mp hfa, _⟩
         simp only [pow_sub _ hab, Equiv.Perm.coe_mul, Function.comp_apply, inv_apply_self, ← hx']
       · have h := @Equiv.Perm.zpow_apply_comm _ f 1 a x
-        simp only [zpow_one, zpow_coe_nat] at h
+        simp only [zpow_one, zpow_ofNat] at h
         rw [not_mem_support, h, Function.Injective.eq_iff (f ^ a).Injective] at hfa
         contradiction
 #align equiv.perm.is_cycle.pow_eq_pow_iff Equiv.Perm.IsCycle.pow_eq_pow_iff
@@ -1099,8 +665,7 @@ theorem cycle_of_zpow_apply_self [Fintype α] (f : Perm α) (x : α) :
     ∀ n : ℤ, (cycleOf f x ^ n) x = (f ^ n) x
   | (n : ℕ) => cycle_of_pow_apply_self f x n
   | -[n+1] => by
-    rw [zpow_neg_succ_of_nat, ← inv_pow, cycle_of_inv, zpow_neg_succ_of_nat, ← inv_pow,
-      cycle_of_pow_apply_self]
+    rw [zpow_negSucc, ← inv_pow, cycle_of_inv, zpow_negSucc, ← inv_pow, cycle_of_pow_apply_self]
 #align equiv.perm.cycle_of_zpow_apply_self Equiv.Perm.cycle_of_zpow_apply_self
 
 theorem SameCycle.cycle_of_apply [Fintype α] {f : Perm α} {x y : α} (h : SameCycle f x y) :
@@ -1351,7 +916,7 @@ def cycleFactorsAux [Fintype α] :
               have : ∀ h ∈ m.erase g, Disjoint g h :=
                 (List.pairwise_cons.1
                     ((hgm.pairwise_iff fun a b (h : Disjoint a b) => h.symm).2 hm₃)).1
-              (Classical.by_cases id) fun hgy : g y ≠ y =>
+              (by_cases id) fun hgy : g y ≠ y =>
                 (disjoint_prod_right _ this y).resolve_right <| by
                   have hsc : SameCycle f⁻¹ x (f y) := by rwa [same_cycle_inv, same_cycle_apply]
                   rw [disjoint_prod_perm hm₃ hgm.symm, List.prod_cons, ← eq_inv_mul_iff_mul_eq] at
@@ -1705,7 +1270,7 @@ theorem SameCycle.nat_of_mem_support [Fintype α] (f : Perm α) {x y : α} (h : 
       · refine' ⟨k, _, _⟩
         · rw [← cycle_of_eq_one_iff] at hgx
           rwa [hd.cycle_of_mul_distrib, hgx, one_mul]
-        · simpa [← zpow_coe_nat, hpow] using hk'
+        · simpa [← zpow_ofNat, hpow] using hk'
       · use m
         simp [hpow]
       · rw [mem_support, hd.commute.eq] at hx
@@ -1719,7 +1284,7 @@ theorem SameCycle.nat_of_mem_support [Fintype α] (f : Perm α) {x y : α} (h : 
       · refine' ⟨k, _, _⟩
         · rw [← cycle_of_eq_one_iff] at hhx
           rwa [hd.cycle_of_mul_distrib, hhx, mul_one]
-        · simpa [← zpow_coe_nat, hpow] using hk'
+        · simpa [← zpow_ofNat, hpow] using hk'
       · use m
         simp [hpow]
       · simpa [hhx] using hx

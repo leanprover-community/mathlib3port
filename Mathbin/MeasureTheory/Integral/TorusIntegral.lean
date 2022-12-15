@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cuma Kökmen, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.torus_integral
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ theorem torus_integral_sub (hf : TorusIntegrable f c R) (hg : TorusIntegrable g 
   simpa only [sub_eq_add_neg, ← torus_integral_neg] using torus_integral_add hf hg.neg
 #align torus_integral_sub torus_integral_sub
 
-theorem torus_integral_smul {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [SmulCommClass 𝕜 ℂ E] (a : 𝕜)
+theorem torus_integral_smul {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [SMulCommClass 𝕜 ℂ E] (a : 𝕜)
     (f : ℂⁿ → E) (c : ℂⁿ) (R : ℝⁿ) : (∯ x in T(c, R), a • f x) = a • ∯ x in T(c, R), f x := by
   simp only [torusIntegral, integral_smul, ← smul_comm a]
 #align torus_integral_smul torus_integral_smul

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.completion
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,8 +43,8 @@ instance : NormedSpace 𝕜 (Completion E) :=
   { Completion.module with 
     smul := (· • ·)
     norm_smul_le := fun c x =>
-      (inductionOn x
-          (isClosedLe (continuous_const_smul _).norm (continuous_const.mul continuous_norm)))
+      (induction_on x
+          (is_closed_le (continuous_const_smul _).norm (continuous_const.mul continuous_norm)))
         fun y => by simp only [← coe_smul, norm_coe, norm_smul] }
 
 variable {𝕜 E}
@@ -86,7 +86,7 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
   { Completion.ring, Completion.metricSpace with
     dist_eq := fun x y => by 
       apply completion.induction_on₂ x y <;> clear x y
-      · refine' isClosedEq (completion.uniform_continuous_extension₂ _).Continuous _
+      · refine' is_closed_eq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
       · intro x y
         rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm]
@@ -94,7 +94,7 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
       apply completion.induction_on₂ x y <;> clear x y
       ·
         exact
-          isClosedLe (Continuous.comp continuous_norm continuous_mul)
+          is_closed_le (Continuous.comp continuous_norm continuous_mul)
             (Continuous.comp Real.continuous_mul
               (Continuous.prod_map continuous_norm continuous_norm))
       · intro x y
@@ -108,7 +108,7 @@ instance [SemiNormedCommRing A] [NormedAlgebra 𝕜 A] [HasUniformContinuousCons
       apply completion.induction_on x <;> clear x
       ·
         exact
-          isClosedLe (Continuous.comp continuous_norm (continuous_const_smul r))
+          is_closed_le (Continuous.comp continuous_norm (continuous_const_smul r))
             (Continuous.comp (continuous_mul_left _) continuous_norm)
       · intro x
         simp only [← coe_smul, norm_coe]

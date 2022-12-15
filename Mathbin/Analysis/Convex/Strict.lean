@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.strict
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ theorem Directed.strict_convex_Union {ι : Sort _} {s : ι → Set E} (hdir : Di
 theorem DirectedOn.strict_convex_sUnion {S : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) S)
     (hS : ∀ s ∈ S, StrictConvex 𝕜 s) : StrictConvex 𝕜 (⋃₀S) := by
   rw [sUnion_eq_Union]
-  exact (directed_on_iff_directed.1 hdir).strict_convex_Union fun s => hS _ s.2
+  exact (directedOn_iff_directed.1 hdir).strict_convex_Union fun s => hS _ s.2
 #align directed_on.strict_convex_sUnion DirectedOn.strict_convex_sUnion
 
 end HasSmul

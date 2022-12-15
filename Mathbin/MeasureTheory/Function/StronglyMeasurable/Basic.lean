@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -296,7 +296,7 @@ theorem strongly_measurable_bot_iff [Nonempty β] [T2Space β] :
 
 end BasicPropertiesInAnyTopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » t) -/
 theorem finStronglyMeasurableOfSetSigmaFinite [TopologicalSpace β] [Zero β] {m : MeasurableSpace α}
     {μ : Measure α} (hf_meas : StronglyMeasurable f) {t : Set α} (ht : MeasurableSet t)
     (hft_zero : ∀ x ∈ tᶜ, f x = 0) (htμ : SigmaFinite (μ.restrict t)) : FinStronglyMeasurable f μ :=
@@ -656,7 +656,7 @@ theorem strongly_measurable_iff_measurable_separable {m : MeasurableSpace α} [T
     rfl
   have T : MeasurableEmbedding (coe : closure (range f) → β) := by
     apply ClosedEmbedding.measurableEmbedding
-    exact closedEmbeddingSubtypeCoe isClosedClosure
+    exact closed_embedding_subtype_coe is_closed_closure
   have g_meas : Measurable g := by 
     rw [fg] at H
     exact T.measurable_comp_iff.1 H
@@ -696,8 +696,8 @@ theorem Embedding.comp_strongly_measurable_iff {m : MeasurableSpace α} [Topolog
   · let G : β → range g := cod_restrict g (range g) mem_range_self
     have hG : ClosedEmbedding G :=
       { hg.cod_restrict _ _ with
-        closedRange := by 
-          convert isClosedUniv
+        closed_range := by 
+          convert is_closed_univ
           apply eq_univ_of_forall
           rintro ⟨-, ⟨x, rfl⟩⟩
           exact mem_range_self x }
@@ -884,9 +884,9 @@ theorem measurableSetLe {m : MeasurableSpace α} [TopologicalSpace β] [Preorder
 #align
   measure_theory.strongly_measurable.measurable_set_le MeasureTheory.StronglyMeasurable.measurableSetLe
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem strongly_measurable_in_set {m : MeasurableSpace α} [TopologicalSpace β] [Zero β] {s : Set α}
     {f : α → β} (hs : MeasurableSet s) (hf : StronglyMeasurable f)
     (hf_zero : ∀ (x) (_ : x ∉ s), f x = 0) :
@@ -909,7 +909,7 @@ theorem strongly_measurable_in_set {m : MeasurableSpace α} [TopologicalSpace β
 #align
   measure_theory.strongly_measurable.strongly_measurable_in_set MeasureTheory.StronglyMeasurable.strongly_measurable_in_set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
 /-- If the restriction to a set `s` of a σ-algebra `m` is included in the restriction to `s` of
 another σ-algebra `m₂` (hypothesis `hs`), the set `s` is `m` measurable and a function `f` supported
 on `s` is `m`-strongly-measurable, then `f` is also `m₂`-strongly-measurable. -/
@@ -966,7 +966,7 @@ theorem exists_spanning_measurable_set_norm_le [SeminormedAddCommGroup β] {m m0
   let norm_sets := fun n : ℕ => { x | ‖f x‖ ≤ n }
   have norm_sets_spanning : (⋃ n, norm_sets n) = Set.univ := by
     ext1 x
-    simp only [Set.mem_Union, Set.mem_set_of_eq, Set.mem_univ, iff_true_iff]
+    simp only [Set.mem_Union, Set.mem_setOf_eq, Set.mem_univ, iff_true_iff]
     exact ⟨⌈‖f x‖⌉₊, Nat.le_ceil ‖f x‖⟩
   let sets n := sigma_finite_sets n ∩ norm_sets n
   have h_meas : ∀ n, measurable_set[m] (sets n) := by
@@ -981,7 +981,7 @@ theorem exists_spanning_measurable_set_norm_le [SeminormedAddCommGroup β] {m m0
   · have :
       (⋃ i, sigma_finite_sets i ∩ norm_sets i) = (⋃ i, sigma_finite_sets i) ∩ ⋃ i, norm_sets i := by
       refine' Set.Union_inter_of_monotone (monotone_spanning_sets (μ.trim hm)) fun i j hij x => _
-      simp only [norm_sets, Set.mem_set_of_eq]
+      simp only [norm_sets, Set.mem_setOf_eq]
       refine' fun hif => hif.trans _
       exact_mod_cast hij
     rw [this, norm_sets_spanning, Union_spanning_sets (μ.trim hm), Set.inter_univ]
@@ -1598,8 +1598,8 @@ theorem Embedding.ae_strongly_measurable_comp_iff [PseudoMetrizableSpace β]
   · let G : β → range g := cod_restrict g (range g) mem_range_self
     have hG : ClosedEmbedding G :=
       { hg.cod_restrict _ _ with
-        closedRange := by 
-          convert isClosedUniv
+        closed_range := by 
+          convert is_closed_univ
           apply eq_univ_of_forall
           rintro ⟨-, ⟨x, rfl⟩⟩
           exact mem_range_self x }
@@ -1736,7 +1736,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 theorem ae_strongly_measurable_smul_const_iff {f : α → 𝕜} {c : E} (hc : c ≠ 0) :
     AeStronglyMeasurable (fun x => f x • c) μ ↔ AeStronglyMeasurable f μ :=
-  (closedEmbeddingSmulLeft hc).toEmbedding.ae_strongly_measurable_comp_iff
+  (closed_embedding_smul_left hc).toEmbedding.ae_strongly_measurable_comp_iff
 #align ae_strongly_measurable_smul_const_iff ae_strongly_measurable_smul_const_iff
 
 end NormedSpace
@@ -2048,5 +2048,6 @@ theorem stronglyMeasurableUncurryOfContinuousOfStronglyMeasurable {α β ι : Ty
 
 end MeasureTheory
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Guard against import creep
+assert_not_exists inner_product_space
+

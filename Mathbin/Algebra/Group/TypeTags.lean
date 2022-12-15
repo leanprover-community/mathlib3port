@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.type_tags
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,85 +38,113 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
+#print Additive /-
 /-- If `α` carries some multiplicative structure, then `additive α` carries the corresponding
 additive structure. -/
 def Additive (α : Type _) :=
   α
 #align additive Additive
+-/
 
+#print Multiplicative /-
 /-- If `α` carries some additive structure, then `multiplicative α` carries the corresponding
 multiplicative structure. -/
 def Multiplicative (α : Type _) :=
   α
 #align multiplicative Multiplicative
+-/
 
 namespace Additive
 
+#print Additive.ofMul /-
 /-- Reinterpret `x : α` as an element of `additive α`. -/
 def ofMul : α ≃ Additive α :=
   ⟨fun x => x, fun x => x, fun x => rfl, fun x => rfl⟩
 #align additive.of_mul Additive.ofMul
+-/
 
+#print Additive.toMul /-
 /-- Reinterpret `x : additive α` as an element of `α`. -/
 def toMul : Additive α ≃ α :=
   ofMul.symm
 #align additive.to_mul Additive.toMul
+-/
 
+#print Additive.ofMul_symm_eq /-
 @[simp]
-theorem of_mul_symm_eq : (@ofMul α).symm = to_mul :=
+theorem ofMul_symm_eq : (@ofMul α).symm = to_mul :=
   rfl
-#align additive.of_mul_symm_eq Additive.of_mul_symm_eq
+#align additive.of_mul_symm_eq Additive.ofMul_symm_eq
+-/
 
+#print Additive.toMul_symm_eq /-
 @[simp]
-theorem to_mul_symm_eq : (@toMul α).symm = of_mul :=
+theorem toMul_symm_eq : (@toMul α).symm = of_mul :=
   rfl
-#align additive.to_mul_symm_eq Additive.to_mul_symm_eq
+#align additive.to_mul_symm_eq Additive.toMul_symm_eq
+-/
 
 end Additive
 
 namespace Multiplicative
 
+#print Multiplicative.ofAdd /-
 /-- Reinterpret `x : α` as an element of `multiplicative α`. -/
 def ofAdd : α ≃ Multiplicative α :=
   ⟨fun x => x, fun x => x, fun x => rfl, fun x => rfl⟩
 #align multiplicative.of_add Multiplicative.ofAdd
+-/
 
+#print Multiplicative.toAdd /-
 /-- Reinterpret `x : multiplicative α` as an element of `α`. -/
 def toAdd : Multiplicative α ≃ α :=
   ofAdd.symm
 #align multiplicative.to_add Multiplicative.toAdd
+-/
 
+#print Multiplicative.ofAdd_symm_eq /-
 @[simp]
-theorem of_add_symm_eq : (@ofAdd α).symm = to_add :=
+theorem ofAdd_symm_eq : (@ofAdd α).symm = to_add :=
   rfl
-#align multiplicative.of_add_symm_eq Multiplicative.of_add_symm_eq
+#align multiplicative.of_add_symm_eq Multiplicative.ofAdd_symm_eq
+-/
 
+#print Multiplicative.toAdd_symm_eq /-
 @[simp]
-theorem to_add_symm_eq : (@toAdd α).symm = of_add :=
+theorem toAdd_symm_eq : (@toAdd α).symm = of_add :=
   rfl
-#align multiplicative.to_add_symm_eq Multiplicative.to_add_symm_eq
+#align multiplicative.to_add_symm_eq Multiplicative.toAdd_symm_eq
+-/
 
 end Multiplicative
 
+#print toAdd_ofAdd /-
 @[simp]
-theorem to_add_of_add (x : α) : (Multiplicative.ofAdd x).toAdd = x :=
+theorem toAdd_ofAdd (x : α) : (Multiplicative.ofAdd x).toAdd = x :=
   rfl
-#align to_add_of_add to_add_of_add
+#align to_add_of_add toAdd_ofAdd
+-/
 
+#print ofAdd_toAdd /-
 @[simp]
-theorem of_add_to_add (x : Multiplicative α) : Multiplicative.ofAdd x.toAdd = x :=
+theorem ofAdd_toAdd (x : Multiplicative α) : Multiplicative.ofAdd x.toAdd = x :=
   rfl
-#align of_add_to_add of_add_to_add
+#align of_add_to_add ofAdd_toAdd
+-/
 
+#print toMul_ofMul /-
 @[simp]
-theorem to_mul_of_mul (x : α) : (Additive.ofMul x).toMul = x :=
+theorem toMul_ofMul (x : α) : (Additive.ofMul x).toMul = x :=
   rfl
-#align to_mul_of_mul to_mul_of_mul
+#align to_mul_of_mul toMul_ofMul
+-/
 
+#print ofMul_toMul /-
 @[simp]
-theorem of_mul_to_mul (x : Additive α) : Additive.ofMul x.toMul = x :=
+theorem ofMul_toMul (x : Additive α) : Additive.ofMul x.toMul = x :=
   rfl
-#align of_mul_to_mul of_mul_to_mul
+#align of_mul_to_mul ofMul_toMul
+-/
 
 instance [Inhabited α] : Inhabited (Additive α) :=
   ⟨Additive.ofMul default⟩
@@ -146,27 +174,35 @@ instance Additive.hasAdd [Mul α] :
 
 instance [Add α] : Mul (Multiplicative α) where mul x y := Multiplicative.ofAdd (x.toAdd + y.toAdd)
 
+#print ofAdd_add /-
 @[simp]
-theorem of_add_add [Add α] (x y : α) :
+theorem ofAdd_add [Add α] (x y : α) :
     Multiplicative.ofAdd (x + y) = Multiplicative.ofAdd x * Multiplicative.ofAdd y :=
   rfl
-#align of_add_add of_add_add
+#align of_add_add ofAdd_add
+-/
 
+#print toAdd_mul /-
 @[simp]
-theorem to_add_mul [Add α] (x y : Multiplicative α) : (x * y).toAdd = x.toAdd + y.toAdd :=
+theorem toAdd_mul [Add α] (x y : Multiplicative α) : (x * y).toAdd = x.toAdd + y.toAdd :=
   rfl
-#align to_add_mul to_add_mul
+#align to_add_mul toAdd_mul
+-/
 
+#print ofMul_mul /-
 @[simp]
-theorem of_mul_mul [Mul α] (x y : α) :
+theorem ofMul_mul [Mul α] (x y : α) :
     Additive.ofMul (x * y) = Additive.ofMul x + Additive.ofMul y :=
   rfl
-#align of_mul_mul of_mul_mul
+#align of_mul_mul ofMul_mul
+-/
 
+#print toMul_add /-
 @[simp]
-theorem to_mul_add [Mul α] (x y : Additive α) : (x + y).toMul = x.toMul * y.toMul :=
+theorem toMul_add [Mul α] (x y : Additive α) : (x + y).toMul = x.toMul * y.toMul :=
   rfl
-#align to_mul_add to_mul_add
+#align to_mul_add toMul_add
+-/
 
 instance [Semigroup α] : AddSemigroup (Additive α) :=
   { Additive.hasAdd with add_assoc := @mul_assoc α _ }
@@ -213,38 +249,50 @@ instance [AddRightCancelSemigroup α] : RightCancelSemigroup (Multiplicative α)
 instance [One α] : Zero (Additive α) :=
   ⟨Additive.ofMul 1⟩
 
+#print ofMul_one /-
 @[simp]
-theorem of_mul_one [One α] : @Additive.ofMul α 1 = 0 :=
+theorem ofMul_one [One α] : @Additive.ofMul α 1 = 0 :=
   rfl
-#align of_mul_one of_mul_one
+#align of_mul_one ofMul_one
+-/
 
+#print ofMul_eq_zero /-
 @[simp]
-theorem of_mul_eq_zero {A : Type _} [One A] {x : A} : Additive.ofMul x = 0 ↔ x = 1 :=
+theorem ofMul_eq_zero {A : Type _} [One A] {x : A} : Additive.ofMul x = 0 ↔ x = 1 :=
   Iff.rfl
-#align of_mul_eq_zero of_mul_eq_zero
+#align of_mul_eq_zero ofMul_eq_zero
+-/
 
+#print toMul_zero /-
 @[simp]
-theorem to_mul_zero [One α] : (0 : Additive α).toMul = 1 :=
+theorem toMul_zero [One α] : (0 : Additive α).toMul = 1 :=
   rfl
-#align to_mul_zero to_mul_zero
+#align to_mul_zero toMul_zero
+-/
 
 instance [Zero α] : One (Multiplicative α) :=
   ⟨Multiplicative.ofAdd 0⟩
 
+#print ofAdd_zero /-
 @[simp]
-theorem of_add_zero [Zero α] : @Multiplicative.ofAdd α 0 = 1 :=
+theorem ofAdd_zero [Zero α] : @Multiplicative.ofAdd α 0 = 1 :=
   rfl
-#align of_add_zero of_add_zero
+#align of_add_zero ofAdd_zero
+-/
 
+#print ofAdd_eq_one /-
 @[simp]
-theorem of_add_eq_one {A : Type _} [Zero A] {x : A} : Multiplicative.ofAdd x = 1 ↔ x = 0 :=
+theorem ofAdd_eq_one {A : Type _} [Zero A] {x : A} : Multiplicative.ofAdd x = 1 ↔ x = 0 :=
   Iff.rfl
-#align of_add_eq_one of_add_eq_one
+#align of_add_eq_one ofAdd_eq_one
+-/
 
+#print toAdd_one /-
 @[simp]
-theorem to_add_one [Zero α] : (1 : Multiplicative α).toAdd = 0 :=
+theorem toAdd_one [Zero α] : (1 : Multiplicative α).toAdd = 0 :=
   rfl
-#align to_add_one to_add_one
+#align to_add_one toAdd_one
+-/
 
 instance [MulOneClass α] : AddZeroClass
       (Additive α) where 
@@ -309,67 +357,86 @@ instance [AddCommMonoid α] : CommMonoid (Multiplicative α) :=
 instance [Inv α] : Neg (Additive α) :=
   ⟨fun x => Multiplicative.ofAdd x.toMul⁻¹⟩
 
+#print ofMul_inv /-
 @[simp]
-theorem of_mul_inv [Inv α] (x : α) : Additive.ofMul x⁻¹ = -Additive.ofMul x :=
+theorem ofMul_inv [Inv α] (x : α) : Additive.ofMul x⁻¹ = -Additive.ofMul x :=
   rfl
-#align of_mul_inv of_mul_inv
+#align of_mul_inv ofMul_inv
+-/
 
+#print toMul_neg /-
 @[simp]
-theorem to_mul_neg [Inv α] (x : Additive α) : (-x).toMul = x.toMul⁻¹ :=
+theorem toMul_neg [Inv α] (x : Additive α) : (-x).toMul = x.toMul⁻¹ :=
   rfl
-#align to_mul_neg to_mul_neg
+#align to_mul_neg toMul_neg
+-/
 
 instance [Neg α] : Inv (Multiplicative α) :=
   ⟨fun x => Additive.ofMul (-x.toAdd)⟩
 
+#print ofAdd_neg /-
 @[simp]
-theorem of_add_neg [Neg α] (x : α) : Multiplicative.ofAdd (-x) = (Multiplicative.ofAdd x)⁻¹ :=
+theorem ofAdd_neg [Neg α] (x : α) : Multiplicative.ofAdd (-x) = (Multiplicative.ofAdd x)⁻¹ :=
   rfl
-#align of_add_neg of_add_neg
+#align of_add_neg ofAdd_neg
+-/
 
+#print toAdd_inv /-
 @[simp]
-theorem to_add_inv [Neg α] (x : Multiplicative α) : x⁻¹.toAdd = -x.toAdd :=
+theorem toAdd_inv [Neg α] (x : Multiplicative α) : x⁻¹.toAdd = -x.toAdd :=
   rfl
-#align to_add_inv to_add_inv
+#align to_add_inv toAdd_inv
+-/
 
-instance Additive.hasSub [Div α] :
-    Sub (Additive α) where sub x y := Additive.ofMul (x.toMul / y.toMul)
-#align additive.has_sub Additive.hasSub
+#print Additive.sub /-
+instance Additive.sub [Div α] : Sub (Additive α) where sub x y := Additive.ofMul (x.toMul / y.toMul)
+#align additive.has_sub Additive.sub
+-/
 
-instance Multiplicative.hasDiv [Sub α] :
+#print Multiplicative.div /-
+instance Multiplicative.div [Sub α] :
     Div (Multiplicative α) where div x y := Multiplicative.ofAdd (x.toAdd - y.toAdd)
-#align multiplicative.has_div Multiplicative.hasDiv
+#align multiplicative.has_div Multiplicative.div
+-/
 
+#print ofAdd_sub /-
 @[simp]
-theorem of_add_sub [Sub α] (x y : α) :
+theorem ofAdd_sub [Sub α] (x y : α) :
     Multiplicative.ofAdd (x - y) = Multiplicative.ofAdd x / Multiplicative.ofAdd y :=
   rfl
-#align of_add_sub of_add_sub
+#align of_add_sub ofAdd_sub
+-/
 
+#print toAdd_div /-
 @[simp]
-theorem to_add_div [Sub α] (x y : Multiplicative α) : (x / y).toAdd = x.toAdd - y.toAdd :=
+theorem toAdd_div [Sub α] (x y : Multiplicative α) : (x / y).toAdd = x.toAdd - y.toAdd :=
   rfl
-#align to_add_div to_add_div
+#align to_add_div toAdd_div
+-/
 
+#print ofMul_div /-
 @[simp]
-theorem of_mul_div [Div α] (x y : α) :
+theorem ofMul_div [Div α] (x y : α) :
     Additive.ofMul (x / y) = Additive.ofMul x - Additive.ofMul y :=
   rfl
-#align of_mul_div of_mul_div
+#align of_mul_div ofMul_div
+-/
 
+#print toMul_sub /-
 @[simp]
-theorem to_mul_sub [Div α] (x y : Additive α) : (x - y).toMul = x.toMul / y.toMul :=
+theorem toMul_sub [Div α] (x y : Additive α) : (x - y).toMul = x.toMul / y.toMul :=
   rfl
-#align to_mul_sub to_mul_sub
+#align to_mul_sub toMul_sub
+-/
 
-instance [HasInvolutiveInv α] : HasInvolutiveNeg (Additive α) :=
+instance [InvolutiveInv α] : InvolutiveNeg (Additive α) :=
   { Additive.hasNeg with neg_neg := @inv_inv _ _ }
 
-instance [HasInvolutiveNeg α] : HasInvolutiveInv (Multiplicative α) :=
+instance [InvolutiveNeg α] : InvolutiveInv (Multiplicative α) :=
   { Multiplicative.hasInv with inv_inv := @neg_neg _ _ }
 
 instance [DivInvMonoid α] : SubNegMonoid (Additive α) :=
-  { Additive.hasNeg, Additive.hasSub, Additive.addMonoid with
+  { Additive.hasNeg, Additive.sub, Additive.addMonoid with
     sub_eq_add_neg := @div_eq_mul_inv α _
     zsmul := @DivInvMonoid.zpow α _
     zsmul_zero' := DivInvMonoid.zpow_zero'
@@ -377,7 +444,7 @@ instance [DivInvMonoid α] : SubNegMonoid (Additive α) :=
     zsmul_neg' := DivInvMonoid.zpow_neg' }
 
 instance [SubNegMonoid α] : DivInvMonoid (Multiplicative α) :=
-  { Multiplicative.hasInv, Multiplicative.hasDiv, Multiplicative.monoid with
+  { Multiplicative.hasInv, Multiplicative.div, Multiplicative.monoid with
     div_eq_mul_inv := @sub_eq_add_neg α _
     zpow := @SubNegMonoid.zsmul α _
     zpow_zero' := SubNegMonoid.zsmul_zero'
@@ -416,6 +483,7 @@ open Multiplicative (ofAdd)
 
 open Additive (ofMul)
 
+#print AddMonoidHom.toMultiplicative /-
 /-- Reinterpret `α →+ β` as `multiplicative α →* multiplicative β`. -/
 @[simps]
 def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
@@ -432,7 +500,9 @@ def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
     ext
     rfl
 #align add_monoid_hom.to_multiplicative AddMonoidHom.toMultiplicative
+-/
 
+#print MonoidHom.toAdditive /-
 /-- Reinterpret `α →* β` as `additive α →+ additive β`. -/
 @[simps]
 def MonoidHom.toAdditive [MulOneClass α] [MulOneClass β] :
@@ -448,7 +518,9 @@ def MonoidHom.toAdditive [MulOneClass α] [MulOneClass β] :
     ext
     rfl
 #align monoid_hom.to_additive MonoidHom.toAdditive
+-/
 
+#print AddMonoidHom.toMultiplicative' /-
 /-- Reinterpret `additive α →+ β` as `α →* multiplicative β`. -/
 @[simps]
 def AddMonoidHom.toMultiplicative' [MulOneClass α] [AddZeroClass β] :
@@ -465,14 +537,18 @@ def AddMonoidHom.toMultiplicative' [MulOneClass α] [AddZeroClass β] :
     ext
     rfl
 #align add_monoid_hom.to_multiplicative' AddMonoidHom.toMultiplicative'
+-/
 
+#print MonoidHom.toAdditive' /-
 /-- Reinterpret `α →* multiplicative β` as `additive α →+ β`. -/
 @[simps]
 def MonoidHom.toAdditive' [MulOneClass α] [AddZeroClass β] :
     (α →* Multiplicative β) ≃ (Additive α →+ β) :=
   AddMonoidHom.toMultiplicative'.symm
 #align monoid_hom.to_additive' MonoidHom.toAdditive'
+-/
 
+#print AddMonoidHom.toMultiplicative'' /-
 /-- Reinterpret `α →+ additive β` as `multiplicative α →* β`. -/
 @[simps]
 def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClass β] :
@@ -488,33 +564,40 @@ def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClass β] :
     ext
     rfl
 #align add_monoid_hom.to_multiplicative'' AddMonoidHom.toMultiplicative''
+-/
 
+#print MonoidHom.toAdditive'' /-
 /-- Reinterpret `multiplicative α →* β` as `α →+ additive β`. -/
 @[simps]
 def MonoidHom.toAdditive'' [AddZeroClass α] [MulOneClass β] :
     (Multiplicative α →* β) ≃ (α →+ Additive β) :=
   AddMonoidHom.toMultiplicative''.symm
 #align monoid_hom.to_additive'' MonoidHom.toAdditive''
+-/
 
+#print Additive.coeToFun /-
 /-- If `α` has some multiplicative structure and coerces to a function,
 then `additive α` should also coerce to the same function.
 
 This allows `additive` to be used on bundled function types with a multiplicative structure, which
 is often used for composition, without affecting the behavior of the function itself.
 -/
-instance Additive.hasCoeToFun {α : Type _} {β : α → Sort _} [CoeFun α β] :
+instance Additive.coeToFun {α : Type _} {β : α → Sort _} [CoeFun α β] :
     CoeFun (Additive α) fun a => β a.toMul :=
   ⟨fun a => coeFn a.toMul⟩
-#align additive.has_coe_to_fun Additive.hasCoeToFun
+#align additive.has_coe_to_fun Additive.coeToFun
+-/
 
+#print Multiplicative.coeToFun /-
 /-- If `α` has some additive structure and coerces to a function,
 then `multiplicative α` should also coerce to the same function.
 
 This allows `multiplicative` to be used on bundled function types with an additive structure, which
 is often used for composition, without affecting the behavior of the function itself.
 -/
-instance Multiplicative.hasCoeToFun {α : Type _} {β : α → Sort _} [CoeFun α β] :
+instance Multiplicative.coeToFun {α : Type _} {β : α → Sort _} [CoeFun α β] :
     CoeFun (Multiplicative α) fun a => β a.toAdd :=
   ⟨fun a => coeFn a.toAdd⟩
-#align multiplicative.has_coe_to_fun Multiplicative.hasCoeToFun
+#align multiplicative.has_coe_to_fun Multiplicative.coeToFun
+-/
 

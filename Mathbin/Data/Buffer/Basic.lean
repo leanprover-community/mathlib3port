@@ -6,7 +6,7 @@ Authors: Simon Hudon
 General utility functions for buffers.
 
 ! This file was ported from Lean 3 source module data.buffer.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem to_list_nil : toList (@nil α) = [] :=
   rfl
 #align buffer.to_list_nil Buffer.to_list_nil
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
 instance (α) [DecidableEq α] : DecidableEq (Buffer α) := by
   run_tac
     tactic.mk_dec_eq_instance

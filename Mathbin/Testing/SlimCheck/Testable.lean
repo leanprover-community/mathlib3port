@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.testable
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -893,7 +893,7 @@ lean 3 declaration is
 but is expected to have type
   forall (p : Prop), (optParam.{1} SlimCheck.Configuration (SlimCheck.Configuration.mk ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Option.none.{0} Nat]) ([mdata structInstDefault:1 Bool.false]))) -> (forall (p' : autoParam.{1} (SlimCheck.Decorations.DecorationsOf p) _auto._@.Mathlib.Testing.SlimCheck.Testable._hyg.6230) [_inst_2 : SlimCheck.Testable p'], IO PUnit.{1})
 Case conversion may be inaccurate. Consider using '#align slim_check.testable.check SlimCheck.Testable.checkₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic tactic.mk_decorations -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.mk_decorations -/
 /-- Run a test suite for `p` and return true or false: should we believe that `p` holds? -/
 def Testable.check (p : Prop) (cfg : SlimCheckCfg := {  })
     (p' : Tactic.DecorationsOf p := by

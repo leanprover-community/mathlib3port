@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -380,7 +380,7 @@ def nextContinuants (a b : K) (ppred pred : Pair K) : Pair K :=
 #align generalized_continued_fraction.next_continuants GeneralizedContinuedFraction.nextContinuants
 
 /-- Returns the continuants `⟨Aₙ₋₁, Bₙ₋₁⟩` of `g`. -/
-def continuantsAux (g : GeneralizedContinuedFraction K) : Stream (Pair K)
+def continuantsAux (g : GeneralizedContinuedFraction K) : Stream' (Pair K)
   | 0 => ⟨1, 0⟩
   | 1 => ⟨g.h, 1⟩
   | n + 2 =>
@@ -390,22 +390,22 @@ def continuantsAux (g : GeneralizedContinuedFraction K) : Stream (Pair K)
 #align generalized_continued_fraction.continuants_aux GeneralizedContinuedFraction.continuantsAux
 
 /-- Returns the continuants `⟨Aₙ, Bₙ⟩` of `g`. -/
-def continuants (g : GeneralizedContinuedFraction K) : Stream (Pair K) :=
+def continuants (g : GeneralizedContinuedFraction K) : Stream' (Pair K) :=
   g.continuantsAux.tail
 #align generalized_continued_fraction.continuants GeneralizedContinuedFraction.continuants
 
 /-- Returns the numerators `Aₙ` of `g`. -/
-def numerators (g : GeneralizedContinuedFraction K) : Stream K :=
+def numerators (g : GeneralizedContinuedFraction K) : Stream' K :=
   g.continuants.map Pair.a
 #align generalized_continued_fraction.numerators GeneralizedContinuedFraction.numerators
 
 /-- Returns the denominators `Bₙ` of `g`. -/
-def denominators (g : GeneralizedContinuedFraction K) : Stream K :=
+def denominators (g : GeneralizedContinuedFraction K) : Stream' K :=
   g.continuants.map Pair.b
 #align generalized_continued_fraction.denominators GeneralizedContinuedFraction.denominators
 
 /-- Returns the convergents `Aₙ / Bₙ` of `g`, where `Aₙ, Bₙ` are the nth continuants of `g`. -/
-def convergents (g : GeneralizedContinuedFraction K) : Stream K := fun n : ℕ =>
+def convergents (g : GeneralizedContinuedFraction K) : Stream' K := fun n : ℕ =>
   g.numerators n / g.denominators n
 #align generalized_continued_fraction.convergents GeneralizedContinuedFraction.convergents
 

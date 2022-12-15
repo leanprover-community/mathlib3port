@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,8 +75,8 @@ theorem real_smul {x : ℝ} {z : ℂ} : x • z = x * z :=
 
 end
 
-instance [HasSmul R ℝ] [HasSmul S ℝ] [SmulCommClass R S ℝ] :
-    SmulCommClass R S ℂ where smul_comm r s x := by ext <;> simp [smul_re, smul_im, smul_comm]
+instance [HasSmul R ℝ] [HasSmul S ℝ] [SMulCommClass R S ℝ] :
+    SMulCommClass R S ℂ where smul_comm r s x := by ext <;> simp [smul_re, smul_im, smul_comm]
 
 instance [HasSmul R S] [HasSmul R ℝ] [HasSmul S ℝ] [IsScalarTower R S ℝ] :
     IsScalarTower R S ℂ where smul_assoc r s x := by ext <;> simp [smul_re, smul_im, smul_assoc]
@@ -91,8 +91,8 @@ instance [Monoid R] [MulAction R ℝ] :
   one_smul x := by ext <;> simp [smul_re, smul_im, one_smul]
   mul_smul r s x := by ext <;> simp [smul_re, smul_im, mul_smul]
 
-instance [DistribSmul R ℝ] :
-    DistribSmul R
+instance [DistribSMul R ℝ] :
+    DistribSMul R
       ℂ where 
   smul_add r x y := by ext <;> simp [smul_re, smul_im, smul_add]
   smul_zero r := by ext <;> simp [smul_re, smul_im, smul_zero]
@@ -185,7 +185,7 @@ theorem coe_basis_one_I : ⇑basis_one_I = ![1, i] :=
 #align complex.coe_basis_one_I Complex.coe_basis_one_I
 
 instance : FiniteDimensional ℝ ℂ :=
-  ofFintypeBasis basisOneI
+  of_fintype_basis basisOneI
 
 @[simp]
 theorem finrank_real_complex : FiniteDimensional.finrank ℝ ℂ = 2 := by
@@ -233,15 +233,15 @@ theorem Complex.coe_smul {E : Type _} [AddCommGroup E] [Module ℂ E] (x : ℝ) 
 
 /-- The scalar action of `ℝ` on a `ℂ`-module `E` induced by `module.complex_to_real` commutes with
 another scalar action of `M` on `E` whenever the action of `ℂ` commutes with the action of `M`. -/
-instance (priority := 900) SmulCommClass.complex_to_real {M E : Type _} [AddCommGroup E]
-    [Module ℂ E] [HasSmul M E] [SmulCommClass ℂ M E] :
-    SmulCommClass ℝ M E where smul_comm r _ _ := (smul_comm (r : ℂ) _ _ : _)
-#align smul_comm_class.complex_to_real SmulCommClass.complex_to_real
+instance (priority := 900) SMulCommClass.complex_to_real {M E : Type _} [AddCommGroup E]
+    [Module ℂ E] [HasSmul M E] [SMulCommClass ℂ M E] :
+    SMulCommClass ℝ M E where smul_comm r _ _ := (smul_comm (r : ℂ) _ _ : _)
+#align smul_comm_class.complex_to_real SMulCommClass.complex_to_real
 
-instance (priority := 100) FiniteDimensional.complexToReal (E : Type _) [AddCommGroup E]
+instance (priority := 100) FiniteDimensional.complex_to_real (E : Type _) [AddCommGroup E]
     [Module ℂ E] [FiniteDimensional ℂ E] : FiniteDimensional ℝ E :=
   FiniteDimensional.trans ℝ ℂ E
-#align finite_dimensional.complex_to_real FiniteDimensional.complexToReal
+#align finite_dimensional.complex_to_real FiniteDimensional.complex_to_real
 
 theorem dim_real_of_complex (E : Type _) [AddCommGroup E] [Module ℂ E] :
     Module.rank ℝ E = 2 * Module.rank ℂ E :=
@@ -461,21 +461,21 @@ scoped[ComplexStarModule] notation "ℑ" => imaginaryPart
 @[simp]
 theorem real_part_apply_coe (a : A) : (ℜ a : A) = (2 : ℝ)⁻¹ • (a + star a) := by
   unfold realPart
-  simp only [self_adjoint_part_apply_coe, inv_of_eq_inv]
+  simp only [self_adjoint_part_apply_coe, invOf_eq_inv]
 #align real_part_apply_coe real_part_apply_coe
 
 @[simp]
 theorem imaginary_part_apply_coe (a : A) : (ℑ a : A) = -I • (2 : ℝ)⁻¹ • (a - star a) := by
   unfold imaginaryPart
   simp only [LinearMap.coe_comp, skewAdjoint.neg_I_smul_apply_coe, skew_adjoint_part_apply_coe,
-    inv_of_eq_inv]
+    invOf_eq_inv]
 #align imaginary_part_apply_coe imaginary_part_apply_coe
 
 /-- The standard decomposition of `ℜ a + complex.I • ℑ a = a` of an element of a star module over
 `ℂ` into a linear combination of self adjoint elements. -/
 theorem real_part_add_I_smul_imaginary_part (a : A) : (ℜ a + I • ℑ a : A) = a := by
   simpa only [smul_smul, real_part_apply_coe, imaginary_part_apply_coe, neg_smul, I_mul_I, one_smul,
-    neg_sub, add_add_sub_cancel, smul_sub, smul_add, neg_sub_neg, inv_of_eq_inv] using
+    neg_sub, add_add_sub_cancel, smul_sub, smul_add, neg_sub_neg, invOf_eq_inv] using
     inv_of_two_smul_add_inv_of_two_smul ℝ a
 #align real_part_add_I_smul_imaginary_part real_part_add_I_smul_imaginary_part
 

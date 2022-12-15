@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen
 
 ! This file was ported from Lean 3 source module tactic.ring_exp
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1553,7 +1553,7 @@ open ExType
                         match
                           hp_instance
                           with
-                          | q( Monoid.hasPow ) => lift <| mk_eq_refl e
+                          | q( Monoid.Pow ) => lift <| mk_eq_refl e
                             |
                               _
                               =>
@@ -1597,7 +1597,7 @@ unsafe def make_eval_info (α : expr) : tactic eval_info := do
   let dr_instance ← some <$> (mk_app `` DivisionRing [α] >>= mk_instance) <|> pure none
   let ha_instance ← mk_app `` Add [α] >>= mk_instance
   let hm_instance ← mk_app `` Mul [α] >>= mk_instance
-  let hp_instance ← mk_mapp `` Monoid.hasPow [some α, none]
+  let hp_instance ← mk_mapp `` Monoid.Pow [some α, none]
   let z ← mk_mapp `` Zero.zero [α, none]
   let o ← mk_mapp `` One.one [α, none]
   pure ⟨α, u, csr_instance, ha_instance, hm_instance, hp_instance, ring_instance, dr_instance, z, o⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Group.limits
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,16 +103,16 @@ def limitConeIsLimit (F : J ⥤ GroupCat.{max v u}) : IsLimit (limitCone F) :=
 
 /-- The category of groups has all limits. -/
 @[to_additive "The category of additive groups has all limits."]
-instance has_limits_of_size :
+instance hasLimitsOfSize :
     HasLimitsOfSize.{v, v}
       GroupCat.{max v
           u} where HasLimitsOfShape J 𝒥 :=
     { HasLimit := fun F => has_limit_of_created F (forget₂ GroupCat MonCat.{max v u}) }
-#align Group.has_limits_of_size GroupCat.has_limits_of_size
+#align Group.has_limits_of_size GroupCat.hasLimitsOfSize
 
 @[to_additive]
 instance has_limits : HasLimits GroupCat.{u} :=
-  GroupCat.has_limits_of_size.{u, u}
+  GroupCat.hasLimitsOfSize.{u, u}
 #align Group.has_limits GroupCat.has_limits
 
 /-- The forgetful functor from groups to monoids preserves all limits.
@@ -213,16 +213,16 @@ def limitConeIsLimit (F : J ⥤ CommGroupCat.{max v u}) : IsLimit (limitCone F) 
 
 /-- The category of commutative groups has all limits. -/
 @[to_additive "The category of additive commutative groups has all limits."]
-instance has_limits_of_size :
+instance hasLimitsOfSize :
     HasLimitsOfSize.{v, v}
       CommGroupCat.{max v
           u} where HasLimitsOfShape J 𝒥 :=
     { HasLimit := fun F => has_limit_of_created F (forget₂ CommGroupCat GroupCat.{max v u}) }
-#align CommGroup.has_limits_of_size CommGroupCat.has_limits_of_size
+#align CommGroup.has_limits_of_size CommGroupCat.hasLimitsOfSize
 
 @[to_additive]
 instance has_limits : HasLimits CommGroupCat.{u} :=
-  CommGroupCat.has_limits_of_size.{u, u}
+  CommGroupCat.hasLimitsOfSize.{u, u}
 #align CommGroup.has_limits CommGroupCat.has_limits
 
 /-- The forgetful functor from commutative groups to groups preserves all limits.

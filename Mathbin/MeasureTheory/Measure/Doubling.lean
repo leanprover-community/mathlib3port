@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.measure.doubling
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ noncomputable section
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open Nnreal TopologicalSpace
+open Ennreal Nnreal TopologicalSpace
 
 /- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closed_ball_le_mul] [] -/
 /-- A measure `μ` is said to be a doubling measure if there exists a constant `C` such that for
@@ -109,6 +109,11 @@ def scalingConstantOf (K : ℝ) : ℝ≥0 :=
   max (Classical.choose <| exists_eventually_forall_measure_closed_ball_le_mul μ K) 1
 #align is_doubling_measure.scaling_constant_of IsDoublingMeasure.scalingConstantOf
 
+@[simp]
+theorem one_le_scaling_constant_of (K : ℝ) : 1 ≤ scalingConstantOf μ K :=
+  le_max_of_le_right <| le_refl 1
+#align is_doubling_measure.one_le_scaling_constant_of IsDoublingMeasure.one_le_scaling_constant_of
+
 theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
     ∃ R : ℝ,
       0 < R ∧
@@ -128,6 +133,23 @@ theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
     exact Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl
 #align
   is_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.eventually_measure_mul_le_scaling_constant_of_mul
+
+theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
+    ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x (K * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) := by
+  filter_upwards [Classical.choose_spec
+      (exists_eventually_forall_measure_closed_ball_le_mul μ K)] with r hr x
+  exact (hr x K le_rfl).trans (Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl)
+#align
+  is_doubling_measure.eventually_measure_le_scaling_constant_mul IsDoublingMeasure.eventually_measure_le_scaling_constant_mul
+
+theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :
+    ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x r) ≤ scalingConstantOf μ K⁻¹ * μ (closedBall x (K * r)) :=
+  by
+  convert eventually_nhds_within_pos_mul_left hK (eventually_measure_le_scaling_constant_mul μ K⁻¹)
+  ext
+  simp [inv_mul_cancel_left₀ hK.ne']
+#align
+  is_doubling_measure.eventually_measure_le_scaling_constant_mul' IsDoublingMeasure.eventually_measure_le_scaling_constant_mul'
 
 /-- A scale below which the doubling measure `μ` satisfies good rescaling properties when one
 multiplies the radius of balls by at most `K`, as stated

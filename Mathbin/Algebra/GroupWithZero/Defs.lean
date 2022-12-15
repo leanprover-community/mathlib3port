@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.defs
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,23 +45,29 @@ class MulZeroClass (M₀ : Type _) extends Mul M₀, Zero M₀ where
 #align mul_zero_class MulZeroClass
 -/
 
+#print IsLeftCancelMulZero /-
 /-- A mixin for left cancellative multiplication by nonzero elements. -/
 @[protect_proj]
 class IsLeftCancelMulZero (M₀ : Type u) [Mul M₀] [Zero M₀] : Prop where
   mul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
 #align is_left_cancel_mul_zero IsLeftCancelMulZero
+-/
 
+#print IsRightCancelMulZero /-
 /-- A mixin for right cancellative multiplication by nonzero elements. -/
 @[protect_proj]
 class IsRightCancelMulZero (M₀ : Type u) [Mul M₀] [Zero M₀] : Prop where
   mul_right_cancel_of_ne_zero : ∀ {a b c : M₀}, b ≠ 0 → a * b = c * b → a = c
 #align is_right_cancel_mul_zero IsRightCancelMulZero
+-/
 
+#print IsCancelMulZero /-
 /-- A mixin for cancellative multiplication by nonzero elements. -/
 @[protect_proj]
 class IsCancelMulZero (M₀ : Type u) [Mul M₀] [Zero M₀] extends IsLeftCancelMulZero M₀,
   IsRightCancelMulZero M₀ : Prop
 #align is_cancel_mul_zero IsCancelMulZero
+-/
 
 section MulZeroClass
 
@@ -160,7 +166,7 @@ theorem mul_right_cancel₀ (hb : b ≠ 0) (h : a * b = c * b) : a = c :=
 lean 3 declaration is
   forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀}, (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))) -> (Function.Injective.{succ u1, succ u1} M₀ M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a))
 but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀}, (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Function.Injective.{succ u1, succ u1} M₀ M₀ ((fun (x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.419 : M₀) (x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.421 : M₀) => HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.419 x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.421) a))
+  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀}, (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Function.Injective.{succ u1, succ u1} M₀ M₀ ((fun (x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.526 : M₀) (x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.528 : M₀) => HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.526 x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.528) a))
 Case conversion may be inaccurate. Consider using '#align mul_right_injective₀ mul_right_injective₀ₓ'. -/
 theorem mul_right_injective₀ (ha : a ≠ 0) : Function.Injective ((· * ·) a) := fun b c =>
   mul_left_cancel₀ ha

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.group.ext
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,6 +33,12 @@ monoid, group, extensionality
 
 universe u
 
+/- warning: monoid.ext -> Monoid.ext is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {{m₁ : Monoid.{u1} M}} {{m₂ : Monoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Monoid.mul.{u1} M m₁) (Monoid.mul.{u1} M m₂)) -> (Eq.{succ u1} (Monoid.{u1} M) m₁ m₂)
+but is expected to have type
+  forall {M : Type.{u1}} {{m₁ : Monoid.{u1} M}} {{m₂ : Monoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (Monoid.toSemigroup.{u1} M m₁))) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (Monoid.toSemigroup.{u1} M m₂)))) -> (Eq.{succ u1} (Monoid.{u1} M) m₁ m₂)
+Case conversion may be inaccurate. Consider using '#align monoid.ext Monoid.extₓ'. -/
 @[ext, to_additive]
 theorem Monoid.ext {M : Type u} ⦃m₁ m₂ : Monoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ := by
   have h₁ : (@Monoid.toMulOneClass _ m₁).one = (@Monoid.toMulOneClass _ m₂).one :=
@@ -49,70 +55,116 @@ theorem Monoid.ext {M : Type u} ⦃m₁ m₂ : Monoid M⦄ (h_mul : m₁.mul = m
   congr <;> assumption
 #align monoid.ext Monoid.ext
 
+#print CommMonoid.toMonoid_injective /-
 @[to_additive]
-theorem CommMonoid.to_monoid_injective {M : Type u} : Function.Injective (@CommMonoid.toMonoid M) :=
+theorem CommMonoid.toMonoid_injective {M : Type u} : Function.Injective (@CommMonoid.toMonoid M) :=
   by 
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
-#align comm_monoid.to_monoid_injective CommMonoid.to_monoid_injective
+#align comm_monoid.to_monoid_injective CommMonoid.toMonoid_injective
+-/
 
+/- warning: comm_monoid.ext -> CommMonoid.ext is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {{m₁ : CommMonoid.{u1} M}} {{m₂ : CommMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (CommMonoid.mul.{u1} M m₁) (CommMonoid.mul.{u1} M m₂)) -> (Eq.{succ u1} (CommMonoid.{u1} M) m₁ m₂)
+but is expected to have type
+  forall {M : Type.{u1}} {{m₁ : CommMonoid.{u1} M}} {{m₂ : CommMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (Monoid.toSemigroup.{u1} M (CommMonoid.toMonoid.{u1} M m₁)))) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (Monoid.toSemigroup.{u1} M (CommMonoid.toMonoid.{u1} M m₂))))) -> (Eq.{succ u1} (CommMonoid.{u1} M) m₁ m₂)
+Case conversion may be inaccurate. Consider using '#align comm_monoid.ext CommMonoid.extₓ'. -/
 @[ext, to_additive]
 theorem CommMonoid.ext {M : Type _} ⦃m₁ m₂ : CommMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  CommMonoid.to_monoid_injective <| Monoid.ext h_mul
+  CommMonoid.toMonoid_injective <| Monoid.ext h_mul
 #align comm_monoid.ext CommMonoid.ext
 
+#print LeftCancelMonoid.toMonoid_injective /-
 @[to_additive]
-theorem LeftCancelMonoid.to_monoid_injective {M : Type u} :
+theorem LeftCancelMonoid.toMonoid_injective {M : Type u} :
     Function.Injective (@LeftCancelMonoid.toMonoid M) := by
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
-#align left_cancel_monoid.to_monoid_injective LeftCancelMonoid.to_monoid_injective
+#align left_cancel_monoid.to_monoid_injective LeftCancelMonoid.toMonoid_injective
+-/
 
+/- warning: left_cancel_monoid.ext -> LeftCancelMonoid.ext is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {{m₁ : LeftCancelMonoid.{u1} M}} {{m₂ : LeftCancelMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (LeftCancelMonoid.mul.{u1} M m₁) (LeftCancelMonoid.mul.{u1} M m₂)) -> (Eq.{succ u1} (LeftCancelMonoid.{u1} M) m₁ m₂)
+but is expected to have type
+  forall {M : Type.{u1}} {{m₁ : LeftCancelMonoid.{u1} M}} {{m₂ : LeftCancelMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (LeftCancelSemigroup.toSemigroup.{u1} M (LeftCancelMonoid.toLeftCancelSemigroup.{u1} M m₁)))) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (LeftCancelSemigroup.toSemigroup.{u1} M (LeftCancelMonoid.toLeftCancelSemigroup.{u1} M m₂))))) -> (Eq.{succ u1} (LeftCancelMonoid.{u1} M) m₁ m₂)
+Case conversion may be inaccurate. Consider using '#align left_cancel_monoid.ext LeftCancelMonoid.extₓ'. -/
 @[ext, to_additive]
 theorem LeftCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : LeftCancelMonoid M⦄ (h_mul : m₁.mul = m₂.mul) :
     m₁ = m₂ :=
-  LeftCancelMonoid.to_monoid_injective <| Monoid.ext h_mul
+  LeftCancelMonoid.toMonoid_injective <| Monoid.ext h_mul
 #align left_cancel_monoid.ext LeftCancelMonoid.ext
 
+#print RightCancelMonoid.toMonoid_injective /-
 @[to_additive]
-theorem RightCancelMonoid.to_monoid_injective {M : Type u} :
+theorem RightCancelMonoid.toMonoid_injective {M : Type u} :
     Function.Injective (@RightCancelMonoid.toMonoid M) := by
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
-#align right_cancel_monoid.to_monoid_injective RightCancelMonoid.to_monoid_injective
+#align right_cancel_monoid.to_monoid_injective RightCancelMonoid.toMonoid_injective
+-/
 
+/- warning: right_cancel_monoid.ext -> RightCancelMonoid.ext is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {{m₁ : RightCancelMonoid.{u1} M}} {{m₂ : RightCancelMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (RightCancelMonoid.mul.{u1} M m₁) (RightCancelMonoid.mul.{u1} M m₂)) -> (Eq.{succ u1} (RightCancelMonoid.{u1} M) m₁ m₂)
+but is expected to have type
+  forall {M : Type.{u1}} {{m₁ : RightCancelMonoid.{u1} M}} {{m₂ : RightCancelMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (RightCancelSemigroup.toSemigroup.{u1} M (RightCancelMonoid.toRightCancelSemigroup.{u1} M m₁)))) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (RightCancelSemigroup.toSemigroup.{u1} M (RightCancelMonoid.toRightCancelSemigroup.{u1} M m₂))))) -> (Eq.{succ u1} (RightCancelMonoid.{u1} M) m₁ m₂)
+Case conversion may be inaccurate. Consider using '#align right_cancel_monoid.ext RightCancelMonoid.extₓ'. -/
 @[ext, to_additive]
 theorem RightCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : RightCancelMonoid M⦄ (h_mul : m₁.mul = m₂.mul) :
     m₁ = m₂ :=
-  RightCancelMonoid.to_monoid_injective <| Monoid.ext h_mul
+  RightCancelMonoid.toMonoid_injective <| Monoid.ext h_mul
 #align right_cancel_monoid.ext RightCancelMonoid.ext
 
+#print CancelMonoid.toLeftCancelMonoid_injective /-
 @[to_additive]
-theorem CancelMonoid.to_left_cancel_monoid_injective {M : Type u} :
+theorem CancelMonoid.toLeftCancelMonoid_injective {M : Type u} :
     Function.Injective (@CancelMonoid.toLeftCancelMonoid M) := by
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
-#align cancel_monoid.to_left_cancel_monoid_injective CancelMonoid.to_left_cancel_monoid_injective
+#align cancel_monoid.to_left_cancel_monoid_injective CancelMonoid.toLeftCancelMonoid_injective
+-/
 
+/- warning: cancel_monoid.ext -> CancelMonoid.ext is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {{m₁ : CancelMonoid.{u1} M}} {{m₂ : CancelMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (CancelMonoid.mul.{u1} M m₁) (CancelMonoid.mul.{u1} M m₂)) -> (Eq.{succ u1} (CancelMonoid.{u1} M) m₁ m₂)
+but is expected to have type
+  forall {M : Type.{u1}} {{m₁ : CancelMonoid.{u1} M}} {{m₂ : CancelMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (LeftCancelSemigroup.toSemigroup.{u1} M (LeftCancelMonoid.toLeftCancelSemigroup.{u1} M (CancelMonoid.toLeftCancelMonoid.{u1} M m₁))))) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (LeftCancelSemigroup.toSemigroup.{u1} M (LeftCancelMonoid.toLeftCancelSemigroup.{u1} M (CancelMonoid.toLeftCancelMonoid.{u1} M m₂)))))) -> (Eq.{succ u1} (CancelMonoid.{u1} M) m₁ m₂)
+Case conversion may be inaccurate. Consider using '#align cancel_monoid.ext CancelMonoid.extₓ'. -/
 @[ext, to_additive]
 theorem CancelMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelMonoid M⦄ (h_mul : m₁.mul = m₂.mul) :
     m₁ = m₂ :=
-  CancelMonoid.to_left_cancel_monoid_injective <| LeftCancelMonoid.ext h_mul
+  CancelMonoid.toLeftCancelMonoid_injective <| LeftCancelMonoid.ext h_mul
 #align cancel_monoid.ext CancelMonoid.ext
 
+#print CancelCommMonoid.toCommMonoid_injective /-
 @[to_additive]
-theorem CancelCommMonoid.to_comm_monoid_injective {M : Type u} :
+theorem CancelCommMonoid.toCommMonoid_injective {M : Type u} :
     Function.Injective (@CancelCommMonoid.toCommMonoid M) := by
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
-#align cancel_comm_monoid.to_comm_monoid_injective CancelCommMonoid.to_comm_monoid_injective
+#align cancel_comm_monoid.to_comm_monoid_injective CancelCommMonoid.toCommMonoid_injective
+-/
 
+/- warning: cancel_comm_monoid.ext -> CancelCommMonoid.ext is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {{m₁ : CancelCommMonoid.{u1} M}} {{m₂ : CancelCommMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (CancelCommMonoid.mul.{u1} M m₁) (CancelCommMonoid.mul.{u1} M m₂)) -> (Eq.{succ u1} (CancelCommMonoid.{u1} M) m₁ m₂)
+but is expected to have type
+  forall {M : Type.{u1}} {{m₁ : CancelCommMonoid.{u1} M}} {{m₂ : CancelCommMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (LeftCancelSemigroup.toSemigroup.{u1} M (LeftCancelMonoid.toLeftCancelSemigroup.{u1} M (CancelCommMonoid.toLeftCancelMonoid.{u1} M m₁))))) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (LeftCancelSemigroup.toSemigroup.{u1} M (LeftCancelMonoid.toLeftCancelSemigroup.{u1} M (CancelCommMonoid.toLeftCancelMonoid.{u1} M m₂)))))) -> (Eq.{succ u1} (CancelCommMonoid.{u1} M) m₁ m₂)
+Case conversion may be inaccurate. Consider using '#align cancel_comm_monoid.ext CancelCommMonoid.extₓ'. -/
 @[ext, to_additive]
 theorem CancelCommMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelCommMonoid M⦄ (h_mul : m₁.mul = m₂.mul) :
     m₁ = m₂ :=
-  CancelCommMonoid.to_comm_monoid_injective <| CommMonoid.ext h_mul
+  CancelCommMonoid.toCommMonoid_injective <| CommMonoid.ext h_mul
 #align cancel_comm_monoid.ext CancelCommMonoid.ext
 
+/- warning: div_inv_monoid.ext -> DivInvMonoid.ext is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {{m₁ : DivInvMonoid.{u1} M}} {{m₂ : DivInvMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (DivInvMonoid.mul.{u1} M m₁) (DivInvMonoid.mul.{u1} M m₂)) -> (Eq.{succ u1} (M -> M) (DivInvMonoid.inv.{u1} M m₁) (DivInvMonoid.inv.{u1} M m₂)) -> (Eq.{succ u1} (DivInvMonoid.{u1} M) m₁ m₂)
+but is expected to have type
+  forall {M : Type.{u1}} {{m₁ : DivInvMonoid.{u1} M}} {{m₂ : DivInvMonoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (Monoid.toSemigroup.{u1} M (DivInvMonoid.toMonoid.{u1} M m₁)))) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (Monoid.toSemigroup.{u1} M (DivInvMonoid.toMonoid.{u1} M m₂))))) -> (Eq.{succ u1} (M -> M) (Inv.inv.{u1} M (DivInvMonoid.toInv.{u1} M m₁)) (Inv.inv.{u1} M (DivInvMonoid.toInv.{u1} M m₂))) -> (Eq.{succ u1} (DivInvMonoid.{u1} M) m₁ m₂)
+Case conversion may be inaccurate. Consider using '#align div_inv_monoid.ext DivInvMonoid.extₓ'. -/
 @[ext, to_additive]
 theorem DivInvMonoid.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoid M⦄ (h_mul : m₁.mul = m₂.mul)
     (h_inv : m₁.inv = m₂.inv) : m₁ = m₂ := by
@@ -136,19 +188,31 @@ theorem DivInvMonoid.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoid M⦄ (h_mul : 
   exacts[h_mul, h₁, hpow, h_inv, hdiv, hzpow]
 #align div_inv_monoid.ext DivInvMonoid.ext
 
+/- warning: group.ext -> Group.ext is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {{g₁ : Group.{u1} G}} {{g₂ : Group.{u1} G}}, (Eq.{succ u1} (G -> G -> G) (Group.mul.{u1} G g₁) (Group.mul.{u1} G g₂)) -> (Eq.{succ u1} (Group.{u1} G) g₁ g₂)
+but is expected to have type
+  forall {G : Type.{u1}} {{g₁ : Group.{u1} G}} {{g₂ : Group.{u1} G}}, (Eq.{succ u1} (G -> G -> G) (Mul.mul.{u1} G (Semigroup.toMul.{u1} G (Monoid.toSemigroup.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G g₁))))) (Mul.mul.{u1} G (Semigroup.toMul.{u1} G (Monoid.toSemigroup.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G g₂)))))) -> (Eq.{succ u1} (Group.{u1} G) g₁ g₂)
+Case conversion may be inaccurate. Consider using '#align group.ext Group.extₓ'. -/
 @[ext, to_additive]
 theorem Group.ext {G : Type _} ⦃g₁ g₂ : Group G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ := by
   set f :=
     @MonoidHom.mk' G G (by letI := g₁ <;> infer_instance) g₂ id fun a b =>
       congr_fun (congr_fun h_mul a) b
   exact
-    Group.to_div_inv_monoid_injective
+    Group.toDivInvMonoid_injective
       (DivInvMonoid.ext h_mul
         (funext <| @MonoidHom.map_inv G G g₁ (@Group.toDivisionMonoid _ g₂) f))
 #align group.ext Group.ext
 
+/- warning: comm_group.ext -> CommGroup.ext is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {{g₁ : CommGroup.{u1} G}} {{g₂ : CommGroup.{u1} G}}, (Eq.{succ u1} (G -> G -> G) (CommGroup.mul.{u1} G g₁) (CommGroup.mul.{u1} G g₂)) -> (Eq.{succ u1} (CommGroup.{u1} G) g₁ g₂)
+but is expected to have type
+  forall {G : Type.{u1}} {{g₁ : CommGroup.{u1} G}} {{g₂ : CommGroup.{u1} G}}, (Eq.{succ u1} (G -> G -> G) (Mul.mul.{u1} G (Semigroup.toMul.{u1} G (Monoid.toSemigroup.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G g₁)))))) (Mul.mul.{u1} G (Semigroup.toMul.{u1} G (Monoid.toSemigroup.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G g₂))))))) -> (Eq.{succ u1} (CommGroup.{u1} G) g₁ g₂)
+Case conversion may be inaccurate. Consider using '#align comm_group.ext CommGroup.extₓ'. -/
 @[ext, to_additive]
 theorem CommGroup.ext {G : Type _} ⦃g₁ g₂ : CommGroup G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=
-  CommGroup.to_group_injective <| Group.ext h_mul
+  CommGroup.toGroup_injective <| Group.ext h_mul
 #align comm_group.ext CommGroup.ext
 

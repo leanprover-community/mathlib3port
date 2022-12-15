@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -540,10 +540,10 @@ theorem cos_eq_one_iff (x : ℝ) : cos x = 1 ↔ ∃ n : ℤ, (n : ℝ) * (2 * �
   ⟨fun h =>
     let ⟨n, hn⟩ := sin_eq_zero_iff.1 (sin_eq_zero_iff_cos_eq.2 (Or.inl h))
     ⟨n / 2,
-      (Int.mod_two_eq_zero_or_one n).elim
+      (Int.emod_two_eq_zero_or_one n).elim
         (fun hn0 => by
           rwa [← mul_assoc, ← @Int.cast_two ℝ, ← Int.cast_mul,
-            Int.div_mul_cancel ((Int.dvd_iff_mod_eq_zero _ _).2 hn0)])
+            Int.ediv_mul_cancel ((Int.dvd_iff_emod_eq_zero _ _).2 hn0)])
         fun hn1 => by
         rw [← Int.mod_add_div n 2, hn1, Int.cast_add, Int.cast_one, add_mul, one_mul, add_comm,
               mul_comm (2 : ℤ), Int.cast_mul, mul_assoc, Int.cast_two] at hn <;>

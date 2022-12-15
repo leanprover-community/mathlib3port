@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.unique_factorization_domain
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ open Associates Nat
 theorem of_wf_dvd_monoid_associates (h : WfDvdMonoid (Associates α)) : WfDvdMonoid α :=
   ⟨by 
     haveI := h
-    refine' (Surjective.well_founded_iff mk_surjective _).2 well_founded_dvd_not_unit
+    refine' (Surjective.wellFounded_iff mk_surjective _).2 well_founded_dvd_not_unit
     intros ; rw [mk_dvd_not_unit_mk_iff]⟩
 #align wf_dvd_monoid.of_wf_dvd_monoid_associates WfDvdMonoid.of_wf_dvd_monoid_associates
 
@@ -71,7 +71,7 @@ variable [WfDvdMonoid α]
 
 instance wf_dvd_monoid_associates : WfDvdMonoid (Associates α) :=
   ⟨by 
-    refine' (Surjective.well_founded_iff mk_surjective _).1 well_founded_dvd_not_unit
+    refine' (Surjective.wellFounded_iff mk_surjective _).1 well_founded_dvd_not_unit
     intros ; rw [mk_dvd_not_unit_mk_iff]⟩
 #align wf_dvd_monoid.wf_dvd_monoid_associates WfDvdMonoid.wf_dvd_monoid_associates
 
@@ -130,7 +130,7 @@ theorem not_unit_iff_exists_factors_eq (a : α) (hn0 : a ≠ 0) :
       · rw [Multiset.prod_cons, mul_comm b, mul_assoc, Multiset.prod_erase h, mul_comm],
     fun ⟨f, hi, he, hne⟩ =>
     let ⟨b, h⟩ := Multiset.exists_mem_of_ne_zero hne
-    not_is_unit_of_not_is_unit_dvd (hi b h).not_unit <| he ▸ Multiset.dvd_prod h⟩
+    not_isUnit_of_not_isUnit_dvd (hi b h).not_unit <| he ▸ Multiset.dvd_prod h⟩
 #align wf_dvd_monoid.not_unit_iff_exists_factors_eq WfDvdMonoid.not_unit_iff_exists_factors_eq
 
 end WfDvdMonoid
@@ -226,7 +226,7 @@ theorem prime_factors_unique [CancelCommMonoidWithZero α] :
         Multiset.eq_zero_of_forall_not_mem fun x hx =>
           have : IsUnit g.Prod := by simpa [associated_one_iff_is_unit] using h.symm
           (hg x hx).not_unit <|
-            is_unit_iff_dvd_one.2 <| (Multiset.dvd_prod hx).trans (is_unit_iff_dvd_one.1 this))
+            isUnit_iff_dvd_one.2 <| (Multiset.dvd_prod hx).trans (isUnit_iff_dvd_one.1 this))
     fun p f ih g hf hg hfg => by
     let ⟨b, hbg, hb⟩ :=
       (exists_associated_mem_of_dvd_prod (hf p (by simp)) fun q hq => hg _ hq) <|
@@ -289,9 +289,9 @@ theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
   ⟨by
     classical 
       refine'
-        RelHomClass.well_founded
+        RelHomClass.wellFounded
           (RelHom.mk _ _ : (DvdNotUnit : α → α → Prop) →r ((· < ·) : ℕ∞ → ℕ∞ → Prop))
-          (WithTop.well_founded_lt Nat.lt_wfRel)
+          (WithTop.wellFounded_lt Nat.lt_wfRel)
       · intro a
         by_cases h : a = 0
         · exact ⊤
@@ -538,7 +538,7 @@ theorem factors_pos (x : α) (hx : x ≠ 0) : 0 < factors x ↔ ¬IsUnit x := by
   constructor
   · intro h hx
     obtain ⟨p, hp⟩ := Multiset.exists_mem_of_ne_zero h.ne'
-    exact (prime_of_factor _ hp).not_unit (is_unit_of_dvd_unit (dvd_of_mem_factors hp) hx)
+    exact (prime_of_factor _ hp).not_unit (isUnit_of_dvd_unit (dvd_of_mem_factors hp) hx)
   · intro h
     obtain ⟨p, hp⟩ := exists_mem_factors hx h
     exact
@@ -620,7 +620,7 @@ theorem normalized_factors_irreducible {a : α} (ha : Irreducible a) :
 #align
   unique_factorization_monoid.normalized_factors_irreducible UniqueFactorizationMonoid.normalized_factors_irreducible
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (p q «expr ∈ » normalized_factors[unique_factorization_monoid.normalized_factors] a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p q «expr ∈ » normalized_factors[unique_factorization_monoid.normalized_factors] a) -/
 theorem normalized_factors_eq_of_dvd (a : α) :
     ∀ (p q) (_ : p ∈ normalizedFactors a) (_ : q ∈ normalizedFactors a), p ∣ q → p = q := by
   intro p hp q hq hdvd
@@ -807,7 +807,7 @@ theorem normalized_factors_pos (x : α) (hx : x ≠ 0) : 0 < normalizedFactors x
     obtain ⟨p, hp⟩ := Multiset.exists_mem_of_ne_zero h.ne'
     exact
       (prime_of_normalized_factor _ hp).not_unit
-        (is_unit_of_dvd_unit (dvd_of_mem_normalized_factors hp) hx)
+        (isUnit_of_dvd_unit (dvd_of_mem_normalized_factors hp) hx)
   · intro h
     obtain ⟨p, hp⟩ := exists_mem_normalized_factors hx h
     exact
@@ -824,7 +824,7 @@ theorem dvd_not_unit_iff_normalized_factors_lt_normalized_factors {x y : α} (hx
       lt_add_iff_pos_right, normalized_factors_pos, hc]
   · intro h
     exact
-      dvd_not_unit_of_dvd_of_not_dvd
+      dvdNotUnit_of_dvd_of_not_dvd
         ((dvd_iff_normalized_factors_le_normalized_factors hx hy).mpr h.le)
         (mt (dvd_iff_normalized_factors_le_normalized_factors hy hx).mp h.not_le)
 #align
@@ -926,7 +926,7 @@ theorem dvd_of_dvd_mul_right_of_no_prime_factors {a b c : R} (ha : a ≠ 0)
 #align
   unique_factorization_monoid.dvd_of_dvd_mul_right_of_no_prime_factors UniqueFactorizationMonoid.dvd_of_dvd_mul_right_of_no_prime_factors
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » (0 : R)) -/
 /-- If `a ≠ 0, b` are elements of a unique factorization domain, then dividing
 out their common factor `c'` gives `a'` and `b'` with no factors in common. -/
 theorem exists_reduced_factors :
@@ -942,7 +942,7 @@ theorem exists_reduced_factors :
     use a, b, 1
     constructor
     · intro p p_dvd_a _
-      exact is_unit_of_dvd_unit p_dvd_a a_unit
+      exact isUnit_of_dvd_unit p_dvd_a a_unit
     · simp
   · intro a p a_ne_zero p_prime ih_a pa_ne_zero b
     by_cases p ∣ b
@@ -1079,7 +1079,7 @@ variable {β : Type _} [CancelCommMonoidWithZero β]
 
 open BigOperators
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (q q' «expr ∈ » insert[has_insert.insert] p s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (q q' «expr ∈ » insert[has_insert.insert] p s) -/
 theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s : Finset α} (i : α → ℕ) (p : α)
     (hps : p ∉ s) (is_prime : ∀ q ∈ insert p s, Prime q)
     (is_coprime : ∀ (q q') (_ : q ∈ insert p s) (_ : q' ∈ insert p s), q ∣ q' → q = q') :
@@ -1098,7 +1098,7 @@ theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s : Finset α
 #align
   unique_factorization_monoid.prime_pow_coprime_prod_of_coprime_insert UniqueFactorizationMonoid.prime_pow_coprime_prod_of_coprime_insert
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p q «expr ∈ » s) -/
 /-- If `P` holds for units and powers of primes,
 and `P x ∧ P y` for coprime `x, y` implies `P (x * y)`,
 then `P` holds on a product of powers of distinct primes. -/
@@ -1130,7 +1130,7 @@ theorem induction_on_coprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}
   letI := Classical.decEq α
   have P_of_associated : ∀ {x y}, Associated x y → P x → P y := by
     rintro x y ⟨u, rfl⟩ hx
-    exact hcp (fun p _ hpx => is_unit_of_dvd_unit hpx u.is_unit) hx (h1 u.is_unit)
+    exact hcp (fun p _ hpx => isUnit_of_dvd_unit hpx u.is_unit) hx (h1 u.is_unit)
   by_cases ha0 : a = 0
   · rwa [ha0]
   haveI : Nontrivial α := ⟨⟨_, _, ha0⟩⟩
@@ -1143,8 +1143,8 @@ theorem induction_on_coprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}
 #align
   unique_factorization_monoid.induction_on_coprime UniqueFactorizationMonoid.induction_on_coprime
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (p q «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p q «expr ∈ » s) -/
 /-- If `f` maps `p ^ i` to `(f p) ^ i` for primes `p`, and `f`
 is multiplicative on coprime elements, then `f` is multiplicative on all products of primes. -/
 @[elab_as_elim]
@@ -1729,7 +1729,7 @@ theorem coprime_iff_inf_one {a b : α} (ha0 : a ≠ 0) (hb0 : b ≠ 0) :
     Associates.mk a ⊓ Associates.mk b = 1 ↔ ∀ {d : α}, d ∣ a → d ∣ b → ¬Prime d := by
   constructor
   · intro hg p ha hb hp
-    refine' ((Associates.prime_mk _).mpr hp).not_unit (is_unit_of_dvd_one _ _)
+    refine' ((Associates.prime_mk _).mpr hp).not_unit (isUnit_of_dvd_one _ _)
     rw [← hg]
     exact le_inf (mk_le_mk_of_dvd ha) (mk_le_mk_of_dvd hb)
   · contrapose

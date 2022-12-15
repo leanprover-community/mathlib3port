@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.metric_space.equicontinuity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ theorem equicontinuous_at_iff {ι : Type _} [PseudoMetricSpace β] {F : ι → �
   nhds_basis_ball.equicontinuous_at_iff uniformity_basis_dist
 #align metric.equicontinuous_at_iff Metric.equicontinuous_at_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
 /-- Reformulation of `equicontinuous_at_iff_pair` for families of functions taking values in a
 (pseudo) metric space. -/
 protected theorem equicontinuous_at_iff_pair {ι : Type _} [TopologicalSpace β] {F : ι → β → α}

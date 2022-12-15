@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module algebra.char_p.char_and_card
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ theorem is_unit_iff_not_dvd_char_of_ring_char_ne_zero (R : Type _) [CommRing R] 
     have h₃ : ¬ringChar R ∣ q := by 
       rintro ⟨r, hr⟩
       rw [hr, ← mul_assoc, mul_comm p, mul_assoc] at hq
-      nth_rw 1 [← mul_one (ringChar R)]  at hq
+      nth_rw 1 [← mul_one (ringChar R)] at hq
       exact Nat.Prime.not_dvd_one hp ⟨r, mul_left_cancel₀ hR hq⟩
     have h₄ := mt (CharP.int_cast_eq_zero_iff R (ringChar R) q).mp
     apply_fun (coe : ℕ → R)  at hq

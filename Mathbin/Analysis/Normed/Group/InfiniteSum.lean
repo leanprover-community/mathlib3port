@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Heather Macbeth, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed.group.infinite_sum
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ theorem cauchy_seq_finset_iff_vanishing_norm {f : ι → E} :
       ∀ ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ‖∑ i in t, f i‖ < ε :=
   by 
   rw [cauchy_seq_finset_iff_vanishing, nhds_basis_ball.forall_iff]
-  · simp only [ball_zero_eq, Set.mem_set_of_eq]
+  · simp only [ball_zero_eq, Set.mem_setOf_eq]
   · rintro s t hst ⟨s', hs'⟩
     exact ⟨s', fun t' ht' => hst <| hs' _ ht'⟩
 #align cauchy_seq_finset_iff_vanishing_norm cauchy_seq_finset_iff_vanishing_norm

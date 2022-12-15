@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Junyan Xu, Jack McKoen
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_subring
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -492,12 +492,12 @@ theorem is_equiv_iff_valuation_subring :
     simpa using this
 #align valuation.is_equiv_iff_valuation_subring Valuation.is_equiv_iff_valuation_subring
 
-theorem isEquivValuationValuationSubring : v.IsEquiv v.ValuationSubring.Valuation := by
+theorem is_equiv_valuation_valuation_subring : v.IsEquiv v.ValuationSubring.Valuation := by
   rw [is_equiv_iff_val_le_one]
   intro x
   rw [ValuationSubring.valuation_le_one_iff]
   rfl
-#align valuation.is_equiv_valuation_valuation_subring Valuation.isEquivValuationValuationSubring
+#align valuation.is_equiv_valuation_valuation_subring Valuation.is_equiv_valuation_valuation_subring
 
 end Valuation
 
@@ -1000,7 +1000,7 @@ variable {Γ : Type _} [LinearOrderedCommGroupWithZero Γ] (v : Valuation K Γ) 
 
 @[simp]
 theorem mem_unit_group_iff : x ∈ v.ValuationSubring.unitGroup ↔ v x = 1 :=
-  (Valuation.is_equiv_iff_val_eq_one _ _).mp (Valuation.isEquivValuationValuationSubring _).symm
+  (Valuation.is_equiv_iff_val_eq_one _ _).mp (Valuation.is_equiv_valuation_valuation_subring _).symm
 #align valuation.mem_unit_group_iff Valuation.mem_unit_group_iff
 
 end Valuation

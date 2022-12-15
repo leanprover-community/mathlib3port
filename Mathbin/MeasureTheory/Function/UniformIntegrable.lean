@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.uniform_integrable
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -328,7 +328,7 @@ theorem Memℒp.snorm_indicator_norm_ge_pos_le (hf : Memℒp f p μ) (hmeas : St
 
 end
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : ℝ} (hε : 0 < ε) {M : ℝ}
     (hf : ∀ x, ‖f x‖ < M) :
     ∃ (δ : ℝ)(hδ : 0 < δ),
@@ -349,7 +349,7 @@ theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : �
   rw [snorm_indicator_eq_snorm_restrict hs]
   have haebdd : ∀ᵐ x ∂μ.restrict s, ‖f x‖ ≤ M := by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     exact fun x => (hf x).le
   refine' le_trans (snorm_le_of_ae_bound haebdd) _
   rw [measure.restrict_apply MeasurableSet.univ, univ_inter, ←

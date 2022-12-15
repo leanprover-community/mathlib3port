@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.Mod
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ restate_axiom ModCat.one_act'
 
 restate_axiom ModCat.assoc'
 
-attribute [simp, reassoc] ModCat.one_act ModCat.assoc
+attribute [simp, reassoc.1] ModCat.one_act ModCat.assoc
 
 namespace ModCat
 
@@ -63,7 +63,7 @@ structure Hom (M N : ModCat A) where
 
 restate_axiom hom.act_hom'
 
-attribute [simp, reassoc] hom.act_hom
+attribute [simp, reassoc.1] hom.act_hom
 
 /-- The identity morphism on a module object. -/
 @[simps]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.algebraic_closure
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,17 +196,17 @@ def toStepOfLe (m n : ℕ) (h : m ≤ n) :
         n where 
   toFun := Nat.leRecOn h fun n => toStepSucc k n
   map_one' := by 
-    induction' h with n h ih; · exact Nat.le_rec_on_self 1
-    rw [Nat.le_rec_on_succ h, ih, RingHom.map_one]
+    induction' h with n h ih; · exact Nat.leRecOn_self 1
+    rw [Nat.leRecOn_succ h, ih, RingHom.map_one]
   map_mul' x y := by 
-    induction' h with n h ih; · simp_rw [Nat.le_rec_on_self]
-    simp_rw [Nat.le_rec_on_succ h, ih, RingHom.map_mul]
+    induction' h with n h ih; · simp_rw [Nat.leRecOn_self]
+    simp_rw [Nat.leRecOn_succ h, ih, RingHom.map_mul]
   map_zero' := by 
-    induction' h with n h ih; · exact Nat.le_rec_on_self 0
-    rw [Nat.le_rec_on_succ h, ih, RingHom.map_zero]
+    induction' h with n h ih; · exact Nat.leRecOn_self 0
+    rw [Nat.leRecOn_succ h, ih, RingHom.map_zero]
   map_add' x y := by 
-    induction' h with n h ih; · simp_rw [Nat.le_rec_on_self]
-    simp_rw [Nat.le_rec_on_succ h, ih, RingHom.map_add]
+    induction' h with n h ih; · simp_rw [Nat.leRecOn_self]
+    simp_rw [Nat.leRecOn_succ h, ih, RingHom.map_add]
 #align algebraic_closure.to_step_of_le AlgebraicClosure.toStepOfLe
 
 @[simp]
@@ -221,7 +221,7 @@ instance Step.algebra (n) : Algebra k (Step k n) :=
 
 instance Step.scalar_tower (n) : IsScalarTower k (Step k n) (Step k (n + 1)) :=
   IsScalarTower.of_algebra_map_eq fun z =>
-    @Nat.le_rec_on_succ (Step k) 0 n n.zero_le (n + 1).zero_le (fun n => toStepSucc k n) z
+    @Nat.leRecOn_succ (Step k) 0 n n.zero_le (n + 1).zero_le (fun n => toStepSucc k n) z
 #align algebraic_closure.step.scalar_tower AlgebraicClosure.Step.scalar_tower
 
 theorem Step.is_integral (n) : ∀ z : Step k n, IsIntegral k z :=
@@ -230,8 +230,7 @@ theorem Step.is_integral (n) : ∀ z : Step k n, IsIntegral k z :=
 #align algebraic_closure.step.is_integral AlgebraicClosure.Step.is_integral
 
 instance toStepOfLe.directed_system : DirectedSystem (Step k) fun i j h => toStepOfLe k i j h :=
-  ⟨fun i x h => Nat.le_rec_on_self x, fun i₁ i₂ i₃ h₁₂ h₂₃ x =>
-    (Nat.le_rec_on_trans h₁₂ h₂₃ x).symm⟩
+  ⟨fun i x h => Nat.leRecOn_self x, fun i₁ i₂ i₃ h₁₂ h₂₃ x => (Nat.leRecOn_trans h₁₂ h₂₃ x).symm⟩
 #align algebraic_closure.to_step_of_le.directed_system AlgebraicClosure.toStepOfLe.directed_system
 
 end AlgebraicClosure
@@ -264,7 +263,7 @@ theorem of_step_succ (n : ℕ) : (ofStep k (n + 1)).comp (toStepSucc k n) = ofSt
     show Ring.DirectLimit.of (Step k) (fun i j h => toStepOfLe k i j h) _ _ = _ by
       convert Ring.DirectLimit.of_f n.le_succ x
       ext x
-      exact (Nat.le_rec_on_succ' x).symm
+      exact (Nat.leRecOn_succ' x).symm
 #align algebraic_closure.of_step_succ AlgebraicClosure.of_step_succ
 
 theorem exists_of_step (z : AlgebraicClosure k) : ∃ n x, ofStep k n x = z :=

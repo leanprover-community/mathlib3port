@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,7 +153,7 @@ theorem decay_neg_aux (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
   exact iterated_fderiv_neg_apply
 #align schwartz_map.decay_neg_aux SchwartzMap.decay_neg_aux
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F]
+variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
 theorem decay_smul_aux (k n : ℕ) (f : 𝓢(E, F)) (c : 𝕜) (x : E) :
     ‖x‖ ^ k * ‖iteratedFderiv ℝ n (c • f) x‖ = ‖c‖ * ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ := by
@@ -192,8 +192,8 @@ end SeminormAux
 
 section Smul
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F] [NormedField 𝕜'] [NormedSpace 𝕜' F]
-  [SmulCommClass ℝ 𝕜' F]
+variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F] [NormedField 𝕜'] [NormedSpace 𝕜' F]
+  [SMulCommClass ℝ 𝕜' F]
 
 instance : HasSmul 𝕜 𝓢(E, F) :=
   ⟨fun c f =>
@@ -217,7 +217,7 @@ theorem smul_apply {f : 𝓢(E, F)} {c : 𝕜} {x : E} : (c • f) x = c • f x
 instance [HasSmul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' F] : IsScalarTower 𝕜 𝕜' 𝓢(E, F) :=
   ⟨fun a b f => ext fun x => smul_assoc a b (f x)⟩
 
-instance [SmulCommClass 𝕜 𝕜' F] : SmulCommClass 𝕜 𝕜' 𝓢(E, F) :=
+instance [SMulCommClass 𝕜 𝕜' F] : SMulCommClass 𝕜 𝕜' 𝓢(E, F) :=
   ⟨fun a b f => ext fun x => smul_comm a b (f x)⟩
 
 theorem seminorm_aux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) :
@@ -370,7 +370,7 @@ end AddCommGroup
 
 section Module
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F]
+variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
 instance : Module 𝕜 𝓢(E, F) :=
   coe_hom_injective.Module 𝕜 (coeHom E F) fun _ _ => rfl
@@ -382,7 +382,7 @@ section Seminorms
 /-! ### Seminorms on Schwartz space-/
 
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F]
+variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
 variable (𝕜)
 
@@ -430,7 +430,7 @@ section Topology
 /-! ### The topology on the Schwartz space-/
 
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F]
+variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
 variable (𝕜 E F)
 
@@ -519,7 +519,7 @@ theorem fderiv_apply (f : 𝓢(E, F)) (x : E) : f.fderiv x = fderiv ℝ f x :=
 
 variable (𝕜)
 
-variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F]
+variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
 /-- The derivative on Schwartz space as a linear map. -/
 def fderivLm : 𝓢(E, F) →ₗ[𝕜]
@@ -586,7 +586,7 @@ theorem to_bounded_continuous_function_apply (f : 𝓢(E, F)) (x : E) :
 
 variable (𝕜 E F)
 
-variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F]
+variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
 /-- The inclusion map from Schwartz functions to bounded continuous functions as a linear map. -/
 def toBoundedContinuousFunctionLm :

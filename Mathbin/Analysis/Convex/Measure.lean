@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.measure
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
   · refine' measure_mono_null _ (add_haar_affine_subspace _ _ hspan)
     exact
       frontier_subset_closure.trans
-        (closure_minimal (subset_affine_span _ _) (affineSpan ℝ s).closedOfFiniteDimensional)
+        (closure_minimal (subset_affine_span _ _) (affineSpan ℝ s).closed_of_finite_dimensional)
   rw [← hs.interior_nonempty_iff_affine_span_eq_top] at hspan
   rcases hspan with ⟨x, hx⟩
   /- Without loss of generality, `s` is bounded. Indeed, `∂s ⊆ ⋃ n, ∂(s ∩ ball x (n + 1))`, hence it

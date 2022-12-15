@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.field.defs
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,6 +59,12 @@ universe u
 
 variable {α β K : Type _}
 
+/- warning: rat.cast_rec -> Rat.castRec is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : HasLiftT.{1, succ u1} Nat K] [_inst_2 : HasLiftT.{1, succ u1} Int K] [_inst_3 : Mul.{u1} K] [_inst_4 : Inv.{u1} K], Rat -> K
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : CoeTail.{1, succ u1} Nat K] [_inst_2 : CoeTail.{1, succ u1} Int K] [_inst_3 : Mul.{u1} K] [_inst_4 : Inv.{u1} K], Rat -> K
+Case conversion may be inaccurate. Consider using '#align rat.cast_rec Rat.castRecₓ'. -/
 /-- The default definition of the coercion `(↑(a : ℚ) : K)` for a division ring `K`
 is defined as `(a / b : K) = (a : K) * (b : K)⁻¹`.
 Use `coe` instead of `rat.cast_rec` for better definitional behaviour.
@@ -67,13 +73,16 @@ def Rat.castRec [HasLiftT ℕ K] [HasLiftT ℤ K] [Mul K] [Inv K] : ℚ → K
   | ⟨a, b, _, _⟩ => ↑a * (↑b)⁻¹
 #align rat.cast_rec Rat.castRec
 
+#print HasRatCast /-
 /-- Type class for the canonical homomorphism `ℚ → K`.
 -/
 @[protect_proj]
 class HasRatCast (K : Type u) where
   ratCast : ℚ → K
 #align has_rat_cast HasRatCast
+-/
 
+#print qsmulRec /-
 /-- The default definition of the scalar multiplication `(a : ℚ) • (x : K)` for a division ring `K`
 is given by `a • x = (↑ a) * x`.
 Use `(a : ℚ) • (x : K)` instead of `qsmul_rec` for better definitional behaviour.
@@ -81,12 +90,16 @@ Use `(a : ℚ) • (x : K)` instead of `qsmul_rec` for better definitional behav
 def qsmulRec (coe : ℚ → K) [Mul K] (a : ℚ) (x : K) : K :=
   coe a * x
 #align qsmul_rec qsmulRec
+-/
 
+#print DivisionSemiring /-
 /-- A `division_semiring` is a `semiring` with multiplicative inverses for nonzero elements. -/
 @[protect_proj]
 class DivisionSemiring (α : Type _) extends Semiring α, GroupWithZero α
 #align division_semiring DivisionSemiring
+-/
 
+#print DivisionRing /-
 /-- A `division_ring` is a `ring` with multiplicative inverses for nonzero elements.
 
 An instance of `division_ring K` includes maps `rat_cast : ℚ → K` and `qsmul : ℚ → K → K`.
@@ -110,17 +123,23 @@ class DivisionRing (K : Type u) extends Ring K, DivInvMonoid K, Nontrivial K, Ha
     intros
     rfl
 #align division_ring DivisionRing
+-/
 
+#print DivisionRing.toDivisionSemiring /-
 -- see Note [lower instance priority]
 instance (priority := 100) DivisionRing.toDivisionSemiring [DivisionRing α] : DivisionSemiring α :=
   { ‹DivisionRing α›, (inferInstance : Semiring α) with }
 #align division_ring.to_division_semiring DivisionRing.toDivisionSemiring
+-/
 
+#print Semifield /-
 /-- A `semifield` is a `comm_semiring` with multiplicative inverses for nonzero elements. -/
 @[protect_proj]
 class Semifield (α : Type _) extends CommSemiring α, DivisionSemiring α, CommGroupWithZero α
 #align semifield Semifield
+-/
 
+#print Field /-
 /-- A `field` is a `comm_ring` with multiplicative inverses for nonzero elements.
 
 An instance of `field K` includes maps `of_rat : ℚ → K` and `qsmul : ℚ → K → K`.
@@ -134,6 +153,7 @@ See also Note [forgetful inheritance].
 @[protect_proj]
 class Field (K : Type u) extends CommRing K, DivisionRing K
 #align field Field
+-/
 
 section DivisionRing
 
@@ -141,6 +161,12 @@ variable [DivisionRing K] {a b : K}
 
 namespace Rat
 
+/- warning: rat.cast_coe -> Rat.castCoe is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_2 : HasRatCast.{u1} K], CoeTCₓ.{1, succ u1} Rat K
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_2 : HasRatCast.{u1} K], CoeTC.{1, succ u1} Rat K
+Case conversion may be inaccurate. Consider using '#align rat.cast_coe Rat.castCoeₓ'. -/
 -- see Note [coercion into rings]
 /-- Construct the canonical injection from `ℚ` into an arbitrary
   division ring. If the field has positive characteristic `p`,
@@ -150,18 +176,42 @@ instance (priority := 900) castCoe {K : Type _} [HasRatCast K] : CoeTC ℚ K :=
   ⟨HasRatCast.ratCast⟩
 #align rat.cast_coe Rat.castCoe
 
+/- warning: rat.cast_mk' -> Rat.cast_mk' is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Int) (b : Nat) (h1 : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) b) (h2 : Nat.Coprime (Int.natAbs a) b), Eq.{succ u1} K ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat K (HasLiftT.mk.{1, succ u1} Rat K (CoeTCₓ.coe.{1, succ u1} Rat K (Rat.castCoe.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1)))) (Rat.mk a b h1 h2)) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int K (HasLiftT.mk.{1, succ u1} Int K (CoeTCₓ.coe.{1, succ u1} Int K (Int.castCoe.{u1} K (AddGroupWithOne.toHasIntCast.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))) a) (Inv.inv.{u1} K (DivInvMonoid.toHasInv.{u1} K (DivisionRing.toDivInvMonoid.{u1} K _inst_1)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat K (HasLiftT.mk.{1, succ u1} Nat K (CoeTCₓ.coe.{1, succ u1} Nat K (Nat.castCoe.{u1} K (AddMonoidWithOne.toNatCast.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))))) b)))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Int) (b : Nat) (h1 : Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (h2 : Nat.coprime (Int.natAbs a) b), Eq.{succ u1} K (HasRatCast.ratCast.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1) (Rat.mk a b h1 h2)) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (Int.cast.{u1} K (Ring.toIntCast.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) a) (Inv.inv.{u1} K (DivisionRing.toInv.{u1} K _inst_1) (Nat.cast.{u1} K (NonAssocRing.toNatCast.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))) b)))
+Case conversion may be inaccurate. Consider using '#align rat.cast_mk' Rat.cast_mk'ₓ'. -/
 theorem cast_mk' (a b h1 h2) : ((⟨a, b, h1, h2⟩ : ℚ) : K) = a * b⁻¹ :=
-  DivisionRing.rat_cast_mk _ _ _ _
+  DivisionRing.ratCast_mk _ _ _ _
 #align rat.cast_mk' Rat.cast_mk'
 
+/- warning: rat.cast_def -> Rat.cast_def is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (r : Rat), Eq.{succ u1} K ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat K (HasLiftT.mk.{1, succ u1} Rat K (CoeTCₓ.coe.{1, succ u1} Rat K (Rat.castCoe.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1)))) r) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivInvMonoid.toHasDiv.{u1} K (DivisionRing.toDivInvMonoid.{u1} K _inst_1))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int K (HasLiftT.mk.{1, succ u1} Int K (CoeTCₓ.coe.{1, succ u1} Int K (Int.castCoe.{u1} K (AddGroupWithOne.toHasIntCast.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))) (Rat.num r)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat K (HasLiftT.mk.{1, succ u1} Nat K (CoeTCₓ.coe.{1, succ u1} Nat K (Nat.castCoe.{u1} K (AddMonoidWithOne.toNatCast.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))))) (Rat.den r)))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (r : Rat), Eq.{succ u1} K (HasRatCast.ratCast.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1) r) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivisionRing.toDiv.{u1} K _inst_1)) (Int.cast.{u1} K (Ring.toIntCast.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (Rat.num r)) (Nat.cast.{u1} K (NonAssocRing.toNatCast.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))) (Rat.den r)))
+Case conversion may be inaccurate. Consider using '#align rat.cast_def Rat.cast_defₓ'. -/
 theorem cast_def : ∀ r : ℚ, (r : K) = r.num / r.denom
   | ⟨a, b, h1, h2⟩ => (cast_mk' _ _ _ _).trans (div_eq_mul_inv _ _).symm
 #align rat.cast_def Rat.cast_def
 
+/- warning: rat.smul_division_ring -> Rat.smulDivisionRing is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], HasSmul.{0, u1} Rat K
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], SMul.{0, u1} Rat K
+Case conversion may be inaccurate. Consider using '#align rat.smul_division_ring Rat.smulDivisionRingₓ'. -/
 instance (priority := 100) smulDivisionRing : HasSmul ℚ K :=
   ⟨DivisionRing.qsmul⟩
 #align rat.smul_division_ring Rat.smulDivisionRing
 
+/- warning: rat.smul_def -> Rat.smul_def is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Rat) (x : K), Eq.{succ u1} K (HasSmul.smul.{0, u1} Rat K (Rat.smulDivisionRing.{u1} K _inst_1) a x) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat K (HasLiftT.mk.{1, succ u1} Rat K (CoeTCₓ.coe.{1, succ u1} Rat K (Rat.castCoe.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1)))) a) x)
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Rat) (x : K), Eq.{succ u1} K (HSMul.hSMul.{0, u1, u1} Rat K K (instHSMul.{0, u1} Rat K (Rat.smulDivisionRing.{u1} K _inst_1)) a x) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (HasRatCast.ratCast.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1) a) x)
+Case conversion may be inaccurate. Consider using '#align rat.smul_def Rat.smul_defₓ'. -/
 theorem smul_def (a : ℚ) (x : K) : a • x = ↑a * x :=
   DivisionRing.qsmul_eq_mul' a x
 #align rat.smul_def Rat.smul_def
@@ -174,15 +224,18 @@ section Field
 
 variable [Field K]
 
+#print Field.toSemifield /-
 -- see Note [lower instance priority]
 instance (priority := 100) Field.toSemifield : Semifield K :=
   { ‹Field K›, (inferInstance : Semiring K) with }
 #align field.to_semifield Field.toSemifield
+-/
 
 end Field
 
 section IsField
 
+#print IsField /-
 /-- A predicate to express that a (semi)ring is a (semi)field.
 
 This is mainly useful because such a predicate does not contain data,
@@ -194,31 +247,41 @@ structure IsField (R : Type u) [Semiring R] : Prop where
   mul_comm : ∀ x y : R, x * y = y * x
   mul_inv_cancel : ∀ {a : R}, a ≠ 0 → ∃ b, a * b = 1
 #align is_field IsField
+-/
 
+#print Semifield.toIsField /-
 /-- Transferring from `semifield` to `is_field`. -/
-theorem Semifield.to_is_field (R : Type u) [Semifield R] : IsField R :=
+theorem Semifield.toIsField (R : Type u) [Semifield R] : IsField R :=
   { ‹Semifield R› with mul_inv_cancel := fun a ha => ⟨a⁻¹, mul_inv_cancel ha⟩ }
-#align semifield.to_is_field Semifield.to_is_field
+#align semifield.to_is_field Semifield.toIsField
+-/
 
+#print Field.toIsField /-
 /-- Transferring from `field` to `is_field`. -/
-theorem Field.to_is_field (R : Type u) [Field R] : IsField R :=
-  Semifield.to_is_field _
-#align field.to_is_field Field.to_is_field
+theorem Field.toIsField (R : Type u) [Field R] : IsField R :=
+  Semifield.toIsField _
+#align field.to_is_field Field.toIsField
+-/
 
+#print IsField.nontrivial /-
 @[simp]
 theorem IsField.nontrivial {R : Type u} [Semiring R] (h : IsField R) : Nontrivial R :=
   ⟨h.exists_pair_ne⟩
 #align is_field.nontrivial IsField.nontrivial
+-/
 
+#print not_isField_of_subsingleton /-
 @[simp]
-theorem not_is_field_of_subsingleton (R : Type u) [Semiring R] [Subsingleton R] : ¬IsField R :=
+theorem not_isField_of_subsingleton (R : Type u) [Semiring R] [Subsingleton R] : ¬IsField R :=
   fun h =>
   let ⟨x, y, h⟩ := h.exists_pair_ne
   h (Subsingleton.elim _ _)
-#align not_is_field_of_subsingleton not_is_field_of_subsingleton
+#align not_is_field_of_subsingleton not_isField_of_subsingleton
+-/
 
 open Classical
 
+#print IsField.toSemifield /-
 /-- Transferring from `is_field` to `semifield`. -/
 noncomputable def IsField.toSemifield {R : Type u} [Semiring R] (h : IsField R) : Semifield R :=
   { ‹Semiring R›, h with
@@ -228,12 +291,21 @@ noncomputable def IsField.toSemifield {R : Type u} [Semiring R] (h : IsField R) 
       convert Classical.choose_spec (IsField.mul_inv_cancel h ha)
       exact dif_neg ha }
 #align is_field.to_semifield IsField.toSemifield
+-/
 
+#print IsField.toField /-
 /-- Transferring from `is_field` to `field`. -/
 noncomputable def IsField.toField {R : Type u} [Ring R] (h : IsField R) : Field R :=
   { ‹Ring R›, IsField.toSemifield h with }
 #align is_field.to_field IsField.toField
+-/
 
+/- warning: uniq_inv_of_is_field -> uniq_inv_of_is_field is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R], (IsField.{u1} R (Ring.toSemiring.{u1} R _inst_1)) -> (forall (x : R), (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))))) -> (ExistsUnique.{succ u1} R (fun (y : R) => Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) x y) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))))))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R], (IsField.{u1} R (Ring.toSemiring.{u1} R _inst_1)) -> (forall (x : R), (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))))) -> (ExistsUnique.{succ u1} R (fun (y : R) => Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) x y) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align uniq_inv_of_is_field uniq_inv_of_is_fieldₓ'. -/
 /-- For each field, and for each nonzero element of said field, there is a unique inverse.
 Since `is_field` doesn't remember the data of an `inv` function and as such,
 a lemma that there is a unique inverse could be useful.

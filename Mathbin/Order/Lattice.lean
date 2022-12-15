@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.lattice
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1056,6 +1056,7 @@ def DistribLattice.ofInfSupLe [Lattice α] (inf_sup_le : ∀ a b c : α, a ⊓ (
 -/
 
 
+#print LinearOrder.toLattice /-
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrder.toLattice {α : Type u} [o : LinearOrder α] : Lattice α :=
   { o with 
@@ -1068,6 +1069,7 @@ instance (priority := 100) LinearOrder.toLattice {α : Type u} [o : LinearOrder 
     inf_le_right := min_le_right
     le_inf := fun a b c => le_min }
 #align linear_order.to_lattice LinearOrder.toLattice
+-/
 
 section LinearOrder
 
@@ -1077,7 +1079,7 @@ variable [LinearOrder α] {a b c d : α}
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) a b) (LinearOrder.max.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (instLattice.{u1} α _inst_1))) a b) (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_1) a b)
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) a b) (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align sup_eq_max sup_eq_maxₓ'. -/
 theorem sup_eq_max : a ⊔ b = max a b :=
   rfl
@@ -1087,29 +1089,20 @@ theorem sup_eq_max : a ⊔ b = max a b :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} α (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) a b) (LinearOrder.min.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} α (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (instLattice.{u1} α _inst_1)) a b) (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) a b)
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} α (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)) a b) (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align inf_eq_min inf_eq_minₓ'. -/
 theorem inf_eq_min : a ⊓ b = min a b :=
   rfl
 #align inf_eq_min inf_eq_min
 
-/- warning: sup_ind -> sup_ind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (a : α) (b : α) {p : α -> Prop}, (p a) -> (p b) -> (p (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (a : α) (b : α) {p : α -> Prop}, (p a) -> (p b) -> (p (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (instLattice.{u1} α _inst_1))) a b))
-Case conversion may be inaccurate. Consider using '#align sup_ind sup_indₓ'. -/
+#print sup_ind /-
 theorem sup_ind (a b : α) {p : α → Prop} (ha : p a) (hb : p b) : p (a ⊔ b) :=
   (IsTotal.total a b).elim (fun h : a ≤ b => by rwa [sup_eq_right.2 h]) fun h => by
     rwa [sup_eq_left.2 h]
 #align sup_ind sup_ind
+-/
 
-/- warning: le_sup_iff -> le_sup_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) b c)) (Or (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a c))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) a (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (instLattice.{u1} α _inst_1))) b c)) (Or (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) a b) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) a c))
-Case conversion may be inaccurate. Consider using '#align le_sup_iff le_sup_iffₓ'. -/
+#print le_sup_iff /-
 @[simp]
 theorem le_sup_iff : a ≤ b ⊔ c ↔ a ≤ b ∨ a ≤ c :=
   ⟨fun h =>
@@ -1117,13 +1110,9 @@ theorem le_sup_iff : a ≤ b ⊔ c ↔ a ≤ b ∨ a ≤ c :=
       rwa [sup_eq_right.2 bc] at h,
     fun h => h.elim le_sup_of_le_left le_sup_of_le_right⟩
 #align le_sup_iff le_sup_iff
+-/
 
-/- warning: lt_sup_iff -> lt_sup_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) b c)) (Or (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a c))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) a (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (instLattice.{u1} α _inst_1))) b c)) (Or (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) a b) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) a c))
-Case conversion may be inaccurate. Consider using '#align lt_sup_iff lt_sup_iffₓ'. -/
+#print lt_sup_iff /-
 @[simp]
 theorem lt_sup_iff : a < b ⊔ c ↔ a < b ∨ a < c :=
   ⟨fun h =>
@@ -1131,60 +1120,41 @@ theorem lt_sup_iff : a < b ⊔ c ↔ a < b ∨ a < c :=
       rwa [sup_eq_right.2 bc] at h,
     fun h => h.elim lt_sup_of_lt_left lt_sup_of_lt_right⟩
 #align lt_sup_iff lt_sup_iff
+-/
 
-/- warning: sup_lt_iff -> sup_lt_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) b c) a) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) c a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (instLattice.{u1} α _inst_1))) b c) a) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) b a) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) c a))
-Case conversion may be inaccurate. Consider using '#align sup_lt_iff sup_lt_iffₓ'. -/
+#print sup_lt_iff /-
 @[simp]
 theorem sup_lt_iff : b ⊔ c < a ↔ b < a ∧ c < a :=
   ⟨fun h => ⟨le_sup_left.trans_lt h, le_sup_right.trans_lt h⟩, fun h => sup_ind b c h.1 h.2⟩
 #align sup_lt_iff sup_lt_iff
+-/
 
-/- warning: inf_ind -> inf_ind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (a : α) (b : α) {p : α -> Prop}, (p a) -> (p b) -> (p (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (a : α) (b : α) {p : α -> Prop}, (p a) -> (p b) -> (p (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (instLattice.{u1} α _inst_1)) a b))
-Case conversion may be inaccurate. Consider using '#align inf_ind inf_indₓ'. -/
+#print inf_ind /-
 theorem inf_ind (a b : α) {p : α → Prop} : p a → p b → p (a ⊓ b) :=
   @sup_ind αᵒᵈ _ _ _ _
 #align inf_ind inf_ind
+-/
 
-/- warning: inf_le_iff -> inf_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) b c) a) (Or (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) c a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (instLattice.{u1} α _inst_1)) b c) a) (Or (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) b a) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) c a))
-Case conversion may be inaccurate. Consider using '#align inf_le_iff inf_le_iffₓ'. -/
+#print inf_le_iff /-
 @[simp]
 theorem inf_le_iff : b ⊓ c ≤ a ↔ b ≤ a ∨ c ≤ a :=
   @le_sup_iff αᵒᵈ _ _ _ _
 #align inf_le_iff inf_le_iff
+-/
 
-/- warning: inf_lt_iff -> inf_lt_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) b c) a) (Or (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) c a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (instLattice.{u1} α _inst_1)) b c) a) (Or (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) b a) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) c a))
-Case conversion may be inaccurate. Consider using '#align inf_lt_iff inf_lt_iffₓ'. -/
+#print inf_lt_iff /-
 @[simp]
 theorem inf_lt_iff : b ⊓ c < a ↔ b < a ∨ c < a :=
   @lt_sup_iff αᵒᵈ _ _ _ _
 #align inf_lt_iff inf_lt_iff
+-/
 
-/- warning: lt_inf_iff -> lt_inf_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) b c)) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a c))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) a (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (instLattice.{u1} α _inst_1)) b c)) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) a b) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (instLattice.{u1} α _inst_1))))) a c))
-Case conversion may be inaccurate. Consider using '#align lt_inf_iff lt_inf_iffₓ'. -/
+#print lt_inf_iff /-
 @[simp]
 theorem lt_inf_iff : a < b ⊓ c ↔ a < b ∧ a < c :=
   @sup_lt_iff αᵒᵈ _ _ _ _
 #align lt_inf_iff lt_inf_iff
+-/
 
 variable (a b c d)
 
@@ -1458,28 +1428,20 @@ theorem of_map_sup [SemilatticeSup α] [SemilatticeSup β] {f : α → β}
 
 variable [LinearOrder α]
 
-/- warning: monotone.map_sup -> Monotone.map_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) x y)) (HasSup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (f x) (f y)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))) x y)) (HasSup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (f x) (f y)))
-Case conversion may be inaccurate. Consider using '#align monotone.map_sup Monotone.map_supₓ'. -/
+#print Monotone.map_sup /-
 theorem map_sup [SemilatticeSup β] {f : α → β} (hf : Monotone f) (x y : α) :
     f (x ⊔ y) = f x ⊔ f y :=
   (IsTotal.total x y).elim (fun h : x ≤ y => by simp only [h, hf h, sup_of_le_right]) fun h => by
     simp only [h, hf h, sup_of_le_left]
 #align monotone.map_sup Monotone.map_sup
+-/
 
-/- warning: monotone.map_inf -> Monotone.map_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) x y)) (HasInf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (f x) (f y)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))) x y)) (HasInf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (f x) (f y)))
-Case conversion may be inaccurate. Consider using '#align monotone.map_inf Monotone.map_infₓ'. -/
+#print Monotone.map_inf /-
 theorem map_inf [SemilatticeInf β] {f : α → β} (hf : Monotone f) (x y : α) :
     f (x ⊓ y) = f x ⊓ f y :=
   hf.dual.map_sup _ _
 #align monotone.map_inf Monotone.map_inf
+-/
 
 end Monotone
 
@@ -1583,27 +1545,19 @@ theorem le_map_inf [SemilatticeInf α] [SemilatticeSup β] {f : α → β} (h : 
 
 variable [LinearOrder α]
 
-/- warning: antitone.map_sup -> Antitone.map_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β}, (Antitone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) x y)) (HasInf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (f x) (f y)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β}, (Antitone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))) x y)) (HasInf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (f x) (f y)))
-Case conversion may be inaccurate. Consider using '#align antitone.map_sup Antitone.map_supₓ'. -/
+#print Antitone.map_sup /-
 theorem map_sup [SemilatticeInf β] {f : α → β} (hf : Antitone f) (x y : α) :
     f (x ⊔ y) = f x ⊓ f y :=
   hf.dual_right.map_sup x y
 #align antitone.map_sup Antitone.map_sup
+-/
 
-/- warning: antitone.map_inf -> Antitone.map_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β}, (Antitone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))) x y)) (HasSup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (f x) (f y)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β}, (Antitone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))) x y)) (HasSup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (f x) (f y)))
-Case conversion may be inaccurate. Consider using '#align antitone.map_inf Antitone.map_infₓ'. -/
+#print Antitone.map_inf /-
 theorem map_inf [SemilatticeSup β] {f : α → β} (hf : Antitone f) (x y : α) :
     f (x ⊓ y) = f x ⊔ f y :=
   hf.dual_right.map_inf x y
 #align antitone.map_inf Antitone.map_inf
+-/
 
 end Antitone
 

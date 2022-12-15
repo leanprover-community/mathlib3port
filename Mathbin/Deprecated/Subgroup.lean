@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mitchell Rowett, Scott Morrison, Johan Commelin, Mario
   Michael Howes
 
 ! This file was ported from Lean 3 source module deprecated.subgroup
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem Multiplicative.is_subgroup_iff {s : Set A} :
     Multiplicative.is_subgroup h⟩
 #align multiplicative.is_subgroup_iff Multiplicative.is_subgroup_iff
 
-@[to_additive of_add_neg]
+@[to_additive ofAdd_neg]
 theorem IsSubgroup.of_div (s : Set G) (one_mem : (1 : G) ∈ s)
     (div_mem : ∀ {a b : G}, a ∈ s → b ∈ s → a * b⁻¹ ∈ s) : IsSubgroup s :=
   have inv_mem : ∀ a, a ∈ s → a⁻¹ ∈ s := fun a ha => by

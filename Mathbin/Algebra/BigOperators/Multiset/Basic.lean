@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.big_operators.multiset.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ theorem prod_repeat (a : α) (n : ℕ) : (repeat a n).Prod = a ^ n := by
   simp [repeat, List.prod_repeat]
 #align multiset.prod_repeat Multiset.prod_repeat
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i' «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i' «expr ≠ » i) -/
 @[to_additive]
 theorem prod_map_eq_pow_single [DecidableEq ι] (i : ι)
     (hf : ∀ (i') (_ : i' ≠ i), i' ∈ m → f i' = 1) : (m.map f).Prod = f i ^ m.count i := by
@@ -127,7 +127,7 @@ theorem prod_map_eq_pow_single [DecidableEq ι] (i : ι)
   simp [List.prod_map_eq_pow_single i f hf]
 #align multiset.prod_map_eq_pow_single Multiset.prod_map_eq_pow_single
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_eq_pow_single [DecidableEq α] (a : α) (h : ∀ (a') (_ : a' ≠ a), a' ∈ s → a' = 1) :
     s.Prod = a ^ s.count a := by

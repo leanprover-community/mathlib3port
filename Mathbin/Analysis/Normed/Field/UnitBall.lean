@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed.field.unit_ball
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -186,8 +186,8 @@ theorem unit_sphere_to_units_injective [NormedDivisionRing 𝕜] :
 instance [NormedDivisionRing 𝕜] : Group (sphere (0 : 𝕜) 1) :=
   unit_sphere_to_units_injective.Group (unitSphereToUnits 𝕜) (Units.ext rfl)
     (fun x y => Units.ext rfl) (fun x => Units.ext rfl) (fun x y => Units.ext <| div_eq_mul_inv _ _)
-    (fun x n => Units.ext (Units.coe_pow (unitSphereToUnits 𝕜 x) n).symm) fun x n =>
-    Units.ext (Units.coe_zpow (unitSphereToUnits 𝕜 x) n).symm
+    (fun x n => Units.ext (Units.val_pow_eq_pow_val (unitSphereToUnits 𝕜 x) n).symm) fun x n =>
+    Units.ext (Units.val_zpow_eq_zpow_val (unitSphereToUnits 𝕜 x) n).symm
 
 instance [NormedDivisionRing 𝕜] : HasDistribNeg (sphere (0 : 𝕜) 1) :=
   Subtype.coe_injective.HasDistribNeg (coe : sphere (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl

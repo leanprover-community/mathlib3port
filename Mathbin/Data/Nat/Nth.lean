@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.nth
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (setOf p).Finite)
     simp only [IsEmpty.forall_iff, Nat.not_lt_zero, forall_const, and_true_iff]
   have hp'' : { i : ℕ | p i ∧ ∀ t, t < k → nth p t < i }.Finite := by
     refine' hp.subset fun x hx => _
-    rw [Set.mem_set_of_eq] at hx
+    rw [Set.mem_setOf_eq] at hx
     exact hx.left
   have hle' := Nat.sub_pos_of_lt hle
   specialize hk hp'' (k.le_succ.trans hle)
@@ -81,7 +81,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (setOf p).Finite)
   convert_to (Finset.erase hp''.to_finset (nth p k)).card = _
   · congr
     ext a
-    simp only [Set.Finite.mem_to_finset, Ne.def, Set.mem_set_of_eq, Finset.mem_erase]
+    simp only [Set.Finite.mem_to_finset, Ne.def, Set.mem_setOf_eq, Finset.mem_erase]
     refine'
       ⟨fun ⟨hp, hlt⟩ =>
         ⟨(hlt _ (lt_add_one k)).ne', ⟨hp, fun n hn => hlt n (hn.trans_le k.le_succ)⟩⟩, _⟩
@@ -280,7 +280,7 @@ theorem nth_count_eq_Inf {n : ℕ} : nth p (count p n) = inf { i : ℕ | p i ∧
   rw [nth]
   congr
   ext a
-  simp only [Set.mem_set_of_eq, and_congr_right_iff]
+  simp only [Set.mem_setOf_eq, and_congr_right_iff]
   intro hpa
   refine' ⟨fun h => _, fun hn k hk => lt_of_lt_of_le _ hn⟩
   · by_contra ha
@@ -369,7 +369,7 @@ theorem nth_eq_order_iso_of_nat (i : Infinite (setOf p)) (n : ℕ) :
     induction' n with k hk <;>
       simp only [subtype.order_iso_of_nat_apply, subtype.of_nat, nat_zero_eq_zero]
     · rw [Nat.Subtype.coe_bot, nth_zero_of_exists]
-    · simp only [Nat.Subtype.succ, Set.mem_set_of_eq, Subtype.coe_mk, Subtype.val_eq_coe]
+    · simp only [Nat.Subtype.succ, Set.mem_setOf_eq, Subtype.coe_mk, Subtype.val_eq_coe]
       rw [subtype.order_iso_of_nat_apply] at hk
       set b := nth p k.succ - nth p k - 1 with hb
       replace hb : p (↑(subtype.of_nat (setOf p) k) + b + 1)
@@ -391,7 +391,7 @@ theorem nth_eq_order_iso_of_nat (i : Infinite (setOf p)) (n : ℕ) :
       refine' ⟨⟨by convert hp, fun r hr => _⟩, fun n hn => _⟩
       · rw [lt_succ_iff] at hr⊢
         exact (nth_monotone p hi hr).trans (by simp)
-      simp only [exists_prop, not_and, not_lt, Set.mem_set_of_eq, not_forall]
+      simp only [exists_prop, not_and, not_lt, Set.mem_setOf_eq, not_forall]
       refine' fun hpn => ⟨k, lt_add_one k, _⟩
       by_contra' hlt
       replace hn : n - nth p k - 1 < t

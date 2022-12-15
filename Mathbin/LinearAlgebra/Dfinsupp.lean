@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.dfinsupp
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ This is needed to define `dfinsupp.lsum` below.
 The cause seems to be an inability to unify the `Π i, add_comm_monoid (M i →ₗ[R] N)` instance that
 we have with the `Π i, has_zero (M i →ₗ[R] N)` instance which appears as a parameter to the
 `dfinsupp` type. -/
-instance moduleOfLinearMap [Semiring S] [Module S N] [SmulCommClass R S N] :
+instance moduleOfLinearMap [Semiring S] [Module S N] [SMulCommClass R S N] :
     Module S (Π₀ i : ι, M i →ₗ[R] N) :=
   @Dfinsupp.module _ _ (fun i => M i →ₗ[R] N) _ _ _
 #align dfinsupp.module_of_linear_map Dfinsupp.moduleOfLinearMap
@@ -138,7 +138,7 @@ include dec_ι
 
 See note [bundled maps over different rings] for why separate `R` and `S` semirings are used. -/
 @[simps]
-def lsum [Semiring S] [Module S N] [SmulCommClass R S N] :
+def lsum [Semiring S] [Module S N] [SMulCommClass R S N] :
     (∀ i, M i →ₗ[R] N) ≃ₗ[S]
       (Π₀ i, M i) →ₗ[R]
         N where 
@@ -170,7 +170,7 @@ def lsum [Semiring S] [Module S N] [SmulCommClass R S N] :
 
 /-- While `simp` can prove this, it is often convenient to avoid unfolding `lsum` into `sum_add_hom`
 with `dfinsupp.lsum_apply_apply`. -/
-theorem lsum_single [Semiring S] [Module S N] [SmulCommClass R S N] (F : ∀ i, M i →ₗ[R] N) (i)
+theorem lsum_single [Semiring S] [Module S N] [SMulCommClass R S N] (F : ∀ i, M i →ₗ[R] N) (i)
     (x : M i) : lsum S F (single i x) = F i x :=
   sum_add_hom_single _ _ _
 #align dfinsupp.lsum_single Dfinsupp.lsum_single

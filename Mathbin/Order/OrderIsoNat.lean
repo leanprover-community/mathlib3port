@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.order_iso_nat
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,8 +77,7 @@ theorem acc_iff_no_decreasing_seq {x} :
       exact ⟨⟨w, h.1⟩, h.2⟩
     obtain ⟨f, h⟩ := Classical.axiom_of_choice this
     refine' fun E =>
-      Classical.by_contradiction fun hx =>
-        E.elim' ⟨nat_gt (fun n => ((f^[n]) ⟨x, hx⟩).1) fun n => _, 0, rfl⟩
+      by_contradiction fun hx => E.elim' ⟨nat_gt (fun n => ((f^[n]) ⟨x, hx⟩).1) fun n => _, 0, rfl⟩
     rw [Function.iterate_succ']
     apply h
 #align rel_embedding.acc_iff_no_decreasing_seq RelEmbedding.acc_iff_no_decreasing_seq
@@ -188,7 +187,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
       have h : ∀ n : ℕ, ∃ n' : ℕ, n < n' ∧ r (f (n + m)) (f (n' + m)) := by
         intro n
         have h := hm _ (le_add_of_nonneg_left n.zero_le)
-        simp only [exists_prop, not_not, Set.mem_set_of_eq, not_forall] at h
+        simp only [exists_prop, not_not, Set.mem_setOf_eq, not_forall] at h
         obtain ⟨n', hn1, hn2⟩ := h
         obtain ⟨x, hpos, rfl⟩ := exists_pos_add_of_lt hn1
         refine' ⟨n + x, add_lt_add_left hpos n, _⟩
@@ -228,13 +227,13 @@ theorem WellFounded.monotone_chain_condition' [Preorder α] :
     exact hn n.succ n.lt_succ_self.le ((RelEmbedding.map_rel_iff _).2 n.lt_succ_self)
 #align well_founded.monotone_chain_condition' WellFounded.monotone_chain_condition'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]] -/
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
 theorem WellFounded.monotone_chain_condition [PartialOrder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
   WellFounded.monotone_chain_condition'.trans <| by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
     rw [lt_iff_le_and_ne]
     simp [a.mono h]
 #align well_founded.monotone_chain_condition WellFounded.monotone_chain_condition

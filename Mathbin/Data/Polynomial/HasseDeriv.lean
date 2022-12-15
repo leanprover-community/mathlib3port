@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.polynomial.hasse_deriv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ theorem factorial_smul_hasse_deriv : ⇑(k ! • @hasseDeriv R _ k) = @derivativ
   ring
 #align polynomial.factorial_smul_hasse_deriv Polynomial.factorial_smul_hasse_deriv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr H, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr H, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem hasse_deriv_comp (k l : ℕ) :
     (@hasseDeriv R _ k).comp (hasseDeriv l) = (k + l).choose k • hasseDeriv (k + l) := by
   ext i : 2
@@ -198,7 +198,7 @@ theorem hasse_deriv_comp (k l : ℕ) :
   · ring
   all_goals
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr H, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr H, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align polynomial.hasse_deriv_comp Polynomial.hasse_deriv_comp
 
 theorem nat_degree_hasse_deriv_le (p : R[X]) (n : ℕ) :

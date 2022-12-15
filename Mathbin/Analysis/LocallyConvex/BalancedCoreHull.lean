@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.balanced_core_hull
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -229,18 +229,18 @@ section Topology
 variable [NontriviallyNormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
   [HasContinuousSmul 𝕜 E] {U : Set E}
 
-protected theorem IsClosed.balancedCore (hU : IsClosed U) : IsClosed (balancedCore 𝕜 U) := by
+protected theorem IsClosed.balanced_core (hU : IsClosed U) : IsClosed (balancedCore 𝕜 U) := by
   by_cases h : (0 : E) ∈ U
   · rw [balanced_core_eq_Inter h]
-    refine' isClosedInter fun a => _
-    refine' isClosedInter fun ha => _
+    refine' is_closed_Inter fun a => _
+    refine' is_closed_Inter fun ha => _
     have ha' := lt_of_lt_of_le zero_lt_one ha
     rw [norm_pos_iff] at ha'
     refine' is_closed_map_smul_of_ne_zero ha' U hU
-  convert isClosedEmpty
+  convert is_closed_empty
   contrapose! h
   exact balanced_core_nonempty_iff.mp (Set.nonempty_iff_ne_empty.2 h)
-#align is_closed.balanced_core IsClosed.balancedCore
+#align is_closed.balanced_core IsClosed.balanced_core
 
 theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : balancedCore 𝕜 U ∈ 𝓝 (0 : E) :=
   by

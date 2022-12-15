@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.factor_thru
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ def factorThru {X Y : C} (P : Subobject Y) (f : X ⟶ Y) (h : Factors P f) : X �
   Classical.choose ((factors_iff _ _).mp h)
 #align category_theory.subobject.factor_thru CategoryTheory.Subobject.factorThru
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem factor_thru_arrow {X Y : C} (P : Subobject Y) (f : X ⟶ Y) (h : Factors P f) :
     P.factorThru f h ≫ P.arrow = f :=
   Classical.choose_spec ((factors_iff _ _).mp h)

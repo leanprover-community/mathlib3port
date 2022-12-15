@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.polish
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,7 +177,7 @@ theorem Equiv.polishSpaceInduced [t : TopologicalSpace β] [PolishSpace β] (f :
 /-- A closed subset of a Polish space is also Polish. -/
 theorem IsClosed.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] {s : Set α}
     (hs : IsClosed s) : PolishSpace s :=
-  (IsClosed.closedEmbeddingSubtypeCoe hs).PolishSpace
+  (IsClosed.closed_embedding_subtype_coe hs).PolishSpace
 #align is_closed.polish_space IsClosed.polishSpace
 
 /-- A sequence of type synonyms of a given type `α`, useful in the proof of
@@ -228,13 +228,13 @@ theorem exists_polish_space_forall_le {ι : Type _} [Countable ι] [t : Topologi
       exact (mem_Inter.1 hx n : _)
   have f_closed : IsClosed (range f) := by 
     rw [A]
-    apply isClosedInter fun n => _
+    apply is_closed_Inter fun n => _
     have C : ∀ i : ι, Continuous fun x : ∀ n, aux_copy α n => (id (x i) : α) := by
       intro i
       apply Continuous.comp _ (continuous_apply i)
       apply continuous_def.2 fun s hs => _
       exact hm i s hs
-    apply isClosedEq (C n) (C default)
+    apply is_closed_eq (C n) (C default)
   have K : @_root_.embedding _ _ (T.induced f) T f := by
     apply Function.Injective.embedding_induced
     intro x y hxy
@@ -414,7 +414,7 @@ theorem IsOpen.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] 
   · simp at h's
     apply IsClosed.polishSpace
     rw [h's]
-    exact isClosedUniv
+    exact is_closed_univ
   · letI := upgradePolishSpace α
     haveI : CompleteSpace (complete_copy s) := complete_space_complete_copy hs h's
     haveI : second_countable_topology (complete_copy s) :=
@@ -476,7 +476,7 @@ theorem IsClosed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set �
   · have : @IsClosed α t' (g ⁻¹' range (Sum.inl : s → Sum s t)) := by
       apply IsClosed.preimage
       · exact @Homeomorph.continuous _ _ t' _ g
-      · exact isClosedRangeInl
+      · exact is_closed_range_inl
     convert this
     exact A.symm
   · have : @IsOpen α t' (g ⁻¹' range (Sum.inl : s → Sum s t)) := by
@@ -490,7 +490,7 @@ theorem IsClosed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set �
 theorem IsClopenable.compl [TopologicalSpace α] {s : Set α} (hs : IsClopenable s) :
     IsClopenable (sᶜ) := by 
   rcases hs with ⟨t, t_le, t_polish, h, h'⟩
-  exact ⟨t, t_le, t_polish, @IsOpen.isClosedCompl α t s h', @IsClosed.is_open_compl α t s h⟩
+  exact ⟨t, t_le, t_polish, @IsOpen.is_closed_compl α t s h', @IsClosed.is_open_compl α t s h⟩
 #align polish_space.is_clopenable.compl PolishSpace.IsClopenable.compl
 
 theorem IsOpen.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set α} (hs : IsOpen s) :

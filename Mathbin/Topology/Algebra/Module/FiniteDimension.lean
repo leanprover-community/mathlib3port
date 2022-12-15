@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.finite_dimension
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ variable {𝕜 E F : Type _} [Field 𝕜] [TopologicalSpace 𝕜] [AddCommGroup 
 
 /-- The space of continuous linear maps between finite-dimensional spaces is finite-dimensional. -/
 instance [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F] : FiniteDimensional 𝕜 (E →L[𝕜] F) :=
-  FiniteDimensional.ofInjective (ContinuousLinearMap.coeLm 𝕜 : (E →L[𝕜] F) →ₗ[𝕜] E →ₗ[𝕜] F)
+  FiniteDimensional.of_injective (ContinuousLinearMap.coeLm 𝕜 : (E →L[𝕜] F) →ₗ[𝕜] E →ₗ[𝕜] F)
     ContinuousLinearMap.coe_injective
 
 end Field
@@ -204,7 +204,7 @@ theorem LinearMap.continuous_of_is_closed_ker (l : E →ₗ[𝕜] 𝕜) (hl : Is
     and only if its kernel is closed. -/
 theorem LinearMap.continuous_iff_is_closed_ker (l : E →ₗ[𝕜] 𝕜) :
     Continuous l ↔ IsClosed (l.ker : Set E) :=
-  ⟨fun h => isClosedSingleton.Preimage h, l.continuous_of_is_closed_ker⟩
+  ⟨fun h => is_closed_singleton.Preimage h, l.continuous_of_is_closed_ker⟩
 #align linear_map.continuous_iff_is_closed_ker LinearMap.continuous_iff_is_closed_ker
 
 /-- Over a nontrivially normed field, any linear form which is nonzero on a nonempty open set is

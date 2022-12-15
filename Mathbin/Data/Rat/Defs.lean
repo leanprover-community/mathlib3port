@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.defs
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ def mkPnat (n : ℤ) : ℕ+ → ℚ
       have : Int.natAbs (n / ↑g) = n' / g := by
         cases' Int.natAbs_eq n with e e <;> rw [e]
         · rfl
-        rw [Int.neg_div_of_dvd, Int.natAbs_neg]
+        rw [Int.neg_ediv_of_dvd, Int.natAbs_neg]
         · rfl
         exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_left _ _)
       rw [this]
@@ -146,7 +146,7 @@ theorem zero_mk (n) : 0 /. n = 0 := by cases n <;> simp [mk]
 #align rat.zero_mk Rat.zero_mk
 
 private theorem gcd_abs_dvd_left {a b} : (Nat.gcd (Int.natAbs a) b : ℤ) ∣ a :=
-  Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| Nat.gcd_dvd_left (Int.natAbs a) b
+  Int.dvd_natAbs.1 <| Int.coe_nat_dvd.2 <| Nat.gcd_dvd_left (Int.natAbs a) b
 #align rat.gcd_abs_dvd_left rat.gcd_abs_dvd_left
 
 @[simp]
@@ -158,7 +158,7 @@ theorem mk_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 := by
   have : ∀ {a b}, mk_pnat a b = 0 → a = 0 := by
     rintro a ⟨b, h⟩ e
     injection e with e
-    apply Int.eq_mul_of_div_eq_right gcd_abs_dvd_left e
+    apply Int.eq_mul_of_ediv_eq_right gcd_abs_dvd_left e
   cases' b with b <;> simp only [mk, mk_nat, Int.ofNat_eq_coe, dite_eq_left_iff] at h
   · simp only [mt (congr_arg Int.ofNat) b0, not_false_iff, forall_true_left] at h
     exact this h
@@ -191,9 +191,9 @@ theorem mk_eq : ∀ {a b c d : ℤ} (hb : b ≠ 0) (hd : d ≠ 0), a /. b = c /.
   · cases' h with ha hb
     have ha := by 
       have dv := @gcd_abs_dvd_left
-      have := Int.eq_mul_of_div_eq_right dv ha
-      rw [← Int.mul_div_assoc _ dv] at this
-      exact Int.eq_mul_of_div_eq_left (dv.mul_left _) this.symm
+      have := Int.eq_mul_of_ediv_eq_right dv ha
+      rw [← Int.mul_ediv_assoc _ dv] at this
+      exact Int.eq_mul_of_ediv_eq_left (dv.mul_left _) this.symm
     have hb := by 
       have dv := fun {a b} => Nat.gcd_dvd_right (Int.natAbs a) b
       have := Nat.eq_mul_of_div_eq_right dv hb
@@ -208,11 +208,11 @@ theorem mk_eq : ∀ {a b c d : ℤ} (hb : b ≠ 0) (hd : d ≠ 0), a /. b = c /.
       cases' this a.nat_abs c.nat_abs (by simpa [Int.natAbs_mul] using congr_arg Int.natAbs h) with
         h₁ h₂
       have hs := congr_arg Int.sign h
-      simp [Int.sign_eq_one_of_pos (Int.coe_nat_lt.2 hb),
-        Int.sign_eq_one_of_pos (Int.coe_nat_lt.2 hd)] at hs
+      simp [Int.sign_eq_one_of_pos (Int.ofNat_lt.2 hb),
+        Int.sign_eq_one_of_pos (Int.ofNat_lt.2 hd)] at hs
       conv in a => rw [← Int.sign_mul_natAbs a]
       conv in c => rw [← Int.sign_mul_natAbs c]
-      rw [Int.mul_div_assoc, Int.mul_div_assoc]
+      rw [Int.mul_ediv_assoc, Int.mul_ediv_assoc]
       exact ⟨congr (congr_arg (· * ·) hs) (congr_arg coe h₁), h₂⟩
       all_goals exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_left _ _)
     intro a c h
@@ -306,8 +306,8 @@ theorem lift_binop_eq (f : ℚ → ℚ → ℚ) (f₁ : ℤ → ℤ → ℤ → 
   generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
   generalize hc : c /. d = x; cases' x with n₂ d₂ h₂ c₂; rw [num_denom'] at hc
   rw [fv]
-  have d₁0 := ne_of_gt (Int.coe_nat_lt.2 h₁)
-  have d₂0 := ne_of_gt (Int.coe_nat_lt.2 h₂)
+  have d₁0 := ne_of_gt (Int.ofNat_lt.2 h₁)
+  have d₂0 := ne_of_gt (Int.ofNat_lt.2 h₂)
   exact (mk_eq (f0 d₁0 d₂0) (f0 b0 d0)).2 (H ((mk_eq b0 d₁0).1 ha) ((mk_eq d0 d₂0).1 hc))
 #align rat.lift_binop_eq Rat.lift_binop_eq
 
@@ -343,7 +343,7 @@ theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b := by
     rfl
   generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
   show Rat.mk _ _ _ _ = _; rw [num_denom']
-  have d0 := ne_of_gt (Int.coe_nat_lt.2 h₁)
+  have d0 := ne_of_gt (Int.ofNat_lt.2 h₁)
   apply (mk_eq d0 b0).2; have h₁ := (mk_eq b0 d0).1 ha
   simp only [neg_mul, congr_arg Neg.neg h₁]
 #align rat.neg_def Rat.neg_def
@@ -412,7 +412,7 @@ theorem inv_def {a b : ℤ} : (a /. b)⁻¹ = b /. a := by
     rintro rfl
     rw [Rat.zero_mk, mk_eq_zero b0] at ha
     exact a0 ha
-  have d0 := ne_of_gt (Int.coe_nat_lt.2 h)
+  have d0 := ne_of_gt (Int.ofNat_lt.2 h)
   have ha := (mk_eq b0 d0).1 ha
   apply (mk_eq n0 a0).2
   cc
@@ -524,7 +524,7 @@ protected theorem inv_mul_cancel (h : a ≠ 0) : a⁻¹ * a = 1 :=
   Eq.trans (Rat.mul_comm _ _) (Rat.mul_inv_cancel _ h)
 #align rat.inv_mul_cancel Rat.inv_mul_cancel
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
 instance : DecidableEq ℚ := by
   run_tac
     tactic.mk_dec_eq_instance
@@ -575,7 +575,7 @@ instance : CommGroupWithZero ℚ :=
     zero_mul := zero_mul }
 
 instance : IsDomain ℚ :=
-  NoZeroDivisors.to_is_domain _
+  NoZeroDivisors.toIsDomain _
 
 -- Extra instances to short-circuit type class resolution 
 -- TODO(Mario): this instance slows down data.real.basic
@@ -643,7 +643,7 @@ theorem num_zero : Rat.num 0 = 0 :=
 #align rat.num_zero Rat.num_zero
 
 @[simp]
-theorem denom_zero : Rat.denom 0 = 1 :=
+theorem denom_zero : Rat.den 0 = 1 :=
   rfl
 #align rat.denom_zero Rat.denom_zero
 
@@ -777,5 +777,6 @@ end Casts
 
 end Rat
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Guard against import creep.
+assert_not_exists Field
+

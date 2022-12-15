@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Michael Howes
 
 ! This file was ported from Lean 3 source module group_theory.abelianization
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,9 +53,9 @@ theorem commutator_eq_normal_closure : commutator G = Subgroup.normalClosure (co
   simp [commutator, Subgroup.commutator_def', commutatorSet]
 #align commutator_eq_normal_closure commutator_eq_normal_closure
 
-instance commutator_characteristic : (commutator G).Characteristic :=
-  Subgroup.commutator_characteristic ⊤ ⊤
-#align commutator_characteristic commutator_characteristic
+instance commutatorCharacteristic : (commutator G).Characteristic :=
+  Subgroup.commutatorCharacteristic ⊤ ⊤
+#align commutator_characteristic commutatorCharacteristic
 
 instance [Finite (commutatorSet G)] : Group.Fg (commutator G) := by
   rw [commutator_eq_closure]
@@ -232,7 +232,7 @@ theorem abelianization_congr_of (x : G) :
 @[simp]
 theorem abelianization_congr_refl :
     (MulEquiv.refl G).abelianizationCongr = MulEquiv.refl (Abelianization G) :=
-  MulEquiv.to_monoid_hom_injective Abelianization.lift_of
+  MulEquiv.toMonoidHom_injective Abelianization.lift_of
 #align abelianization_congr_refl abelianization_congr_refl
 
 @[simp]
@@ -243,7 +243,7 @@ theorem abelianization_congr_symm : e.abelianizationCongr.symm = e.symm.abeliani
 @[simp]
 theorem abelianization_congr_trans {I : Type v} [Group I] (e₂ : H ≃* I) :
     e.abelianizationCongr.trans e₂.abelianizationCongr = (e.trans e₂).abelianizationCongr :=
-  MulEquiv.to_monoid_hom_injective (Abelianization.hom_ext _ _ rfl)
+  MulEquiv.toMonoidHom_injective (Abelianization.hom_ext _ _ rfl)
 #align abelianization_congr_trans abelianization_congr_trans
 
 end AbelianizationCongr

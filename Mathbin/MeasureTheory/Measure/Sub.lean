@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich
 
 ! This file was ported from Lean 3 source module measure_theory.measure.sub
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,7 +135,7 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
       simp [restrict_apply h_meas_t, restrict_apply (h_meas_t.inter h_meas_s), inter_assoc]
   · refine' Inf_le_Inf_of_forall_exists_le _
     refine' ball_image_iff.2 fun t h_t_in => ⟨t.restrict s, _, le_rfl⟩
-    rw [Set.mem_set_of_eq, ← restrict_add]
+    rw [Set.mem_setOf_eq, ← restrict_add]
     exact restrict_mono subset.rfl h_t_in
 #align
   measure_theory.measure.restrict_sub_eq_restrict_sub_restrict MeasureTheory.Measure.restrict_sub_eq_restrict_sub_restrict

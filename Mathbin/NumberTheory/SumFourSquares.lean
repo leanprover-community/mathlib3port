@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.sum_four_squares
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
       2 * 2 * m = (x - y) ^ 2 + (x + y) ^ 2 := by rw [mul_assoc, h] <;> ring
       _ = (2 * ((x - y) / 2)) ^ 2 + (2 * ((x + y) / 2)) ^ 2 := by
         rw [even_iff_two_dvd] at hxsuby hxaddy
-        rw [Int.mul_div_cancel' hxsuby, Int.mul_div_cancel' hxaddy]
+        rw [Int.mul_ediv_cancel' hxsuby, Int.mul_ediv_cancel' hxaddy]
       _ = 2 * 2 * (((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2) := by
         simp [mul_add, pow_succ, mul_comm, mul_assoc, mul_left_comm]
       
@@ -174,7 +174,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
               (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) :=
             hnat_abs
           _ ≤ ((m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 : ℕ) :=
-            Int.coe_nat_le.2 <|
+            Int.ofNat_le.2 <|
               add_le_add
                 (add_le_add
                   (add_le_add (Nat.pow_le_pow_of_le_left (Zmod.nat_abs_val_min_abs_le _) _)
@@ -247,7 +247,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
             repeat' try refine' add_nonneg _ _; try exact sq_nonneg _)
           (Int.coe_nat_pos.2 <| NeZero.pos m)
       have hnm : n.natAbs < m :=
-        Int.coe_nat_lt.1
+        Int.ofNat_lt.1
           (lt_of_mul_lt_mul_left
             (by 
               rw [Int.natAbs_of_nonneg hn_nonneg, ← hn, ← sq]

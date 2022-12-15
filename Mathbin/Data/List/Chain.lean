@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.chain
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -300,7 +300,7 @@ theorem Chain'.rel_head {x y l} (h : Chain' R (x :: y :: l)) : R x y :=
   rel_of_chain_cons h
 #align list.chain'.rel_head List.Chain'.rel_head
 
-theorem Chain'.rel_head' {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head' l) : R x y := by
+theorem Chain'.rel_head' {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head? l) : R x y := by
   rw [← cons_head'_tail hy] at h
   exact h.rel_head
 #align list.chain'.rel_head' List.Chain'.rel_head'
@@ -310,7 +310,7 @@ theorem Chain'.cons' {x} : ∀ {l : List α}, Chain' R l → (∀ y ∈ l.head',
   | a :: l, hl, H => hl.cons <| H _ rfl
 #align list.chain'.cons' List.Chain'.cons'
 
-theorem chain'_cons' {x l} : Chain' R (x :: l) ↔ (∀ y ∈ head' l, R x y) ∧ Chain' R l :=
+theorem chain'_cons' {x l} : Chain' R (x :: l) ↔ (∀ y ∈ head? l, R x y) ∧ Chain' R l :=
   ⟨fun h => ⟨h.rel_head', h.tail⟩, fun ⟨h₁, h₂⟩ => h₂.cons' h₁⟩
 #align list.chain'_cons' List.chain'_cons'
 
@@ -343,11 +343,11 @@ theorem Chain'.infix (h : Chain' R l) (h' : l₁ <:+: l) : Chain' R l₁ := by
 #align list.chain'.infix List.Chain'.infix
 
 theorem Chain'.suffix (h : Chain' R l) (h' : l₁ <:+ l) : Chain' R l₁ :=
-  h.infix h'.IsInfix
+  h.infix h'.isInfix
 #align list.chain'.suffix List.Chain'.suffix
 
 theorem Chain'.prefix (h : Chain' R l) (h' : l₁ <+: l) : Chain' R l₁ :=
-  h.infix h'.IsInfix
+  h.infix h'.isInfix
 #align list.chain'.prefix List.Chain'.prefix
 
 theorem Chain'.drop (h : Chain' R l) (n : ℕ) : Chain' R (drop n l) :=

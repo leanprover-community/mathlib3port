@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.field.defs
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,21 +38,28 @@ The lemmata are instead located there.
 
 variable {α : Type _}
 
+#print LinearOrderedSemifield /-
 /-- A linear ordered semifield is a field with a linear order respecting the operations. -/
 @[protect_proj]
 class LinearOrderedSemifield (α : Type _) extends LinearOrderedCommSemiring α, Semifield α
 #align linear_ordered_semifield LinearOrderedSemifield
+-/
 
+#print LinearOrderedField /-
 /-- A linear ordered field is a field with a linear order respecting the operations. -/
 @[protect_proj]
 class LinearOrderedField (α : Type _) extends LinearOrderedCommRing α, Field α
 #align linear_ordered_field LinearOrderedField
+-/
 
+#print LinearOrderedField.toLinearOrderedSemifield /-
 -- See note [lower instance priority]
 instance (priority := 100) LinearOrderedField.toLinearOrderedSemifield [LinearOrderedField α] :
     LinearOrderedSemifield α :=
   { LinearOrderedRing.toLinearOrderedSemiring, ‹LinearOrderedField α› with }
 #align linear_ordered_field.to_linear_ordered_semifield LinearOrderedField.toLinearOrderedSemifield
+-/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Guard against import creep.
+assert_not_exists MonoidHom
+

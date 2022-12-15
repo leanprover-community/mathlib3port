@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.part_enat
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ instance : AddCommMonoid PartEnat where
   add_zero x := Part.ext' (and_true_iff _) fun _ _ => add_zero _
   add_assoc x y z := Part.ext' and_assoc fun _ _ => add_assoc _ _ _
 
-instance : AddMonoidWithOne PartEnat :=
+instance : AddCommMonoidWithOne PartEnat :=
   { PartEnat.addCommMonoid with 
     one := 1
     natCast := some
@@ -357,100 +357,15 @@ theorem coe_ne_top (x : ℕ) : (x : PartEnat) ≠ ⊤ :=
 #align part_enat.coe_ne_top PartEnat.coe_ne_top
 
 theorem not_is_max_coe (x : ℕ) : ¬IsMax (x : PartEnat) :=
-  not_is_max_of_lt (coe_lt_top x)
+  not_isMax_of_lt (coe_lt_top x)
 #align part_enat.not_is_max_coe PartEnat.not_is_max_coe
 
 theorem ne_top_iff {x : PartEnat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by
   simpa only [← some_eq_coe] using Part.ne_none_iff
 #align part_enat.ne_top_iff PartEnat.ne_top_iff
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [] [] [] [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `ne_top_iff_dom [])
-      (Command.declSig
-       [(Term.implicitBinder "{" [`x] [":" `PartEnat] "}")]
-       (Term.typeSpec
-        ":"
-        («term_↔_»
-         («term_≠_» `x "≠" (Order.BoundedOrder.«term⊤» "⊤"))
-         "↔"
-         (Term.proj `x "." `Dom))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Tactic.exact
-             "exact"
-             (Term.app (Term.proj `not_iff_comm "." (fieldIdx "1")) [`part.eq_none_iff'.symm])))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.exact
-            "exact"
-            (Term.app (Term.proj `not_iff_comm "." (fieldIdx "1")) [`part.eq_none_iff'.symm])))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.exact
-        "exact"
-        (Term.app (Term.proj `not_iff_comm "." (fieldIdx "1")) [`part.eq_none_iff'.symm])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact
-       "exact"
-       (Term.app (Term.proj `not_iff_comm "." (fieldIdx "1")) [`part.eq_none_iff'.symm]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app (Term.proj `not_iff_comm "." (fieldIdx "1")) [`part.eq_none_iff'.symm])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `part.eq_none_iff'.symm
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      (Term.proj `not_iff_comm "." (fieldIdx "1"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `not_iff_comm
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  ne_top_iff_dom
-  { x : PartEnat } : x ≠ ⊤ ↔ x . Dom
-  := by skip <;> exact not_iff_comm . 1 part.eq_none_iff'.symm
+theorem ne_top_iff_dom {x : PartEnat} : x ≠ ⊤ ↔ x.Dom := by
+  classical exact not_iff_comm.1 part.eq_none_iff'.symm
 #align part_enat.ne_top_iff_dom PartEnat.ne_top_iff_dom
 
 theorem not_dom_iff_eq_top {x : PartEnat} : ¬x.Dom ↔ x = ⊤ :=
@@ -742,7 +657,7 @@ theorem lt_wf : @WellFounded PartEnat (· < ·) := by
   classical 
     change WellFounded fun a b : PartEnat => a < b
     simp_rw [← to_with_top_lt]
-    exact InvImage.wf _ (WithTop.well_founded_lt Nat.lt_wfRel)
+    exact InvImage.wf _ (WithTop.wellFounded_lt Nat.lt_wfRel)
 #align part_enat.lt_wf PartEnat.lt_wf
 
 instance : WellFoundedLt PartEnat :=

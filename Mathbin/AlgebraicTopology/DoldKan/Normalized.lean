@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.normalized
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,14 +80,14 @@ def pInftyToNormalizedMooreComplex (X : SimplicialObject A) : K[X] ⟶ N[X] :=
 #align
   algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.pInftyToNormalizedMooreComplex
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map
     (X : SimplicialObject A) :
     pInftyToNormalizedMooreComplex X ≫ inclusionOfMooreComplexMap X = P_infty := by tidy
 #align
   algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_to_normalized_Moore_complex_naturality {X Y : SimplicialObject A} (f : X ⟶ Y) :
     AlternatingFaceMapComplex.map f ≫ pInftyToNormalizedMooreComplex Y =
       pInftyToNormalizedMooreComplex X ≫ NormalizedMooreComplex.map f :=
@@ -95,13 +95,13 @@ theorem P_infty_to_normalized_Moore_complex_naturality {X Y : SimplicialObject A
 #align
   algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_naturality AlgebraicTopology.DoldKan.P_infty_to_normalized_Moore_complex_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_comp_P_infty_to_normalized_Moore_complex (X : SimplicialObject A) :
     P_infty ≫ pInftyToNormalizedMooreComplex X = pInftyToNormalizedMooreComplex X := by tidy
 #align
   algebraic_topology.dold_kan.P_infty_comp_P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.P_infty_comp_P_infty_to_normalized_Moore_complex
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem inclusion_of_Moore_complex_map_comp_P_infty (X : SimplicialObject A) :
     inclusionOfMooreComplexMap X ≫ P_infty = inclusionOfMooreComplexMap X := by
   ext n

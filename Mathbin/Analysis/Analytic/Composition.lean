@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.analytic.composition
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -657,7 +657,7 @@ theorem comp_partial_sum_target_subset_image_comp_partial_sum_source (m M N : �
     ∃ (j : _)(hj : j ∈ compPartialSumSource m M N), i = compChangeOfVariables m M N j hj := by
   rcases i with ⟨n, c⟩
   refine' ⟨⟨c.length, c.blocks_fun⟩, _, _⟩
-  · simp only [comp_partial_sum_target_set, Set.mem_set_of_eq] at hi
+  · simp only [comp_partial_sum_target_set, Set.mem_setOf_eq] at hi
     simp only [mem_comp_partial_sum_source_iff, hi.left, hi.right, true_and_iff, and_true_iff]
     exact fun a => c.one_le_blocks' _
   · dsimp [comp_change_of_variables]

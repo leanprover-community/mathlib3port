@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.function.special_functions.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,8 +119,8 @@ theorem measurableArg : Measurable arg :=
     Real.measurableArcsin.comp (measurableIm.div measurableNorm)
   have B : Measurable fun x : ℂ => Real.arcsin ((-x).im / x.abs) :=
     Real.measurableArcsin.comp ((measurableIm.comp measurableNeg).div measurableNorm)
-  Measurable.ite (isClosedLe continuous_const continuous_re).MeasurableSet A <|
-    Measurable.ite (isClosedLe continuous_const continuous_im).MeasurableSet (B.AddConst _)
+  Measurable.ite (is_closed_le continuous_const continuous_re).MeasurableSet A <|
+    Measurable.ite (is_closed_le continuous_const continuous_im).MeasurableSet (B.AddConst _)
       (B.sub_const _)
 #align complex.measurable_arg Complex.measurableArg
 
@@ -327,6 +327,8 @@ instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ := by
 
 end PowInstances
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Guard against import creep:
+assert_not_exists inner_product_space
+
+assert_not_exists real.arctan
+

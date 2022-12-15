@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.abstract_completion
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,16 +104,16 @@ theorem continuous_coe : Continuous ι :=
 #align abstract_completion.continuous_coe AbstractCompletion.continuous_coe
 
 @[elab_as_elim]
-theorem inductionOn {p : hatα → Prop} (a : hatα) (hp : IsClosed { a | p a }) (ih : ∀ a, p (ι a)) :
+theorem induction_on {p : hatα → Prop} (a : hatα) (hp : IsClosed { a | p a }) (ih : ∀ a, p (ι a)) :
     p a :=
-  isClosedProperty pkg.dense hp ih a
-#align abstract_completion.induction_on AbstractCompletion.inductionOn
+  is_closed_property pkg.dense hp ih a
+#align abstract_completion.induction_on AbstractCompletion.induction_on
 
 variable {β : Type _}
 
 protected theorem funext [TopologicalSpace β] [T2Space β] {f g : hatα → β} (hf : Continuous f)
     (hg : Continuous g) (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
-  funext fun a => pkg.induction_on a (isClosedEq hf hg) h
+  funext fun a => pkg.induction_on a (is_closed_eq hf hg) h
 #align abstract_completion.funext AbstractCompletion.funext
 
 variable [UniformSpace β]
@@ -162,7 +162,7 @@ theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : Unifor
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
   funext fun x =>
-    pkg.induction_on x (isClosedEq pkg.continuous_extend hf.Continuous) fun y =>
+    pkg.induction_on x (is_closed_eq pkg.continuous_extend hf.Continuous) fun y =>
       pkg.extend_coe (hf.comp <| pkg.uniform_continuous_coe) y
 #align abstract_completion.extend_comp_coe AbstractCompletion.extend_comp_coe
 

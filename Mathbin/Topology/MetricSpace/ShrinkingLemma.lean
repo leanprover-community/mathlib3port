@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.shrinking_lemma
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ the new balls has strictly smaller radius than the old one. -/
 theorem exists_Union_ball_eq_radius_lt {r : ι → ℝ} (uf : ∀ x, { i | x ∈ ball (c i) (r i) }.Finite)
     (uU : (⋃ i, ball (c i) (r i)) = univ) :
     ∃ r' : ι → ℝ, (⋃ i, ball (c i) (r' i)) = univ ∧ ∀ i, r' i < r i :=
-  let ⟨r', hU, hv⟩ := exists_subset_Union_ball_radius_lt isClosedUniv (fun x _ => uf x) uU.ge
+  let ⟨r', hU, hv⟩ := exists_subset_Union_ball_radius_lt is_closed_univ (fun x _ => uf x) uU.ge
   ⟨r', univ_subset_iff.1 hU, hv⟩
 #align exists_Union_ball_eq_radius_lt exists_Union_ball_eq_radius_lt
 
@@ -78,7 +78,8 @@ so that each of the new balls has strictly smaller radius than the old one. -/
 theorem exists_Union_ball_eq_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 < r i)
     (uf : ∀ x, { i | x ∈ ball (c i) (r i) }.Finite) (uU : (⋃ i, ball (c i) (r i)) = univ) :
     ∃ r' : ι → ℝ, (⋃ i, ball (c i) (r' i)) = univ ∧ ∀ i, r' i ∈ ioo 0 (r i) :=
-  let ⟨r', hU, hv⟩ := exists_subset_Union_ball_radius_pos_lt hr isClosedUniv (fun x _ => uf x) uU.ge
+  let ⟨r', hU, hv⟩ :=
+    exists_subset_Union_ball_radius_pos_lt hr is_closed_univ (fun x _ => uf x) uU.ge
   ⟨r', univ_subset_iff.1 hU, hv⟩
 #align exists_Union_ball_eq_radius_pos_lt exists_Union_ball_eq_radius_pos_lt
 
@@ -125,7 +126,7 @@ theorem exists_locally_finite_Union_eq_ball_radius_lt {R : α → ℝ} (hR : ∀
       (∀ i, 0 < r i ∧ r i < r' i ∧ r' i < R (c i)) ∧
         (LocallyFinite fun i => ball (c i) (r' i)) ∧ (⋃ i, ball (c i) (r i)) = univ :=
   let ⟨ι, c, r, r', hlt, hfin, hsub⟩ :=
-    exists_locally_finite_subset_Union_ball_radius_lt isClosedUniv fun x _ => hR x
+    exists_locally_finite_subset_Union_ball_radius_lt is_closed_univ fun x _ => hR x
   ⟨ι, c, r, r', fun i => (hlt i).2, hfin, univ_subset_iff.1 hsub⟩
 #align exists_locally_finite_Union_eq_ball_radius_lt exists_locally_finite_Union_eq_ball_radius_lt
 

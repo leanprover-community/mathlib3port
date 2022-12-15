@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.countable_dense_linear_order
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrder α] [DenselyOrdered α
 
 variable (α β : Type _) [LinearOrder α] [LinearOrder β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (p q «expr ∈ » f) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p q «expr ∈ » f) -/
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/

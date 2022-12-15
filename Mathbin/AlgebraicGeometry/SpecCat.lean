@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module algebraic_geometry.Spec
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -303,7 +303,7 @@ instance is_iso_to_Spec_Γ (R : CommRingCat) : IsIso (toSpecΓ R) := by
   apply structure_sheaf.is_iso_to_global
 #align algebraic_geometry.is_iso_to_Spec_Γ AlgebraicGeometry.is_iso_to_Spec_Γ
 
-@[reassoc]
+@[reassoc.1]
 theorem Spec_Γ_naturality {R S : CommRingCat} (f : R ⟶ S) :
     f ≫ toSpecΓ S = toSpecΓ R ≫ Γ.map (SpecCat.toLocallyRingedSpace.map f.op).op := by
   ext
@@ -354,7 +354,7 @@ def toPushforwardStalk : S ⟶ (SpecCat.topMap f _* (structureSheaf S).1).stalk 
 #align
   algebraic_geometry.structure_sheaf.to_pushforward_stalk AlgebraicGeometry.StructureSheaf.toPushforwardStalk
 
-@[reassoc]
+@[reassoc.1]
 theorem to_pushforward_stalk_comp :
     f ≫ StructureSheaf.toPushforwardStalk f p =
       StructureSheaf.toStalk R p ≫
@@ -429,7 +429,7 @@ instance is_localized_module_to_pushforward_stalk_alg_hom :
     exact (IsLocalization.map_units ((structure_sheaf R).Presheaf.stalk p) ⟨x, hx⟩).map _
   · apply is_localized_module_to_pushforward_stalk_alg_hom_aux
   · intro x hx
-    rw [to_pushforward_stalk_alg_hom_apply, RingHom.to_fun_eq_coe, ←
+    rw [to_pushforward_stalk_alg_hom_apply, RingHom.toFun_eq_coe, ←
       (to_pushforward_stalk (algebraMap R S) p).map_zero, to_pushforward_stalk, comp_apply,
       comp_apply, map_zero] at hx
     obtain ⟨U, hpU, i₁, i₂, e⟩ := TopCat.Presheaf.germ_eq _ _ _ _ _ _ hx

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.with_bot
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,29 +125,29 @@ def recBotCoe {C : WithBot α → Sort _} (h₁ : C ⊥) (h₂ : ∀ a : α, C a
 #align with_bot.rec_bot_coe WithBot.recBotCoe
 -/
 
-/- warning: with_bot.rec_bot_coe_bot -> WithBot.rec_bot_coe_bot is a dubious translation:
+/- warning: with_bot.rec_bot_coe_bot -> WithBot.recBotCoe_bot is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {C : (WithBot.{u1} α) -> Sort.{u2}} (d : C (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (f : forall (a : α), C ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a)), Eq.{u2} (C (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (WithBot.recBotCoe.{u1, u2} α C d f (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) d
 but is expected to have type
-  forall {α : Type.{u2}} {C : (WithBot.{u2} α) -> Sort.{u1}} (d : C (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.instBotWithBot.{u2} α))) (f : forall (a : α), C (WithBot.some.{u2} α a)), Eq.{u1} (C (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.instBotWithBot.{u2} α))) (WithBot.recBotCoe.{u2, u1} α C d f (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.instBotWithBot.{u2} α))) d
-Case conversion may be inaccurate. Consider using '#align with_bot.rec_bot_coe_bot WithBot.rec_bot_coe_botₓ'. -/
+  forall {α : Type.{u2}} {C : (WithBot.{u2} α) -> Sort.{u1}} (d : C (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.bot.{u2} α))) (f : forall (a : α), C (WithBot.some.{u2} α a)), Eq.{u1} (C (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.bot.{u2} α))) (WithBot.recBotCoe.{u2, u1} α C d f (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.bot.{u2} α))) d
+Case conversion may be inaccurate. Consider using '#align with_bot.rec_bot_coe_bot WithBot.recBotCoe_botₓ'. -/
 @[simp]
-theorem rec_bot_coe_bot {C : WithBot α → Sort _} (d : C ⊥) (f : ∀ a : α, C a) :
+theorem recBotCoe_bot {C : WithBot α → Sort _} (d : C ⊥) (f : ∀ a : α, C a) :
     @recBotCoe _ C d f ⊥ = d :=
   rfl
-#align with_bot.rec_bot_coe_bot WithBot.rec_bot_coe_bot
+#align with_bot.rec_bot_coe_bot WithBot.recBotCoe_bot
 
-/- warning: with_bot.rec_bot_coe_coe -> WithBot.rec_bot_coe_coe is a dubious translation:
+/- warning: with_bot.rec_bot_coe_coe -> WithBot.recBotCoe_coe is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {C : (WithBot.{u1} α) -> Sort.{u2}} (d : C (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (f : forall (a : α), C ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a)) (x : α), Eq.{u2} (C ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x)) (WithBot.recBotCoe.{u1, u2} α C d f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x)) (f x)
 but is expected to have type
-  forall {α : Type.{u2}} {C : (WithBot.{u2} α) -> Sort.{u1}} (d : C (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.instBotWithBot.{u2} α))) (f : forall (a : α), C (WithBot.some.{u2} α a)) (x : α), Eq.{u1} (C (WithBot.some.{u2} α x)) (WithBot.recBotCoe.{u2, u1} α C d f (WithBot.some.{u2} α x)) (f x)
-Case conversion may be inaccurate. Consider using '#align with_bot.rec_bot_coe_coe WithBot.rec_bot_coe_coeₓ'. -/
+  forall {α : Type.{u2}} {C : (WithBot.{u2} α) -> Sort.{u1}} (d : C (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.bot.{u2} α))) (f : forall (a : α), C (WithBot.some.{u2} α a)) (x : α), Eq.{u1} (C (WithBot.some.{u2} α x)) (WithBot.recBotCoe.{u2, u1} α C d f (WithBot.some.{u2} α x)) (f x)
+Case conversion may be inaccurate. Consider using '#align with_bot.rec_bot_coe_coe WithBot.recBotCoe_coeₓ'. -/
 @[simp]
-theorem rec_bot_coe_coe {C : WithBot α → Sort _} (d : C ⊥) (f : ∀ a : α, C a) (x : α) :
+theorem recBotCoe_coe {C : WithBot α → Sort _} (d : C ⊥) (f : ∀ a : α, C a) (x : α) :
     @recBotCoe _ C d f ↑x = f x :=
   rfl
-#align with_bot.rec_bot_coe_coe WithBot.rec_bot_coe_coe
+#align with_bot.rec_bot_coe_coe WithBot.recBotCoe_coe
 
 #print WithBot.unbot' /-
 /-- Specialization of `option.get_or_else` to values in `with_bot α` that respects API boundaries.
@@ -255,7 +255,7 @@ instance (priority := 10) : LE (WithBot α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align with_bot.some_le_some WithBot.some_le_someₓ'. -/
 @[simp]
 theorem some_le_some : @LE.le (WithBot α) _ (some a) (some b) ↔ a ≤ b := by simp [(· ≤ ·)]
@@ -265,7 +265,7 @@ theorem some_le_some : @LE.le (WithBot α) _ (some a) (some b) ↔ a ≤ b := by
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b)) (LE.le.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) (WithBot.some.{u1} α a) (WithBot.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) (WithBot.some.{u1} α a) (WithBot.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align with_bot.coe_le_coe WithBot.coe_le_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_le_coe : (a : WithBot α) ≤ b ↔ a ≤ b :=
@@ -276,7 +276,7 @@ theorem coe_le_coe : (a : WithBot α) ≤ b ↔ a ≤ b :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} α}, LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) (Option.none.{u1} α) a
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} α}, LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) (Option.none.{u1} α) a
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} α}, LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) (Option.none.{u1} α) a
 Case conversion may be inaccurate. Consider using '#align with_bot.none_le WithBot.none_leₓ'. -/
 @[simp]
 theorem none_le {a : WithBot α} : @LE.le (WithBot α) _ none a := fun b h => Option.noConfusion h
@@ -297,7 +297,7 @@ instance [OrderTop α] : BoundedOrder (WithBot α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (a : α), Not (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (a : α), Not (LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) (WithBot.some.{u1} α a) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.instBotWithBot.{u1} α)))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (a : α), Not (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) (WithBot.some.{u1} α a) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align with_bot.not_coe_le_bot WithBot.not_coe_le_botₓ'. -/
 theorem not_coe_le_bot (a : α) : ¬(a : WithBot α) ≤ ⊥ := fun h =>
   let ⟨b, hb, _⟩ := h _ rfl
@@ -308,7 +308,7 @@ theorem not_coe_le_bot (a : α) : ¬(a : WithBot α) ≤ ⊥ := fun h =>
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α] {o : Option.{u1} α}, (Membership.Mem.{u1, u1} α (Option.{u1} α) (Option.hasMem.{u1} α) b o) -> (Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) o) (LE.le.{u1} α _inst_1 a b))
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α] {o : Option.{u1} α}, (Membership.mem.{u1, u1} α (Option.{u1} α) (Option.instMembershipOption.{u1} α) b o) -> (Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) (WithBot.some.{u1} α a) o) (LE.le.{u1} α _inst_1 a b))
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α] {o : Option.{u1} α}, (Membership.mem.{u1, u1} α (Option.{u1} α) (Option.instMembershipOption.{u1} α) b o) -> (Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) (WithBot.some.{u1} α a) o) (LE.le.{u1} α _inst_1 a b))
 Case conversion may be inaccurate. Consider using '#align with_bot.coe_le WithBot.coe_leₓ'. -/
 theorem coe_le : ∀ {o : Option α}, b ∈ o → ((a : WithBot α) ≤ o ↔ a ≤ b)
   | _, rfl => coe_le_coe
@@ -318,7 +318,7 @@ theorem coe_le : ∀ {o : Option α}, b ∈ o → ((a : WithBot α) ≤ o ↔ a 
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α] {x : WithBot.{u1} α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) x) (Exists.{succ u1} α (fun (b : α) => And (Eq.{succ u1} (WithBot.{u1} α) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b)) (LE.le.{u1} α _inst_1 a b)))
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α] {x : WithBot.{u1} α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) (WithBot.some.{u1} α a) x) (Exists.{succ u1} α (fun (b : α) => And (Eq.{succ u1} (WithBot.{u1} α) x (WithBot.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)))
+  forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α] {x : WithBot.{u1} α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) (WithBot.some.{u1} α a) x) (Exists.{succ u1} α (fun (b : α) => And (Eq.{succ u1} (WithBot.{u1} α) x (WithBot.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)))
 Case conversion may be inaccurate. Consider using '#align with_bot.coe_le_iff WithBot.coe_le_iffₓ'. -/
 theorem coe_le_iff : ∀ {x : WithBot α}, ↑a ≤ x ↔ ∃ b : α, x = b ∧ a ≤ b
   | some a => by simp [some_eq_coe, coe_eq_coe]
@@ -329,7 +329,7 @@ theorem coe_le_iff : ∀ {x : WithBot α}, ↑a ≤ x ↔ ∃ b : α, x = b ∧ 
 lean 3 declaration is
   forall {α : Type.{u1}} {b : α} [_inst_1 : LE.{u1} α] {x : WithBot.{u1} α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b)) (forall (a : α), (Eq.{succ u1} (WithBot.{u1} α) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a)) -> (LE.le.{u1} α _inst_1 a b))
 but is expected to have type
-  forall {α : Type.{u1}} {b : α} [_inst_1 : LE.{u1} α] {x : WithBot.{u1} α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) x (WithBot.some.{u1} α b)) (forall (a : WithBot.{u1} α), (Eq.{succ u1} (WithBot.{u1} α) x a) -> (LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) a (WithBot.some.{u1} α b)))
+  forall {α : Type.{u1}} {b : α} [_inst_1 : LE.{u1} α] {x : WithBot.{u1} α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x (WithBot.some.{u1} α b)) (forall (a : WithBot.{u1} α), (Eq.{succ u1} (WithBot.{u1} α) x a) -> (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) a (WithBot.some.{u1} α b)))
 Case conversion may be inaccurate. Consider using '#align with_bot.le_coe_iff WithBot.le_coe_iffₓ'. -/
 theorem le_coe_iff : ∀ {x : WithBot α}, x ≤ b ↔ ∀ a, x = ↑a → a ≤ b
   | some b => by simp [some_eq_coe, coe_eq_coe]
@@ -340,7 +340,7 @@ theorem le_coe_iff : ∀ {x : WithBot α}, x ≤ b ↔ ∀ a, x = ↑a → a ≤
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α], (IsMax.{u1} α _inst_1 a) -> (IsMax.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a))
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α], (IsMax.{u1} α _inst_1 a) -> (IsMax.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) (WithBot.some.{u1} α a))
+  forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α], (IsMax.{u1} α _inst_1 a) -> (IsMax.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) (WithBot.some.{u1} α a))
 Case conversion may be inaccurate. Consider using '#align is_max.with_bot IsMax.withBotₓ'. -/
 protected theorem IsMax.withBot (h : IsMax a) : IsMax (a : WithBot α)
   | none, _ => bot_le
@@ -360,7 +360,7 @@ instance (priority := 10) : LT (WithBot α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LT.{u1} α], Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LT.{u1} α], Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LT.{u1} α], Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align with_bot.some_lt_some WithBot.some_lt_someₓ'. -/
 @[simp]
 theorem some_lt_some : @LT.lt (WithBot α) _ (some a) (some b) ↔ a < b := by simp [(· < ·)]
@@ -370,7 +370,7 @@ theorem some_lt_some : @LT.lt (WithBot α) _ (some a) (some b) ↔ a < b := by s
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LT.{u1} α], Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b)) (LT.lt.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LT.{u1} α], Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) (WithBot.some.{u1} α a) (WithBot.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LT.{u1} α], Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) (WithBot.some.{u1} α a) (WithBot.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align with_bot.coe_lt_coe WithBot.coe_lt_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_lt_coe : (a : WithBot α) < b ↔ a < b :=
@@ -381,7 +381,7 @@ theorem coe_lt_coe : (a : WithBot α) < b ↔ a < b :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) (Option.none.{u1} α) (Option.some.{u1} α a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) (Option.none.{u1} α) (WithBot.some.{u1} α a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) (Option.none.{u1} α) (WithBot.some.{u1} α a)
 Case conversion may be inaccurate. Consider using '#align with_bot.none_lt_some WithBot.none_lt_someₓ'. -/
 @[simp]
 theorem none_lt_some (a : α) : @LT.lt (WithBot α) _ none (some a) :=
@@ -392,7 +392,7 @@ theorem none_lt_some (a : α) : @LT.lt (WithBot α) _ none (some a) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.instBotWithBot.{u1} α)) (WithBot.some.{u1} α a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) (WithBot.some.{u1} α a)
 Case conversion may be inaccurate. Consider using '#align with_bot.bot_lt_coe WithBot.bot_lt_coeₓ'. -/
 theorem bot_lt_coe (a : α) : (⊥ : WithBot α) < a :=
   none_lt_some a
@@ -402,7 +402,7 @@ theorem bot_lt_coe (a : α) : (⊥ : WithBot α) < a :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : WithBot.{u1} α), Not (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) a (Option.none.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : WithBot.{u1} α), Not (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) a (Option.none.{u1} α))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : WithBot.{u1} α), Not (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) a (Option.none.{u1} α))
 Case conversion may be inaccurate. Consider using '#align with_bot.not_lt_none WithBot.not_lt_noneₓ'. -/
 @[simp]
 theorem not_lt_none (a : WithBot α) : ¬@LT.lt (WithBot α) _ a none := fun ⟨_, h, _⟩ =>
@@ -413,7 +413,7 @@ theorem not_lt_none (a : WithBot α) : ¬@LT.lt (WithBot α) _ a none := fun ⟨
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) a b) (Exists.{succ u1} α (fun (p : α) => And (Eq.{succ u1} (WithBot.{u1} α) b ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) p)) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) p))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) a b) (Exists.{succ u1} α (fun (p : α) => And (Eq.{succ u1} (WithBot.{u1} α) b (WithBot.some.{u1} α p)) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) a (WithBot.some.{u1} α p))))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) a b) (Exists.{succ u1} α (fun (p : α) => And (Eq.{succ u1} (WithBot.{u1} α) b (WithBot.some.{u1} α p)) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) a (WithBot.some.{u1} α p))))
 Case conversion may be inaccurate. Consider using '#align with_bot.lt_iff_exists_coe WithBot.lt_iff_exists_coeₓ'. -/
 theorem lt_iff_exists_coe : ∀ {a b : WithBot α}, a < b ↔ ∃ p : α, b = p ∧ a < p
   | a, some b => by simp [some_eq_coe, coe_eq_coe]
@@ -424,7 +424,7 @@ theorem lt_iff_exists_coe : ∀ {a b : WithBot α}, a < b ↔ ∃ p : α, b = p 
 lean 3 declaration is
   forall {α : Type.{u1}} {b : α} [_inst_1 : LT.{u1} α] {x : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b)) (forall (a : α), (Eq.{succ u1} (WithBot.{u1} α) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a)) -> (LT.lt.{u1} α _inst_1 a b))
 but is expected to have type
-  forall {α : Type.{u1}} {b : α} [_inst_1 : LT.{u1} α] {x : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) x (WithBot.some.{u1} α b)) (forall (a : WithBot.{u1} α), (Eq.{succ u1} (WithBot.{u1} α) x a) -> (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) a (WithBot.some.{u1} α b)))
+  forall {α : Type.{u1}} {b : α} [_inst_1 : LT.{u1} α] {x : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) x (WithBot.some.{u1} α b)) (forall (a : WithBot.{u1} α), (Eq.{succ u1} (WithBot.{u1} α) x a) -> (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) a (WithBot.some.{u1} α b)))
 Case conversion may be inaccurate. Consider using '#align with_bot.lt_coe_iff WithBot.lt_coe_iffₓ'. -/
 theorem lt_coe_iff : ∀ {x : WithBot α}, x < b ↔ ∀ a, x = ↑a → a < b
   | some b => by simp [some_eq_coe, coe_eq_coe, coe_lt_coe]
@@ -457,29 +457,21 @@ instance [PartialOrder α] : PartialOrder (WithBot α) :=
         rcases h₂ b rfl with ⟨_, ⟨⟩, h₂'⟩
         rw [le_antisymm h₁' h₂'] }
 
-/- warning: with_bot.coe_strict_mono -> WithBot.coe_strict_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], StrictMono.{u1, u1} α (WithBot.{u1} α) _inst_1 (WithBot.preorder.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], StrictMono.{u1, u1} α (WithBot.{u1} α) _inst_1 (WithBot.instPreorderWithBot.{u1} α _inst_1) (fun (a : α) => WithBot.some.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align with_bot.coe_strict_mono WithBot.coe_strict_monoₓ'. -/
-theorem coe_strict_mono [Preorder α] : StrictMono (coe : α → WithBot α) := fun a b => some_lt_some.2
-#align with_bot.coe_strict_mono WithBot.coe_strict_mono
+#print WithBot.coe_strictMono /-
+theorem coe_strictMono [Preorder α] : StrictMono (coe : α → WithBot α) := fun a b => some_lt_some.2
+#align with_bot.coe_strict_mono WithBot.coe_strictMono
+-/
 
-/- warning: with_bot.coe_mono -> WithBot.coe_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Monotone.{u1, u1} α (WithBot.{u1} α) _inst_1 (WithBot.preorder.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Monotone.{u1, u1} α (WithBot.{u1} α) _inst_1 (WithBot.instPreorderWithBot.{u1} α _inst_1) (fun (a : α) => WithBot.some.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align with_bot.coe_mono WithBot.coe_monoₓ'. -/
+#print WithBot.coe_mono /-
 theorem coe_mono [Preorder α] : Monotone (coe : α → WithBot α) := fun a b => coe_le_coe.2
 #align with_bot.coe_mono WithBot.coe_mono
+-/
 
 /- warning: with_bot.monotone_iff -> WithBot.monotone_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithBot.{u1} α) -> β}, Iff (Monotone.{u1, u2} (WithBot.{u1} α) β (WithBot.preorder.{u1} α _inst_1) _inst_2 f) (And (Monotone.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithBot.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α)))))) (forall (x : α), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (f (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithBot.{u2} α) -> β}, Iff (Monotone.{u2, u1} (WithBot.{u2} α) β (WithBot.instPreorderWithBot.{u2} α _inst_1) _inst_2 f) (And (Monotone.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithBot.some.{u2} α a))) (forall (x : α), LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.instBotWithBot.{u2} α))) (f (WithBot.some.{u2} α x))))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithBot.{u2} α) -> β}, Iff (Monotone.{u2, u1} (WithBot.{u2} α) β (WithBot.preorder.{u2} α _inst_1) _inst_2 f) (And (Monotone.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithBot.some.{u2} α a))) (forall (x : α), LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.bot.{u2} α))) (f (WithBot.some.{u2} α x))))
 Case conversion may be inaccurate. Consider using '#align with_bot.monotone_iff WithBot.monotone_iffₓ'. -/
 theorem monotone_iff [Preorder α] [Preorder β] {f : WithBot α → β} :
     Monotone f ↔ Monotone (f ∘ coe : α → β) ∧ ∀ x : α, f ⊥ ≤ f x :=
@@ -493,7 +485,7 @@ theorem monotone_iff [Preorder α] [Preorder β] {f : WithBot α → β} :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, Iff (Monotone.{u1, u2} (WithBot.{u1} α) (WithBot.{u2} β) (WithBot.preorder.{u1} α _inst_1) (WithBot.preorder.{u2} β _inst_2) (WithBot.map.{u1, u2} α β f)) (Monotone.{u1, u2} α β _inst_1 _inst_2 f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, Iff (Monotone.{u2, u1} (WithBot.{u2} α) (WithBot.{u1} β) (WithBot.instPreorderWithBot.{u2} α _inst_1) (WithBot.instPreorderWithBot.{u1} β _inst_2) (WithBot.map.{u2, u1} α β f)) (Monotone.{u2, u1} α β _inst_1 _inst_2 f)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, Iff (Monotone.{u2, u1} (WithBot.{u2} α) (WithBot.{u1} β) (WithBot.preorder.{u2} α _inst_1) (WithBot.preorder.{u1} β _inst_2) (WithBot.map.{u2, u1} α β f)) (Monotone.{u2, u1} α β _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align with_bot.monotone_map_iff WithBot.monotone_map_iffₓ'. -/
 @[simp]
 theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} :
@@ -503,31 +495,31 @@ theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} :
 
 alias monotone_map_iff ↔ _ _root_.monotone.with_bot_map
 
-/- warning: with_bot.strict_mono_iff -> WithBot.strict_mono_iff is a dubious translation:
+/- warning: with_bot.strict_mono_iff -> WithBot.strictMono_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithBot.{u1} α) -> β}, Iff (StrictMono.{u1, u2} (WithBot.{u1} α) β (WithBot.preorder.{u1} α _inst_1) _inst_2 f) (And (StrictMono.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithBot.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α)))))) (forall (x : α), LT.lt.{u2} β (Preorder.toLT.{u2} β _inst_2) (f (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithBot.{u2} α) -> β}, Iff (StrictMono.{u2, u1} (WithBot.{u2} α) β (WithBot.instPreorderWithBot.{u2} α _inst_1) _inst_2 f) (And (StrictMono.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithBot.some.{u2} α a))) (forall (x : α), LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) (f (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.instBotWithBot.{u2} α))) (f (WithBot.some.{u2} α x))))
-Case conversion may be inaccurate. Consider using '#align with_bot.strict_mono_iff WithBot.strict_mono_iffₓ'. -/
-theorem strict_mono_iff [Preorder α] [Preorder β] {f : WithBot α → β} :
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithBot.{u2} α) -> β}, Iff (StrictMono.{u2, u1} (WithBot.{u2} α) β (WithBot.preorder.{u2} α _inst_1) _inst_2 f) (And (StrictMono.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithBot.some.{u2} α a))) (forall (x : α), LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) (f (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.bot.{u2} α))) (f (WithBot.some.{u2} α x))))
+Case conversion may be inaccurate. Consider using '#align with_bot.strict_mono_iff WithBot.strictMono_iffₓ'. -/
+theorem strictMono_iff [Preorder α] [Preorder β] {f : WithBot α → β} :
     StrictMono f ↔ StrictMono (f ∘ coe : α → β) ∧ ∀ x : α, f ⊥ < f x :=
-  ⟨fun h => ⟨h.comp WithBot.coe_strict_mono, fun x => h (bot_lt_coe _)⟩, fun h =>
+  ⟨fun h => ⟨h.comp WithBot.coe_strictMono, fun x => h (bot_lt_coe _)⟩, fun h =>
     WithBot.forall.2
       ⟨WithBot.forall.2 ⟨flip absurd (lt_irrefl _), fun x _ => h.2 x⟩, fun x =>
         WithBot.forall.2 ⟨fun h => (not_lt_bot h).elim, fun y hle => h.1 (coe_lt_coe.1 hle)⟩⟩⟩
-#align with_bot.strict_mono_iff WithBot.strict_mono_iff
+#align with_bot.strict_mono_iff WithBot.strictMono_iff
 
-/- warning: with_bot.strict_mono_map_iff -> WithBot.strict_mono_map_iff is a dubious translation:
+/- warning: with_bot.strict_mono_map_iff -> WithBot.strictMono_map_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, Iff (StrictMono.{u1, u2} (WithBot.{u1} α) (WithBot.{u2} β) (WithBot.preorder.{u1} α _inst_1) (WithBot.preorder.{u2} β _inst_2) (WithBot.map.{u1, u2} α β f)) (StrictMono.{u1, u2} α β _inst_1 _inst_2 f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, Iff (StrictMono.{u2, u1} (WithBot.{u2} α) (WithBot.{u1} β) (WithBot.instPreorderWithBot.{u2} α _inst_1) (WithBot.instPreorderWithBot.{u1} β _inst_2) (WithBot.map.{u2, u1} α β f)) (StrictMono.{u2, u1} α β _inst_1 _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align with_bot.strict_mono_map_iff WithBot.strict_mono_map_iffₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, Iff (StrictMono.{u2, u1} (WithBot.{u2} α) (WithBot.{u1} β) (WithBot.preorder.{u2} α _inst_1) (WithBot.preorder.{u1} β _inst_2) (WithBot.map.{u2, u1} α β f)) (StrictMono.{u2, u1} α β _inst_1 _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align with_bot.strict_mono_map_iff WithBot.strictMono_map_iffₓ'. -/
 @[simp]
-theorem strict_mono_map_iff [Preorder α] [Preorder β] {f : α → β} :
+theorem strictMono_map_iff [Preorder α] [Preorder β] {f : α → β} :
     StrictMono (WithBot.map f) ↔ StrictMono f :=
-  strict_mono_iff.trans <| by simp [StrictMono, bot_lt_coe]
-#align with_bot.strict_mono_map_iff WithBot.strict_mono_map_iff
+  strictMono_iff.trans <| by simp [StrictMono, bot_lt_coe]
+#align with_bot.strict_mono_map_iff WithBot.strictMono_map_iff
 
 alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_bot_map
 
@@ -535,7 +527,7 @@ alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_bot_map
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (f : α -> β), (forall {a : α} {b : α}, Iff (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (f a) (f b)) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)) -> (forall (a : WithBot.{u1} α) (b : WithBot.{u1} α), Iff (LE.le.{u2} (WithBot.{u2} β) (Preorder.toLE.{u2} (WithBot.{u2} β) (WithBot.preorder.{u2} β _inst_2)) (WithBot.map.{u1, u2} α β f a) (WithBot.map.{u1, u2} α β f b)) (LE.le.{u1} (WithBot.{u1} α) (Preorder.toLE.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a b))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : α -> β), (forall {a : α} {b : α}, Iff (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f a) (f b)) (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) a b)) -> (forall (a : WithBot.{u2} α) (b : WithBot.{u2} α), Iff (LE.le.{u1} (WithBot.{u1} β) (Preorder.toLE.{u1} (WithBot.{u1} β) (WithBot.instPreorderWithBot.{u1} β _inst_2)) (WithBot.map.{u2, u1} α β f a) (WithBot.map.{u2, u1} α β f b)) (LE.le.{u2} (WithBot.{u2} α) (Preorder.toLE.{u2} (WithBot.{u2} α) (WithBot.instPreorderWithBot.{u2} α _inst_1)) a b))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : α -> β), (forall {a : α} {b : α}, Iff (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f a) (f b)) (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) a b)) -> (forall (a : WithBot.{u2} α) (b : WithBot.{u2} α), Iff (LE.le.{u1} (WithBot.{u1} β) (Preorder.toLE.{u1} (WithBot.{u1} β) (WithBot.preorder.{u1} β _inst_2)) (WithBot.map.{u2, u1} α β f a) (WithBot.map.{u2, u1} α β f b)) (LE.le.{u2} (WithBot.{u2} α) (Preorder.toLE.{u2} (WithBot.{u2} α) (WithBot.preorder.{u2} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align with_bot.map_le_iff WithBot.map_le_iffₓ'. -/
 theorem map_le_iff [Preorder α] [Preorder β] (f : α → β) (mono_iff : ∀ {a b}, f a ≤ f b ↔ a ≤ b) :
     ∀ a b : WithBot α, a.map f ≤ b.map f ↔ a ≤ b
@@ -544,22 +536,18 @@ theorem map_le_iff [Preorder α] [Preorder β] (f : α → β) (mono_iff : ∀ {
   | (a : α), (b : α) => by simpa only [map_coe, coe_le_coe] using mono_iff
 #align with_bot.map_le_iff WithBot.map_le_iff
 
-/- warning: with_bot.le_coe_unbot' -> WithBot.le_coe_unbot' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : WithBot.{u1} α) (b : α), LE.le.{u1} (WithBot.{u1} α) (Preorder.toLE.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) (WithBot.unbot'.{u1} α b a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : WithBot.{u1} α) (b : α), LE.le.{u1} (WithBot.{u1} α) (Preorder.toLE.{u1} (WithBot.{u1} α) (WithBot.instPreorderWithBot.{u1} α _inst_1)) a (WithBot.some.{u1} α (WithBot.unbot'.{u1} α b a))
-Case conversion may be inaccurate. Consider using '#align with_bot.le_coe_unbot' WithBot.le_coe_unbot'ₓ'. -/
+#print WithBot.le_coe_unbot' /-
 theorem le_coe_unbot' [Preorder α] : ∀ (a : WithBot α) (b : α), a ≤ a.unbot' b
   | (a : α), b => le_rfl
   | ⊥, b => bot_le
 #align with_bot.le_coe_unbot' WithBot.le_coe_unbot'
+-/
 
 /- warning: with_bot.unbot'_bot_le_iff -> WithBot.unbot'_bot_le_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1] {a : WithBot.{u1} α} {b : α}, Iff (LE.le.{u1} α _inst_1 (WithBot.unbot'.{u1} α (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α _inst_1 _inst_2)) a) b) (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1] {a : WithBot.{u1} α} {b : α}, Iff (LE.le.{u1} α _inst_1 (WithBot.unbot'.{u1} α (Bot.bot.{u1} α (OrderBot.toBot.{u1} α _inst_1 _inst_2)) a) b) (LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) a (WithBot.some.{u1} α b))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1] {a : WithBot.{u1} α} {b : α}, Iff (LE.le.{u1} α _inst_1 (WithBot.unbot'.{u1} α (Bot.bot.{u1} α (OrderBot.toBot.{u1} α _inst_1 _inst_2)) a) b) (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) a (WithBot.some.{u1} α b))
 Case conversion may be inaccurate. Consider using '#align with_bot.unbot'_bot_le_iff WithBot.unbot'_bot_le_iffₓ'. -/
 theorem unbot'_bot_le_iff [LE α] [OrderBot α] {a : WithBot α} {b : α} : a.unbot' ⊥ ≤ b ↔ a ≤ b := by
   cases a <;> simp [none_eq_bot, some_eq_coe]
@@ -569,7 +557,7 @@ theorem unbot'_bot_le_iff [LE α] [OrderBot α] {a : WithBot α} {b : α} : a.un
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : α} {c : α}, (Ne.{succ u1} (WithBot.{u1} α) a (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) -> (Iff (LT.lt.{u1} α _inst_1 (WithBot.unbot'.{u1} α b a) c) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) c)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : α} {c : α}, (Ne.{succ u1} (WithBot.{u1} α) a (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.instBotWithBot.{u1} α))) -> (Iff (LT.lt.{u1} α _inst_1 (WithBot.unbot'.{u1} α b a) c) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) a (WithBot.some.{u1} α c)))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : α} {c : α}, (Ne.{succ u1} (WithBot.{u1} α) a (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α))) -> (Iff (LT.lt.{u1} α _inst_1 (WithBot.unbot'.{u1} α b a) c) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) a (WithBot.some.{u1} α c)))
 Case conversion may be inaccurate. Consider using '#align with_bot.unbot'_lt_iff WithBot.unbot'_lt_iffₓ'. -/
 theorem unbot'_lt_iff [LT α] {a : WithBot α} {b c : α} (ha : a ≠ ⊥) : a.unbot' b < c ↔ a < c := by
   lift a to α using ha
@@ -589,15 +577,11 @@ instance [SemilatticeSup α] : SemilatticeSup (WithBot α) :=
         simp at h₂
         exact ⟨d, rfl, sup_le h₁' h₂⟩ }
 
-/- warning: with_bot.coe_sup -> WithBot.coe_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithBot.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b)) (HasSup.sup.{u1} (WithBot.{u1} α) (SemilatticeSup.toHasSup.{u1} (WithBot.{u1} α) (WithBot.semilatticeSup.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithBot.{u1} α) (WithBot.some.{u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b)) (HasSup.sup.{u1} (WithBot.{u1} α) (SemilatticeSup.toHasSup.{u1} (WithBot.{u1} α) (WithBot.instSemilatticeSupWithBot.{u1} α _inst_1)) (WithBot.some.{u1} α a) (WithBot.some.{u1} α b))
-Case conversion may be inaccurate. Consider using '#align with_bot.coe_sup WithBot.coe_supₓ'. -/
+#print WithBot.coe_sup /-
 theorem coe_sup [SemilatticeSup α] (a b : α) : ((a ⊔ b : α) : WithBot α) = a ⊔ b :=
   rfl
 #align with_bot.coe_sup WithBot.coe_sup
+-/
 
 instance [SemilatticeInf α] : SemilatticeInf (WithBot α) :=
   { WithBot.orderBot, WithBot.partialOrder with
@@ -614,15 +598,11 @@ instance [SemilatticeInf α] : SemilatticeInf (WithBot α) :=
       rcases h₂ a rfl with ⟨c, ⟨⟩, ac⟩
       exact ⟨_, rfl, le_inf ab ac⟩ }
 
-/- warning: with_bot.coe_inf -> WithBot.coe_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithBot.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b)) (HasInf.inf.{u1} (WithBot.{u1} α) (SemilatticeInf.toHasInf.{u1} (WithBot.{u1} α) (WithBot.semilatticeInf.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithBot.{u1} α) (WithBot.some.{u1} α (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b)) (HasInf.inf.{u1} (WithBot.{u1} α) (SemilatticeInf.toHasInf.{u1} (WithBot.{u1} α) (WithBot.instSemilatticeInfWithBot.{u1} α _inst_1)) (WithBot.some.{u1} α a) (WithBot.some.{u1} α b))
-Case conversion may be inaccurate. Consider using '#align with_bot.coe_inf WithBot.coe_infₓ'. -/
+#print WithBot.coe_inf /-
 theorem coe_inf [SemilatticeInf α] (a b : α) : ((a ⊓ b : α) : WithBot α) = a ⊓ b :=
   rfl
 #align with_bot.coe_inf WithBot.coe_inf
+-/
 
 instance [Lattice α] : Lattice (WithBot α) :=
   { WithBot.semilatticeSup, WithBot.semilatticeInf with }
@@ -640,43 +620,43 @@ instance [DistribLattice α] : DistribLattice (WithBot α) :=
       | (a₁ : α), (a₂ : α), ⊥ => inf_le_right
       | (a₁ : α), (a₂ : α), (a₃ : α) => coe_le_coe.mpr le_sup_inf }
 
-/- warning: with_bot.decidable_le -> WithBot.decidableLe is a dubious translation:
+/- warning: with_bot.decidable_le -> WithBot.decidableLE is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LE.le.{u1} α _inst_1)], DecidableRel.{succ u1} (WithBot.{u1} α) (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.3823 : α) (x._@.Mathlib.Order.WithBot._hyg.3825 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.3823 x._@.Mathlib.Order.WithBot._hyg.3825)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.3843 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.3845 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.3843 x._@.Mathlib.Order.WithBot._hyg.3845)
-Case conversion may be inaccurate. Consider using '#align with_bot.decidable_le WithBot.decidableLeₓ'. -/
-instance decidableLe [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithBot α) (· ≤ ·)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.3804 : α) (x._@.Mathlib.Order.WithBot._hyg.3806 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.3804 x._@.Mathlib.Order.WithBot._hyg.3806)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.3824 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.3826 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.3824 x._@.Mathlib.Order.WithBot._hyg.3826)
+Case conversion may be inaccurate. Consider using '#align with_bot.decidable_le WithBot.decidableLEₓ'. -/
+instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithBot α) (· ≤ ·)
   | none, x => is_true fun a h => Option.noConfusion h
   | some x, some y => if h : x ≤ y then isTrue (some_le_some.2 h) else is_false <| by simp [*]
   | some x, none => is_false fun h => by rcases h x rfl with ⟨y, ⟨_⟩, _⟩
-#align with_bot.decidable_le WithBot.decidableLe
+#align with_bot.decidable_le WithBot.decidableLE
 
-/- warning: with_bot.decidable_lt -> WithBot.decidableLt is a dubious translation:
+/- warning: with_bot.decidable_lt -> WithBot.decidableLT is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LT.lt.{u1} α _inst_1)], DecidableRel.{succ u1} (WithBot.{u1} α) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.3985 : α) (x._@.Mathlib.Order.WithBot._hyg.3987 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.3985 x._@.Mathlib.Order.WithBot._hyg.3987)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4005 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4007 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4005 x._@.Mathlib.Order.WithBot._hyg.4007)
-Case conversion may be inaccurate. Consider using '#align with_bot.decidable_lt WithBot.decidableLtₓ'. -/
-instance decidableLt [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithBot α) (· < ·)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.3966 : α) (x._@.Mathlib.Order.WithBot._hyg.3968 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.3966 x._@.Mathlib.Order.WithBot._hyg.3968)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.3986 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.3988 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.3986 x._@.Mathlib.Order.WithBot._hyg.3988)
+Case conversion may be inaccurate. Consider using '#align with_bot.decidable_lt WithBot.decidableLTₓ'. -/
+instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithBot α) (· < ·)
   | none, some x => is_true <| by exists x, rfl <;> rintro _ ⟨⟩
   | some x, some y => if h : x < y then is_true <| by simp [*] else is_false <| by simp [*]
   | x, none => is_false <| by rintro ⟨a, ⟨⟨⟩⟩⟩
-#align with_bot.decidable_lt WithBot.decidableLt
+#align with_bot.decidable_lt WithBot.decidableLT
 
-/- warning: with_bot.is_total_le -> WithBot.is_total_le is a dubious translation:
+/- warning: with_bot.is_total_le -> WithBot.isTotal_le is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (LE.le.{u1} α _inst_1)], IsTotal.{u1} (WithBot.{u1} α) (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4184 : α) (x._@.Mathlib.Order.WithBot._hyg.4186 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4184 x._@.Mathlib.Order.WithBot._hyg.4186)], IsTotal.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4204 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4206 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4204 x._@.Mathlib.Order.WithBot._hyg.4206)
-Case conversion may be inaccurate. Consider using '#align with_bot.is_total_le WithBot.is_total_leₓ'. -/
-instance is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithBot α) (· ≤ ·) :=
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4165 : α) (x._@.Mathlib.Order.WithBot._hyg.4167 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4165 x._@.Mathlib.Order.WithBot._hyg.4167)], IsTotal.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4185 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4187 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4185 x._@.Mathlib.Order.WithBot._hyg.4187)
+Case conversion may be inaccurate. Consider using '#align with_bot.is_total_le WithBot.isTotal_leₓ'. -/
+instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithBot α) (· ≤ ·) :=
   ⟨fun a b =>
     match a, b with
     | none, _ => Or.inl bot_le
     | _, none => Or.inr bot_le
     | some x, some y => (total_of (· ≤ ·) x y).imp some_le_some.2 some_le_some.2⟩
-#align with_bot.is_total_le WithBot.is_total_le
+#align with_bot.is_total_le WithBot.isTotal_le
 
 instance [LinearOrder α] : LinearOrder (WithBot α) :=
   Lattice.toLinearOrder _
@@ -685,7 +665,7 @@ instance [LinearOrder α] : LinearOrder (WithBot α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithBot.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) (LinearOrder.min.{u1} α _inst_1 x y)) (LinearOrder.min.{u1} (WithBot.{u1} α) (WithBot.linearOrder.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) y))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithBot.{u1} α) (WithBot.some.{u1} α (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) x y)) (Min.min.{u1} (WithBot.{u1} α) (LinearOrder.toMin.{u1} (WithBot.{u1} α) (WithBot.instLinearOrderWithBot.{u1} α _inst_1)) (WithBot.some.{u1} α x) (WithBot.some.{u1} α y))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithBot.{u1} α) (WithBot.some.{u1} α (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) x y)) (Min.min.{u1} (WithBot.{u1} α) (LinearOrder.toMin.{u1} (WithBot.{u1} α) (WithBot.linearOrder.{u1} α _inst_1)) (WithBot.some.{u1} α x) (WithBot.some.{u1} α y))
 Case conversion may be inaccurate. Consider using '#align with_bot.coe_min WithBot.coe_minₓ'. -/
 -- this is not marked simp because the corresponding with_top lemmas are used
 @[norm_cast]
@@ -697,7 +677,7 @@ theorem coe_min [LinearOrder α] (x y : α) : ((min x y : α) : WithBot α) = mi
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithBot.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) (LinearOrder.max.{u1} α _inst_1 x y)) (LinearOrder.max.{u1} (WithBot.{u1} α) (WithBot.linearOrder.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) y))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithBot.{u1} α) (WithBot.some.{u1} α (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_1) x y)) (Max.max.{u1} (WithBot.{u1} α) (LinearOrder.toMax.{u1} (WithBot.{u1} α) (WithBot.instLinearOrderWithBot.{u1} α _inst_1)) (WithBot.some.{u1} α x) (WithBot.some.{u1} α y))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithBot.{u1} α) (WithBot.some.{u1} α (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_1) x y)) (Max.max.{u1} (WithBot.{u1} α) (LinearOrder.toMax.{u1} (WithBot.{u1} α) (WithBot.linearOrder.{u1} α _inst_1)) (WithBot.some.{u1} α x) (WithBot.some.{u1} α y))
 Case conversion may be inaccurate. Consider using '#align with_bot.coe_max WithBot.coe_maxₓ'. -/
 -- this is not marked simp because the corresponding with_top lemmas are used
 @[norm_cast]
@@ -705,13 +685,8 @@ theorem coe_max [LinearOrder α] (x y : α) : ((max x y : α) : WithBot α) = ma
   rfl
 #align with_bot.coe_max WithBot.coe_max
 
-/- warning: with_bot.well_founded_lt -> WithBot.well_founded_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1))) -> (WellFounded.{succ u1} (WithBot.{u1} α) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4386 : α) (x._@.Mathlib.Order.WithBot._hyg.4388 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4386 x._@.Mathlib.Order.WithBot._hyg.4388)) -> (WellFounded.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4406 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4408 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.instPreorderWithBot.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.4406 x._@.Mathlib.Order.WithBot._hyg.4408))
-Case conversion may be inaccurate. Consider using '#align with_bot.well_founded_lt WithBot.well_founded_ltₓ'. -/
-theorem well_founded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
+#print WithBot.wellFounded_lt /-
+theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
     @WellFounded (WithBot α) (· < ·) :=
   have acc_bot : Acc ((· < ·) : WithBot α → WithBot α → Prop) ⊥ :=
     Acc.intro _ fun a ha => (not_le_of_gt ha bot_le).elim
@@ -729,7 +704,8 @@ theorem well_founded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
               Acc.intro _ fun c =>
                 Option.recOn c (fun _ => acc_bot) fun c hc =>
                   ih _ (some_lt_some.1 hc) (lt_trans hc hba))⟩
-#align with_bot.well_founded_lt WithBot.well_founded_lt
+#align with_bot.well_founded_lt WithBot.wellFounded_lt
+-/
 
 instance [LT α] [DenselyOrdered α] [NoMinOrder α] : DenselyOrdered (WithBot α) :=
   ⟨fun a b =>
@@ -742,12 +718,7 @@ instance [LT α] [DenselyOrdered α] [NoMinOrder α] : DenselyOrdered (WithBot �
       let ⟨a, ha₁, ha₂⟩ := exists_between (coe_lt_coe.1 h)
       ⟨a, coe_lt_coe.2 ha₁, coe_lt_coe.2 ha₂⟩⟩
 
-/- warning: with_bot.lt_iff_exists_coe_btwn -> WithBot.lt_iff_exists_coe_btwn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toLT.{u1} α _inst_1)] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a b) (Exists.{succ u1} α (fun (x : α) => And (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x)) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x) b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toLT.{u1} α _inst_1)] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.instPreorderWithBot.{u1} α _inst_1)) a b) (Exists.{succ u1} α (fun (x : α) => And (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.instPreorderWithBot.{u1} α _inst_1)) a (WithBot.some.{u1} α x)) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.instPreorderWithBot.{u1} α _inst_1)) (WithBot.some.{u1} α x) b)))
-Case conversion may be inaccurate. Consider using '#align with_bot.lt_iff_exists_coe_btwn WithBot.lt_iff_exists_coe_btwnₓ'. -/
+#print WithBot.lt_iff_exists_coe_btwn /-
 theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMinOrder α] {a b : WithBot α} :
     a < b ↔ ∃ x : α, a < ↑x ∧ ↑x < b :=
   ⟨fun h =>
@@ -756,6 +727,7 @@ theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMinOrder α]
     ⟨x, hx.1 ▸ hy⟩,
     fun ⟨x, hx⟩ => lt_trans hx.1 hx.2⟩
 #align with_bot.lt_iff_exists_coe_btwn WithBot.lt_iff_exists_coe_btwn
+-/
 
 instance [LE α] [NoTopOrder α] [Nonempty α] : NoTopOrder (WithBot α) :=
   ⟨by 
@@ -859,29 +831,29 @@ def recTopCoe {C : WithTop α → Sort _} (h₁ : C ⊤) (h₂ : ∀ a : α, C a
 #align with_top.rec_top_coe WithTop.recTopCoe
 -/
 
-/- warning: with_top.rec_top_coe_top -> WithTop.rec_top_coe_top is a dubious translation:
+/- warning: with_top.rec_top_coe_top -> WithTop.recTopCoe_top is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {C : (WithTop.{u1} α) -> Sort.{u2}} (d : C (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (f : forall (a : α), C ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a)), Eq.{u2} (C (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (WithTop.recTopCoe.{u1, u2} α C d f (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) d
 but is expected to have type
-  forall {α : Type.{u2}} {C : (WithTop.{u2} α) -> Sort.{u1}} (d : C (Top.top.{u2} (WithTop.{u2} α) (WithTop.instTopWithTop.{u2} α))) (f : forall (a : α), C (WithTop.some.{u2} α a)), Eq.{u1} (C (Top.top.{u2} (WithTop.{u2} α) (WithTop.instTopWithTop.{u2} α))) (WithTop.recTopCoe.{u2, u1} α C d f (Top.top.{u2} (WithTop.{u2} α) (WithTop.instTopWithTop.{u2} α))) d
-Case conversion may be inaccurate. Consider using '#align with_top.rec_top_coe_top WithTop.rec_top_coe_topₓ'. -/
+  forall {α : Type.{u2}} {C : (WithTop.{u2} α) -> Sort.{u1}} (d : C (Top.top.{u2} (WithTop.{u2} α) (WithTop.top.{u2} α))) (f : forall (a : α), C (WithTop.some.{u2} α a)), Eq.{u1} (C (Top.top.{u2} (WithTop.{u2} α) (WithTop.top.{u2} α))) (WithTop.recTopCoe.{u2, u1} α C d f (Top.top.{u2} (WithTop.{u2} α) (WithTop.top.{u2} α))) d
+Case conversion may be inaccurate. Consider using '#align with_top.rec_top_coe_top WithTop.recTopCoe_topₓ'. -/
 @[simp]
-theorem rec_top_coe_top {C : WithTop α → Sort _} (d : C ⊤) (f : ∀ a : α, C a) :
+theorem recTopCoe_top {C : WithTop α → Sort _} (d : C ⊤) (f : ∀ a : α, C a) :
     @recTopCoe _ C d f ⊤ = d :=
   rfl
-#align with_top.rec_top_coe_top WithTop.rec_top_coe_top
+#align with_top.rec_top_coe_top WithTop.recTopCoe_top
 
-/- warning: with_top.rec_top_coe_coe -> WithTop.rec_top_coe_coe is a dubious translation:
+/- warning: with_top.rec_top_coe_coe -> WithTop.recTopCoe_coe is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {C : (WithTop.{u1} α) -> Sort.{u2}} (d : C (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (f : forall (a : α), C ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a)) (x : α), Eq.{u2} (C ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (WithTop.recTopCoe.{u1, u2} α C d f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (f x)
 but is expected to have type
-  forall {α : Type.{u2}} {C : (WithTop.{u2} α) -> Sort.{u1}} (d : C (Top.top.{u2} (WithTop.{u2} α) (WithTop.instTopWithTop.{u2} α))) (f : forall (a : α), C (WithTop.some.{u2} α a)) (x : α), Eq.{u1} (C (WithTop.some.{u2} α x)) (WithTop.recTopCoe.{u2, u1} α C d f (WithTop.some.{u2} α x)) (f x)
-Case conversion may be inaccurate. Consider using '#align with_top.rec_top_coe_coe WithTop.rec_top_coe_coeₓ'. -/
+  forall {α : Type.{u2}} {C : (WithTop.{u2} α) -> Sort.{u1}} (d : C (Top.top.{u2} (WithTop.{u2} α) (WithTop.top.{u2} α))) (f : forall (a : α), C (WithTop.some.{u2} α a)) (x : α), Eq.{u1} (C (WithTop.some.{u2} α x)) (WithTop.recTopCoe.{u2, u1} α C d f (WithTop.some.{u2} α x)) (f x)
+Case conversion may be inaccurate. Consider using '#align with_top.rec_top_coe_coe WithTop.recTopCoe_coeₓ'. -/
 @[simp]
-theorem rec_top_coe_coe {C : WithTop α → Sort _} (d : C ⊤) (f : ∀ a : α, C a) (x : α) :
+theorem recTopCoe_coe {C : WithTop α → Sort _} (d : C ⊤) (f : ∀ a : α, C a) (x : α) :
     @recTopCoe _ C d f ↑x = f x :=
   rfl
-#align with_top.rec_top_coe_coe WithTop.rec_top_coe_coe
+#align with_top.rec_top_coe_coe WithTop.recTopCoe_coe
 
 #print WithTop.toDual /-
 /-- `with_top.to_dual` is the equivalence sending `⊤` to `⊥` and any `a : α` to `to_dual a : αᵒᵈ`.
@@ -1028,7 +1000,7 @@ theorem map_comm {f₁ : α → β} {f₂ : α → γ} {g₁ : β → δ} {g₂ 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : (OrderDual.{u1} α) -> (OrderDual.{u2} β)) (a : WithBot.{u1} α), Eq.{succ u2} (WithTop.{u2} (OrderDual.{u2} β)) (WithTop.map.{u1, u2} (OrderDual.{u1} α) (OrderDual.{u2} β) f (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) a)) (WithBot.map.{u1, u2} α (OrderDual.{u2} β) (Function.comp.{succ u1, succ u2, succ u2} α β (OrderDual.{u2} β) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) (fun (_x : Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) => β -> (OrderDual.{u2} β)) (Equiv.hasCoeToFun.{succ u2, succ u2} β (OrderDual.{u2} β)) (OrderDual.toDual.{u2} β)) f) a)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : (OrderDual.{u2} α) -> (OrderDual.{u1} β)) (a : WithBot.{u2} α), Eq.{succ u1} (WithTop.{u1} (OrderDual.{u1} β)) (WithTop.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} β) f (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (fun (_x : WithBot.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u2} α) => WithTop.{u2} (OrderDual.{u2} α)) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α)) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α)) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))))) (WithBot.toDual.{u2} α) a)) (WithBot.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} β) (Function.comp.{succ u2, succ u1, succ u1} (OrderDual.{u2} α) (OrderDual.{u1} β) (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u1} β) => OrderDual.{u1} (OrderDual.{u1} β)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))))) (OrderDual.toDual.{u1} (OrderDual.{u1} β))) f) a)
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : (OrderDual.{u2} α) -> (OrderDual.{u1} β)) (a : WithBot.{u2} α), Eq.{succ u1} (WithTop.{u1} (OrderDual.{u1} β)) (WithTop.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} β) f (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (fun (_x : WithBot.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u2} α) => WithTop.{u2} (OrderDual.{u2} α)) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α)) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α)) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))))) (WithBot.toDual.{u2} α) a)) (WithBot.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} (OrderDual.{u1} β)) (Function.comp.{succ u2, succ u1, succ u1} (OrderDual.{u2} α) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u1} β) => OrderDual.{u1} (OrderDual.{u1} β)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))))) (OrderDual.toDual.{u1} (OrderDual.{u1} β))) f) a)
 Case conversion may be inaccurate. Consider using '#align with_top.map_to_dual WithTop.map_toDualₓ'. -/
 theorem map_toDual (f : αᵒᵈ → βᵒᵈ) (a : WithBot α) :
     map f (WithBot.toDual a) = a.map (to_dual ∘ f) :=
@@ -1049,7 +1021,7 @@ theorem map_ofDual (f : α → β) (a : WithBot αᵒᵈ) : map f (WithBot.ofDua
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (a : WithTop.{u1} α), Eq.{succ u2} (WithBot.{u2} (OrderDual.{u2} β)) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} β) (WithBot.{u2} (OrderDual.{u2} β))) (fun (_x : Equiv.{succ u2, succ u2} (WithTop.{u2} β) (WithBot.{u2} (OrderDual.{u2} β))) => (WithTop.{u2} β) -> (WithBot.{u2} (OrderDual.{u2} β))) (Equiv.hasCoeToFun.{succ u2, succ u2} (WithTop.{u2} β) (WithBot.{u2} (OrderDual.{u2} β))) (WithTop.toDual.{u2} β) (WithTop.map.{u1, u2} α β f a)) (WithBot.map.{u1, u2} (OrderDual.{u1} α) (OrderDual.{u2} β) (Function.comp.{succ u1, succ u2, succ u2} (OrderDual.{u1} α) β (OrderDual.{u2} β) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) (fun (_x : Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) => β -> (OrderDual.{u2} β)) (Equiv.hasCoeToFun.{succ u2, succ u2} β (OrderDual.{u2} β)) (OrderDual.toDual.{u2} β)) (Function.comp.{succ u1, succ u1, succ u2} (OrderDual.{u1} α) α β f (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) => (OrderDual.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.ofDual.{u1} α)))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) a))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (a : WithTop.{u2} α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} β) => WithBot.{u1} (OrderDual.{u1} β)) (WithTop.map.{u2, u1} α β f a)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β))) (WithTop.{u1} β) (fun (_x : WithTop.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} β) => WithBot.{u1} (OrderDual.{u1} β)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β))) (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β))) (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β))))) (WithTop.toDual.{u1} β) (WithTop.map.{u2, u1} α β f a)) (WithBot.map.{u2, u1} (OrderDual.{u2} α) β (Function.comp.{succ u2, succ u1, succ u1} (OrderDual.{u2} α) β β (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) (Function.comp.{succ u2, succ u2, succ u1} (OrderDual.{u2} α) α β f (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) (fun (_x : OrderDual.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (OrderDual.{u2} α) α))) (OrderDual.ofDual.{u2} α)))) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (fun (_x : WithTop.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u2} α) => WithBot.{u2} (OrderDual.{u2} α)) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α)) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α)) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))))) (WithTop.toDual.{u2} α) a))
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (a : WithTop.{u2} α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} β) => WithBot.{u1} (OrderDual.{u1} β)) (WithTop.map.{u2, u1} α β f a)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β))) (WithTop.{u1} β) (fun (_x : WithTop.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} β) => WithBot.{u1} (OrderDual.{u1} β)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β))) (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β))) (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} β) (WithBot.{u1} (OrderDual.{u1} β))))) (WithTop.toDual.{u1} β) (WithTop.map.{u2, u1} α β f a)) (WithBot.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} β) (Function.comp.{succ u2, succ u1, succ u1} (OrderDual.{u2} α) β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) (Function.comp.{succ u2, succ u2, succ u1} (OrderDual.{u2} α) α β f (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) (fun (_x : OrderDual.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (OrderDual.{u2} α) α))) (OrderDual.ofDual.{u2} α)))) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (fun (_x : WithTop.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u2} α) => WithBot.{u2} (OrderDual.{u2} α)) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α)) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α)) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))))) (WithTop.toDual.{u2} α) a))
 Case conversion may be inaccurate. Consider using '#align with_top.to_dual_map WithTop.toDual_mapₓ'. -/
 theorem toDual_map (f : α → β) (a : WithTop α) :
     WithTop.toDual (map f a) = WithBot.map (to_dual ∘ f ∘ of_dual) a.toDual :=
@@ -1116,7 +1088,7 @@ theorem toDual_le_iff {a : WithTop α} {b : WithBot αᵒᵈ} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LE.le.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.hasLe.{u1} (OrderDual.{u1} α) (OrderDual.hasLe.{u1} α _inst_1)) a (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) b)) (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) b (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) => (WithBot.{u1} (OrderDual.{u1} α)) -> (WithTop.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.ofDual.{u1} α) a))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LE.le.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.instLEWithBot.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b)) (LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LE.le.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.le.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b)) (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align with_top.le_to_dual_iff WithTop.le_toDual_iffₓ'. -/
 theorem le_toDual_iff {a : WithBot αᵒᵈ} {b : WithTop α} :
     a ≤ WithTop.toDual b ↔ b ≤ WithBot.ofDual a :=
@@ -1141,7 +1113,7 @@ theorem ofDual_le_iff {a : WithTop αᵒᵈ} {b : WithBot α} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) a (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) => (WithTop.{u1} (OrderDual.{u1} α)) -> (WithBot.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.ofDual.{u1} α) b)) (LE.le.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.hasLe.{u1} (OrderDual.{u1} α) (OrderDual.hasLe.{u1} α _inst_1)) b (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) a))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.instLEWithBot.{u1} α _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b)) (LE.le.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.instLEWithTop.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b)) (LE.le.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.le.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align with_top.le_of_dual_iff WithTop.le_ofDual_iffₓ'. -/
 theorem le_ofDual_iff {a : WithBot α} {b : WithTop αᵒᵈ} :
     a ≤ WithTop.ofDual b ↔ b ≤ WithBot.toDual a :=
@@ -1159,7 +1131,7 @@ theorem ofDual_le_ofDual_iff {a b : WithTop αᵒᵈ} : WithTop.ofDual a ≤ Wit
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b)) (LE.le.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) (WithTop.some.{u1} α a) (WithTop.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) (WithTop.some.{u1} α a) (WithTop.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align with_top.coe_le_coe WithTop.coe_le_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_le_coe : (a : WithTop α) ≤ b ↔ a ≤ b := by
@@ -1170,7 +1142,7 @@ theorem coe_le_coe : (a : WithTop α) ≤ b ↔ a ≤ b := by
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α], Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align with_top.some_le_some WithTop.some_le_someₓ'. -/
 @[simp]
 theorem some_le_some : @LE.le (WithTop α) _ (some a) (some b) ↔ a ≤ b :=
@@ -1181,7 +1153,7 @@ theorem some_le_some : @LE.le (WithTop α) _ (some a) (some b) ↔ a ≤ b :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithTop.{u1} α}, LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) a (Option.none.{u1} α)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithTop.{u1} α}, LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) a (Option.none.{u1} α)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithTop.{u1} α}, LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) a (Option.none.{u1} α)
 Case conversion may be inaccurate. Consider using '#align with_top.le_none WithTop.le_noneₓ'. -/
 @[simp]
 theorem le_none {a : WithTop α} : @LE.le (WithTop α) _ a none :=
@@ -1203,7 +1175,7 @@ instance [OrderBot α] : BoundedOrder (WithTop α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (a : α), Not (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (a : α), Not (LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) (Top.top.{u1} (WithTop.{u1} α) (WithTop.instTopWithTop.{u1} α)) (WithTop.some.{u1} α a))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (a : α), Not (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α)) (WithTop.some.{u1} α a))
 Case conversion may be inaccurate. Consider using '#align with_top.not_top_le_coe WithTop.not_top_le_coeₓ'. -/
 theorem not_top_le_coe (a : α) : ¬(⊤ : WithTop α) ≤ ↑a :=
   WithBot.not_coe_le_bot (toDual a)
@@ -1213,7 +1185,7 @@ theorem not_top_le_coe (a : α) : ¬(⊤ : WithTop α) ≤ ↑a :=
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α] {o : Option.{u1} α}, (Membership.Mem.{u1, u1} α (Option.{u1} α) (Option.hasMem.{u1} α) a o) -> (Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) o ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b)) (LE.le.{u1} α _inst_1 a b))
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α] {o : Option.{u1} α}, (Membership.mem.{u1, u1} α (Option.{u1} α) (Option.instMembershipOption.{u1} α) a o) -> (Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) o (WithTop.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b))
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LE.{u1} α] {o : Option.{u1} α}, (Membership.mem.{u1, u1} α (Option.{u1} α) (Option.instMembershipOption.{u1} α) a o) -> (Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) o (WithTop.some.{u1} α b)) (LE.le.{u1} α _inst_1 a b))
 Case conversion may be inaccurate. Consider using '#align with_top.le_coe WithTop.le_coeₓ'. -/
 theorem le_coe : ∀ {o : Option α}, a ∈ o → (@LE.le (WithTop α) _ o b ↔ a ≤ b)
   | _, rfl => coe_le_coe
@@ -1223,7 +1195,7 @@ theorem le_coe : ∀ {o : Option α}, a ∈ o → (@LE.le (WithTop α) _ o b ↔
 lean 3 declaration is
   forall {α : Type.{u1}} {b : α} [_inst_1 : LE.{u1} α] {x : WithTop.{u1} α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b)) (Exists.{succ u1} α (fun (a : α) => And (Eq.{succ u1} (WithTop.{u1} α) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a)) (LE.le.{u1} α _inst_1 a b)))
 but is expected to have type
-  forall {α : Type.{u1}} {b : α} [_inst_1 : LE.{u1} α] {x : WithTop.{u1} α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) x (WithTop.some.{u1} α b)) (Exists.{succ u1} α (fun (a : α) => And (Eq.{succ u1} (WithTop.{u1} α) x (WithTop.some.{u1} α a)) (LE.le.{u1} α _inst_1 a b)))
+  forall {α : Type.{u1}} {b : α} [_inst_1 : LE.{u1} α] {x : WithTop.{u1} α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x (WithTop.some.{u1} α b)) (Exists.{succ u1} α (fun (a : α) => And (Eq.{succ u1} (WithTop.{u1} α) x (WithTop.some.{u1} α a)) (LE.le.{u1} α _inst_1 a b)))
 Case conversion may be inaccurate. Consider using '#align with_top.le_coe_iff WithTop.le_coe_iffₓ'. -/
 theorem le_coe_iff {x : WithTop α} : x ≤ b ↔ ∃ a : α, x = a ∧ a ≤ b := by
   simpa [← to_dual_le_to_dual_iff, WithBot.coe_le_iff]
@@ -1233,7 +1205,7 @@ theorem le_coe_iff {x : WithTop α} : x ≤ b ↔ ∃ a : α, x = a ∧ a ≤ b 
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α] {x : WithTop.{u1} α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) x) (forall (b : α), (Eq.{succ u1} (WithTop.{u1} α) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b)) -> (LE.le.{u1} α _inst_1 a b))
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α] {x : WithTop.{u1} α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) (WithTop.some.{u1} α a) x) (forall (b : WithTop.{u1} α), (Eq.{succ u1} (WithTop.{u1} α) x b) -> (LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) (WithTop.some.{u1} α a) b))
+  forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α] {x : WithTop.{u1} α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) (WithTop.some.{u1} α a) x) (forall (b : WithTop.{u1} α), (Eq.{succ u1} (WithTop.{u1} α) x b) -> (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) (WithTop.some.{u1} α a) b))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_le_iff WithTop.coe_le_iffₓ'. -/
 theorem coe_le_iff {x : WithTop α} : ↑a ≤ x ↔ ∀ b, x = ↑b → a ≤ b := by
   simp only [← to_dual_le_to_dual_iff, to_dual_apply_coe, WithBot.le_coe_iff, OrderDual.forall,
@@ -1245,7 +1217,7 @@ theorem coe_le_iff {x : WithTop α} : ↑a ≤ x ↔ ∀ b, x = ↑b → a ≤ b
 lean 3 declaration is
   forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α], (IsMin.{u1} α _inst_1 a) -> (IsMin.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a))
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α], (IsMin.{u1} α _inst_1 a) -> (IsMin.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) (WithTop.some.{u1} α a))
+  forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α], (IsMin.{u1} α _inst_1 a) -> (IsMin.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) (WithTop.some.{u1} α a))
 Case conversion may be inaccurate. Consider using '#align is_min.with_top IsMin.withTopₓ'. -/
 protected theorem IsMin.withTop (h : IsMin a) : IsMin (a : WithTop α) :=
   by
@@ -1268,7 +1240,7 @@ instance (priority := 10) : LT (WithTop α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithBot.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) a) b) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) => (WithBot.{u1} (OrderDual.{u1} α)) -> (WithTop.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.ofDual.{u1} α) b) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithBot.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) a) (WithBot.instLTWithBot.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) a) b) (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) b) (WithTop.instLTWithTop.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) b) a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithBot.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) a) (WithBot.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) a) b) (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) b) (WithTop.lt.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) b) a)
 Case conversion may be inaccurate. Consider using '#align with_top.to_dual_lt_iff WithTop.toDual_lt_iffₓ'. -/
 theorem toDual_lt_iff {a : WithTop α} {b : WithBot αᵒᵈ} :
     WithTop.toDual a < b ↔ WithBot.ofDual b < a :=
@@ -1279,7 +1251,7 @@ theorem toDual_lt_iff {a : WithTop α} {b : WithBot αᵒᵈ} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) a (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) b (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) => (WithBot.{u1} (OrderDual.{u1} α)) -> (WithTop.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.ofDual.{u1} α) a))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.instLTWithBot.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align with_top.lt_to_dual_iff WithTop.lt_toDual_iffₓ'. -/
 theorem lt_toDual_iff {a : WithBot αᵒᵈ} {b : WithTop α} :
     a < WithTop.toDual b ↔ b < WithBot.ofDual a :=
@@ -1290,7 +1262,7 @@ theorem lt_toDual_iff {a : WithBot αᵒᵈ} {b : WithTop α} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) b a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) a) (WithBot.instLTWithBot.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) b a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) a) (WithBot.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) b a)
 Case conversion may be inaccurate. Consider using '#align with_top.to_dual_lt_to_dual_iff WithTop.toDual_lt_toDual_iffₓ'. -/
 @[simp]
 theorem toDual_lt_toDual_iff {a b : WithTop α} : WithTop.toDual a < WithTop.toDual b ↔ b < a :=
@@ -1301,7 +1273,7 @@ theorem toDual_lt_toDual_iff {a b : WithTop α} : WithTop.toDual a < WithTop.toD
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} (OrderDual.{u1} α)} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) => (WithTop.{u1} (OrderDual.{u1} α)) -> (WithBot.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.ofDual.{u1} α) a) b) (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) b) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} (OrderDual.{u1} α)} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) a) (WithBot.instLTWithBot.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) a) b) (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) b) (WithTop.instLTWithTop.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) b) a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} (OrderDual.{u1} α)} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) a) (WithBot.lt.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) a) b) (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) b) (WithTop.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) b) a)
 Case conversion may be inaccurate. Consider using '#align with_top.of_dual_lt_iff WithTop.ofDual_lt_iffₓ'. -/
 theorem ofDual_lt_iff {a : WithTop αᵒᵈ} {b : WithBot α} :
     WithTop.ofDual a < b ↔ WithBot.toDual b < a :=
@@ -1312,7 +1284,7 @@ theorem ofDual_lt_iff {a : WithTop αᵒᵈ} {b : WithBot α} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) a (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) => (WithTop.{u1} (OrderDual.{u1} α)) -> (WithBot.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.ofDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) b (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) a))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.instLTWithTop.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align with_top.lt_of_dual_iff WithTop.lt_ofDual_iffₓ'. -/
 theorem lt_ofDual_iff {a : WithBot α} {b : WithTop αᵒᵈ} :
     a < WithTop.ofDual b ↔ b < WithBot.toDual a :=
@@ -1323,7 +1295,7 @@ theorem lt_ofDual_iff {a : WithBot α} {b : WithTop αᵒᵈ} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) => (WithTop.{u1} (OrderDual.{u1} α)) -> (WithBot.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.ofDual.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) => (WithTop.{u1} (OrderDual.{u1} α)) -> (WithBot.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.ofDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) b a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) a) (WithBot.instLTWithBot.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.instLTWithTop.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) b a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) a) (WithBot.lt.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b)) (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) b a)
 Case conversion may be inaccurate. Consider using '#align with_top.of_dual_lt_of_dual_iff WithTop.ofDual_lt_ofDual_iffₓ'. -/
 @[simp]
 theorem ofDual_lt_ofDual_iff {a b : WithTop αᵒᵈ} : WithTop.ofDual a < WithTop.ofDual b ↔ b < a :=
@@ -1384,7 +1356,7 @@ theorem ofDual_apply_coe (a : αᵒᵈ) : WithBot.ofDual (a : WithBot αᵒᵈ) 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : (OrderDual.{u1} α) -> (OrderDual.{u2} β)) (a : WithTop.{u1} α), Eq.{succ u2} (WithBot.{u2} (OrderDual.{u2} β)) (WithBot.map.{u1, u2} (OrderDual.{u1} α) (OrderDual.{u2} β) f (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) a)) (WithTop.map.{u1, u2} α (OrderDual.{u2} β) (Function.comp.{succ u1, succ u2, succ u2} α β (OrderDual.{u2} β) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) (fun (_x : Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) => β -> (OrderDual.{u2} β)) (Equiv.hasCoeToFun.{succ u2, succ u2} β (OrderDual.{u2} β)) (OrderDual.toDual.{u2} β)) f) a)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : (OrderDual.{u2} α) -> (OrderDual.{u1} β)) (a : WithTop.{u2} α), Eq.{succ u1} (WithBot.{u1} (OrderDual.{u1} β)) (WithBot.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} β) f (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (fun (_x : WithTop.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u2} α) => WithBot.{u2} (OrderDual.{u2} α)) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α)) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α)) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))))) (WithTop.toDual.{u2} α) a)) (WithTop.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} β) (Function.comp.{succ u2, succ u1, succ u1} (OrderDual.{u2} α) (OrderDual.{u1} β) (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u1} β) => OrderDual.{u1} (OrderDual.{u1} β)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))))) (OrderDual.toDual.{u1} (OrderDual.{u1} β))) f) a)
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : (OrderDual.{u2} α) -> (OrderDual.{u1} β)) (a : WithTop.{u2} α), Eq.{succ u1} (WithBot.{u1} (OrderDual.{u1} β)) (WithBot.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} β) f (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (fun (_x : WithTop.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u2} α) => WithBot.{u2} (OrderDual.{u2} α)) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α)) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))) (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α)) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (WithTop.{u2} α) (WithBot.{u2} (OrderDual.{u2} α))))) (WithTop.toDual.{u2} α) a)) (WithTop.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} (OrderDual.{u1} β)) (Function.comp.{succ u2, succ u1, succ u1} (OrderDual.{u2} α) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u1} β) => OrderDual.{u1} (OrderDual.{u1} β)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))) (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) (OrderDual.{u1} (OrderDual.{u1} β))))) (OrderDual.toDual.{u1} (OrderDual.{u1} β))) f) a)
 Case conversion may be inaccurate. Consider using '#align with_bot.map_to_dual WithBot.map_toDualₓ'. -/
 theorem map_toDual (f : αᵒᵈ → βᵒᵈ) (a : WithTop α) :
     WithBot.map f (WithTop.toDual a) = a.map (to_dual ∘ f) :=
@@ -1406,7 +1378,7 @@ theorem map_ofDual (f : α → β) (a : WithTop αᵒᵈ) :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (a : WithBot.{u1} α), Eq.{succ u2} (WithTop.{u2} (OrderDual.{u2} β)) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} β) (WithTop.{u2} (OrderDual.{u2} β))) (fun (_x : Equiv.{succ u2, succ u2} (WithBot.{u2} β) (WithTop.{u2} (OrderDual.{u2} β))) => (WithBot.{u2} β) -> (WithTop.{u2} (OrderDual.{u2} β))) (Equiv.hasCoeToFun.{succ u2, succ u2} (WithBot.{u2} β) (WithTop.{u2} (OrderDual.{u2} β))) (WithBot.toDual.{u2} β) (WithBot.map.{u1, u2} α β f a)) (WithBot.map.{u1, u2} (OrderDual.{u1} α) (OrderDual.{u2} β) (Function.comp.{succ u1, succ u2, succ u2} (OrderDual.{u1} α) β (OrderDual.{u2} β) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) (fun (_x : Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) => β -> (OrderDual.{u2} β)) (Equiv.hasCoeToFun.{succ u2, succ u2} β (OrderDual.{u2} β)) (OrderDual.toDual.{u2} β)) (Function.comp.{succ u1, succ u1, succ u2} (OrderDual.{u1} α) α β f (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) => (OrderDual.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.ofDual.{u1} α)))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) a))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (a : WithBot.{u2} α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} β) => WithTop.{u1} (OrderDual.{u1} β)) (WithBot.map.{u2, u1} α β f a)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β))) (WithBot.{u1} β) (fun (_x : WithBot.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} β) => WithTop.{u1} (OrderDual.{u1} β)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β))) (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β))) (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β))))) (WithBot.toDual.{u1} β) (WithBot.map.{u2, u1} α β f a)) (WithBot.map.{u2, u1} (OrderDual.{u2} α) β (Function.comp.{succ u2, succ u1, succ u1} (OrderDual.{u2} α) β β (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) (Function.comp.{succ u2, succ u2, succ u1} (OrderDual.{u2} α) α β f (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) (fun (_x : OrderDual.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (OrderDual.{u2} α) α))) (OrderDual.ofDual.{u2} α)))) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (fun (_x : WithBot.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u2} α) => WithTop.{u2} (OrderDual.{u2} α)) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α)) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α)) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))))) (WithBot.toDual.{u2} α) a))
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (a : WithBot.{u2} α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} β) => WithTop.{u1} (OrderDual.{u1} β)) (WithBot.map.{u2, u1} α β f a)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β))) (WithBot.{u1} β) (fun (_x : WithBot.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} β) => WithTop.{u1} (OrderDual.{u1} β)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β))) (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β))) (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} β) (WithTop.{u1} (OrderDual.{u1} β))))) (WithBot.toDual.{u1} β) (WithBot.map.{u2, u1} α β f a)) (WithBot.map.{u2, u1} (OrderDual.{u2} α) (OrderDual.{u1} β) (Function.comp.{succ u2, succ u1, succ u1} (OrderDual.{u2} α) β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) (Function.comp.{succ u2, succ u2, succ u1} (OrderDual.{u2} α) α β f (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) (fun (_x : OrderDual.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (OrderDual.{u2} α) α))) (OrderDual.ofDual.{u2} α)))) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (fun (_x : WithBot.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u2} α) => WithTop.{u2} (OrderDual.{u2} α)) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α)) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))) (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α)) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (WithBot.{u2} α) (WithTop.{u2} (OrderDual.{u2} α))))) (WithBot.toDual.{u2} α) a))
 Case conversion may be inaccurate. Consider using '#align with_bot.to_dual_map WithBot.toDual_mapₓ'. -/
 theorem toDual_map (f : α → β) (a : WithBot α) :
     WithBot.toDual (WithBot.map f a) = map (to_dual ∘ f ∘ of_dual) a.toDual :=
@@ -1432,7 +1404,7 @@ variable [LE α] {a b : α}
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LE.le.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.hasLe.{u1} (OrderDual.{u1} α) (OrderDual.hasLe.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) a) b) (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) => (WithTop.{u1} (OrderDual.{u1} α)) -> (WithBot.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.ofDual.{u1} α) b) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LE.le.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) a) (WithTop.instLEWithTop.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a) b) (LE.le.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) b) (WithBot.instLEWithBot.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b) a)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LE.le.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) a) (WithTop.le.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a) b) (LE.le.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) b) (WithBot.le.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b) a)
 Case conversion may be inaccurate. Consider using '#align with_bot.to_dual_le_iff WithBot.toDual_le_iffₓ'. -/
 theorem toDual_le_iff {a : WithBot α} {b : WithTop αᵒᵈ} :
     WithBot.toDual a ≤ b ↔ WithTop.ofDual b ≤ a :=
@@ -1457,7 +1429,7 @@ theorem toDual_le_toDual_iff {a b : WithBot α} : WithBot.toDual a ≤ WithBot.t
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) => (WithBot.{u1} (OrderDual.{u1} α)) -> (WithTop.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.ofDual.{u1} α) a) b) (LE.le.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.hasLe.{u1} (OrderDual.{u1} α) (OrderDual.hasLe.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) b) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LE.le.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) a) (WithTop.instLEWithTop.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a) b) (LE.le.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) b) (WithBot.instLEWithBot.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b) a)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LE.le.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) a) (WithTop.le.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a) b) (LE.le.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) b) (WithBot.le.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b) a)
 Case conversion may be inaccurate. Consider using '#align with_bot.of_dual_le_iff WithBot.ofDual_le_iffₓ'. -/
 theorem ofDual_le_iff {a : WithBot αᵒᵈ} {b : WithTop α} :
     WithBot.ofDual a ≤ b ↔ WithTop.toDual b ≤ a :=
@@ -1488,7 +1460,7 @@ variable [LT α] {a b : α}
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) a) b) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) => (WithTop.{u1} (OrderDual.{u1} α)) -> (WithBot.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.ofDual.{u1} α) b) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) a) (WithTop.instLTWithTop.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a) b) (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) b) (WithBot.instLTWithBot.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b) a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithTop.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) a) (WithTop.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a) b) (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) b) (WithBot.lt.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) b) a)
 Case conversion may be inaccurate. Consider using '#align with_bot.to_dual_lt_iff WithBot.toDual_lt_iffₓ'. -/
 theorem toDual_lt_iff {a : WithBot α} {b : WithTop αᵒᵈ} :
     WithBot.toDual a < b ↔ WithTop.ofDual b < a :=
@@ -1499,7 +1471,7 @@ theorem toDual_lt_iff {a : WithBot α} {b : WithTop αᵒᵈ} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} (OrderDual.{u1} α)} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) a (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) b (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) => (WithTop.{u1} (OrderDual.{u1} α)) -> (WithBot.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.ofDual.{u1} α) a))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} (OrderDual.{u1} α)} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.instLTWithTop.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) a))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} (OrderDual.{u1} α)} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align with_bot.lt_to_dual_iff WithBot.lt_toDual_iffₓ'. -/
 theorem lt_toDual_iff {a : WithTop αᵒᵈ} {b : WithBot α} :
     a < WithBot.toDual b ↔ b < WithTop.ofDual a :=
@@ -1510,7 +1482,7 @@ theorem lt_toDual_iff {a : WithTop αᵒᵈ} {b : WithBot α} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) => (WithBot.{u1} α) -> (WithTop.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.toDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1) b a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) a) (WithTop.instLTWithTop.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.instLTWithBot.{u1} α _inst_1) b a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) a) (WithTop.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} α) => WithTop.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))) (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (WithTop.{u1} (OrderDual.{u1} α))))) (WithBot.toDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) b a)
 Case conversion may be inaccurate. Consider using '#align with_bot.to_dual_lt_to_dual_iff WithBot.toDual_lt_toDual_iffₓ'. -/
 @[simp]
 theorem toDual_lt_toDual_iff {a b : WithBot α} : WithBot.toDual a < WithBot.toDual b ↔ b < a :=
@@ -1521,7 +1493,7 @@ theorem toDual_lt_toDual_iff {a b : WithBot α} : WithBot.toDual a < WithBot.toD
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) => (WithBot.{u1} (OrderDual.{u1} α)) -> (WithTop.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.ofDual.{u1} α) a) b) (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) b) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) a) (WithTop.instLTWithTop.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a) b) (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) b) (WithBot.instLTWithBot.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b) a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) a) (WithTop.lt.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a) b) (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) b) (WithBot.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) b) a)
 Case conversion may be inaccurate. Consider using '#align with_bot.of_dual_lt_iff WithBot.ofDual_lt_iffₓ'. -/
 theorem ofDual_lt_iff {a : WithBot αᵒᵈ} {b : WithTop α} :
     WithBot.ofDual a < b ↔ WithTop.toDual b < a :=
@@ -1532,7 +1504,7 @@ theorem ofDual_lt_iff {a : WithBot αᵒᵈ} {b : WithTop α} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithBot.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) a (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) => (WithBot.{u1} (OrderDual.{u1} α)) -> (WithTop.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.ofDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) b (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (fun (_x : Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) => (WithTop.{u1} α) -> (WithBot.{u1} (OrderDual.{u1} α))) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.toDual.{u1} α) a))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithBot.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.instLTWithBot.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) a))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithBot.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) b (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithTop.{u1} α) => WithBot.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))) (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (WithBot.{u1} (OrderDual.{u1} α))))) (WithTop.toDual.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align with_bot.lt_of_dual_iff WithBot.lt_ofDual_iffₓ'. -/
 theorem lt_ofDual_iff {a : WithTop α} {b : WithBot αᵒᵈ} :
     a < WithBot.ofDual b ↔ b < WithTop.toDual a :=
@@ -1543,7 +1515,7 @@ theorem lt_ofDual_iff {a : WithTop α} {b : WithBot αᵒᵈ} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithBot.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) => (WithBot.{u1} (OrderDual.{u1} α)) -> (WithTop.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.ofDual.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) => (WithBot.{u1} (OrderDual.{u1} α)) -> (WithTop.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.ofDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.hasLt.{u1} (OrderDual.{u1} α) (OrderDual.hasLt.{u1} α _inst_1)) b a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithBot.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) a) (WithTop.instLTWithTop.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.instLTWithBot.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) b a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} (OrderDual.{u1} α)} {b : WithBot.{u1} (OrderDual.{u1} α)}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) a) (WithTop.lt.{u1} α _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α) b)) (LT.lt.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.lt.{u1} (OrderDual.{u1} α) (OrderDual.instLTOrderDual.{u1} α _inst_1)) b a)
 Case conversion may be inaccurate. Consider using '#align with_bot.of_dual_lt_of_dual_iff WithBot.ofDual_lt_ofDual_iffₓ'. -/
 @[simp]
 theorem ofDual_lt_ofDual_iff {a b : WithBot αᵒᵈ} : WithBot.ofDual a < WithBot.ofDual b ↔ b < a :=
@@ -1566,7 +1538,7 @@ open OrderDual
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b)) (LT.lt.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) (WithTop.some.{u1} α a) (WithTop.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (WithTop.some.{u1} α a) (WithTop.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align with_top.coe_lt_coe WithTop.coe_lt_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_lt_coe : (a : WithTop α) < b ↔ a < b := by
@@ -1577,7 +1549,7 @@ theorem coe_lt_coe : (a : WithTop α) < b ↔ a < b := by
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (Option.some.{u1} α a) (Option.some.{u1} α b)) (LT.lt.{u1} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align with_top.some_lt_some WithTop.some_lt_someₓ'. -/
 @[simp]
 theorem some_lt_some : @LT.lt (WithTop α) _ (some a) (some b) ↔ a < b :=
@@ -1588,7 +1560,7 @@ theorem some_lt_some : @LT.lt (WithTop α) _ (some a) (some b) ↔ a < b :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) (WithTop.some.{u1} α a) (Top.top.{u1} (WithTop.{u1} α) (WithTop.instTopWithTop.{u1} α))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (WithTop.some.{u1} α a) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_lt_top WithTop.coe_lt_topₓ'. -/
 theorem coe_lt_top (a : α) : (a : WithTop α) < ⊤ := by
   simpa [← to_dual_lt_to_dual_iff] using WithBot.bot_lt_coe _
@@ -1598,7 +1570,7 @@ theorem coe_lt_top (a : α) : (a : WithTop α) < ⊤ := by
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) (Option.some.{u1} α a) (Option.none.{u1} α)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) (Option.some.{u1} α a) (Option.none.{u1} α)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (Option.some.{u1} α a) (Option.none.{u1} α)
 Case conversion may be inaccurate. Consider using '#align with_top.some_lt_none WithTop.some_lt_noneₓ'. -/
 @[simp]
 theorem some_lt_none (a : α) : @LT.lt (WithTop α) _ (some a) none :=
@@ -1609,7 +1581,7 @@ theorem some_lt_none (a : α) : @LT.lt (WithTop α) _ (some a) none :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : WithTop.{u1} α), Not (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) (Option.none.{u1} α) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : WithTop.{u1} α), Not (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) (Option.none.{u1} α) a)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : WithTop.{u1} α), Not (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (Option.none.{u1} α) a)
 Case conversion may be inaccurate. Consider using '#align with_top.not_none_lt WithTop.not_none_ltₓ'. -/
 @[simp]
 theorem not_none_lt (a : WithTop α) : ¬@LT.lt (WithTop α) _ none a := by
@@ -1621,7 +1593,7 @@ theorem not_none_lt (a : WithTop α) : ¬@LT.lt (WithTop α) _ none a := by
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) a b) (Exists.{succ u1} α (fun (p : α) => And (Eq.{succ u1} (WithTop.{u1} α) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) p)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) p) b)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) a b) (Exists.{succ u1} α (fun (p : α) => And (Eq.{succ u1} (WithTop.{u1} α) a (WithTop.some.{u1} α p)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) (WithTop.some.{u1} α p) b)))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) a b) (Exists.{succ u1} α (fun (p : α) => And (Eq.{succ u1} (WithTop.{u1} α) a (WithTop.some.{u1} α p)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (WithTop.some.{u1} α p) b)))
 Case conversion may be inaccurate. Consider using '#align with_top.lt_iff_exists_coe WithTop.lt_iff_exists_coeₓ'. -/
 theorem lt_iff_exists_coe {a b : WithTop α} : a < b ↔ ∃ p : α, a = p ∧ ↑p < b := by
   rw [← to_dual_lt_to_dual_iff, WithBot.lt_iff_exists_coe, OrderDual.exists]
@@ -1632,7 +1604,7 @@ theorem lt_iff_exists_coe {a b : WithTop α} : a < b ↔ ∃ p : α, a = p ∧ �
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {x : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) x) (forall (b : α), (Eq.{succ u1} (WithTop.{u1} α) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b)) -> (LT.lt.{u1} α _inst_1 a b))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {x : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) (WithTop.some.{u1} α a) x) (forall (b : WithTop.{u1} α), (Eq.{succ u1} (WithTop.{u1} α) x b) -> (LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) (WithTop.some.{u1} α a) b))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {x : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (WithTop.some.{u1} α a) x) (forall (b : WithTop.{u1} α), (Eq.{succ u1} (WithTop.{u1} α) x b) -> (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (WithTop.some.{u1} α a) b))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_lt_iff WithTop.coe_lt_iffₓ'. -/
 theorem coe_lt_iff {x : WithTop α} : ↑a < x ↔ ∀ b, x = ↑b → a < b := by
   simp only [← to_dual_lt_to_dual_iff, WithBot.lt_coe_iff, to_dual_apply_coe, OrderDual.forall,
@@ -1658,29 +1630,21 @@ instance [PartialOrder α] : PartialOrder (WithTop α) :=
       simp_rw [← to_dual_le_to_dual_iff]
       exact Function.swap le_antisymm }
 
-/- warning: with_top.coe_strict_mono -> WithTop.coe_strict_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], StrictMono.{u1, u1} α (WithTop.{u1} α) _inst_1 (WithTop.preorder.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], StrictMono.{u1, u1} α (WithTop.{u1} α) _inst_1 (WithTop.instPreorderWithTop.{u1} α _inst_1) (fun (a : α) => WithTop.some.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align with_top.coe_strict_mono WithTop.coe_strict_monoₓ'. -/
-theorem coe_strict_mono [Preorder α] : StrictMono (coe : α → WithTop α) := fun a b => some_lt_some.2
-#align with_top.coe_strict_mono WithTop.coe_strict_mono
+#print WithTop.coe_strictMono /-
+theorem coe_strictMono [Preorder α] : StrictMono (coe : α → WithTop α) := fun a b => some_lt_some.2
+#align with_top.coe_strict_mono WithTop.coe_strictMono
+-/
 
-/- warning: with_top.coe_mono -> WithTop.coe_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Monotone.{u1, u1} α (WithTop.{u1} α) _inst_1 (WithTop.preorder.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Monotone.{u1, u1} α (WithTop.{u1} α) _inst_1 (WithTop.instPreorderWithTop.{u1} α _inst_1) (fun (a : α) => WithTop.some.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align with_top.coe_mono WithTop.coe_monoₓ'. -/
+#print WithTop.coe_mono /-
 theorem coe_mono [Preorder α] : Monotone (coe : α → WithTop α) := fun a b => coe_le_coe.2
 #align with_top.coe_mono WithTop.coe_mono
+-/
 
 /- warning: with_top.monotone_iff -> WithTop.monotone_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithTop.{u1} α) -> β}, Iff (Monotone.{u1, u2} (WithTop.{u1} α) β (WithTop.preorder.{u1} α _inst_1) _inst_2 f) (And (Monotone.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithTop.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α)))))) (forall (x : α), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (f (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithTop.{u2} α) -> β}, Iff (Monotone.{u2, u1} (WithTop.{u2} α) β (WithTop.instPreorderWithTop.{u2} α _inst_1) _inst_2 f) (And (Monotone.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithTop.some.{u2} α a))) (forall (x : α), LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f (WithTop.some.{u2} α x)) (f (Top.top.{u2} (WithTop.{u2} α) (WithTop.instTopWithTop.{u2} α)))))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithTop.{u2} α) -> β}, Iff (Monotone.{u2, u1} (WithTop.{u2} α) β (WithTop.preorder.{u2} α _inst_1) _inst_2 f) (And (Monotone.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithTop.some.{u2} α a))) (forall (x : α), LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f (WithTop.some.{u2} α x)) (f (Top.top.{u2} (WithTop.{u2} α) (WithTop.top.{u2} α)))))
 Case conversion may be inaccurate. Consider using '#align with_top.monotone_iff WithTop.monotone_iffₓ'. -/
 theorem monotone_iff [Preorder α] [Preorder β] {f : WithTop α → β} :
     Monotone f ↔ Monotone (f ∘ coe : α → β) ∧ ∀ x : α, f x ≤ f ⊤ :=
@@ -1694,7 +1658,7 @@ theorem monotone_iff [Preorder α] [Preorder β] {f : WithTop α → β} :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, Iff (Monotone.{u1, u2} (WithTop.{u1} α) (WithTop.{u2} β) (WithTop.preorder.{u1} α _inst_1) (WithTop.preorder.{u2} β _inst_2) (WithTop.map.{u1, u2} α β f)) (Monotone.{u1, u2} α β _inst_1 _inst_2 f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, Iff (Monotone.{u2, u1} (WithTop.{u2} α) (WithTop.{u1} β) (WithTop.instPreorderWithTop.{u2} α _inst_1) (WithTop.instPreorderWithTop.{u1} β _inst_2) (WithTop.map.{u2, u1} α β f)) (Monotone.{u2, u1} α β _inst_1 _inst_2 f)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, Iff (Monotone.{u2, u1} (WithTop.{u2} α) (WithTop.{u1} β) (WithTop.preorder.{u2} α _inst_1) (WithTop.preorder.{u1} β _inst_2) (WithTop.map.{u2, u1} α β f)) (Monotone.{u2, u1} α β _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align with_top.monotone_map_iff WithTop.monotone_map_iffₓ'. -/
 @[simp]
 theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} :
@@ -1704,31 +1668,31 @@ theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} :
 
 alias monotone_map_iff ↔ _ _root_.monotone.with_top_map
 
-/- warning: with_top.strict_mono_iff -> WithTop.strict_mono_iff is a dubious translation:
+/- warning: with_top.strict_mono_iff -> WithTop.strictMono_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithTop.{u1} α) -> β}, Iff (StrictMono.{u1, u2} (WithTop.{u1} α) β (WithTop.preorder.{u1} α _inst_1) _inst_2 f) (And (StrictMono.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithTop.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α)))))) (forall (x : α), LT.lt.{u2} β (Preorder.toLT.{u2} β _inst_2) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (f (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithTop.{u2} α) -> β}, Iff (StrictMono.{u2, u1} (WithTop.{u2} α) β (WithTop.instPreorderWithTop.{u2} α _inst_1) _inst_2 f) (And (StrictMono.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithTop.some.{u2} α a))) (forall (x : α), LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) (f (WithTop.some.{u2} α x)) (f (Top.top.{u2} (WithTop.{u2} α) (WithTop.instTopWithTop.{u2} α)))))
-Case conversion may be inaccurate. Consider using '#align with_top.strict_mono_iff WithTop.strict_mono_iffₓ'. -/
-theorem strict_mono_iff [Preorder α] [Preorder β] {f : WithTop α → β} :
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithTop.{u2} α) -> β}, Iff (StrictMono.{u2, u1} (WithTop.{u2} α) β (WithTop.preorder.{u2} α _inst_1) _inst_2 f) (And (StrictMono.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithTop.some.{u2} α a))) (forall (x : α), LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) (f (WithTop.some.{u2} α x)) (f (Top.top.{u2} (WithTop.{u2} α) (WithTop.top.{u2} α)))))
+Case conversion may be inaccurate. Consider using '#align with_top.strict_mono_iff WithTop.strictMono_iffₓ'. -/
+theorem strictMono_iff [Preorder α] [Preorder β] {f : WithTop α → β} :
     StrictMono f ↔ StrictMono (f ∘ coe : α → β) ∧ ∀ x : α, f x < f ⊤ :=
-  ⟨fun h => ⟨h.comp WithTop.coe_strict_mono, fun x => h (coe_lt_top _)⟩, fun h =>
+  ⟨fun h => ⟨h.comp WithTop.coe_strictMono, fun x => h (coe_lt_top _)⟩, fun h =>
     WithTop.forall.2
       ⟨WithTop.forall.2 ⟨flip absurd (lt_irrefl _), fun x h => (not_top_lt h).elim⟩, fun x =>
         WithTop.forall.2 ⟨fun _ => h.2 x, fun y hle => h.1 (coe_lt_coe.1 hle)⟩⟩⟩
-#align with_top.strict_mono_iff WithTop.strict_mono_iff
+#align with_top.strict_mono_iff WithTop.strictMono_iff
 
-/- warning: with_top.strict_mono_map_iff -> WithTop.strict_mono_map_iff is a dubious translation:
+/- warning: with_top.strict_mono_map_iff -> WithTop.strictMono_map_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, Iff (StrictMono.{u1, u2} (WithTop.{u1} α) (WithTop.{u2} β) (WithTop.preorder.{u1} α _inst_1) (WithTop.preorder.{u2} β _inst_2) (WithTop.map.{u1, u2} α β f)) (StrictMono.{u1, u2} α β _inst_1 _inst_2 f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, Iff (StrictMono.{u2, u1} (WithTop.{u2} α) (WithTop.{u1} β) (WithTop.instPreorderWithTop.{u2} α _inst_1) (WithTop.instPreorderWithTop.{u1} β _inst_2) (WithTop.map.{u2, u1} α β f)) (StrictMono.{u2, u1} α β _inst_1 _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align with_top.strict_mono_map_iff WithTop.strict_mono_map_iffₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, Iff (StrictMono.{u2, u1} (WithTop.{u2} α) (WithTop.{u1} β) (WithTop.preorder.{u2} α _inst_1) (WithTop.preorder.{u1} β _inst_2) (WithTop.map.{u2, u1} α β f)) (StrictMono.{u2, u1} α β _inst_1 _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align with_top.strict_mono_map_iff WithTop.strictMono_map_iffₓ'. -/
 @[simp]
-theorem strict_mono_map_iff [Preorder α] [Preorder β] {f : α → β} :
+theorem strictMono_map_iff [Preorder α] [Preorder β] {f : α → β} :
     StrictMono (WithTop.map f) ↔ StrictMono f :=
-  strict_mono_iff.trans <| by simp [StrictMono, coe_lt_top]
-#align with_top.strict_mono_map_iff WithTop.strict_mono_map_iff
+  strictMono_iff.trans <| by simp [StrictMono, coe_lt_top]
+#align with_top.strict_mono_map_iff WithTop.strictMono_map_iff
 
 alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_top_map
 
@@ -1736,7 +1700,7 @@ alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_top_map
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (f : α -> β) (a : WithTop.{u1} α) (b : WithTop.{u1} α), (forall {a : α} {b : α}, Iff (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (f a) (f b)) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)) -> (Iff (LE.le.{u2} (WithTop.{u2} β) (Preorder.toLE.{u2} (WithTop.{u2} β) (WithTop.preorder.{u2} β _inst_2)) (WithTop.map.{u1, u2} α β f a) (WithTop.map.{u1, u2} α β f b)) (LE.le.{u1} (WithTop.{u1} α) (Preorder.toLE.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) a b))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : α -> β) (a : WithTop.{u2} α) (b : WithTop.{u2} α), (forall {a : α} {b : α}, Iff (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f a) (f b)) (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) a b)) -> (Iff (LE.le.{u1} (WithTop.{u1} β) (Preorder.toLE.{u1} (WithTop.{u1} β) (WithTop.instPreorderWithTop.{u1} β _inst_2)) (WithTop.map.{u2, u1} α β f a) (WithTop.map.{u2, u1} α β f b)) (LE.le.{u2} (WithTop.{u2} α) (Preorder.toLE.{u2} (WithTop.{u2} α) (WithTop.instPreorderWithTop.{u2} α _inst_1)) a b))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : α -> β) (a : WithTop.{u2} α) (b : WithTop.{u2} α), (forall {a : α} {b : α}, Iff (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f a) (f b)) (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) a b)) -> (Iff (LE.le.{u1} (WithTop.{u1} β) (Preorder.toLE.{u1} (WithTop.{u1} β) (WithTop.preorder.{u1} β _inst_2)) (WithTop.map.{u2, u1} α β f a) (WithTop.map.{u2, u1} α β f b)) (LE.le.{u2} (WithTop.{u2} α) (Preorder.toLE.{u2} (WithTop.{u2} α) (WithTop.preorder.{u2} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align with_top.map_le_iff WithTop.map_le_iffₓ'. -/
 theorem map_le_iff [Preorder α] [Preorder β] (f : α → β) (a b : WithTop α)
     (mono_iff : ∀ {a b}, f a ≤ f b ↔ a ≤ b) : a.map f ≤ b.map f ↔ a ≤ b := by
@@ -1758,15 +1722,11 @@ instance [SemilatticeInf α] : SemilatticeInf (WithTop α) :=
         simp at h₂
         exact ⟨d, rfl, le_inf h₁' h₂⟩ }
 
-/- warning: with_top.coe_inf -> WithTop.coe_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithTop.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b)) (HasInf.inf.{u1} (WithTop.{u1} α) (SemilatticeInf.toHasInf.{u1} (WithTop.{u1} α) (WithTop.semilatticeInf.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b)) (HasInf.inf.{u1} (WithTop.{u1} α) (SemilatticeInf.toHasInf.{u1} (WithTop.{u1} α) (WithTop.instSemilatticeInfWithTop.{u1} α _inst_1)) (WithTop.some.{u1} α a) (WithTop.some.{u1} α b))
-Case conversion may be inaccurate. Consider using '#align with_top.coe_inf WithTop.coe_infₓ'. -/
+#print WithTop.coe_inf /-
 theorem coe_inf [SemilatticeInf α] (a b : α) : ((a ⊓ b : α) : WithTop α) = a ⊓ b :=
   rfl
 #align with_top.coe_inf WithTop.coe_inf
+-/
 
 instance [SemilatticeSup α] : SemilatticeSup (WithTop α) :=
   { WithTop.partialOrder with
@@ -1783,15 +1743,11 @@ instance [SemilatticeSup α] : SemilatticeSup (WithTop α) :=
       rcases h₂ a rfl with ⟨c, ⟨⟩, ac⟩
       exact ⟨_, rfl, sup_le ab ac⟩ }
 
-/- warning: with_top.coe_sup -> WithTop.coe_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithTop.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b)) (HasSup.sup.{u1} (WithTop.{u1} α) (SemilatticeSup.toHasSup.{u1} (WithTop.{u1} α) (WithTop.semilatticeSup.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b)) (HasSup.sup.{u1} (WithTop.{u1} α) (SemilatticeSup.toHasSup.{u1} (WithTop.{u1} α) (WithTop.instSemilatticeSupWithTop.{u1} α _inst_1)) (WithTop.some.{u1} α a) (WithTop.some.{u1} α b))
-Case conversion may be inaccurate. Consider using '#align with_top.coe_sup WithTop.coe_supₓ'. -/
+#print WithTop.coe_sup /-
 theorem coe_sup [SemilatticeSup α] (a b : α) : ((a ⊔ b : α) : WithTop α) = a ⊔ b :=
   rfl
 #align with_top.coe_sup WithTop.coe_sup
+-/
 
 instance [Lattice α] : Lattice (WithTop α) :=
   { WithTop.semilatticeSup, WithTop.semilatticeInf with }
@@ -1806,37 +1762,37 @@ instance [DistribLattice α] : DistribLattice (WithTop α) :=
       | (a₁ : α), (a₂ : α), ⊤ => le_rfl
       | (a₁ : α), (a₂ : α), (a₃ : α) => coe_le_coe.mpr le_sup_inf }
 
-/- warning: with_top.decidable_le -> WithTop.decidableLe is a dubious translation:
+/- warning: with_top.decidable_le -> WithTop.decidableLE is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LE.le.{u1} α _inst_1)], DecidableRel.{succ u1} (WithTop.{u1} α) (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9637 : α) (x._@.Mathlib.Order.WithBot._hyg.9639 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9637 x._@.Mathlib.Order.WithBot._hyg.9639)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9657 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9659 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9657 x._@.Mathlib.Order.WithBot._hyg.9659)
-Case conversion may be inaccurate. Consider using '#align with_top.decidable_le WithTop.decidableLeₓ'. -/
-instance decidableLe [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithTop α) (· ≤ ·) :=
-  fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLe _ _) toDual_le_toDual_iff
-#align with_top.decidable_le WithTop.decidableLe
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9601 : α) (x._@.Mathlib.Order.WithBot._hyg.9603 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9601 x._@.Mathlib.Order.WithBot._hyg.9603)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9621 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9623 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9621 x._@.Mathlib.Order.WithBot._hyg.9623)
+Case conversion may be inaccurate. Consider using '#align with_top.decidable_le WithTop.decidableLEₓ'. -/
+instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithTop α) (· ≤ ·) :=
+  fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLE _ _) toDual_le_toDual_iff
+#align with_top.decidable_le WithTop.decidableLE
 
-/- warning: with_top.decidable_lt -> WithTop.decidableLt is a dubious translation:
+/- warning: with_top.decidable_lt -> WithTop.decidableLT is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LT.lt.{u1} α _inst_1)], DecidableRel.{succ u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9692 : α) (x._@.Mathlib.Order.WithBot._hyg.9694 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9692 x._@.Mathlib.Order.WithBot._hyg.9694)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9712 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9714 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (WithTop.instLTWithTop.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9712 x._@.Mathlib.Order.WithBot._hyg.9714)
-Case conversion may be inaccurate. Consider using '#align with_top.decidable_lt WithTop.decidableLtₓ'. -/
-instance decidableLt [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithTop α) (· < ·) :=
-  fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLt _ _) toDual_lt_toDual_iff
-#align with_top.decidable_lt WithTop.decidableLt
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9656 : α) (x._@.Mathlib.Order.WithBot._hyg.9658 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9656 x._@.Mathlib.Order.WithBot._hyg.9658)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9676 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9678 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9676 x._@.Mathlib.Order.WithBot._hyg.9678)
+Case conversion may be inaccurate. Consider using '#align with_top.decidable_lt WithTop.decidableLTₓ'. -/
+instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithTop α) (· < ·) :=
+  fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLT _ _) toDual_lt_toDual_iff
+#align with_top.decidable_lt WithTop.decidableLT
 
-/- warning: with_top.is_total_le -> WithTop.is_total_le is a dubious translation:
+/- warning: with_top.is_total_le -> WithTop.isTotal_le is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (LE.le.{u1} α _inst_1)], IsTotal.{u1} (WithTop.{u1} α) (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9747 : α) (x._@.Mathlib.Order.WithBot._hyg.9749 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9747 x._@.Mathlib.Order.WithBot._hyg.9749)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9767 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9769 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.instLEWithTop.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9767 x._@.Mathlib.Order.WithBot._hyg.9769)
-Case conversion may be inaccurate. Consider using '#align with_top.is_total_le WithTop.is_total_leₓ'. -/
-instance is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) :=
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9711 : α) (x._@.Mathlib.Order.WithBot._hyg.9713 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9711 x._@.Mathlib.Order.WithBot._hyg.9713)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9731 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9733 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9731 x._@.Mathlib.Order.WithBot._hyg.9733)
+Case conversion may be inaccurate. Consider using '#align with_top.is_total_le WithTop.isTotal_leₓ'. -/
+instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) :=
   ⟨fun _ _ => by 
     simp_rw [← to_dual_le_to_dual_iff]
     exact total_of _ _ _⟩
-#align with_top.is_total_le WithTop.is_total_le
+#align with_top.is_total_le WithTop.isTotal_le
 
 instance [LinearOrder α] : LinearOrder (WithTop α) :=
   Lattice.toLinearOrder _
@@ -1845,7 +1801,7 @@ instance [LinearOrder α] : LinearOrder (WithTop α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithTop.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) (LinearOrder.min.{u1} α _inst_1 x y)) (LinearOrder.min.{u1} (WithTop.{u1} α) (WithTop.linearOrder.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) y))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) x y)) (Min.min.{u1} (WithTop.{u1} α) (LinearOrder.toMin.{u1} (WithTop.{u1} α) (WithTop.instLinearOrderWithTop.{u1} α _inst_1)) (WithTop.some.{u1} α x) (WithTop.some.{u1} α y))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) x y)) (Min.min.{u1} (WithTop.{u1} α) (LinearOrder.toMin.{u1} (WithTop.{u1} α) (WithTop.linearOrder.{u1} α _inst_1)) (WithTop.some.{u1} α x) (WithTop.some.{u1} α y))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_min WithTop.coe_minₓ'. -/
 @[simp, norm_cast]
 theorem coe_min [LinearOrder α] (x y : α) : (↑(min x y) : WithTop α) = min x y :=
@@ -1856,20 +1812,15 @@ theorem coe_min [LinearOrder α] (x y : α) : (↑(min x y) : WithTop α) = min 
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithTop.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) (LinearOrder.max.{u1} α _inst_1 x y)) (LinearOrder.max.{u1} (WithTop.{u1} α) (WithTop.linearOrder.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) y))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_1) x y)) (Max.max.{u1} (WithTop.{u1} α) (LinearOrder.toMax.{u1} (WithTop.{u1} α) (WithTop.instLinearOrderWithTop.{u1} α _inst_1)) (WithTop.some.{u1} α x) (WithTop.some.{u1} α y))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (x : α) (y : α), Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_1) x y)) (Max.max.{u1} (WithTop.{u1} α) (LinearOrder.toMax.{u1} (WithTop.{u1} α) (WithTop.linearOrder.{u1} α _inst_1)) (WithTop.some.{u1} α x) (WithTop.some.{u1} α y))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_max WithTop.coe_maxₓ'. -/
 @[simp, norm_cast]
 theorem coe_max [LinearOrder α] (x y : α) : (↑(max x y) : WithTop α) = max x y :=
   rfl
 #align with_top.coe_max WithTop.coe_max
 
-/- warning: with_top.well_founded_lt -> WithTop.well_founded_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1))) -> (WellFounded.{succ u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9895 : α) (x._@.Mathlib.Order.WithBot._hyg.9897 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9895 x._@.Mathlib.Order.WithBot._hyg.9897)) -> (WellFounded.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9915 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9917 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.instPreorderWithTop.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.9915 x._@.Mathlib.Order.WithBot._hyg.9917))
-Case conversion may be inaccurate. Consider using '#align with_top.well_founded_lt WithTop.well_founded_ltₓ'. -/
-theorem well_founded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
+#print WithTop.wellFounded_lt /-
+theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
     @WellFounded (WithTop α) (· < ·) :=
   have acc_some : ∀ a : α, Acc ((· < ·) : WithTop α → WithTop α → Prop) (some a) := fun a =>
     Acc.intro _
@@ -1885,126 +1836,91 @@ theorem well_founded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
     Option.recOn a
       (Acc.intro _ fun y => Option.recOn y (fun h => (lt_irrefl _ h).elim) fun _ _ => acc_some _)
       acc_some⟩
-#align with_top.well_founded_lt WithTop.well_founded_lt
+#align with_top.well_founded_lt WithTop.wellFounded_lt
+-/
 
 open OrderDual
 
-/- warning: with_top.well_founded_gt -> WithTop.well_founded_gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1))) -> (WellFounded.{succ u1} (WithTop.{u1} α) (GT.gt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10143 : α) (x._@.Mathlib.Order.WithBot._hyg.10145 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10143 x._@.Mathlib.Order.WithBot._hyg.10145)) -> (WellFounded.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10163 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10165 : WithTop.{u1} α) => GT.gt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.instPreorderWithTop.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10163 x._@.Mathlib.Order.WithBot._hyg.10165))
-Case conversion may be inaccurate. Consider using '#align with_top.well_founded_gt WithTop.well_founded_gtₓ'. -/
-theorem well_founded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
+#print WithTop.wellFounded_gt /-
+theorem wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     @WellFounded (WithTop α) (· > ·) :=
   ⟨fun a =>
     by
     -- ideally, use rel_hom_class.acc, but that is defined later
-    have : Acc (· < ·) a.to_dual := WellFounded.apply (WithBot.well_founded_lt h) _
+    have : Acc (· < ·) a.to_dual := WellFounded.apply (WithBot.wellFounded_lt h) _
     revert this
     generalize ha : a.to_dual = b; intro ac
     induction' ac with _ H IH generalizing a; subst ha
     exact ⟨_, fun a' h => IH a'.toDual (to_dual_lt_to_dual.mpr h) _ rfl⟩⟩
-#align with_top.well_founded_gt WithTop.well_founded_gt
+#align with_top.well_founded_gt WithTop.wellFounded_gt
+-/
 
-/- warning: with_bot.well_founded_gt -> WithBot.well_founded_gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1))) -> (WellFounded.{succ u1} (WithBot.{u1} α) (GT.gt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10279 : α) (x._@.Mathlib.Order.WithBot._hyg.10281 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10279 x._@.Mathlib.Order.WithBot._hyg.10281)) -> (WellFounded.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10299 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10301 : WithBot.{u1} α) => GT.gt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.instPreorderWithBot.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10299 x._@.Mathlib.Order.WithBot._hyg.10301))
-Case conversion may be inaccurate. Consider using '#align with_bot.well_founded_gt WithBot.well_founded_gtₓ'. -/
-theorem WithBot.well_founded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
+#print WithBot.wellFounded_gt /-
+theorem WithBot.wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     @WellFounded (WithBot α) (· > ·) :=
   ⟨fun a =>
     by
     -- ideally, use rel_hom_class.acc, but that is defined later
-    have : Acc (· < ·) a.to_dual := WellFounded.apply (WithTop.well_founded_lt h) _
+    have : Acc (· < ·) a.to_dual := WellFounded.apply (WithTop.wellFounded_lt h) _
     revert this
     generalize ha : a.to_dual = b; intro ac
     induction' ac with _ H IH generalizing a; subst ha
     exact ⟨_, fun a' h => IH a'.toDual (to_dual_lt_to_dual.mpr h) _ rfl⟩⟩
-#align with_bot.well_founded_gt WithBot.well_founded_gt
+#align with_bot.well_founded_gt WithBot.wellFounded_gt
+-/
 
-/- warning: with_top.trichotomous.lt -> WithTop.Trichotomous.lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTrichotomous.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1))], IsTrichotomous.{u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTrichotomous.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10419 : α) (x._@.Mathlib.Order.WithBot._hyg.10421 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10419 x._@.Mathlib.Order.WithBot._hyg.10421)], IsTrichotomous.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10439 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10441 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.instPreorderWithTop.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10439 x._@.Mathlib.Order.WithBot._hyg.10441)
-Case conversion may be inaccurate. Consider using '#align with_top.trichotomous.lt WithTop.Trichotomous.ltₓ'. -/
-instance Trichotomous.lt [Preorder α] [IsTrichotomous α (· < ·)] :
+#print WithTop.trichotomous.lt /-
+instance trichotomous.lt [Preorder α] [IsTrichotomous α (· < ·)] :
     IsTrichotomous (WithTop α) (· < ·) :=
   ⟨by 
     rintro (a | _) (b | _)
     iterate 3 simp
     simpa [Option.some_inj] using @trichotomous _ (· < ·) _ a b⟩
-#align with_top.trichotomous.lt WithTop.Trichotomous.lt
+#align with_top.trichotomous.lt WithTop.trichotomous.lt
+-/
 
-/- warning: with_top.is_well_order.lt -> WithTop.IsWellOrder.lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1))], IsWellOrder.{u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10534 : α) (x._@.Mathlib.Order.WithBot._hyg.10536 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10534 x._@.Mathlib.Order.WithBot._hyg.10536)], IsWellOrder.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10554 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10556 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.instPreorderWithTop.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10554 x._@.Mathlib.Order.WithBot._hyg.10556)
-Case conversion may be inaccurate. Consider using '#align with_top.is_well_order.lt WithTop.IsWellOrder.ltₓ'. -/
+#print WithTop.IsWellOrder.lt /-
 instance IsWellOrder.lt [Preorder α] [h : IsWellOrder α (· < ·)] :
-    IsWellOrder (WithTop α) (· < ·) where wf := well_founded_lt h.wf
+    IsWellOrder (WithTop α) (· < ·) where wf := wellFounded_lt h.wf
 #align with_top.is_well_order.lt WithTop.IsWellOrder.lt
+-/
 
-/- warning: with_top.trichotomous.gt -> WithTop.Trichotomous.gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTrichotomous.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1))], IsTrichotomous.{u1} (WithTop.{u1} α) (GT.gt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTrichotomous.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10591 : α) (x._@.Mathlib.Order.WithBot._hyg.10593 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10591 x._@.Mathlib.Order.WithBot._hyg.10593)], IsTrichotomous.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10611 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10613 : WithTop.{u1} α) => GT.gt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.instPreorderWithTop.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10611 x._@.Mathlib.Order.WithBot._hyg.10613)
-Case conversion may be inaccurate. Consider using '#align with_top.trichotomous.gt WithTop.Trichotomous.gtₓ'. -/
-instance Trichotomous.gt [Preorder α] [IsTrichotomous α (· > ·)] :
+#print WithTop.trichotomous.gt /-
+instance trichotomous.gt [Preorder α] [IsTrichotomous α (· > ·)] :
     IsTrichotomous (WithTop α) (· > ·) :=
   ⟨by 
     rintro (a | _) (b | _)
     iterate 3 simp
     simpa [Option.some_inj] using @trichotomous _ (· > ·) _ a b⟩
-#align with_top.trichotomous.gt WithTop.Trichotomous.gt
+#align with_top.trichotomous.gt WithTop.trichotomous.gt
+-/
 
-/- warning: with_top.is_well_order.gt -> WithTop.IsWellOrder.gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1))], IsWellOrder.{u1} (WithTop.{u1} α) (GT.gt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10706 : α) (x._@.Mathlib.Order.WithBot._hyg.10708 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10706 x._@.Mathlib.Order.WithBot._hyg.10708)], IsWellOrder.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10726 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10728 : WithTop.{u1} α) => GT.gt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.instPreorderWithTop.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10726 x._@.Mathlib.Order.WithBot._hyg.10728)
-Case conversion may be inaccurate. Consider using '#align with_top.is_well_order.gt WithTop.IsWellOrder.gtₓ'. -/
+#print WithTop.IsWellOrder.gt /-
 instance IsWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] :
-    IsWellOrder (WithTop α) (· > ·) where wf := well_founded_gt h.wf
+    IsWellOrder (WithTop α) (· > ·) where wf := wellFounded_gt h.wf
 #align with_top.is_well_order.gt WithTop.IsWellOrder.gt
+-/
 
-/- warning: with_bot.trichotomous.lt -> WithBot.trichotomous.lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsTrichotomous.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1))], IsTrichotomous.{u1} (WithBot.{u1} α) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsTrichotomous.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10759 : α) (x._@.Mathlib.Order.WithBot._hyg.10761 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10759 x._@.Mathlib.Order.WithBot._hyg.10761)], IsTrichotomous.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10779 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10781 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.instPreorderWithBot.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10779 x._@.Mathlib.Order.WithBot._hyg.10781)
-Case conversion may be inaccurate. Consider using '#align with_bot.trichotomous.lt WithBot.trichotomous.ltₓ'. -/
+#print WithBot.trichotomous.lt /-
 instance WithBot.trichotomous.lt [Preorder α] [h : IsTrichotomous α (· < ·)] :
     IsTrichotomous (WithBot α) (· < ·) :=
-  @WithTop.Trichotomous.gt αᵒᵈ _ h
+  @WithTop.trichotomous.gt αᵒᵈ _ h
 #align with_bot.trichotomous.lt WithBot.trichotomous.lt
+-/
 
-/- warning: with_bot.is_well_order.lt -> WithBot.is_well_order.lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1))], IsWellOrder.{u1} (WithBot.{u1} α) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10811 : α) (x._@.Mathlib.Order.WithBot._hyg.10813 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10811 x._@.Mathlib.Order.WithBot._hyg.10813)], IsWellOrder.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10831 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10833 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.instPreorderWithBot.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10831 x._@.Mathlib.Order.WithBot._hyg.10833)
-Case conversion may be inaccurate. Consider using '#align with_bot.is_well_order.lt WithBot.is_well_order.ltₓ'. -/
-instance WithBot.is_well_order.lt [Preorder α] [h : IsWellOrder α (· < ·)] :
+#print WithBot.isWellOrder.lt /-
+instance WithBot.isWellOrder.lt [Preorder α] [h : IsWellOrder α (· < ·)] :
     IsWellOrder (WithBot α) (· < ·) :=
   @WithTop.IsWellOrder.gt αᵒᵈ _ h
-#align with_bot.is_well_order.lt WithBot.is_well_order.lt
+#align with_bot.is_well_order.lt WithBot.isWellOrder.lt
+-/
 
-/- warning: with_bot.trichotomous.gt -> WithBot.trichotomous.gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsTrichotomous.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1))], IsTrichotomous.{u1} (WithBot.{u1} α) (GT.gt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsTrichotomous.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10863 : α) (x._@.Mathlib.Order.WithBot._hyg.10865 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10863 x._@.Mathlib.Order.WithBot._hyg.10865)], IsTrichotomous.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10883 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10885 : WithBot.{u1} α) => GT.gt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.instPreorderWithBot.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10883 x._@.Mathlib.Order.WithBot._hyg.10885)
-Case conversion may be inaccurate. Consider using '#align with_bot.trichotomous.gt WithBot.trichotomous.gtₓ'. -/
+#print WithBot.trichotomous.gt /-
 instance WithBot.trichotomous.gt [Preorder α] [h : IsTrichotomous α (· > ·)] :
     IsTrichotomous (WithBot α) (· > ·) :=
-  @WithTop.Trichotomous.lt αᵒᵈ _ h
+  @WithTop.trichotomous.lt αᵒᵈ _ h
 #align with_bot.trichotomous.gt WithBot.trichotomous.gt
+-/
 
 instance WithBot.IsWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] :
     IsWellOrder (WithBot α) (· > ·) :=
@@ -2014,12 +1930,7 @@ instance WithBot.IsWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] :
 instance [LT α] [DenselyOrdered α] [NoMaxOrder α] : DenselyOrdered (WithTop α) :=
   OrderDual.densely_ordered (WithBot αᵒᵈ)
 
-/- warning: with_top.lt_iff_exists_coe_btwn -> WithTop.lt_iff_exists_coe_btwn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toLT.{u1} α _inst_1)] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) a b) (Exists.{succ u1} α (fun (x : α) => And (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x) b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toLT.{u1} α _inst_1)] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.instPreorderWithTop.{u1} α _inst_1)) a b) (Exists.{succ u1} α (fun (x : α) => And (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.instPreorderWithTop.{u1} α _inst_1)) a (WithTop.some.{u1} α x)) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.instPreorderWithTop.{u1} α _inst_1)) (WithTop.some.{u1} α x) b)))
-Case conversion may be inaccurate. Consider using '#align with_top.lt_iff_exists_coe_btwn WithTop.lt_iff_exists_coe_btwnₓ'. -/
+#print WithTop.lt_iff_exists_coe_btwn /-
 theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMaxOrder α] {a b : WithTop α} :
     a < b ↔ ∃ x : α, a < ↑x ∧ ↑x < b :=
   ⟨fun h =>
@@ -2028,12 +1939,13 @@ theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMaxOrder α]
     ⟨x, hx.1 ▸ hy⟩,
     fun ⟨x, hx⟩ => lt_trans hx.1 hx.2⟩
 #align with_top.lt_iff_exists_coe_btwn WithTop.lt_iff_exists_coe_btwn
+-/
 
 instance [LE α] [NoBotOrder α] [Nonempty α] : NoBotOrder (WithTop α) :=
-  OrderDual.no_bot_order (WithBot αᵒᵈ)
+  OrderDual.noBotOrder (WithBot αᵒᵈ)
 
 instance [LT α] [NoMinOrder α] [Nonempty α] : NoMinOrder (WithTop α) :=
-  OrderDual.no_min_order (WithBot αᵒᵈ)
+  OrderDual.noMinOrder (WithBot αᵒᵈ)
 
 end WithTop
 

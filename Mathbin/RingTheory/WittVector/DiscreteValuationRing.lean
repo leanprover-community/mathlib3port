@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.discrete_valuation_ring
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -172,13 +172,13 @@ https://github.com/leanprover/lean4/issues/1102
 -/
 /-- The ring of Witt Vectors of a perfect field of positive characteristic is a DVR.
 -/
-theorem discreteValuationRing : DiscreteValuationRing (𝕎 k) :=
-  DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+theorem discrete_valuation_ring : DiscreteValuationRing (𝕎 k) :=
+  DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
     (by 
       refine' ⟨p, Irreducible p, fun x hx => _⟩
       obtain ⟨n, b, hb⟩ := exists_eq_pow_p_mul' x hx
       exact ⟨n, b, hb.symm⟩)
-#align witt_vector.discrete_valuation_ring WittVector.discreteValuationRing
+#align witt_vector.discrete_valuation_ring WittVector.discrete_valuation_ring
 
 end PerfectField
 

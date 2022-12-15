@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,7 +170,7 @@ theorem to_outer_measure_apply_eq_zero_iff : p.toOuterMeasure s = 0 ↔ Disjoint
   exact function.funext_iff.symm.trans Set.indicator_eq_zero'
 #align pmf.to_outer_measure_apply_eq_zero_iff Pmf.to_outer_measure_apply_eq_zero_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem to_outer_measure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.support ⊆ s := by
   refine' (p.to_outer_measure_apply s).symm ▸ ⟨fun h a hap => _, fun h => _⟩
   · refine' by_contra fun hs => ne_of_lt _ (h.trans p.tsum_coe.symm)

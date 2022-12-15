@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.prime
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,18 +92,18 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
   by 
   obtain ⟨n, hn⟩ := hm
   have := pp.is_unit_or_is_unit hn
-  rw [Nat.is_unit_iff, Nat.is_unit_iff] at this
+  rw [Nat.isUnit_iff, Nat.isUnit_iff] at this
   apply Or.imp_right _ this
   rintro rfl
   rw [hn, mul_one]
 #align nat.prime.eq_one_or_self_of_dvd Nat.Prime.eq_one_or_self_of_dvd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (m «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (m «expr ∣ » p) -/
 theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p), m = 1 ∨ m = p := by
   refine' ⟨fun h => ⟨h.two_le, h.eq_one_or_self_of_dvd⟩, fun h => _⟩
   have h1 := one_lt_two.trans_le h.1
   refine' ⟨mt nat.is_unit_iff.mp h1.ne', fun a b hab => _⟩
-  simp only [Nat.is_unit_iff]
+  simp only [Nat.isUnit_iff]
   apply Or.imp_right _ (h.2 a _)
   · rintro rfl
     rw [← mul_right_inj' (pos_of_gt h1).ne', ← hab, mul_one]
@@ -220,7 +220,7 @@ theorem not_prime_mul' {a b n : ℕ} (h : a * b = n) (h₁ : 1 < a) (h₂ : 1 < 
 #align nat.not_prime_mul' Nat.not_prime_mul'
 
 theorem prime_mul_iff {a b : ℕ} : Nat.Prime (a * b) ↔ a.Prime ∧ b = 1 ∨ b.Prime ∧ a = 1 := by
-  simp only [iff_self_iff, irreducible_mul_iff, ← irreducible_iff_nat_prime, Nat.is_unit_iff]
+  simp only [iff_self_iff, irreducible_mul_iff, ← irreducible_iff_nat_prime, Nat.isUnit_iff]
 #align nat.prime_mul_iff Nat.prime_mul_iff
 
 theorem Prime.dvd_iff_eq {p a : ℕ} (hp : p.Prime) (a1 : a ≠ 1) : a ∣ p ↔ p = a := by
@@ -726,14 +726,13 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {
 
 theorem prime_iff_prime_int {p : ℕ} : p.Prime ↔ Prime (p : ℤ) :=
   ⟨fun hp =>
-    ⟨Int.coe_nat_ne_zero_iff_pos.2 hp.Pos, mt Int.is_unit_iff_nat_abs_eq.1 hp.ne_one, fun a b h =>
-      by
-      rw [← Int.dvd_nat_abs, Int.coe_nat_dvd, Int.natAbs_mul, hp.dvd_mul] at h <;>
-        rwa [← Int.dvd_nat_abs, Int.coe_nat_dvd, ← Int.dvd_nat_abs, Int.coe_nat_dvd]⟩,
+    ⟨Int.coe_nat_ne_zero_iff_pos.2 hp.Pos, mt Int.isUnit_iff_natAbs_eq.1 hp.ne_one, fun a b h => by
+      rw [← Int.dvd_natAbs, Int.coe_nat_dvd, Int.natAbs_mul, hp.dvd_mul] at h <;>
+        rwa [← Int.dvd_natAbs, Int.coe_nat_dvd, ← Int.dvd_natAbs, Int.coe_nat_dvd]⟩,
     fun hp =>
     Nat.prime_iff.2
       ⟨Int.coe_nat_ne_zero.1 hp.1,
-        (mt Nat.is_unit_iff.1) fun h => by simpa [h, not_prime_one] using hp, fun a b => by
+        (mt Nat.isUnit_iff.1) fun h => by simpa [h, not_prime_one] using hp, fun a b => by
         simpa only [Int.coe_nat_dvd, (Int.ofNat_mul _ _).symm] using hp.2.2 a b⟩⟩
 #align nat.prime_iff_prime_int Nat.prime_iff_prime_int
 
@@ -795,4 +794,5 @@ theorem prime_three : Prime (3 : ℤ) :=
 
 end Int
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+assert_not_exists multiset
+

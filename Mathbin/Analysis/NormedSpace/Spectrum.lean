@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.spectrum
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,12 +103,12 @@ theorem is_open_resolvent_set (a : A) : IsOpen (ρ a) :=
   Units.is_open.Preimage ((continuous_algebra_map 𝕜 A).sub continuous_const)
 #align spectrum.is_open_resolvent_set spectrum.is_open_resolvent_set
 
-protected theorem isClosed (a : A) : IsClosed (σ a) :=
-  (is_open_resolvent_set a).isClosedCompl
-#align spectrum.is_closed spectrum.isClosed
+protected theorem is_closed (a : A) : IsClosed (σ a) :=
+  (is_open_resolvent_set a).is_closed_compl
+#align spectrum.is_closed spectrum.is_closed
 
 theorem mem_resolvent_set_of_norm_lt_mul {a : A} {k : 𝕜} (h : ‖a‖ * ‖(1 : A)‖ < ‖k‖) : k ∈ ρ a := by
-  rw [resolventSet, Set.mem_set_of_eq, Algebra.algebra_map_eq_smul_one]
+  rw [resolventSet, Set.mem_setOf_eq, Algebra.algebra_map_eq_smul_one]
   nontriviality A
   have hk : k ≠ 0 :=
     ne_zero_of_norm_ne_zero ((mul_nonneg (norm_nonneg _) (norm_nonneg _)).trans_lt h).ne'
@@ -144,7 +144,7 @@ theorem isBounded (a : A) : Metric.Bounded (σ a) :=
 #align spectrum.is_bounded spectrum.isBounded
 
 protected theorem is_compact [ProperSpace 𝕜] (a : A) : IsCompact (σ a) :=
-  Metric.is_compact_of_is_closed_bounded (spectrum.isClosed a) (isBounded a)
+  Metric.is_compact_of_is_closed_bounded (spectrum.is_closed a) (isBounded a)
 #align spectrum.is_compact spectrum.is_compact
 
 theorem spectral_radius_le_nnnorm [NormOneClass A] (a : A) : spectralRadius 𝕜 a ≤ ‖a‖₊ := by

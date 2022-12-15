@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.tm_to_partrec
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -905,7 +905,7 @@ inductive Λ'
   | move (p : Γ' → Bool) (k₁ k₂ : K'Cat) (q : Λ')
   | clear (p : Γ' → Bool) (k : K'Cat) (q : Λ')
   | copy (q : Λ')
-  | push (k : K'Cat) (s : Option Γ' → Option Γ') (q : Λ')
+  | Push (k : K'Cat) (s : Option Γ' → Option Γ') (q : Λ')
   | read (f : Option Γ' → Λ')
   | succ (q : Λ')
   | pred (q₁ q₂ : Λ')

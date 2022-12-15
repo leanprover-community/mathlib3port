@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metrizable
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,8 +185,8 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
         eq_on f 0 UV.1.1 ∧ eq_on f (fun _ => ε UV) (UV.1.2ᶜ) ∧ ∀ x, f x ∈ Icc 0 (ε UV) :=
     by 
     intro UV
-    rcases exists_continuous_zero_one_of_closed isClosedClosure (hB.is_open UV.2.1.2).isClosedCompl
-        (hd UV) with
+    rcases exists_continuous_zero_one_of_closed is_closed_closure
+        (hB.is_open UV.2.1.2).is_closed_compl (hd UV) with
       ⟨f, hf₀, hf₁, hf01⟩
     exact
       ⟨ε UV • f, fun x hx => by simp [hf₀ (subset_closure hx)], fun x hx => by simp [hf₁ hx],

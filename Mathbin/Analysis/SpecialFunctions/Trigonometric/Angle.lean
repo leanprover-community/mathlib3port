@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.angle
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,7 +270,7 @@ theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin 
     eq_false (ne_of_gt pi_pos), or_false_iff, sub_neg_eq_add, ← Int.cast_zero, ← Int.cast_one, ←
     Int.cast_bit0, ← Int.cast_mul, ← Int.cast_add, Int.cast_inj] at hn
   have : (n * 2 + 1) % (2 : ℤ) = 0 % (2 : ℤ) := congr_arg (· % (2 : ℤ)) hn
-  rw [add_comm, Int.add_mul_mod_self] at this
+  rw [add_comm, Int.add_mul_emod_self] at this
   exact absurd this one_ne_zero
 #align real.angle.cos_sin_inj Real.Angle.cos_sin_inj
 

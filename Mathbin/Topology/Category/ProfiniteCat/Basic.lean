@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Calle Sönne
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,11 +250,11 @@ noncomputable instance toTop.createsLimits : CreatesLimits ProfiniteCat.toTop :=
 #align Profinite.to_Top.creates_limits ProfiniteCat.toTop.createsLimits
 
 instance has_limits : Limits.HasLimits ProfiniteCat :=
-  has_limits_of_has_limits_creates_limits ProfiniteCat.toTop
+  hasLimitsOfHasLimitsCreatesLimits ProfiniteCat.toTop
 #align Profinite.has_limits ProfiniteCat.has_limits
 
 instance has_colimits : Limits.HasColimits ProfiniteCat :=
-  has_colimits_of_reflective profiniteToCompHaus
+  hasColimitsOfReflective profiniteToCompHaus
 #align Profinite.has_colimits ProfiniteCat.has_colimits
 
 noncomputable instance forgetPreservesLimits : Limits.PreservesLimits (forget ProfiniteCat) := by

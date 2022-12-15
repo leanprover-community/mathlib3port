@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo
 
 ! This file was ported from Lean 3 source module dynamics.omega_limit
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,9 +91,9 @@ theorem omega_limit_mono_right {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) : ω f 
   Inter₂_mono fun u hu => closure_mono (image2_subset Subset.rfl hs)
 #align omega_limit_mono_right omega_limit_mono_right
 
-theorem isClosedOmegaLimit : IsClosed (ω f ϕ s) :=
-  isClosedInter fun u => isClosedInter fun hu => isClosedClosure
-#align is_closed_omega_limit isClosedOmegaLimit
+theorem is_closed_omega_limit : IsClosed (ω f ϕ s) :=
+  is_closed_Inter fun u => is_closed_Inter fun hu => is_closed_closure
+#align is_closed_omega_limit is_closed_omega_limit
 
 theorem maps_to_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filter τ} {ϕ : τ → α → β}
     {ϕ' : τ → α' → β'} {ga : α → α'} {s' : Set α'} (hs : MapsTo ga s s') {gb : β → β'}
@@ -245,9 +245,9 @@ theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_li
   rcases hc₂ with ⟨v, hv₁, hv₂⟩
   let k := closure (image2 ϕ v s)
   have hk : IsCompact (k \ n) :=
-    IsCompact.diff (is_compact_of_is_closed_subset hc₁ isClosedClosure hv₂) hn₁
+    IsCompact.diff (is_compact_of_is_closed_subset hc₁ is_closed_closure hv₂) hn₁
   let j u := closure (image2 ϕ (u ∩ v) s)ᶜ
-  have hj₁ : ∀ u ∈ f, IsOpen (j u) := fun _ _ => is_open_compl_iff.mpr isClosedClosure
+  have hj₁ : ∀ u ∈ f, IsOpen (j u) := fun _ _ => is_open_compl_iff.mpr is_closed_closure
   have hj₂ : k \ n ⊆ ⋃ u ∈ f, j u := by
     have : (⋃ u ∈ f, j u) = ⋃ u : ↥f.sets, j u := bUnion_eq_Union _ _
     rw [this, diff_subset_comm, diff_Union]
@@ -333,12 +333,12 @@ theorem nonempty_omega_limit_of_is_compact_absorbing [NeBot f] {c : Set β} (hc�
       nonempty.image2 (nonempty_of_mem (inter_mem u.prop hv₁)) hs
     exact hn.mono subset_closure
   · intro
-    apply is_compact_of_is_closed_subset hc₁ isClosedClosure
+    apply is_compact_of_is_closed_subset hc₁ is_closed_closure
     calc
       _ ⊆ closure (image2 ϕ v s) := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
       _ ⊆ c := hv₂
       
-  · exact fun _ => isClosedClosure
+  · exact fun _ => is_closed_closure
 #align nonempty_omega_limit_of_is_compact_absorbing nonempty_omega_limit_of_is_compact_absorbing
 
 theorem nonempty_omega_limit [CompactSpace β] [NeBot f] (hs : s.Nonempty) : (ω f ϕ s).Nonempty :=

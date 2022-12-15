@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.finite_dimensional
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ section FiniteDimensional
 variable {m n : Type _} {R : Type v} [Field R]
 
 instance [Finite m] [Finite n] : FiniteDimensional R (Matrix m n R) :=
-  LinearEquiv.finiteDimensional (LinearEquiv.curry R m n)
+  LinearEquiv.finite_dimensional (LinearEquiv.curry R m n)
 
 /-- The dimension of the space of finite dimensional matrices
 is the product of the number of rows and columns.

@@ -6,7 +6,7 @@ Authors: Johannes Hölzl
 Binder elimination
 
 ! This file was ported from Lean 3 source module tactic.converter.binders
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,13 +266,13 @@ section
 
 variable [CompleteLattice α]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic old_conv.conversion -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic old_conv.conversion -/
 example {s : Set β} {f : β → α} : inf (Set.image f s) = ⨅ a ∈ s, f a := by
   simp [Inf_eq_infi, infi_and]
   run_tac
     conversion infi_eq_elim.old_conv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic old_conv.conversion -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic old_conv.conversion -/
 example {s : Set β} {f : β → α} : sup (Set.image f s) = ⨆ a ∈ s, f a := by
   simp [Sup_eq_supr, supr_and]
   run_tac

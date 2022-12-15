@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.invariants
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ theorem mul_average_left (g : G) :
     Finset.sum_congr, MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (g * x)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
-  rw [Function.Bijective.sum_comp (Group.mul_left_bijective g) _]
+  rw [Function.Bijective.sum_comp (Group.mulLeft_bijective g) _]
 #align group_algebra.mul_average_left GroupAlgebra.mul_average_left
 
 /-- `average k G` is invariant under right multiplication by elements of `G`.
@@ -62,7 +62,7 @@ theorem mul_average_right (g : G) : average k G * Finsupp.single g 1 = average k
     Finset.sum_congr, MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (x * g)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
-  rw [Function.Bijective.sum_comp (Group.mul_right_bijective g) _]
+  rw [Function.Bijective.sum_comp (Group.mulRight_bijective g) _]
 #align group_algebra.mul_average_right GroupAlgebra.mul_average_right
 
 end GroupAlgebra

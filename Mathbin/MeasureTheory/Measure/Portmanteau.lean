@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.measure.portmanteau
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -264,7 +264,7 @@ theorem tendsto_measure_of_null_frontier {ι : Type _} {L : Filter ι} {μ : Mea
   haveI h_closeds : ∀ F, IsClosed F → (L.limsup fun i => μs i F) ≤ μ F :=
     limsup_measure_closed_le_iff_liminf_measure_open_ge.mpr h_opens
   tendsto_measure_of_le_liminf_measure_of_limsup_measure_le interior_subset subset_closure
-    E_nullbdry (h_opens _ is_open_interior) (h_closeds _ isClosedClosure)
+    E_nullbdry (h_opens _ is_open_interior) (h_closeds _ is_closed_closure)
 #align
   measure_theory.tendsto_measure_of_null_frontier MeasureTheory.tendsto_measure_of_null_frontier
 

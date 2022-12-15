@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_eq_of_integral
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,8 +64,8 @@ theorem ae_eq_zero_of_forall_inner [InnerProductSpace 𝕜 E] [SecondCountableTo
   refine' hf'.mono fun x hx => _
   rw [Pi.zero_apply, ← inner_self_eq_zero]
   have h_closed : IsClosed { c : E | inner c (f x) = (0 : 𝕜) } :=
-    isClosedEq (continuous_id.inner continuous_const) continuous_const
-  exact @isClosedProperty ℕ E _ s (fun c => inner c (f x) = (0 : 𝕜)) hs h_closed (fun n => hx n) _
+    is_closed_eq (continuous_id.inner continuous_const) continuous_const
+  exact @is_closed_property ℕ E _ s (fun c => inner c (f x) = (0 : 𝕜)) hs h_closed (fun n => hx n) _
 #align measure_theory.ae_eq_zero_of_forall_inner MeasureTheory.ae_eq_zero_of_forall_inner
 
 -- mathport name: «expr⟪ , ⟫»
@@ -153,7 +153,7 @@ theorem ae_const_le_iff_forall_lt_measure_zero {β} [LinearOrder β] [Topologica
     H.exists_seq_strict_mono_tendsto_of_not_mem (lt_irrefl c) h
   have h_Union : { x | f x < c } = ⋃ n : ℕ, { x | f x ≤ u n } := by
     ext1 x
-    simp_rw [Set.mem_Union, Set.mem_set_of_eq]
+    simp_rw [Set.mem_Union, Set.mem_setOf_eq]
     constructor <;> intro h
     · obtain ⟨n, hn⟩ := ((tendsto_order.1 u_lim).1 _ h).exists
       exact ⟨n, hn.le⟩
@@ -267,9 +267,9 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_strongly_measurable (hfm : St
       μ s ≤ μ { x | (c : ℝ≥0∞) ≤ ‖f x‖₊ } := by
         apply measure_mono
         intro x hx
-        simp only [Set.mem_set_of_eq] at hx
+        simp only [Set.mem_setOf_eq] at hx
         simpa only [nnnorm, abs_of_neg hb_neg, abs_of_neg (hx.trans_lt hb_neg), Real.norm_eq_abs,
-          Subtype.mk_le_mk, neg_le_neg_iff, Set.mem_set_of_eq, Ennreal.coe_le_coe] using hx
+          Subtype.mk_le_mk, neg_le_neg_iff, Set.mem_setOf_eq, Ennreal.coe_le_coe] using hx
       _ ≤ (∫⁻ x, ‖f x‖₊ ∂μ) / c :=
         meas_ge_le_lintegral_div hfm.ae_measurable.ennnorm c_pos Ennreal.coe_ne_top
       _ < ∞ := Ennreal.div_lt_top (ne_of_lt hf.2) c_pos

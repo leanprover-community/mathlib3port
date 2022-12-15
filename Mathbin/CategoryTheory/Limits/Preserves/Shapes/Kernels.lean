@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.kernels
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ instance : IsIso (kernelComparison f G) := by
   rw [← preserves_kernel.iso_hom]
   infer_instance
 
-@[reassoc]
+@[reassoc.1]
 theorem kernel_map_comp_preserves_kernel_iso_inv {X' Y' : C} (g : X' ⟶ Y') [HasKernel g]
     [HasKernel (G.map g)] [PreservesLimit (parallelPair g 0) G] (p : X ⟶ X') (q : Y ⟶ Y')
     (hpq : f ≫ q = p ≫ g) :
@@ -231,7 +231,7 @@ instance : IsIso (cokernelComparison f G) := by
   rw [← preserves_cokernel.iso_inv]
   infer_instance
 
-@[reassoc]
+@[reassoc.1]
 theorem preserves_cokernel_iso_comp_cokernel_map {X' Y' : C} (g : X' ⟶ Y') [HasCokernel g]
     [HasCokernel (G.map g)] [PreservesColimit (parallelPair g 0) G] (p : X ⟶ X') (q : Y ⟶ Y')
     (hpq : f ≫ q = p ≫ g) :

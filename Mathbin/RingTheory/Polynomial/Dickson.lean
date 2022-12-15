@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.dickson
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,12 +154,12 @@ theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]
     norm_num
   | 1 => by
-    rw [dickson_one, chebyshev.T_one, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul,
-      mul_inv_of_self, C_1, one_mul]
+    rw [dickson_one, chebyshev.T_one, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, mul_invOf_self,
+      C_1, one_mul]
   | n + 2 => by
     simp only [dickson_add_two, chebyshev.T_add_two, dickson_one_one_eq_chebyshev_T (n + 1),
       dickson_one_one_eq_chebyshev_T n, sub_comp, mul_comp, add_comp, X_comp, bit0_comp, one_comp]
-    simp only [← C_1, ← C_bit0, ← mul_assoc, ← C_mul, mul_inv_of_self]
+    simp only [← C_1, ← C_bit0, ← mul_assoc, ← C_mul, mul_invOf_self]
     rw [C_1, one_mul]
     ring
 #align polynomial.dickson_one_one_eq_chebyshev_T Polynomial.dickson_one_one_eq_chebyshev_T
@@ -168,7 +168,7 @@ theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
     Chebyshev.t R n = c (⅟ 2) * (dickson 1 1 n).comp (2 * X) := by
   rw [dickson_one_one_eq_chebyshev_T]
   simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
-  rw [inv_of_mul_self, C_1, one_mul, one_mul, comp_X]
+  rw [invOf_mul_self, C_1, one_mul, one_mul, comp_X]
 #align polynomial.chebyshev_T_eq_dickson_one_one Polynomial.chebyshev_T_eq_dickson_one_one
 
 /-- The `(m * n)`-th Dickson polynomial of the first kind is the composition of the `m`-th and
@@ -187,8 +187,7 @@ theorem dickson_one_one_mul (m n : ℕ) :
   apply eval₂_congr rfl rfl
   rw [comp_assoc]
   apply eval₂_congr rfl _ rfl
-  rw [mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, inv_of_mul_self, C_1,
-    one_mul]
+  rw [mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, invOf_mul_self, C_1, one_mul]
 #align polynomial.dickson_one_one_mul Polynomial.dickson_one_one_mul
 
 theorem dickson_one_one_comp_comm (m n : ℕ) :
@@ -220,7 +219,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
   -- The two polynomials agree on all `x` of the form `x = y + y⁻¹`.
   apply @Set.Infinite.mono _ { x : K | ∃ y, x = y + y⁻¹ ∧ y ≠ 0 }
   · rintro _ ⟨x, rfl, hx⟩
-    simp only [eval_X, eval_pow, Set.mem_set_of_eq, @add_pow_char K _ p,
+    simp only [eval_X, eval_pow, Set.mem_setOf_eq, @add_pow_char K _ p,
       dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, Zmod.cast_hom_apply,
       Zmod.cast_one']
   -- Now we need to show that the set of such `x` is infinite.
@@ -249,7 +248,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
       classical 
         convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
         ext1 y
-        simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union,
+        simp only [Multiset.mem_to_finset, Set.mem_setOf_eq, Finset.mem_coe, Multiset.mem_union,
           mem_roots hφ, is_root, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
           Multiset.mem_singleton]
         by_cases hy : y = 0
@@ -261,7 +260,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
     -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     · apply (Set.eq_univ_of_forall _).symm
       intro x
-      simp only [exists_prop, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_set_of_eq]
+      simp only [exists_prop, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_setOf_eq]
       by_cases hx : x = 0
       · simp only [hx, and_true_iff, eq_self_iff_true, inv_zero, or_true_iff]
         exact ⟨_, 1, rfl, one_ne_zero⟩

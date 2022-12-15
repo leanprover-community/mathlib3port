@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,17 +158,17 @@ section Field
 variable {K : Type _} [Field K]
 
 /-- `cyclotomic' n K` splits. -/
-theorem cyclotomic'Splits (n : ℕ) : Splits (RingHom.id K) (cyclotomic' n K) := by
+theorem cyclotomic'_splits (n : ℕ) : Splits (RingHom.id K) (cyclotomic' n K) := by
   apply splits_prod (RingHom.id K)
   intro z hz
   simp only [splits_X_sub_C (RingHom.id K)]
-#align polynomial.cyclotomic'_splits Polynomial.cyclotomic'Splits
+#align polynomial.cyclotomic'_splits Polynomial.cyclotomic'_splits
 
 /-- If there is a primitive `n`-th root of unity in `K`, then `X ^ n - 1`splits. -/
-theorem xPowSubOneSplits {ζ : K} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
+theorem X_pow_sub_one_splits {ζ : K} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
     Splits (RingHom.id K) (X ^ n - c (1 : K)) := by
   rw [splits_iff_card_roots, ← nth_roots, IsPrimitiveRoot.card_nth_roots h, nat_degree_X_pow_sub_C]
-#align polynomial.X_pow_sub_one_splits Polynomial.xPowSubOneSplits
+#align polynomial.X_pow_sub_one_splits Polynomial.X_pow_sub_one_splits
 
 /-- If there is a primitive `n`-th root of unity in `K`, then
 `∏ i in nat.divisors n, cyclotomic' i K = X ^ n - 1`. -/
@@ -804,7 +804,7 @@ theorem order_of_root_cyclotomic_dvd {n : ℕ} (hpos : 0 < n) {p : ℕ} [Fact p.
   suffices hpow : eval (Nat.castRingHom (Zmod p) a) (X ^ n - 1 : (Zmod p)[X]) = 0
   · simp only [eval_X, eval_one, eval_pow, eval_sub, eq_nat_cast] at hpow
     apply Units.val_eq_one.1
-    simp only [sub_eq_zero.mp hpow, Zmod.coe_unit_of_coprime, Units.coe_pow]
+    simp only [sub_eq_zero.mp hpow, Zmod.coe_unit_of_coprime, Units.val_pow_eq_pow_val]
   rw [is_root.def] at hroot
   rw [← prod_cyclotomic_eq_X_pow_sub_one hpos (Zmod p),
     Nat.divisors_eq_proper_divisors_insert_self_of_pos hpos,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.count
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,7 +309,7 @@ theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.e
   by rw [count_erase, if_neg ab, tsub_zero]
 #align list.count_erase_of_ne List.count_erase_of_ne
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β)
     (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).Prod = f a ^ l.count a := by
@@ -322,7 +322,7 @@ theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β
     · rw [hf a' (Ne.symm ha') (List.mem_cons_self a' as), one_mul]
 #align list.prod_map_eq_pow_single List.prod_map_eq_pow_single
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_eq_pow_single [Monoid α] {l : List α} (a : α)
     (h : ∀ (a') (_ : a' ≠ a), a' ∈ l → a' = 1) : l.Prod = a ^ l.count a :=

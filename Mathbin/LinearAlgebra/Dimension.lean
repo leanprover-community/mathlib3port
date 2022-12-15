@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1024,171 +1024,11 @@ theorem dim_fin_fun (n : ℕ) : Module.rank K (Fin n → K) = n := by simp [dim_
 
 end Fintype
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [] [] [] [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `dim_quotient_add_dim [])
-      (Command.declSig
-       [(Term.explicitBinder "(" [`p] [":" (Term.app `Submodule [`K `V])] [] ")")]
-       (Term.typeSpec
-        ":"
-        («term_=_»
-         («term_+_»
-          (Term.app `Module.rank [`K (Algebra.Quotient.«term_⧸_» `V " ⧸ " `p)])
-          "+"
-          (Term.app `Module.rank [`K `p]))
-         "="
-         (Term.app `Module.rank [`K `V]))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Tactic.exact
-             "exact"
-             (Term.let
-              "let"
-              (Term.letDecl
-               (Term.letPatDecl
-                (Term.anonymousCtor "⟨" [`f] "⟩")
-                []
-                []
-                ":="
-                (Term.app `quotient_prod_linear_equiv [`p])))
-              []
-              (Term.app `dim_prod.symm.trans [(Term.proj `f "." `dim_eq)]))))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.exact
-            "exact"
-            (Term.let
-             "let"
-             (Term.letDecl
-              (Term.letPatDecl
-               (Term.anonymousCtor "⟨" [`f] "⟩")
-               []
-               []
-               ":="
-               (Term.app `quotient_prod_linear_equiv [`p])))
-             []
-             (Term.app `dim_prod.symm.trans [(Term.proj `f "." `dim_eq)]))))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.exact
-        "exact"
-        (Term.let
-         "let"
-         (Term.letDecl
-          (Term.letPatDecl
-           (Term.anonymousCtor "⟨" [`f] "⟩")
-           []
-           []
-           ":="
-           (Term.app `quotient_prod_linear_equiv [`p])))
-         []
-         (Term.app `dim_prod.symm.trans [(Term.proj `f "." `dim_eq)]))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact
-       "exact"
-       (Term.let
-        "let"
-        (Term.letDecl
-         (Term.letPatDecl
-          (Term.anonymousCtor "⟨" [`f] "⟩")
-          []
-          []
-          ":="
-          (Term.app `quotient_prod_linear_equiv [`p])))
-        []
-        (Term.app `dim_prod.symm.trans [(Term.proj `f "." `dim_eq)])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.let
-       "let"
-       (Term.letDecl
-        (Term.letPatDecl
-         (Term.anonymousCtor "⟨" [`f] "⟩")
-         []
-         []
-         ":="
-         (Term.app `quotient_prod_linear_equiv [`p])))
-       []
-       (Term.app `dim_prod.symm.trans [(Term.proj `f "." `dim_eq)]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `dim_prod.symm.trans [(Term.proj `f "." `dim_eq)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `f "." `dim_eq)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `f
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `dim_prod.symm.trans
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `quotient_prod_linear_equiv [`p])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `p
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `quotient_prod_linear_equiv
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor "⟨" [`f] "⟩")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `f
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  dim_quotient_add_dim
-  ( p : Submodule K V ) : Module.rank K V ⧸ p + Module.rank K p = Module.rank K V
-  := by skip <;> exact let ⟨ f ⟩ := quotient_prod_linear_equiv p dim_prod.symm.trans f . dim_eq
+theorem dim_quotient_add_dim (p : Submodule K V) :
+    Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by
+  classical exact
+      let ⟨f⟩ := quotient_prod_linear_equiv p
+      dim_prod.symm.trans f.dim_eq
 #align dim_quotient_add_dim dim_quotient_add_dim
 
 /-- rank-nullity theorem -/

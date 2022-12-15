@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -323,7 +323,7 @@ theorem IsCompact.measurableSet [T2Space α] (h : IsCompact s) : MeasurableSet s
 
 @[measurability]
 theorem measurableSetClosure : MeasurableSet (closure s) :=
-  isClosedClosure.MeasurableSet
+  is_closed_closure.MeasurableSet
 #align measurable_set_closure measurableSetClosure
 
 theorem measurableOfIsOpen {f : δ → γ} (hf : ∀ s, IsOpen s → MeasurableSet (f ⁻¹' s)) :
@@ -365,7 +365,7 @@ theorem MeasurableSet.nhdsWithinIsMeasurablyGenerated {s : Set α} (hs : Measura
 -- see Note [lower instance priority]
 instance (priority := 100) OpensMeasurableSpace.toMeasurableSingletonClass [T1Space α] :
     MeasurableSingletonClass α :=
-  ⟨fun x => isClosedSingleton.MeasurableSet⟩
+  ⟨fun x => is_closed_singleton.MeasurableSet⟩
 #align
   opens_measurable_space.to_measurable_singleton_class OpensMeasurableSpace.toMeasurableSingletonClass
 
@@ -433,17 +433,17 @@ variable [Preorder α] [OrderClosedTopology α] {a b x : α}
 
 @[simp, measurability]
 theorem measurableSetIci : MeasurableSet (ici a) :=
-  isClosedIci.MeasurableSet
+  is_closed_Ici.MeasurableSet
 #align measurable_set_Ici measurableSetIci
 
 @[simp, measurability]
 theorem measurableSetIic : MeasurableSet (iic a) :=
-  isClosedIic.MeasurableSet
+  is_closed_Iic.MeasurableSet
 #align measurable_set_Iic measurableSetIic
 
 @[simp, measurability]
 theorem measurableSetIcc : MeasurableSet (icc a b) :=
-  isClosedIcc.MeasurableSet
+  is_closed_Icc.MeasurableSet
 #align measurable_set_Icc measurableSetIcc
 
 instance nhdsWithinIciIsMeasurablyGenerated : (𝓝[ici b] a).IsMeasurablyGenerated :=
@@ -477,7 +477,7 @@ variable [PartialOrder α] [OrderClosedTopology α] [SecondCountableTopology α]
 
 @[measurability]
 theorem measurableSetLe' : MeasurableSet { p : α × α | p.1 ≤ p.2 } :=
-  OrderClosedTopology.isClosedLe'.MeasurableSet
+  OrderClosedTopology.is_closed_le'.MeasurableSet
 #align measurable_set_le' measurableSetLe'
 
 @[measurability]
@@ -745,7 +745,7 @@ theorem ext_of_Iic {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
     [IsFiniteMeasure μ] (h : ∀ a, μ (iic a) = ν (iic a)) : μ = ν := by
   refine' ext_of_Ioc_finite μ ν _ fun a b hlt => _
   · rcases exists_countable_dense_bot_top α with ⟨s, hsc, hsd, -, hst⟩
-    have : DirectedOn (· ≤ ·) s := directed_on_iff_directed.2 (directed_of_sup fun _ _ => id)
+    have : DirectedOn (· ≤ ·) s := directedOn_iff_directed.2 (directed_of_sup fun _ _ => id)
     simp only [← bsupr_measure_Iic hsc (hsd.exists_ge' hst) this, h]
   rw [← Iic_diff_Iic, measure_diff (Iic_subset_Iic.2 hlt.le) measurableSetIic,
     measure_diff (Iic_subset_Iic.2 hlt.le) measurableSetIic, h a, h b]
@@ -1022,7 +1022,7 @@ protected theorem Embedding.measurableEmbedding {f : α → β} (h₁ : Embeddin
 
 protected theorem ClosedEmbedding.measurableEmbedding {f : α → β} (h : ClosedEmbedding f) :
     MeasurableEmbedding f :=
-  h.toEmbedding.MeasurableEmbedding h.closedRange.MeasurableSet
+  h.toEmbedding.MeasurableEmbedding h.closed_range.MeasurableSet
 #align closed_embedding.measurable_embedding ClosedEmbedding.measurableEmbedding
 
 protected theorem OpenEmbedding.measurableEmbedding {f : α → β} (h : OpenEmbedding f) :
@@ -1091,7 +1091,7 @@ private theorem ae_measurable.is_lub_of_nonempty {ι} (hι : Nonempty ι) {μ : 
     · have h_set_eq : { a : α | ∃ i : ι, (hf i).mk (f i) b = a } = { a : α | ∃ i : ι, f i b = a } :=
         by 
         ext x
-        simp_rw [Set.mem_set_of_eq, aeSeq.mk_eq_fun_of_mem_ae_seq_set hf h]
+        simp_rw [Set.mem_setOf_eq, aeSeq.mk_eq_fun_of_mem_ae_seq_set hf h]
       rw [h_set_eq]
       exact aeSeq.funPropOfMemAeSeqSet hf h
     · have h_singleton : { a : α | ∃ i : ι, hα.some = a } = {hα.some} := by
@@ -1119,7 +1119,7 @@ theorem AeMeasurable.isLub {ι} {μ : Measure δ} [Countable ι] {f : ι → δ 
   have h_empty : ∀ x, { a : α | ∃ i : ι, f i x = a } = ∅ := by
     intro x
     ext1 y
-    rw [Set.mem_set_of_eq, Set.mem_empty_iff_false, iff_false_iff]
+    rw [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false_iff]
     exact fun hi => hι (nonempty_of_exists hi)
   simp_rw [h_empty] at hg
   exact ⟨hg.exists.some, hg.mono fun y hy => IsLub.unique hy hg.exists.some_spec⟩
@@ -1148,7 +1148,7 @@ private theorem ae_measurable.is_glb_of_nonempty {ι} (hι : Nonempty ι) {μ : 
     · have h_set_eq : { a : α | ∃ i : ι, (hf i).mk (f i) b = a } = { a : α | ∃ i : ι, f i b = a } :=
         by 
         ext x
-        simp_rw [Set.mem_set_of_eq, aeSeq.mk_eq_fun_of_mem_ae_seq_set hf h]
+        simp_rw [Set.mem_setOf_eq, aeSeq.mk_eq_fun_of_mem_ae_seq_set hf h]
       rw [h_set_eq]
       exact aeSeq.funPropOfMemAeSeqSet hf h
     · have h_singleton : { a : α | ∃ i : ι, hα.some = a } = {hα.some} := by
@@ -1176,7 +1176,7 @@ theorem AeMeasurable.isGlb {ι} {μ : Measure δ} [Countable ι] {f : ι → δ 
   have h_empty : ∀ x, { a : α | ∃ i : ι, f i x = a } = ∅ := by
     intro x
     ext1 y
-    rw [Set.mem_set_of_eq, Set.mem_empty_iff_false, iff_false_iff]
+    rw [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false_iff]
     exact fun hi => hι (nonempty_of_exists hi)
   simp_rw [h_empty] at hg
   exact ⟨hg.exists.some, hg.mono fun y hy => IsGlb.unique hy hg.exists.some_spec⟩
@@ -1255,14 +1255,14 @@ end LinearOrder
 @[measurability]
 theorem Measurable.suprProp {α} [MeasurableSpace α] [CompleteLattice α] (p : Prop) {f : δ → α}
     (hf : Measurable f) : Measurable fun b => ⨆ h : p, f b :=
-  Classical.by_cases (fun h : p => by convert hf; funext ; exact supr_pos h) fun h : ¬p => by
+  by_cases (fun h : p => by convert hf; funext ; exact supr_pos h) fun h : ¬p => by
     convert measurableConst; funext ; exact supr_neg h
 #align measurable.supr_Prop Measurable.suprProp
 
 @[measurability]
 theorem Measurable.infiProp {α} [MeasurableSpace α] [CompleteLattice α] (p : Prop) {f : δ → α}
     (hf : Measurable f) : Measurable fun b => ⨅ h : p, f b :=
-  Classical.by_cases (fun h : p => by convert hf; funext ; exact infi_pos h) fun h : ¬p => by
+  by_cases (fun h : p => by convert hf; funext ; exact infi_pos h) fun h : ¬p => by
     convert measurableConst; funext ; exact infi_neg h
 #align measurable.infi_Prop Measurable.infiProp
 
@@ -1560,7 +1560,7 @@ theorem measurableSetBall : MeasurableSet (Metric.ball x ε) :=
 
 @[measurability]
 theorem measurableSetClosedBall : MeasurableSet (Metric.closedBall x ε) :=
-  Metric.isClosedBall.MeasurableSet
+  Metric.is_closed_ball.MeasurableSet
 #align measurable_set_closed_ball measurableSetClosedBall
 
 @[measurability]
@@ -2345,12 +2345,12 @@ variable [BorelSpace 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜
 
 theorem measurable_smul_const {f : α → 𝕜} {c : E} (hc : c ≠ 0) :
     (Measurable fun x => f x • c) ↔ Measurable f :=
-  (closedEmbeddingSmulLeft hc).MeasurableEmbedding.measurable_comp_iff
+  (closed_embedding_smul_left hc).MeasurableEmbedding.measurable_comp_iff
 #align measurable_smul_const measurable_smul_const
 
 theorem ae_measurable_smul_const {f : α → 𝕜} {μ : Measure α} {c : E} (hc : c ≠ 0) :
     AeMeasurable (fun x => f x • c) μ ↔ AeMeasurable f μ :=
-  (closedEmbeddingSmulLeft hc).MeasurableEmbedding.ae_measurable_comp_iff
+  (closed_embedding_smul_left hc).MeasurableEmbedding.ae_measurable_comp_iff
 #align ae_measurable_smul_const ae_measurable_smul_const
 
 end NormedSpace

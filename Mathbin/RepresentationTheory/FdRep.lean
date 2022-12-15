@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.fdRep
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ instance (V : FdRep k G) : FiniteDimensional k V := by
 
 /-- All hom spaces are finite dimensional. -/
 instance (V W : FdRep k G) : FiniteDimensional k (V ⟶ W) :=
-  FiniteDimensional.ofInjective ((forget₂ (FdRep k G) (FgModule k)).mapLinearMap k)
+  FiniteDimensional.of_injective ((forget₂ (FdRep k G) (FgModule k)).mapLinearMap k)
     (Functor.map_injective _)
 
 /-- The monoid homomorphism corresponding to the action of `G` onto `V : fdRep k G`. -/

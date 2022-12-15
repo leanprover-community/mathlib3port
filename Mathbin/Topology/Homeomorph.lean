@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton
 
 ! This file was ported from Lean 3 source module topology.homeomorph
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -295,9 +295,9 @@ protected theorem t0_space [T0Space α] (h : α ≃ₜ β) : T0Space β :=
   h.symm.Embedding.T0Space
 #align homeomorph.t0_space Homeomorph.t0_space
 
-protected theorem t1Space [T1Space α] (h : α ≃ₜ β) : T1Space β :=
+protected theorem t1_space [T1Space α] (h : α ≃ₜ β) : T1Space β :=
   h.symm.Embedding.T1Space
-#align homeomorph.t1_space Homeomorph.t1Space
+#align homeomorph.t1_space Homeomorph.t1_space
 
 protected theorem t2Space [T2Space α] (h : α ≃ₜ β) : T2Space β :=
   h.symm.Embedding.T2Space
@@ -341,9 +341,9 @@ protected theorem open_embedding (h : α ≃ₜ β) : OpenEmbedding h :=
   open_embedding_of_embedding_open h.Embedding h.IsOpenMap
 #align homeomorph.open_embedding Homeomorph.open_embedding
 
-protected theorem closedEmbedding (h : α ≃ₜ β) : ClosedEmbedding h :=
-  closedEmbeddingOfEmbeddingClosed h.Embedding h.IsClosedMap
-#align homeomorph.closed_embedding Homeomorph.closedEmbedding
+protected theorem closed_embedding (h : α ≃ₜ β) : ClosedEmbedding h :=
+  closed_embedding_of_embedding_closed h.Embedding h.IsClosedMap
+#align homeomorph.closed_embedding Homeomorph.closed_embedding
 
 protected theorem normalSpace [NormalSpace α] (h : α ≃ₜ β) : NormalSpace β :=
   h.symm.ClosedEmbedding.NormalSpace

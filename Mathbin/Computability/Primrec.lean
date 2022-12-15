@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.primrec
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1047,7 +1047,7 @@ theorem list_foldr {f : α → List β} {g : α → σ} {h : α → β × σ →
     fun a => by simp [List.foldl_reverse]
 #align primrec.list_foldr Primrec.list_foldr
 
-theorem list_head' : Primrec (@List.head' α) :=
+theorem list_head' : Primrec (@List.head? α) :=
   (list_cases Primrec.id (const none) (option_some_iff.2 <| fst.comp snd).to₂).of_eq fun l => by
     cases l <;> rfl
 #align primrec.list_head' Primrec.list_head'
@@ -1099,15 +1099,15 @@ theorem list_nth : Primrec₂ (@List.nth α) :=
     · apply IH
 #align primrec.list_nth Primrec.list_nth
 
-theorem list_nthd (d : α) : Primrec₂ (List.nthd d) := by
-  suffices List.nthd d = fun l n => (List.nth l n).getOrElse d by
+theorem list_nthd (d : α) : Primrec₂ (List.getD d) := by
+  suffices List.getD d = fun l n => (List.nth l n).getOrElse d by
     rw [this]
     exact option_get_or_else.comp₂ list_nth (const _)
   funext
   exact List.nthd_eq_get_or_else_nth _ _ _
 #align primrec.list_nthd Primrec.list_nthd
 
-theorem list_inth [Inhabited α] : Primrec₂ (@List.inth α _) :=
+theorem list_inth [Inhabited α] : Primrec₂ (@List.getI α _) :=
   list_nthd _
 #align primrec.list_inth Primrec.list_inth
 

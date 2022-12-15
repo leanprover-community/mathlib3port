@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.uniform
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,7 @@ theorem is_uniform_comm : IsUniform G ε s t ↔ IsUniform G ε t s :=
   ⟨fun h => h.symm, fun h => h.symm⟩
 #align simple_graph.is_uniform_comm SimpleGraph.is_uniform_comm
 
-theorem isUniformSingleton (hε : 0 < ε) : G.IsUniform ε {a} {b} := by
+theorem is_uniform_singleton (hε : 0 < ε) : G.IsUniform ε {a} {b} := by
   intro s' hs' t' ht' hs ht
   rw [card_singleton, Nat.cast_one, one_mul] at hs ht
   obtain rfl | rfl := Finset.subset_singleton_iff.1 hs'
@@ -90,19 +90,19 @@ theorem isUniformSingleton (hε : 0 < ε) : G.IsUniform ε {a} {b} := by
   · replace ht : ε ≤ 0 := by simpa using ht
     exact (hε.not_le ht).elim
   · rwa [sub_self, abs_zero]
-#align simple_graph.is_uniform_singleton SimpleGraph.isUniformSingleton
+#align simple_graph.is_uniform_singleton SimpleGraph.is_uniform_singleton
 
 theorem not_is_uniform_zero : ¬G.IsUniform (0 : 𝕜) s t := fun h =>
   (abs_nonneg _).not_lt <| h (empty_subset _) (empty_subset _) (by simp) (by simp)
 #align simple_graph.not_is_uniform_zero SimpleGraph.not_is_uniform_zero
 
-theorem isUniformOne : G.IsUniform (1 : 𝕜) s t := by
+theorem is_uniform_one : G.IsUniform (1 : 𝕜) s t := by
   intro s' hs' t' ht' hs ht
   rw [mul_one] at hs ht
   rw [eq_of_subset_of_card_le hs' (Nat.cast_le.1 hs),
     eq_of_subset_of_card_le ht' (Nat.cast_le.1 ht), sub_self, abs_zero]
   exact zero_lt_one
-#align simple_graph.is_uniform_one SimpleGraph.isUniformOne
+#align simple_graph.is_uniform_one SimpleGraph.is_uniform_one
 
 variable {G}
 

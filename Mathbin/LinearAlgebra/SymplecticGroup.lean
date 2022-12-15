@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matej Penciak, Moritz Doll, Fabien Clery
 
 ! This file was ported from Lean 3 source module linear_algebra.symplectic_group
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ def symplecticGroup :
   carrier := { A | A ⬝ j l R ⬝ Aᵀ = j l R }
   mul_mem' := by 
     intro a b ha hb
-    simp only [mul_eq_mul, Set.mem_set_of_eq, transpose_mul] at *
+    simp only [mul_eq_mul, Set.mem_setOf_eq, transpose_mul] at *
     rw [← Matrix.mul_assoc, a.mul_assoc, a.mul_assoc, hb]
     exact ha
   one_mem' := by simp

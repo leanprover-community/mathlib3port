@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.equalizers
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ instance map_π_epi : Epi (G.map (coequalizer.π f g)) :=
     apply epi_comp⟩
 #align category_theory.limits.map_π_epi CategoryTheory.Limits.map_π_epi
 
-@[reassoc]
+@[reassoc.1]
 theorem map_π_preserves_coequalizer_inv :
     G.map (coequalizer.π f g) ≫ (PreservesCoequalizer.iso G f g).inv =
       coequalizer.π (G.map f) (G.map g) :=
@@ -219,7 +219,7 @@ theorem map_π_preserves_coequalizer_inv :
 #align
   category_theory.limits.map_π_preserves_coequalizer_inv CategoryTheory.Limits.map_π_preserves_coequalizer_inv
 
-@[reassoc]
+@[reassoc.1]
 theorem map_π_preserves_coequalizer_inv_desc {W : D} (k : G.obj Y ⟶ W)
     (wk : G.map f ≫ k = G.map g ≫ k) :
     G.map (coequalizer.π f g) ≫ (PreservesCoequalizer.iso G f g).inv ≫ coequalizer.desc k wk = k :=
@@ -227,7 +227,7 @@ theorem map_π_preserves_coequalizer_inv_desc {W : D} (k : G.obj Y ⟶ W)
 #align
   category_theory.limits.map_π_preserves_coequalizer_inv_desc CategoryTheory.Limits.map_π_preserves_coequalizer_inv_desc
 
-@[reassoc]
+@[reassoc.1]
 theorem map_π_preserves_coequalizer_inv_colim_map {X' Y' : D} (f' g' : X' ⟶ Y')
     [HasCoequalizer f' g'] (p : G.obj X ⟶ X') (q : G.obj Y ⟶ Y') (wf : G.map f ≫ q = p ≫ f')
     (wg : G.map g ≫ q = p ≫ g') :
@@ -239,7 +239,7 @@ theorem map_π_preserves_coequalizer_inv_colim_map {X' Y' : D} (f' g' : X' ⟶ Y
 #align
   category_theory.limits.map_π_preserves_coequalizer_inv_colim_map CategoryTheory.Limits.map_π_preserves_coequalizer_inv_colim_map
 
-@[reassoc]
+@[reassoc.1]
 theorem map_π_preserves_coequalizer_inv_colim_map_desc {X' Y' : D} (f' g' : X' ⟶ Y')
     [HasCoequalizer f' g'] (p : G.obj X ⟶ X') (q : G.obj Y ⟶ Y') (wf : G.map f ≫ q = p ≫ f')
     (wg : G.map g ≫ q = p ≫ g') {Z' : D} (h : Y' ⟶ Z') (wh : f' ≫ h = g' ≫ h) :

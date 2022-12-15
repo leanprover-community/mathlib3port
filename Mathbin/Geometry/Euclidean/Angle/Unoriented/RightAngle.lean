@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.right_angle
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,7 +265,7 @@ theorem angle_sub_eq_arccos_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
 theorem angle_sub_eq_arcsin_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x ≠ 0 ∨ y ≠ 0) :
     angle x (x - y) = Real.arcsin (‖y‖ / ‖x - y‖) := by
   rw [← neg_eq_zero, ← inner_neg_right] at h
-  nth_rw 2 [← neg_ne_zero]  at h0
+  nth_rw 2 [← neg_ne_zero] at h0
   rw [sub_eq_add_neg, angle_add_eq_arcsin_of_inner_eq_zero h h0, norm_neg]
 #align
   inner_product_geometry.angle_sub_eq_arcsin_of_inner_eq_zero InnerProductGeometry.angle_sub_eq_arcsin_of_inner_eq_zero
@@ -322,7 +322,7 @@ vectors. -/
 theorem sin_angle_sub_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x ≠ 0 ∨ y ≠ 0) :
     Real.sin (angle x (x - y)) = ‖y‖ / ‖x - y‖ := by
   rw [← neg_eq_zero, ← inner_neg_right] at h
-  nth_rw 2 [← neg_ne_zero]  at h0
+  nth_rw 2 [← neg_ne_zero] at h0
   rw [sub_eq_add_neg, sin_angle_add_of_inner_eq_zero h h0, norm_neg]
 #align
   inner_product_geometry.sin_angle_sub_of_inner_eq_zero InnerProductGeometry.sin_angle_sub_of_inner_eq_zero

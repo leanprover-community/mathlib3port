@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul van Wamelen
 
 ! This file was ported from Lean 3 source module number_theory.fermat4
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minima
   let S : Set ℕ := { n | ∃ s : ℤ × ℤ × ℤ, Fermat42 s.1 s.2.1 s.2.2 ∧ n = Int.natAbs s.2.2 }
   have S_nonempty : S.nonempty := by 
     use Int.natAbs c
-    rw [Set.mem_set_of_eq]
+    rw [Set.mem_setOf_eq]
     use ⟨a, ⟨b, c⟩⟩
     tauto
   let m : ℕ := Nat.find S_nonempty
@@ -128,11 +128,11 @@ theorem neg_of_minimal {a b c : ℤ} : Minimal a b c → Minimal a b (-c) := by
 theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
     ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 := by
   obtain ⟨a0, b0, c0, hf⟩ := exists_minimal h
-  cases' Int.mod_two_eq_zero_or_one a0 with hap hap
-  · cases' Int.mod_two_eq_zero_or_one b0 with hbp hbp
+  cases' Int.emod_two_eq_zero_or_one a0 with hap hap
+  · cases' Int.emod_two_eq_zero_or_one b0 with hbp hbp
     · exfalso
       have h1 : 2 ∣ (Int.gcd a0 b0 : ℤ) :=
-        Int.dvd_gcd (Int.dvd_of_mod_eq_zero hap) (Int.dvd_of_mod_eq_zero hbp)
+        Int.dvd_gcd (Int.dvd_of_emod_eq_zero hap) (Int.dvd_of_emod_eq_zero hbp)
       rw [int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1
       revert h1
       norm_num
@@ -184,7 +184,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- in order to reduce the possibilities we get from the classification of pythagorean triples
   -- it helps if we know the parity of a ^ 2 (and the sign of c):
   have ha22 : a ^ 2 % 2 = 1 := by 
-    rw [sq, Int.mul_mod, ha2]
+    rw [sq, Int.mul_emod, ha2]
     norm_num
   obtain ⟨m, n, ht1, ht2, ht3, ht4, ht5, ht6⟩ := ht.coprime_classification' h2 ha22 hc
   -- Now a, n, m form a pythagorean triple and so we can obtain r and s such that

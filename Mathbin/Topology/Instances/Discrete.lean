@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module topology.instances.discrete
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,17 +88,17 @@ theorem LinearOrder.bot_topological_space_eq_generate_from {α} [LinearOrder α]
     · rw [ha_bot.Ici_eq] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply is_open_univ
-    · rw [is_bot_iff_is_min] at ha_bot
+    · rw [isBot_iff_is_min] at ha_bot
       rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-  · rw [is_top_iff_is_max] at ha_top
+  · rw [isTop_iff_is_max] at ha_top
     rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
     by_cases ha_bot : IsBot a
     · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-    · rw [is_bot_iff_is_min] at ha_bot
+    · rw [isBot_iff_is_min] at ha_bot
       rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply IsOpen.inter

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pointwise
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -228,9 +228,9 @@ end Inv
 
 open Pointwise
 
-section HasInvolutiveInv
+section InvolutiveInv
 
-variable [DecidableEq α] [HasInvolutiveInv α] (s : Finset α)
+variable [DecidableEq α] [InvolutiveInv α] (s : Finset α)
 
 @[simp, norm_cast, to_additive]
 theorem coe_inv : ↑s⁻¹ = (s : Set α)⁻¹ :=
@@ -247,7 +247,7 @@ theorem preimage_inv : s.Preimage Inv.inv (inv_injective.InjOn _) = s⁻¹ :=
   coe_injective <| by rw [coe_preimage, Set.inv_preimage, coe_inv]
 #align finset.preimage_inv Finset.preimage_inv
 
-end HasInvolutiveInv
+end InvolutiveInv
 
 /-! ### Finset addition/multiplication -/
 
@@ -960,12 +960,12 @@ theorem Nonempty.one_mem_div (h : s.Nonempty) : (1 : α) ∈ s / s :=
 
 @[to_additive]
 theorem is_unit_singleton (a : α) : IsUnit ({a} : Finset α) :=
-  (Group.is_unit a).Finset
+  (Group.isUnit a).Finset
 #align finset.is_unit_singleton Finset.is_unit_singleton
 
 @[simp]
 theorem is_unit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by
-  simp only [is_unit_iff, Group.is_unit, and_true_iff]
+  simp only [is_unit_iff, Group.isUnit, and_true_iff]
 #align finset.is_unit_iff_singleton Finset.is_unit_iff_singleton
 
 @[simp, to_additive]
@@ -1204,14 +1204,14 @@ end HasSmul
 /-! ### Scalar subtraction of finsets -/
 
 
-section HasVsub
+section VSub
 
-variable [DecidableEq α] [HasVsub α β] {s s₁ s₂ t t₁ t₂ : Finset β} {u : Finset α} {a : α} {b c : β}
+variable [DecidableEq α] [VSub α β] {s s₁ s₂ t t₁ t₂ : Finset β} {u : Finset α} {a : α} {b c : β}
 
 include α
 
 /-- The pointwise product of two finsets `s` and `t`: `s -ᵥ t = {x -ᵥ y | x ∈ s, y ∈ t}`. -/
-protected def hasVsub : HasVsub (Finset α) (Finset β) :=
+protected def hasVsub : VSub (Finset α) (Finset β) :=
   ⟨image₂ (· -ᵥ ·)⟩
 #align finset.has_vsub Finset.hasVsub
 
@@ -1335,7 +1335,7 @@ theorem subset_vsub {s t : Set β} :
   subset_image₂
 #align finset.subset_vsub Finset.subset_vsub
 
-end HasVsub
+end VSub
 
 open Pointwise
 
@@ -1445,27 +1445,27 @@ section Instances
 variable [DecidableEq γ]
 
 @[to_additive]
-instance smul_comm_class_finset [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] :
-    SmulCommClass α β (Finset γ) :=
+instance smul_comm_class_finset [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+    SMulCommClass α β (Finset γ) :=
   ⟨fun _ _ => commute.finset_image <| smul_comm _ _⟩
 #align finset.smul_comm_class_finset Finset.smul_comm_class_finset
 
 @[to_additive]
-instance smul_comm_class_finset' [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] :
-    SmulCommClass α (Finset β) (Finset γ) :=
+instance smul_comm_class_finset' [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+    SMulCommClass α (Finset β) (Finset γ) :=
   ⟨fun a s t => coe_injective <| by simp only [coe_smul_finset, coe_smul, smul_comm]⟩
 #align finset.smul_comm_class_finset' Finset.smul_comm_class_finset'
 
 @[to_additive]
-instance smul_comm_class_finset'' [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] :
-    SmulCommClass (Finset α) β (Finset γ) :=
-  haveI := SmulCommClass.symm α β γ
-  SmulCommClass.symm _ _ _
+instance smul_comm_class_finset'' [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+    SMulCommClass (Finset α) β (Finset γ) :=
+  haveI := SMulCommClass.symm α β γ
+  SMulCommClass.symm _ _ _
 #align finset.smul_comm_class_finset'' Finset.smul_comm_class_finset''
 
 @[to_additive]
-instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] :
-    SmulCommClass (Finset α) (Finset β) (Finset γ) :=
+instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+    SMulCommClass (Finset α) (Finset β) (Finset γ) :=
   ⟨fun s t u => coe_injective <| by simp_rw [coe_smul, smul_comm]⟩
 #align finset.smul_comm_class Finset.smul_comm_class
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.seq.wseq
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ def ofList (l : List α) : Wseq α :=
 #align wseq.of_list Wseq.ofList
 
 /-- Turn a stream into a weak sequence -/
-def ofStream (l : Stream α) : Wseq α :=
+def ofStream (l : Stream' α) : Wseq α :=
   ofSeq l
 #align wseq.of_stream Wseq.ofStream
 
@@ -63,7 +63,7 @@ instance coeList : Coe (List α) (Wseq α) :=
   ⟨ofList⟩
 #align wseq.coe_list Wseq.coeList
 
-instance coeStream : Coe (Stream α) (Wseq α) :=
+instance coeStream : Coe (Stream' α) (Wseq α) :=
   ⟨ofStream⟩
 #align wseq.coe_stream Wseq.coeStream
 
@@ -270,7 +270,7 @@ def zip : Wseq α → Wseq β → Wseq (α × β) :=
 
 /-- Get the list of indexes of elements of `s` satisfying `p` -/
 def findIndexes (p : α → Prop) [DecidablePred p] (s : Wseq α) : Wseq ℕ :=
-  (zip s (Stream.nats : Wseq ℕ)).filterMap fun ⟨a, n⟩ => if p a then some n else none
+  (zip s (Stream'.nats : Wseq ℕ)).filterMap fun ⟨a, n⟩ => if p a then some n else none
 #align wseq.find_indexes Wseq.findIndexes
 
 /-- Get the index of the first element of `s` satisfying `p` -/
@@ -897,10 +897,10 @@ theorem mem_think (s : Wseq α) (a) : a ∈ think s ↔ a ∈ s := by
   cases' s with f al
   change (some (some a) ∈ some none::f) ↔ some (some a) ∈ f
   constructor <;> intro h
-  · apply (Stream.eq_or_mem_of_mem_cons h).resolve_left
+  · apply (Stream'.eq_or_mem_of_mem_cons h).resolve_left
     intro
     injections
-  · apply Stream.mem_cons_of_mem _ h
+  · apply Stream'.mem_cons_of_mem _ h
 #align wseq.mem_think Wseq.mem_think
 
 theorem eq_or_mem_iff_mem {s : Wseq α} {a a' s'} :
@@ -919,11 +919,11 @@ theorem eq_or_mem_iff_mem {s : Wseq α} {a a' s'} :
     simp
     have h_a_eq_a' : a = a' ↔ some (some a) = some (some a') := by simp
     rw [h_a_eq_a']
-    refine' ⟨Stream.eq_or_mem_of_mem_cons, fun o => _⟩
+    refine' ⟨Stream'.eq_or_mem_of_mem_cons, fun o => _⟩
     · cases' o with e m
       · rw [e]
-        apply Stream.mem_cons
-      · exact Stream.mem_cons_of_mem _ m
+        apply Stream'.mem_cons
+      · exact Stream'.mem_cons_of_mem _ m
   · simp
     exact IH this
 #align wseq.eq_or_mem_iff_mem Wseq.eq_or_mem_iff_mem
@@ -942,7 +942,7 @@ theorem mem_cons (s : Wseq α) (a) : a ∈ cons a s :=
 #align wseq.mem_cons Wseq.mem_cons
 
 theorem mem_of_mem_tail {s : Wseq α} {a} : a ∈ tail s → a ∈ s := by
-  intro h; have := h; cases' h with n e; revert s; simp [Stream.nth]
+  intro h; have := h; cases' h with n e; revert s; simp [Stream'.nth]
   induction' n with n IH <;> intro s <;> apply s.rec_on _ (fun x s => _) fun s => _ <;>
         repeat' simp <;>
       intro m e <;>

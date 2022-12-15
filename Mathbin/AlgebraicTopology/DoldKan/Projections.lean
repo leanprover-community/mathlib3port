@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.projections
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ theorem of_P : ∀ q n : ℕ, HigherFacesVanish q ((p q).f (n + 1) : X _[n + 1] 
 #align
   algebraic_topology.dold_kan.higher_faces_vanish.of_P AlgebraicTopology.DoldKan.HigherFacesVanish.of_P
 
-@[reassoc]
+@[reassoc.1]
 theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
     φ ≫ (p q).f (n + 1) = φ := by 
   induction' q with q hq
@@ -143,25 +143,25 @@ theorem comp_P_eq_self_iff {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} :
   · exact higher_faces_vanish.comp_P_eq_self
 #align algebraic_topology.dold_kan.comp_P_eq_self_iff AlgebraicTopology.DoldKan.comp_P_eq_self_iff
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_f_idem (q n : ℕ) : ((p q).f n : X _[n] ⟶ _) ≫ (p q).f n = (p q).f n := by
   cases n
   · rw [P_f_0_eq q, comp_id]
   · exact (higher_faces_vanish.of_P q n).comp_P_eq_self
 #align algebraic_topology.dold_kan.P_f_idem AlgebraicTopology.DoldKan.P_f_idem
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Q_f_idem (q n : ℕ) : ((q q).f n : X _[n] ⟶ _) ≫ (q q).f n = (q q).f n :=
   idem_of_id_sub_idem _ (P_f_idem q n)
 #align algebraic_topology.dold_kan.Q_f_idem AlgebraicTopology.DoldKan.Q_f_idem
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_idem (q : ℕ) : (p q : K[X] ⟶ K[X]) ≫ p q = p q := by
   ext n
   exact P_f_idem q n
 #align algebraic_topology.dold_kan.P_idem AlgebraicTopology.DoldKan.P_idem
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Q_idem (q : ℕ) : (q q : K[X] ⟶ K[X]) ≫ q q = q q := by
   ext n
   exact Q_f_idem q n
@@ -186,13 +186,13 @@ def natTransP (q : ℕ) :
       exact (nat_trans_Hσ q).naturality' f
 #align algebraic_topology.dold_kan.nat_trans_P AlgebraicTopology.DoldKan.natTransP
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_f_naturality (q n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ (p q).f n = (p q).f n ≫ f.app (op [n]) :=
   HomologicalComplex.congr_hom ((natTransP q).naturality f) n
 #align algebraic_topology.dold_kan.P_f_naturality AlgebraicTopology.DoldKan.P_f_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Q_f_naturality (q n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ (q q).f n = (q q).f n ≫ f.app (op [n]) := by
   simp only [Q, HomologicalComplex.sub_f_apply, HomologicalComplex.id_f, comp_sub, P_f_naturality,

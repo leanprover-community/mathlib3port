@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.fundamental_domain
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,20 +38,19 @@ open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace Filter
 
 namespace MeasureTheory
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (g «expr ≠ » (0 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (g «expr ≠ » (0 : G)) -/
 /-- A measurable set `s` is a *fundamental domain* for an additive action of an additive group `G`
 on a measurable space `α` with respect to a measure `α` if the sets `g +ᵥ s`, `g : G`, are pairwise
 a.e. disjoint and cover the whole space. -/
 @[protect_proj]
-structure IsAddFundamentalDomain (G : Type _) {α : Type _} [Zero G] [HasVadd G α]
-  [MeasurableSpace α] (s : Set α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) :
-  Prop where
+structure IsAddFundamentalDomain (G : Type _) {α : Type _} [Zero G] [VAdd G α] [MeasurableSpace α]
+  (s : Set α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) : Prop where
   NullMeasurableSet : NullMeasurableSet s μ
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g +ᵥ x ∈ s
   AeDisjoint : ∀ (g) (_ : g ≠ (0 : G)), AeDisjoint μ (g +ᵥ s) s
 #align measure_theory.is_add_fundamental_domain MeasureTheory.IsAddFundamentalDomain
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 /-- A measurable set `s` is a *fundamental domain* for an action of a group `G` on a measurable
 space `α` with respect to a measure `α` if the sets `g • s`, `g : G`, are pairwise a.e. disjoint and
 cover the whole space. -/
@@ -85,7 +84,7 @@ theorem mk' (h_meas : NullMeasurableSet s μ) (h_exists : ∀ x : α, ∃! g : G
             exact hne ((h_exists x).unique hgx hx)) }
 #align measure_theory.is_fundamental_domain.mk' MeasureTheory.IsFundamentalDomain.mk'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 /-- If a measurable space has a finite measure `μ` and a countable group `G` acts
 quasi-measure-preservingly, then to show that a set `s` is a fundamental domain, it is sufficient
 to check that its translates `g • s` are (almost) disjoint and that the sum `∑' g, μ (g • s)` is
@@ -195,7 +194,7 @@ theorem smul (h : IsFundamentalDomain G s μ) (g : G) : IsFundamentalDomain G (g
 
 @[to_additive]
 theorem smulOfComm {G' : Type _} [Group G'] [MulAction G' α] [MeasurableSpace G']
-    [HasMeasurableSmul G' α] [SmulInvariantMeasure G' α μ] [SmulCommClass G' G α]
+    [HasMeasurableSmul G' α] [SmulInvariantMeasure G' α μ] [SMulCommClass G' G α]
     (h : IsFundamentalDomain G s μ) (g : G') : IsFundamentalDomain G (g • s) μ :=
   h.imageOfEquiv (MulAction.toPerm g) (measurePreservingSmul _ _).QuasiMeasurePreserving
       (Equiv.refl _) <|
@@ -435,8 +434,8 @@ theorem measure_le_of_pairwise_disjoint (hs : IsFundamentalDomain G s μ)
 #align
   measure_theory.is_fundamental_domain.measure_le_of_pairwise_disjoint MeasureTheory.IsFundamentalDomain.measure_le_of_pairwise_disjoint
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 /-- If the action of a countable group `G` admits an invariant measure `μ` with a fundamental domain
 `s`, then every null-measurable set `t` of measure strictly greater than `μ s` contains two
 points `x y` such that `g • x = y` for some `g ≠ 1`. -/

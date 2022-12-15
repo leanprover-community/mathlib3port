@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.add_circle
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,11 +42,12 @@ variable {T : ℝ} [hT : Fact (0 < T)]
 
 include hT
 
-/-- If a null-measurable subset of the circle is invariant under rotation by a family of rational
-angles with denominators tending to infinity, then it must be almost empty or almost full. -/
-theorem ae_empty_or_univ_of_forall_vadd_eq_self {s : Set <| AddCircle T}
+/-- If a null-measurable subset of the circle is almost invariant under rotation by a family of
+rational angles with denominators tending to infinity, then it must be almost empty or almost full.
+-/
+theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
     (hs : NullMeasurableSet s volume) {ι : Type _} {l : Filter ι} [l.ne_bot] {u : ι → AddCircle T}
-    (hu₁ : ∀ i, u i +ᵥ s = s) (hu₂ : Tendsto (addOrderOf ∘ u) l atTop) :
+    (hu₁ : ∀ i, (u i +ᵥ s : Set _) =ᵐ[volume] s) (hu₂ : Tendsto (addOrderOf ∘ u) l atTop) :
     s =ᵐ[volume] (∅ : Set <| AddCircle T) ∨ s =ᵐ[volume] univ :=
   by
   /- Sketch of proof:
@@ -107,24 +108,25 @@ theorem ae_empty_or_univ_of_forall_vadd_eq_self {s : Set <| AddCircle T}
     volume_of_add_preimage_eq s _ (u j) d huj (hu₁ j) closed_ball_ae_eq_ball, nsmul_eq_mul, ←
     mul_assoc, hI₂]
 #align
-  add_circle.ae_empty_or_univ_of_forall_vadd_eq_self AddCircle.ae_empty_or_univ_of_forall_vadd_eq_self
+  add_circle.ae_empty_or_univ_of_forall_vadd_ae_eq_self AddCircle.ae_empty_or_univ_of_forall_vadd_ae_eq_self
 
 theorem ergodicZsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n • y :=
   { measurePreservingZsmul volume (abs_pos.mp <| lt_trans zero_lt_one hn) with
     ae_empty_or_univ := fun s hs hs' => by
       let u : ℕ → AddCircle T := fun j => ↑((↑1 : ℝ) / ↑(n.nat_abs ^ j) * T)
       replace hn : 1 < n.nat_abs
-      · rwa [Int.abs_eq_nat_abs, Nat.one_lt_cast] at hn
+      · rwa [Int.abs_eq_natAbs, Nat.one_lt_cast] at hn
       have hu₀ : ∀ j, addOrderOf (u j) = n.nat_abs ^ j := fun j =>
         add_order_of_div_of_gcd_eq_one (pow_pos (pos_of_gt hn) j) (gcd_one_left _)
       have hnu : ∀ j, n ^ j • u j = 0 := fun j => by
-        rw [← add_order_of_dvd_iff_zsmul_eq_zero, hu₀, Int.coe_nat_pow, ← Int.abs_eq_nat_abs, ←
+        rw [← add_order_of_dvd_iff_zsmul_eq_zero, hu₀, Int.coe_nat_pow, ← Int.abs_eq_natAbs, ←
           abs_pow, abs_dvd]
-      have hu₁ : ∀ j, u j +ᵥ s = s := fun j => vadd_eq_self_of_preimage_zsmul_eq_self hs' (hnu j)
+      have hu₁ : ∀ j, (u j +ᵥ s : Set _) =ᵐ[volume] s := fun j => by
+        rw [vadd_eq_self_of_preimage_zsmul_eq_self hs' (hnu j)]
       have hu₂ : tendsto (fun j => addOrderOf <| u j) at_top at_top := by
         simp_rw [hu₀]
         exact Nat.tendsto_pow_at_top_at_top_of_one_lt hn
-      exact ae_empty_or_univ_of_forall_vadd_eq_self hs.null_measurable_set hu₁ hu₂ }
+      exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hs.null_measurable_set hu₁ hu₂ }
 #align add_circle.ergodic_zsmul AddCircle.ergodicZsmul
 
 theorem ergodicNsmul {n : ℕ} (hn : 1 < n) : Ergodic fun y : AddCircle T => n • y :=

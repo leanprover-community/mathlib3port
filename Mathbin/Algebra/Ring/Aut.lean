@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.ring.aut
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ protected theorem smul_def (f : RingAut R) (r : R) : f • r = f r :=
   rfl
 #align ring_aut.smul_def RingAut.smul_def
 
-instance apply_has_faithful_smul : HasFaithfulSmul (RingAut R) R :=
+instance apply_has_faithful_smul : FaithfulSMul (RingAut R) R :=
   ⟨fun _ _ => RingEquiv.ext⟩
 #align ring_aut.apply_has_faithful_smul RingAut.apply_has_faithful_smul
 

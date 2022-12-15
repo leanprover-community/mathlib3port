@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.complete_lattice
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -371,7 +371,7 @@ instance [CompleteLattice α] : CompleteLattice αᵒᵈ :=
     le_Inf := @CompleteLattice.Sup_le α _ }
 
 instance [CompleteLinearOrder α] : CompleteLinearOrder αᵒᵈ :=
-  { OrderDual.completeLattice α, OrderDual.linearOrder α with }
+  { OrderDual.completeLattice α, OrderDual.instLinearOrderOrderDual α with }
 
 end OrderDual
 
@@ -1702,7 +1702,7 @@ end CompleteLinearOrder
 
 
 instance PropCat.completeLattice : CompleteLattice Prop :=
-  { PropCat.boundedOrder, PropCat.distribLattice with
+  { Prop.boundedOrder, Prop.distribLattice with
     sup := fun s => ∃ a ∈ s, a
     le_Sup := fun s a h p => ⟨a, h, p⟩
     Sup_le := fun s a h ⟨b, h', p⟩ => h b h' p
@@ -1712,7 +1712,7 @@ instance PropCat.completeLattice : CompleteLattice Prop :=
 #align Prop.complete_lattice PropCat.completeLattice
 
 noncomputable instance PropCat.completeLinearOrder : CompleteLinearOrder Prop :=
-  { PropCat.completeLattice, PropCat.linearOrder with }
+  { PropCat.completeLattice, Prop.linearOrder with }
 #align Prop.complete_linear_order PropCat.completeLinearOrder
 
 @[simp]

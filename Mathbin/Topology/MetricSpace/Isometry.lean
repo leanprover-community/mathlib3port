@@ -5,7 +5,7 @@ Isometries of emetric and metric spaces
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.isometry
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -194,10 +194,10 @@ protected theorem embedding (hf : Isometry f) : Embedding f :=
 #align isometry.embedding Isometry.embedding
 
 /-- An isometry from a complete emetric space is a closed embedding -/
-theorem closedEmbedding [CompleteSpace α] [EmetricSpace γ] {f : α → γ} (hf : Isometry f) :
+theorem closed_embedding [CompleteSpace α] [EmetricSpace γ] {f : α → γ} (hf : Isometry f) :
     ClosedEmbedding f :=
   hf.antilipschitz.ClosedEmbedding hf.lipschitz.UniformContinuous
-#align isometry.closed_embedding Isometry.closedEmbedding
+#align isometry.closed_embedding Isometry.closed_embedding
 
 end EmetricIsometry
 

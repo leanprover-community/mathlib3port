@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Roca González
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.lax_milgram
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,10 +88,10 @@ theorem ker_eq_bot (coercive : IsCoercive B) : ker B♯ = ⊥ := by
   exact antilipschitz.injective
 #align is_coercive.ker_eq_bot IsCoercive.ker_eq_bot
 
-theorem closedRange (coercive : IsCoercive B) : IsClosed (range B♯ : Set V) := by
+theorem closed_range (coercive : IsCoercive B) : IsClosed (range B♯ : Set V) := by
   rcases coercive.antilipschitz with ⟨_, _, antilipschitz⟩
   exact antilipschitz.is_closed_range B♯.UniformContinuous
-#align is_coercive.closed_range IsCoercive.closedRange
+#align is_coercive.closed_range IsCoercive.closed_range
 
 theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ := by
   haveI := coercive.closed_range.complete_space_coe

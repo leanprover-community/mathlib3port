@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.perm.subgroup
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,8 +72,8 @@ theorem subtypeCongrHom.card_range {α : Type _} (p : α → Prop) [DecidablePre
 /-- **Cayley's theorem**: Every group G is isomorphic to a subgroup of the symmetric group acting on
 `G`. Note that we generalize this to an arbitrary "faithful" group action by `G`. Setting `H = G`
 recovers the usual statement of Cayley's theorem via `right_cancel_monoid.to_has_faithful_smul` -/
-noncomputable def subgroupOfMulAction (G H : Type _) [Group G] [MulAction G H]
-    [HasFaithfulSmul G H] : G ≃* (MulAction.toPermHom G H).range :=
+noncomputable def subgroupOfMulAction (G H : Type _) [Group G] [MulAction G H] [FaithfulSMul G H] :
+    G ≃* (MulAction.toPermHom G H).range :=
   MulEquiv.ofLeftInverse' _ (Classical.choose_spec MulAction.to_perm_injective.HasLeftInverse)
 #align equiv.perm.subgroup_of_mul_action Equiv.Perm.subgroupOfMulAction
 

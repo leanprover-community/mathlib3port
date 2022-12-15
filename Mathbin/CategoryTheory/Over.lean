@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.over
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ theorem comp_left (a b c : Over X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).left 
   rfl
 #align category_theory.over.comp_left CategoryTheory.Over.comp_left
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem w {A B : Over X} (f : A ⟶ B) : f.left ≫ B.Hom = A.Hom := by have := f.w <;> tidy
 #align category_theory.over.w CategoryTheory.Over.w
 
@@ -353,7 +353,7 @@ theorem comp_right (a b c : Under X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).rig
   rfl
 #align category_theory.under.comp_right CategoryTheory.Under.comp_right
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem w {A B : Under X} (f : A ⟶ B) : A.Hom ≫ f.right = B.Hom := by have := f.w <;> tidy
 #align category_theory.under.w CategoryTheory.Under.w
 

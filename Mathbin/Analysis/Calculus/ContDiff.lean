@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1146,7 +1146,7 @@ theorem cont_diff_on_succ_iff_fderiv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s)
   rwa [fderiv_within_inter (IsOpen.mem_nhds o_open hy.2) (hs y hy.1)] at A
 #align cont_diff_on_succ_iff_fderiv_within cont_diff_on_succ_iff_fderiv_within
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (expressed with `fderiv`) is `C^n`. -/
 theorem cont_diff_on_succ_iff_fderiv_of_open {n : ℕ} (hs : IsOpen s) :
@@ -1155,7 +1155,7 @@ theorem cont_diff_on_succ_iff_fderiv_of_open {n : ℕ} (hs : IsOpen s) :
   by 
   rw [cont_diff_on_succ_iff_fderiv_within hs.unique_diff_on]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply cont_diff_on_congr
   intro x hx
   exact fderiv_within_of_open hs hx
@@ -1179,14 +1179,14 @@ theorem cont_diff_on_top_iff_fderiv_within (hs : UniqueDiffOn 𝕜 s) :
     exact WithTop.coe_le_coe.2 (Nat.le_succ n)
 #align cont_diff_on_top_iff_fderiv_within cont_diff_on_top_iff_fderiv_within
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
 /-- A function is `C^∞` on an open domain if and only if it is differentiable there, and its
 derivative (expressed with `fderiv`) is `C^∞`. -/
 theorem cont_diff_on_top_iff_fderiv_of_open (hs : IsOpen s) :
     ContDiffOn 𝕜 ∞ f s ↔ DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 ∞ (fun y => fderiv 𝕜 f y) s := by
   rw [cont_diff_on_top_iff_fderiv_within hs.unique_diff_on]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply cont_diff_on_congr
   intro x hx
   exact fderiv_within_of_open hs hx
@@ -2927,7 +2927,7 @@ end Smul
 
 section ConstSmul
 
-variable {R : Type _} [Semiring R] [Module R F] [SmulCommClass 𝕜 R F]
+variable {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F]
 
 variable [HasContinuousConstSmul R F]
 
@@ -3512,14 +3512,14 @@ theorem cont_diff_on_succ_iff_deriv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s�
     exact (this.is_bounded_linear_map_right _).ContDiff
 #align cont_diff_on_succ_iff_deriv_within cont_diff_on_succ_iff_deriv_within
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (formulated with `deriv`) is `C^n`. -/
 theorem cont_diff_on_succ_iff_deriv_of_open {n : ℕ} (hs : IsOpen s₂) :
     ContDiffOn 𝕜 (n + 1 : ℕ) f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 n (deriv f₂) s₂ := by
   rw [cont_diff_on_succ_iff_deriv_within hs.unique_diff_on]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   exact cont_diff_on_congr fun _ => deriv_within_of_open hs
 #align cont_diff_on_succ_iff_deriv_of_open cont_diff_on_succ_iff_deriv_of_open
 
@@ -3539,14 +3539,14 @@ theorem cont_diff_on_top_iff_deriv_within (hs : UniqueDiffOn 𝕜 s₂) :
     exact WithTop.coe_le_coe.2 (Nat.le_succ n)
 #align cont_diff_on_top_iff_deriv_within cont_diff_on_top_iff_deriv_within
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
 /-- A function is `C^∞` on an open domain if and only if it is differentiable
 there, and its derivative (formulated with `deriv`) is `C^∞`. -/
 theorem cont_diff_on_top_iff_deriv_of_open (hs : IsOpen s₂) :
     ContDiffOn 𝕜 ∞ f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 ∞ (deriv f₂) s₂ := by
   rw [cont_diff_on_top_iff_deriv_within hs.unique_diff_on]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   exact cont_diff_on_congr fun _ => deriv_within_of_open hs
 #align cont_diff_on_top_iff_deriv_of_open cont_diff_on_top_iff_deriv_of_open
 

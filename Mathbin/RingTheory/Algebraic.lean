@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.algebraic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -307,7 +307,7 @@ end Algebra
 
 variable {R S : Type _} [CommRing R] [IsDomain R] [CommRing S]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ≠ » (0 : R)) -/
 theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     (inj : ∀ x, algebraMap R S x = 0 → x = 0) :
     ∃ (x : integralClosure R S)(y : _)(_ : y ≠ (0 : R)), z * algebraMap R S y = x := by
@@ -321,7 +321,7 @@ theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
   exact ⟨⟨_, x_integral⟩, a, a_ne_zero, rfl⟩
 #align exists_integral_multiple exists_integral_multiple
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (d «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (d «expr ≠ » (0 : R)) -/
 /-- A fraction `(a : S) / (b : S)` can be reduced to `(c : S) / (d : R)`,
 if `S` is the integral closure of `R` in an algebraic extension `L` of `R`. -/
 theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S] [Algebra S L]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -763,7 +763,7 @@ theorem Union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.union
 #align
   box_integral.prepartition.is_partition.Union_subset BoxIntegral.Prepartition.IsPartition.Union_subset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (J «expr ∈ » π) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (J «expr ∈ » π) -/
 protected theorem exists_unique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J :=
   by 
   rcases h x hx with ⟨J, h, hx⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.kernel_pair
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -230,7 +230,7 @@ theorem of_is_iso_of_mono [IsIso a] [Mono f] : IsKernelPair f a a := by
   delta is_kernel_pair
   convert_to is_pullback a (a ≫ 𝟙 X) (𝟙 X ≫ f) f
   · rw [category.comp_id]; · rw [category.id_comp]
-  exact (is_pullback.of_horiz_is_iso ⟨rfl⟩).paste_vert (is_kernel_pair.id_of_mono f)
+  exact (is_pullback.of_horiz_is_iso ⟨rfl⟩).pasteVert (is_kernel_pair.id_of_mono f)
 #align
   category_theory.is_kernel_pair.of_is_iso_of_mono CategoryTheory.IsKernelPair.of_is_iso_of_mono
 

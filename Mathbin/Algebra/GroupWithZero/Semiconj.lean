@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.semiconj
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align semiconj_by.inv_symm_left_iff₀ SemiconjBy.inv_symm_left_iff₀ₓ'. -/
 @[simp]
 theorem inv_symm_left_iff₀ : SemiconjBy a⁻¹ x y ↔ SemiconjBy a y x :=
-  Classical.by_cases (fun ha : a = 0 => by simp only [ha, inv_zero, SemiconjBy.zero_left]) fun ha =>
+  by_cases (fun ha : a = 0 => by simp only [ha, inv_zero, SemiconjBy.zero_left]) fun ha =>
     @units_inv_symm_left_iff _ _ (Units.mk0 a ha) _ _
 #align semiconj_by.inv_symm_left_iff₀ SemiconjBy.inv_symm_left_iff₀
 

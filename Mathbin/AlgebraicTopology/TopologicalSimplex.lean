@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.topological_simplex
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem toTopObj.ext {x : SimplexCategory} (f g : x.toTopObj) : (f : x → ℝ�
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
 def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj := fun g =>
   ⟨fun i => ∑ j in Finset.univ.filter fun k => f k = i, g j, by
-    simp only [Finset.filter_congr_decidable, Finset.sum_congr, to_Top_obj, Set.mem_set_of]
+    simp only [Finset.filter_congr_decidable, Finset.sum_congr, to_Top_obj, Set.mem_setOf]
     rw [← Finset.sum_bUnion]
     convert g.2
     · rw [Finset.eq_univ_iff_forall]

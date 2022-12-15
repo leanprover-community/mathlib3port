@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.div
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem gcd_div_eq_one {β : Type _} {f : β → ℤ} (s : Finset β) {x : β} (
     (hfz : f x ≠ 0) : (s.gcd fun b => f b / s.gcd f) = 1 := by
   obtain ⟨g, he, hg⟩ := Finset.extract_gcd f ⟨x, hx⟩
   refine' ((Finset.gcd_congr rfl) fun a ha => _).trans hg
-  rw [he a ha, Int.mul_div_cancel_left]
+  rw [he a ha, Int.mul_ediv_cancel_left]
   exact mt Finset.gcd_eq_zero_iff.1 fun h => hfz <| h x hx
 #align finset.int.gcd_div_eq_one Finset.Int.gcd_div_eq_one
 

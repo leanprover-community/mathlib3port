@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.ring
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -563,7 +563,7 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem ring_hom_ext' ⦃F G : (⨁ i, A i) →+* R⦄
     (h : ∀ i, (↑F : _ →+ R).comp (of A i) = (↑G : _ →+ R).comp (of A i)) : F = G :=
-  RingHom.coe_add_monoid_hom_injective <| DirectSum.add_hom_ext' h
+  RingHom.coe_addMonoidHom_injective <| DirectSum.add_hom_ext' h
 #align direct_sum.ring_hom_ext' DirectSum.ring_hom_ext'
 
 /-- Two `ring_hom`s out of a direct sum are equal if they agree on the generators. -/
@@ -623,18 +623,18 @@ def liftRingHom :
   toFun f := toSemiring (fun _ => f.1) f.2.1 fun _ _ => f.2.2
   invFun F :=
     ⟨fun i => (F : (⨁ i, A i) →+ R).comp (of _ i), by
-      simp only [AddMonoidHom.comp_apply, RingHom.coe_add_monoid_hom]
+      simp only [AddMonoidHom.comp_apply, [anonymous]]
       rw [← F.map_one]
       rfl, fun i j ai aj => by
-      simp only [AddMonoidHom.comp_apply, RingHom.coe_add_monoid_hom]
+      simp only [AddMonoidHom.comp_apply, [anonymous]]
       rw [← F.map_mul, of_mul_of]⟩
   left_inv f := by 
     ext (xi xv)
     exact to_add_monoid_of (fun _ => f.1) xi xv
   right_inv F := by 
-    apply RingHom.coe_add_monoid_hom_injective
+    apply RingHom.coe_addMonoidHom_injective
     ext (xi xv)
-    simp only [RingHom.coe_add_monoid_hom_mk, DirectSum.to_add_monoid_of, AddMonoidHom.mk_coe,
+    simp only [RingHom.coe_addMonoidHom_mk, DirectSum.to_add_monoid_of, AddMonoidHom.mk_coe,
       AddMonoidHom.comp_apply, to_semiring_coe_add_monoid_hom]
 #align direct_sum.lift_ring_hom DirectSum.liftRingHom
 

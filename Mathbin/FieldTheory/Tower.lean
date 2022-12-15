@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.tower
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ Note this cannot be an instance as Lean cannot infer `L`.
 -/
 theorem left (K L : Type _) [Field K] [Algebra F K] [Ring L] [Nontrivial L] [Algebra F L]
     [Algebra K L] [IsScalarTower F K L] [FiniteDimensional F L] : FiniteDimensional F K :=
-  FiniteDimensional.ofInjective (IsScalarTower.toAlgHom F K L).toLinearMap (RingHom.injective _)
+  FiniteDimensional.of_injective (IsScalarTower.toAlgHom F K L).toLinearMap (RingHom.injective _)
 #align finite_dimensional.left FiniteDimensional.left
 
 theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
@@ -130,13 +130,13 @@ theorem Subalgebra.is_simple_order_of_finrank_prime (A) [Ring A] [IsDomain A] [A
   finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.is_simple_order_of_finrank_prime
 
 -- TODO: `intermediate_field` version
-instance linearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V] [Module F V]
+instance linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V] [Module F V]
     [AddCommGroup W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
     FiniteDimensional F (V →ₗ[F] W) :=
   let b := Basis.ofVectorSpace F V
   let c := Basis.ofVectorSpace F W
   (Matrix.toLin b c).FiniteDimensional
-#align finite_dimensional.linear_map FiniteDimensional.linearMap
+#align finite_dimensional.linear_map FiniteDimensional.linear_map
 
 theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V]
     [Module F V] [AddCommGroup W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
@@ -150,11 +150,11 @@ theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [Add
 -- TODO: generalize by removing [finite_dimensional F K]
 -- V = ⊕F,
 -- (V →ₗ[F] K) = ((⊕F) →ₗ[F] K) = (⊕ (F →ₗ[F] K)) = ⊕K
-instance linearMap' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
+instance linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
     [FiniteDimensional F K] [AddCommGroup V] [Module F V] [FiniteDimensional F V] :
     FiniteDimensional K (V →ₗ[F] K) :=
   right F _ _
-#align finite_dimensional.linear_map' FiniteDimensional.linearMap'
+#align finite_dimensional.linear_map' FiniteDimensional.linear_map'
 
 theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
     [FiniteDimensional F K] [AddCommGroup V] [Module F V] [FiniteDimensional F V] :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.regular_mono
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ class RegularMono (f : X ⟶ Y) where
   IsLimit : IsLimit (Fork.ofι f w)
 #align category_theory.regular_mono CategoryTheory.RegularMono
 
-attribute [reassoc] regular_mono.w
+attribute [reassoc.1] regular_mono.w
 
 /-- Every regular monomorphism is a monomorphism. -/
 instance (priority := 100) RegularMono.mono (f : X ⟶ Y) [RegularMono f] : Mono f :=
@@ -186,7 +186,7 @@ class RegularEpi (f : X ⟶ Y) where
   IsColimit : IsColimit (Cofork.ofπ f w)
 #align category_theory.regular_epi CategoryTheory.RegularEpi
 
-attribute [reassoc] regular_epi.w
+attribute [reassoc.1] regular_epi.w
 
 /-- Every regular epimorphism is an epimorphism. -/
 instance (priority := 100) RegularEpi.epi (f : X ⟶ Y) [RegularEpi f] : Epi f :=

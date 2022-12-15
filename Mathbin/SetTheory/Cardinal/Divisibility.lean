@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.divisibility
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem is_unit_iff : IsUnit a ↔ a = 1 := by
       exact isUnit_one⟩
   rcases eq_or_ne a 0 with (rfl | ha)
   · exact (not_isUnit_zero h).elim
-  rw [is_unit_iff_forall_dvd] at h
+  rw [isUnit_iff_forall_dvd] at h
   cases' h 1 with t ht
   rw [eq_comm, mul_eq_one_iff'] at ht
   · exact ht.1
@@ -110,7 +110,7 @@ theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m := by
 theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
   simp only [Prime, Nat.prime_iff]
   refine' and_congr (by simp) (and_congr _ ⟨fun h b c hbc => _, fun h b c hbc => _⟩)
-  · simp only [is_unit_iff, Nat.is_unit_iff]
+  · simp only [is_unit_iff, Nat.isUnit_iff]
     exact_mod_cast Iff.rfl
   · exact_mod_cast h b c (by exact_mod_cast hbc)
   cases' lt_or_le (b * c) ℵ₀ with h' h'

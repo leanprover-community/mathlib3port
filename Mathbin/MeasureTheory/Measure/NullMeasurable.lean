@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.null_measurable
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,7 +238,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)]
   hs.insert a
 #align measure_theory.null_measurable_set.insert MeasureTheory.NullMeasurableSet.insert
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊇ » s) -/
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s := by
   rcases h with ⟨t, htm, hst⟩
@@ -261,7 +261,7 @@ theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) :
 #align
   measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_to_measurable_compl_ae_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨toMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _,

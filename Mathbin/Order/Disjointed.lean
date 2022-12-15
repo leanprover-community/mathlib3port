@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.disjointed
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,6 +83,12 @@ theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed 
       ((disjointed_le f m).trans (le_partial_sups_of_le f (Nat.lt_add_one_iff.1 h)))
 #align disjoint_disjointed disjoint_disjointed
 
+/- warning: disjointed_rec -> disjointedRec is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] {f : Nat -> α} {p : α -> Sort.{u2}}, (forall {{t : α}} {{i : Nat}}, (p t) -> (p (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) t (f i)))) -> (forall {{n : Nat}}, (p (f n)) -> (p (disjointed.{u1} α _inst_1 f n)))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : GeneralizedBooleanAlgebra.{u2} α] {f : Nat -> α} {p : α -> Sort.{u1}}, (forall {{t : α}} {{i : Nat}}, (p t) -> (p (SDiff.sdiff.{u2} α (GeneralizedBooleanAlgebra.toHasSdiff.{u2} α _inst_1) t (f i)))) -> (forall {{n : Nat}}, (p (f n)) -> (p (disjointed.{u2} α _inst_1 f n)))
+Case conversion may be inaccurate. Consider using '#align disjointed_rec disjointedRecₓ'. -/
 /-- An induction principle for `disjointed`. To define/prove something on `disjointed f n`, it's
 enough to define/prove it for `f n` and being able to extend through diffs. -/
 def disjointedRec {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i)) :

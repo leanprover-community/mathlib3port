@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.power_series.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,6 +250,16 @@ theorem coeff_add_mul_monomial (a : R) : coeff R (m + n) (φ * monomial R n a) =
   exact le_add_left le_rfl
 #align mv_power_series.coeff_add_mul_monomial MvPowerSeries.coeff_add_mul_monomial
 
+@[simp]
+theorem commute_monomial {a : R} {n} : Commute φ (monomial R n a) ↔ ∀ m, Commute (coeff R m φ) a :=
+  by 
+  refine' ext_iff.trans ⟨fun h m => _, fun h m => _⟩
+  · have := h (m + n)
+    rwa [coeff_add_mul_monomial, add_comm, coeff_add_monomial_mul] at this
+  · rw [coeff_mul_monomial, coeff_monomial_mul]
+    split_ifs <;> [apply h, rfl]
+#align mv_power_series.commute_monomial MvPowerSeries.commute_monomial
+
 protected theorem one_mul : (1 : MvPowerSeries σ R) * φ = φ :=
   ext fun n => by simpa using coeff_add_monomial_mul 0 n φ 1
 #align mv_power_series.one_mul MvPowerSeries.one_mul
@@ -389,6 +399,10 @@ theorem coeff_zero_X (s : σ) : coeff R (0 : σ →₀ ℕ) (x s : MvPowerSeries
   exact one_ne_zero (single_eq_zero.mp h.symm)
 #align mv_power_series.coeff_zero_X MvPowerSeries.coeff_zero_X
 
+theorem commute_X (φ : MvPowerSeries σ R) (s : σ) : Commute φ (x s) :=
+  φ.commute_monomial.mpr fun m => Commute.one_right _
+#align mv_power_series.commute_X MvPowerSeries.commute_X
+
 theorem X_def (s : σ) : x s = monomial R (single s 1) 1 :=
   rfl
 #align mv_power_series.X_def MvPowerSeries.X_def
@@ -420,8 +434,7 @@ theorem coeff_zero_mul_X (φ : MvPowerSeries σ R) (s : σ) : coeff R (0 : σ �
 #align mv_power_series.coeff_zero_mul_X MvPowerSeries.coeff_zero_mul_X
 
 theorem coeff_zero_X_mul (φ : MvPowerSeries σ R) (s : σ) : coeff R (0 : σ →₀ ℕ) (x s * φ) = 0 := by
-  have : ¬single s 1 ≤ 0 := fun h => by simpa using h s
-  simp only [X, coeff_monomial_mul, if_neg this]
+  rw [← (φ.commute_X s).Eq, coeff_zero_mul_X]
 #align mv_power_series.coeff_zero_X_mul MvPowerSeries.coeff_zero_X_mul
 
 variable (σ) (R)
@@ -1286,6 +1299,10 @@ def x : PowerSeries R :=
   MvPowerSeries.x ()
 #align power_series.X PowerSeries.x
 
+theorem commute_X (φ : PowerSeries R) : Commute φ x :=
+  φ.commute_X _
+#align power_series.commute_X PowerSeries.commute_X
+
 @[simp]
 theorem coeff_zero_eq_constant_coeff : ⇑(coeff R 0) = constantCoeff R := by
   rw [coeff, Finsupp.single_zero]
@@ -1890,7 +1907,7 @@ instance [NoZeroDivisors R] :
       (PowerSeries R) where eq_zero_or_eq_zero_of_mul_eq_zero := eq_zero_or_eq_zero_of_mul_eq_zero
 
 instance [IsDomain R] : IsDomain (PowerSeries R) :=
-  NoZeroDivisors.to_is_domain _
+  NoZeroDivisors.toIsDomain _
 
 end Domain
 
@@ -2309,7 +2326,7 @@ theorem X_pow_order_dvd (h : (order φ).Dom) : X ^ (order φ).get h ∣ φ := by
     simpa [PartEnat.coe_lt_iff] using fun _ => hn
 #align power_series.X_pow_order_dvd PowerSeries.X_pow_order_dvd
 
-theorem order_eq_multiplicity_X {R : Type _} [CommSemiring R] (φ : PowerSeries R) :
+theorem order_eq_multiplicity_X {R : Type _} [Semiring R] (φ : PowerSeries R) :
     order φ = multiplicity x φ := by
   rcases eq_or_ne φ 0 with (rfl | hφ)
   · simp
@@ -2322,7 +2339,7 @@ theorem order_eq_multiplicity_X {R : Type _} [CommSemiring R] (φ : PowerSeries 
       (PartEnat.find_le _ _ _)
   rintro ⟨ψ, H⟩
   have := congr_arg (coeff R n) H
-  rw [mul_comm, coeff_mul_of_lt_order, ← hn] at this
+  rw [← (ψ.commute_X.pow_right _).Eq, coeff_mul_of_lt_order, ← hn] at this
   · exact coeff_order _ this
   · rw [X_pow_eq, order_monomial]
     split_ifs

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.path_category
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,7 +152,7 @@ variable (W : Type u₂) [Quiver.{v₂ + 1} W]
 @[simp]
 theorem Prefunctor.map_path_comp' (F : V ⥤q W) {X Y Z : Paths V} (f : X ⟶ Y) (g : Y ⟶ Z) :
     F.mapPath (f ≫ g) = (F.mapPath f).comp (F.mapPath g) :=
-  Prefunctor.map_path_comp _ _ _
+  Prefunctor.mapPath_comp _ _ _
 #align category_theory.prefunctor.map_path_comp' CategoryTheory.Prefunctor.map_path_comp'
 
 end

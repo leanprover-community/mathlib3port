@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.sheafification
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -519,7 +519,7 @@ theorem sheafify_map_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) 
 #align
   category_theory.grothendieck_topology.sheafify_map_comp CategoryTheory.GrothendieckTopology.sheafify_map_comp
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem to_sheafify_naturality {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
     η ≫ J.toSheafify _ = J.toSheafify _ ≫ J.sheafifyMap η := by
   dsimp [sheafify_map, sheafify, to_sheafify]
@@ -593,7 +593,7 @@ def sheafifyLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q
 #align
   category_theory.grothendieck_topology.sheafify_lift CategoryTheory.GrothendieckTopology.sheafifyLift
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem to_sheafify_sheafify_lift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) :
     J.toSheafify P ≫ sheafifyLift J η hQ = η := by
   dsimp only [sheafify_lift, to_sheafify]
@@ -628,7 +628,7 @@ theorem sheafify_hom_ext {P Q : Cᵒᵖ ⥤ D} (η γ : J.sheafify P ⟶ Q) (hQ 
 #align
   category_theory.grothendieck_topology.sheafify_hom_ext CategoryTheory.GrothendieckTopology.sheafify_hom_ext
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem sheafify_map_sheafify_lift {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R)
     (hR : Presheaf.IsSheaf J R) :
     J.sheafifyMap η ≫ J.sheafifyLift γ hR = J.sheafifyLift (η ≫ γ) hR := by
@@ -731,7 +731,7 @@ instance is_iso_sheafification_adjunction_counit (P : SheafCat J D) :
   category_theory.is_iso_sheafification_adjunction_counit CategoryTheory.is_iso_sheafification_adjunction_counit
 
 instance sheafification_reflective : IsIso (sheafificationAdjunction J D).counit :=
-  NatIso.is_iso_of_is_iso_app _
+  NatIso.isIso_of_isIso_app _
 #align category_theory.sheafification_reflective CategoryTheory.sheafification_reflective
 
 end CategoryTheory

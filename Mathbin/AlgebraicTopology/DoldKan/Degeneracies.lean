@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.degeneracies
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,14 +119,14 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
           linarith
 #align algebraic_topology.dold_kan.σ_comp_P_eq_zero AlgebraicTopology.DoldKan.σ_comp_P_eq_zero
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem σ_comp_P_infty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ pInfty.f (n + 1) = 0 := by
   rw [P_infty_f, σ_comp_P_eq_zero X i]
   simp only [le_add_iff_nonneg_left, zero_le]
 #align algebraic_topology.dold_kan.σ_comp_P_infty AlgebraicTopology.DoldKan.σ_comp_P_infty
 
-@[reassoc]
+@[reassoc.1]
 theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory}
     (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ pInfty.f n = 0 := by
   rw [SimplexCategory.mono_iff_injective] at hθ

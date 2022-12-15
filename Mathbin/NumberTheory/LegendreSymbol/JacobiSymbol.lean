@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.jacobi_symbol
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -225,8 +225,8 @@ theorem mod_left (a : ℤ) (b : ℕ) : J(a | b) = J(a % b | b) :=
       (by 
         rintro p hp _ _
         conv_rhs =>
-          rw [legendreSym.mod, Int.mod_mod_of_dvd _ (Int.coe_nat_dvd.2 <| dvd_of_mem_factors hp), ←
-            legendreSym.mod])
+          rw [legendreSym.mod, Int.emod_emod_of_dvd _ (Int.coe_nat_dvd.2 <| dvd_of_mem_factors hp),
+            ← legendreSym.mod])
 #align jacobi_sym.mod_left jacobiSym.mod_left
 
 /-- The symbol `J(a | b)` depends only on `a` mod `b`. -/
@@ -431,7 +431,7 @@ theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * 
   congr 1; swap; congr 1
   · simp_rw [qrSign]
     rw [χ₄_nat_mod_four, χ₄_nat_mod_four (b % (4 * a)), mod_mod_of_dvd b (dvd_mul_right 4 a)]
-  · rw [mod_left ↑(b % _), mod_left b, Int.coe_nat_mod, Int.mod_mod_of_dvd b]
+  · rw [mod_left ↑(b % _), mod_left b, Int.coe_nat_mod, Int.emod_emod_of_dvd b]
     simp only [ha₂, Nat.cast_mul, ← mul_assoc]
     exact dvd_mul_left a' _
   cases e; · rfl

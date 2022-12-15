@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module data.polynomial.unit_trinomial
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ theorem is_unit_trinomial_iff' :
       sum_insert (mt mem_insert.mp (not_or_of_not hkm.ne (mt mem_singleton.mp (hkm.trans hmn).Ne))),
       sum_insert (mt mem_singleton.mp hmn.ne), sum_singleton, trinomial_leading_coeff' hkm hmn,
       trinomial_middle_coeff hkm hmn, trinomial_trailing_coeff' hkm hmn]
-    simp_rw [← Units.coe_pow, Int.units_sq, Units.val_one, ← add_assoc, bit1, bit0]
+    simp_rw [← Units.val_pow_eq_pow_val, Int.units_sq, Units.val_one, ← add_assoc, bit1, bit0]
   · have key : ∀ k ∈ p.support, p.coeff k ^ 2 = 1 := fun k hk =>
       Int.sq_eq_one_of_sq_le_three
         ((single_le_sum (fun k hk => sq_nonneg (p.coeff k)) hk).trans hp.le) (mem_support_iff.mp hk)
@@ -292,11 +292,11 @@ theorem irreducible_aux3 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k 
   rw [eval_mul, eval_mul, mirror_eval_one, mirror_eval_one, ← sq, ← sq, hp, hq] at hadd
   simp only [eval_add, eval_C_mul, eval_pow, eval_X, one_pow, mul_one, trinomial_def] at hadd
   rw [add_assoc, add_assoc, add_comm ↑u, add_comm ↑x, add_assoc, add_assoc] at hadd
-  simp only [add_sq', add_assoc, add_right_inj, ← Units.coe_pow, Int.units_sq] at hadd
+  simp only [add_sq', add_assoc, add_right_inj, ← Units.val_pow_eq_pow_val, Int.units_sq] at hadd
   rw [mul_assoc, hmul, ← mul_assoc, add_right_inj,
     mul_right_inj' (show 2 * (v : ℤ) ≠ 0 from mul_ne_zero two_ne_zero v.ne_zero)] at hadd
   replace hadd :=
-    (Int.is_unit_add_is_unit_eq_is_unit_add_is_unit w.is_unit u.is_unit z.is_unit x.is_unit).mp hadd
+    (Int.isUnit_add_isUnit_eq_isUnit_add_isUnit w.is_unit u.is_unit z.is_unit x.is_unit).mp hadd
   simp only [Units.eq_iff] at hadd
   rcases hadd with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
   · exact irreducible_aux2 hkm hmn hkm' hmn' u v w hp hq h

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.ramification_inertia
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -780,14 +780,14 @@ theorem Factors.finrank_pow_ramification_idx [p.IsMaximal]
   exact factors.ne_bot p P
 #align ideal.factors.finrank_pow_ramification_idx Ideal.Factors.finrank_pow_ramification_idx
 
-instance Factors.finiteDimensionalQuotient [IsNoetherian R S] [p.IsMaximal]
+instance Factors.finite_dimensional_quotient [IsNoetherian R S] [p.IsMaximal]
     (P : (factors (map (algebraMap R S) p)).toFinset) :
     FiniteDimensional (R ⧸ p) (S ⧸ (P : Ideal S)) :=
   IsNoetherian.iff_fg.mp <|
     is_noetherian_of_tower R <|
       is_noetherian_of_surjective S (Ideal.Quotient.mkₐ _ _).toLinearMap <|
         LinearMap.range_eq_top.mpr Ideal.Quotient.mk_surjective
-#align ideal.factors.finite_dimensional_quotient Ideal.Factors.finiteDimensionalQuotient
+#align ideal.factors.finite_dimensional_quotient Ideal.Factors.finite_dimensional_quotient
 
 theorem Factors.inertia_deg_ne_zero [IsNoetherian R S] [p.IsMaximal]
     (P : (factors (map (algebraMap R S) p)).toFinset) : inertiaDeg (algebraMap R S) p P ≠ 0 := by
@@ -795,13 +795,13 @@ theorem Factors.inertia_deg_ne_zero [IsNoetherian R S] [p.IsMaximal]
   exact (finite_dimensional.finrank_pos_iff.mpr inferInstance).ne'
 #align ideal.factors.inertia_deg_ne_zero Ideal.Factors.inertia_deg_ne_zero
 
-instance Factors.finiteDimensionalQuotientPow [IsNoetherian R S] [p.IsMaximal]
+instance Factors.finite_dimensional_quotient_pow [IsNoetherian R S] [p.IsMaximal]
     (P : (factors (map (algebraMap R S) p)).toFinset) :
     FiniteDimensional (R ⧸ p) (S ⧸ (P : Ideal S) ^ ramificationIdx (algebraMap R S) p P) := by
-  refine' FiniteDimensional.finiteDimensionalOfFinrank _
+  refine' FiniteDimensional.finite_dimensional_of_finrank _
   rw [pos_iff_ne_zero, factors.finrank_pow_ramification_idx]
   exact mul_ne_zero (factors.ramification_idx_ne_zero p P) (factors.inertia_deg_ne_zero p P)
-#align ideal.factors.finite_dimensional_quotient_pow Ideal.Factors.finiteDimensionalQuotientPow
+#align ideal.factors.finite_dimensional_quotient_pow Ideal.Factors.finite_dimensional_quotient_pow
 
 universe w
 

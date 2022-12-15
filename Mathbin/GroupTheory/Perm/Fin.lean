@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.perm.fin
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ theorem is_cycle_fin_rotate {n : ℕ} : IsCycle (finRotate (n + 2)) := by
   refine' ⟨0, by decide, fun x hx' => ⟨x, _⟩⟩
   clear hx'
   cases' x with x hx
-  rw [coe_coe, zpow_coe_nat, Fin.ext_iff, Fin.coe_mk]
+  rw [coe_coe, zpow_ofNat, Fin.ext_iff, Fin.coe_mk]
   induction' x with x ih; · rfl
   rw [pow_succ, perm.mul_apply, coe_fin_rotate_of_ne_last, ih (lt_trans x.lt_succ_self hx)]
   rw [Ne.def, Fin.ext_iff, ih (lt_trans x.lt_succ_self hx), Fin.coe_last]

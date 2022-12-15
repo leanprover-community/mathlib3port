@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.sets.closeds
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ theorem coe_mk (s : Set α) (h) : (mk s h : Set α) = s :=
 
 /-- The closure of a set, as an element of `closeds`. -/
 protected def closure (s : Set α) : Closeds α :=
-  ⟨closure s, isClosedClosure⟩
+  ⟨closure s, is_closed_closure⟩
 #align topological_space.closeds.closure TopologicalSpace.Closeds.closure
 
 theorem gc : GaloisConnection Closeds.closure (coe : Closeds α → Set α) := fun s U =>
@@ -87,9 +87,9 @@ instance : CompleteLattice (Closeds α) :=
     (GaloisInsertion.liftCompleteLattice gi)-- le
     _
     rfl-- top
-    ⟨univ, isClosedUniv⟩
+    ⟨univ, is_closed_univ⟩
     rfl-- bot
-    ⟨∅, isClosedEmpty⟩
+    ⟨∅, is_closed_empty⟩
     (SetLike.coe_injective closure_empty.symm)
     (-- sup
     fun s t => ⟨s ∪ t, s.2.union t.2⟩)
@@ -100,7 +100,7 @@ instance : CompleteLattice (Closeds α) :=
     _
     rfl
     (-- Inf
-    fun S => ⟨⋂ s ∈ S, ↑s, isClosedBInter fun s _ => s.2⟩)
+    fun S => ⟨⋂ s ∈ S, ↑s, is_closed_bInter fun s _ => s.2⟩)
     (funext fun S => SetLike.coe_injective Inf_image.symm)
 
 /-- The type of closed sets is inhabited, with default element the empty set. -/
@@ -145,7 +145,7 @@ theorem coe_finset_inf (f : ι → Closeds α) (s : Finset ι) :
 #align topological_space.closeds.coe_finset_inf TopologicalSpace.Closeds.coe_finset_inf
 
 theorem infi_def {ι} (s : ι → Closeds α) :
-    (⨅ i, s i) = ⟨⋂ i, s i, isClosedInter fun i => (s i).2⟩ := by
+    (⨅ i, s i) = ⟨⋂ i, s i, is_closed_Inter fun i => (s i).2⟩ := by
   ext
   simp only [infi, coe_Inf, bInter_range]
   rfl
@@ -153,7 +153,7 @@ theorem infi_def {ι} (s : ι → Closeds α) :
 
 @[simp]
 theorem infi_mk {ι} (s : ι → Set α) (h : ∀ i, IsClosed (s i)) :
-    (⨅ i, ⟨s i, h i⟩ : Closeds α) = ⟨⋂ i, s i, isClosedInter h⟩ := by simp [infi_def]
+    (⨅ i, ⟨s i, h i⟩ : Closeds α) = ⟨⋂ i, s i, is_closed_Inter h⟩ := by simp [infi_def]
 #align topological_space.closeds.infi_mk TopologicalSpace.Closeds.infi_mk
 
 @[simp, norm_cast]
@@ -180,7 +180,7 @@ instance : Coframe (Closeds α) :=
 /-- The term of `closeds α` corresponding to a singleton. -/
 @[simps]
 def singleton [T1Space α] (x : α) : Closeds α :=
-  ⟨{x}, isClosedSingleton⟩
+  ⟨{x}, is_closed_singleton⟩
 #align topological_space.closeds.singleton TopologicalSpace.Closeds.singleton
 
 end Closeds
@@ -194,7 +194,7 @@ def Closeds.compl (s : Closeds α) : Opens α :=
 /-- The complement of an open set as a closed set. -/
 @[simps]
 def Opens.compl (s : Opens α) : Closeds α :=
-  ⟨sᶜ, s.2.isClosedCompl⟩
+  ⟨sᶜ, s.2.is_closed_compl⟩
 #align topological_space.opens.compl TopologicalSpace.Opens.compl
 
 theorem Closeds.compl_compl (s : Closeds α) : s.compl.compl = s :=
@@ -255,7 +255,7 @@ theorem Closeds.is_atom_iff [T1Space α] {s : Closeds α} : IsAtom s ↔ ∃ x, 
   simpa only [← this, (s : Set α).is_atom_iff, SetLike.ext_iff, Set.ext_iff]
 #align topological_space.closeds.is_atom_iff TopologicalSpace.Closeds.is_atom_iff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]] -/
 /-- in a `t1_space`, coatoms of `opens α` are precisely complements of singletons:
 `(closeds.singleton x).compl`. -/
 theorem Opens.is_coatom_iff [T1Space α] {s : Opens α} :
@@ -264,7 +264,7 @@ theorem Opens.is_coatom_iff [T1Space α] {s : Opens α} :
   change IsAtom (closeds.compl_order_iso α s.compl) ↔ _
   rw [(closeds.compl_order_iso α).is_atom_iff, closeds.is_atom_iff]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
   exact closeds.compl_bijective.injective.eq_iff.symm
 #align topological_space.opens.is_coatom_iff TopologicalSpace.Opens.is_coatom_iff
 

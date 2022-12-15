@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.functor_category
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,15 +28,15 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 variable {D : Type u₂} [Category.{v₂} D]
 
-instance functor_category_has_finite_limits [HasFiniteLimits D] :
+instance functorCategoryHasFiniteLimits [HasFiniteLimits D] :
     HasFiniteLimits (C ⥤ D) where out J _ _ := inferInstance
 #align
-  category_theory.limits.functor_category_has_finite_limits CategoryTheory.Limits.functor_category_has_finite_limits
+  category_theory.limits.functor_category_has_finite_limits CategoryTheory.Limits.functorCategoryHasFiniteLimits
 
-instance functor_category_has_finite_colimits [HasFiniteColimits D] :
+instance functorCategoryHasFiniteColimits [HasFiniteColimits D] :
     HasFiniteColimits (C ⥤ D) where out J _ _ := inferInstance
 #align
-  category_theory.limits.functor_category_has_finite_colimits CategoryTheory.Limits.functor_category_has_finite_colimits
+  category_theory.limits.functor_category_has_finite_colimits CategoryTheory.Limits.functorCategoryHasFiniteColimits
 
 end CategoryTheory.Limits
 

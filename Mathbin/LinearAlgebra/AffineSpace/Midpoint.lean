@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.midpoint
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,11 +73,11 @@ omit V'
 theorem AffineEquiv.point_reflection_midpoint_left (x y : P) :
     pointReflection R (midpoint R x y) x = y := by
   rw [midpoint, point_reflection_apply, line_map_apply, vadd_vsub, vadd_vadd, ← add_smul, ← two_mul,
-    mul_inv_of_self, one_smul, vsub_vadd]
+    mul_invOf_self, one_smul, vsub_vadd]
 #align affine_equiv.point_reflection_midpoint_left AffineEquiv.point_reflection_midpoint_left
 
 theorem midpoint_comm (x y : P) : midpoint R x y = midpoint R y x := by
-  rw [midpoint, ← line_map_apply_one_sub, one_sub_inv_of_two, midpoint]
+  rw [midpoint, ← line_map_apply_one_sub, one_sub_invOf_two, midpoint]
 #align midpoint_comm midpoint_comm
 
 @[simp]
@@ -212,7 +212,7 @@ theorem midpoint_zero_add (x y : V) : midpoint R 0 (x + y) = midpoint R x y :=
 
 theorem midpoint_eq_smul_add (x y : V) : midpoint R x y = (⅟ 2 : R) • (x + y) := by
   rw [midpoint_eq_iff, point_reflection_apply, vsub_eq_sub, vadd_eq_add, sub_add_eq_add_sub, ←
-    two_smul R, smul_smul, mul_inv_of_self, one_smul, add_sub_cancel']
+    two_smul R, smul_smul, mul_invOf_self, one_smul, add_sub_cancel']
 #align midpoint_eq_smul_add midpoint_eq_smul_add
 
 @[simp]

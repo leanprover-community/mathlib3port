@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_distance
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,7 +213,7 @@ theorem IsOpen.exists_Union_is_closed {U : Set α} (hU : IsOpen U) :
     have : inf_edist x (Uᶜ) ≠ 0 := ((Ennreal.pow_pos a_pos _).trans_le hx).ne'
     contrapose! this
     exact inf_edist_zero_of_mem this
-  refine' ⟨F, fun n => IsClosed.preimage continuous_inf_edist isClosedIci, F_subset, _, _⟩
+  refine' ⟨F, fun n => IsClosed.preimage continuous_inf_edist is_closed_Ici, F_subset, _, _⟩
   show Monotone F
   · intro m n hmn x hx
     simp only [mem_Ici, mem_preimage] at hx⊢
@@ -398,7 +398,8 @@ theorem Hausdorff_edist_zero_iff_closure_eq_closure :
         mem_closure_iff_inf_edist_zero, subset_def]
     _ ↔ closure s = closure t :=
       ⟨fun h =>
-        Subset.antisymm (closure_minimal h.1 isClosedClosure) (closure_minimal h.2 isClosedClosure),
+        Subset.antisymm (closure_minimal h.1 is_closed_closure)
+          (closure_minimal h.2 is_closed_closure),
         fun h => ⟨h ▸ subset_closure, h.symm ▸ subset_closure⟩⟩
     
 #align
@@ -1107,9 +1108,9 @@ theorem cthickening_eq_preimage_inf_edist (δ : ℝ) (E : Set α) :
 #align metric.cthickening_eq_preimage_inf_edist Metric.cthickening_eq_preimage_inf_edist
 
 /-- The closed thickening is a closed set. -/
-theorem isClosedCthickening {δ : ℝ} {E : Set α} : IsClosed (cthickening δ E) :=
-  IsClosed.preimage continuous_inf_edist isClosedIic
-#align metric.is_closed_cthickening Metric.isClosedCthickening
+theorem is_closed_cthickening {δ : ℝ} {E : Set α} : IsClosed (cthickening δ E) :=
+  IsClosed.preimage continuous_inf_edist is_closed_Iic
+#align metric.is_closed_cthickening Metric.is_closed_cthickening
 
 /-- The closed thickening of the empty set is empty. -/
 @[simp]
@@ -1202,7 +1203,7 @@ theorem thickening_subset_interior_cthickening (δ : ℝ) (E : Set α) :
 
 theorem closure_thickening_subset_cthickening (δ : ℝ) (E : Set α) :
     closure (thickening δ E) ⊆ cthickening δ E :=
-  (closure_mono (thickening_subset_cthickening δ E)).trans isClosedCthickening.closure_subset
+  (closure_mono (thickening_subset_cthickening δ E)).trans is_closed_cthickening.closure_subset
 #align metric.closure_thickening_subset_cthickening Metric.closure_thickening_subset_cthickening
 
 /-- The closed thickening of a set contains the closure of the set. -/
@@ -1347,7 +1348,7 @@ theorem Disjoint.exists_cthickenings (hst : Disjoint s t) (hs : IsCompact s) (ht
 
 theorem IsCompact.exists_cthickening_subset_open (hs : IsCompact s) (ht : IsOpen t) (hst : s ⊆ t) :
     ∃ δ, 0 < δ ∧ cthickening δ s ⊆ t :=
-  (hst.disjoint_compl_right.exists_cthickenings hs ht.isClosedCompl).imp fun δ h =>
+  (hst.disjoint_compl_right.exists_cthickenings hs ht.is_closed_compl).imp fun δ h =>
     ⟨h.1, disjoint_compl_right_iff_subset.1 <| h.2.mono_right <| self_subset_cthickening _⟩
 #align is_compact.exists_cthickening_subset_open IsCompact.exists_cthickening_subset_open
 
@@ -1467,8 +1468,18 @@ theorem closed_ball_subset_cthickening {α : Type _} [PseudoMetricSpace α] {x :
   simpa using hx
 #align metric.closed_ball_subset_cthickening Metric.closed_ball_subset_cthickening
 
+theorem cthickening_subset_Union_closed_ball_of_lt {α : Type _} [PseudoMetricSpace α] (E : Set α)
+    {δ δ' : ℝ} (hδ₀ : 0 < δ') (hδδ' : δ < δ') : cthickening δ E ⊆ ⋃ x ∈ E, closedBall x δ' := by
+  refine' (cthickening_subset_thickening' hδ₀ hδδ' E).trans fun x hx => _
+  obtain ⟨y, hy₁, hy₂⟩ := mem_thickening_iff.mp hx
+  exact mem_Union₂.mpr ⟨y, hy₁, hy₂.le⟩
+#align
+  metric.cthickening_subset_Union_closed_ball_of_lt Metric.cthickening_subset_Union_closed_ball_of_lt
+
 /-- The closed thickening of a compact set `E` is the union of the balls `closed_ball x δ` over
-`x ∈ E`. -/
+`x ∈ E`.
+
+See also `metric.cthickening_eq_bUnion_closed_ball`. -/
 theorem IsCompact.cthickening_eq_bUnion_closed_ball {α : Type _} [PseudoMetricSpace α] {δ : ℝ}
     {E : Set α} (hE : IsCompact E) (hδ : 0 ≤ δ) : cthickening δ E = ⋃ x ∈ E, closedBall x δ := by
   rcases eq_empty_or_nonempty E with (rfl | hne)
@@ -1482,6 +1493,27 @@ theorem IsCompact.cthickening_eq_bUnion_closed_ball {α : Type _} [PseudoMetricS
     exact (Ennreal.of_real_le_of_real_iff hδ).1 D1
   exact mem_bUnion yE D2
 #align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_bUnion_closed_ball
+
+theorem cthickening_eq_bUnion_closed_ball {α : Type _} [PseudoMetricSpace α] [ProperSpace α]
+    (E : Set α) (hδ : 0 ≤ δ) : cthickening δ E = ⋃ x ∈ closure E, closedBall x δ := by
+  rcases eq_empty_or_nonempty E with (rfl | hne)
+  · simp only [cthickening_empty, Union_false, Union_empty, closure_empty]
+  rw [← cthickening_closure]
+  refine'
+    subset.antisymm (fun x hx => _) (Union₂_subset fun x hx => closed_ball_subset_cthickening hx _)
+  obtain ⟨y, yE, hy⟩ : ∃ y ∈ closure E, inf_dist x (closure E) = dist x y :=
+    is_closed_closure.exists_inf_dist_eq_dist (closure_nonempty_iff.mpr hne) x
+  replace hy : dist x y ≤ δ :=
+    (Ennreal.of_real_le_of_real_iff hδ).mp
+      (((congr_arg Ennreal.ofReal hy.symm).le.trans Ennreal.of_real_to_real_le).trans hx)
+  exact mem_bUnion yE hy
+#align metric.cthickening_eq_bUnion_closed_ball Metric.cthickening_eq_bUnion_closed_ball
+
+theorem IsClosed.cthickening_eq_bUnion_closed_ball {α : Type _} [PseudoMetricSpace α]
+    [ProperSpace α] {E : Set α} (hE : IsClosed E) (hδ : 0 ≤ δ) :
+    cthickening δ E = ⋃ x ∈ E, closedBall x δ := by
+  rw [cthickening_eq_bUnion_closed_ball E hδ, hE.closure_eq]
+#align is_closed.cthickening_eq_bUnion_closed_ball IsClosed.cthickening_eq_bUnion_closed_ball
 
 /-- For the equality, see `inf_edist_cthickening`. -/
 theorem inf_edist_le_inf_edist_cthickening_add :

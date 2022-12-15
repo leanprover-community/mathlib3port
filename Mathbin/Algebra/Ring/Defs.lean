@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.defs
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -223,7 +223,7 @@ theorem mul_one_add [LeftDistribClass α] (a b : α) : a * (1 + b) = a + a * b :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : MulOneClass.{u1} α] [_inst_3 : RightDistribClass.{u1} α (MulOneClass.toHasMul.{u1} α _inst_2) _inst_1] (n : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_2)) (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α _inst_2))))) n) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α _inst_1) n n)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (_inst_2 : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (Semiring.toNatCast.{u1} α _inst_1) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) _inst_2) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) _inst_2 _inst_2)
+  forall {α : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} α] (_inst_2 : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (NonAssocSemiring.toNatCast.{u1} α _inst_1) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) _inst_2) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1)))) _inst_2 _inst_2)
 Case conversion may be inaccurate. Consider using '#align two_mul two_mulₓ'. -/
 theorem two_mul [RightDistribClass α] (n : α) : 2 * n = n + n :=
   Eq.trans (right_distrib 1 1 n) (by simp)
@@ -233,7 +233,7 @@ theorem two_mul [RightDistribClass α] (n : α) : 2 * n = n + n :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : MulOneClass.{u1} α] [_inst_3 : RightDistribClass.{u1} α (MulOneClass.toHasMul.{u1} α _inst_2) _inst_1] (n : α), Eq.{succ u1} α (bit0.{u1} α _inst_1 n) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_2)) (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α _inst_2))))) n)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (_inst_2 : α), Eq.{succ u1} α (bit0.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) _inst_2) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (Semiring.toNatCast.{u1} α _inst_1) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) _inst_2)
+  forall {α : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} α] (_inst_2 : α), Eq.{succ u1} α (bit0.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1))) _inst_2) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (NonAssocSemiring.toNatCast.{u1} α _inst_1) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) _inst_2)
 Case conversion may be inaccurate. Consider using '#align bit0_eq_two_mul bit0_eq_two_mulₓ'. -/
 theorem bit0_eq_two_mul [RightDistribClass α] (n : α) : bit0 n = 2 * n :=
   (two_mul _).symm
@@ -243,7 +243,7 @@ theorem bit0_eq_two_mul [RightDistribClass α] (n : α) : bit0 n = 2 * n :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : MulOneClass.{u1} α] [_inst_3 : LeftDistribClass.{u1} α (MulOneClass.toHasMul.{u1} α _inst_2) _inst_1] (n : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_2)) n (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α _inst_2)))))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α _inst_1) n n)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (_inst_2 : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) _inst_2 (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (Semiring.toNatCast.{u1} α _inst_1) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) _inst_2 _inst_2)
+  forall {α : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} α] (_inst_2 : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1))) _inst_2 (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (NonAssocSemiring.toNatCast.{u1} α _inst_1) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1)))) _inst_2 _inst_2)
 Case conversion may be inaccurate. Consider using '#align mul_two mul_twoₓ'. -/
 theorem mul_two [LeftDistribClass α] (n : α) : n * 2 = n + n :=
   (left_distrib n 1 1).trans (by simp)
@@ -393,7 +393,7 @@ section HasDistribNeg
 
 This is useful for dealing with submonoids of a ring that contain `-1` without having to duplicate
 lemmas. -/
-class HasDistribNeg (α : Type _) [Mul α] extends HasInvolutiveNeg α where
+class HasDistribNeg (α : Type _) [Mul α] extends InvolutiveNeg α where
   neg_mul : ∀ x y : α, -x * y = -(x * y)
   mul_neg : ∀ x y : α, x * -y = -(x * y)
 #align has_distrib_neg HasDistribNeg
@@ -405,9 +405,9 @@ variable [Mul α] [HasDistribNeg α]
 
 /- warning: neg_mul -> neg_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
 Case conversion may be inaccurate. Consider using '#align neg_mul neg_mulₓ'. -/
 @[simp]
 theorem neg_mul (a b : α) : -a * b = -(a * b) :=
@@ -416,9 +416,9 @@ theorem neg_mul (a b : α) : -a * b = -(a * b) :=
 
 /- warning: mul_neg -> mul_neg is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b)) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b)) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b)) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) b)) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
 Case conversion may be inaccurate. Consider using '#align mul_neg mul_negₓ'. -/
 @[simp]
 theorem mul_neg (a b : α) : a * -b = -(a * b) :=
@@ -427,18 +427,18 @@ theorem mul_neg (a b : α) : a * -b = -(a * b) :=
 
 /- warning: neg_mul_neg -> neg_mul_neg is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align neg_mul_neg neg_mul_negₓ'. -/
 theorem neg_mul_neg (a b : α) : -a * -b = a * b := by simp
 #align neg_mul_neg neg_mul_neg
 
 /- warning: neg_mul_eq_neg_mul -> neg_mul_eq_neg_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b)
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b)
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b)
 Case conversion may be inaccurate. Consider using '#align neg_mul_eq_neg_mul neg_mul_eq_neg_mulₓ'. -/
 theorem neg_mul_eq_neg_mul (a b : α) : -(a * b) = -a * b :=
   (neg_mul _ _).symm
@@ -446,9 +446,9 @@ theorem neg_mul_eq_neg_mul (a b : α) : -(a * b) = -a * b :=
 
 /- warning: neg_mul_eq_mul_neg -> neg_mul_eq_mul_neg is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b))
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b))
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) b))
 Case conversion may be inaccurate. Consider using '#align neg_mul_eq_mul_neg neg_mul_eq_mul_negₓ'. -/
 theorem neg_mul_eq_mul_neg (a b : α) : -(a * b) = a * -b :=
   (mul_neg _ _).symm
@@ -456,9 +456,9 @@ theorem neg_mul_eq_mul_neg (a b : α) : -(a * b) = a * -b :=
 
 /- warning: neg_mul_comm -> neg_mul_comm is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b))
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) b))
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] (a : α) (b : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) a) b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) b))
 Case conversion may be inaccurate. Consider using '#align neg_mul_comm neg_mul_commₓ'. -/
 theorem neg_mul_comm (a b : α) : -a * b = a * -b := by simp
 #align neg_mul_comm neg_mul_comm
@@ -471,18 +471,18 @@ variable [MulOneClass α] [HasDistribNeg α]
 
 /- warning: neg_eq_neg_one_mul -> neg_eq_neg_one_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α _inst_1))))) a)
+  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α _inst_1))))) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (MulOneClass.toOne.{u1} α _inst_1)))) a)
+  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (MulOneClass.toOne.{u1} α _inst_1)))) a)
 Case conversion may be inaccurate. Consider using '#align neg_eq_neg_one_mul neg_eq_neg_one_mulₓ'. -/
 theorem neg_eq_neg_one_mul (a : α) : -a = -1 * a := by simp
 #align neg_eq_neg_one_mul neg_eq_neg_one_mul
 
 /- warning: mul_neg_one -> mul_neg_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)) a (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α _inst_1)))))) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) a)
+  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)) a (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α _inst_1)))))) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) a (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (MulOneClass.toOne.{u1} α _inst_1))))) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) a)
+  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) a (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (MulOneClass.toOne.{u1} α _inst_1))))) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) a)
 Case conversion may be inaccurate. Consider using '#align mul_neg_one mul_neg_oneₓ'. -/
 /-- An element of a ring multiplied by the additive inverse of one is the element's additive
   inverse. -/
@@ -491,9 +491,9 @@ theorem mul_neg_one (a : α) : a * -1 = -a := by simp
 
 /- warning: neg_one_mul -> neg_one_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α _inst_1))))) a) (Neg.neg.{u1} α (HasInvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) a)
+  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α _inst_1))))) a) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1) _inst_2)) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (MulOneClass.toOne.{u1} α _inst_1)))) a) (Neg.neg.{u1} α (HasInvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) a)
+  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1)] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (MulOneClass.toOne.{u1} α _inst_1)))) a) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α _inst_1) _inst_2)) a)
 Case conversion may be inaccurate. Consider using '#align neg_one_mul neg_one_mulₓ'. -/
 /-- The additive inverse of one multiplied by an element of a ring is the element's additive
   inverse. -/
@@ -759,12 +759,7 @@ instance (priority := 100) CommRing.toNonUnitalCommRing [s : CommRing α] : NonU
 #align comm_ring.to_non_unital_comm_ring CommRing.toNonUnitalCommRing
 -/
 
-/- warning: is_domain -> IsDomain is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Semiring.{u1} α], Prop
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α], Prop
-Case conversion may be inaccurate. Consider using '#align is_domain IsDomainₓ'. -/
+#print IsDomain /-
 /-- A domain is a nontrivial semiring such multiplication by a non zero element is cancellative,
   on both sides. In other words, a nontrivial semiring `R` satisfying
   `∀ {a b c : R}, a ≠ 0 → a * b = a * c → b = c` and
@@ -775,4 +770,5 @@ Case conversion may be inaccurate. Consider using '#align is_domain IsDomainₓ'
 @[protect_proj]
 class IsDomain (α : Type u) [Semiring α] extends IsCancelMulZero α, Nontrivial α : Prop
 #align is_domain IsDomain
+-/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.elimination
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -346,7 +346,7 @@ This map represents that we can find a contradiction by taking the sum  `∑ (co
 -/
 unsafe def fourier_motzkin.produce_certificate : certificate_oracle := fun hyps max_var =>
   let state := mk_linarith_structure hyps max_var
-  match ExceptT.run (StateT.run (validate >> elim_all_vars) State) with
+  match ExceptT.run (StateT.run (validate >> elim_all_vars) StateM) with
   | Except.ok (a, _) => tactic.failed
   | Except.error contr => return contr.src.flatten
 #align linarith.fourier_motzkin.produce_certificate linarith.fourier_motzkin.produce_certificate

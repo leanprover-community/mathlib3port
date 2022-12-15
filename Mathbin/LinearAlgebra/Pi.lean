@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.pi
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,7 +142,7 @@ variable (R φ)
 families of functions on these modules. See note [bundled maps over different rings]. -/
 @[simps]
 def lsum (S) [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι] [Semiring S] [Module S M]
-    [SmulCommClass R S M] :
+    [SMulCommClass R S M] :
     (∀ i, φ i →ₗ[R] M) ≃ₗ[S]
       (∀ i, φ i) →ₗ[R] M where 
   toFun f := ∑ i : ι, (f i).comp (proj i)
@@ -393,7 +393,7 @@ def piOptionEquivProd {ι : Type _} {M : Option ι → Type _} [∀ i, AddCommGr
 #align linear_equiv.pi_option_equiv_prod LinearEquiv.piOptionEquivProd
 
 variable (ι R M) (S : Type _) [Fintype ι] [DecidableEq ι] [Semiring S] [AddCommMonoid M]
-  [Module R M] [Module S M] [SmulCommClass R S M]
+  [Module R M] [Module S M] [SMulCommClass R S M]
 
 /-- Linear equivalence between linear functions `Rⁿ → M` and `Mⁿ`. The spaces `Rⁿ` and `Mⁿ`
 are represented as `ι → R` and `ι → M`, respectively, where `ι` is a finite type.

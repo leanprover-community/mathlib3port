@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.locally_finite
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,8 @@ protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => closur
       (inter_subset_inter_right _ interior_subset)
 #align locally_finite.closure LocallyFinite.closure
 
-theorem isClosedUnion (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) := by
+theorem is_closed_Union (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) :=
+  by 
   simp only [← is_open_compl_iff, compl_Union, is_open_iff_mem_nhds, mem_Inter]
   intro a ha
   replace ha : ∀ i, f iᶜ ∈ 𝓝 a := fun i => (hc i).is_open_compl.mem_nhds (ha i)
@@ -103,12 +104,12 @@ theorem isClosedUnion (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsCl
   simp only [mem_inter_iff, mem_Inter]
   rintro b ⟨hbt, hn⟩ i hfb
   exact hn i ⟨b, hfb, hbt⟩ hfb
-#align locally_finite.is_closed_Union LocallyFinite.isClosedUnion
+#align locally_finite.is_closed_Union LocallyFinite.is_closed_Union
 
 theorem closure_Union (h : LocallyFinite f) : closure (⋃ i, f i) = ⋃ i, closure (f i) :=
   Subset.antisymm
     (closure_minimal (Union_mono fun _ => subset_closure) <|
-      h.closure.isClosedUnion fun _ => isClosedClosure)
+      h.closure.is_closed_Union fun _ => is_closed_closure)
     (Union_subset fun i => closure_mono <| subset_Union _ _)
 #align locally_finite.closure_Union LocallyFinite.closure_Union
 
@@ -119,7 +120,7 @@ theorem Inter_compl_mem_nhds (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i))
   refine' IsOpen.mem_nhds _ (mem_Inter₂.2 fun i => id)
   suffices IsClosed (⋃ i : { i // x ∉ f i }, f i) by
     rwa [← is_open_compl_iff, compl_Union, Inter_subtype] at this
-  exact (hf.comp_injective Subtype.coe_injective).isClosedUnion fun i => hc _
+  exact (hf.comp_injective Subtype.coe_injective).is_closed_Union fun i => hc _
 #align locally_finite.Inter_compl_mem_nhds LocallyFinite.Inter_compl_mem_nhds
 
 /-- Let `f : ℕ → Π a, β a` be a sequence of (dependent) functions on a topological space. Suppose

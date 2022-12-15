@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.matrix_exponential
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -212,9 +212,9 @@ theorem exp_neg (A : Matrix m m 𝔸) : exp 𝕂 (-A) = (exp 𝕂 A)⁻¹ := by
 
 theorem exp_zsmul (z : ℤ) (A : Matrix m m 𝔸) : exp 𝕂 (z • A) = exp 𝕂 A ^ z := by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [zpow_coe_nat, coe_nat_zsmul, exp_nsmul]
+  · rw [zpow_ofNat, coe_nat_zsmul, exp_nsmul]
   · have : IsUnit (exp 𝕂 A).det := (Matrix.is_unit_iff_is_unit_det _).mp (is_unit_exp _ _)
-    rw [Matrix.zpow_neg this, zpow_coe_nat, neg_smul, exp_neg, coe_nat_zsmul, exp_nsmul]
+    rw [Matrix.zpow_neg this, zpow_ofNat, neg_smul, exp_neg, coe_nat_zsmul, exp_nsmul]
 #align matrix.exp_zsmul Matrix.exp_zsmul
 
 theorem exp_conj (U : Matrix m m 𝔸) (A : Matrix m m 𝔸) (hy : IsUnit U) :

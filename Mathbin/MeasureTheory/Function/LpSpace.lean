@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -923,7 +923,7 @@ theorem limsup_trim (hm : m ≤ m0) {f : α → ℝ≥0∞} (hf : measurable[m] 
   · rw [h_set_eq]
   ext1 a
   suffices h_meas_eq : ν { x | ¬f x ≤ a } = ν.trim hm { x | ¬f x ≤ a }
-  · simp_rw [Set.mem_set_of_eq, ae_iff, h_meas_eq]
+  · simp_rw [Set.mem_setOf_eq, ae_iff, h_meas_eq]
   refine' (trim_measurable_set_eq hm _).symm
   refine' @MeasurableSet.compl _ _ m (@measurableSetLe ℝ≥0∞ _ _ _ _ m _ _ _ _ _ hf _)
   exact @measurableConst _ _ _ m _
@@ -1504,7 +1504,7 @@ theorem ae_bdd_liminf_at_top_rpow_of_snorm_bdd {p : ℝ≥0∞} {f : ℕ → α 
 #align
   measure_theory.ae_bdd_liminf_at_top_rpow_of_snorm_bdd MeasureTheory.ae_bdd_liminf_at_top_rpow_of_snorm_bdd
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem ae_bdd_liminf_at_top_of_snorm_bdd {p : ℝ≥0∞} (hp : p ≠ 0) {f : ℕ → α → E}
     (hfmeas : ∀ n, Measurable (f n)) (hbdd : ∀ n, snorm (f n) p μ ≤ R) :
     ∀ᵐ x ∂μ, liminf (fun n => (‖f n x‖₊ : ℝ≥0∞)) atTop < ∞ := by
@@ -1569,7 +1569,7 @@ def lp {α} (E : Type _) {m : MeasurableSpace α} [NormedAddCommGroup E] (p : �
   add_mem' f g hf hg := by
     simp [snorm_congr_ae (ae_eq_fun.coe_fn_add _ _),
       snorm_add_lt_top ⟨f.ae_strongly_measurable, hf⟩ ⟨g.ae_strongly_measurable, hg⟩]
-  neg_mem' f hf := by rwa [Set.mem_set_of_eq, snorm_congr_ae (ae_eq_fun.coe_fn_neg _), snorm_neg]
+  neg_mem' f hf := by rwa [Set.mem_setOf_eq, snorm_congr_ae (ae_eq_fun.coe_fn_neg _), snorm_neg]
 #align measure_theory.Lp MeasureTheory.lp
 
 -- mathport name: measure_theory.L1
@@ -1946,7 +1946,7 @@ theorem snorm_ess_sup_indicator_const_eq (s : Set α) (c : G) (hμs : μ s ≠ 0
   have h' := ae_iff.mp (ae_lt_of_ess_sup_lt h)
   push_neg  at h'
   refine' hμs (measure_mono_null (fun x hx_mem => _) h')
-  rw [Set.mem_set_of_eq, Set.indicator_of_mem hx_mem]
+  rw [Set.mem_setOf_eq, Set.indicator_of_mem hx_mem]
   exact le_rfl
 #align
   measure_theory.snorm_ess_sup_indicator_const_eq MeasureTheory.snorm_ess_sup_indicator_const_eq
@@ -2325,7 +2325,7 @@ theorem add_comp_Lp (L L' : E →L[𝕜] F) (f : lp E p μ) :
   rfl
 #align continuous_linear_map.add_comp_Lp ContinuousLinearMap.add_comp_Lp
 
-theorem smul_comp_Lp {𝕜'} [NormedField 𝕜'] [NormedSpace 𝕜' F] [SmulCommClass 𝕜 𝕜' F] (c : 𝕜')
+theorem smul_comp_Lp {𝕜'} [NormedField 𝕜'] [NormedSpace 𝕜' F] [SMulCommClass 𝕜 𝕜' F] (c : 𝕜')
     (L : E →L[𝕜] F) (f : lp E p μ) : (c • L).compLp f = c • L.compLp f := by
   ext1
   refine' (coe_fn_comp_Lp' (c • L) f).trans _
@@ -2393,7 +2393,7 @@ theorem smul_comp_LpL [Fact (1 ≤ p)] (c : 𝕜) (L : E →L[𝕜] F) :
 
 /-- TODO: written in an "apply" way because of a missing `has_smul` instance. -/
 theorem smul_comp_LpL_apply [Fact (1 ≤ p)] {𝕜'} [NormedField 𝕜'] [NormedSpace 𝕜' F]
-    [SmulCommClass 𝕜 𝕜' F] (c : 𝕜') (L : E →L[𝕜] F) (f : lp E p μ) :
+    [SMulCommClass 𝕜 𝕜' F] (c : 𝕜') (L : E →L[𝕜] F) (f : lp E p μ) :
     (c • L).compLpL p μ f = c • L.compLpL p μ f :=
   smul_comp_Lp c L f
 #align continuous_linear_map.smul_comp_LpL_apply ContinuousLinearMap.smul_comp_LpL_apply
@@ -2518,7 +2518,7 @@ theorem snorm'_lim_eq_lintegral_liminf {ι} [Nonempty ι] [LinearOrder ι] {f : 
 #align
   measure_theory.Lp.snorm'_lim_eq_lintegral_liminf MeasureTheory.lp.snorm'_lim_eq_lintegral_liminf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem snorm'_lim_le_liminf_snorm' {E} [NormedAddCommGroup E] {f : ℕ → α → E} {p : ℝ}
     (hp_pos : 0 < p) (hf : ∀ n, AeStronglyMeasurable (f n) μ) {f_lim : α → E}
     (h_lim : ∀ᵐ x : α ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (f_lim x))) :
@@ -2717,7 +2717,7 @@ private theorem lintegral_rpow_sum_coe_nnnorm_sub_le_rpow_tsum {f : ℕ → α �
 #align
   measure_theory.Lp.lintegral_rpow_sum_coe_nnnorm_sub_le_rpow_tsum measure_theory.Lp.lintegral_rpow_sum_coe_nnnorm_sub_le_rpow_tsum
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 private theorem lintegral_rpow_tsum_coe_nnnorm_sub_le_tsum {f : ℕ → α → E}
     (hf : ∀ n, AeStronglyMeasurable (f n) μ) {p : ℝ} (hp1 : 1 ≤ p) {B : ℕ → ℝ≥0∞}
     (h :

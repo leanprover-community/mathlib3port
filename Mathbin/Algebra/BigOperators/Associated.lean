@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.associated
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ end Prime
 
 theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α} (hp : Prime p)
     {s : Multiset α} : (∀ r ∈ s, Prime r) → p ∣ s.Prod → ∃ q ∈ s, p ~ᵤ q :=
-  Multiset.induction_on s (by simp [mt is_unit_iff_dvd_one.2 hp.not_unit]) fun a s ih hs hps => by
+  Multiset.induction_on s (by simp [mt isUnit_iff_dvd_one.2 hp.not_unit]) fun a s ih hs hps => by
     rw [Multiset.prod_cons] at hps
     cases' hp.dvd_or_dvd hps with h h
     · have hap := hs a (Multiset.mem_cons.2 (Or.inl rfl))

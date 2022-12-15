@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Morenikeji Neri
 
 ! This file was ported from Lean 3 source module ring_theory.principal_ideal_domain
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,7 +201,7 @@ instance (priority := 100) EuclideanDomain.to_principal_ideal_domain :
     IsPrincipalIdealRing
       R where principal S :=
     ⟨if h : { x : R | x ∈ S ∧ x ≠ 0 }.Nonempty then
-        have wf : WellFounded (EuclideanDomain.R : R → R → Prop) := EuclideanDomain.r_well_founded
+        have wf : WellFounded (EuclideanDomain.r : R → R → Prop) := EuclideanDomain.r_wellFounded
         have hmin :
           WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ∈ S ∧
             WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ≠ 0 :=
@@ -217,7 +217,7 @@ instance (priority := 100) EuclideanDomain.to_principal_ideal_domain :
                         { x : R | x ∈ S ∧ x ≠ 0 } :=
                       fun h₁ => WellFounded.not_lt_min wf _ h h₁ (mod_lt x hmin.2)
                     have : x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h = 0 := by
-                      simp only [not_and_or, Set.mem_set_of_eq, not_ne_iff] at this
+                      simp only [not_and_or, Set.mem_setOf_eq, not_ne_iff] at this
                       cases this
                       cases this ((mod_mem_iff hmin.1).2 hx)
                       exact this
@@ -414,7 +414,7 @@ theorem dvd_or_coprime (x y : R) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y
     simpa using h
   · rintro z nu nz ⟨w, rfl⟩ dy
     refine' h' (dvd_trans _ dy)
-    simpa using mul_dvd_mul_left z (is_unit_iff_dvd_one.1 <| (of_irreducible_mul h).resolve_left nu)
+    simpa using mul_dvd_mul_left z (isUnit_iff_dvd_one.1 <| (of_irreducible_mul h).resolve_left nu)
 #align dvd_or_coprime dvd_or_coprime
 
 theorem is_coprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
@@ -437,7 +437,7 @@ theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCopri
   constructor
   · intro co H
     apply pp.not_unit
-    rw [is_unit_iff_dvd_one]
+    rw [isUnit_iff_dvd_one]
     apply IsCoprime.dvd_of_dvd_mul_left co
     rw [mul_one n]
     exact H

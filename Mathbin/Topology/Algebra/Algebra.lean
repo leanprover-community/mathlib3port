@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.algebra.algebra
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,9 +117,9 @@ theorem Subalgebra.le_topological_closure (s : Subalgebra R A) : s ≤ s.topolog
   subset_closure
 #align subalgebra.le_topological_closure Subalgebra.le_topological_closure
 
-theorem Subalgebra.isClosedTopologicalClosure (s : Subalgebra R A) :
-    IsClosed (s.topologicalClosure : Set A) := by convert isClosedClosure
-#align subalgebra.is_closed_topological_closure Subalgebra.isClosedTopologicalClosure
+theorem Subalgebra.is_closed_topological_closure (s : Subalgebra R A) :
+    IsClosed (s.topologicalClosure : Set A) := by convert is_closed_closure
+#align subalgebra.is_closed_topological_closure Subalgebra.is_closed_topological_closure
 
 theorem Subalgebra.topological_closure_minimal (s : Subalgebra R A) {t : Subalgebra R A} (h : s ≤ t)
     (ht : IsClosed (t : Set A)) : s.topologicalClosure ≤ t :=

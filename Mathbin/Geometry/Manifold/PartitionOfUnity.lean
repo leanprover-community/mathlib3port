@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.partition_of_unity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -552,7 +552,7 @@ theorem exists_cont_mdiff_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t 
     ∃ g : C^n⟮I, M; 𝓘(ℝ, F), F⟯, ∀ x, g x ∈ t x := by
   choose U hU g hgs hgt using Hloc
   obtain ⟨f, hf⟩ :=
-    SmoothPartitionOfUnity.exists_is_subordinate I isClosedUniv (fun x => interior (U x))
+    SmoothPartitionOfUnity.exists_is_subordinate I is_closed_univ (fun x => interior (U x))
       (fun x => is_open_interior) fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   refine'
     ⟨⟨fun x => ∑ᶠ i, f i x • g i x,

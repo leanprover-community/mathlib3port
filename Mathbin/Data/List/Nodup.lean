@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.list.nodup
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1166,7 +1166,7 @@ theorem Nodup.pairwise_coe [IsSymm α r] (hl : l.Nodup) : { a | a ∈ l }.Pairwi
   rw [List.nodup_cons] at hl
   have : ∀ b ∈ l, ¬a = b → r a b ↔ r a b := fun b hb =>
     imp_iff_right (ne_of_mem_of_not_mem hb hl.1).symm
-  simp [Set.set_of_or, Set.pairwise_insert_of_symmetric (@symm_of _ r _), ih hl.2, and_comm',
+  simp [Set.setOf_or, Set.pairwise_insert_of_symmetric (@symm_of _ r _), ih hl.2, and_comm',
     forall₂_congr this]
 #align list.nodup.pairwise_coe List.Nodup.pairwise_coe
 

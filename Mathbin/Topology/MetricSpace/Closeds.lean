@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.closeds
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,9 +74,9 @@ theorem continuous_inf_edist_Hausdorff_edist :
 #align emetric.continuous_inf_edist_Hausdorff_edist Emetric.continuous_inf_edist_Hausdorff_edist
 
 /-- Subsets of a given closed subset form a closed set -/
-theorem isClosedSubsetsOfIsClosed (hs : IsClosed s) :
+theorem is_closed_subsets_of_is_closed (hs : IsClosed s) :
     IsClosed { t : Closeds α | (t : Set α) ⊆ s } := by
-  refine' isClosedOfClosureSubset fun t ht x hx => _
+  refine' is_closed_of_closure_subset fun t ht x hx => _
   -- t : closeds α,  ht : t ∈ closure {t : closeds α | t ⊆ s},
   -- x : α,  hx : x ∈ t
   -- goal : x ∈ s
@@ -88,7 +88,7 @@ theorem isClosedSubsetsOfIsClosed (hs : IsClosed s) :
     -- y : α,  hy : y ∈ u, Dxy : edist x y < ε
     exact ⟨y, hu hy, Dxy⟩
   rwa [hs.closure_eq] at this
-#align emetric.is_closed_subsets_of_is_closed Emetric.isClosedSubsetsOfIsClosed
+#align emetric.is_closed_subsets_of_is_closed Emetric.is_closed_subsets_of_is_closed
 
 /-- By definition, the edistance on `closeds α` is given by the Hausdorff edistance -/
 theorem Closeds.edist_eq {s t : Closeds α} : edist s t = hausdorffEdist (s : Set α) t :=
@@ -113,7 +113,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
     standard criterion. -/
   refine' complete_of_convergent_controlled_sequences B B_pos fun s hs => _
   let t0 := ⋂ n, closure (⋃ m ≥ n, s m : Set α)
-  let t : closeds α := ⟨t0, isClosedInter fun _ => isClosedClosure⟩
+  let t : closeds α := ⟨t0, is_closed_Inter fun _ => is_closed_closure⟩
   use t
   -- The inequality is written this way to agree with `edist_le_of_edist_le_geometric_of_tendsto₀`
   have I1 : ∀ n, ∀ x ∈ s n, ∃ y ∈ t0, edist x y ≤ 2 * B n :=
@@ -201,7 +201,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   exact ⟨N, fun n hn => lt_of_le_of_lt (main n) (hN n hn)⟩
 #align emetric.closeds.complete_space Emetric.Closeds.complete_space
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (v «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ⊆ » s) -/
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by
@@ -211,7 +211,7 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
         are finitely many, and ε-dense for the Hausdorff distance. -/
     refine'
       is_compact_of_totally_bounded_is_closed (Emetric.totally_bounded_iff.2 fun ε εpos => _)
-        isClosedUniv
+        is_closed_univ
     rcases exists_between εpos with ⟨δ, δpos, δlt⟩
     rcases Emetric.totally_bounded_iff.1
         (is_compact_iff_totally_bounded_is_complete.1 (@is_compact_univ α _ _)).1 δ δpos with
@@ -236,7 +236,7 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
     -- `F` is finite
     · apply @finite.of_finite_image _ _ F coe
       · apply fs.finite_subsets.subset fun b => _
-        simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp]
+        simp only [and_imp, Set.mem_image, Set.mem_setOf_eq, exists_imp]
         intro x hx hx'
         rwa [hx'] at hx
       · exact set_like.coe_injective.inj_on F
@@ -274,7 +274,7 @@ theorem NonemptyCompacts.ToCloseds.uniform_embedding :
   emetric.nonempty_compacts.to_closeds.uniform_embedding Emetric.NonemptyCompacts.ToCloseds.uniform_embedding
 
 /-- The range of `nonempty_compacts.to_closeds` is closed in a complete space -/
-theorem NonemptyCompacts.isClosedInCloseds [CompleteSpace α] :
+theorem NonemptyCompacts.is_closed_in_closeds [CompleteSpace α] :
     IsClosed (range <| @NonemptyCompacts.toCloseds α _ _) := by
   have :
     range nonempty_compacts.to_closeds =
@@ -285,7 +285,7 @@ theorem NonemptyCompacts.isClosedInCloseds [CompleteSpace α] :
     rintro ⟨s, hs, rfl⟩
     exact ⟨s.nonempty, s.is_compact⟩
   rw [this]
-  refine' isClosedOfClosureSubset fun s hs => ⟨_, _⟩
+  refine' is_closed_of_closure_subset fun s hs => ⟨_, _⟩
   · -- take a set set t which is nonempty and at a finite distance of s
     rcases mem_closure_iff.1 hs ⊤ Ennreal.coe_lt_top with ⟨t, ht, Dst⟩
     rw [edist_comm] at Dst
@@ -312,14 +312,14 @@ theorem NonemptyCompacts.isClosedInCloseds [CompleteSpace α] :
         _ = ε := Ennreal.add_halves _
         
     exact mem_bUnion hy this
-#align emetric.nonempty_compacts.is_closed_in_closeds Emetric.NonemptyCompacts.isClosedInCloseds
+#align emetric.nonempty_compacts.is_closed_in_closeds Emetric.NonemptyCompacts.is_closed_in_closeds
 
 /-- In a complete space, the type of nonempty compact subsets is complete. This follows
 from the same statement for closed subsets -/
 instance NonemptyCompacts.complete_space [CompleteSpace α] : CompleteSpace (NonemptyCompacts α) :=
   (complete_space_iff_is_complete_range
         NonemptyCompacts.ToCloseds.uniform_embedding.to_uniform_inducing).2 <|
-    NonemptyCompacts.isClosedInCloseds.IsComplete
+    NonemptyCompacts.is_closed_in_closeds.IsComplete
 #align emetric.nonempty_compacts.complete_space Emetric.NonemptyCompacts.complete_space
 
 /-- In a compact space, the type of nonempty compact subsets is compact. This follows from

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.cyclic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,9 +165,9 @@ theorem Infinite.order_of_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α}
     · exact ⟨k, by exact_mod_cast hk⟩
     let t : ℤ := -k % orderOf g
     rw [zpow_eq_mod_order_of] at hk
-    have : 0 ≤ t := Int.mod_nonneg (-k) (by exact_mod_cast ho.ne')
+    have : 0 ≤ t := Int.emod_nonneg (-k) (by exact_mod_cast ho.ne')
     refine' ⟨t.to_nat, _⟩
-    rwa [← zpow_coe_nat, Int.toNat_of_nonneg this]
+    rwa [← zpow_ofNat, Int.toNat_of_nonneg this]
 #align
   infinite.order_of_eq_zero_of_forall_mem_zpowers Infinite.order_of_eq_zero_of_forall_mem_zpowers
 
@@ -187,13 +187,13 @@ instance Subgroup.is_cyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup
       ⟨k.natAbs,
         Nat.pos_of_ne_zero fun h => hx₂ <| by rw [← hk, Int.eq_zero_of_natAbs_eq_zero h, zpow_zero],
         match k, hk with
-        | (k : ℕ), hk => by rw [Int.natAbs_ofNat, ← zpow_coe_nat, hk] <;> exact hx₁
+        | (k : ℕ), hk => by rw [Int.natAbs_ofNat, ← zpow_ofNat, hk] <;> exact hx₁
         | -[k+1], hk => by
           rw [Int.nat_abs_of_neg_succ_of_nat, ← Subgroup.inv_mem_iff H] <;> simp_all⟩
     ⟨⟨⟨g ^ Nat.find hex, (Nat.find_spec hex).2⟩, fun ⟨x, hx⟩ =>
         let ⟨k, hk⟩ := hg x
         have hk₁ : g ^ ((Nat.find hex : ℤ) * (k / Nat.find hex)) ∈ zpowers (g ^ Nat.find hex) :=
-          ⟨k / Nat.find hex, by rw [← zpow_coe_nat, zpow_mul]⟩
+          ⟨k / Nat.find hex, by rw [← zpow_ofNat, zpow_mul]⟩
         have hk₂ : g ^ ((Nat.find hex : ℤ) * (k / Nat.find hex)) ∈ H := by
           rw [zpow_mul]
           apply H.zpow_mem
@@ -203,19 +203,20 @@ instance Subgroup.is_cyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup
             rw [← zpow_add, Int.mod_add_div, hk] <;> exact hx
         have hk₄ : k % Nat.find hex = (k % Nat.find hex).natAbs := by
           rw [Int.natAbs_of_nonneg
-              (Int.mod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (Nat.find_spec hex).1))]
-        have hk₅ : g ^ (k % Nat.find hex).natAbs ∈ H := by rwa [← zpow_coe_nat, ← hk₄]
+              (Int.emod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (Nat.find_spec hex).1))]
+        have hk₅ : g ^ (k % Nat.find hex).natAbs ∈ H := by rwa [← zpow_ofNat, ← hk₄]
         have hk₆ : (k % (Nat.find hex : ℤ)).natAbs = 0 :=
           by_contradiction fun h =>
             Nat.find_min hex
-              (Int.coe_nat_lt.1 <| by
-                rw [← hk₄] <;> exact Int.mod_lt_of_pos _ (Int.coe_nat_pos.2 (Nat.find_spec hex).1))
+              (Int.ofNat_lt.1 <| by
+                rw [← hk₄] <;> exact Int.emod_lt_of_pos _ (Int.coe_nat_pos.2 (Nat.find_spec hex).1))
               ⟨Nat.pos_of_ne_zero h, hk₅⟩
         ⟨k / (Nat.find hex : ℤ),
           Subtype.ext_iff_val.2
             (by 
               suffices g ^ ((Nat.find hex : ℤ) * (k / Nat.find hex)) = x by simpa [zpow_mul]
-              rw [Int.mul_div_cancel' (Int.dvd_of_mod_eq_zero (Int.eq_zero_of_natAbs_eq_zero hk₆)),
+              rw [Int.mul_ediv_cancel'
+                  (Int.dvd_of_emod_eq_zero (Int.eq_zero_of_natAbs_eq_zero hk₆)),
                 hk])⟩⟩⟩
   else by
     have : H = (⊥ : Subgroup α) :=
@@ -244,7 +245,7 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
           ⟨(m / (Fintype.card α / Nat.gcd n (Fintype.card α)) : ℕ), by
             have hgmn : g ^ (m * Nat.gcd n (Fintype.card α)) = 1 := by
               rw [pow_mul, hm, ← pow_gcd_card_eq_one_iff] <;> exact (mem_filter.1 hx).2
-            rw [zpow_coe_nat, ← pow_mul, Nat.mul_div_cancel_left', hm]
+            rw [zpow_ofNat, ← pow_mul, Nat.mul_div_cancel_left', hm]
             refine' dvd_of_mul_dvd_mul_right (gcd_pos_of_pos_left (Fintype.card α) hn0) _
             conv_lhs =>
               rw [Nat.div_mul_cancel (Nat.gcd_dvd_right _ _), ←
@@ -315,7 +316,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
               mem_filter.2
                 ⟨mem_univ _, by 
                   let ⟨i, hi⟩ := b.2
-                  rw [← hi, ← zpow_coe_nat, ← zpow_mul, mul_comm, zpow_mul, zpow_coe_nat,
+                  rw [← hi, ← zpow_ofNat, ← zpow_mul, mul_comm, zpow_mul, zpow_ofNat,
                     pow_order_of_eq_one, one_zpow]⟩⟩)
           fun _ _ h => Subtype.eq (Subtype.mk.inj h)
       _ = (univ.filter fun b : α => b ^ orderOf a = 1).card := Fintype.card_of_finset _ _

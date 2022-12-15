@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -252,9 +252,8 @@ theorem log_pow (x : ℝ) (n : ℕ) : log (x ^ n) = n * log x := by
 @[simp]
 theorem log_zpow (x : ℝ) (n : ℤ) : log (x ^ n) = n * log x := by
   induction n
-  · rw [Int.ofNat_eq_coe, zpow_coe_nat, log_pow, Int.cast_ofNat]
-  rw [zpow_neg_succ_of_nat, log_inv, log_pow, Int.cast_negSucc, Nat.cast_add_one,
-    neg_mul_eq_neg_mul]
+  · rw [Int.ofNat_eq_coe, zpow_ofNat, log_pow, Int.cast_ofNat]
+  rw [zpow_negSucc, log_inv, log_pow, Int.cast_negSucc, Nat.cast_add_one, neg_mul_eq_neg_mul]
 #align real.log_zpow Real.log_zpow
 
 theorem log_sqrt {x : ℝ} (hx : 0 ≤ x) : log (sqrt x) = log x / 2 := by

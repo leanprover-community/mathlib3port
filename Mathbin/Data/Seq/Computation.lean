@@ -6,7 +6,7 @@ Authors: Mario Carneiro
 Coinductive formalization of unbounded computations.
 
 ! This file was ported from Lean 3 source module data.seq.computation
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ coinductive computation (α : Type u) : Type u
   An element of `computation α` is an infinite sequence of `option α` such
   that if `f n = some a` for some `n` then it is constantly `some a` after that. -/
 def Computation (α : Type u) : Type u :=
-  { f : Stream (Option α) // ∀ ⦃n a⦄, f n = some a → f (n + 1) = some a }
+  { f : Stream' (Option α) // ∀ ⦃n a⦄, f n = some a → f (n + 1) = some a }
 #align computation Computation
 
 namespace Computation
@@ -36,7 +36,7 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 -- constructors
 /-- `return a` is the computation that immediately terminates with result `a`. -/
 def return (a : α) : Computation α :=
-  ⟨Stream.const (some a), fun n a' => id⟩
+  ⟨Stream'.const (some a), fun n a' => id⟩
 #align computation.return Computation.return
 
 instance : CoeTC α (Computation α) :=
@@ -77,7 +77,7 @@ def tail (c : Computation α) : Computation α :=
 /-- `empty α` is the computation that never returns, an infinite sequence of
   `think`s. -/
 def empty (α) : Computation α :=
-  ⟨Stream.const none, fun n a' => id⟩
+  ⟨Stream'.const none, fun n a' => id⟩
 #align computation.empty Computation.empty
 
 instance : Inhabited (Computation α) :=
@@ -127,7 +127,7 @@ theorem destruct_eq_think {s : Computation α} {s'} : destruct s = Sum.inr s' �
     apply Subtype.eq
     dsimp [think, tail]
     rw [← f0]
-    exact (Stream.eta f).symm
+    exact (Stream'.eta f).symm
   · contradiction
 #align computation.destruct_eq_think Computation.destruct_eq_think
 
@@ -168,7 +168,7 @@ theorem tail_ret (a : α) : tail (return a) = return a :=
 
 @[simp]
 theorem tail_think (s : Computation α) : tail (think s) = s := by
-  cases' s with f al <;> apply Subtype.eq <;> dsimp [tail, think] <;> rw [Stream.tail_cons]
+  cases' s with f al <;> apply Subtype.eq <;> dsimp [tail, think] <;> rw [Stream'.tail_cons]
 #align computation.tail_think Computation.tail_think
 
 @[simp]
@@ -204,9 +204,9 @@ def Corec.f (f : β → Sum α β) : Sum α β → Option α × Sum α β
   If `f b = inl a` then `corec f b = return a`, and if `f b = inl b'` then
   `corec f b = think (corec f b')`. -/
 def corec (f : β → Sum α β) (b : β) : Computation α := by
-  refine' ⟨Stream.corec' (corec.F f) (Sum.inr b), fun n a' h => _⟩
-  rw [Stream.corec'_eq]
-  change Stream.corec' (corec.F f) (corec.F f (Sum.inr b)).2 n = some a'
+  refine' ⟨Stream'.corec' (corec.F f) (Sum.inr b), fun n a' h => _⟩
+  rw [Stream'.corec'_eq]
+  change Stream'.corec' (corec.F f) (corec.F f (Sum.inr b)).2 n = some a'
   revert h; generalize Sum.inr b = o; revert o
   induction' n with n IH <;> intro o
   · change (corec.F f o).1 = some a' → (corec.F f (corec.F f o).2).1 = some a'
@@ -217,7 +217,7 @@ def corec (f : β → Sum α β) (b : β) : Computation α := by
     cases' f b with a b'
     · exact h
     · contradiction
-  · rw [Stream.corec'_eq (corec.F f) (corec.F f o).2, Stream.corec'_eq (corec.F f) o]
+  · rw [Stream'.corec'_eq (corec.F f) (corec.F f o).2, Stream'.corec'_eq (corec.F f) o]
     exact IH (corec.F f o).2
 #align computation.corec Computation.corec
 
@@ -238,12 +238,12 @@ attribute [simp] lmap rmap
 @[simp]
 theorem corec_eq (f : β → Sum α β) (b : β) : destruct (corec f b) = rmap (corec f) (f b) := by
   dsimp [corec, destruct]
-  change Stream.corec' (corec.F f) (Sum.inr b) 0 with corec.F._match_1 (f b)
+  change Stream'.corec' (corec.F f) (Sum.inr b) 0 with corec.F._match_1 (f b)
   induction' h : f b with a b'; · rfl
   dsimp [corec.F, destruct]
   apply congr_arg; apply Subtype.eq
   dsimp [corec, tail]
-  rw [Stream.corec'_eq, Stream.tail_cons]
+  rw [Stream'.corec'_eq, Stream'.tail_cons]
   dsimp [corec.F]; rw [h]
 #align computation.corec_eq Computation.corec_eq
 
@@ -269,8 +269,8 @@ def IsBisimulation :=
 -- If two computations are bisimilar, then they are equal
 theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
   apply Subtype.eq
-  apply Stream.eq_of_bisim fun x y => ∃ s s' : Computation α, s.1 = x ∧ s'.1 = y ∧ R s s'
-  dsimp [Stream.IsBisimulation]
+  apply Stream'.eq_of_bisim fun x y => ∃ s s' : Computation α, s.1 = x ∧ s'.1 = y ∧ R s s'
+  dsimp [Stream'.IsBisimulation]
   intro t₁ t₂ e
   exact
     match t₁, t₂, e with
@@ -335,7 +335,7 @@ theorem terminates_of_mem {s : Computation α} {a : α} (h : a ∈ s) : Terminat
 theorem terminates_def (s : Computation α) : Terminates s ↔ ∃ n, (s.1 n).isSome :=
   ⟨fun ⟨⟨a, n, h⟩⟩ =>
     ⟨n, by 
-      dsimp [Stream.nth] at h
+      dsimp [Stream'.nth] at h
       rw [← h]
       exact rfl⟩,
     fun ⟨n, h⟩ => ⟨⟨Option.get h, n, (Option.eq_some_of_isSome h).symm⟩⟩⟩
@@ -607,7 +607,7 @@ def terminatesRecOn {C : Computation α → Sort v} (s) [Terminates s] (h1 : ∀
 def map (f : α → β) : Computation α → Computation β
   | ⟨s, al⟩ =>
     ⟨s.map fun o => Option.casesOn o none (some ∘ f), fun n b => by
-      dsimp [Stream.map, Stream.nth]
+      dsimp [Stream'.map, Stream'.nth]
       induction' e : s n with a <;> intro h
       · contradiction; · rw [al e, ← h]⟩
 #align computation.map Computation.map
@@ -650,7 +650,7 @@ theorem map_ret (f : α → β) (a) : map f (return a) = return (f a) :=
 
 @[simp]
 theorem map_think (f : α → β) : ∀ s, map f (think s) = think (map f s)
-  | ⟨s, al⟩ => by apply Subtype.eq <;> dsimp [think, map] <;> rw [Stream.map_cons]
+  | ⟨s, al⟩ => by apply Subtype.eq <;> dsimp [think, map] <;> rw [Stream'.map_cons]
 #align computation.map_think Computation.map_think
 
 @[simp]
@@ -663,14 +663,14 @@ theorem map_id : ∀ s : Computation α, map id s = s
   | ⟨f, al⟩ => by 
     apply Subtype.eq <;> simp [map, Function.comp]
     have e : @Option.rec α (fun _ => Option α) none some = id := by ext ⟨⟩ <;> rfl
-    simp [e, Stream.map_id]
+    simp [e, Stream'.map_id]
 #align computation.map_id Computation.map_id
 
 theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Computation α, map (g ∘ f) s = map g (map f s)
   | ⟨s, al⟩ => by 
     apply Subtype.eq <;> dsimp [map]
-    rw [Stream.map_map]
-    apply congr_arg fun f : _ → Option γ => Stream.map f s
+    rw [Stream'.map_map]
+    apply congr_arg fun f : _ → Option γ => Stream'.map f s
     ext ⟨⟩ <;> rfl
 #align computation.map_comp Computation.map_comp
 

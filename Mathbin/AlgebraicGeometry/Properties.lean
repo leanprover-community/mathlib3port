@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.properties
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,15 +42,15 @@ instance : T0Space X.carrier := by
 
 instance : QuasiSober X.carrier := by
   apply (config := { instances := false })
-    quasiSoberOfOpenCover (Set.range fun x => Set.range <| (X.affine_cover.map x).1.base)
+    quasi_sober_of_open_cover (Set.range fun x => Set.range <| (X.affine_cover.map x).1.base)
   · rintro ⟨_, i, rfl⟩
     exact (X.affine_cover.is_open i).base_open.open_range
   · rintro ⟨_, i, rfl⟩
     exact
-      @OpenEmbedding.quasiSober _ _ _
+      @OpenEmbedding.quasi_sober _ _ _
         (Homeomorph.ofEmbedding _
               (X.affine_cover.is_open i).base_open.toEmbedding).symm.OpenEmbedding
-        PrimeSpectrum.quasiSober
+        PrimeSpectrum.quasi_sober
   · rw [Set.top_eq_univ, Set.sUnion_range, Set.eq_univ_iff_forall]
     intro x
     exact ⟨_, ⟨_, rfl⟩, X.affine_cover.covers x⟩
@@ -281,7 +281,7 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.carri
 #align
   algebraic_geometry.is_irreducible_of_is_integral AlgebraicGeometry.is_irreducible_of_is_integral
 
-theorem isIntegralOfIsIrreducibleIsReduced [IsReduced X] [H : IrreducibleSpace X.carrier] :
+theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleSpace X.carrier] :
     IsIntegral X := by 
   constructor
   intro U hU
@@ -302,9 +302,9 @@ theorem isIntegralOfIsIrreducibleIsReduced [IsReduced X] [H : IrreducibleSpace X
     refine' zero_ne_one' (X.presheaf.stalk x.1) (isUnit_zero_iff.1 _)
     convert hx₁.mul hx₂
     exact e.symm
-  exact NoZeroDivisors.to_is_domain _
+  exact NoZeroDivisors.toIsDomain _
 #align
-  algebraic_geometry.is_integral_of_is_irreducible_is_reduced AlgebraicGeometry.isIntegralOfIsIrreducibleIsReduced
+  algebraic_geometry.is_integral_of_is_irreducible_is_reduced AlgebraicGeometry.is_integral_of_is_irreducible_is_reduced
 
 theorem is_integral_iff_is_irreducible_and_is_reduced :
     IsIntegral X ↔ IrreducibleSpace X.carrier ∧ IsReduced X :=
@@ -313,7 +313,7 @@ theorem is_integral_iff_is_irreducible_and_is_reduced :
 #align
   algebraic_geometry.is_integral_iff_is_irreducible_and_is_reduced AlgebraicGeometry.is_integral_iff_is_irreducible_and_is_reduced
 
-theorem isIntegralOfOpenImmersion {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f]
+theorem is_integral_of_open_immersion {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f]
     [IsIntegral Y] [Nonempty X.carrier] : IsIntegral X := by
   constructor
   intro U hU
@@ -329,7 +329,8 @@ theorem isIntegralOfOpenImmersion {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImm
     (as_iso <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U) :
               Y.presheaf.obj _ ≅ _).symm.commRingIsoToRingEquiv.IsDomain
       _
-#align algebraic_geometry.is_integral_of_open_immersion AlgebraicGeometry.isIntegralOfOpenImmersion
+#align
+  algebraic_geometry.is_integral_of_open_immersion AlgebraicGeometry.is_integral_of_open_immersion
 
 instance {R : CommRingCat} [H : IsDomain R] : IsIntegral (SchemeCat.spec.obj <| op R) := by
   apply (config := { instances := false }) is_integral_of_is_irreducible_is_reduced
@@ -345,14 +346,14 @@ theorem affine_is_integral_iff (R : CommRingCat) :
     fun h => inferInstance⟩
 #align algebraic_geometry.affine_is_integral_iff AlgebraicGeometry.affine_is_integral_iff
 
-theorem isIntegralOfIsAffineIsDomain [IsAffine X] [Nonempty X.carrier]
+theorem is_integral_of_is_affine_is_domain [IsAffine X] [Nonempty X.carrier]
     [h : IsDomain (X.Presheaf.obj (op ⊤))] : IsIntegral X :=
   haveI : IsIntegral (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by
     rw [affine_is_integral_iff]
     exact h
   is_integral_of_open_immersion X.iso_Spec.hom
 #align
-  algebraic_geometry.is_integral_of_is_affine_is_domain AlgebraicGeometry.isIntegralOfIsAffineIsDomain
+  algebraic_geometry.is_integral_of_is_affine_is_domain AlgebraicGeometry.is_integral_of_is_affine_is_domain
 
 theorem map_injective_of_is_integral [IsIntegral X] {U V : Opens X.carrier} (i : U ⟶ V)
     [H : Nonempty U] : Function.Injective (X.Presheaf.map i.op) := by

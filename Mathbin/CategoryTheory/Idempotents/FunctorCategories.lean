@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.functor_categories
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,24 +37,24 @@ namespace Idempotents
 
 variable {J C : Type _} [Category J] [Category C] (P Q : Karoubi (J ⥤ C)) (f : P ⟶ Q) (X : J)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem app_idem : P.p.app X ≫ P.p.app X = P.p.app X :=
   congr_app P.idem X
 #align category_theory.idempotents.app_idem CategoryTheory.Idempotents.app_idem
 
 variable {P Q}
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem app_p_comp : P.p.app X ≫ f.f.app X = f.f.app X :=
   congr_app (p_comp f) X
 #align category_theory.idempotents.app_p_comp CategoryTheory.Idempotents.app_p_comp
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem app_comp_p : f.f.app X ≫ Q.p.app X = f.f.app X :=
   congr_app (comp_p f) X
 #align category_theory.idempotents.app_comp_p CategoryTheory.Idempotents.app_comp_p
 
-@[reassoc]
+@[reassoc.1]
 theorem app_p_comm : P.p.app X ≫ f.f.app X = f.f.app X ≫ Q.p.app X :=
   congr_app (p_comm f) X
 #align category_theory.idempotents.app_p_comm CategoryTheory.Idempotents.app_p_comm

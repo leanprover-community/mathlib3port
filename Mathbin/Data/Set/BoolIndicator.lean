@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dagur Tómas Ásgeirsson, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.bool_indicator
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,10 +23,14 @@ namespace Set
 
 variable {α : Type _} (s : Set α)
 
+/- warning: set.bool_indicator clashes with set.boolIndicator -> Set.boolIndicator
+Case conversion may be inaccurate. Consider using '#align set.bool_indicator Set.boolIndicatorₓ'. -/
+#print Set.boolIndicator /-
 /-- `bool_indicator` maps `x` to `tt` if `x ∈ s`, else to `ff` -/
 noncomputable def boolIndicator (x : α) :=
   @ite _ (x ∈ s) (Classical.propDecidable _) true false
 #align set.bool_indicator Set.boolIndicator
+-/
 
 theorem mem_iff_bool_indicator (x : α) : x ∈ s ↔ s.boolIndicator x = tt := by
   unfold bool_indicator

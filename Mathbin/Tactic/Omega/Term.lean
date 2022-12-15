@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.term
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem val_mul {v : Nat → Int} {i : Int} {t : Term} : val v (mul i t) = i * v
 theorem val_div {v : Nat → Int} {i b : Int} {as : List Int} :
     i ∣ b → (∀ x ∈ as, i ∣ x) → (div i (b, as)).val v = val v (b, as) / i := by
   intro h1 h2; simp only [val, div, List.map]
-  rw [Int.add_div_of_dvd_left h1]
+  rw [Int.add_ediv_of_dvd_left h1]
   apply fun_mono_2 rfl
   rw [← coeffs.val_map_div h2]
 #align omega.term.val_div Omega.Term.val_div

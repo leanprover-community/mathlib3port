@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.torsion
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,7 +177,7 @@ def torsionBySet (s : Set R) : Submodule R M :=
 /-- The `S`-torsion submodule, containing all elements `x` of `M` such that `a • x = 0` for some
 `a` in `S`. -/
 @[simps]
-def torsion' (S : Type _) [CommMonoid S] [DistribMulAction S M] [SmulCommClass S R M] :
+def torsion' (S : Type _) [CommMonoid S] [DistribMulAction S M] [SMulCommClass S R M] :
     Submodule R M where 
   carrier := { x | ∃ a : S, a • x = 0 }
   zero_mem' := ⟨1, smul_zero _⟩
@@ -597,7 +597,7 @@ open Module
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 
-variable (S : Type _) [CommMonoid S] [DistribMulAction S M] [SmulCommClass S R M]
+variable (S : Type _) [CommMonoid S] [DistribMulAction S M] [SMulCommClass S R M]
 
 @[simp]
 theorem mem_torsion'_iff (x : M) : x ∈ torsion' R M S ↔ ∃ a : S, a • x = 0 :=
@@ -622,7 +622,7 @@ instance : DistribMulAction S (torsion' R M S) :=
   Subtype.coe_injective.DistribMulAction (torsion' R M S).Subtype.toAddMonoidHom fun (c : S) x =>
     rfl
 
-instance : SmulCommClass S R (torsion' R M S) :=
+instance : SMulCommClass S R (torsion' R M S) :=
   ⟨fun s a x => Subtype.ext <| smul_comm _ _ _⟩
 
 /-- A `S`-torsion module is a module whose `S`-torsion submodule is the full space. -/

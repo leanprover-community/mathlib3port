@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.banach_steinhaus
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
   let e : ℕ → Set E := fun n => ⋂ i : ι, { x : E | ‖g i x‖ ≤ n }
   -- each of these sets is closed
   have hc : ∀ n : ℕ, IsClosed (e n) := fun i =>
-    isClosedInter fun i => isClosedLe (Continuous.norm (g i).cont) continuous_const
+    is_closed_Inter fun i => is_closed_le (Continuous.norm (g i).cont) continuous_const
   -- the union is the entire space; this is where we use `h`
   have hU : (⋃ n : ℕ, e n) = univ := by
     refine' eq_univ_of_forall fun x => _

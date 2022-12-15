@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.pi_tensor_product
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,9 +226,9 @@ protected theorem induction_on' {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s 
 
 section DistribMulAction
 
-variable [Monoid R₁] [DistribMulAction R₁ R] [SmulCommClass R₁ R R]
+variable [Monoid R₁] [DistribMulAction R₁ R] [SMulCommClass R₁ R R]
 
-variable [Monoid R₂] [DistribMulAction R₂ R] [SmulCommClass R₂ R R]
+variable [Monoid R₂] [DistribMulAction R₂ R] [SMulCommClass R₂ R R]
 
 -- Most of the time we want the instance below this one, which is easier for typeclass resolution
 -- to find.
@@ -266,7 +266,7 @@ instance distribMulAction' :
   smul_zero r := AddMonoidHom.map_zero _
 #align pi_tensor_product.distrib_mul_action' PiTensorProduct.distribMulAction'
 
-instance smul_comm_class' [SmulCommClass R₁ R₂ R] : SmulCommClass R₁ R₂ (⨂[R] i, s i) :=
+instance smul_comm_class' [SMulCommClass R₁ R₂ R] : SMulCommClass R₁ R₂ (⨂[R] i, s i) :=
   ⟨fun r' r'' x =>
     PiTensorProduct.induction_on' x (fun xr xf => by simp only [smul_tprod_coeff', smul_comm])
       fun z y ihz ihy => by simp_rw [PiTensorProduct.smul_add, ihz, ihy]⟩
@@ -283,7 +283,7 @@ end DistribMulAction
 
 -- Most of the time we want the instance below this one, which is easier for typeclass resolution
 -- to find.
-instance module' [Semiring R₁] [Module R₁ R] [SmulCommClass R₁ R R] : Module R₁ (⨂[R] i, s i) :=
+instance module' [Semiring R₁] [Module R₁ R] [SMulCommClass R₁ R R] : Module R₁ (⨂[R] i, s i) :=
   { PiTensorProduct.distribMulAction' with 
     smul := (· • ·)
     add_smul := fun r r' x =>
@@ -302,7 +302,7 @@ instance module' [Semiring R₁] [Module R₁ R] [SmulCommClass R₁ R R] : Modu
 instance : Module R (⨂[R] i, s i) :=
   PiTensorProduct.module'
 
-instance : SmulCommClass R R (⨂[R] i, s i) :=
+instance : SMulCommClass R R (⨂[R] i, s i) :=
   PiTensorProduct.smul_comm_class'
 
 instance : IsScalarTower R R (⨂[R] i, s i) :=

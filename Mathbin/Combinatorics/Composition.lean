@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module combinatorics.composition
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -777,8 +777,7 @@ def compositionAsSetEquiv (n : ℕ) :
   left_inv := by 
     intro c
     ext i
-    simp only [exists_prop, add_comm, Set.mem_to_finset, true_or_iff, or_true_iff,
-      Set.mem_set_of_eq]
+    simp only [exists_prop, add_comm, Set.mem_to_finset, true_or_iff, or_true_iff, Set.mem_setOf_eq]
     constructor
     · rintro (rfl | rfl | ⟨j, hj1, hj2⟩)
       · exact c.zero_mem
@@ -809,8 +808,8 @@ def compositionAsSetEquiv (n : ℕ) :
       apply (Nat.succ_pred_eq_of_pos _).symm
       exact (zero_le i.val).trans_lt (i.2.trans_le (Nat.sub_le n 1))
     simp only [Fin.ext_iff, exists_prop, Fin.coe_zero, add_comm, Set.mem_to_finset,
-      Set.mem_set_of_eq, Fin.coe_last]
-    erw [Set.mem_set_of_eq]
+      Set.mem_setOf_eq, Fin.coe_last]
+    erw [Set.mem_setOf_eq]
     simp only [this, false_or_iff, add_right_inj, add_eq_zero_iff, one_ne_zero, false_and_iff,
       Fin.coe_mk]
     constructor

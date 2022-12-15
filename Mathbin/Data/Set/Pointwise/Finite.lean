@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.finite
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,16 +20,16 @@ variable {F α β γ : Type _}
 
 namespace Set
 
-section HasInvolutiveInv
+section InvolutiveInv
 
-variable [HasInvolutiveInv α] {s : Set α}
+variable [InvolutiveInv α] {s : Set α}
 
 @[to_additive]
 theorem Finite.inv (hs : s.Finite) : s⁻¹.Finite :=
   hs.Preimage <| inv_injective.InjOn _
 #align set.finite.inv Set.Finite.inv
 
-end HasInvolutiveInv
+end InvolutiveInv
 
 section Mul
 
@@ -94,7 +94,7 @@ end HasSmulSet
 
 section Vsub
 
-variable [HasVsub α β] {s t : Set β}
+variable [VSub α β] {s t : Set β}
 
 include α
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.simps
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ unsafe structure projection_data where
   expr : expr
   proj_nrs : List ℕ
   is_default : Bool
-  IsPrefix : Bool
+  isPrefix : Bool
   deriving has_reflect, Inhabited
 #align projection_data projection_data
 
@@ -81,7 +81,7 @@ unsafe structure parsed_projection_data where
   new_name : Name
   -- name for this projection used in the generated `simp` lemmas
   is_default : Bool
-  IsPrefix : Bool
+  isPrefix : Bool
 #align parsed_projection_data parsed_projection_data
 
 section
@@ -175,7 +175,7 @@ unsafe def projections_info (l : List projection_data) (pref : String) (str : Na
   let to_print ←
     defaults.mmap fun s =>
         toString <$>
-          let prefix_str := if s.IsPrefix then "(prefix) " else ""
+          let prefix_str := if s.isPrefix then "(prefix) " else ""
           f!"Projection {(← prefix_str)}{(← s.Name)}: {← s.expr}"
   let print2 :=
     String.join <| (nondefaults.map fun nm : projection_data => toString nm.1).intersperse ", "
@@ -324,7 +324,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
                   if proj = old_nm then
                     { proj with 
                       new_name := new_nm
-                      IsPrefix }
+                      isPrefix }
                   else proj
               else projs ++ [⟨old_nm, new_nm, tt, is_prefix⟩]
             | (inr nm, is_prefix) =>
@@ -333,7 +333,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
                   if proj = nm then
                     { proj with 
                       is_default := ff
-                      IsPrefix }
+                      isPrefix }
                   else proj
               else projs ++ [⟨nm, nm, ff, is_prefix⟩])
           projs

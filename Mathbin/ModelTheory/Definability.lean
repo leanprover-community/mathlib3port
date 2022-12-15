@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.definability
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,7 +238,7 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
     · rintro ⟨y, ys, rfl⟩
       refine' ⟨⟨y, ys, _⟩, fun a => _⟩
       · ext
-        simp [Set.apply_range_splitting f]
+        simp [Set.apply_rangeSplitting f]
       ·
         rw [Function.comp_apply, Function.comp_apply, apply_range_splitting f,
           range_factorization_coe]

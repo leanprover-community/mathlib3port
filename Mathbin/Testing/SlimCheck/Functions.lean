@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.functions
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -423,7 +423,7 @@ that it is a permutation.
 def Perm.slice [DecidableEq α] (n m : ℕ) :
     (Σ'xs ys : List α, xs ~ ys ∧ ys.Nodup) → Σ'xs ys : List α, xs ~ ys ∧ ys.Nodup
   | ⟨xs, ys, h, h'⟩ =>
-    let xs' := List.slice n m xs
+    let xs' := List.dropSlice n m xs
     have h₀ : xs' ~ ys.inter xs' := Perm.slice_inter _ _ h h'
     ⟨xs', ys.inter xs', h₀, h'.inter _⟩
 #align slim_check.injective_function.perm.slice SlimCheck.InjectiveFunction.Perm.slice

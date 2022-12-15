@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.image_to_kernel
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ theorem subobject_of_le_as_image_to_kernel (w : f ≫ g = 0) (h) :
   rfl
 #align subobject_of_le_as_image_to_kernel subobject_of_le_as_image_to_kernel
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem image_to_kernel_arrow (w : f ≫ g = 0) :
     imageToKernel f g w ≫ (kernelSubobject g).arrow = (imageSubobject f).arrow := by
   simp [imageToKernel]
@@ -201,7 +201,7 @@ def homology.desc {D : V} (k : (kernelSubobject g : V) ⟶ D) (p : imageToKernel
   cokernel.desc _ k p
 #align homology.desc homology.desc
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem homology.π_desc {D : V} (k : (kernelSubobject g : V) ⟶ D)
     (p : imageToKernel f g w ≫ k = 0) : homology.π f g w ≫ homology.desc f g w k p = k := by
   simp [homology.π, homology.desc]
@@ -259,7 +259,7 @@ variable {f g} (w : f ≫ g = 0) {A' B' C' : V} {f' : A' ⟶ B'} [HasImage f'] {
 a pair `f g` and a pair `f' g'` satisfying `f ≫ g = 0` and `f' ≫ g' = 0`,
 the `image_to_kernel` morphisms intertwine the induced map on kernels and the induced map on images.
 -/
-@[reassoc]
+@[reassoc.1]
 theorem image_subobject_map_comp_image_to_kernel (p : α.right = β.left) :
     imageToKernel f g w ≫ kernelSubobjectMap β = imageSubobjectMap α ≫ imageToKernel f' g' w' := by
   ext
@@ -285,13 +285,13 @@ def homology.map (p : α.right = β.left) : homology f g w ⟶ homology f' g' w'
       simp only [cokernel.condition, comp_zero])
 #align homology.map homology.map
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem homology.π_map (p : α.right = β.left) :
     homology.π f g w ≫ homology.map w w' α β p = kernelSubobjectMap β ≫ homology.π f' g' w' := by
   simp only [homology.π, homology.map, cokernel.π_desc]
 #align homology.π_map homology.π_map
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem homology.map_desc (p : α.right = β.left) {D : V} (k : (kernelSubobject g' : V) ⟶ D)
     (z : imageToKernel f' g' w' ≫ k = 0) :
     homology.map w w' α β p ≫ homology.desc f' g' w' k z =
@@ -314,7 +314,7 @@ theorem homology.comp_right_eq_comp_left {V : Type _} [Category V] {A₁ B₁ C�
   simp only [comma.comp_left, comma.comp_right, p₁, p₂]
 #align homology.comp_right_eq_comp_left homology.comp_right_eq_comp_left
 
-@[reassoc]
+@[reassoc.1]
 theorem homology.map_comp (p₁ : α₁.right = β₁.left) (p₂ : α₂.right = β₂.left) :
     homology.map w₁ w₂ α₁ β₁ p₁ ≫ homology.map w₂ w₃ α₂ β₂ p₂ =
       homology.map w₁ w₃ (α₁ ≫ α₂) (β₁ ≫ β₂) (homology.comp_right_eq_comp_left p₁ p₂) :=
@@ -358,10 +358,10 @@ private unsafe def aux_tac : tactic Unit :=
   sorry
 #align aux_tac aux_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1672157693.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1672157693.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1672157693.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1672157693.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1672157693.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1672157693.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1672157693.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1672157693.aux_tac -/
 /-- `homology f g w ≅ homology f' g' w'` if `f = f'` and `g = g'`.
 (Note the objects are not changing here.)
 -/

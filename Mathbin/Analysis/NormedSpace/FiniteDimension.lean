@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,7 +174,7 @@ theorem ContinuousLinearMap.continuous_det : Continuous fun f : E →L[𝕜] E =
   change Continuous fun f : E →L[𝕜] E => (f : E →ₗ[𝕜] E).det
   by_cases h : ∃ s : Finset E, Nonempty (Basis (↥s) 𝕜 E)
   · rcases h with ⟨s, ⟨b⟩⟩
-    haveI : FiniteDimensional 𝕜 E := FiniteDimensional.ofFintypeBasis b
+    haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis b
     simp_rw [LinearMap.det_eq_det_to_matrix_of_finset b]
     refine' Continuous.matrix_det _
     exact
@@ -304,7 +304,7 @@ variable {ι : Type _} [Fintype ι]
 
 /-- Construct a continuous linear map given the value at a finite basis. -/
 def Basis.constrL (v : Basis ι 𝕜 E) (f : ι → F) : E →L[𝕜] F :=
-  haveI : FiniteDimensional 𝕜 E := FiniteDimensional.ofFintypeBasis v
+  haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis v
   (v.constr 𝕜 f).toContinuousLinearMap
 #align basis.constrL Basis.constrL
 
@@ -319,7 +319,7 @@ functions from its basis indexing type to `𝕜`. -/
 def Basis.equivFunL (v : Basis ι 𝕜 E) : E ≃L[𝕜] ι → 𝕜 :=
   { v.equivFun with
     continuous_to_fun :=
-      haveI : FiniteDimensional 𝕜 E := FiniteDimensional.ofFintypeBasis v
+      haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis v
       v.equiv_fun.to_linear_map.continuous_of_finite_dimensional
     continuous_inv_fun := by 
       change Continuous v.equiv_fun.symm.to_fun
@@ -447,15 +447,16 @@ theorem Submodule.complete_of_finite_dimensional (s : Submodule 𝕜 E) [FiniteD
 #align submodule.complete_of_finite_dimensional Submodule.complete_of_finite_dimensional
 
 /-- A finite-dimensional subspace is closed. -/
-theorem Submodule.closedOfFiniteDimensional (s : Submodule 𝕜 E) [FiniteDimensional 𝕜 s] :
+theorem Submodule.closed_of_finite_dimensional (s : Submodule 𝕜 E) [FiniteDimensional 𝕜 s] :
     IsClosed (s : Set E) :=
   s.complete_of_finite_dimensional.IsClosed
-#align submodule.closed_of_finite_dimensional Submodule.closedOfFiniteDimensional
+#align submodule.closed_of_finite_dimensional Submodule.closed_of_finite_dimensional
 
-theorem AffineSubspace.closedOfFiniteDimensional {P : Type _} [MetricSpace P] [NormedAddTorsor E P]
-    (s : AffineSubspace 𝕜 P) [FiniteDimensional 𝕜 s.direction] : IsClosed (s : Set P) :=
-  s.is_closed_direction_iff.mp s.direction.closedOfFiniteDimensional
-#align affine_subspace.closed_of_finite_dimensional AffineSubspace.closedOfFiniteDimensional
+theorem AffineSubspace.closed_of_finite_dimensional {P : Type _} [MetricSpace P]
+    [NormedAddTorsor E P] (s : AffineSubspace 𝕜 P) [FiniteDimensional 𝕜 s.direction] :
+    IsClosed (s : Set P) :=
+  s.is_closed_direction_iff.mp s.direction.closed_of_finite_dimensional
+#align affine_subspace.closed_of_finite_dimensional AffineSubspace.closed_of_finite_dimensional
 
 section Riesz
 
@@ -467,7 +468,7 @@ theorem exists_norm_le_le_norm_sub_of_finset {c : 𝕜} (hc : 1 < ‖c‖) {R : 
   haveI : FiniteDimensional 𝕜 F :=
     Module.finite_def.2
       ((Submodule.fg_top _).2 (Submodule.fg_def.2 ⟨s, Finset.finite_to_set _, rfl⟩))
-  have Fclosed : IsClosed (F : Set E) := Submodule.closedOfFiniteDimensional _
+  have Fclosed : IsClosed (F : Set E) := Submodule.closed_of_finite_dimensional _
   have : ∃ x, x ∉ F := by 
     contrapose! h
     have : (⊤ : Submodule 𝕜 E) = F := by 
@@ -513,7 +514,7 @@ variable (𝕜)
 
 /-- **Riesz's theorem**: if a closed ball with center zero of positive radius is compact in a vector
 space, then the space is finite-dimensional. -/
-theorem finiteDimensionalOfIsCompactClosedBall₀ {r : ℝ} (rpos : 0 < r)
+theorem finite_dimensional_of_is_compact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
     (h : IsCompact (Metric.closedBall (0 : E) r)) : FiniteDimensional 𝕜 E := by
   by_contra hfin
   obtain ⟨R, f, Rgt, fle, lef⟩ :
@@ -545,16 +546,16 @@ theorem finiteDimensionalOfIsCompactClosedBall₀ {r : ℝ} (rpos : 0 < r)
       exact φmono (Nat.lt_succ_self N)
     _ < ‖c‖ := hN (N + 1) (Nat.le_succ N)
     
-#align finite_dimensional_of_is_compact_closed_ball₀ finiteDimensionalOfIsCompactClosedBall₀
+#align finite_dimensional_of_is_compact_closed_ball₀ finite_dimensional_of_is_compact_closed_ball₀
 
 /-- **Riesz's theorem**: if a closed ball of positive radius is compact in a vector space, then the
 space is finite-dimensional. -/
-theorem finiteDimensionalOfIsCompactClosedBall {r : ℝ} (rpos : 0 < r) {c : E}
+theorem finite_dimensional_of_is_compact_closed_ball {r : ℝ} (rpos : 0 < r) {c : E}
     (h : IsCompact (Metric.closedBall c r)) : FiniteDimensional 𝕜 E := by
-  apply finiteDimensionalOfIsCompactClosedBall₀ 𝕜 rpos
+  apply finite_dimensional_of_is_compact_closed_ball₀ 𝕜 rpos
   have : Continuous fun x => -c + x := continuous_const.add continuous_id
   simpa using h.image this
-#align finite_dimensional_of_is_compact_closed_ball finiteDimensionalOfIsCompactClosedBall
+#align finite_dimensional_of_is_compact_closed_ball finite_dimensional_of_is_compact_closed_ball
 
 /-- If a function has compact multiplicative support, then either the function is trivial or the
 space if finite-dimensional. -/
@@ -575,22 +576,22 @@ theorem HasCompactMulSupport.eq_one_or_finite_dimensional {X : Type _} [Topologi
   obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ)(hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f
   exact metric.nhds_basis_closed_ball.mem_iff.1 this
   have : IsCompact (Metric.closedBall x r) :=
-    is_compact_of_is_closed_subset hf Metric.isClosedBall (hr.trans (subset_mul_tsupport _))
-  exact finiteDimensionalOfIsCompactClosedBall 𝕜 rpos this
+    is_compact_of_is_closed_subset hf Metric.is_closed_ball (hr.trans (subset_mul_tsupport _))
+  exact finite_dimensional_of_is_compact_closed_ball 𝕜 rpos this
 #align
   has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finite_dimensional
 
 end Riesz
 
 /-- An injective linear map with finite-dimensional domain is a closed embedding. -/
-theorem LinearEquiv.closedEmbeddingOfInjective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥)
+theorem LinearEquiv.closed_embedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥)
     [FiniteDimensional 𝕜 E] : ClosedEmbedding ⇑f :=
   let g := LinearEquiv.ofInjective f (LinearMap.ker_eq_bot.mp hf)
   { embedding_subtype_coe.comp g.toContinuousLinearEquiv.toHomeomorph.Embedding with
-    closedRange := by 
+    closed_range := by 
       haveI := f.finite_dimensional_range
       simpa [f.range_coe] using f.range.closed_of_finite_dimensional }
-#align linear_equiv.closed_embedding_of_injective LinearEquiv.closedEmbeddingOfInjective
+#align linear_equiv.closed_embedding_of_injective LinearEquiv.closed_embedding_of_injective
 
 theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensional 𝕜 F]
     (f : E →L[𝕜] F) (hf : LinearMap.range f = ⊤) :
@@ -600,16 +601,16 @@ theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensiona
 #align
   continuous_linear_map.exists_right_inverse_of_surjective ContinuousLinearMap.exists_right_inverse_of_surjective
 
-theorem closedEmbeddingSmulLeft {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
-  LinearEquiv.closedEmbeddingOfInjective (LinearMap.ker_to_span_singleton 𝕜 E hc)
-#align closed_embedding_smul_left closedEmbeddingSmulLeft
+theorem closed_embedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
+  LinearEquiv.closed_embedding_of_injective (LinearMap.ker_to_span_singleton 𝕜 E hc)
+#align closed_embedding_smul_left closed_embedding_smul_left
 
 -- `smul` is a closed map in the first argument.
 theorem is_closed_map_smul_left (c : E) : IsClosedMap fun x : 𝕜 => x • c := by
   by_cases hc : c = 0
   · simp_rw [hc, smul_zero]
     exact is_closed_map_const
-  · exact (closedEmbeddingSmulLeft hc).IsClosedMap
+  · exact (closed_embedding_smul_left hc).IsClosedMap
 #align is_closed_map_smul_left is_closed_map_smul_left
 
 open ContinuousLinearMap
@@ -714,8 +715,8 @@ theorem IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [Norme
   · rw [mem_interior_iff_mem_nhds, metric.nhds_basis_closed_ball.mem_iff] at hx'
     rcases hx' with ⟨r, hr₀, hrK⟩
     have : FiniteDimensional ℝ E :=
-      finiteDimensionalOfIsCompactClosedBall ℝ hr₀
-        (is_compact_of_is_closed_subset hK Metric.isClosedBall hrK)
+      finite_dimensional_of_is_compact_closed_ball ℝ hr₀
+        (is_compact_of_is_closed_subset hK Metric.is_closed_ball hrK)
     exact exists_mem_frontier_inf_dist_compl_eq_dist hx hK.ne_univ
   · refine' ⟨x, hx', _⟩
     rw [frontier_eq_closure_inter_closure] at hx'

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.gauss_sum
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -262,7 +262,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   -- we work in `FF`, the eighth cyclotomic field extension of `F`
   let FF := (Polynomial.cyclotomic 8 F).SplittingField
   haveI : FiniteDimensional F FF :=
-    Polynomial.IsSplittingField.finiteDimensional FF (Polynomial.cyclotomic 8 F)
+    Polynomial.IsSplittingField.finite_dimensional FF (Polynomial.cyclotomic 8 F)
   haveI : Fintype FF := FiniteDimensional.fintypeOfFintype F FF
   have hchar := Algebra.ring_char_eq F FF
   have FFp := hchar.subst hp

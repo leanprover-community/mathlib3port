@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -750,7 +750,7 @@ theorem integral_sub (hf : IntervalIntegrable f μ a b) (hg : IntervalIntegrable
 
 @[simp]
 theorem integral_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E]
-    [SmulCommClass ℝ 𝕜 E] (r : 𝕜) (f : ℝ → E) :
+    [SMulCommClass ℝ 𝕜 E] (r : 𝕜) (f : ℝ → E) :
     (∫ x in a..b, r • f x ∂μ) = r • ∫ x in a..b, f x ∂μ := by
   simp only [intervalIntegral, integral_smul, smul_sub]
 #align interval_integral.integral_smul intervalIntegral.integral_smul
@@ -2479,7 +2479,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le_Ico (hab : a ≤ b)
       rw [← interval_of_le hab] at G'int hcont⊢
       exact (hcont.sub continuous_on_const).Prod (continuous_on_primitive_interval G'int)
     simp only [s, inter_comm]
-    exact this.preimage_closed_of_closed isClosedIcc OrderClosedTopology.isClosedLe'
+    exact this.preimage_closed_of_closed is_closed_Icc OrderClosedTopology.is_closed_le'
   have main : Icc a b ⊆ { t | g t - g a ≤ ∫ u in a..t, (G' u).toReal } :=
     by
     -- to show that the set `s` is all `[a, b]`, it suffices to show that any point `t` in `s`
@@ -2586,7 +2586,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
       rw [← interval_of_le hab] at hcont φint⊢
       exact (continuous_on_const.sub hcont).Prod (continuous_on_primitive_interval_left φint)
     simp only [s, inter_comm]
-    exact this.preimage_closed_of_closed isClosedIcc isClosedLeProd
+    exact this.preimage_closed_of_closed is_closed_Icc is_closed_le_prod
   have A : closure (Ioc a b) ⊆ s := by
     apply s_closed.closure_subset_iff.2
     intro t ht

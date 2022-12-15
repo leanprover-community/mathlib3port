@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.algebra
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -537,8 +537,8 @@ theorem smul_comp [HasSmul R M] [HasContinuousConstSmul R M] (r : R) (f : C(β, 
 
 @[to_additive]
 instance [HasSmul R M] [HasContinuousConstSmul R M] [HasSmul R₁ M] [HasContinuousConstSmul R₁ M]
-    [SmulCommClass R R₁ M] :
-    SmulCommClass R R₁ C(α, M) where smul_comm _ _ _ := ext fun _ => smul_comm _ _ _
+    [SMulCommClass R R₁ M] :
+    SMulCommClass R R₁ C(α, M) where smul_comm _ _ _ := ext fun _ => smul_comm _ _ _
 
 instance [HasSmul R M] [HasContinuousConstSmul R M] [HasSmul R₁ M] [HasContinuousConstSmul R₁ M]
     [HasSmul R R₁] [IsScalarTower R R₁ M] :

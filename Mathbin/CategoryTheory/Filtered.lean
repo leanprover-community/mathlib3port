@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.filtered
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,7 +173,7 @@ noncomputable def coeqHom {j j' : C} (f f' : j ⟶ j') : j' ⟶ coeq f f' :=
 /-- `coeq_condition f f'`, for morphisms `f f' : j ⟶ j'`, is the proof that
 `f ≫ coeq_hom f f' = f' ≫ coeq_hom f f'`.
 -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem coeq_condition {j j' : C} (f f' : j ⟶ j') : f ≫ coeqHom f f' = f' ≫ coeqHom f f' :=
   (IsFilteredOrEmpty.cocone_maps f f').some_spec.some_spec
 #align category_theory.is_filtered.coeq_condition CategoryTheory.IsFiltered.coeq_condition
@@ -572,7 +572,7 @@ noncomputable def eqHom {j j' : C} (f f' : j ⟶ j') : eq f f' ⟶ j :=
 /-- `eq_condition f f'`, for morphisms `f f' : j ⟶ j'`, is the proof that
 `eq_hom f f' ≫ f = eq_hom f f' ≫ f'`.
 -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem eq_condition {j j' : C} (f f' : j ⟶ j') : eqHom f f' ≫ f = eqHom f f' ≫ f' :=
   (IsCofilteredOrEmpty.cocone_maps f f').some_spec.some_spec
 #align category_theory.is_cofiltered.eq_condition CategoryTheory.IsCofiltered.eq_condition

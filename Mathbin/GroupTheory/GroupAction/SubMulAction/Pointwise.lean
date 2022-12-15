@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sub_mul_action.pointwise
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ end Mul
 
 section MulOneClass
 
-variable [Monoid R] [MulAction R M] [MulOneClass M] [IsScalarTower R M M] [SmulCommClass R M M]
+variable [Monoid R] [MulAction R M] [MulOneClass M] [IsScalarTower R M M] [SMulCommClass R M M]
 
 instance : MulOneClass (SubMulAction R
         M) where 
@@ -113,7 +113,7 @@ end Semigroup
 
 section Monoid
 
-variable [Monoid R] [MulAction R M] [Monoid M] [IsScalarTower R M M] [SmulCommClass R M M]
+variable [Monoid R] [MulAction R M] [Monoid M] [IsScalarTower R M M] [SMulCommClass R M M]
 
 instance : Monoid (SubMulAction R M) :=
   { SubMulAction.semigroup, SubMulAction.mulOneClass with

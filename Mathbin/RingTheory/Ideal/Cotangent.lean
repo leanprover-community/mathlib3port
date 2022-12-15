@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.cotangent
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,7 @@ def AlgHom.kerSquareLift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^ 2 →ₐ[
   · intro a ha
     exact Ideal.pow_le_self two_ne_zero ha
   · intro r
-    rw [IsScalarTower.algebra_map_apply R A, RingHom.to_fun_eq_coe, Ideal.Quotient.algebra_map_eq,
+    rw [IsScalarTower.algebra_map_apply R A, RingHom.toFun_eq_coe, Ideal.Quotient.algebra_map_eq,
       Ideal.Quotient.lift_mk]
     exact f.map_algebra_map r
 #align alg_hom.ker_square_lift AlgHom.kerSquareLift

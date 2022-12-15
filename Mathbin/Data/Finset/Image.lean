@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.image
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -549,12 +549,12 @@ theorem mem_range_iff_mem_finset_range_of_mod_eq [DecidableEq α] {f : ℤ → �
     (hn : 0 < n) (h : ∀ i, f (i % n) = f i) :
     a ∈ Set.range f ↔ a ∈ (Finset.range n).image fun i => f i :=
   suffices (∃ i, f (i % n) = a) ↔ ∃ i, i < n ∧ f ↑i = a by simpa [h]
-  have hn' : 0 < (n : ℤ) := Int.coe_nat_lt.mpr hn
+  have hn' : 0 < (n : ℤ) := Int.ofNat_lt.mpr hn
   Iff.intro
     (fun ⟨i, hi⟩ =>
-      have : 0 ≤ i % ↑n := Int.mod_nonneg _ (ne_of_gt hn')
+      have : 0 ≤ i % ↑n := Int.emod_nonneg _ (ne_of_gt hn')
       ⟨Int.toNat (i % n), by
-        rw [← Int.coe_nat_lt, Int.toNat_of_nonneg this] <;> exact ⟨Int.mod_lt_of_pos i hn', hi⟩⟩)
+        rw [← Int.ofNat_lt, Int.toNat_of_nonneg this] <;> exact ⟨Int.emod_lt_of_pos i hn', hi⟩⟩)
     fun ⟨i, hi, ha⟩ =>
     ⟨i, by rw [Int.mod_eq_of_lt (Int.ofNat_zero_le _) (Int.ofNat_lt_ofNat_of_lt hi), ha]⟩
 #align

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Module.change_of_rings
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ theorem restrictScalars.smul_def' {R : Type u₁} {S : Type u₂} [Ring R] [Ring
 
 instance (priority := 100) smul_comm_class_mk {R : Type u₁} {S : Type u₂} [Ring R] [CommRing S]
     (f : R →+* S) (M : Type v) [AddCommGroup M] [Module S M] :
-    @SmulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toHasSmul
+    @SMulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toHasSmul
       _ where smul_comm r s m := (by simp [← mul_smul, mul_comm] : f r • s • m = s • f r • m)
 #align category_theory.Module.smul_comm_class_mk CategoryTheory.ModuleCat.smul_comm_class_mk
 

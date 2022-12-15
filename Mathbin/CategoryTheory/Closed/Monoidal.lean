@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.monoidal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,14 +117,14 @@ theorem ihom_adjunction_unit : (ihom.adjunction A).Unit = coev A :=
 #align category_theory.ihom.ihom_adjunction_unit CategoryTheory.ihom.ihom_adjunction_unit
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ev_naturality {X Y : C} (f : X ⟶ Y) :
     (𝟙 A ⊗ (ihom A).map f) ≫ (ev A).app Y = (ev A).app X ≫ f :=
   (ev A).naturality f
 #align category_theory.ihom.ev_naturality CategoryTheory.ihom.ev_naturality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem coev_naturality {X Y : C} (f : X ⟶ Y) :
     f ≫ (coev A).app Y = (coev A).app X ≫ (ihom A).map (𝟙 A ⊗ f) :=
   (coev A).naturality f
@@ -136,12 +136,12 @@ notation A " ⟶[" C "] " B:10 => (@ihom C _ _ A _).obj B
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ev_coev : (𝟙 A ⊗ (coev A).app B) ≫ (ev A).app (A ⊗ B) = 𝟙 (A ⊗ B) :=
   Adjunction.left_triangle_components (ihom.adjunction A)
 #align category_theory.ihom.ev_coev CategoryTheory.ihom.ev_coev
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem coev_ev : (coev A).app (A ⟶[C] B) ≫ (ihom A).map ((ev A).app B) = 𝟙 (A ⟶[C] B) :=
   Adjunction.right_triangle_components (ihom.adjunction A)
 #align category_theory.ihom.coev_ev CategoryTheory.ihom.coev_ev
@@ -186,21 +186,21 @@ theorem hom_equiv_symm_apply_eq (f : Y ⟶ A ⟶[C] X) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[reassoc]
+@[reassoc.1]
 theorem curry_natural_left (f : X ⟶ X') (g : A ⊗ X' ⟶ Y) : curry ((𝟙 _ ⊗ f) ≫ g) = f ≫ curry g :=
   Adjunction.hom_equiv_naturality_left _ _ _
 #align
   category_theory.monoidal_closed.curry_natural_left CategoryTheory.MonoidalClosed.curry_natural_left
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[reassoc]
+@[reassoc.1]
 theorem curry_natural_right (f : A ⊗ X ⟶ Y) (g : Y ⟶ Y') :
     curry (f ≫ g) = curry f ≫ (ihom _).map g :=
   Adjunction.hom_equiv_naturality_right _ _ _
 #align
   category_theory.monoidal_closed.curry_natural_right CategoryTheory.MonoidalClosed.curry_natural_right
 
-@[reassoc]
+@[reassoc.1]
 theorem uncurry_natural_right (f : X ⟶ A ⟶[C] Y) (g : Y ⟶ Y') :
     uncurry (f ≫ (ihom _).map g) = uncurry f ≫ g :=
   Adjunction.hom_equiv_naturality_right_symm _ _ _
@@ -208,7 +208,7 @@ theorem uncurry_natural_right (f : X ⟶ A ⟶[C] Y) (g : Y ⟶ Y') :
   category_theory.monoidal_closed.uncurry_natural_right CategoryTheory.MonoidalClosed.uncurry_natural_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[reassoc]
+@[reassoc.1]
 theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟶[C] Y) :
     uncurry (f ≫ g) = (𝟙 _ ⊗ f) ≫ uncurry g :=
   Adjunction.hom_equiv_naturality_left_symm _ _ _
@@ -283,7 +283,7 @@ def pre (f : B ⟶ A) : ihom A ⟶ ihom B :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem id_tensor_pre_app_comp_ev (f : B ⟶ A) (X : C) :
     (𝟙 B ⊗ (pre f).app X) ≫ (ihom.ev B).app X = (f ⊗ 𝟙 (A ⟶[C] X)) ≫ (ihom.ev A).app X :=
   transfer_nat_trans_self_counit _ _ ((tensoringLeft C).map f) X
@@ -299,7 +299,7 @@ theorem uncurry_pre (f : B ⟶ A) (X : C) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem coev_app_comp_pre_app (f : B ⟶ A) :
     (ihom.coev A).app X ≫ (pre f).app (A ⊗ X) = (ihom.coev B).app X ≫ (ihom B).map (f ⊗ 𝟙 _) :=
   unit_transfer_nat_trans_self _ _ ((tensoringLeft C).map f) X

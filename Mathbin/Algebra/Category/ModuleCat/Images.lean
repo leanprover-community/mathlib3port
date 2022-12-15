@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.images
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,13 +123,13 @@ noncomputable def imageIsoRange {G H : ModuleCat.{v} R} (f : G ⟶ H) :
   IsImage.isoExt (Image.isImage f) (isImage f)
 #align Module.image_iso_range ModuleCat.imageIsoRange
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem image_iso_range_inv_image_ι {G H : ModuleCat.{v} R} (f : G ⟶ H) :
     (imageIsoRange f).inv ≫ Limits.image.ι f = ModuleCat.ofHom f.range.Subtype :=
   IsImage.iso_ext_inv_m _ _
 #align Module.image_iso_range_inv_image_ι ModuleCat.image_iso_range_inv_image_ι
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem image_iso_range_hom_subtype {G H : ModuleCat.{v} R} (f : G ⟶ H) :
     (imageIsoRange f).hom ≫ ModuleCat.ofHom f.range.Subtype = Limits.image.ι f := by
   erw [← image_iso_range_inv_image_ι f, iso.hom_inv_id_assoc]

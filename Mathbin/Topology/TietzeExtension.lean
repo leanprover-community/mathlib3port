@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.tietze_extension
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,7 +170,7 @@ on the whole space. -/
 theorem exists_norm_eq_restrict_eq_of_closed {s : Set Y} (f : s →ᵇ ℝ) (hs : IsClosed s) :
     ∃ g : Y →ᵇ ℝ, ‖g‖ = ‖f‖ ∧ g.restrict s = f :=
   exists_extension_norm_eq_of_closed_embedding' f ((ContinuousMap.id _).restrict s)
-    (closedEmbeddingSubtypeCoe hs)
+    (closed_embedding_subtype_coe hs)
 #align
   bounded_continuous_function.exists_norm_eq_restrict_eq_of_closed BoundedContinuousFunction.exists_norm_eq_restrict_eq_of_closed
 
@@ -350,7 +350,7 @@ theorem exists_forall_mem_restrict_eq_of_closed {s : Set Y} (f : s →ᵇ ℝ) (
     {t : Set ℝ} [OrdConnected t] (hf : ∀ x, f x ∈ t) (hne : t.Nonempty) :
     ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ t) ∧ g.restrict s = f := by
   rcases exists_extension_forall_mem_of_closed_embedding f hf hne
-      (closedEmbeddingSubtypeCoe hs) with
+      (closed_embedding_subtype_coe hs) with
     ⟨g, hg, hgf⟩
   exact ⟨g, hg, FunLike.coe_injective hgf⟩
 #align
@@ -423,7 +423,7 @@ theorem exists_restrict_eq_forall_mem_of_closed {s : Set Y} (f : C(s, ℝ)) {t :
     [OrdConnected t] (ht : ∀ x, f x ∈ t) (hne : t.Nonempty) (hs : IsClosed s) :
     ∃ g : C(Y, ℝ), (∀ y, g y ∈ t) ∧ g.restrict s = f :=
   let ⟨g, hgt, hgf⟩ :=
-    exists_extension_forall_mem_of_closed_embedding f ht hne (closedEmbeddingSubtypeCoe hs)
+    exists_extension_forall_mem_of_closed_embedding f ht hne (closed_embedding_subtype_coe hs)
   ⟨g, hgt, coe_injective hgf⟩
 #align
   continuous_map.exists_restrict_eq_forall_mem_of_closed ContinuousMap.exists_restrict_eq_forall_mem_of_closed

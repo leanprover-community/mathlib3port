@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.coeffs
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,8 +179,8 @@ def valExcept (k : Nat) (v : Nat → Int) (as) :=
   valBetween v as 0 k + valBetween v as (k + 1) (as.length - (k + 1))
 #align omega.coeffs.val_except Omega.Coeffs.valExcept
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » k) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » k) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » k) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » k) -/
 theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
     (∀ (x) (_ : x ≠ k), v x = w x) →
       (∀ (x) (_ : x ≠ k), get x is = get x js) → valExcept k v is = valExcept k w js :=
@@ -284,7 +284,7 @@ theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x ∈ 
   | 0 => by simp only [Int.zero_div, val_between, List.map]
   | m + 1 => by 
     unfold val_between
-    rw [@val_between_map_div m, Int.add_div_of_dvd_right]
+    rw [@val_between_map_div m, Int.add_ediv_of_dvd_right]
     apply fun_mono_2 rfl
     ·
       apply
@@ -297,7 +297,7 @@ theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x ∈ 
             apply Int.zero_div
           _ = get (l + m) as * v (l + m) / i := by
             repeat' rw [mul_comm _ (v (l + m))]
-            rw [Int.mul_div_assoc]
+            rw [Int.mul_ediv_assoc]
             apply forall_val_dvd_of_forall_mem_dvd h1
           
     apply dvd_mul_of_dvd_left

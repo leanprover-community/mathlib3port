@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.default
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,23 +47,23 @@ instance {B : C} [HasEqualizers C] : HasEqualizers (Over B) := by
   letI : category (UliftHom.{v} (ULift.{v} walking_parallel_pair)) := inferInstance
   exact has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v, v} _).symm
 
-instance has_finite_limits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (Over B) := by
+instance hasFiniteLimits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (Over B) := by
   apply @has_finite_limits_of_has_equalizers_and_finite_products _ _ _ _
   · exact construct_products.over_finite_products_of_finite_wide_pullbacks
   · apply @has_equalizers_of_has_pullbacks_and_binary_products _ _ _ _
     · haveI : has_pullbacks C := ⟨by infer_instance⟩
       exact construct_products.over_binary_product_of_pullback
     · infer_instance
-#align category_theory.over.has_finite_limits CategoryTheory.Over.has_finite_limits
+#align category_theory.over.has_finite_limits CategoryTheory.Over.hasFiniteLimits
 
-instance has_limits {B : C} [HasWidePullbacks.{w} C] : HasLimitsOfSize.{w} (Over B) := by
+instance hasLimits {B : C} [HasWidePullbacks.{w} C] : HasLimitsOfSize.{w} (Over B) := by
   apply @has_limits_of_has_equalizers_and_products _ _ _ _
   · exact construct_products.over_products_of_wide_pullbacks
   · apply @has_equalizers_of_has_pullbacks_and_binary_products _ _ _ _
     · haveI : has_pullbacks C := ⟨inferInstance⟩
       exact construct_products.over_binary_product_of_pullback
     · infer_instance
-#align category_theory.over.has_limits CategoryTheory.Over.has_limits
+#align category_theory.over.has_limits CategoryTheory.Over.hasLimits
 
 end CategoryTheory.Over
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.units
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,11 +23,13 @@ import Mathbin.Algebra.Order.Monoid.Units
 
 variable {α : Type _}
 
+#print Units.orderedCommGroup /-
 /-- The units of an ordered commutative monoid form an ordered commutative group. -/
 @[to_additive
       "The units of an ordered commutative additive monoid form an ordered commutative\nadditive group."]
 instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup αˣ :=
-  { Units.partialOrder, Units.commGroup with
+  { Units.instPartialOrderUnits, Units.instCommGroupUnitsToMonoid with
     mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : (c : α) * a ≤ c * b) }
 #align units.ordered_comm_group Units.orderedCommGroup
+-/
 

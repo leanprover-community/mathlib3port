@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.signed_hahn
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -319,8 +319,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
 /-- A measurable set of negative measure has a negative subset of negative measure. -/
 theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     ∃ j : Set α, MeasurableSet j ∧ j ⊆ i ∧ s ≤[j] 0 ∧ s j < 0 := by
-  have hi₁ : MeasurableSet i :=
-    Classical.by_contradiction fun h => ne_of_lt hi <| s.not_measurable h
+  have hi₁ : MeasurableSet i := by_contradiction fun h => ne_of_lt hi <| s.not_measurable h
   by_cases s ≤[i] 0
   · exact ⟨i, hi₁, Set.Subset.refl _, h, hi⟩
   by_cases hn : ∀ n : ℕ, ¬s ≤[i \ ⋃ l < n, restrict_nonpos_seq s i l] 0
@@ -493,7 +492,7 @@ theorem of_symm_diff_compl_positive_negative {s : SignedMeasure α} {i j : Set �
     (hj' : 0 ≤[j] s ∧ s ≤[jᶜ] 0) : s (i ∆ j) = 0 ∧ s (iᶜ ∆ jᶜ) = 0 := by
   rw [restrict_le_restrict_iff s 0, restrict_le_restrict_iff 0 s] at hi' hj'
   constructor
-  · rw [symm_diff_def, Set.diff_eq_compl_inter, Set.diff_eq_compl_inter, Set.sup_eq_union, of_union,
+  · rw [symmDiff_def, Set.diff_eq_compl_inter, Set.diff_eq_compl_inter, Set.sup_eq_union, of_union,
       le_antisymm (hi'.2 (hi.compl.inter hj) (Set.inter_subset_left _ _))
         (hj'.1 (hi.compl.inter hj) (Set.inter_subset_right _ _)),
       le_antisymm (hj'.2 (hj.compl.inter hi) (Set.inter_subset_left _ _))
@@ -506,7 +505,7 @@ theorem of_symm_diff_compl_positive_negative {s : SignedMeasure α} {i j : Set �
             (Disjoint.comm.1 (IsCompl.disjoint is_compl_compl)))
     · exact hj.compl.inter hi
     · exact hi.compl.inter hj
-  · rw [symm_diff_def, Set.diff_eq_compl_inter, Set.diff_eq_compl_inter, compl_compl, compl_compl,
+  · rw [symmDiff_def, Set.diff_eq_compl_inter, Set.diff_eq_compl_inter, compl_compl, compl_compl,
       Set.sup_eq_union, of_union,
       le_antisymm (hi'.2 (hj.inter hi.compl) (Set.inter_subset_right _ _))
         (hj'.1 (hj.inter hi.compl) (Set.inter_subset_left _ _)),

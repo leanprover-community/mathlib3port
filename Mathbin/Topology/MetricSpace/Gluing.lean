@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gluing
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -447,10 +447,10 @@ theorem fst_eq_of_dist_lt_one (x y : Σi, E i) (h : dist x y < 1) : x.1 = y.1 :=
   apply one_le_dist_of_ne h
 #align metric.sigma.fst_eq_of_dist_lt_one Metric.Sigma.fst_eq_of_dist_lt_one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_nonneg, ",", expr zero_le_one, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr zero_le_one, ",", expr dist_nonneg, ",", expr le_rfl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_nonneg, ",", expr zero_le_one, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr zero_le_one, ",", expr dist_nonneg, ",", expr le_rfl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dist y z := by
   rcases x with ⟨i, x⟩; rcases y with ⟨j, y⟩; rcases z with ⟨k, z⟩
   rcases eq_or_ne i k with (rfl | hik)
@@ -462,7 +462,7 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
           simpa only [zero_add, add_zero] using dist_triangle _ _ _
         _ ≤ _ := by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_nonneg, \",\", expr zero_le_one, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_nonneg, \",\", expr zero_le_one, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         
   · rcases eq_or_ne i j with (rfl | hij)
     · simp only [hik, sigma.dist_ne, Ne.def, not_false_iff, sigma.dist_same]
@@ -471,7 +471,7 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
             dist x y + dist y (Nonempty.some ⟨y⟩) + 1 + dist (Nonempty.some ⟨z⟩) z :=
           by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         _ = _ := by abel
         
     · rcases eq_or_ne j k with (rfl | hjk)
@@ -481,7 +481,7 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
               dist x (Nonempty.some ⟨x⟩) + 1 + (dist (Nonempty.some ⟨z⟩) y + dist y z) :=
             by
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
           _ = _ := by abel
           
       · simp only [hik, hij, hjk, sigma.dist_ne, Ne.def, not_false_iff]
@@ -491,7 +491,7 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
             by simp only [add_zero, zero_add]
           _ ≤ _ := by
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr zero_le_one, \",\", expr dist_nonneg, \",\", expr le_rfl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr zero_le_one, \",\", expr dist_nonneg, \",\", expr le_rfl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
           
 #align metric.sigma.dist_triangle Metric.Sigma.dist_triangle
 

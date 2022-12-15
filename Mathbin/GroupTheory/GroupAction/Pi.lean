@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module group_theory.group_action.pi
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,21 +70,21 @@ instance is_scalar_tower'' {g : I → Type _} {h : I → Type _} [∀ i, HasSmul
 
 @[to_additive]
 instance smul_comm_class {α β : Type _} [∀ i, HasSmul α <| f i] [∀ i, HasSmul β <| f i]
-    [∀ i, SmulCommClass α β (f i)] : SmulCommClass α β (∀ i : I, f i) :=
+    [∀ i, SMulCommClass α β (f i)] : SMulCommClass α β (∀ i : I, f i) :=
   ⟨fun x y z => funext fun i => smul_comm x y (z i)⟩
 #align pi.smul_comm_class Pi.smul_comm_class
 
 @[to_additive]
 instance smul_comm_class' {g : I → Type _} {α : Type _} [∀ i, HasSmul α <| g i]
-    [∀ i, HasSmul (f i) (g i)] [∀ i, SmulCommClass α (f i) (g i)] :
-    SmulCommClass α (∀ i : I, f i) (∀ i : I, g i) :=
+    [∀ i, HasSmul (f i) (g i)] [∀ i, SMulCommClass α (f i) (g i)] :
+    SMulCommClass α (∀ i : I, f i) (∀ i : I, g i) :=
   ⟨fun x y z => funext fun i => smul_comm x (y i) (z i)⟩
 #align pi.smul_comm_class' Pi.smul_comm_class'
 
 @[to_additive]
 instance smul_comm_class'' {g : I → Type _} {h : I → Type _} [∀ i, HasSmul (g i) (h i)]
-    [∀ i, HasSmul (f i) (h i)] [∀ i, SmulCommClass (f i) (g i) (h i)] :
-    SmulCommClass (∀ i, f i) (∀ i, g i) (∀ i, h i) :=
+    [∀ i, HasSmul (f i) (h i)] [∀ i, SMulCommClass (f i) (g i) (h i)] :
+    SMulCommClass (∀ i, f i) (∀ i, g i) (∀ i, h i) :=
   ⟨fun x y z => funext fun i => smul_comm (x i) (y i) (z i)⟩
 #align pi.smul_comm_class'' Pi.smul_comm_class''
 
@@ -98,7 +98,7 @@ not an instance as `i` cannot be inferred. -/
 @[to_additive Pi.has_faithful_vadd_at
       "If `f i` has a faithful additive action for a given `i`, then\nso does `Π i, f i`. This is not an instance as `i` cannot be inferred"]
 theorem has_faithful_smul_at {α : Type _} [∀ i, HasSmul α <| f i] [∀ i, Nonempty (f i)] (i : I)
-    [HasFaithfulSmul α (f i)] : HasFaithfulSmul α (∀ i, f i) :=
+    [FaithfulSMul α (f i)] : FaithfulSMul α (∀ i, f i) :=
   ⟨fun x y h =>
     eq_of_smul_eq_smul fun a : f i => by
       classical 
@@ -110,7 +110,7 @@ theorem has_faithful_smul_at {α : Type _} [∀ i, HasSmul α <| f i] [∀ i, No
 
 @[to_additive Pi.has_faithful_vadd]
 instance has_faithful_smul {α : Type _} [Nonempty I] [∀ i, HasSmul α <| f i] [∀ i, Nonempty (f i)]
-    [∀ i, HasFaithfulSmul α (f i)] : HasFaithfulSmul α (∀ i, f i) :=
+    [∀ i, FaithfulSMul α (f i)] : FaithfulSMul α (∀ i, f i) :=
   let ⟨i⟩ := ‹Nonempty I›
   has_faithful_smul_at i
 #align pi.has_faithful_smul Pi.has_faithful_smul
@@ -132,27 +132,27 @@ instance mulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} [∀ i, MulActi
   one_smul f := funext fun i => one_smul _ _
 #align pi.mul_action' Pi.mulAction'
 
-instance smulZeroClass (α) {n : ∀ i, Zero <| f i} [∀ i, SmulZeroClass α <| f i] :
-    @SmulZeroClass α (∀ i : I, f i)
+instance smulZeroClass (α) {n : ∀ i, Zero <| f i} [∀ i, SMulZeroClass α <| f i] :
+    @SMulZeroClass α (∀ i : I, f i)
       (@Pi.instZero I f n) where smul_zero c := funext fun i => smul_zero _
 #align pi.smul_zero_class Pi.smulZeroClass
 
-instance smulZeroClass' {g : I → Type _} {n : ∀ i, Zero <| g i} [∀ i, SmulZeroClass (f i) (g i)] :
-    @SmulZeroClass (∀ i, f i) (∀ i : I, g i)
+instance smulZeroClass' {g : I → Type _} {n : ∀ i, Zero <| g i} [∀ i, SMulZeroClass (f i) (g i)] :
+    @SMulZeroClass (∀ i, f i) (∀ i : I, g i)
       (@Pi.instZero I g n) where smul_zero := by 
     intros
     ext x
     apply smul_zero
 #align pi.smul_zero_class' Pi.smulZeroClass'
 
-instance distribSmul (α) {n : ∀ i, AddZeroClass <| f i} [∀ i, DistribSmul α <| f i] :
-    @DistribSmul α (∀ i : I, f i)
+instance distribSmul (α) {n : ∀ i, AddZeroClass <| f i} [∀ i, DistribSMul α <| f i] :
+    @DistribSMul α (∀ i : I, f i)
       (@Pi.addZeroClass I f n) where smul_add c f g := funext fun i => smul_add _ _ _
 #align pi.distrib_smul Pi.distribSmul
 
 instance distribSmul' {g : I → Type _} {n : ∀ i, AddZeroClass <| g i}
-    [∀ i, DistribSmul (f i) (g i)] :
-    @DistribSmul (∀ i, f i) (∀ i : I, g i)
+    [∀ i, DistribSMul (f i) (g i)] :
+    @DistribSMul (∀ i, f i) (∀ i : I, g i)
       (@Pi.addZeroClass I g
         n) where smul_add := by 
     intros
@@ -228,8 +228,8 @@ instance hasSmul {ι R M : Type _} [HasSmul R M] : HasSmul R (ι → M) :=
 this is not present. -/
 @[to_additive
       "Non-dependent version of `pi.vadd_comm_class`. Lean gets confused by the dependent\ninstance if this is not present."]
-instance smul_comm_class {ι α β M : Type _} [HasSmul α M] [HasSmul β M] [SmulCommClass α β M] :
-    SmulCommClass α β (ι → M) :=
+instance smul_comm_class {ι α β M : Type _} [HasSmul α M] [HasSmul β M] [SMulCommClass α β M] :
+    SMulCommClass α β (ι → M) :=
   Pi.smul_comm_class
 #align function.smul_comm_class Function.smul_comm_class
 

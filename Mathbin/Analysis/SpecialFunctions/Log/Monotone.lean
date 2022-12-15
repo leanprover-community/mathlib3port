@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.monotone
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,13 +74,13 @@ theorem log_div_self_rpow_antitone_on {a : ℝ} (ha : 0 < a) :
     log_rpow (rpow_pos_of_pos y_pos a), log_rpow (rpow_pos_of_pos x_pos a), mul_div_assoc,
     mul_div_assoc, mul_le_mul_left (one_div_pos.mpr ha)]
   · refine' log_div_self_antitone_on _ _ _
-    · simp only [Set.mem_set_of_eq]
+    · simp only [Set.mem_setOf_eq]
       convert rpow_le_rpow _ hex (le_of_lt ha)
       rw [← exp_mul]
       simp only [Real.exp_eq_exp]
       field_simp [(ne_of_lt ha).symm]
       exact le_of_lt (exp_pos (1 / a))
-    · simp only [Set.mem_set_of_eq]
+    · simp only [Set.mem_setOf_eq]
       convert rpow_le_rpow _ (trans hex hxy) (le_of_lt ha)
       rw [← exp_mul]
       simp only [Real.exp_eq_exp]

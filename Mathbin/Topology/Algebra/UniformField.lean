@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_field
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) := by
 variable [UniformAddGroup K]
 
 theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
-  haveI : T1Space (hat K) := T2Space.t1Space
+  haveI : T1Space (hat K) := T2Space.t1_space
   let f := fun x : hat K => x * hat_inv x
   let c := (coe : K → hat K)
   change f x = 1

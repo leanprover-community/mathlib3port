@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.with_density_vector_measure
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem with_densityᵥ_sub' (hf : Integrable f μ) (hg : Integrable g μ) :
 
 @[simp]
 theorem with_densityᵥ_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E]
-    [SmulCommClass ℝ 𝕜 E] (f : α → E) (r : 𝕜) : μ.withDensityᵥ (r • f) = r • μ.withDensityᵥ f := by
+    [SMulCommClass ℝ 𝕜 E] (f : α → E) (r : 𝕜) : μ.withDensityᵥ (r • f) = r • μ.withDensityᵥ f := by
   by_cases hf : integrable f μ
   · ext1 i hi
     rw [with_densityᵥ_apply (hf.smul r) hi, vector_measure.smul_apply, with_densityᵥ_apply hf hi, ←
@@ -133,7 +133,7 @@ theorem with_densityᵥ_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [Nor
 #align measure_theory.with_densityᵥ_smul MeasureTheory.with_densityᵥ_smul
 
 theorem with_densityᵥ_smul' {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E]
-    [SmulCommClass ℝ 𝕜 E] (f : α → E) (r : 𝕜) :
+    [SMulCommClass ℝ 𝕜 E] (f : α → E) (r : 𝕜) :
     (μ.withDensityᵥ fun x => r • f x) = r • μ.withDensityᵥ f :=
   with_densityᵥ_smul f r
 #align measure_theory.with_densityᵥ_smul' MeasureTheory.with_densityᵥ_smul'

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.ball_action
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,52 +170,52 @@ instance is_scalar_tower_closed_ball_ball_ball :
 
 end IsScalarTower
 
-section SmulCommClass
+section SMulCommClass
 
-variable [SmulCommClass 𝕜 𝕜' E]
+variable [SMulCommClass 𝕜 𝕜' E]
 
 instance smul_comm_class_closed_ball_closed_ball_closed_ball :
-    SmulCommClass (closedBall (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (closedBall (0 : E) r) :=
+    SMulCommClass (closedBall (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (closedBall (0 : E) r) :=
   ⟨fun a b c => Subtype.ext <| smul_comm (a : 𝕜) (b : 𝕜') (c : E)⟩
 #align
   smul_comm_class_closed_ball_closed_ball_closed_ball smul_comm_class_closed_ball_closed_ball_closed_ball
 
 instance smul_comm_class_closed_ball_closed_ball_ball :
-    SmulCommClass (closedBall (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (ball (0 : E) r) :=
+    SMulCommClass (closedBall (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (ball (0 : E) r) :=
   ⟨fun a b c => Subtype.ext <| smul_comm (a : 𝕜) (b : 𝕜') (c : E)⟩
 #align smul_comm_class_closed_ball_closed_ball_ball smul_comm_class_closed_ball_closed_ball_ball
 
 instance smul_comm_class_sphere_closed_ball_closed_ball :
-    SmulCommClass (sphere (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (closedBall (0 : E) r) :=
+    SMulCommClass (sphere (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (closedBall (0 : E) r) :=
   ⟨fun a b c => Subtype.ext <| smul_comm (a : 𝕜) (b : 𝕜') (c : E)⟩
 #align smul_comm_class_sphere_closed_ball_closed_ball smul_comm_class_sphere_closed_ball_closed_ball
 
 instance smul_comm_class_sphere_closed_ball_ball :
-    SmulCommClass (sphere (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (ball (0 : E) r) :=
+    SMulCommClass (sphere (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (ball (0 : E) r) :=
   ⟨fun a b c => Subtype.ext <| smul_comm (a : 𝕜) (b : 𝕜') (c : E)⟩
 #align smul_comm_class_sphere_closed_ball_ball smul_comm_class_sphere_closed_ball_ball
 
 instance smul_comm_class_sphere_ball_ball [NormedAlgebra 𝕜 𝕜'] :
-    SmulCommClass (sphere (0 : 𝕜) 1) (ball (0 : 𝕜') 1) (ball (0 : 𝕜') 1) :=
+    SMulCommClass (sphere (0 : 𝕜) 1) (ball (0 : 𝕜') 1) (ball (0 : 𝕜') 1) :=
   ⟨fun a b c => Subtype.ext <| smul_comm (a : 𝕜) (b : 𝕜') (c : 𝕜')⟩
 #align smul_comm_class_sphere_ball_ball smul_comm_class_sphere_ball_ball
 
 instance smul_comm_class_sphere_sphere_closed_ball :
-    SmulCommClass (sphere (0 : 𝕜) 1) (sphere (0 : 𝕜') 1) (closedBall (0 : E) r) :=
+    SMulCommClass (sphere (0 : 𝕜) 1) (sphere (0 : 𝕜') 1) (closedBall (0 : E) r) :=
   ⟨fun a b c => Subtype.ext <| smul_comm (a : 𝕜) (b : 𝕜') (c : E)⟩
 #align smul_comm_class_sphere_sphere_closed_ball smul_comm_class_sphere_sphere_closed_ball
 
 instance smul_comm_class_sphere_sphere_ball :
-    SmulCommClass (sphere (0 : 𝕜) 1) (sphere (0 : 𝕜') 1) (ball (0 : E) r) :=
+    SMulCommClass (sphere (0 : 𝕜) 1) (sphere (0 : 𝕜') 1) (ball (0 : E) r) :=
   ⟨fun a b c => Subtype.ext <| smul_comm (a : 𝕜) (b : 𝕜') (c : E)⟩
 #align smul_comm_class_sphere_sphere_ball smul_comm_class_sphere_sphere_ball
 
 instance smul_comm_class_sphere_sphere_sphere :
-    SmulCommClass (sphere (0 : 𝕜) 1) (sphere (0 : 𝕜') 1) (sphere (0 : E) r) :=
+    SMulCommClass (sphere (0 : 𝕜) 1) (sphere (0 : 𝕜') 1) (sphere (0 : E) r) :=
   ⟨fun a b c => Subtype.ext <| smul_comm (a : 𝕜) (b : 𝕜') (c : E)⟩
 #align smul_comm_class_sphere_sphere_sphere smul_comm_class_sphere_sphere_sphere
 
-end SmulCommClass
+end SMulCommClass
 
 variable (𝕜) [CharZero 𝕜]
 

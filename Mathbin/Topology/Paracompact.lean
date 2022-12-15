@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.paracompact
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,7 +226,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis [LocallyCompac
     ∃ (α : Type v)(c : α → X)(r : ∀ a, ι (c a)),
       (∀ a, p (c a) (r a)) ∧ (⋃ a, B (c a) (r a)) = univ ∧ LocallyFinite fun a => B (c a) (r a) :=
   let ⟨α, c, r, hp, hU, hfin⟩ :=
-    refinement_of_locally_compact_sigma_compact_of_nhds_basis_set isClosedUniv fun x _ => hB x
+    refinement_of_locally_compact_sigma_compact_of_nhds_basis_set is_closed_univ fun x _ => hB x
   ⟨α, c, r, fun a => (hp a).2, univ_subset_iff.1 hU, hfin⟩
 #align
   refinement_of_locally_compact_sigma_compact_of_nhds_basis refinement_of_locally_compact_sigma_compact_of_nhds_basis
@@ -273,7 +273,7 @@ theorem normalOfParacompactT2 [T2Space X] [ParacompactSpace X] : NormalSpace X :
     exact fun y hyu hyv => (huv i).le_bot ⟨hsub _ hyu, hyv⟩
   -- Now we apply the lemma twice: first to `s` and `t`, then to `t` and each point of `s`.
   refine' ⟨fun s t hs ht hst => this s t hs ht fun x hx => _⟩
-  rcases this t {x} ht isClosedSingleton fun y hy => _ with ⟨v, u, hv, hu, htv, hxu, huv⟩
+  rcases this t {x} ht is_closed_singleton fun y hy => _ with ⟨v, u, hv, hu, htv, hxu, huv⟩
   · exact ⟨u, v, hu, hv, singleton_subset_iff.1 hxu, htv, huv.symm⟩
   · simp_rw [singleton_subset_iff]
     exact t2_separation (hst.symm.ne_of_mem hy hx)

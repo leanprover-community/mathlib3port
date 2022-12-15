@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.inseparable
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ infixl:300 " ⤳ " => Specializes
               (Term.app
                `h
                [(Term.hole "_")
-                `isClosedClosure
+                `is_closed_closure
                 («term_<|_» `subset_closure "<|" (Term.app `mem_singleton [(Term.hole "_")]))]))))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "6") "↔" (num "5"))
@@ -347,7 +347,7 @@ infixl:300 " ⤳ " => Specializes
              (Term.app
               `h
               [(Term.hole "_")
-               `isClosedClosure
+               `is_closed_closure
                («term_<|_» `subset_closure "<|" (Term.app `mem_singleton [(Term.hole "_")]))]))))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "6") "↔" (num "5"))
@@ -727,7 +727,7 @@ infixl:300 " ⤳ " => Specializes
           exact fun h s hsc hx => of_not_not fun hy => h s ᶜ hsc . is_open_compl hy hx
           tfae_have 4 → 5
           ;
-          exact fun h => h _ isClosedClosure subset_closure <| mem_singleton _
+          exact fun h => h _ is_closed_closure subset_closure <| mem_singleton _
           tfae_have 6 ↔ 5
           ;
           exact is_closed_closure.closure_subset_iff.trans singleton_subset_iff
@@ -1117,7 +1117,7 @@ theorem inducing_mk : Inducing (mk : X → SeparationQuotient X) :=
 theorem is_closed_map_mk : IsClosedMap (mk : X → SeparationQuotient X) :=
   inducing_mk.IsClosedMap <| by 
     rw [range_mk]
-    exact isClosedUniv
+    exact is_closed_univ
 #align separation_quotient.is_closed_map_mk SeparationQuotient.is_closed_map_mk
 
 @[simp]

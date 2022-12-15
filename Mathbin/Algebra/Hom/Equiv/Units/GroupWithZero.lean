@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.equiv.units.group_with_zero
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,6 +28,12 @@ section GroupWithZero
 
 variable [GroupWithZero G]
 
+/- warning: equiv.mul_left₀ -> Equiv.mulLeft₀ is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (OfNat.mk.{u1} G 0 (Zero.zero.{u1} G (MulZeroClass.toHasZero.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1)))))))) -> (Equiv.Perm.{succ u1} G)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (Zero.toOfNat0.{u1} G (MonoidWithZero.toZero.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) -> (Equiv.Perm.{succ u1} G)
+Case conversion may be inaccurate. Consider using '#align equiv.mul_left₀ Equiv.mulLeft₀ₓ'. -/
 /-- Left multiplication by a nonzero element in a `group_with_zero` is a permutation of the
 underlying type. -/
 @[simps (config := { fullyApplied := false })]
@@ -39,6 +45,12 @@ theorem mul_left_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· *
   (Equiv.mulLeft₀ a ha).Bijective
 #align mul_left_bijective₀ mul_left_bijective₀
 
+/- warning: equiv.mul_right₀ -> Equiv.mulRight₀ is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (OfNat.mk.{u1} G 0 (Zero.zero.{u1} G (MulZeroClass.toHasZero.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1)))))))) -> (Equiv.Perm.{succ u1} G)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (Zero.toOfNat0.{u1} G (MonoidWithZero.toZero.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) -> (Equiv.Perm.{succ u1} G)
+Case conversion may be inaccurate. Consider using '#align equiv.mul_right₀ Equiv.mulRight₀ₓ'. -/
 /-- Right multiplication by a nonzero element in a `group_with_zero` is a permutation of the
 underlying type. -/
 @[simps (config := { fullyApplied := false })]

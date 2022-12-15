@@ -5,7 +5,7 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.module.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -230,9 +230,9 @@ theorem Submodule.le_topological_closure (s : Submodule R M) : s ≤ s.topologic
   subset_closure
 #align submodule.le_topological_closure Submodule.le_topological_closure
 
-theorem Submodule.isClosedTopologicalClosure (s : Submodule R M) :
-    IsClosed (s.topologicalClosure : Set M) := by convert isClosedClosure
-#align submodule.is_closed_topological_closure Submodule.isClosedTopologicalClosure
+theorem Submodule.is_closed_topological_closure (s : Submodule R M) :
+    IsClosed (s.topologicalClosure : Set M) := by convert is_closed_closure
+#align submodule.is_closed_topological_closure Submodule.is_closed_topological_closure
 
 theorem Submodule.topological_closure_minimal (s : Submodule R M) {t : Submodule R M} (h : s ≤ t)
     (ht : IsClosed (t : Set M)) : s.topologicalClosure ≤ t :=
@@ -241,7 +241,7 @@ theorem Submodule.topological_closure_minimal (s : Submodule R M) {t : Submodule
 
 theorem Submodule.topological_closure_mono {s : Submodule R M} {t : Submodule R M} (h : s ≤ t) :
     s.topologicalClosure ≤ t.topologicalClosure :=
-  s.topological_closure_minimal (h.trans t.le_topological_closure) t.isClosedTopologicalClosure
+  s.topological_closure_minimal (h.trans t.le_topological_closure) t.is_closed_topological_closure
 #align submodule.topological_closure_mono Submodule.topological_closure_mono
 
 /-- The topological closure of a closed submodule `s` is equal to `s`. -/
@@ -260,13 +260,13 @@ theorem Submodule.dense_iff_topological_closure_eq_top {s : Submodule R M} :
 instance {M' : Type _} [AddCommMonoid M'] [Module R M'] [UniformSpace M'] [HasContinuousAdd M']
     [HasContinuousSmul R M'] [CompleteSpace M'] (U : Submodule R M') :
     CompleteSpace U.topologicalClosure :=
-  isClosedClosure.complete_space_coe
+  is_closed_closure.complete_space_coe
 
 /-- A maximal proper subspace of a topological module (i.e a `submodule` satisfying `is_coatom`)
 is either closed or dense. -/
 theorem Submodule.is_closed_or_dense_of_is_coatom (s : Submodule R M) (hs : IsCoatom s) :
     IsClosed (s : Set M) ∨ Dense (s : Set M) :=
-  (hs.le_iff.mp s.le_topological_closure).swap.imp (isClosedOfClosureSubset ∘ Eq.le)
+  (hs.le_iff.mp s.le_topological_closure).swap.imp (is_closed_of_closure_subset ∘ Eq.le)
     Submodule.dense_iff_topological_closure_eq_top.mpr
 #align submodule.is_closed_or_dense_of_is_coatom Submodule.is_closed_or_dense_of_is_coatom
 
@@ -276,7 +276,7 @@ theorem LinearMap.is_closed_or_dense_ker [HasContinuousAdd M'] [IsSimpleModule R
   · refine' l.ker.is_closed_or_dense_of_is_coatom (LinearMap.is_coatom_ker_of_surjective hl)
   · rw [LinearMap.ker_zero]
     left
-    exact isClosedUniv
+    exact is_closed_univ
 #align linear_map.is_closed_or_dense_ker LinearMap.is_closed_or_dense_ker
 
 end closure
@@ -396,12 +396,12 @@ section
 
 variable (M₁ M₂) (σ : R →+* S)
 
-theorem isClosedSetOfMapSmul : IsClosed { f : M₁ → M₂ | ∀ c x, f (c • x) = σ c • f x } := by
+theorem is_closed_set_of_map_smul : IsClosed { f : M₁ → M₂ | ∀ c x, f (c • x) = σ c • f x } := by
   simp only [Set.set_of_forall]
   exact
-    isClosedInter fun c =>
-      isClosedInter fun x => isClosedEq (continuous_apply _) ((continuous_apply _).const_smul _)
-#align is_closed_set_of_map_smul isClosedSetOfMapSmul
+    is_closed_Inter fun c =>
+      is_closed_Inter fun x => is_closed_eq (continuous_apply _) ((continuous_apply _).const_smul _)
+#align is_closed_set_of_map_smul is_closed_set_of_map_smul
 
 end
 
@@ -415,7 +415,7 @@ def linearMapOfMemClosureRangeCoe (f : M₁ → M₂)
   { addMonoidHomOfMemClosureRangeCoe f hf with 
     toFun := f
     map_smul' :=
-      (isClosedSetOfMapSmul M₁ M₂ σ).closure_subset_iff.2
+      (is_closed_set_of_map_smul M₁ M₂ σ).closure_subset_iff.2
         (Set.range_subset_iff.2 LinearMap.map_smulₛₗ) hf }
 #align linear_map_of_mem_closure_range_coe linearMapOfMemClosureRangeCoe
 
@@ -429,9 +429,9 @@ def linearMapOfTendsto (f : M₁ → M₂) (g : α → M₁ →ₛₗ[σ] M₂) 
 
 variable (M₁ M₂ σ)
 
-theorem LinearMap.isClosedRangeCoe : IsClosed (Set.range (coeFn : (M₁ →ₛₗ[σ] M₂) → M₁ → M₂)) :=
-  isClosedOfClosureSubset fun f hf => ⟨linearMapOfMemClosureRangeCoe f hf, rfl⟩
-#align linear_map.is_closed_range_coe LinearMap.isClosedRangeCoe
+theorem LinearMap.is_closed_range_coe : IsClosed (Set.range (coeFn : (M₁ →ₛₗ[σ] M₂) → M₁ → M₂)) :=
+  is_closed_of_closure_subset fun f hf => ⟨linearMapOfMemClosureRangeCoe f hf, rfl⟩
+#align linear_map.is_closed_range_coe LinearMap.is_closed_range_coe
 
 end PointwiseLimits
 
@@ -637,9 +637,9 @@ section SmulMonoid
 
 variable {S₂ T₂ : Type _} [Monoid S₂] [Monoid T₂]
 
-variable [DistribMulAction S₂ M₂] [SmulCommClass R₂ S₂ M₂] [HasContinuousConstSmul S₂ M₂]
+variable [DistribMulAction S₂ M₂] [SMulCommClass R₂ S₂ M₂] [HasContinuousConstSmul S₂ M₂]
 
-variable [DistribMulAction T₂ M₂] [SmulCommClass R₂ T₂ M₂] [HasContinuousConstSmul T₂ M₂]
+variable [DistribMulAction T₂ M₂] [SMulCommClass R₂ T₂ M₂] [HasContinuousConstSmul T₂ M₂]
 
 instance :
     MulAction S₂
@@ -666,7 +666,7 @@ theorem coe_smul' (c : S₂) (f : M₁ →SL[σ₁₂] M₂) : ⇑(c • f) = c 
 instance [HasSmul S₂ T₂] [IsScalarTower S₂ T₂ M₂] : IsScalarTower S₂ T₂ (M₁ →SL[σ₁₂] M₂) :=
   ⟨fun a b f => ext fun x => smul_assoc a b (f x)⟩
 
-instance [SmulCommClass S₂ T₂ M₂] : SmulCommClass S₂ T₂ (M₁ →SL[σ₁₂] M₂) :=
+instance [SMulCommClass S₂ T₂ M₂] : SMulCommClass S₂ T₂ (M₁ →SL[σ₁₂] M₂) :=
   ⟨fun a b f => ext fun x => smul_comm a b (f x)⟩
 
 end SmulMonoid
@@ -778,10 +778,10 @@ theorem coe_add' (f g : M₁ →SL[σ₁₂] M₂) : ⇑(f + g) = f + g :=
   rfl
 #align continuous_linear_map.coe_add' ContinuousLinearMap.coe_add'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 instance : AddCommMonoid
       (M₁ →SL[σ₁₂] M₂) where 
   zero := (0 : M₁ →SL[σ₁₂] M₂)
@@ -789,19 +789,19 @@ instance : AddCommMonoid
   zero_add := by
     intros <;> ext <;>
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   add_zero := by
     intros <;> ext <;>
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   add_comm := by
     intros <;> ext <;>
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   add_assoc := by
     intros <;> ext <;>
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   nsmul := (· • ·)
   nsmul_zero' f := by 
     ext
@@ -967,16 +967,16 @@ protected theorem smul_def (f : M₁ →L[R₁] M₁) (a : M₁) : f • a = f a
 #align continuous_linear_map.smul_def ContinuousLinearMap.smul_def
 
 /-- `continuous_linear_map.apply_module` is faithful. -/
-instance apply_has_faithful_smul : HasFaithfulSmul (M₁ →L[R₁] M₁) M₁ :=
+instance apply_has_faithful_smul : FaithfulSMul (M₁ →L[R₁] M₁) M₁ :=
   ⟨fun _ _ => ContinuousLinearMap.ext⟩
 #align continuous_linear_map.apply_has_faithful_smul ContinuousLinearMap.apply_has_faithful_smul
 
 instance apply_smul_comm_class :
-    SmulCommClass R₁ (M₁ →L[R₁] M₁) M₁ where smul_comm r e m := (e.map_smul r m).symm
+    SMulCommClass R₁ (M₁ →L[R₁] M₁) M₁ where smul_comm r e m := (e.map_smul r m).symm
 #align continuous_linear_map.apply_smul_comm_class ContinuousLinearMap.apply_smul_comm_class
 
 instance apply_smul_comm_class' :
-    SmulCommClass (M₁ →L[R₁] M₁) R₁ M₁ where smul_comm := ContinuousLinearMap.map_smul
+    SMulCommClass (M₁ →L[R₁] M₁) R₁ M₁ where smul_comm := ContinuousLinearMap.map_smul
 #align continuous_linear_map.apply_smul_comm_class' ContinuousLinearMap.apply_smul_comm_class'
 
 instance : HasContinuousConstSmul (M₁ →L[R₁] M₁) M₁ :=
@@ -1040,21 +1040,21 @@ theorem coe_inr [Module R₁ M₂] : (inr R₁ M₁ M₂ : M₂ →ₗ[R₁] M�
   rfl
 #align continuous_linear_map.coe_inr ContinuousLinearMap.coe_inr
 
-theorem isClosedKer [T1Space M₂] [ContinuousSemilinearMapClass F σ₁₂ M₁ M₂] (f : F) :
+theorem is_closed_ker [T1Space M₂] [ContinuousSemilinearMapClass F σ₁₂ M₁ M₂] (f : F) :
     IsClosed (ker f : Set M₁) :=
-  continuous_iff_is_closed.1 (map_continuous f) _ isClosedSingleton
-#align continuous_linear_map.is_closed_ker ContinuousLinearMap.isClosedKer
+  continuous_iff_is_closed.1 (map_continuous f) _ is_closed_singleton
+#align continuous_linear_map.is_closed_ker ContinuousLinearMap.is_closed_ker
 
 theorem is_complete_ker {M' : Type _} [UniformSpace M'] [CompleteSpace M'] [AddCommMonoid M']
     [Module R₁ M'] [T1Space M₂] [ContinuousSemilinearMapClass F σ₁₂ M' M₂] (f : F) :
     IsComplete (ker f : Set M') :=
-  (isClosedKer f).IsComplete
+  (is_closed_ker f).IsComplete
 #align continuous_linear_map.is_complete_ker ContinuousLinearMap.is_complete_ker
 
 instance (priority := 100) complete_space_ker {M' : Type _} [UniformSpace M'] [CompleteSpace M']
     [AddCommMonoid M'] [Module R₁ M'] [T1Space M₂] [ContinuousSemilinearMapClass F σ₁₂ M' M₂]
     (f : F) : CompleteSpace (ker f) :=
-  (isClosedKer f).complete_space_coe
+  (is_closed_ker f).complete_space_coe
 #align continuous_linear_map.complete_space_ker ContinuousLinearMap.complete_space_ker
 
 @[simp]
@@ -1416,7 +1416,7 @@ theorem coe_neg' (f : M →SL[σ₁₂] M₂) : ⇑(-f) = -f :=
 instance : Sub (M →SL[σ₁₂] M₂) :=
   ⟨fun f g => ⟨f - g, f.2.sub g.2⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, ",", expr sub_eq_add_neg, "]"],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, ",", expr sub_eq_add_neg, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 instance : AddCommGroup (M →SL[σ₁₂] M₂) := by
   refine'
@@ -1440,7 +1440,7 @@ instance : AddCommGroup (M →SL[σ₁₂] M₂) := by
         intros <;>
       ext <;>
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \",\", expr sub_eq_add_neg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \",\", expr sub_eq_add_neg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 
 theorem sub_apply (f g : M →SL[σ₁₂] M₂) (x : M) : (f - g) x = f x - g x :=
   rfl
@@ -1562,8 +1562,8 @@ variable {R R₂ R₃ S S₃ : Type _} [Semiring R] [Semiring R₂] [Semiring R�
   [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R₂ M₂] {M₃ : Type _} [TopologicalSpace M₃]
   [AddCommMonoid M₃] [Module R₃ M₃] {N₂ : Type _} [TopologicalSpace N₂] [AddCommMonoid N₂]
   [Module R N₂] {N₃ : Type _} [TopologicalSpace N₃] [AddCommMonoid N₃] [Module R N₃]
-  [DistribMulAction S₃ M₃] [SmulCommClass R₃ S₃ M₃] [HasContinuousConstSmul S₃ M₃]
-  [DistribMulAction S N₃] [SmulCommClass R S N₃] [HasContinuousConstSmul S N₃] {σ₁₂ : R →+* R₂}
+  [DistribMulAction S₃ M₃] [SMulCommClass R₃ S₃ M₃] [HasContinuousConstSmul S₃ M₃]
+  [DistribMulAction S N₃] [SMulCommClass R S N₃] [HasContinuousConstSmul S N₃] {σ₁₂ : R →+* R₂}
   {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
 include σ₁₃
@@ -1576,9 +1576,9 @@ theorem smul_comp (c : S₃) (h : M₂ →SL[σ₂₃] M₃) (f : M →SL[σ₁�
 
 omit σ₁₃
 
-variable [DistribMulAction S₃ M₂] [HasContinuousConstSmul S₃ M₂] [SmulCommClass R₂ S₃ M₂]
+variable [DistribMulAction S₃ M₂] [HasContinuousConstSmul S₃ M₂] [SMulCommClass R₂ S₃ M₂]
 
-variable [DistribMulAction S N₂] [HasContinuousConstSmul S N₂] [SmulCommClass R S N₂]
+variable [DistribMulAction S N₂] [HasContinuousConstSmul S N₂] [SMulCommClass R S N₂]
 
 @[simp]
 theorem comp_smul [LinearMap.CompatibleSmul N₂ N₃ S R] (hₗ : N₂ →L[R] N₃) (c : S)
@@ -1590,7 +1590,7 @@ theorem comp_smul [LinearMap.CompatibleSmul N₂ N₃ S R] (hₗ : N₂ →L[R] 
 include σ₁₃
 
 @[simp]
-theorem comp_smulₛₗ [SmulCommClass R₂ R₂ M₂] [SmulCommClass R₃ R₃ M₃] [HasContinuousConstSmul R₂ M₂]
+theorem comp_smulₛₗ [SMulCommClass R₂ R₂ M₂] [SMulCommClass R₃ R₃ M₃] [HasContinuousConstSmul R₂ M₂]
     [HasContinuousConstSmul R₃ M₃] (h : M₂ →SL[σ₂₃] M₃) (c : R₂) (f : M →SL[σ₁₂] M₂) :
     h.comp (c • f) = σ₂₃ c • h.comp f := by 
   ext x
@@ -1617,8 +1617,8 @@ variable {R R₂ R₃ S S₃ : Type _} [Semiring R] [Semiring R₂] [Semiring R�
   [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R₂ M₂] {M₃ : Type _} [TopologicalSpace M₃]
   [AddCommMonoid M₃] [Module R₃ M₃] {N₂ : Type _} [TopologicalSpace N₂] [AddCommMonoid N₂]
   [Module R N₂] {N₃ : Type _} [TopologicalSpace N₃] [AddCommMonoid N₃] [Module R N₃] [Module S₃ M₃]
-  [SmulCommClass R₃ S₃ M₃] [HasContinuousConstSmul S₃ M₃] [Module S N₂]
-  [HasContinuousConstSmul S N₂] [SmulCommClass R S N₂] [Module S N₃] [SmulCommClass R S N₃]
+  [SMulCommClass R₃ S₃ M₃] [HasContinuousConstSmul S₃ M₃] [Module S N₂]
+  [HasContinuousConstSmul S N₂] [SMulCommClass R S N₂] [Module S N₃] [SMulCommClass R S N₃]
   [HasContinuousConstSmul S N₃] {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃}
   [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] (c : S) (h : M₂ →SL[σ₂₃] M₃) (f g : M →SL[σ₁₂] M₂) (x y z : M)
 
@@ -1694,8 +1694,8 @@ section SmulRightₗ
 variable {R S T M M₂ : Type _} [Semiring R] [Semiring S] [Semiring T] [Module R S]
   [AddCommMonoid M₂] [Module R M₂] [Module S M₂] [IsScalarTower R S M₂] [TopologicalSpace S]
   [TopologicalSpace M₂] [HasContinuousSmul S M₂] [TopologicalSpace M] [AddCommMonoid M] [Module R M]
-  [HasContinuousAdd M₂] [Module T M₂] [HasContinuousConstSmul T M₂] [SmulCommClass R T M₂]
-  [SmulCommClass S T M₂]
+  [HasContinuousAdd M₂] [Module T M₂] [HasContinuousConstSmul T M₂] [SMulCommClass R T M₂]
+  [SMulCommClass S T M₂]
 
 /-- Given `c : E →L[𝕜] 𝕜`, `c.smul_rightₗ` is the linear map from `F` to `E →L[𝕜] F`
 sending `f` to `λ e, c e • f`. See also `continuous_linear_map.smul_rightL`. -/
@@ -1779,8 +1779,8 @@ theorem restrict_scalars_neg (f : M →L[A] M₂) : (-f).restrictScalars R = -f.
 
 end
 
-variable {S : Type _} [Ring S] [Module S M₂] [HasContinuousConstSmul S M₂] [SmulCommClass A S M₂]
-  [SmulCommClass R S M₂]
+variable {S : Type _} [Ring S] [Module S M₂] [HasContinuousConstSmul S M₂] [SMulCommClass A S M₂]
+  [SMulCommClass R S M₂]
 
 @[simp]
 theorem restrict_scalars_smul (c : S) (f : M →L[A] M₂) :
@@ -2692,16 +2692,16 @@ def ClosedComplemented (p : Submodule R M) : Prop :=
 
 theorem ClosedComplemented.has_closed_complement {p : Submodule R M} [T1Space p]
     (h : ClosedComplemented p) : ∃ (q : Submodule R M)(hq : IsClosed (q : Set M)), IsCompl p q :=
-  (Exists.elim h) fun f hf => ⟨ker f, f.isClosedKer, LinearMap.is_compl_of_proj hf⟩
+  (Exists.elim h) fun f hf => ⟨ker f, f.is_closed_ker, LinearMap.is_compl_of_proj hf⟩
 #align
   submodule.closed_complemented.has_closed_complement Submodule.ClosedComplemented.has_closed_complement
 
-protected theorem ClosedComplemented.isClosed [TopologicalAddGroup M] [T1Space M]
+protected theorem ClosedComplemented.is_closed [TopologicalAddGroup M] [T1Space M]
     {p : Submodule R M} (h : ClosedComplemented p) : IsClosed (p : Set M) := by
   rcases h with ⟨f, hf⟩
   have : ker (id R M - p.subtypeL.comp f) = p := LinearMap.ker_id_sub_eq_of_proj hf
   exact this ▸ is_closed_ker _
-#align submodule.closed_complemented.is_closed Submodule.ClosedComplemented.isClosed
+#align submodule.closed_complemented.is_closed Submodule.ClosedComplemented.is_closed
 
 @[simp]
 theorem closed_complemented_bot : ClosedComplemented (⊥ : Submodule R M) :=

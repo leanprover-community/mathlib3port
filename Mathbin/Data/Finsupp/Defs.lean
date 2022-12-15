@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.defs
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -225,7 +225,7 @@ theorem finite_support (f : α →₀ M) : Set.Finite (Function.support f) :=
   f.fun_support_eq.symm ▸ f.support.finite_to_set
 #align finsupp.finite_support Finsupp.finite_support
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.support ⊆ s ↔ ∀ (a) (_ : a ∉ s), f a = 0 :=
   by
   simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congr' fun a => not_imp_comm
@@ -440,7 +440,7 @@ theorem support_eq_singleton {f : α →₀ M} {a : α} :
     fun h => h.2.symm ▸ support_single_ne_zero _ h.1⟩
 #align finsupp.support_eq_singleton Finsupp.support_eq_singleton
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem support_eq_singleton' {f : α →₀ M} {a : α} :
     f.support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
   ⟨fun h =>
@@ -453,7 +453,7 @@ theorem card_support_eq_one {f : α →₀ M} : card f.support = 1 ↔ ∃ a, f 
   by simp only [card_eq_one, support_eq_singleton]
 #align finsupp.card_support_eq_one Finsupp.card_support_eq_one
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem card_support_eq_one' {f : α →₀ M} :
     card f.support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b := by
   simp only [card_eq_one, support_eq_singleton']

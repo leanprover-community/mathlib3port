@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,7 +19,8 @@ open Function
 
 open Nat hiding one_pos
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+assert_not_exists Set.range
+
 namespace List
 
 universe u v w x
@@ -150,77 +151,8 @@ theorem Decidable.List.eq_or_ne_mem_of_mem [DecidableEq α] {a b : α} {l : List
 #align decidable.list.eq_or_ne_mem_of_mem Decidable.List.eq_or_ne_mem_of_mem
 
 #print List.eq_or_ne_mem_of_mem /-
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [] [] [] [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `eq_or_ne_mem_of_mem [])
-      (Command.declSig
-       [(Term.implicitBinder "{" [`a `b] [":" `α] "}")
-        (Term.implicitBinder "{" [`l] [":" (Term.app `List [`α])] "}")]
-       (Term.typeSpec
-        ":"
-        (Term.arrow
-         («term_∈_» `a "∈" («term_::_» `b "::" `l))
-         "→"
-         («term_∨_»
-          («term_=_» `a "=" `b)
-          "∨"
-          («term_∧_» («term_≠_» `a "≠" `b) "∧" («term_∈_» `a "∈" `l))))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Tactic.exact "exact" `Decidable.List.eq_or_ne_mem_of_mem))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.exact "exact" `Decidable.List.eq_or_ne_mem_of_mem))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.exact "exact" `Decidable.List.eq_or_ne_mem_of_mem))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact "exact" `Decidable.List.eq_or_ne_mem_of_mem)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Decidable.List.eq_or_ne_mem_of_mem
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  eq_or_ne_mem_of_mem
-  { a b : α } { l : List α } : a ∈ b :: l → a = b ∨ a ≠ b ∧ a ∈ l
-  := by skip <;> exact Decidable.List.eq_or_ne_mem_of_mem
+theorem eq_or_ne_mem_of_mem {a b : α} {l : List α} : a ∈ b :: l → a = b ∨ a ≠ b ∧ a ∈ l := by
+  classical exact Decidable.List.eq_or_ne_mem_of_mem
 #align list.eq_or_ne_mem_of_mem List.eq_or_ne_mem_of_mem
 -/
 
@@ -1453,13 +1385,13 @@ theorem last'_append {l₁ l₂ : List α} {x : α} (h : x ∈ l₂.last') : x �
 /-! ### head(') and tail -/
 
 
-theorem head_eq_head' [Inhabited α] (l : List α) : head l = (head' l).iget := by cases l <;> rfl
+theorem head_eq_head' [Inhabited α] (l : List α) : head l = (head? l).iget := by cases l <;> rfl
 #align list.head_eq_head' List.head_eq_head'
 
 theorem surjective_head [Inhabited α] : Surjective (@head α _) := fun x => ⟨[x], rfl⟩
 #align list.surjective_head List.surjective_head
 
-theorem surjective_head' : Surjective (@head' α) :=
+theorem surjective_head' : Surjective (@head? α) :=
   Option.forall.2 ⟨⟨[], rfl⟩, fun x => ⟨[x], rfl⟩⟩
 #align list.surjective_head' List.surjective_head'
 
@@ -1519,7 +1451,7 @@ theorem head'_append {s t : List α} {x : α} (h : x ∈ s.head') : x ∈ (s ++ 
 #align list.head'_append List.head'_append
 
 theorem head'_append_of_ne_nil :
-    ∀ (l₁ : List α) {l₂ : List α} (hl₁ : l₁ ≠ []), head' (l₁ ++ l₂) = head' l₁
+    ∀ (l₁ : List α) {l₂ : List α} (hl₁ : l₁ ≠ []), head? (l₁ ++ l₂) = head? l₁
   | [], _, hl₁ => by contradiction
   | x :: l₁, _, _ => rfl
 #align list.head'_append_of_ne_nil List.head'_append_of_ne_nil
@@ -1531,14 +1463,14 @@ theorem tail_append_singleton_of_ne_nil {a : α} {l : List α} (h : l ≠ nil) :
   rw [tail, cons_append, tail]
 #align list.tail_append_singleton_of_ne_nil List.tail_append_singleton_of_ne_nil
 
-theorem cons_head'_tail : ∀ {l : List α} {a : α} (h : a ∈ head' l), a :: tail l = l
+theorem cons_head'_tail : ∀ {l : List α} {a : α} (h : a ∈ head? l), a :: tail l = l
   | [], a, h => by contradiction
   | b :: l, a, h => by 
     simp at h
     simp [h]
 #align list.cons_head'_tail List.cons_head'_tail
 
-theorem head_mem_head' [Inhabited α] : ∀ {l : List α} (h : l ≠ []), head l ∈ head' l
+theorem head_mem_head' [Inhabited α] : ∀ {l : List α} (h : l ≠ []), head l ∈ head? l
   | [], h => by contradiction
   | a :: l, h => rfl
 #align list.head_mem_head' List.head_mem_head'
@@ -1553,7 +1485,7 @@ theorem head_mem_self [Inhabited α] {l : List α} (h : l ≠ nil) : l.head ∈ 
 #align list.head_mem_self List.head_mem_self
 
 @[simp]
-theorem head'_map (f : α → β) (l) : head' (map f l) = (head' l).map f := by cases l <;> rfl
+theorem head'_map (f : α → β) (l) : head? (map f l) = (head? l).map f := by cases l <;> rfl
 #align list.head'_map List.head'_map
 
 theorem tail_append_of_ne_nil (l l' : List α) (h : l ≠ []) : (l ++ l').tail = l.tail ++ l' := by
@@ -2194,12 +2126,7 @@ theorem take_one_drop_eq_of_lt_length {l : List α} {n : ℕ} (h : n < l.length)
     apply ih
 #align list.take_one_drop_eq_of_lt_length List.take_one_drop_eq_of_lt_length
 
-/- warning: list.ext -> List.ext is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (forall (n : Nat), Eq.{succ u1} (Option.{u1} α) (List.nth.{u1} α l₁ n) (List.nth.{u1} α l₂ n)) -> (Eq.{succ u1} (List.{u1} α) l₁ l₂)
-but is expected to have type
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (forall (n : Nat), Eq.{succ u1} (Option.{u1} α) (List.get?.{u1} α l₁ n) (List.get?.{u1} α l₂ n)) -> (Eq.{succ u1} (List.{u1} α) l₁ l₂)
-Case conversion may be inaccurate. Consider using '#align list.ext List.extₓ'. -/
+#print List.ext /-
 @[ext]
 theorem ext : ∀ {l₁ l₂ : List α}, (∀ n, nth l₁ n = nth l₂ n) → l₁ = l₂
   | [], [], h => rfl
@@ -2211,6 +2138,7 @@ theorem ext : ∀ {l₁ l₂ : List α}, (∀ n, nth l₁ n = nth l₂ n) → l�
         constructor <;>
       rfl
 #align list.ext List.ext
+-/
 
 theorem ext_le {l₁ l₂ : List α} (hl : length l₁ = length l₂)
     (h : ∀ n h₁ h₂, nthLe l₁ n h₁ = nthLe l₂ n h₂) : l₁ = l₂ :=
@@ -3175,28 +3103,28 @@ section Take'
 variable [Inhabited α]
 
 @[simp]
-theorem take'_length : ∀ n l, length (@take' α _ n l) = n
+theorem take'_length : ∀ n l, length (@takeD α _ n l) = n
   | 0, l => rfl
   | n + 1, l => congr_arg succ (take'_length _ _)
 #align list.take'_length List.take'_length
 
 @[simp]
-theorem take'_nil : ∀ n, take' n (@nil α) = repeat default n
+theorem take'_nil : ∀ n, takeD n (@nil α) = repeat default n
   | 0 => rfl
   | n + 1 => congr_arg (cons _) (take'_nil _)
 #align list.take'_nil List.take'_nil
 
-theorem take'_eq_take : ∀ {n} {l : List α}, n ≤ length l → take' n l = take n l
+theorem take'_eq_take : ∀ {n} {l : List α}, n ≤ length l → takeD n l = take n l
   | 0, l, h => rfl
   | n + 1, a :: l, h => congr_arg (cons _) <| take'_eq_take <| le_of_succ_le_succ h
 #align list.take'_eq_take List.take'_eq_take
 
 @[simp]
-theorem take'_left (l₁ l₂ : List α) : take' (length l₁) (l₁ ++ l₂) = l₁ :=
+theorem take'_left (l₁ l₂ : List α) : takeD (length l₁) (l₁ ++ l₂) = l₁ :=
   (take'_eq_take (by simp only [length_append, Nat.le_add_right])).trans (take_left _ _)
 #align list.take'_left List.take'_left
 
-theorem take'_left' {l₁ l₂ : List α} {n} (h : length l₁ = n) : take' n (l₁ ++ l₂) = l₁ := by
+theorem take'_left' {l₁ l₂ : List α} {n} (h : length l₁ = n) : takeD n (l₁ ++ l₂) = l₁ := by
   rw [← h] <;> apply take'_left
 #align list.take'_left' List.take'_left'
 
@@ -4106,22 +4034,22 @@ section Find
 variable {p : α → Prop} [DecidablePred p] {l : List α} {a : α}
 
 @[simp]
-theorem find_nil (p : α → Prop) [DecidablePred p] : find p [] = none :=
+theorem find_nil (p : α → Prop) [DecidablePred p] : find? p [] = none :=
   rfl
 #align list.find_nil List.find_nil
 
 @[simp]
-theorem find_cons_of_pos (l) (h : p a) : find p (a :: l) = some a :=
+theorem find_cons_of_pos (l) (h : p a) : find? p (a :: l) = some a :=
   if_pos h
 #align list.find_cons_of_pos List.find_cons_of_pos
 
 @[simp]
-theorem find_cons_of_neg (l) (h : ¬p a) : find p (a :: l) = find p l :=
+theorem find_cons_of_neg (l) (h : ¬p a) : find? p (a :: l) = find? p l :=
   if_neg h
 #align list.find_cons_of_neg List.find_cons_of_neg
 
 @[simp]
-theorem find_eq_none : find p l = none ↔ ∀ x ∈ l, ¬p x := by
+theorem find_eq_none : find? p l = none ↔ ∀ x ∈ l, ¬p x := by
   induction' l with a l IH
   · exact iff_of_true rfl (forall_mem_nil _)
   rw [forall_mem_cons]; by_cases h : p a
@@ -4129,7 +4057,7 @@ theorem find_eq_none : find p l = none ↔ ∀ x ∈ l, ¬p x := by
   · rwa [find_cons_of_neg _ h, iff_true_intro h, true_and_iff]
 #align list.find_eq_none List.find_eq_none
 
-theorem find_some (H : find p l = some a) : p a := by
+theorem find_some (H : find? p l = some a) : p a := by
   induction' l with b l IH; · contradiction
   by_cases h : p b
   · rw [find_cons_of_pos _ h] at H
@@ -4140,7 +4068,7 @@ theorem find_some (H : find p l = some a) : p a := by
 #align list.find_some List.find_some
 
 @[simp]
-theorem find_mem (H : find p l = some a) : a ∈ l := by
+theorem find_mem (H : find? p l = some a) : a ∈ l := by
   induction' l with b l IH; · contradiction
   by_cases h : p b
   · rw [find_cons_of_pos _ h] at H
@@ -4804,7 +4732,7 @@ theorem erasep_map (f : β → α) : ∀ l : List β, (map f l).erasep p = map f
 #align list.erasep_map List.erasep_map
 
 @[simp]
-theorem extractp_eq_find_erasep : ∀ l : List α, extractp p l = (find p l, erasep p l)
+theorem extractp_eq_find_erasep : ∀ l : List α, extractp p l = (find? p l, erasep p l)
   | [] => rfl
   | a :: l => by by_cases pa : p a <;> simp [extractp, pa, extractp_eq_find_erasep l]
 #align list.extractp_eq_find_erasep List.extractp_eq_find_erasep
@@ -5657,18 +5585,18 @@ theorem mem_map_swap (x : α) (y : β) (xs : List (α × β)) :
     simp only [mem_cons_iff, Prod.mk.inj_iff, map, Prod.swap_prod_mk, Prod.exists, xs_ih, and_comm']
 #align list.mem_map_swap List.mem_map_swap
 
-theorem slice_eq (xs : List α) (n m : ℕ) : slice n m xs = xs.take n ++ xs.drop (n + m) := by
+theorem slice_eq (xs : List α) (n m : ℕ) : dropSlice n m xs = xs.take n ++ xs.drop (n + m) := by
   induction n generalizing xs
   · simp [slice]
   · cases xs <;> simp [slice, *, Nat.succ_add]
 #align list.slice_eq List.slice_eq
 
 theorem sizeof_slice_lt [SizeOf α] (i j : ℕ) (hj : 0 < j) (xs : List α) (hi : i < xs.length) :
-    SizeOf.sizeOf (List.slice i j xs) < SizeOf.sizeOf xs := by
+    SizeOf.sizeOf (List.dropSlice i j xs) < SizeOf.sizeOf xs := by
   induction xs generalizing i j
   case nil i j h => cases hi
   case cons x xs xs_ih i j h =>
-    cases i <;> simp only [-slice_eq, List.slice]
+    cases i <;> simp only [-slice_eq, List.dropSlice]
     · cases j
       cases h
       dsimp only [drop]
@@ -5695,17 +5623,17 @@ section Nthd
 variable (l : List α) (x : α) (xs : List α) (d : α) (n : ℕ)
 
 @[simp]
-theorem nthd_nil : nthd d [] n = d :=
+theorem nthd_nil : getD d [] n = d :=
   rfl
 #align list.nthd_nil List.nthd_nil
 
 @[simp]
-theorem nthd_cons_zero : nthd d (x :: xs) 0 = x :=
+theorem nthd_cons_zero : getD d (x :: xs) 0 = x :=
   rfl
 #align list.nthd_cons_zero List.nthd_cons_zero
 
 @[simp]
-theorem nthd_cons_succ : nthd d (x :: xs) (n + 1) = nthd d xs n :=
+theorem nthd_cons_succ : getD d (x :: xs) (n + 1) = getD d xs n :=
   rfl
 #align list.nthd_cons_succ List.nthd_cons_succ
 
@@ -5727,7 +5655,7 @@ theorem nthd_eq_default {n : ℕ} (hn : l.length ≤ n) : l.nthd d n = d := by
 
 /-- An empty list can always be decidably checked for the presence of an element.
 Not an instance because it would clash with `decidable_eq α`. -/
-def decidableNthdNilNe {α} (a : α) : DecidablePred fun i : ℕ => nthd a ([] : List α) i ≠ a :=
+def decidableNthdNilNe {α} (a : α) : DecidablePred fun i : ℕ => getD a ([] : List α) i ≠ a :=
   fun i => is_false fun H => H (nthd_nil _ _)
 #align list.decidable_nthd_nil_ne List.decidableNthdNilNe
 
@@ -5769,17 +5697,17 @@ section Inth
 variable [Inhabited α] (l : List α) (x : α) (xs : List α) (n : ℕ)
 
 @[simp]
-theorem inth_nil : inth ([] : List α) n = default :=
+theorem inth_nil : getI ([] : List α) n = default :=
   rfl
 #align list.inth_nil List.inth_nil
 
 @[simp]
-theorem inth_cons_zero : inth (x :: xs) 0 = x :=
+theorem inth_cons_zero : getI (x :: xs) 0 = x :=
   rfl
 #align list.inth_cons_zero List.inth_cons_zero
 
 @[simp]
-theorem inth_cons_succ : inth (x :: xs) (n + 1) = inth xs n :=
+theorem inth_cons_succ : getI (x :: xs) (n + 1) = getI xs n :=
   rfl
 #align list.inth_cons_succ List.inth_cons_succ
 

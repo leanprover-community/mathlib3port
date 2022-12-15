@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.simplex_category
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -214,8 +214,8 @@ def σ {n} (i : Fin (n + 1)) : [n + 1] ⟶ [n] :=
 theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) : δ i ≫ δ j.succ = δ j ≫ δ i.cast_succ := by
   ext k
   dsimp [δ, Fin.succAbove]
-  simp only [OrderEmbedding.to_order_hom_coe, OrderEmbedding.coe_of_strict_mono,
-    Function.comp_apply, SimplexCategory.Hom.to_order_hom_mk, OrderHom.comp_coe]
+  simp only [OrderEmbedding.to_order_hom_coe, OrderEmbedding.coe_ofStrictMono, Function.comp_apply,
+    SimplexCategory.Hom.to_order_hom_mk, OrderHom.comp_coe]
   rcases i with ⟨i, _⟩
   rcases j with ⟨j, _⟩
   rcases k with ⟨k, _⟩
@@ -242,12 +242,12 @@ theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_s
 #align simplex_category.δ_comp_δ'' SimplexCategory.δ_comp_δ''
 
 /-- The special case of the first simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : δ i ≫ δ i.cast_succ = δ i ≫ δ i.succ :=
   (δ_comp_δ (le_refl i)).symm
 #align simplex_category.δ_comp_δ_self SimplexCategory.δ_comp_δ_self
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.cast_succ) :
     δ i ≫ δ j = δ i ≫ δ i.succ := by 
   subst H
@@ -255,7 +255,7 @@ theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.cast
 #align simplex_category.δ_comp_δ_self' SimplexCategory.δ_comp_δ_self'
 
 /-- The second simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
     δ i.cast_succ ≫ σ j.succ = σ j ≫ δ i := by 
   ext k
@@ -299,7 +299,7 @@ theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.ca
 #align simplex_category.δ_comp_σ_of_le SimplexCategory.δ_comp_σ_of_le
 
 /-- The first part of the third simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : δ i.cast_succ ≫ σ i = 𝟙 [n] := by
   ext j
   suffices
@@ -315,7 +315,7 @@ theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : δ i.cast_succ ≫ σ i = 𝟙 [
   split_ifs <;> · simp at * <;> linarith
 #align simplex_category.δ_comp_σ_self SimplexCategory.δ_comp_σ_self
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast_succ) :
     δ j ≫ σ i = 𝟙 [n] := by 
   subst H
@@ -323,7 +323,7 @@ theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast
 #align simplex_category.δ_comp_σ_self' SimplexCategory.δ_comp_σ_self'
 
 /-- The second part of the third simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_succ {n} {i : Fin (n + 1)} : δ i.succ ≫ σ i = 𝟙 [n] := by
   ext j
   rcases i with ⟨i, _⟩
@@ -333,7 +333,7 @@ theorem δ_comp_σ_succ {n} {i : Fin (n + 1)} : δ i.succ ≫ σ i = 𝟙 [n] :=
   split_ifs <;> · simp at * <;> linarith
 #align simplex_category.δ_comp_σ_succ SimplexCategory.δ_comp_σ_succ
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_succ' {n} (j : Fin (n + 2)) (i : Fin (n + 1)) (H : j = i.succ) :
     δ j ≫ σ i = 𝟙 [n] := by 
   subst H
@@ -341,7 +341,7 @@ theorem δ_comp_σ_succ' {n} (j : Fin (n + 2)) (i : Fin (n + 1)) (H : j = i.succ
 #align simplex_category.δ_comp_σ_succ' SimplexCategory.δ_comp_σ_succ'
 
 /-- The fourth simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
     δ i.succ ≫ σ j.cast_succ = σ j ≫ δ i := by 
   ext k
@@ -379,7 +379,7 @@ theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_suc
   all_goals simp at h_1 h_2⊢ <;> linarith
 #align simplex_category.δ_comp_σ_of_gt SimplexCategory.δ_comp_σ_of_gt
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < i) :
     δ i ≫ σ j =
       σ
@@ -399,7 +399,7 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
 attribute [local simp] Fin.pred_mk
 
 /-- The fifth simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫ σ j = σ j.succ ≫ σ i := by
   ext k
   dsimp [σ, Fin.predAbove]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module data.list.indexes
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ theorem foldr_with_index_aux_eq_foldr_with_index_aux_spec (f : ℕ → α → β
   list.foldr_with_index_aux_eq_foldr_with_index_aux_spec List.foldr_with_index_aux_eq_foldr_with_index_aux_spec
 
 theorem foldr_with_index_eq_foldr_enum (f : ℕ → α → β → β) (b : β) (as : List α) :
-    foldrWithIndex f b as = foldr (uncurry f) b (enum as) := by
+    foldrIdx f b as = foldr (uncurry f) b (enum as) := by
   simp only [foldr_with_index, foldr_with_index_aux_spec,
     foldr_with_index_aux_eq_foldr_with_index_aux_spec, enum]
 #align list.foldr_with_index_eq_foldr_enum List.foldr_with_index_eq_foldr_enum
@@ -123,7 +123,7 @@ theorem indexes_values_eq_filter_enum (p : α → Prop) [DecidablePred p] (as : 
 #align list.indexes_values_eq_filter_enum List.indexes_values_eq_filter_enum
 
 theorem find_indexes_eq_map_indexes_values (p : α → Prop) [DecidablePred p] (as : List α) :
-    findIndexes p as = map Prod.fst (indexesValues p as) := by
+    findIdxs p as = map Prod.fst (indexesValues p as) := by
   simp only [indexes_values_eq_filter_enum, map_filter_eq_foldr, find_indexes,
     foldr_with_index_eq_foldr_enum, uncurry]
 #align list.find_indexes_eq_map_indexes_values List.find_indexes_eq_map_indexes_values
@@ -150,7 +150,7 @@ theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β
   list.foldl_with_index_aux_eq_foldl_with_index_aux_spec List.foldl_with_index_aux_eq_foldl_with_index_aux_spec
 
 theorem foldl_with_index_eq_foldl_enum (f : ℕ → α → β → α) (a : α) (bs : List β) :
-    foldlWithIndex f a bs = foldl (fun a (p : ℕ × β) => f p.fst a p.snd) a (enum bs) := by
+    foldlIdx f a bs = foldl (fun a (p : ℕ × β) => f p.fst a p.snd) a (enum bs) := by
   simp only [foldl_with_index, foldl_with_index_aux_spec,
     foldl_with_index_aux_eq_foldl_with_index_aux_spec, enum]
 #align list.foldl_with_index_eq_foldl_enum List.foldl_with_index_eq_foldl_enum
@@ -162,14 +162,13 @@ section MfoldWithIndex
 variable {m : Type u → Type v} [Monad m]
 
 theorem mfoldr_with_index_eq_mfoldr_enum {α β} (f : ℕ → α → β → m β) (b : β) (as : List α) :
-    mfoldrWithIndex f b as = foldrM (uncurry f) b (enum as) := by
+    foldrIdxM f b as = foldrM (uncurry f) b (enum as) := by
   simp only [mfoldr_with_index, mfoldr_eq_foldr, foldr_with_index_eq_foldr_enum, uncurry]
 #align list.mfoldr_with_index_eq_mfoldr_enum List.mfoldr_with_index_eq_mfoldr_enum
 
 theorem mfoldl_with_index_eq_mfoldl_enum [LawfulMonad m] {α β} (f : ℕ → β → α → m β) (b : β)
-    (as : List α) :
-    mfoldlWithIndex f b as = foldlM (fun b (p : ℕ × α) => f p.fst b p.snd) b (enum as) := by
-  rw [mfoldl_with_index, mfoldl_eq_foldl, foldl_with_index_eq_foldl_enum]
+    (as : List α) : foldlIdxM f b as = foldlM (fun b (p : ℕ × α) => f p.fst b p.snd) b (enum as) :=
+  by rw [mfoldl_with_index, mfoldl_eq_foldl, foldl_with_index_eq_foldl_enum]
 #align list.mfoldl_with_index_eq_mfoldl_enum List.mfoldl_with_index_eq_mfoldl_enum
 
 end MfoldWithIndex
@@ -200,7 +199,7 @@ theorem mmap_with_index_aux_eq_mmap_with_index_aux_spec {α β} (f : ℕ → α 
   list.mmap_with_index_aux_eq_mmap_with_index_aux_spec List.mmap_with_index_aux_eq_mmap_with_index_aux_spec
 
 theorem mmap_with_index_eq_mmap_enum {α β} (f : ℕ → α → m β) (as : List α) :
-    mmapWithIndex f as = List.traverse (uncurry f) (enum as) := by
+    mapIdxM f as = List.traverse (uncurry f) (enum as) := by
   simp only [mmap_with_index, mmap_with_index_aux_spec,
     mmap_with_index_aux_eq_mmap_with_index_aux_spec, enum]
 #align list.mmap_with_index_eq_mmap_enum List.mmap_with_index_eq_mmap_enum
@@ -212,8 +211,7 @@ section MmapWithIndex'
 variable {m : Type u → Type v} [Applicative m] [LawfulApplicative m]
 
 theorem mmap_with_index'_aux_eq_mmap_with_index_aux {α} (f : ℕ → α → m PUnit) (start : ℕ)
-    (as : List α) : mmapWithIndex'Aux f start as = mmapWithIndexAux f start as *> pure PUnit.unit :=
-  by
+    (as : List α) : mapIdxMAux' f start as = mmapWithIndexAux f start as *> pure PUnit.unit := by
   induction as generalizing start <;>
     simp [mmap_with_index'_aux, mmap_with_index_aux, *, seq_right_eq, const, -comp_const,
       functor_norm]
@@ -221,7 +219,7 @@ theorem mmap_with_index'_aux_eq_mmap_with_index_aux {α} (f : ℕ → α → m P
   list.mmap_with_index'_aux_eq_mmap_with_index_aux List.mmap_with_index'_aux_eq_mmap_with_index_aux
 
 theorem mmap_with_index'_eq_mmap_with_index {α} (f : ℕ → α → m PUnit) (as : List α) :
-    mmapWithIndex' f as = mmapWithIndex f as *> pure PUnit.unit := by
+    mapIdxM' f as = mapIdxM f as *> pure PUnit.unit := by
   apply mmap_with_index'_aux_eq_mmap_with_index_aux
 #align list.mmap_with_index'_eq_mmap_with_index List.mmap_with_index'_eq_mmap_with_index
 

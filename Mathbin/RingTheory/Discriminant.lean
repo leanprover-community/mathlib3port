@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.discriminant
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -244,7 +244,7 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
     ext
     rw [← aeval_alg_hom_apply,
       aeval_root_derivative_of_splits (minpoly.monic (IsSeparable.is_integral K pb.gen))
-        (IsAlgClosed.splitsCodomain _) (hroots σ),
+        (IsAlgClosed.splits_codomain _) (hroots σ),
       ← Finset.prod_mk _ (hnodup.erase _)]
   rw [prod_sigma', prod_sigma']
   refine'
@@ -316,7 +316,7 @@ theorem discr_eq_discr_of_to_matrix_coeff_is_integral [NumberField K] {b : Basis
         exact (IsFractionRing.injective ℤ ℚ) this
       rw [RingHom.map_mul, hr, hr', ← det_mul, Basis.to_matrix_mul_to_matrix_flip, det_one]
     rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
-    cases' Int.is_unit_iff.1 hunit with hp hm
+    cases' Int.isUnit_iff.1 hunit with hp hm
     · simp [hp]
     · simp [hm]
 #align

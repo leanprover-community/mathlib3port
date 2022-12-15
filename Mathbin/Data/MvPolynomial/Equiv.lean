@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.equiv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -417,7 +417,7 @@ theorem eval_eq_eval_mv_eval' (s : Fin n → R) (y : R) (f : MvPolynomial (Fin (
   apply MvPolynomial.alg_hom_ext
   rw [Fin.forall_fin_succ]
   simp only [aeval_X, Fin.cons_zero, AlgEquiv.to_alg_hom_eq_coe, AlgHom.coe_comp,
-    Polynomial.coe_aeval_eq_eval, Polynomial.map_C, AlgHom.coe_mk, RingHom.to_fun_eq_coe,
+    Polynomial.coe_aeval_eq_eval, Polynomial.map_C, AlgHom.coe_mk, RingHom.toFun_eq_coe,
     Polynomial.coe_map_ring_hom, AlgEquiv.coe_alg_hom, comp_app, fin_succ_equiv_apply, eval₂_hom_X',
     Fin.cases_zero, Polynomial.map_X, Polynomial.eval_X, eq_self_iff_true, Fin.cons_succ,
     Fin.cases_succ, eval_X, Polynomial.eval_C, imp_true_iff, and_self_iff]

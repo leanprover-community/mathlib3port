@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.semiconj
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,9 +65,9 @@ variable [Mul R] [HasDistribNeg R] {a x y : R}
 
 /- warning: semiconj_by.neg_right -> SemiconjBy.neg_right is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, (SemiconjBy.{u1} R _inst_1 a x y) -> (SemiconjBy.{u1} R _inst_1 a (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) x) (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) y))
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, (SemiconjBy.{u1} R _inst_1 a x y) -> (SemiconjBy.{u1} R _inst_1 a (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) x) (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) y))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, (SemiconjBy.{u1} R _inst_1 a x y) -> (SemiconjBy.{u1} R _inst_1 a (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) x) (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) y))
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, (SemiconjBy.{u1} R _inst_1 a x y) -> (SemiconjBy.{u1} R _inst_1 a (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) x) (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) y))
 Case conversion may be inaccurate. Consider using '#align semiconj_by.neg_right SemiconjBy.neg_rightₓ'. -/
 theorem neg_right (h : SemiconjBy a x y) : SemiconjBy a (-x) (-y) := by
   simp only [SemiconjBy, h.eq, neg_mul, mul_neg]
@@ -75,9 +75,9 @@ theorem neg_right (h : SemiconjBy a x y) : SemiconjBy a (-x) (-y) := by
 
 /- warning: semiconj_by.neg_right_iff -> SemiconjBy.neg_right_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, Iff (SemiconjBy.{u1} R _inst_1 a (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) x) (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) y)) (SemiconjBy.{u1} R _inst_1 a x y)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, Iff (SemiconjBy.{u1} R _inst_1 a (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) x) (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) y)) (SemiconjBy.{u1} R _inst_1 a x y)
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, Iff (SemiconjBy.{u1} R _inst_1 a (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) x) (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) y)) (SemiconjBy.{u1} R _inst_1 a x y)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, Iff (SemiconjBy.{u1} R _inst_1 a (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) x) (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) y)) (SemiconjBy.{u1} R _inst_1 a x y)
 Case conversion may be inaccurate. Consider using '#align semiconj_by.neg_right_iff SemiconjBy.neg_right_iffₓ'. -/
 @[simp]
 theorem neg_right_iff : SemiconjBy a (-x) (-y) ↔ SemiconjBy a x y :=
@@ -86,9 +86,9 @@ theorem neg_right_iff : SemiconjBy a (-x) (-y) ↔ SemiconjBy a x y :=
 
 /- warning: semiconj_by.neg_left -> SemiconjBy.neg_left is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, (SemiconjBy.{u1} R _inst_1 a x y) -> (SemiconjBy.{u1} R _inst_1 (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) x y)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, (SemiconjBy.{u1} R _inst_1 a x y) -> (SemiconjBy.{u1} R _inst_1 (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) x y)
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, (SemiconjBy.{u1} R _inst_1 a x y) -> (SemiconjBy.{u1} R _inst_1 (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) x y)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, (SemiconjBy.{u1} R _inst_1 a x y) -> (SemiconjBy.{u1} R _inst_1 (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) x y)
 Case conversion may be inaccurate. Consider using '#align semiconj_by.neg_left SemiconjBy.neg_leftₓ'. -/
 theorem neg_left (h : SemiconjBy a x y) : SemiconjBy (-a) x y := by
   simp only [SemiconjBy, h.eq, neg_mul, mul_neg]
@@ -96,9 +96,9 @@ theorem neg_left (h : SemiconjBy a x y) : SemiconjBy (-a) x y := by
 
 /- warning: semiconj_by.neg_left_iff -> SemiconjBy.neg_left_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, Iff (SemiconjBy.{u1} R _inst_1 (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) x y) (SemiconjBy.{u1} R _inst_1 a x y)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, Iff (SemiconjBy.{u1} R _inst_1 (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) x y) (SemiconjBy.{u1} R _inst_1 a x y)
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, Iff (SemiconjBy.{u1} R _inst_1 (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) x y) (SemiconjBy.{u1} R _inst_1 a x y)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {x : R} {y : R}, Iff (SemiconjBy.{u1} R _inst_1 (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) x y) (SemiconjBy.{u1} R _inst_1 a x y)
 Case conversion may be inaccurate. Consider using '#align semiconj_by.neg_left_iff SemiconjBy.neg_left_iffₓ'. -/
 @[simp]
 theorem neg_left_iff : SemiconjBy (-a) x y ↔ SemiconjBy a x y :=
@@ -113,9 +113,9 @@ variable [MulOneClass R] [HasDistribNeg R] {a x y : R}
 
 /- warning: semiconj_by.neg_one_right -> SemiconjBy.neg_one_right is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1)] (a : R), SemiconjBy.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) a (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1))))) (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1)))))
+  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1)] (a : R), SemiconjBy.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) a (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1))))) (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1)))))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1)] (a : R), SemiconjBy.{u1} R (MulOneClass.toMul.{u1} R _inst_1) a (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1)))) (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1))))
+  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1)] (a : R), SemiconjBy.{u1} R (MulOneClass.toMul.{u1} R _inst_1) a (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1)))) (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align semiconj_by.neg_one_right SemiconjBy.neg_one_rightₓ'. -/
 @[simp]
 theorem neg_one_right (a : R) : SemiconjBy a (-1) (-1) :=
@@ -124,9 +124,9 @@ theorem neg_one_right (a : R) : SemiconjBy a (-1) (-1) :=
 
 /- warning: semiconj_by.neg_one_left -> SemiconjBy.neg_one_left is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1)] (x : R), SemiconjBy.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1))))) x x
+  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1)] (x : R), SemiconjBy.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1))))) x x
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1)] (x : R), SemiconjBy.{u1} R (MulOneClass.toMul.{u1} R _inst_1) (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1)))) x x
+  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1)] (x : R), SemiconjBy.{u1} R (MulOneClass.toMul.{u1} R _inst_1) (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1)))) x x
 Case conversion may be inaccurate. Consider using '#align semiconj_by.neg_one_left SemiconjBy.neg_one_leftₓ'. -/
 @[simp]
 theorem neg_one_left (x : R) : SemiconjBy (-1) x x :=

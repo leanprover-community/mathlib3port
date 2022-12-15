@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.sym.sym2
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -478,13 +478,13 @@ theorem from_rel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ fromRel 
 theorem from_rel_bot : fromRel (fun (x y : α) z => z : Symmetric ⊥) = ∅ := by
   apply Set.eq_empty_of_forall_not_mem fun e => _
   refine' e.ind _
-  simp [-Set.bot_eq_empty, PropCat.bot_eq_false]
+  simp [-Set.bot_eq_empty, Prop.bot_eq_false]
 #align sym2.from_rel_bot Sym2.from_rel_bot
 
 theorem from_rel_top : fromRel (fun (x y : α) z => z : Symmetric ⊤) = Set.univ := by
   apply Set.eq_univ_of_forall fun e => _
   refine' e.ind _
-  simp [-Set.top_eq_univ, PropCat.top_eq_true]
+  simp [-Set.top_eq_univ, Prop.top_eq_true]
 #align sym2.from_rel_top Sym2.from_rel_top
 
 theorem from_rel_irreflexive {sym : Symmetric r} :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.connected
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,9 +100,9 @@ instance forgetCreatesConnectedLimits [IsConnected J] {B : C} :
   category_theory.over.forget_creates_connected_limits CategoryTheory.Over.forgetCreatesConnectedLimits
 
 /-- The over category has any connected limit which the original category has. -/
-instance has_connected_limits {B : C} [IsConnected J] [HasLimitsOfShape J C] :
-    HasLimitsOfShape J (Over B) where HasLimit F := has_limit_of_created F (forget B)
-#align category_theory.over.has_connected_limits CategoryTheory.Over.has_connected_limits
+instance hasConnectedLimits {B : C} [IsConnected J] [HasLimitsOfShape J C] :
+    HasLimitsOfShape J (Over B) where HasLimit F := hasLimitOfCreated F (forget B)
+#align category_theory.over.has_connected_limits CategoryTheory.Over.hasConnectedLimits
 
 end CategoryTheory.Over
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Aaron Anderson, Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.support
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,7 +149,7 @@ theorem pow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : �
 
 theorem zpow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : ℤ, (f ^ n) x = x
   | (n : ℕ) => pow_apply_eq_self_of_apply_eq_self hfx n
-  | -[n+1] => by rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, pow_apply_eq_self_of_apply_eq_self hfx]
+  | -[n+1] => by rw [zpow_negSucc, inv_eq_iff_eq, pow_apply_eq_self_of_apply_eq_self hfx]
 #align equiv.perm.zpow_apply_eq_self_of_apply_eq_self Equiv.Perm.zpow_apply_eq_self_of_apply_eq_self
 
 theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) :
@@ -164,7 +164,7 @@ theorem zpow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) :
     ∀ i : ℤ, (f ^ i) x = x ∨ (f ^ i) x = f x
   | (n : ℕ) => pow_apply_eq_of_apply_apply_eq_self hffx n
   | -[n+1] => by
-    rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, ← f.injective.eq_iff, ← mul_apply, ← pow_succ, eq_comm,
+    rw [zpow_negSucc, inv_eq_iff_eq, ← f.injective.eq_iff, ← mul_apply, ← pow_succ, eq_comm,
       inv_eq_iff_eq, ← mul_apply, ← pow_succ', @eq_comm _ x, or_comm]
     exact pow_apply_eq_of_apply_apply_eq_self hffx _
 #align
@@ -262,7 +262,7 @@ variable (p q : Perm α)
 
 theorem set_support_inv_eq : { x | p⁻¹ x ≠ x } = { x | p x ≠ x } := by
   ext x
-  simp only [Set.mem_set_of_eq, Ne.def]
+  simp only [Set.mem_setOf_eq, Ne.def]
   rw [inv_def, symm_apply_eq, eq_comm]
 #align equiv.perm.set_support_inv_eq Equiv.Perm.set_support_inv_eq
 
@@ -272,14 +272,14 @@ theorem set_support_apply_mem {p : Perm α} {a : α} : p a ∈ { x | p x ≠ x }
 
 theorem set_support_zpow_subset (n : ℤ) : { x | (p ^ n) x ≠ x } ⊆ { x | p x ≠ x } := by
   intro x
-  simp only [Set.mem_set_of_eq, Ne.def]
+  simp only [Set.mem_setOf_eq, Ne.def]
   intro hx H
   simpa [zpow_apply_eq_self_of_apply_eq_self H] using hx
 #align equiv.perm.set_support_zpow_subset Equiv.Perm.set_support_zpow_subset
 
 theorem set_support_mul_subset : { x | (p * q) x ≠ x } ⊆ { x | p x ≠ x } ∪ { x | q x ≠ x } := by
   intro x
-  simp only [perm.coe_mul, Function.comp_apply, Ne.def, Set.mem_union, Set.mem_set_of_eq]
+  simp only [perm.coe_mul, Function.comp_apply, Ne.def, Set.mem_union, Set.mem_setOf_eq]
   by_cases hq : q x = x <;> simp [hq]
 #align equiv.perm.set_support_mul_subset Equiv.Perm.set_support_mul_subset
 
@@ -370,8 +370,8 @@ theorem pow_apply_mem_support {n : ℕ} {x : α} : (f ^ n) x ∈ f.support ↔ x
 @[simp]
 theorem zpow_apply_mem_support {n : ℤ} {x : α} : (f ^ n) x ∈ f.support ↔ x ∈ f.support := by
   cases n
-  · rw [Int.ofNat_eq_coe, zpow_coe_nat, pow_apply_mem_support]
-  · rw [zpow_neg_succ_of_nat, ← support_inv, ← inv_pow, pow_apply_mem_support]
+  · rw [Int.ofNat_eq_coe, zpow_ofNat, pow_apply_mem_support]
+  · rw [zpow_negSucc, ← support_inv, ← inv_pow, pow_apply_mem_support]
 #align equiv.perm.zpow_apply_mem_support Equiv.Perm.zpow_apply_mem_support
 
 theorem pow_eq_on_of_mem_support (h : ∀ x ∈ f.support ∩ g.support, f x = g x) (k : ℕ) :

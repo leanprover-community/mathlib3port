@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Sébastien Gouëzel, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.interactive
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -508,8 +508,8 @@ unsafe def success_if_fail_with_msg (tac : tactic.interactive.itactic) :=
 
 /-- Get the field of the current goal. -/
 unsafe def get_current_field : tactic Name := do
-  let [_, field, str] ← get_main_tag
-  expr.const_name <$> resolve_name (field str)
+  let [_, Field, str] ← get_main_tag
+  expr.const_name <$> resolve_name (Field str)
 #align tactic.interactive.get_current_field tactic.interactive.get_current_field
 
 unsafe def field (n : parse ident) (tac : itactic) : tactic Unit := do

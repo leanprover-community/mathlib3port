@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.stalks
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ theorem stalk_hom_ext (F : X.Presheaf C) {x} {Y : C} {f₁ f₂ : F.stalk x ⟶ 
     exact ih U hxU
 #align Top.presheaf.stalk_hom_ext TopCat.Presheaf.stalk_hom_ext
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem stalk_functor_map_germ {F G : X.Presheaf C} (U : Opens X) (x : U) (f : F ⟶ G) :
     germ F x ≫ (stalkFunctor C x.1).map f = f.app (op U) ≫ germ G x :=
   colimit.ι_map (whiskerLeft (OpenNhds.inclusion x.1).op f) (op ⟨U, x.2⟩)
@@ -139,7 +139,7 @@ def stalkPushforward (f : X ⟶ Y) (F : X.Presheaf C) (x : X) : (f _* F).stalk (
   exact colim.map (whisker_right (nat_trans.op (open_nhds.inclusion_map_iso f x).inv) F)
 #align Top.presheaf.stalk_pushforward TopCat.Presheaf.stalkPushforward
 
-@[simp, elementwise, reassoc]
+@[simp, elementwise, reassoc.1]
 theorem stalk_pushforward_germ (f : X ⟶ Y) (F : X.Presheaf C) (U : Opens Y)
     (x : (Opens.map f).obj U) : (f _* F).germ ⟨f x, x.2⟩ ≫ F.stalkPushforward C f x = F.germ x := by
   rw [stalk_pushforward, germ, colimit.ι_map_assoc, colimit.ι_pre, whisker_right_app]
@@ -164,7 +164,7 @@ namespace StalkPushforward
 
 attribute [local tidy] tactic.op_induction'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic tactic.op_induction' -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.op_induction' -/
 @[simp]
 theorem id (ℱ : X.Presheaf C) (x : X) :
     ℱ.stalkPushforward C (𝟙 X) x = (stalkFunctor C x).map (Pushforward.id ℱ).Hom := by
@@ -327,13 +327,13 @@ noncomputable def stalkSpecializes (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
     exact colimit.w ((open_nhds.inclusion x).op ⋙ F) (show V' ⟶ U' from i.unop).op
 #align Top.presheaf.stalk_specializes TopCat.Presheaf.stalkSpecializes
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem germ_stalk_specializes (F : X.Presheaf C) {U : Opens X} {y : U} {x : X} (h : x ⤳ y) :
     F.germ y ≫ F.stalkSpecializes h = F.germ ⟨x, specializes_iff_forall_open.mp h _ U.2 y.Prop⟩ :=
   colimit.ι_desc _ _
 #align Top.presheaf.germ_stalk_specializes TopCat.Presheaf.germ_stalk_specializes
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem germ_stalk_specializes' (F : X.Presheaf C) {U : Opens X} {x y : X} (h : x ⤳ y)
     (hy : y ∈ U) :
     F.germ ⟨y, hy⟩ ≫ F.stalkSpecializes h = F.germ ⟨x, specializes_iff_forall_open.mp h _ U.2 hy⟩ :=
@@ -348,14 +348,14 @@ theorem stalk_specializes_refl {C : Type _} [Category C] [Limits.HasColimits C] 
     simpa
 #align Top.presheaf.stalk_specializes_refl TopCat.Presheaf.stalk_specializes_refl
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem stalk_specializes_comp {C : Type _} [Category C] [Limits.HasColimits C] {X : TopCat}
     (F : X.Presheaf C) {x y z : X} (h : x ⤳ y) (h' : y ⤳ z) :
     F.stalkSpecializes h' ≫ F.stalkSpecializes h = F.stalkSpecializes (h.trans h') :=
   F.stalk_hom_ext fun _ _ => by simp
 #align Top.presheaf.stalk_specializes_comp TopCat.Presheaf.stalk_specializes_comp
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem stalk_specializes_stalk_functor_map {F G : X.Presheaf C} (f : F ⟶ G) {x y : X} (h : x ⤳ y) :
     F.stalkSpecializes h ≫ (stalkFunctor C x).map f =
       (stalkFunctor C y).map f ≫ G.stalkSpecializes h :=
@@ -366,7 +366,7 @@ theorem stalk_specializes_stalk_functor_map {F G : X.Presheaf C} (f : F ⟶ G) {
 #align
   Top.presheaf.stalk_specializes_stalk_functor_map TopCat.Presheaf.stalk_specializes_stalk_functor_map
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem stalk_specializes_stalk_pushforward (f : X ⟶ Y) (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
     (f _* F).stalkSpecializes (f.map_specializes h) ≫ F.stalkPushforward _ f x =
       F.stalkPushforward _ f y ≫ F.stalkSpecializes h :=

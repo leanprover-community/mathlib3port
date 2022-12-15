@@ -6,7 +6,7 @@ Authors: Yury Kudryashov
 Some proofs and docs came from `algebra/commute` (c) Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.group.semiconj
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -241,7 +241,7 @@ theorem units_val_iff {a x y : Mˣ} : SemiconjBy (a : M) x y ↔ SemiconjBy a x 
 
 /- warning: semiconj_by.pow_right -> SemiconjBy.pow_right is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M} {x : M} {y : M}, (SemiconjBy.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) a x y) -> (forall (n : Nat), SemiconjBy.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) a (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.hasPow.{u1} M _inst_1)) x n) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.hasPow.{u1} M _inst_1)) y n))
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M} {x : M} {y : M}, (SemiconjBy.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) a x y) -> (forall (n : Nat), SemiconjBy.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) a (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) y n))
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M} {x : M} {y : M}, (SemiconjBy.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) a x y) -> (forall (n : Nat), SemiconjBy.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) a (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) y n))
 Case conversion may be inaccurate. Consider using '#align semiconj_by.pow_right SemiconjBy.pow_rightₓ'. -/

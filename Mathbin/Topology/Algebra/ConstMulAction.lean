@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.const_mul_action
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,8 +66,7 @@ including (semi)modules and algebras.
 
 Note that both `has_continuous_const_vadd α α` and `has_continuous_const_vadd αᵐᵒᵖ α` are
 weaker versions of `has_continuous_add α`. -/
-class HasContinuousConstVadd (Γ : Type _) (T : Type _) [TopologicalSpace T] [HasVadd Γ T] :
-  Prop where
+class HasContinuousConstVadd (Γ : Type _) (T : Type _) [TopologicalSpace T] [VAdd Γ T] : Prop where
   continuous_const_vadd : ∀ γ : Γ, Continuous fun x : T => γ +ᵥ x
 #align has_continuous_const_vadd HasContinuousConstVadd
 
@@ -329,10 +328,10 @@ theorem is_closed_map_smul_of_ne_zero {c : G₀} (hc : c ≠ 0) : IsClosedMap fu
   (Homeomorph.smulOfNeZero c hc).IsClosedMap
 #align is_closed_map_smul_of_ne_zero is_closed_map_smul_of_ne_zero
 
-theorem IsClosed.smulOfNeZero {c : G₀} {s : Set α} (hs : IsClosed s) (hc : c ≠ 0) :
+theorem IsClosed.smul_of_ne_zero {c : G₀} {s : Set α} (hs : IsClosed s) (hc : c ≠ 0) :
     IsClosed (c • s) :=
   is_closed_map_smul_of_ne_zero hc s hs
-#align is_closed.smul_of_ne_zero IsClosed.smulOfNeZero
+#align is_closed.smul_of_ne_zero IsClosed.smul_of_ne_zero
 
 /-- `smul` is a closed map in the second argument.
 
@@ -428,7 +427,7 @@ class ProperlyDiscontinuousSmul (Γ : Type _) (T : Type _) [TopologicalSpace T] 
 is properly discontinuous, that is, for any pair of compact sets `K, L` in `T`, only finitely many
 `γ:Γ` move `K` to have nontrivial intersection with `L`.
 -/
-class ProperlyDiscontinuousVadd (Γ : Type _) (T : Type _) [TopologicalSpace T] [HasVadd Γ T] :
+class ProperlyDiscontinuousVadd (Γ : Type _) (T : Type _) [TopologicalSpace T] [VAdd Γ T] :
   Prop where
   finite_disjoint_inter_image :
     ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite { γ : Γ | (· +ᵥ ·) γ '' K ∩ L ≠ ∅ }

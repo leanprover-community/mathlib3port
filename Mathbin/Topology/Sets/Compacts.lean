@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.sets.compacts
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -459,7 +459,7 @@ instance [T2Space α] : SDiff (CompactOpens α) :=
   ⟨fun s t => ⟨⟨s \ t, s.IsCompact.diff t.IsOpen⟩, s.IsOpen.sdiff t.IsCompact.IsClosed⟩⟩
 
 instance [T2Space α] [CompactSpace α] : HasCompl (CompactOpens α) :=
-  ⟨fun s => ⟨⟨sᶜ, s.IsOpen.isClosedCompl.IsCompact⟩, s.IsCompact.IsClosed.is_open_compl⟩⟩
+  ⟨fun s => ⟨⟨sᶜ, s.IsOpen.is_closed_compl.IsCompact⟩, s.IsCompact.IsClosed.is_open_compl⟩⟩
 
 instance : SemilatticeSup (CompactOpens α) :=
   SetLike.coe_injective.SemilatticeSup _ fun _ _ => rfl

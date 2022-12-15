@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1617,7 +1617,7 @@ theorem abs_oangle_sub_left_to_real_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y�
     rw [← exists_nonneg_left_iff_same_ray hy] at hr
     rcases hr with ⟨r, hr0, hr⟩
     rw [eq_sub_iff_add_eq] at hr
-    nth_rw 2 [← one_smul ℝ y]  at hr
+    nth_rw 2 [← one_smul ℝ y] at hr
     rw [← add_smul] at hr
     rw [← hr, norm_smul, Real.norm_eq_abs, abs_of_pos (Left.add_pos_of_nonneg_of_pos hr0 one_pos),
       mul_left_eq_self₀, or_iff_left (norm_ne_zero_iff.2 hy), add_left_eq_self] at h

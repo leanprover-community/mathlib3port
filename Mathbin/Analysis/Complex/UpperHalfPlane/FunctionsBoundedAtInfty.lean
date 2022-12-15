@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.functions_bounded_at_infty
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ theorem at_im_infty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im
 #align upper_half_plane.at_im_infty_basis UpperHalfPlane.at_im_infty_basis
 
 theorem at_im_infty_mem (S : Set ℍ) : S ∈ at_im_infty ↔ ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → z ∈ S := by
-  simp only [at_im_infty, Filter.mem_comap', Filter.mem_at_top_sets, ge_iff_le, Set.mem_set_of_eq,
+  simp only [at_im_infty, Filter.mem_comap', Filter.mem_at_top_sets, ge_iff_le, Set.mem_setOf_eq,
     UpperHalfPlane.coe_im]
   refine' ⟨fun ⟨a, h⟩ => ⟨a, fun z hz => h (im z) hz rfl⟩, _⟩
   rintro ⟨A, h⟩

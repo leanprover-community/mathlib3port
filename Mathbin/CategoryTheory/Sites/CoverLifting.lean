@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.cover_lifting
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ variable {G : C ⥤ D} (hu : CoverLifting J K G) (ℱ : SheafCat J A)
 variable {X : A} {U : D} (S : Sieve U) (hS : S ∈ K U)
 
 instance (X : Dᵒᵖ) : HasLimitsOfShape (StructuredArrow X G.op) A :=
-  haveI := Limits.has_limits_of_size_shrink.{v, max u v, max u v, max u v} A
+  haveI := Limits.hasLimitsOfSizeShrink.{v, max u v, max u v, max u v} A
   has_limits_of_size.has_limits_of_shape _
 
 variable (x : S.arrows.FamilyOfElements ((ran G.op).obj ℱ.val ⋙ coyoneda.obj (op X)))

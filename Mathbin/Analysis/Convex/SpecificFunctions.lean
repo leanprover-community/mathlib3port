@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.convex.specific_functions
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ ico (0 
   rw [eq_comm, Finset.prod_eq_zero_iff] at h
   obtain ⟨a, ha, h⟩ := h
   rw [sub_eq_zero.1 h]
-  exact ⟨Int.ofNat_zero_le _, Int.coe_nat_lt.2 <| Finset.mem_range.1 ha⟩
+  exact ⟨Int.ofNat_zero_le _, Int.ofNat_lt.2 <| Finset.mem_range.1 ha⟩
 #align int_prod_range_pos int_prod_range_pos
 
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` -/

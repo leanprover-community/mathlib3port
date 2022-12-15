@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1311,9 +1311,9 @@ theorem norm_multiset_sum_le {E} [SeminormedAddCommGroup E] (m : Multiset E) :
 
 @[to_additive]
 theorem norm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖ ≤ (m.map fun x => ‖x‖).Sum := by
-  rw [← Multiplicative.of_add_le, of_add_multiset_prod, Multiset.map_map]
+  rw [← Multiplicative.ofAdd_le, of_add_multiset_prod, Multiset.map_map]
   refine' Multiset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) _ (fun x y => _) _
-  · simp only [comp_app, norm_one', of_add_zero]
+  · simp only [comp_app, norm_one', ofAdd_zero]
   · exact norm_mul_le' _ _
 #align norm_multiset_prod_le norm_multiset_prod_le
 
@@ -1324,9 +1324,9 @@ theorem norm_sum_le {E} [SeminormedAddCommGroup E] (s : Finset ι) (f : ι → E
 
 @[to_additive]
 theorem norm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ i in s, f i‖ ≤ ∑ i in s, ‖f i‖ := by
-  rw [← Multiplicative.of_add_le, of_add_sum]
+  rw [← Multiplicative.ofAdd_le, of_add_sum]
   refine' Finset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) _ (fun x y => _) _ _
-  · simp only [comp_app, norm_one', of_add_zero]
+  · simp only [comp_app, norm_one', ofAdd_zero]
   · exact norm_mul_le' _ _
 #align norm_prod_le norm_prod_le
 

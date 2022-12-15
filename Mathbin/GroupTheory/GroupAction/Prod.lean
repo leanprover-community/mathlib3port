@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.prod
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,8 +115,8 @@ instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarT
   ⟨fun x y z => mk.inj_iff.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
 
 @[to_additive]
-instance [SmulCommClass M N α] [SmulCommClass M N β] :
-    SmulCommClass M N
+instance [SMulCommClass M N α] [SMulCommClass M N β] :
+    SMulCommClass M N
       (α × β) where smul_comm r s x := mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
 
 @[to_additive]
@@ -125,14 +125,14 @@ instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] 
   ⟨fun r m => Prod.ext (op_smul_eq_smul _ _) (op_smul_eq_smul _ _)⟩
 
 @[to_additive]
-instance has_faithful_smul_left [HasFaithfulSmul M α] [Nonempty β] : HasFaithfulSmul M (α × β) :=
+instance has_faithful_smul_left [FaithfulSMul M α] [Nonempty β] : FaithfulSMul M (α × β) :=
   ⟨fun x y h =>
     let ⟨b⟩ := ‹Nonempty β›
     eq_of_smul_eq_smul fun a : α => by injection h (a, b)⟩
 #align prod.has_faithful_smul_left Prod.has_faithful_smul_left
 
 @[to_additive]
-instance has_faithful_smul_right [Nonempty α] [HasFaithfulSmul M β] : HasFaithfulSmul M (α × β) :=
+instance has_faithful_smul_right [Nonempty α] [FaithfulSMul M β] : FaithfulSMul M (α × β) :=
   ⟨fun x y h =>
     let ⟨a⟩ := ‹Nonempty α›
     eq_of_smul_eq_smul fun b : β => by injection h (a, b)⟩
@@ -141,8 +141,8 @@ instance has_faithful_smul_right [Nonempty α] [HasFaithfulSmul M β] : HasFaith
 end
 
 @[to_additive]
-instance smul_comm_class_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [SmulCommClass M N N]
-    [SmulCommClass M P P] : SmulCommClass M (N × P) (N × P) :=
+instance smul_comm_class_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [SMulCommClass M N N]
+    [SMulCommClass M P P] : SMulCommClass M (N × P) (N × P) :=
   ⟨fun c x y => by simp [smul_def, mul_def, mul_smul_comm]⟩
 #align prod.smul_comm_class_both Prod.smul_comm_class_both
 
@@ -159,11 +159,11 @@ instance {m : Monoid M} [MulAction M α] [MulAction M β] :
   mul_smul a₁ a₂ p := mk.inj_iff.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
   one_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨one_smul _ _, one_smul _ _⟩
 
-instance {R M N : Type _} [Zero M] [Zero N] [SmulZeroClass R M] [SmulZeroClass R N] :
-    SmulZeroClass R (M × N) where smul_zero a := mk.inj_iff.mpr ⟨smul_zero _, smul_zero _⟩
+instance {R M N : Type _} [Zero M] [Zero N] [SMulZeroClass R M] [SMulZeroClass R N] :
+    SMulZeroClass R (M × N) where smul_zero a := mk.inj_iff.mpr ⟨smul_zero _, smul_zero _⟩
 
-instance {R M N : Type _} [AddZeroClass M] [AddZeroClass N] [DistribSmul R M] [DistribSmul R N] :
-    DistribSmul R (M × N) where smul_add a p₁ p₂ := mk.inj_iff.mpr ⟨smul_add _ _ _, smul_add _ _ _⟩
+instance {R M N : Type _} [AddZeroClass M] [AddZeroClass N] [DistribSMul R M] [DistribSMul R N] :
+    DistribSMul R (M × N) where smul_add a p₁ p₂ := mk.inj_iff.mpr ⟨smul_add _ _ _, smul_add _ _ _⟩
 
 instance {R M N : Type _} {r : Monoid R} [AddMonoid M] [AddMonoid N] [DistribMulAction R M]
     [DistribMulAction R N] : DistribMulAction R (M × N) :=
@@ -186,7 +186,7 @@ section BundledSmul
 
 /-- Scalar multiplication as a multiplicative homomorphism. -/
 @[simps]
-def smulMulHom [Monoid α] [Mul β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] :
+def smulMulHom [Monoid α] [Mul β] [MulAction α β] [IsScalarTower α β β] [SMulCommClass α β β] :
     α × β →ₙ* β where 
   toFun a := a.1 • a.2
   map_mul' a b := (smul_mul_smul _ _ _ _).symm
@@ -195,7 +195,7 @@ def smulMulHom [Monoid α] [Mul β] [MulAction α β] [IsScalarTower α β β] [
 /-- Scalar multiplication as a monoid homomorphism. -/
 @[simps]
 def smulMonoidHom [Monoid α] [MulOneClass β] [MulAction α β] [IsScalarTower α β β]
-    [SmulCommClass α β β] : α × β →* β :=
+    [SMulCommClass α β β] : α × β →* β :=
   { smulMulHom with map_one' := one_smul _ _ }
 #align smul_monoid_hom smulMonoidHom
 

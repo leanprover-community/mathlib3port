@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.aut
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ protected theorem smul_def {M} [Monoid M] (f : MulAut M) (a : M) : f • a = f a
 #align mul_aut.smul_def MulAut.smul_def
 
 /-- `mul_aut.apply_mul_action` is faithful. -/
-instance apply_has_faithful_smul {M} [Monoid M] : HasFaithfulSmul (MulAut M) M :=
+instance apply_has_faithful_smul {M} [Monoid M] : FaithfulSMul (MulAut M) M :=
   ⟨fun _ _ => MulEquiv.ext⟩
 #align mul_aut.apply_has_faithful_smul MulAut.apply_has_faithful_smul
 
@@ -259,7 +259,7 @@ protected theorem smul_def {A} [AddMonoid A] (f : AddAut A) (a : A) : f • a = 
 #align add_aut.smul_def AddAut.smul_def
 
 /-- `add_aut.apply_distrib_mul_action` is faithful. -/
-instance apply_has_faithful_smul {A} [AddMonoid A] : HasFaithfulSmul (AddAut A) A :=
+instance apply_has_faithful_smul {A} [AddMonoid A] : FaithfulSMul (AddAut A) A :=
   ⟨fun _ _ => AddEquiv.ext⟩
 #align add_aut.apply_has_faithful_smul AddAut.apply_has_faithful_smul
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,10 +149,10 @@ For example, let `(v : ℚ) := 3.4`. The process goes as follows:
 - `stream v 2 = some ⟨⌊0.5⁻¹⌋, 0.5⁻¹ - ⌊0.5⁻¹⌋⟩ = some ⟨⌊2⌋, 2 - ⌊2⌋⟩ = some ⟨2, 0⟩`
 - `stream v n = none`, for `n ≥ 3`
 -/
-protected def stream (v : K) : Stream <| Option (IntFractPair K)
+protected def stream (v : K) : Stream' <| Option (IntFractPair K)
   | 0 => some (IntFractPair.of v)
   | n + 1 => do
-    let ap_n ← Stream n
+    let ap_n ← Stream' n
     if ap_n = 0 then none else int_fract_pair.of ap_n⁻¹
 #align
   generalized_continued_fraction.int_fract_pair.stream GeneralizedContinuedFraction.IntFractPair.stream
@@ -160,11 +160,11 @@ protected def stream (v : K) : Stream <| Option (IntFractPair K)
 /-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
 -/
-theorem streamIsSeq (v : K) : (IntFractPair.stream v).IsSeq := by
+theorem stream_is_seq (v : K) : (IntFractPair.stream v).IsSeq := by
   intro _ hyp
   simp [int_fract_pair.stream, hyp]
 #align
-  generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.streamIsSeq
+  generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.stream_is_seq
 
 /--
 Uses `int_fract_pair.stream` to create a sequence with head (i.e. `seq1`) of integer and fractional
@@ -180,7 +180,7 @@ protected def seq1 (v : K) : Seq1 <| IntFractPair K :=
       Seq.tail-- take the tail of `int_fract_pair.stream` since the first element is already in the
       -- head create a sequence from `int_fract_pair.stream`
       ⟨IntFractPair.stream v,-- the underlying stream
-          @streamIsSeq
+          @stream_is_seq
           _ _ _ v⟩⟩
 #align
   generalized_continued_fraction.int_fract_pair.seq1 GeneralizedContinuedFraction.IntFractPair.seq1

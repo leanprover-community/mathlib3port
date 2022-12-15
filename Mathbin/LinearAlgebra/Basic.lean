@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ variable {V : Type _} {V₂ : Type _}
 namespace Finsupp
 
 theorem smul_sum {α : Type _} {β : Type _} {R : Type _} {M : Type _} [Zero β] [AddCommMonoid M]
-    [DistribSmul R M] {v : α →₀ β} {c : R} {h : α → β → M} :
+    [DistribSMul R M] {v : α →₀ β} {c : R} {h : α → β → M} :
     c • v.Sum h = v.Sum fun a b => c • h a b :=
   Finset.smul_sum
 #align finsupp.smul_sum Finsupp.smul_sum
@@ -442,8 +442,8 @@ end AddCommMonoid
 section Module
 
 variable [Semiring R] [Semiring S] [AddCommMonoid M] [AddCommMonoid M₂] [AddCommMonoid M₃]
-  [Module R M] [Module R M₂] [Module R M₃] [Module S M₂] [Module S M₃] [SmulCommClass R S M₂]
-  [SmulCommClass R S M₃] (f : M →ₗ[R] M₂)
+  [Module R M] [Module R M₂] [Module R M₃] [Module S M₂] [Module S M₃] [SMulCommClass R S M₂]
+  [SMulCommClass R S M₃] (f : M →ₗ[R] M₂)
 
 variable (S)
 
@@ -476,7 +476,7 @@ Otherwise, `S = ℕ` shows that the equivalence is additive.
 See note [bundled maps over different rings].
 -/
 @[simps]
-def ringLmapEquivSelf [Module S M] [SmulCommClass R S M] : (R →ₗ[R] M) ≃ₗ[S] M :=
+def ringLmapEquivSelf [Module S M] [SMulCommClass R S M] : (R →ₗ[R] M) ≃ₗ[S] M :=
   { applyₗ' S (1 : R) with 
     toFun := fun f => f 1
     invFun := smulRight (1 : R →ₗ[R] R)
@@ -1155,289 +1155,12 @@ theorem map_smul (f : V →ₗ[K] V₂) (p : Submodule K V) (a : K) (h : a ≠ 0
     (by rw [map_le_iff_le_comap, ← comap_smul f _ a h, ← map_le_iff_le_comap]; exact le_rfl)
 #align submodule.map_smul Submodule.map_smul
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [] [] [] [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `comap_smul' [])
-      (Command.declSig
-       [(Term.explicitBinder
-         "("
-         [`f]
-         [":" (Algebra.Module.LinearMap.«term_→ₗ[_]_» `V " →ₗ[" `K "] " `V₂)]
-         []
-         ")")
-        (Term.explicitBinder "(" [`p] [":" (Term.app `Submodule [`K `V₂])] [] ")")
-        (Term.explicitBinder "(" [`a] [":" `K] [] ")")]
-       (Term.typeSpec
-        ":"
-        («term_=_»
-         (Term.app (Term.proj `p "." `comap) [(Algebra.Group.Defs.«term_•_» `a " • " `f)])
-         "="
-         (Order.CompleteLattice.«term⨅_,_»
-          "⨅"
-          (Std.ExtendedBinder.extBinders
-           (Std.ExtendedBinder.extBinder
-            (Lean.binderIdent `h)
-            [(group ":" («term_≠_» `a "≠" (num "0")))]))
-          ", "
-          (Term.app (Term.proj `p "." `comap) [`f])))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Tactic.«tactic_<;>_»
-             (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-             "<;>"
-             (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0"))))
-            "<;>"
-            (Tactic.simp
-             "simp"
-             []
-             []
-             []
-             ["[" [(Tactic.simpLemma [] [] `h) "," (Tactic.simpLemma [] [] `comap_smul)] "]"]
-             []))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0"))))
-           "<;>"
-           (Tactic.simp
-            "simp"
-            []
-            []
-            []
-            ["[" [(Tactic.simpLemma [] [] `h) "," (Tactic.simpLemma [] [] `comap_smul)] "]"]
-            []))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Tactic.«tactic_<;>_»
-        (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-        "<;>"
-        (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0"))))
-       "<;>"
-       (Tactic.simp
-        "simp"
-        []
-        []
-        []
-        ["[" [(Tactic.simpLemma [] [] `h) "," (Tactic.simpLemma [] [] `comap_smul)] "]"]
-        []))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.simp
-       "simp"
-       []
-       []
-       []
-       ["[" [(Tactic.simpLemma [] [] `h) "," (Tactic.simpLemma [] [] `comap_smul)] "]"]
-       [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `comap_smul
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `h
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0"))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0")))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» `a "=" (num "0"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      `a
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  comap_smul'
-  ( f : V →ₗ[ K ] V₂ ) ( p : Submodule K V₂ ) ( a : K )
-    : p . comap a • f = ⨅ h : a ≠ 0 , p . comap f
-  := by skip <;> by_cases a = 0 <;> simp [ h , comap_smul ]
+theorem comap_smul' (f : V →ₗ[K] V₂) (p : Submodule K V₂) (a : K) :
+    p.comap (a • f) = ⨅ h : a ≠ 0, p.comap f := by classical by_cases a = 0 <;> simp [h, comap_smul]
 #align submodule.comap_smul' Submodule.comap_smul'
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [] [] [] [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `map_smul' [])
-      (Command.declSig
-       [(Term.explicitBinder
-         "("
-         [`f]
-         [":" (Algebra.Module.LinearMap.«term_→ₗ[_]_» `V " →ₗ[" `K "] " `V₂)]
-         []
-         ")")
-        (Term.explicitBinder "(" [`p] [":" (Term.app `Submodule [`K `V])] [] ")")
-        (Term.explicitBinder "(" [`a] [":" `K] [] ")")]
-       (Term.typeSpec
-        ":"
-        («term_=_»
-         (Term.app (Term.proj `p "." `map) [(Algebra.Group.Defs.«term_•_» `a " • " `f)])
-         "="
-         (Order.CompleteLattice.«term⨆_,_»
-          "⨆"
-          (Std.ExtendedBinder.extBinders
-           (Std.ExtendedBinder.extBinder
-            (Lean.binderIdent `h)
-            [(group ":" («term_≠_» `a "≠" (num "0")))]))
-          ", "
-          (Term.app (Term.proj `p "." `map) [`f])))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Tactic.«tactic_<;>_»
-             (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-             "<;>"
-             (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0"))))
-            "<;>"
-            (Tactic.simp
-             "simp"
-             []
-             []
-             []
-             ["[" [(Tactic.simpLemma [] [] `h) "," (Tactic.simpLemma [] [] `map_smul)] "]"]
-             []))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0"))))
-           "<;>"
-           (Tactic.simp
-            "simp"
-            []
-            []
-            []
-            ["[" [(Tactic.simpLemma [] [] `h) "," (Tactic.simpLemma [] [] `map_smul)] "]"]
-            []))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Tactic.«tactic_<;>_»
-        (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-        "<;>"
-        (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0"))))
-       "<;>"
-       (Tactic.simp
-        "simp"
-        []
-        []
-        []
-        ["[" [(Tactic.simpLemma [] [] `h) "," (Tactic.simpLemma [] [] `map_smul)] "]"]
-        []))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.simp
-       "simp"
-       []
-       []
-       []
-       ["[" [(Tactic.simpLemma [] [] `h) "," (Tactic.simpLemma [] [] `map_smul)] "]"]
-       [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `map_smul
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `h
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0"))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Classical.«tacticBy_cases_:_» "by_cases" [] («term_=_» `a "=" (num "0")))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» `a "=" (num "0"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      `a
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  map_smul'
-  ( f : V →ₗ[ K ] V₂ ) ( p : Submodule K V ) ( a : K ) : p . map a • f = ⨆ h : a ≠ 0 , p . map f
-  := by skip <;> by_cases a = 0 <;> simp [ h , map_smul ]
+theorem map_smul' (f : V →ₗ[K] V₂) (p : Submodule K V) (a : K) :
+    p.map (a • f) = ⨆ h : a ≠ 0, p.map f := by classical by_cases a = 0 <;> simp [h, map_smul]
 #align submodule.map_smul' Submodule.map_smul'
 
 end Submodule
@@ -1886,7 +1609,7 @@ include sc
 theorem sub_mem_ker_iff {x y} : x - y ∈ ker f ↔ f x = f y := by rw [mem_ker, map_sub, sub_eq_zero]
 #align linear_map.sub_mem_ker_iff LinearMap.sub_mem_ker_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » p) -/
 theorem disjoint_ker' {p : Submodule R M} :
     Disjoint p (ker f) ↔ ∀ (x y) (_ : x ∈ p) (_ : y ∈ p), f x = f y → x = y :=
   disjoint_ker.trans

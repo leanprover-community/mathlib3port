@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,56 +96,56 @@ unsafe def map_fun_tac : tactic Unit :=
 
 include hp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 -- We do not tag these lemmas as `@[simp]` because they will be bundled in `map` later on.
 theorem zero : mapFun f (0 : 𝕎 R) = 0 := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.zero WittVector.mapFun.zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem one : mapFun f (1 : 𝕎 R) = 1 := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.one WittVector.mapFun.one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem add : mapFun f (x + y) = mapFun f x + mapFun f y := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.add WittVector.mapFun.add
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem sub : mapFun f (x - y) = mapFun f x - mapFun f y := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.sub WittVector.mapFun.sub
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem mul : mapFun f (x * y) = mapFun f x * mapFun f y := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.mul WittVector.mapFun.mul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem neg : mapFun f (-x) = -mapFun f x := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.neg WittVector.mapFun.neg
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem nsmul (n : ℕ) : mapFun f (n • x) = n • mapFun f x := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.nsmul WittVector.mapFun.nsmul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem zsmul (z : ℤ) : mapFun f (z • x) = z • mapFun f x := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.zsmul WittVector.mapFun.zsmul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem pow (n : ℕ) : mapFun f (x ^ n) = mapFun f x ^ n := by
   run_tac
     map_fun_tac

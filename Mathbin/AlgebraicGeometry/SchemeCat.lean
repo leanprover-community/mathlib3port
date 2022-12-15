@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.Scheme
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,24 +107,24 @@ theorem id_app {X : SchemeCat} (U : (Opens X.carrier)ᵒᵖ) :
   PresheafedSpaceCat.id_c_app X.toPresheafedSpace U
 #align algebraic_geometry.Scheme.id_app AlgebraicGeometry.SchemeCat.id_app
 
-@[reassoc]
+@[reassoc.1]
 theorem comp_val {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).val = f.val ≫ g.val :=
   rfl
 #align algebraic_geometry.Scheme.comp_val AlgebraicGeometry.SchemeCat.comp_val
 
-@[reassoc, simp]
+@[reassoc.1, simp]
 theorem comp_coe_base {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) :
     (f ≫ g).val.base = f.val.base ≫ g.val.base :=
   rfl
 #align algebraic_geometry.Scheme.comp_coe_base AlgebraicGeometry.SchemeCat.comp_coe_base
 
-@[reassoc, elementwise]
+@[reassoc.1, elementwise]
 theorem comp_val_base {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) :
     (f ≫ g).val.base = f.val.base ≫ g.val.base :=
   rfl
 #align algebraic_geometry.Scheme.comp_val_base AlgebraicGeometry.SchemeCat.comp_val_base
 
-@[reassoc, simp]
+@[reassoc.1, simp]
 theorem comp_val_c_app {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
     (f ≫ g).val.c.app U = g.val.c.app U ≫ f.val.c.app _ :=
   rfl

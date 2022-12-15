@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.simplicial_object
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,14 +92,14 @@ theorem eq_to_iso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ := by
   category_theory.simplicial_object.eq_to_iso_refl CategoryTheory.SimplicialObject.eq_to_iso_refl
 
 /-- The generic case of the first simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) :
     X.δ j.succ ≫ X.δ i = X.δ i.cast_succ ≫ X.δ j := by
   dsimp [δ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ H]
 #align category_theory.simplicial_object.δ_comp_δ CategoryTheory.SimplicialObject.δ_comp_δ
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j) :
     X.δ j ≫ X.δ i =
       X.δ i.cast_succ ≫ X.δ (j.pred fun hj => by simpa only [hj, Fin.not_lt_zero] using H) :=
@@ -108,7 +108,7 @@ theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ' H]
 #align category_theory.simplicial_object.δ_comp_δ' CategoryTheory.SimplicialObject.δ_comp_δ'
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_succ) :
     X.δ j.succ ≫ X.δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_coe_le_coe.mp H) j.is_lt)) =
       X.δ i ≫ X.δ j :=
@@ -118,13 +118,13 @@ theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_s
 #align category_theory.simplicial_object.δ_comp_δ'' CategoryTheory.SimplicialObject.δ_comp_δ''
 
 /-- The special case of the first simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i.cast_succ ≫ X.δ i = X.δ i.succ ≫ X.δ i := by
   dsimp [δ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ_self]
 #align category_theory.simplicial_object.δ_comp_δ_self CategoryTheory.SimplicialObject.δ_comp_δ_self
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ_self' {n} {j : Fin (n + 3)} {i : Fin (n + 2)} (H : j = i.cast_succ) :
     X.δ j ≫ X.δ i = X.δ i.succ ≫ X.δ i := by 
   subst H
@@ -133,7 +133,7 @@ theorem δ_comp_δ_self' {n} {j : Fin (n + 3)} {i : Fin (n + 2)} (H : j = i.cast
   category_theory.simplicial_object.δ_comp_δ_self' CategoryTheory.SimplicialObject.δ_comp_δ_self'
 
 /-- The second simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
     X.σ j.succ ≫ X.δ i.cast_succ = X.δ i ≫ X.σ j := by
   dsimp [δ, σ]
@@ -142,13 +142,13 @@ theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.ca
   category_theory.simplicial_object.δ_comp_σ_of_le CategoryTheory.SimplicialObject.δ_comp_σ_of_le
 
 /-- The first part of the third simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : X.σ i ≫ X.δ i.cast_succ = 𝟙 _ := by
   dsimp [δ, σ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_self, op_id, X.map_id]
 #align category_theory.simplicial_object.δ_comp_σ_self CategoryTheory.SimplicialObject.δ_comp_σ_self
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast_succ) :
     X.σ i ≫ X.δ j = 𝟙 _ := by 
   subst H
@@ -157,13 +157,13 @@ theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast
   category_theory.simplicial_object.δ_comp_σ_self' CategoryTheory.SimplicialObject.δ_comp_σ_self'
 
 /-- The second part of the third simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_succ {n} {i : Fin (n + 1)} : X.σ i ≫ X.δ i.succ = 𝟙 _ := by
   dsimp [δ, σ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_succ, op_id, X.map_id]
 #align category_theory.simplicial_object.δ_comp_σ_succ CategoryTheory.SimplicialObject.δ_comp_σ_succ
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_succ' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.succ) :
     X.σ i ≫ X.δ j = 𝟙 _ := by 
   subst H
@@ -172,7 +172,7 @@ theorem δ_comp_σ_succ' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.succ
   category_theory.simplicial_object.δ_comp_σ_succ' CategoryTheory.SimplicialObject.δ_comp_σ_succ'
 
 /-- The fourth simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
     X.σ j.cast_succ ≫ X.δ i.succ = X.δ i ≫ X.σ j := by
   dsimp [δ, σ]
@@ -180,7 +180,7 @@ theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_suc
 #align
   category_theory.simplicial_object.δ_comp_σ_of_gt CategoryTheory.SimplicialObject.δ_comp_σ_of_gt
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < i) :
     X.σ j ≫ X.δ i =
       X.δ (i.pred fun hi => by simpa only [Fin.not_lt_zero, hi] using H) ≫
@@ -197,7 +197,7 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
   category_theory.simplicial_object.δ_comp_σ_of_gt' CategoryTheory.SimplicialObject.δ_comp_σ_of_gt'
 
 /-- The fifth simplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) :
     X.σ j ≫ X.σ i.cast_succ = X.σ i ≫ X.σ j.succ := by
   dsimp [δ, σ]
@@ -206,13 +206,13 @@ theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) :
 
 open Simplicial
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem δ_naturality {X' X : SimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Fin (n + 2)) :
     X.δ i ≫ f.app (op [n]) = f.app (op [n + 1]) ≫ X'.δ i :=
   f.naturality _
 #align category_theory.simplicial_object.δ_naturality CategoryTheory.SimplicialObject.δ_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem σ_naturality {X' X : SimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ f.app (op [n + 1]) = f.app (op [n]) ≫ X'.σ i :=
   f.naturality _
@@ -327,7 +327,7 @@ def toArrow :
   category_theory.simplicial_object.augmented.to_arrow CategoryTheory.SimplicialObject.Augmented.toArrow
 
 /-- The compatibility of a morphism with the augmentation, on 0-simplices -/
-@[reassoc]
+@[reassoc.1]
 theorem w₀ {X Y : Augmented C} (f : X ⟶ Y) :
     (Augmented.drop.map f).app (op (SimplexCategory.mk 0)) ≫ Y.Hom.app (op (SimplexCategory.mk 0)) =
       X.Hom.app (op (SimplexCategory.mk 0)) ≫ Augmented.point.map f :=
@@ -459,14 +459,14 @@ theorem eq_to_iso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ := by
   category_theory.cosimplicial_object.eq_to_iso_refl CategoryTheory.CosimplicialObject.eq_to_iso_refl
 
 /-- The generic case of the first cosimplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) :
     X.δ i ≫ X.δ j.succ = X.δ j ≫ X.δ i.cast_succ := by
   dsimp [δ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_δ H]
 #align category_theory.cosimplicial_object.δ_comp_δ CategoryTheory.CosimplicialObject.δ_comp_δ
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j) :
     X.δ i ≫ X.δ j =
       X.δ (j.pred fun hj => by simpa only [hj, Fin.not_lt_zero] using H) ≫ X.δ i.cast_succ :=
@@ -475,7 +475,7 @@ theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ' H]
 #align category_theory.cosimplicial_object.δ_comp_δ' CategoryTheory.CosimplicialObject.δ_comp_δ'
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_succ) :
     X.δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_coe_le_coe.mp H) j.is_lt)) ≫ X.δ j.succ =
       X.δ j ≫ X.δ i :=
@@ -485,14 +485,14 @@ theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_s
 #align category_theory.cosimplicial_object.δ_comp_δ'' CategoryTheory.CosimplicialObject.δ_comp_δ''
 
 /-- The special case of the first cosimplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i ≫ X.δ i.cast_succ = X.δ i ≫ X.δ i.succ := by
   dsimp [δ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_δ_self]
 #align
   category_theory.cosimplicial_object.δ_comp_δ_self CategoryTheory.CosimplicialObject.δ_comp_δ_self
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.cast_succ) :
     X.δ i ≫ X.δ j = X.δ i ≫ X.δ i.succ := by 
   subst H
@@ -501,7 +501,7 @@ theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.cast
   category_theory.cosimplicial_object.δ_comp_δ_self' CategoryTheory.CosimplicialObject.δ_comp_δ_self'
 
 /-- The second cosimplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
     X.δ i.cast_succ ≫ X.σ j.succ = X.σ j ≫ X.δ i := by
   dsimp [δ, σ]
@@ -510,14 +510,14 @@ theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.ca
   category_theory.cosimplicial_object.δ_comp_σ_of_le CategoryTheory.CosimplicialObject.δ_comp_σ_of_le
 
 /-- The first part of the third cosimplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : X.δ i.cast_succ ≫ X.σ i = 𝟙 _ := by
   dsimp [δ, σ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_σ_self, X.map_id]
 #align
   category_theory.cosimplicial_object.δ_comp_σ_self CategoryTheory.CosimplicialObject.δ_comp_σ_self
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast_succ) :
     X.δ j ≫ X.σ i = 𝟙 _ := by 
   subst H
@@ -526,14 +526,14 @@ theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast
   category_theory.cosimplicial_object.δ_comp_σ_self' CategoryTheory.CosimplicialObject.δ_comp_σ_self'
 
 /-- The second part of the third cosimplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_succ {n} {i : Fin (n + 1)} : X.δ i.succ ≫ X.σ i = 𝟙 _ := by
   dsimp [δ, σ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_σ_succ, X.map_id]
 #align
   category_theory.cosimplicial_object.δ_comp_σ_succ CategoryTheory.CosimplicialObject.δ_comp_σ_succ
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_succ' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.succ) :
     X.δ j ≫ X.σ i = 𝟙 _ := by 
   subst H
@@ -542,7 +542,7 @@ theorem δ_comp_σ_succ' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.succ
   category_theory.cosimplicial_object.δ_comp_σ_succ' CategoryTheory.CosimplicialObject.δ_comp_σ_succ'
 
 /-- The fourth cosimplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
     X.δ i.succ ≫ X.σ j.cast_succ = X.σ j ≫ X.δ i := by
   dsimp [δ, σ]
@@ -550,7 +550,7 @@ theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_suc
 #align
   category_theory.cosimplicial_object.δ_comp_σ_of_gt CategoryTheory.CosimplicialObject.δ_comp_σ_of_gt
 
-@[reassoc]
+@[reassoc.1]
 theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < i) :
     X.δ i ≫ X.σ j =
       X.σ
@@ -567,21 +567,21 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
   category_theory.cosimplicial_object.δ_comp_σ_of_gt' CategoryTheory.CosimplicialObject.δ_comp_σ_of_gt'
 
 /-- The fifth cosimplicial identity -/
-@[reassoc]
+@[reassoc.1]
 theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) :
     X.σ i.cast_succ ≫ X.σ j = X.σ j.succ ≫ X.σ i := by
   dsimp [δ, σ]
   simp only [← X.map_comp, SimplexCategory.σ_comp_σ H]
 #align category_theory.cosimplicial_object.σ_comp_σ CategoryTheory.CosimplicialObject.σ_comp_σ
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem δ_naturality {X' X : CosimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Fin (n + 2)) :
     X.δ i ≫ f.app (SimplexCategory.mk (n + 1)) = f.app (SimplexCategory.mk n) ≫ X'.δ i :=
   f.naturality _
 #align
   category_theory.cosimplicial_object.δ_naturality CategoryTheory.CosimplicialObject.δ_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem σ_naturality {X' X : CosimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ f.app (SimplexCategory.mk n) = f.app (SimplexCategory.mk (n + 1)) ≫ X'.σ i :=
   f.naturality _

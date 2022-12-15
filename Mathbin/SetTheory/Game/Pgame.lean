@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.pgame
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1170,7 +1170,7 @@ theorem neg_def {xl xr xL xR} : -mk xl xr xL xR = mk xr xl (fun j => -xR j) fun 
   rfl
 #align pgame.neg_def Pgame.neg_def
 
-instance : HasInvolutiveNeg Pgame :=
+instance : InvolutiveNeg Pgame :=
   { Pgame.hasNeg with
     neg_neg := fun x => by 
       induction' x with xl xr xL xR ihL ihR
@@ -1861,7 +1861,7 @@ protected theorem zero_lt_one : (0 : Pgame) < 1 :=
   lt_of_le_of_lf (zero_le_of_is_empty_right_moves 1) (zero_lf_le.2 ⟨default, le_rfl⟩)
 #align pgame.zero_lt_one Pgame.zero_lt_one
 
-instance : ZeroLeOneClass Pgame :=
+instance : ZeroLEOneClass Pgame :=
   ⟨Pgame.zero_lt_one.le⟩
 
 @[simp]

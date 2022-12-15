@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.permutation
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ theorem permutations_aux2_fst (t : α) (ts : List α) (r : List β) :
   | [], f => rfl
   | y :: ys, f =>
     match (motive :=
-      ∀ o : List α × List β, o.1 = ys ++ ts → (PermutationsAux2._match1 t y f o).1 = y :: ys ++ ts)
+      ∀ o : List α × List β, o.1 = ys ++ ts → (permutationsAux2._match1 t y f o).1 = y :: ys ++ ts)
       _, permutations_aux2_fst ys _ with
     | ⟨_, zs⟩, rfl => rfl
 #align list.permutations_aux2_fst List.permutations_aux2_fst
@@ -77,7 +77,7 @@ theorem permutations_aux2_snd_cons (t : α) (ts : List α) (r : List β) (y : α
       f (t :: y :: ys ++ ts) :: (permutationsAux2 t ts r ys fun x : List α => f (y :: x)).2 :=
   match (motive :=
     ∀ o : List α × List β,
-      o.1 = ys ++ ts → (PermutationsAux2._match1 t y f o).2 = f (t :: y :: ys ++ ts) :: o.2)
+      o.1 = ys ++ ts → (permutationsAux2._match1 t y f o).2 = f (t :: y :: ys ++ ts) :: o.2)
     _, permutations_aux2_fst t ts r _ _ with
   | ⟨_, zs⟩, rfl => rfl
 #align list.permutations_aux2_snd_cons List.permutations_aux2_snd_cons

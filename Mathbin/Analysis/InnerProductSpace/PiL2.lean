@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -286,151 +286,10 @@ namespace OrthonormalBasis
 instance : Inhabited (OrthonormalBasis ι 𝕜 (EuclideanSpace 𝕜 ι)) :=
   ⟨of_repr (LinearIsometryEquiv.refl 𝕜 (EuclideanSpace 𝕜 ι))⟩
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment "/--" "`b i` is the `i`th basis vector. -/")]
-      []
-      []
-      []
-      []
-      [])
-     (Command.instance
-      (Term.attrKind [])
-      "instance"
-      []
-      []
-      (Command.declSig
-       []
-       (Term.typeSpec
-        ":"
-        (Term.app
-         `CoeFun
-         [(Term.app `OrthonormalBasis [`ι `𝕜 `E])
-          (Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Term.arrow `ι "→" `E)))])))
-      (Command.whereStructInst
-       "where"
-       [(Command.whereStructField
-         (Term.letDecl
-          (Term.letIdDecl
-           `coe
-           [`b `i]
-           []
-           ":="
-           (Term.byTactic
-            "by"
-            (Tactic.tacticSeq
-             (Tactic.tacticSeq1Indented
-              [(Tactic.«tactic_<;>_»
-                (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-                "<;>"
-                (Tactic.exact
-                 "exact"
-                 (Term.app
-                  `b.repr.symm
-                  [(Term.app
-                    `EuclideanSpace.single
-                    [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])])))]))))))]
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.exact
-            "exact"
-            (Term.app
-             `b.repr.symm
-             [(Term.app
-               `EuclideanSpace.single
-               [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])])))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.exact
-        "exact"
-        (Term.app
-         `b.repr.symm
-         [(Term.app
-           `EuclideanSpace.single
-           [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact
-       "exact"
-       (Term.app
-        `b.repr.symm
-        [(Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       `b.repr.symm
-       [(Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `𝕜
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `EuclideanSpace.single
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])
-     ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `b.repr.symm
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `b i` is the `i`th basis vector. -/
-  instance
-    : CoeFun OrthonormalBasis ι 𝕜 E fun _ => ι → E
-    where coe b i := by skip <;> exact b.repr.symm EuclideanSpace.single i ( 1 : 𝕜 )
+instance :
+    CoeFun (OrthonormalBasis ι 𝕜 E) fun _ =>
+      ι → E where coe b i := by classical exact b.repr.symm (EuclideanSpace.single i (1 : 𝕜))
 
 @[simp]
 theorem coe_of_repr [DecidableEq ι] (e : E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 ι) :
@@ -595,140 +454,10 @@ protected def mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.span 𝕜 (
   (Basis.mk (Orthonormal.linear_independent hon) hsp).toOrthonormalBasis (by rwa [Basis.coe_mk])
 #align orthonormal_basis.mk OrthonormalBasis.mk
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      []
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
-      [(Command.protected "protected")]
-      []
-      []
-      [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `coe_mk [])
-      (Command.declSig
-       [(Term.explicitBinder "(" [`hon] [":" (Term.app `Orthonormal [`𝕜 `v])] [] ")")
-        (Term.explicitBinder
-         "("
-         [`hsp]
-         [":"
-          («term_≤_»
-           (Order.BoundedOrder.«term⊤» "⊤")
-           "≤"
-           (Term.app `Submodule.span [`𝕜 (Term.app `Set.range [`v])]))]
-         []
-         ")")]
-       (Term.typeSpec
-        ":"
-        («term_=_» (Init.Coe.«term⇑_» "⇑" (Term.app `OrthonormalBasis.mk [`hon `hsp])) "=" `v)))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Tactic.rwSeq
-             "rw"
-             []
-             (Tactic.rwRuleSeq
-              "["
-              [(Tactic.rwRule [] `OrthonormalBasis.mk)
-               ","
-               (Tactic.rwRule [] `_root_.basis.coe_to_orthonormal_basis)
-               ","
-               (Tactic.rwRule [] `Basis.coe_mk)]
-              "]")
-             []))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.rwSeq
-            "rw"
-            []
-            (Tactic.rwRuleSeq
-             "["
-             [(Tactic.rwRule [] `OrthonormalBasis.mk)
-              ","
-              (Tactic.rwRule [] `_root_.basis.coe_to_orthonormal_basis)
-              ","
-              (Tactic.rwRule [] `Basis.coe_mk)]
-             "]")
-            []))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.rwSeq
-        "rw"
-        []
-        (Tactic.rwRuleSeq
-         "["
-         [(Tactic.rwRule [] `OrthonormalBasis.mk)
-          ","
-          (Tactic.rwRule [] `_root_.basis.coe_to_orthonormal_basis)
-          ","
-          (Tactic.rwRule [] `Basis.coe_mk)]
-         "]")
-        []))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.rwSeq
-       "rw"
-       []
-       (Tactic.rwRuleSeq
-        "["
-        [(Tactic.rwRule [] `OrthonormalBasis.mk)
-         ","
-         (Tactic.rwRule [] `_root_.basis.coe_to_orthonormal_basis)
-         ","
-         (Tactic.rwRule [] `Basis.coe_mk)]
-        "]")
-       [])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Basis.coe_mk
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `_root_.basis.coe_to_orthonormal_basis
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `OrthonormalBasis.mk
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp ] protected
-  theorem
-    coe_mk
-    ( hon : Orthonormal 𝕜 v ) ( hsp : ⊤ ≤ Submodule.span 𝕜 Set.range v )
-      : ⇑ OrthonormalBasis.mk hon hsp = v
-    := by skip <;> rw [ OrthonormalBasis.mk , _root_.basis.coe_to_orthonormal_basis , Basis.coe_mk ]
+@[simp]
+protected theorem coe_mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.span 𝕜 (Set.range v)) :
+    ⇑(OrthonormalBasis.mk hon hsp) = v := by
+  classical rw [OrthonormalBasis.mk, _root_.basis.coe_to_orthonormal_basis, Basis.coe_mk]
 #align orthonormal_basis.coe_mk OrthonormalBasis.coe_mk
 
 /-- Any finite subset of a orthonormal family is an `orthonormal_basis` for its span. -/
@@ -768,7 +497,7 @@ protected def mkOfOrthogonalEqBot (hon : Orthonormal 𝕜 v) (hsp : (span 𝕜 (
     (by 
       refine' Eq.ge _
       haveI : FiniteDimensional 𝕜 (span 𝕜 (range v)) :=
-        FiniteDimensional.spanOfFinite 𝕜 (finite_range v)
+        FiniteDimensional.span_of_finite 𝕜 (finite_range v)
       haveI : CompleteSpace (span 𝕜 (range v)) := FiniteDimensional.complete 𝕜 _
       rwa [orthogonal_eq_bot_iff] at hsp)
 #align orthonormal_basis.mk_of_orthogonal_eq_bot OrthonormalBasis.mkOfOrthogonalEqBot

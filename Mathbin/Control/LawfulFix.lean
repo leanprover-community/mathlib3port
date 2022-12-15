@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.lawful_fix
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ theorem le_f_of_mem_approx {x} : x ∈ approxChain f → x ≤ f x := by
 #align part.fix.le_f_of_mem_approx Part.fix.le_f_of_mem_approx
 
 theorem approx_mem_approx_chain {i} : approx f i ∈ approxChain f :=
-  Stream.mem_of_nth_eq rfl
+  Stream'.mem_of_nth_eq rfl
 #align part.fix.approx_mem_approx_chain Part.fix.approx_mem_approx_chain
 
 end Fix

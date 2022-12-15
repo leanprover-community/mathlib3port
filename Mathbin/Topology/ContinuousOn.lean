@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.continuous_on
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -329,7 +329,7 @@ theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, Topologica
     infi_principal_finite hI, ← infi_inf_eq]
 #align nhds_within_pi_eq' nhds_within_pi_eq'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι}
     (hI : I.Finite) (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
     𝓝[pi I s] x =
@@ -1031,12 +1031,12 @@ theorem ContinuousOn.is_open_preimage {f : α → β} {s : Set α} {t : Set β} 
   rw [inter_comm, inter_eq_self_of_subset_left hp]
 #align continuous_on.is_open_preimage ContinuousOn.is_open_preimage
 
-theorem ContinuousOn.preimageClosedOfClosed {f : α → β} {s : Set α} {t : Set β}
+theorem ContinuousOn.preimage_closed_of_closed {f : α → β} {s : Set α} {t : Set β}
     (hf : ContinuousOn f s) (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ∩ f ⁻¹' t) := by
   rcases continuous_on_iff_is_closed.1 hf t ht with ⟨u, hu⟩
   rw [inter_comm, hu.2]
   apply IsClosed.inter hu.1 hs
-#align continuous_on.preimage_closed_of_closed ContinuousOn.preimageClosedOfClosed
+#align continuous_on.preimage_closed_of_closed ContinuousOn.preimage_closed_of_closed
 
 theorem ContinuousOn.preimage_interior_subset_interior_preimage {f : α → β} {s : Set α} {t : Set β}
     (hf : ContinuousOn f s) (hs : IsOpen s) : s ∩ f ⁻¹' interior t ⊆ s ∩ interior (f ⁻¹' t) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.list.sort
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ def Sorted :=
 #align list.sorted List.Sorted
 
 instance decidableSorted [DecidableRel r] (l : List α) : Decidable (Sorted r l) :=
-  List.decidablePairwise _
+  List.instDecidablePairwise _
 #align list.decidable_sorted List.decidableSorted
 
 @[simp]

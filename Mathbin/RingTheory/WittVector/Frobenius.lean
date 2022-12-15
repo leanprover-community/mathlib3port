@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.frobenius
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,7 @@ theorem map_frobenius_poly (n : ℕ) :
   intro n IH
   rw [X_in_terms_of_W_eq]
   simp only [AlgHom.map_sum, AlgHom.map_sub, AlgHom.map_mul, AlgHom.map_pow, bind₁_C_right]
-  have h1 : ↑p ^ n * ⅟ (↑p : ℚ) ^ n = 1 := by rw [← mul_pow, mul_inv_of_self, one_pow]
+  have h1 : ↑p ^ n * ⅟ (↑p : ℚ) ^ n = 1 := by rw [← mul_pow, mul_invOf_self, one_pow]
   rw [bind₁_X_right, Function.comp_apply, witt_polynomial_eq_sum_C_mul_X_pow, sum_range_succ,
     sum_range_succ, tsub_self, add_tsub_cancel_left, pow_zero, pow_one, pow_one, sub_mul, add_mul,
     add_mul, mul_right_comm, mul_right_comm (C (↑p ^ (n + 1))), ← C_mul, ← C_mul, pow_succ,
@@ -217,7 +217,7 @@ theorem map_frobenius_poly (n : ℕ) :
   rw [← C_eq_coe_nat]
   simp only [← RingHom.map_pow, ← C_mul]
   rw [C_inj]
-  simp only [inv_of_eq_inv, eq_int_cast, inv_pow, Int.cast_ofNat, Nat.cast_mul, Int.cast_mul]
+  simp only [invOf_eq_inv, eq_int_cast, inv_pow, Int.cast_ofNat, Nat.cast_mul, Int.cast_mul]
   rw [Rat.coe_nat_div _ _ (map_frobenius_poly.key₁ p (n - i) j hj)]
   simp only [Nat.cast_pow, pow_add, pow_one]
   suffices

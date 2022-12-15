@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,8 +113,8 @@ instance [CommSemiring S] [CommSemiring K] [HasSmul S K] [Algebra S R] [Algebra 
     [IsScalarTower S K R] : IsScalarTower S K (AdjoinRoot f) :=
   Submodule.Quotient.is_scalar_tower _ _
 
-instance [CommSemiring S] [CommSemiring K] [Algebra S R] [Algebra K R] [SmulCommClass S K R] :
-    SmulCommClass S K (AdjoinRoot f) :=
+instance [CommSemiring S] [CommSemiring K] [Algebra S R] [Algebra K R] [SMulCommClass S K R] :
+    SMulCommClass S K (AdjoinRoot f) :=
   Submodule.Quotient.smul_comm_class _ _
 
 @[simp]
@@ -846,7 +846,7 @@ noncomputable def quotientEquivQuotientMinpolyMap (pb : PowerBasis R S) (I : Ide
                 (algebraMap R (S ⧸ I.map (algebraMap R S)) x) =
               algebraMap R _ x
           from fun x => by
-          rw [← Ideal.Quotient.mk_algebra_map, Ideal.quotient_equiv_apply, RingHom.to_fun_eq_coe,
+          rw [← Ideal.Quotient.mk_algebra_map, Ideal.quotient_equiv_apply, RingHom.toFun_eq_coe,
             Ideal.quotient_map_mk, AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.coe_to_ring_hom,
             AlgEquiv.coe_ring_equiv, AlgEquiv.commutes, quotient.mk_algebra_map])).trans
     (AdjoinRoot.quotEquivQuotMap _ _)

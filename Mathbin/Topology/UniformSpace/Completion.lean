@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.uniform_space.completion
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -482,29 +482,29 @@ theorem dense_range_coe₃ :
 #align uniform_space.completion.dense_range_coe₃ UniformSpace.Completion.dense_range_coe₃
 
 @[elab_as_elim]
-theorem inductionOn {p : Completion α → Prop} (a : Completion α) (hp : IsClosed { a | p a })
+theorem induction_on {p : Completion α → Prop} (a : Completion α) (hp : IsClosed { a | p a })
     (ih : ∀ a : α, p a) : p a :=
-  isClosedProperty dense_range_coe hp ih a
-#align uniform_space.completion.induction_on UniformSpace.Completion.inductionOn
+  is_closed_property dense_range_coe hp ih a
+#align uniform_space.completion.induction_on UniformSpace.Completion.induction_on
 
 @[elab_as_elim]
-theorem inductionOn₂ {p : Completion α → Completion β → Prop} (a : Completion α) (b : Completion β)
+theorem induction_on₂ {p : Completion α → Completion β → Prop} (a : Completion α) (b : Completion β)
     (hp : IsClosed { x : Completion α × Completion β | p x.1 x.2 })
     (ih : ∀ (a : α) (b : β), p a b) : p a b :=
   have : ∀ x : Completion α × Completion β, p x.1 x.2 :=
-    (isClosedProperty dense_range_coe₂ hp) fun ⟨a, b⟩ => ih a b
+    (is_closed_property dense_range_coe₂ hp) fun ⟨a, b⟩ => ih a b
   this (a, b)
-#align uniform_space.completion.induction_on₂ UniformSpace.Completion.inductionOn₂
+#align uniform_space.completion.induction_on₂ UniformSpace.Completion.induction_on₂
 
 @[elab_as_elim]
-theorem inductionOn₃ {p : Completion α → Completion β → Completion γ → Prop} (a : Completion α)
+theorem induction_on₃ {p : Completion α → Completion β → Completion γ → Prop} (a : Completion α)
     (b : Completion β) (c : Completion γ)
     (hp : IsClosed { x : Completion α × Completion β × Completion γ | p x.1 x.2.1 x.2.2 })
     (ih : ∀ (a : α) (b : β) (c : γ), p a b c) : p a b c :=
   have : ∀ x : Completion α × Completion β × Completion γ, p x.1 x.2.1 x.2.2 :=
-    (isClosedProperty dense_range_coe₃ hp) fun ⟨a, b, c⟩ => ih a b c
+    (is_closed_property dense_range_coe₃ hp) fun ⟨a, b, c⟩ => ih a b c
   this (a, b, c)
-#align uniform_space.completion.induction_on₃ UniformSpace.Completion.inductionOn₃
+#align uniform_space.completion.induction_on₃ UniformSpace.Completion.induction_on₃
 
 theorem ext {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α → Y}
     (hf : Continuous f) (hg : Continuous g) (h : ∀ a : α, f a = g a) : f = g :=
@@ -623,7 +623,7 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
     ⟨completion.extension (SeparationQuotient.lift (coe : α → completion α)),
       completion.map Quotient.mk'', _, _⟩
   · intro a
-    refine' induction_on a (isClosedEq (continuous_map.comp continuous_extension) continuous_id) _
+    refine' induction_on a (is_closed_eq (continuous_map.comp continuous_extension) continuous_id) _
     rintro ⟨a⟩
     show
       completion.map Quotient.mk'' (completion.extension (SeparationQuotient.lift coe) ↑(⟦a⟧)) =
@@ -635,7 +635,7 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
   · intro a
     refine'
       completion.induction_on a
-        (isClosedEq (continuous_extension.comp continuous_map) continuous_id) fun a => _
+        (is_closed_eq (continuous_extension.comp continuous_map) continuous_id) fun a => _
     rw [map_coe uniform_continuous_quotient_mk,
         extension_coe (separation_quotient.uniform_continuous_lift _),
         SeparationQuotient.lift_mk (uniform_continuous_coe α) _] <;>

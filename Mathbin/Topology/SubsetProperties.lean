@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.subset_properties
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,7 +156,7 @@ theorem IsCompact.image {f : α → β} (hs : IsCompact s) (hf : Continuous f) :
 
 theorem IsCompact.adherence_nhdset {f : Filter α} (hs : IsCompact s) (hf₂ : f ≤ 𝓟 s)
     (ht₁ : IsOpen t) (ht₂ : ∀ a ∈ s, ClusterPt a f → a ∈ t) : t ∈ f :=
-  (Classical.by_cases mem_of_eq_bot) fun this : f ⊓ 𝓟 (tᶜ) ≠ ⊥ =>
+  (by_cases mem_of_eq_bot) fun this : f ⊓ 𝓟 (tᶜ) ≠ ⊥ =>
     let ⟨a, ha, (hfa : ClusterPt a <| f ⊓ 𝓟 (tᶜ))⟩ := @hs ⟨this⟩ <| inf_le_of_left_le hf₂
     have : a ∈ t := ht₂ a ha hfa.of_inf_left
     have : tᶜ ∩ t ∈ 𝓝[tᶜ] a := inter_mem_nhds_within _ (IsOpen.mem_nhds ht₁ this)
@@ -313,7 +313,7 @@ theorem IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed (Z : ℕ �
 #align
   is_compact.nonempty_Inter_of_sequence_nonempty_compact_closed IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀ i ∈ b, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
@@ -332,7 +332,7 @@ theorem is_compact_of_finite_subfamily_closed
       ∀ {ι : Type u} (Z : ι → Set α),
         (∀ i, IsClosed (Z i)) → (s ∩ ⋂ i, Z i) = ∅ → ∃ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i) = ∅) :
     IsCompact s := fun f hfn hfs =>
-  Classical.by_contradiction fun this : ¬∃ x ∈ s, ClusterPt x f =>
+  by_contradiction fun this : ¬∃ x ∈ s, ClusterPt x f =>
     have hf : ∀ x ∈ s, 𝓝 x ⊓ f = ⊥ := by simpa only [ClusterPt, not_exists, not_not, ne_bot_iff]
     have : ¬∃ x ∈ s, ∀ t ∈ f.sets, x ∈ closure t := fun ⟨x, hxs, hx⟩ => by
       have : ∅ ∈ 𝓝 x ⊓ f := by rw [empty_mem_iff_bot, hf x hxs]
@@ -343,7 +343,7 @@ theorem is_compact_of_finite_subfamily_closed
       have : 𝓝[t₂] x = ⊥ := by rwa [empty_mem_iff_bot] at this
       simp only [closure_eq_cluster_pts] at hx <;> exact (hx t₂ ht₂).Ne this
     let ⟨t, ht⟩ :=
-      h (fun i : f.sets => closure i.1) (fun i => isClosedClosure)
+      h (fun i : f.sets => closure i.1) (fun i => is_closed_closure)
         (by simpa [eq_empty_iff_forall_not_mem, not_exists] )
     have : (⋂ i ∈ t, Subtype.val i) ∈ f := t.Inter_mem_sets.2 fun i hi => i.2
     have : (s ∩ ⋂ i ∈ t, Subtype.val i) ∈ f := inter_mem (le_principal_iff.1 hfs) this
@@ -639,7 +639,7 @@ def coclosedCompact (α : Type _) [TopologicalSpace α] : Filter α :=
 theorem has_basis_coclosed_compact :
     (Filter.coclosedCompact α).HasBasis (fun s => IsClosed s ∧ IsCompact s) compl := by
   simp only [Filter.coclosedCompact, infi_and']
-  refine' has_basis_binfi_principal' _ ⟨∅, isClosedEmpty, is_compact_empty⟩
+  refine' has_basis_binfi_principal' _ ⟨∅, is_closed_empty, is_compact_empty⟩
   rintro s ⟨hs₁, hs₂⟩ t ⟨ht₁, ht₂⟩
   exact
     ⟨s ∪ t,
@@ -1286,7 +1286,7 @@ protected theorem ClosedEmbedding.locally_compact_space [LocallyCompactSpace β]
 
 protected theorem IsClosed.locally_compact_space [LocallyCompactSpace α] {s : Set α}
     (hs : IsClosed s) : LocallyCompactSpace s :=
-  (closedEmbeddingSubtypeCoe hs).LocallyCompactSpace
+  (closed_embedding_subtype_coe hs).LocallyCompactSpace
 #align is_closed.locally_compact_space IsClosed.locally_compact_space
 
 protected theorem OpenEmbedding.locally_compact_space [LocallyCompactSpace β] {f : α → β}
@@ -1429,7 +1429,7 @@ protected noncomputable def LocallyFinite.encodable {ι : Type _} {f : ι → Se
   @Encodable.ofEquiv _ _ (hf.countable_univ hne).toEncodable (Equiv.Set.univ _).symm
 #align locally_finite.encodable LocallyFinite.encodable
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
 the neighborhoods `f x`, `x ∈ t`, cover the whole set `s`. -/
@@ -1453,7 +1453,7 @@ point `x` to a neighborhood of `x`, then for some countable set `s`, the neighbo
 theorem countable_cover_nhds_of_sigma_compact {f : α → Set α} (hf : ∀ x, f x ∈ 𝓝 x) :
     ∃ s : Set α, s.Countable ∧ (⋃ x ∈ s, f x) = univ := by
   simp only [← nhds_within_univ] at hf
-  rcases countable_cover_nhds_within_of_sigma_compact isClosedUniv fun x _ => hf x with
+  rcases countable_cover_nhds_within_of_sigma_compact is_closed_univ fun x _ => hf x with
     ⟨s, -, hsc, hsU⟩
   exact ⟨s, hsc, univ_subset_iff.1 hsU⟩
 #align countable_cover_nhds_of_sigma_compact countable_cover_nhds_of_sigma_compact
@@ -1578,9 +1578,9 @@ protected theorem IsClopen.is_open (hs : IsClopen s) : IsOpen s :=
   hs.1
 #align is_clopen.is_open IsClopen.is_open
 
-protected theorem IsClopen.isClosed (hs : IsClopen s) : IsClosed s :=
+protected theorem IsClopen.is_closed (hs : IsClopen s) : IsClosed s :=
   hs.2
-#align is_clopen.is_closed IsClopen.isClosed
+#align is_clopen.is_closed IsClopen.is_closed
 
 theorem is_clopen_iff_frontier_eq_empty {s : Set α} : IsClopen s ↔ frontier s = ∅ := by
   rw [IsClopen, ← closure_eq_iff_is_closed, ← interior_eq_iff_is_open, frontier, diff_eq_empty]
@@ -1602,16 +1602,16 @@ theorem IsClopen.inter {s t : Set α} (hs : IsClopen s) (ht : IsClopen t) : IsCl
 
 @[simp]
 theorem is_clopen_empty : IsClopen (∅ : Set α) :=
-  ⟨is_open_empty, isClosedEmpty⟩
+  ⟨is_open_empty, is_closed_empty⟩
 #align is_clopen_empty is_clopen_empty
 
 @[simp]
 theorem is_clopen_univ : IsClopen (univ : Set α) :=
-  ⟨is_open_univ, isClosedUniv⟩
+  ⟨is_open_univ, is_closed_univ⟩
 #align is_clopen_univ is_clopen_univ
 
 theorem IsClopen.compl {s : Set α} (hs : IsClopen s) : IsClopen (sᶜ) :=
-  ⟨hs.2.is_open_compl, hs.1.isClosedCompl⟩
+  ⟨hs.2.is_open_compl, hs.1.is_closed_compl⟩
 #align is_clopen.compl IsClopen.compl
 
 @[simp]
@@ -1631,12 +1631,12 @@ theorem IsClopen.prod {s : Set α} {t : Set β} (hs : IsClopen s) (ht : IsClopen
 
 theorem is_clopen_Union {β : Type _} [Finite β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) :
     IsClopen (⋃ i, s i) :=
-  ⟨is_open_Union (forall_and.1 h).1, isClosedUnion (forall_and.1 h).2⟩
+  ⟨is_open_Union (forall_and.1 h).1, is_closed_Union (forall_and.1 h).2⟩
 #align is_clopen_Union is_clopen_Union
 
 theorem is_clopen_bUnion {β : Type _} {s : Set β} {f : β → Set α} (hs : s.Finite)
     (h : ∀ i ∈ s, IsClopen <| f i) : IsClopen (⋃ i ∈ s, f i) :=
-  ⟨is_open_bUnion fun i hi => (h i hi).1, isClosedBUnion hs fun i hi => (h i hi).2⟩
+  ⟨is_open_bUnion fun i hi => (h i hi).1, is_closed_bUnion hs fun i hi => (h i hi).2⟩
 #align is_clopen_bUnion is_clopen_bUnion
 
 theorem is_clopen_bUnion_finset {β : Type _} {s : Finset β} {f : β → Set α}
@@ -1646,12 +1646,12 @@ theorem is_clopen_bUnion_finset {β : Type _} {s : Finset β} {f : β → Set α
 
 theorem is_clopen_Inter {β : Type _} [Finite β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) :
     IsClopen (⋂ i, s i) :=
-  ⟨is_open_Inter (forall_and.1 h).1, isClosedInter (forall_and.1 h).2⟩
+  ⟨is_open_Inter (forall_and.1 h).1, is_closed_Inter (forall_and.1 h).2⟩
 #align is_clopen_Inter is_clopen_Inter
 
 theorem is_clopen_bInter {β : Type _} {s : Set β} (hs : s.Finite) {f : β → Set α}
     (h : ∀ i ∈ s, IsClopen (f i)) : IsClopen (⋂ i ∈ s, f i) :=
-  ⟨is_open_bInter hs fun i hi => (h i hi).1, isClosedBInter fun i hi => (h i hi).2⟩
+  ⟨is_open_bInter hs fun i hi => (h i hi).1, is_closed_bInter fun i hi => (h i hi).2⟩
 #align is_clopen_bInter is_clopen_bInter
 
 theorem is_clopen_bInter_finset {β : Type _} {s : Finset β} {f : β → Set α}
@@ -1667,7 +1667,7 @@ theorem IsClopen.preimage {s : Set β} (h : IsClopen s) {f : α → β} (hf : Co
 theorem ContinuousOn.preimage_clopen_of_clopen {f : α → β} {s : Set α} {t : Set β}
     (hf : ContinuousOn f s) (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ∩ f ⁻¹' t) :=
   ⟨ContinuousOn.preimage_open_of_open hf hs.1 ht.1,
-    ContinuousOn.preimageClosedOfClosed hf hs.2 ht.2⟩
+    ContinuousOn.preimage_closed_of_closed hf hs.2 ht.2⟩
 #align continuous_on.preimage_clopen_of_clopen ContinuousOn.preimage_clopen_of_clopen
 
 /-- The intersection of a disjoint covering by two open sets of a clopen set will be clopen. -/
@@ -1684,17 +1684,17 @@ theorem is_clopen_inter_of_disjoint_cover_clopen {Z a b : Set α} (h : IsClopen 
 
 @[simp]
 theorem is_clopen_discrete [DiscreteTopology α] (x : Set α) : IsClopen x :=
-  ⟨is_open_discrete _, isClosedDiscrete _⟩
+  ⟨is_open_discrete _, is_closed_discrete _⟩
 #align is_clopen_discrete is_clopen_discrete
 
 theorem clopen_range_sigma_mk {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)] {i : ι} :
     IsClopen (Set.range (@Sigma.mk ι σ i)) :=
-  ⟨open_embedding_sigma_mk.open_range, closedEmbeddingSigmaMk.closedRange⟩
+  ⟨open_embedding_sigma_mk.open_range, closed_embedding_sigma_mk.closed_range⟩
 #align clopen_range_sigma_mk clopen_range_sigma_mk
 
 protected theorem QuotientMap.is_clopen_preimage {f : α → β} (hf : QuotientMap f) {s : Set β} :
     IsClopen (f ⁻¹' s) ↔ IsClopen s :=
-  and_congr hf.is_open_preimage hf.isClosedPreimage
+  and_congr hf.is_open_preimage hf.is_closed_preimage
 #align quotient_map.is_clopen_preimage QuotientMap.is_clopen_preimage
 
 variable {X : Type _} [TopologicalSpace X]
@@ -1704,7 +1704,7 @@ theorem continuous_bool_indicator_iff_clopen (U : Set X) :
   constructor
   · intro hc
     rw [← U.preimage_bool_indicator_tt]
-    exact ⟨hc.is_open_preimage _ trivial, continuous_iff_is_closed.mp hc _ (isClosedDiscrete _)⟩
+    exact ⟨hc.is_open_preimage _ trivial, continuous_iff_is_closed.mp hc _ (is_closed_discrete _)⟩
   · refine' fun hU => ⟨fun s hs => _⟩
     rcases U.preimage_bool_indicator s with (h | h | h | h) <;> rw [h]
     exacts[is_open_univ, hU.1, hU.2.is_open_compl, is_open_empty]
@@ -1792,21 +1792,22 @@ def irreducibleComponents (α : Type _) [TopologicalSpace α] : Set (Set α) :=
   maximals (· ≤ ·) { s : Set α | IsIrreducible s }
 #align irreducible_components irreducibleComponents
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
-theorem isClosedOfMemIrreducibleComponents (s) (_ : s ∈ irreducibleComponents α) : IsClosed s := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
+theorem is_closed_of_mem_irreducible_components (s) (_ : s ∈ irreducibleComponents α) :
+    IsClosed s := by 
   rw [← closure_eq_iff_is_closed, eq_comm]
   exact subset_closure.antisymm (H.2 H.1.closure subset_closure)
-#align is_closed_of_mem_irreducible_components isClosedOfMemIrreducibleComponents
+#align is_closed_of_mem_irreducible_components is_closed_of_mem_irreducible_components
 
 theorem irreducible_components_eq_maximals_closed (α : Type _) [TopologicalSpace α] :
     irreducibleComponents α = maximals (· ≤ ·) { s : Set α | IsClosed s ∧ IsIrreducible s } := by
   ext s
   constructor
   · intro H
-    exact ⟨⟨isClosedOfMemIrreducibleComponents _ H, H.1⟩, fun x h e => H.2 h.2 e⟩
+    exact ⟨⟨is_closed_of_mem_irreducible_components _ H, H.1⟩, fun x h e => H.2 h.2 e⟩
   · intro H
     refine' ⟨H.1.2, fun x h e => _⟩
-    have : closure x ≤ s := H.2 ⟨isClosedClosure, h.closure⟩ (e.trans subset_closure)
+    have : closure x ≤ s := H.2 ⟨is_closed_closure, h.closure⟩ (e.trans subset_closure)
     exact le_trans subset_closure this
 #align irreducible_components_eq_maximals_closed irreducible_components_eq_maximals_closed
 
@@ -1841,9 +1842,9 @@ theorem irreducible_component_mem_irreducible_components (x : α) :
 #align
   irreducible_component_mem_irreducible_components irreducible_component_mem_irreducible_components
 
-theorem isClosedIrreducibleComponent {x : α} : IsClosed (irreducibleComponent x) :=
-  isClosedOfMemIrreducibleComponents _ (irreducible_component_mem_irreducible_components x)
-#align is_closed_irreducible_component isClosedIrreducibleComponent
+theorem is_closed_irreducible_component {x : α} : IsClosed (irreducibleComponent x) :=
+  is_closed_of_mem_irreducible_components _ (irreducible_component_mem_irreducible_components x)
+#align is_closed_irreducible_component is_closed_irreducible_component
 
 /- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] [] -/
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
@@ -2026,7 +2027,7 @@ theorem is_irreducible_iff_sUnion_closed {s : Set α} :
           solve_by_elim [Finset.mem_insert_of_mem]
       · solve_by_elim [Finset.mem_insert_self]
       · rw [sUnion_eq_bUnion]
-        apply isClosedBUnion (Finset.finite_to_set Z)
+        apply is_closed_bUnion (Finset.finite_to_set Z)
         · intros
           solve_by_elim [Finset.mem_insert_of_mem]
       · simpa using H
@@ -2051,7 +2052,7 @@ theorem subset_closure_inter_of_is_preirreducible_of_is_open {S U : Set α} (hS 
     (hU : IsOpen U) (h : (S ∩ U).Nonempty) : S ⊆ closure (S ∩ U) := by
   by_contra h'
   obtain ⟨x, h₁, h₂, h₃⟩ :=
-    hS _ (closure (S ∩ U)ᶜ) hU (is_open_compl_iff.mpr isClosedClosure) h
+    hS _ (closure (S ∩ U)ᶜ) hU (is_open_compl_iff.mpr is_closed_closure) h
       (set.inter_compl_nonempty_iff.mpr h')
   exact h₃ (subset_closure ⟨h₁, h₂⟩)
 #align

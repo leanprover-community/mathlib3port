@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.convex.caratheodory
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,13 +122,13 @@ noncomputable def minCardFinsetOfMemConvexHull : Finset E :=
 #align caratheodory.min_card_finset_of_mem_convex_hull Caratheodory.minCardFinsetOfMemConvexHull
 
 theorem min_card_finset_of_mem_convex_hull_subseteq : ↑(minCardFinsetOfMemConvexHull hx) ⊆ s :=
-  (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).1
+  (Function.argminOn_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).1
 #align
   caratheodory.min_card_finset_of_mem_convex_hull_subseteq Caratheodory.min_card_finset_of_mem_convex_hull_subseteq
 
 theorem mem_min_card_finset_of_mem_convex_hull :
     x ∈ convexHull 𝕜 (minCardFinsetOfMemConvexHull hx : Set E) :=
-  (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).2
+  (Function.argminOn_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).2
 #align
   caratheodory.mem_min_card_finset_of_mem_convex_hull Caratheodory.mem_min_card_finset_of_mem_convex_hull
 
@@ -141,7 +141,7 @@ theorem min_card_finset_of_mem_convex_hull_nonempty : (minCardFinsetOfMemConvexH
 
 theorem min_card_finset_of_mem_convex_hull_card_le_card {t : Finset E} (ht₁ : ↑t ⊆ s)
     (ht₂ : x ∈ convexHull 𝕜 (t : Set E)) : (minCardFinsetOfMemConvexHull hx).card ≤ t.card :=
-  Function.argmin_on_le _ _ _ ⟨ht₁, ht₂⟩
+  Function.argminOn_le _ _ _ ⟨ht₁, ht₂⟩
 #align
   caratheodory.min_card_finset_of_mem_convex_hull_card_le_card Caratheodory.min_card_finset_of_mem_convex_hull_card_le_card
 
@@ -196,7 +196,7 @@ theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull �
   rw [convex_hull_eq_union] at hx
   simp only [exists_prop, Set.mem_Union] at hx
   obtain ⟨t, ht₁, ht₂, ht₃⟩ := hx
-  simp only [t.convex_hull_eq, exists_prop, Set.mem_set_of_eq] at ht₃
+  simp only [t.convex_hull_eq, exists_prop, Set.mem_setOf_eq] at ht₃
   obtain ⟨w, hw₁, hw₂, hw₃⟩ := ht₃
   let t' := t.filter fun i => w i ≠ 0
   refine' ⟨t', t'.fintype_coe_sort, (coe : t' → E), w ∘ (coe : t' → E), _, _, _, _, _⟩

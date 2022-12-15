@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -884,10 +884,10 @@ variable {V : Type _} [AddCommGroup V] [Module K V] [FiniteDimensional K V]
 
 variable {W : Type _} [AddCommGroup W] [Module K W] [FiniteDimensional K W]
 
-instance finiteDimensional : FiniteDimensional K (V →ₗ[K] W) :=
-  LinearEquiv.finiteDimensional
+instance finite_dimensional : FiniteDimensional K (V →ₗ[K] W) :=
+  LinearEquiv.finite_dimensional
     (LinearMap.toMatrix (Basis.ofVectorSpace K V) (Basis.ofVectorSpace K W)).symm
-#align linear_map.finite_dimensional LinearMap.finiteDimensional
+#align linear_map.finite_dimensional LinearMap.finite_dimensional
 
 section
 
@@ -896,9 +896,9 @@ variable {A : Type _} [Ring A] [Algebra K A] [Module A V] [IsScalarTower K A V] 
 
 /-- Linear maps over a `k`-algebra are finite dimensional (over `k`) if both the source and
 target are, since they form a subspace of all `k`-linear maps. -/
-instance finiteDimensional' : FiniteDimensional K (V →ₗ[A] W) :=
-  FiniteDimensional.ofInjective (restrictScalarsLinearMap K A V W) (restrict_scalars_injective _)
-#align linear_map.finite_dimensional' LinearMap.finiteDimensional'
+instance finite_dimensional' : FiniteDimensional K (V →ₗ[A] W) :=
+  FiniteDimensional.of_injective (restrictScalarsLinearMap K A V W) (restrict_scalars_injective _)
+#align linear_map.finite_dimensional' LinearMap.finite_dimensional'
 
 end
 

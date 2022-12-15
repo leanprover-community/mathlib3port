@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.intervals
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,14 +33,14 @@ variable {α : Type u} {β : Type v} {γ : Type w} {s₂ s₁ s : Finset α} {a 
 variable [CommMonoid β]
 
 @[to_additive]
-theorem prod_Ico_add' [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α]
+theorem prod_Ico_add' [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder α]
     (f : α → β) (a b c : α) : (∏ x in ico a b, f (x + c)) = ∏ x in ico (a + c) (b + c), f x := by
   rw [← map_add_right_Ico, Prod_map]
   rfl
 #align finset.prod_Ico_add' Finset.prod_Ico_add'
 
 @[to_additive]
-theorem prod_Ico_add [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α]
+theorem prod_Ico_add [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder α]
     (f : α → β) (a b c : α) : (∏ x in ico a b, f (c + x)) = ∏ x in ico (a + c) (b + c), f x := by
   convert prod_Ico_add' f a b c
   simp_rw [add_comm]

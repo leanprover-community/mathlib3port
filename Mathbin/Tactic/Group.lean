@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module tactic.group
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,12 +63,11 @@ unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
         expr ``(neg_neg), expr ``(tsub_self), expr ``(Int.ofNat_add), expr ``(Int.ofNat_mul),
         expr ``(Int.ofNat_zero), expr ``(Int.ofNat_one), expr ``(Int.ofNat_bit0),
         expr ``(Int.ofNat_bit1), expr ``(Int.mul_neg_eq_neg_mul_symm),
-        expr ``(Int.neg_mul_eq_neg_mul_symm), symm_expr ``(zpow_coe_nat),
-        symm_expr ``(zpow_neg_one), symm_expr ``(zpow_mul), symm_expr ``(zpow_add_one),
-        symm_expr ``(zpow_one_add), symm_expr ``(zpow_add), expr ``(mul_zpow_neg_one),
-        expr ``(zpow_zero), expr ``(mul_zpow), symm_expr ``(mul_assoc), expr ``(zpow_trick),
-        expr ``(zpow_trick_one), expr ``(zpow_trick_one'), expr ``(zpow_trick_sub),
-        expr ``(Tactic.Ring.horner)]
+        expr ``(Int.neg_mul_eq_neg_mul_symm), symm_expr ``(zpow_ofNat), symm_expr ``(zpow_neg_one),
+        symm_expr ``(zpow_mul), symm_expr ``(zpow_add_one), symm_expr ``(zpow_one_add),
+        symm_expr ``(zpow_add), expr ``(mul_zpow_neg_one), expr ``(zpow_zero), expr ``(mul_zpow),
+        symm_expr ``(mul_assoc), expr ``(zpow_trick), expr ``(zpow_trick_one),
+        expr ``(zpow_trick_one'), expr ``(zpow_trick_sub), expr ``(Tactic.Ring.horner)]
       [] locat >>
     skip
 #align tactic.aux_group₁ tactic.aux_group₁

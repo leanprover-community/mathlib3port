@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.cofiltered_limit
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
       refine' this.imp fun j hj => _
       refine' ⟨⟨hj.elim, fun A => _⟩, _⟩
       · convert is_open_empty
-        exact @Set.eq_empty_of_is_empty _ hj _
+        exact @Set.eq_empty_of_isEmpty _ hj _
       · ext x
         exact hj.elim' (C.π.app j x)
     simp only [← not_nonempty_iff, ← not_forall]

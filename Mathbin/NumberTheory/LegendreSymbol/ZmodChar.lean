@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.zmod_char
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,8 +69,8 @@ theorem χ₄_int_eq_if_mod_four (n : ℤ) :
     χ₄ n = if n % 2 = 0 then 0 else if n % 4 = 1 then 1 else -1 := by
   have help : ∀ m : ℤ, 0 ≤ m → m < 4 → χ₄ m = if m % 2 = 0 then 0 else if m = 1 then 1 else -1 := by
     decide
-  rw [← Int.mod_mod_of_dvd n (by norm_num : (2 : ℤ) ∣ 4), ← Zmod.int_cast_mod n 4]
-  exact help (n % 4) (Int.mod_nonneg n (by norm_num)) (Int.mod_lt n (by norm_num))
+  rw [← Int.emod_emod_of_dvd n (by norm_num : (2 : ℤ) ∣ 4), ← Zmod.int_cast_mod n 4]
+  exact help (n % 4) (Int.emod_nonneg n (by norm_num)) (Int.emod_lt n (by norm_num))
 #align zmod.χ₄_int_eq_if_mod_four Zmod.χ₄_int_eq_if_mod_four
 
 theorem χ₄_nat_eq_if_mod_four (n : ℕ) :
@@ -162,8 +162,8 @@ theorem χ₈_int_eq_if_mod_eight (n : ℤ) :
   have help :
     ∀ m : ℤ, 0 ≤ m → m < 8 → χ₈ m = if m % 2 = 0 then 0 else if m = 1 ∨ m = 7 then 1 else -1 := by
     decide
-  rw [← Int.mod_mod_of_dvd n (by norm_num : (2 : ℤ) ∣ 8), ← Zmod.int_cast_mod n 8]
-  exact help (n % 8) (Int.mod_nonneg n (by norm_num)) (Int.mod_lt n (by norm_num))
+  rw [← Int.emod_emod_of_dvd n (by norm_num : (2 : ℤ) ∣ 8), ← Zmod.int_cast_mod n 8]
+  exact help (n % 8) (Int.emod_nonneg n (by norm_num)) (Int.emod_lt n (by norm_num))
 #align zmod.χ₈_int_eq_if_mod_eight Zmod.χ₈_int_eq_if_mod_eight
 
 theorem χ₈_nat_eq_if_mod_eight (n : ℕ) :
@@ -194,8 +194,8 @@ theorem χ₈'_int_eq_if_mod_eight (n : ℤ) :
   have help :
     ∀ m : ℤ, 0 ≤ m → m < 8 → χ₈' m = if m % 2 = 0 then 0 else if m = 1 ∨ m = 3 then 1 else -1 := by
     decide
-  rw [← Int.mod_mod_of_dvd n (by norm_num : (2 : ℤ) ∣ 8), ← Zmod.int_cast_mod n 8]
-  exact help (n % 8) (Int.mod_nonneg n (by norm_num)) (Int.mod_lt n (by norm_num))
+  rw [← Int.emod_emod_of_dvd n (by norm_num : (2 : ℤ) ∣ 8), ← Zmod.int_cast_mod n 8]
+  exact help (n % 8) (Int.emod_nonneg n (by norm_num)) (Int.emod_lt n (by norm_num))
 #align zmod.χ₈'_int_eq_if_mod_eight Zmod.χ₈'_int_eq_if_mod_eight
 
 theorem χ₈'_nat_eq_if_mod_eight (n : ℕ) :

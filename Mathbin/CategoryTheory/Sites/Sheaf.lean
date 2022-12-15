@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.sheaf
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -252,7 +252,7 @@ def IsSheaf.amalgamate {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X :
     hx ⟨Y₁, Y₂, Z, g₁, g₂, f₁, f₂, h₁, h₂, w⟩
 #align category_theory.presheaf.is_sheaf.amalgamate CategoryTheory.Presheaf.IsSheaf.amalgamate
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem IsSheaf.amalgamate_map {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X : C} {P : Cᵒᵖ ⥤ A}
     (hP : Presheaf.IsSheaf J P) (S : J.cover X) (x : ∀ I : S.arrow, E ⟶ P.obj (op I.y))
     (hx : ∀ I : S.Relation, x I.fst ≫ P.map I.g₁.op = x I.snd ≫ P.map I.g₂.op) (I : S.arrow) :

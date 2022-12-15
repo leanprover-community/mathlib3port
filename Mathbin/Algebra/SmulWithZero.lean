@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.smul_with_zero
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ variable (R M)
 /-- `smul_with_zero` is a class consisting of a Type `R` with `0 ∈ R` and a scalar multiplication
 of `R` on a Type `M` with `0`, such that the equality `r • m = 0` holds if at least one among `r`
 or `m` equals `0`. -/
-class SmulWithZero [Zero R] [Zero M] extends SmulZeroClass R M where
+class SmulWithZero [Zero R] [Zero M] extends SMulZeroClass R M where
   zero_smul : ∀ m : M, (0 : R) • m = 0
 #align smul_with_zero SmulWithZero
 
@@ -191,7 +191,7 @@ section GroupWithZero
 
 variable {α β : Type _} [GroupWithZero α] [GroupWithZero β] [MulActionWithZero α β]
 
-theorem smul_inv₀ [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) :
+theorem smul_inv₀ [SMulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) :
     (c • x)⁻¹ = c⁻¹ • x⁻¹ := by 
   obtain rfl | hc := eq_or_ne c 0
   · simp only [inv_zero, zero_smul]
@@ -206,7 +206,7 @@ end GroupWithZero
 /-- Scalar multiplication as a monoid homomorphism with zero. -/
 @[simps]
 def smulMonoidWithZeroHom {α β : Type _} [MonoidWithZero α] [MulZeroOneClass β]
-    [MulActionWithZero α β] [IsScalarTower α β β] [SmulCommClass α β β] : α × β →*₀ β :=
+    [MulActionWithZero α β] [IsScalarTower α β β] [SMulCommClass α β β] : α × β →*₀ β :=
   { smulMonoidHom with map_zero' := smul_zero _ }
 #align smul_monoid_with_zero_hom smulMonoidWithZeroHom
 

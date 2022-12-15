@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.constructions
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -966,23 +966,23 @@ theorem is_open_range_inr : IsOpen (range (inr : β → Sum α β)) :=
   open_embedding_inr.2
 #align is_open_range_inr is_open_range_inr
 
-theorem isClosedRangeInl : IsClosed (range (inl : α → Sum α β)) := by
+theorem is_closed_range_inl : IsClosed (range (inl : α → Sum α β)) := by
   rw [← is_open_compl_iff, compl_range_inl]
   exact is_open_range_inr
-#align is_closed_range_inl isClosedRangeInl
+#align is_closed_range_inl is_closed_range_inl
 
-theorem isClosedRangeInr : IsClosed (range (inr : β → Sum α β)) := by
+theorem is_closed_range_inr : IsClosed (range (inr : β → Sum α β)) := by
   rw [← is_open_compl_iff, compl_range_inr]
   exact is_open_range_inl
-#align is_closed_range_inr isClosedRangeInr
+#align is_closed_range_inr is_closed_range_inr
 
-theorem closedEmbeddingInl : ClosedEmbedding (inl : α → Sum α β) :=
-  ⟨embedding_inl, isClosedRangeInl⟩
-#align closed_embedding_inl closedEmbeddingInl
+theorem closed_embedding_inl : ClosedEmbedding (inl : α → Sum α β) :=
+  ⟨embedding_inl, is_closed_range_inl⟩
+#align closed_embedding_inl closed_embedding_inl
 
-theorem closedEmbeddingInr : ClosedEmbedding (inr : β → Sum α β) :=
-  ⟨embedding_inr, isClosedRangeInr⟩
-#align closed_embedding_inr closedEmbeddingInr
+theorem closed_embedding_inr : ClosedEmbedding (inr : β → Sum α β) :=
+  ⟨embedding_inr, is_closed_range_inr⟩
+#align closed_embedding_inr closed_embedding_inr
 
 theorem nhds_inl (x : α) : 𝓝 (inl x : Sum α β) = map inl (𝓝 x) :=
   (open_embedding_inl.map_nhds_eq _).symm
@@ -1051,10 +1051,10 @@ theorem embedding_subtype_coe : Embedding (coe : Subtype p → α) :=
   ⟨⟨rfl⟩, Subtype.coe_injective⟩
 #align embedding_subtype_coe embedding_subtype_coe
 
-theorem closedEmbeddingSubtypeCoe (h : IsClosed { a | p a }) :
+theorem closed_embedding_subtype_coe (h : IsClosed { a | p a }) :
     ClosedEmbedding (coe : Subtype p → α) :=
   ⟨embedding_subtype_coe, by rwa [Subtype.range_coe_subtype]⟩
-#align closed_embedding_subtype_coe closedEmbeddingSubtypeCoe
+#align closed_embedding_subtype_coe closed_embedding_subtype_coe
 
 @[continuity]
 theorem continuous_subtype_val : Continuous (@Subtype.val α p) :=
@@ -1086,12 +1086,12 @@ theorem IsOpenMap.restrict {f : α → β} (hf : IsOpenMap f) {s : Set α} (hs :
   hf.comp hs.is_open_map_subtype_coe
 #align is_open_map.restrict IsOpenMap.restrict
 
-theorem IsClosed.closedEmbeddingSubtypeCoe {s : Set α} (hs : IsClosed s) :
+theorem IsClosed.closed_embedding_subtype_coe {s : Set α} (hs : IsClosed s) :
     ClosedEmbedding (coe : { x // x ∈ s } → α) :=
   { induced := rfl
     inj := Subtype.coe_injective
-    closedRange := (Subtype.range_coe : range coe = s).symm ▸ hs }
-#align is_closed.closed_embedding_subtype_coe IsClosed.closedEmbeddingSubtypeCoe
+    closed_range := (Subtype.range_coe : range coe = s).symm ▸ hs }
+#align is_closed.closed_embedding_subtype_coe IsClosed.closed_embedding_subtype_coe
 
 @[continuity]
 theorem Continuous.subtype_mk {f : β → α} (h : Continuous f) (hp : ∀ x, p (f x)) :
@@ -1152,9 +1152,9 @@ theorem continuous_subtype_is_closed_cover {ι : Sort _} {f : α → β} (c : ι
     Continuous f :=
   continuous_iff_is_closed.mpr fun s hs => by
     have : ∀ i, IsClosed ((coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) := fun i =>
-      (closedEmbeddingSubtypeCoe (h_is_closed _)).IsClosedMap _ (hs.Preimage (f_cont i))
+      (closed_embedding_subtype_coe (h_is_closed _)).IsClosedMap _ (hs.Preimage (f_cont i))
     have : IsClosed (⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) :=
-      LocallyFinite.isClosedUnion (h_lf.Subset fun i x ⟨⟨x', hx'⟩, _, HEq⟩ => HEq ▸ hx') this
+      LocallyFinite.is_closed_Union (h_lf.Subset fun i x ⟨⟨x', hx'⟩, _, HEq⟩ => HEq ▸ hx') this
     have : f ⁻¹' s = ⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s) := by
       apply Set.ext
       have : ∀ x : α, f x ∈ s ↔ ∃ i : ι, c i x ∧ f x ∈ s := fun x =>
@@ -1349,11 +1349,11 @@ theorem is_open_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hi : i.Finite)
   rw [pi_def] <;> exact (is_open_bInter hi) fun a ha => (hs _ ha).Preimage (continuous_apply _)
 #align is_open_set_pi is_open_set_pi
 
-theorem isClosedSetPi {i : Set ι} {s : ∀ a, Set (π a)} (hs : ∀ a ∈ i, IsClosed (s a)) :
+theorem is_closed_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hs : ∀ a ∈ i, IsClosed (s a)) :
     IsClosed (pi i s) := by
   rw [pi_def] <;>
-    exact isClosedInter fun a => isClosedInter fun ha => (hs _ ha).Preimage (continuous_apply _)
-#align is_closed_set_pi isClosedSetPi
+    exact is_closed_Inter fun a => is_closed_Inter fun ha => (hs _ ha).Preimage (continuous_apply _)
+#align is_closed_set_pi is_closed_set_pi
 
 theorem mem_nhds_of_pi_mem_nhds {I : Set ι} {s : ∀ i, Set (π i)} (a : ∀ i, π i) (hs : I.pi s ∈ 𝓝 a)
     {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) := by
@@ -1463,7 +1463,7 @@ variable [Finite ι] [∀ i, DiscreteTopology (π i)]
 instance PiCat.discreteTopology : DiscreteTopology (∀ i, π i) :=
   singletons_open_iff_discrete.mp fun x => by
     rw [show {x} = ⋂ i, { y : ∀ i, π i | y i = x i } by ext;
-        simp only [funext_iff, Set.mem_singleton_iff, Set.mem_Inter, Set.mem_set_of_eq]]
+        simp only [funext_iff, Set.mem_singleton_iff, Set.mem_Inter, Set.mem_setOf_eq]]
     exact
       is_open_Inter fun i => (continuous_apply i).is_open_preimage {x i} (is_open_discrete {x i})
 #align Pi.discrete_topology PiCat.discreteTopology
@@ -1509,25 +1509,25 @@ theorem is_closed_map_sigma_mk {i : ι} : IsClosedMap (@Sigma.mk ι σ i) := by
   rcases eq_or_ne j i with (rfl | hne)
   · rwa [Set.preimage_image_eq _ sigma_mk_injective]
   · rw [preimage_image_sigma_mk_of_ne hne]
-    exact isClosedEmpty
+    exact is_closed_empty
 #align is_closed_map_sigma_mk is_closed_map_sigma_mk
 
-theorem isClosedRangeSigmaMk {i : ι} : IsClosed (Set.range (@Sigma.mk ι σ i)) :=
-  is_closed_map_sigma_mk.closedRange
-#align is_closed_range_sigma_mk isClosedRangeSigmaMk
+theorem is_closed_range_sigma_mk {i : ι} : IsClosed (Set.range (@Sigma.mk ι σ i)) :=
+  is_closed_map_sigma_mk.closed_range
+#align is_closed_range_sigma_mk is_closed_range_sigma_mk
 
 theorem open_embedding_sigma_mk {i : ι} : OpenEmbedding (@Sigma.mk ι σ i) :=
   open_embedding_of_continuous_injective_open continuous_sigma_mk sigma_mk_injective
     is_open_map_sigma_mk
 #align open_embedding_sigma_mk open_embedding_sigma_mk
 
-theorem closedEmbeddingSigmaMk {i : ι} : ClosedEmbedding (@Sigma.mk ι σ i) :=
-  closedEmbeddingOfContinuousInjectiveClosed continuous_sigma_mk sigma_mk_injective
+theorem closed_embedding_sigma_mk {i : ι} : ClosedEmbedding (@Sigma.mk ι σ i) :=
+  closed_embedding_of_continuous_injective_closed continuous_sigma_mk sigma_mk_injective
     is_closed_map_sigma_mk
-#align closed_embedding_sigma_mk closedEmbeddingSigmaMk
+#align closed_embedding_sigma_mk closed_embedding_sigma_mk
 
 theorem embedding_sigma_mk {i : ι} : Embedding (@Sigma.mk ι σ i) :=
-  closedEmbeddingSigmaMk.1
+  closed_embedding_sigma_mk.1
 #align embedding_sigma_mk embedding_sigma_mk
 
 theorem Sigma.nhds_mk (i : ι) (x : σ i) : 𝓝 (⟨i, x⟩ : Sigma σ) = map (Sigma.mk i) (𝓝 x) :=

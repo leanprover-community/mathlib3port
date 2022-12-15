@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.convergence
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ theorem not_frequently_of_upcrossings_lt_top (hab : a < b) (hω : upcrossings a 
 upcrossings. -/
 theorem upcrossings_eq_top_of_frequently_lt (hab : a < b) (h₁ : ∃ᶠ n in at_top, f n ω < a)
     (h₂ : ∃ᶠ n in at_top, b < f n ω) : upcrossings a b f ω = ∞ :=
-  Classical.by_contradiction fun h => not_frequently_of_upcrossings_lt_top hab h ⟨h₁, h₂⟩
+  by_contradiction fun h => not_frequently_of_upcrossings_lt_top hab h ⟨h₁, h₂⟩
 #align
   measure_theory.upcrossings_eq_top_of_frequently_lt MeasureTheory.upcrossings_eq_top_of_frequently_lt
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.ray
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,12 +183,12 @@ theorem same_ray_map_iff (e : M ≃ₗ[R] N) : SameRay R (e x) (e y) ↔ SameRay
 
 /-- If two vectors are on the same ray then both scaled by the same action are also on the same
 ray. -/
-theorem smul {S : Type _} [Monoid S] [DistribMulAction S M] [SmulCommClass R S M]
+theorem smul {S : Type _} [Monoid S] [DistribMulAction S M] [SMulCommClass R S M]
     (h : SameRay R x y) (s : S) : SameRay R (s • x) (s • y) :=
   h.map (s • (LinearMap.id : M →ₗ[R] M))
 #align same_ray.smul SameRay.smul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_pos, ",", expr mul_pos, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_pos, ",", expr mul_pos, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- If `x` and `y` are on the same ray as `z`, then so is `x + y`. -/
 theorem add_left (hx : SameRay R x z) (hy : SameRay R y z) : SameRay R (x + y) z := by
   rcases eq_or_ne x 0 with (rfl | hx₀); · rwa [zero_add]
@@ -199,7 +199,7 @@ theorem add_left (hx : SameRay R x z) (hy : SameRay R y z) : SameRay R (x + y) z
   refine' Or.inr (Or.inr ⟨rx * ry, ry * rz₁ + rx * rz₂, mul_pos hrx hry, _, _⟩)
   ·
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_pos, \",\", expr mul_pos, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_pos, \",\", expr mul_pos, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   · simp only [mul_smul, smul_add, add_smul, ← Hx, ← Hy]
     rw [smul_comm]
 #align same_ray.add_left SameRay.add_left
@@ -321,7 +321,7 @@ instance {R : Type _} :
   mul_smul a b m := Subtype.ext <| mul_smul a b _
   one_smul m := Subtype.ext <| one_smul _ _
 
-variable [SmulCommClass R G M]
+variable [SMulCommClass R G M]
 
 /-- Any invertible action preserves the non-zeroness of rays. This is primarily of interest when
 `G = Rˣ` -/
@@ -438,7 +438,7 @@ theorem coe_neg {R : Type _} (v : RayVector R M) : ↑(-v) = -(v : M) :=
 
 /-- Negating a nonzero vector twice produces the original vector. -/
 instance {R : Type _} :
-    HasInvolutiveNeg (RayVector R M) where 
+    InvolutiveNeg (RayVector R M) where 
   neg := Neg.neg
   neg_neg v := by rw [Subtype.ext_iff, coe_neg, coe_neg, neg_neg]
 
@@ -468,7 +468,7 @@ namespace Module.Ray
 variable {R}
 
 /-- Negating a ray twice produces the original ray. -/
-instance : HasInvolutiveNeg (Module.Ray R
+instance : InvolutiveNeg (Module.Ray R
         M) where 
   neg := Neg.neg
   neg_neg x := Quotient.ind (fun a => congr_arg Quotient.mk'' <| neg_neg _) x

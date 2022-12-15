@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.epi_mono
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ structure SplitMono {X Y : C} (f : X ⟶ Y) where
 
 restate_axiom split_mono.id'
 
-attribute [simp, reassoc] split_mono.id
+attribute [simp, reassoc.1] split_mono.id
 
 /-- `is_split_mono f` is the assertion that `f` admits a retraction -/
 class IsSplitMono {X Y : C} (f : X ⟶ Y) : Prop where
@@ -80,7 +80,7 @@ structure SplitEpi {X Y : C} (f : X ⟶ Y) where
 
 restate_axiom split_epi.id'
 
-attribute [simp, reassoc] split_epi.id
+attribute [simp, reassoc.1] split_epi.id
 
 /-- `is_split_epi f` is the assertion that `f` admits a section -/
 class IsSplitEpi {X Y : C} (f : X ⟶ Y) : Prop where
@@ -97,7 +97,7 @@ noncomputable def retraction {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : Y �
   hf.exists_split_mono.some.retraction
 #align category_theory.retraction CategoryTheory.retraction
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem IsSplitMono.id {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : f ≫ retraction f = 𝟙 X :=
   hf.exists_split_mono.some.id
 #align category_theory.is_split_mono.id CategoryTheory.IsSplitMono.id
@@ -125,7 +125,7 @@ noncomputable def section_ {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : Y ⟶ X
   hf.exists_split_epi.some.section_
 #align category_theory.section_ CategoryTheory.section_
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem IsSplitEpi.id {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : section_ f ≫ f = 𝟙 Y :=
   hf.exists_split_epi.some.id
 #align category_theory.is_split_epi.id CategoryTheory.IsSplitEpi.id

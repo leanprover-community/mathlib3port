@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.dioph
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -502,7 +502,7 @@ theorem dioph_fn_iff_pfun (f : (α → ℕ) → ℕ) : DiophFn f = @DiophPfun α
 theorem abs_poly_dioph (p : Poly α) : DiophFn fun v => (p v).natAbs :=
   (of_no_dummies _ ((p.map some - Poly.proj none) * (p.map some + Poly.proj none))) fun v => by
     dsimp
-    exact Int.eq_nat_abs_iff_mul_eq_zero
+    exact Int.eq_natAbs_iff_mul_eq_zero
 #align dioph.abs_poly_dioph Dioph.abs_poly_dioph
 
 theorem proj_dioph (i : α) : DiophFn fun v => v i :=

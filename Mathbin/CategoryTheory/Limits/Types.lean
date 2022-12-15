@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.limits.types
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ def limitConeIsLimit (F : J ⥤ Type max v u) :
 
 See <https://stacks.math.columbia.edu/tag/002U>.
 -/
-instance has_limits_of_size :
+instance hasLimitsOfSize :
     HasLimitsOfSize.{v}
       (Type
         max v
@@ -71,8 +71,7 @@ instance has_limits_of_size :
         has_limit.mk
           { Cone := limit_cone F
             IsLimit := limit_cone_is_limit F } }
-#align
-  category_theory.limits.types.has_limits_of_size CategoryTheory.Limits.Types.has_limits_of_size
+#align category_theory.limits.types.has_limits_of_size CategoryTheory.Limits.Types.hasLimitsOfSize
 
 instance : HasLimits (Type u) :=
   types.has_limits_of_size.{u, u}
@@ -268,7 +267,7 @@ def colimitCoconeIsColimit (F : J ⥤ Type max v u) :
 
 See <https://stacks.math.columbia.edu/tag/002U>.
 -/
-instance has_colimits_of_size :
+instance hasColimitsOfSize :
     HasColimitsOfSize.{v}
       (Type
         max v
@@ -278,7 +277,7 @@ instance has_colimits_of_size :
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
 #align
-  category_theory.limits.types.has_colimits_of_size CategoryTheory.Limits.Types.has_colimits_of_size
+  category_theory.limits.types.has_colimits_of_size CategoryTheory.Limits.Types.hasColimitsOfSize
 
 instance : HasColimits (Type u) :=
   types.has_colimits_of_size.{u, u}

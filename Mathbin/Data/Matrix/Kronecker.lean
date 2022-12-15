@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.kronecker
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -267,7 +267,7 @@ theorem smul_kronecker [Monoid R] [Monoid α] [MulAction R α] [IsScalarTower R 
   kronecker_map_smul_left _ _ (fun _ _ => smul_mul_assoc _ _ _) _ _
 #align matrix.smul_kronecker Matrix.smul_kronecker
 
-theorem kronecker_smul [Monoid R] [Monoid α] [MulAction R α] [SmulCommClass R α α] (r : R)
+theorem kronecker_smul [Monoid R] [Monoid α] [MulAction R α] [SMulCommClass R α α] (r : R)
     (A : Matrix l m α) (B : Matrix n p α) : A ⊗ₖ (r • B) = r • A ⊗ₖ B :=
   kronecker_map_smul_right _ _ (fun _ _ => mul_smul_comm _ _ _) _ _
 #align matrix.kronecker_smul Matrix.kronecker_smul

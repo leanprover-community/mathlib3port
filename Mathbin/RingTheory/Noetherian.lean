@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module ring_theory.noetherian
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,7 +309,7 @@ theorem is_noetherian_iff_fg_well_founded :
   constructor
   · intro H
     let f : α ↪o Submodule R M := OrderEmbedding.subtype _
-    exact OrderEmbedding.well_founded f.dual (is_noetherian_iff_well_founded.mp H)
+    exact OrderEmbedding.wellFounded f.dual (is_noetherian_iff_well_founded.mp H)
   · intro H
     constructor
     intro N
@@ -345,7 +345,7 @@ variable {R M}
 theorem set_has_maximal_iff_noetherian :
     (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, M' ≤ I → I = M') ↔
       IsNoetherian R M :=
-  by rw [is_noetherian_iff_well_founded, WellFounded.well_founded_iff_has_max']
+  by rw [is_noetherian_iff_well_founded, WellFounded.wellFounded_iff_has_max']
 #align set_has_maximal_iff_noetherian set_has_maximal_iff_noetherian
 
 /-- A module is Noetherian iff every increasing chain of submodules stabilizes. -/
@@ -372,7 +372,7 @@ variable {R M P : Type _} {N : Type w} [Ring R] [AddCommGroup M] [Module R M] [A
 theorem finite_of_linear_independent [Nontrivial R] [IsNoetherian R M] {s : Set M}
     (hs : LinearIndependent R (coe : s → M)) : s.Finite := by
   refine'
-    Classical.by_contradiction fun hf =>
+    by_contradiction fun hf =>
       (RelEmbedding.well_founded_iff_no_descending_seq.1 (well_founded_submodule_gt R M)).elim' _
   have f : ℕ ↪ s := Set.Infinite.natEmbedding s hf
   have : ∀ n, coe ∘ f '' { m | m ≤ n } ⊆ s := by
@@ -515,13 +515,13 @@ instance (priority := 100) is_noetherian_of_subsingleton (R M) [Subsingleton R] 
 theorem is_noetherian_of_submodule_of_noetherian (R M) [Semiring R] [AddCommMonoid M] [Module R M]
     (N : Submodule R M) (h : IsNoetherian R M) : IsNoetherian R N := by
   rw [is_noetherian_iff_well_founded] at h⊢
-  exact OrderEmbedding.well_founded (Submodule.MapSubtype.orderEmbedding N).dual h
+  exact OrderEmbedding.wellFounded (Submodule.MapSubtype.orderEmbedding N).dual h
 #align is_noetherian_of_submodule_of_noetherian is_noetherian_of_submodule_of_noetherian
 
 instance Submodule.Quotient.is_noetherian {R} [Ring R] {M} [AddCommGroup M] [Module R M]
     (N : Submodule R M) [h : IsNoetherian R M] : IsNoetherian R (M ⧸ N) := by
   rw [is_noetherian_iff_well_founded] at h⊢
-  exact OrderEmbedding.well_founded (Submodule.ComapMkq.orderEmbedding N).dual h
+  exact OrderEmbedding.wellFounded (Submodule.ComapMkq.orderEmbedding N).dual h
 #align submodule.quotient.is_noetherian Submodule.Quotient.is_noetherian
 
 /-- If `M / S / R` is a scalar tower, and `M / R` is Noetherian, then `M / S` is
@@ -586,7 +586,7 @@ theorem is_noetherian_span_of_finite (R) {M} [Ring R] [AddCommGroup M] [Module R
 theorem is_noetherian_ring_of_surjective (R) [Ring R] (S) [Ring S] (f : R →+* S)
     (hf : Function.Surjective f) [H : IsNoetherianRing R] : IsNoetherianRing S := by
   rw [is_noetherian_ring_iff, is_noetherian_iff_well_founded] at H⊢
-  exact OrderEmbedding.well_founded (Ideal.orderEmbeddingOfSurjective f hf).dual H
+  exact OrderEmbedding.wellFounded (Ideal.orderEmbeddingOfSurjective f hf).dual H
 #align is_noetherian_ring_of_surjective is_noetherian_ring_of_surjective
 
 instance is_noetherian_ring_range {R} [Ring R] {S} [Ring S] (f : R →+* S) [IsNoetherianRing R] :

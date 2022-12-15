@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Kershaw
 
 ! This file was ported from Lean 3 source module category_theory.triangulated.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ restate_axiom triangle_morphism.comm₂'
 
 restate_axiom triangle_morphism.comm₃'
 
-attribute [simp, reassoc] triangle_morphism.comm₁ triangle_morphism.comm₂ triangle_morphism.comm₃
+attribute [simp, reassoc.1] triangle_morphism.comm₁ triangle_morphism.comm₂ triangle_morphism.comm₃
 
 /-- The identity triangle morphism.
 -/

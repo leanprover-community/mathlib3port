@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.functor.flat
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,7 @@ theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [Prese
     RepresentablyFlat F :=
   ⟨fun X =>
     haveI : has_finite_limits (structured_arrow X F) := by
-      apply has_finite_limits_of_has_finite_limits_of_size.{v₁} (structured_arrow X F)
+      apply hasFiniteLimitsOfHasFiniteLimitsOfSize.{v₁} (structured_arrow X F)
       intro J sJ fJ; skip; constructor
     cofiltered_of_has_finite_limits⟩
 #align
@@ -572,11 +572,11 @@ attribute [local simp] eq_to_hom_map
                    (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
                    ["with" ["_" `e₂]])
                   []
-                  (Std.Tactic.simpa
+                  (Std.Tactic.Simpa.simpa
                    "simpa"
                    []
                    []
-                   (Std.Tactic.simpaArgsRest
+                   (Std.Tactic.Simpa.simpaArgsRest
                     []
                     []
                     []
@@ -971,11 +971,11 @@ attribute [local simp] eq_to_hom_map
                   (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
                   ["with" ["_" `e₂]])
                  []
-                 (Std.Tactic.simpa
+                 (Std.Tactic.Simpa.simpa
                   "simpa"
                   []
                   []
-                  (Std.Tactic.simpaArgsRest
+                  (Std.Tactic.Simpa.simpaArgsRest
                    []
                    []
                    []
@@ -1714,11 +1714,11 @@ attribute [local simp] eq_to_hom_map
               (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
               ["with" ["_" `e₂]])
              []
-             (Std.Tactic.simpa
+             (Std.Tactic.Simpa.simpa
               "simpa"
               []
               []
-              (Std.Tactic.simpaArgsRest
+              (Std.Tactic.Simpa.simpaArgsRest
                []
                []
                []
@@ -1741,18 +1741,23 @@ attribute [local simp] eq_to_hom_map
            (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
            ["with" ["_" `e₂]])
           []
-          (Std.Tactic.simpa
+          (Std.Tactic.Simpa.simpa
            "simpa"
            []
            []
-           (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `e₁.symm.trans [`e₂])]))])))
+           (Std.Tactic.Simpa.simpaArgsRest
+            []
+            []
+            []
+            []
+            ["using" (Term.app `e₁.symm.trans [`e₂])]))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Std.Tactic.simpa
+      (Std.Tactic.Simpa.simpa
        "simpa"
        []
        []
-       (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `e₁.symm.trans [`e₂])]))
+       (Std.Tactic.Simpa.simpaArgsRest [] [] [] [] ["using" (Term.app `e₁.symm.trans [`e₂])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `e₁.symm.trans [`e₂])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'

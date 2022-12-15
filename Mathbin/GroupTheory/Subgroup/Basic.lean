@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,10 +150,10 @@ theorem div_mem {x y : M} (hx : x ∈ H) (hy : y ∈ H) : x / y ∈ H := by
 @[to_additive]
 theorem zpow_mem {x : M} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K
   | (n : ℕ) => by 
-    rw [zpow_coe_nat]
+    rw [zpow_ofNat]
     exact pow_mem hx n
   | -[n+1] => by 
-    rw [zpow_neg_succ_of_nat]
+    rw [zpow_negSucc]
     exact inv_mem (pow_mem hx n.succ)
 #align zpow_mem zpow_mem
 
@@ -642,7 +642,7 @@ protected theorem zpow_mem {x : G} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K :=
   zpow_mem hx
 #align subgroup.zpow_mem Subgroup.zpow_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- Construct a subgroup from a nonempty set that is closed under division. -/
 @[to_additive "Construct a subgroup from a nonempty set that is closed under subtraction"]
 def ofDiv (s : Set G) (hsn : s.Nonempty) (hs : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x * y⁻¹ ∈ s) :
@@ -1454,11 +1454,11 @@ theorem map_symm_eq_iff_map_eq {H : Subgroup N} {e : G ≃* N} : H.map ↑e.symm
   by 
   constructor <;> rintro rfl
   ·
-    rw [map_map, ← MulEquiv.coe_monoid_hom_trans, MulEquiv.symm_trans_self,
-      MulEquiv.coe_monoid_hom_refl, map_id]
+    rw [map_map, ← MulEquiv.coe_monoidHom_trans, MulEquiv.symm_trans_self,
+      MulEquiv.coe_monoidHom_refl, map_id]
   ·
-    rw [map_map, ← MulEquiv.coe_monoid_hom_trans, MulEquiv.self_trans_symm,
-      MulEquiv.coe_monoid_hom_refl, map_id]
+    rw [map_map, ← MulEquiv.coe_monoidHom_trans, MulEquiv.self_trans_symm,
+      MulEquiv.coe_monoidHom_refl, map_id]
 #align subgroup.map_symm_eq_iff_map_eq Subgroup.map_symm_eq_iff_map_eq
 
 @[to_additive]
@@ -1986,14 +1986,14 @@ theorem characteristic_iff_le_map : H.Characteristic ↔ ∀ ϕ : G ≃* G, H �
 #align subgroup.characteristic_iff_le_map Subgroup.characteristic_iff_le_map
 
 @[to_additive]
-instance bot_characteristic : Characteristic (⊥ : Subgroup G) :=
+instance botCharacteristic : Characteristic (⊥ : Subgroup G) :=
   characteristic_iff_le_map.mpr fun ϕ => bot_le
-#align subgroup.bot_characteristic Subgroup.bot_characteristic
+#align subgroup.bot_characteristic Subgroup.botCharacteristic
 
 @[to_additive]
-instance top_characteristic : Characteristic (⊤ : Subgroup G) :=
+instance topCharacteristic : Characteristic (⊤ : Subgroup G) :=
   characteristic_iff_map_le.mpr fun ϕ => le_top
-#align subgroup.top_characteristic Subgroup.top_characteristic
+#align subgroup.top_characteristic Subgroup.topCharacteristic
 
 variable (G)
 
@@ -2028,11 +2028,11 @@ instance decidableMemCenter [DecidableEq G] [Fintype G] : DecidablePred (· ∈ 
 #align subgroup.decidable_mem_center Subgroup.decidableMemCenter
 
 @[to_additive]
-instance center_characteristic : (center G).Characteristic := by
+instance centerCharacteristic : (center G).Characteristic := by
   refine' characteristic_iff_comap_le.mpr fun ϕ g hg h => _
   rw [← ϕ.injective.eq_iff, ϕ.map_mul, ϕ.map_mul]
   exact hg (ϕ h)
-#align subgroup.center_characteristic Subgroup.center_characteristic
+#align subgroup.center_characteristic Subgroup.centerCharacteristic
 
 theorem CommGroup.center_eq_top {G : Type _} [CommGroup G] : center G = ⊤ := by
   rw [eq_top_iff']
@@ -3260,7 +3260,7 @@ theorem zpow_mem_zpowers (g : G) (k : ℤ) : g ^ k ∈ zpowers g :=
 
 @[simp]
 theorem npow_mem_zpowers (g : G) (k : ℕ) : g ^ k ∈ zpowers g :=
-  zpow_coe_nat g k ▸ zpow_mem_zpowers g k
+  zpow_ofNat g k ▸ zpow_mem_zpowers g k
 #align subgroup.npow_mem_zpowers Subgroup.npow_mem_zpowers
 
 @[simp]
@@ -3360,10 +3360,10 @@ theorem of_mul_image_zpowers_eq_zmultiples_of_mul {x : G} :
   · rintro ⟨z, ⟨m, hm⟩, hz2⟩
     use m
     simp only
-    rwa [← of_mul_zpow, hm]
+    rwa [← ofMul_zpow, hm]
   · rintro ⟨n, hn⟩
     refine' ⟨x ^ n, ⟨n, rfl⟩, _⟩
-    rwa [of_mul_zpow]
+    rwa [ofMul_zpow]
 #align of_mul_image_zpowers_eq_zmultiples_of_mul of_mul_image_zpowers_eq_zmultiples_of_mul
 
 theorem of_add_image_zmultiples_eq_zpowers_of_add {x : A} :
@@ -3724,14 +3724,14 @@ theorem normal_closure_eq_top_of {N : Subgroup G} [hn : N.Normal] {g g' : G} {hg
     refine' ⟨⟨c⁻¹ * x * c, _⟩, _⟩
     · have h := hn.conj_mem _ hx c⁻¹
       rwa [inv_inv] at h
-    simp only [MonoidHom.cod_restrict_apply, MulEquiv.coe_to_monoid_hom, MulAut.conj_apply, coe_mk,
+    simp only [MonoidHom.cod_restrict_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply, coe_mk,
       MonoidHom.restrict_apply, Subtype.mk_eq_mk, ← mul_assoc, mul_inv_self, one_mul]
     rw [mul_assoc, mul_inv_self, mul_one]
   have ht' := map_mono (eq_top_iff.1 ht)
   rw [← MonoidHom.range_eq_map, MonoidHom.range_top_of_surjective _ hs] at ht'
   refine' eq_top_iff.2 (le_trans ht' (map_le_iff_le_comap.2 (normal_closure_le_normal _)))
   rw [Set.singleton_subset_iff, SetLike.mem_coe]
-  simp only [MonoidHom.cod_restrict_apply, MulEquiv.coe_to_monoid_hom, MulAut.conj_apply, coe_mk,
+  simp only [MonoidHom.cod_restrict_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply, coe_mk,
     MonoidHom.restrict_apply, mem_comap]
   exact subset_normal_closure (Set.mem_singleton _)
 #align is_conj.normal_closure_eq_top_of IsConj.normal_closure_eq_top_of
@@ -3761,14 +3761,14 @@ theorem smul_def [MulAction G α] {S : Subgroup G} (g : S) (m : α) : g • m = 
 #align subgroup.smul_def Subgroup.smul_def
 
 @[to_additive]
-instance smul_comm_class_left [MulAction G β] [HasSmul α β] [SmulCommClass G α β] (S : Subgroup G) :
-    SmulCommClass S α β :=
+instance smul_comm_class_left [MulAction G β] [HasSmul α β] [SMulCommClass G α β] (S : Subgroup G) :
+    SMulCommClass S α β :=
   S.toSubmonoid.smul_comm_class_left
 #align subgroup.smul_comm_class_left Subgroup.smul_comm_class_left
 
 @[to_additive]
-instance smul_comm_class_right [HasSmul α β] [MulAction G β] [SmulCommClass α G β]
-    (S : Subgroup G) : SmulCommClass α S β :=
+instance smul_comm_class_right [HasSmul α β] [MulAction G β] [SMulCommClass α G β]
+    (S : Subgroup G) : SMulCommClass α S β :=
   S.toSubmonoid.smul_comm_class_right
 #align subgroup.smul_comm_class_right Subgroup.smul_comm_class_right
 
@@ -3777,7 +3777,7 @@ instance [HasSmul α β] [MulAction G α] [MulAction G β] [IsScalarTower G α �
     IsScalarTower S α β :=
   S.toSubmonoid.IsScalarTower
 
-instance [MulAction G α] [HasFaithfulSmul G α] (S : Subgroup G) : HasFaithfulSmul S α :=
+instance [MulAction G α] [FaithfulSMul G α] (S : Subgroup G) : FaithfulSMul S α :=
   S.toSubmonoid.HasFaithfulSmul
 
 /-- The action by a subgroup is the action by the underlying group. -/
@@ -3789,12 +3789,12 @@ instance [Monoid α] [MulDistribMulAction G α] (S : Subgroup G) : MulDistribMul
   S.toSubmonoid.MulDistribMulAction
 
 /-- The center of a group acts commutatively on that group. -/
-instance center.smul_comm_class_left : SmulCommClass (center G) G G :=
+instance center.smul_comm_class_left : SMulCommClass (center G) G G :=
   Submonoid.center.smul_comm_class_left
 #align subgroup.center.smul_comm_class_left Subgroup.center.smul_comm_class_left
 
 /-- The center of a group acts commutatively on that group. -/
-instance center.smul_comm_class_right : SmulCommClass G (center G) G :=
+instance center.smul_comm_class_right : SMulCommClass G (center G) G :=
   Submonoid.center.smul_comm_class_right
 #align subgroup.center.smul_comm_class_right Subgroup.center.smul_comm_class_right
 
@@ -3881,15 +3881,15 @@ theorem saturated_iff_zpow {H : Subgroup G} :
     Saturated H ↔ ∀ (n : ℤ) (g : G), g ^ n ∈ H → n = 0 ∨ g ∈ H := by
   constructor
   · rintro hH ⟨n⟩ g hgn
-    · simp only [Int.coe_nat_eq_zero, Int.ofNat_eq_coe, zpow_coe_nat] at hgn⊢
+    · simp only [Int.coe_nat_eq_zero, Int.ofNat_eq_coe, zpow_ofNat] at hgn⊢
       exact hH hgn
     · suffices g ^ (n + 1) ∈ H by 
         refine' (hH this).imp _ id
         simp only [IsEmpty.forall_iff, Nat.succ_ne_zero]
-      simpa only [inv_mem_iff, zpow_neg_succ_of_nat] using hgn
+      simpa only [inv_mem_iff, zpow_negSucc] using hgn
   · intro h n g hgn
     specialize h n g
-    simp only [Int.coe_nat_eq_zero, zpow_coe_nat] at h
+    simp only [Int.coe_nat_eq_zero, zpow_ofNat] at h
     apply h hgn
 #align subgroup.saturated_iff_zpow Subgroup.saturated_iff_zpow
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module category_theory.sites.types
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -207,7 +207,7 @@ theorem types_grothendieck_topology_eq_canonical :
           funext fun α =>
             Set.ext fun S =>
               ⟨fun hs x =>
-                Classical.by_contradiction fun hsx =>
+                by_contradiction fun hsx =>
                   have :
                     (fun _ => ULift.up true : (yoneda.obj (ULift Bool)).obj (op PUnit)) = fun _ =>
                       ULift.up false :=

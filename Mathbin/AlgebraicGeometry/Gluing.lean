@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.gluing
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ instance : PreservesColimit 𝖣.diagram.multispan forgetToTop := by
   infer_instance
 
 instance : HasMulticoequalizer 𝖣.diagram :=
-  has_colimit_of_created _ forgetToLocallyRingedSpace
+  hasColimitOfCreated _ forgetToLocallyRingedSpace
 
 /-- The glued scheme of a glued space. -/
 abbrev glued : SchemeCat :=
@@ -170,7 +170,7 @@ theorem ι_jointly_surjective (x : 𝖣.glued.carrier) :
 #align
   algebraic_geometry.Scheme.glue_data.ι_jointly_surjective AlgebraicGeometry.SchemeCat.GlueData.ι_jointly_surjective
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j ≫ D.ι i :=
   𝖣.glue_condition i j
 #align
@@ -289,7 +289,7 @@ def gluedCoverT' (x y z : 𝒰.J) :
 #align
   algebraic_geometry.Scheme.open_cover.glued_cover_t' AlgebraicGeometry.SchemeCat.OpenCover.gluedCoverT'
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem glued_cover_t'_fst_fst (x y z : 𝒰.J) :
     𝒰.gluedCoverT' x y z ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
   delta glued_cover_t'
@@ -297,7 +297,7 @@ theorem glued_cover_t'_fst_fst (x y z : 𝒰.J) :
 #align
   algebraic_geometry.Scheme.open_cover.glued_cover_t'_fst_fst AlgebraicGeometry.SchemeCat.OpenCover.glued_cover_t'_fst_fst
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem glued_cover_t'_fst_snd (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
   delta glued_cover_t'
@@ -305,7 +305,7 @@ theorem glued_cover_t'_fst_snd (x y z : 𝒰.J) :
 #align
   algebraic_geometry.Scheme.open_cover.glued_cover_t'_fst_snd AlgebraicGeometry.SchemeCat.OpenCover.glued_cover_t'_fst_snd
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem glued_cover_t'_snd_fst (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
   delta glued_cover_t'
@@ -313,7 +313,7 @@ theorem glued_cover_t'_snd_fst (x y z : 𝒰.J) :
 #align
   algebraic_geometry.Scheme.open_cover.glued_cover_t'_snd_fst AlgebraicGeometry.SchemeCat.OpenCover.glued_cover_t'_snd_fst
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem glued_cover_t'_snd_snd (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst := by
   delta glued_cover_t'
@@ -373,7 +373,7 @@ def fromGlued : 𝒰.gluedCover.glued ⟶ X := by
 #align
   algebraic_geometry.Scheme.open_cover.from_glued AlgebraicGeometry.SchemeCat.OpenCover.fromGlued
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_from_glued (x : 𝒰.J) : 𝒰.gluedCover.ι x ≫ 𝒰.fromGlued = 𝒰.map x :=
   multicoequalizer.π_desc _ _ _ _ _
 #align
@@ -482,7 +482,7 @@ def glueMorphisms {Y : SchemeCat} (f : ∀ x, 𝒰.obj x ⟶ Y)
 #align
   algebraic_geometry.Scheme.open_cover.glue_morphisms AlgebraicGeometry.SchemeCat.OpenCover.glueMorphisms
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_glue_morphisms {Y : SchemeCat} (f : ∀ x, 𝒰.obj x ⟶ Y)
     (hf : ∀ x y, (pullback.fst : pullback (𝒰.map x) (𝒰.map y) ⟶ _) ≫ f x = pullback.snd ≫ f y)
     (x : 𝒰.J) : 𝒰.map x ≫ 𝒰.glueMorphisms f hf = f x := by

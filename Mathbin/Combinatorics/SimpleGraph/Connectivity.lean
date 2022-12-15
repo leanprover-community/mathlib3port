@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.connectivity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1935,7 +1935,7 @@ theorem set_walk_self_length_zero_eq (u : V) : { p : G.Walk u u | p.length = 0 }
 theorem set_walk_length_zero_eq_of_ne {u v : V} (h : u ≠ v) :
     { p : G.Walk u v | p.length = 0 } = ∅ := by 
   ext p
-  simp only [Set.mem_set_of_eq, Set.mem_empty_iff_false, iff_false_iff]
+  simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false_iff]
   exact fun h' => absurd (walk.eq_of_length_eq_zero h') h
 #align simple_graph.set_walk_length_zero_eq_of_ne SimpleGraph.set_walk_length_zero_eq_of_ne
 
@@ -1946,8 +1946,8 @@ theorem set_walk_length_succ_eq (u v : V) (n : ℕ) :
   ext p
   cases' p with _ _ w _ huw pwv
   · simp [eq_comm]
-  · simp only [Nat.succ_eq_add_one, Set.mem_set_of_eq, walk.length_cons, add_left_inj,
-      Set.mem_Union, Set.mem_image, exists_prop]
+  · simp only [Nat.succ_eq_add_one, Set.mem_setOf_eq, walk.length_cons, add_left_inj, Set.mem_Union,
+      Set.mem_image, exists_prop]
     constructor
     · rintro rfl
       exact ⟨w, huw, pwv, rfl, rfl, HEq.rfl⟩
@@ -1986,12 +1986,12 @@ theorem coe_finset_walk_length_eq (n : ℕ) (u v : V) :
       Finset.mem_univ, Set.Union_true]
     ext p
     simp only [mem_neighbor_set, Finset.coe_map, embedding.coe_fn_mk, Set.Union_coe_set,
-      Set.mem_Union, Set.mem_image, Finset.mem_coe, Set.mem_set_of_eq]
+      Set.mem_Union, Set.mem_image, Finset.mem_coe, Set.mem_setOf_eq]
     congr with w
     congr with h
     congr with q
     have := set.ext_iff.mp (ih w v) q
-    simp only [Finset.mem_coe, Set.mem_set_of_eq] at this
+    simp only [Finset.mem_coe, Set.mem_setOf_eq] at this
     rw [← this]
     rfl
 #align simple_graph.coe_finset_walk_length_eq SimpleGraph.coe_finset_walk_length_eq

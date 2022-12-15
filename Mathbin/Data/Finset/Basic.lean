@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -588,7 +588,7 @@ theorem not_nonempty_iff_eq_empty {s : Finset α} : ¬s.Nonempty ↔ s = ∅ :=
 #align finset.not_nonempty_iff_eq_empty Finset.not_nonempty_iff_eq_empty
 
 theorem eq_empty_or_nonempty (s : Finset α) : s = ∅ ∨ s.Nonempty :=
-  Classical.by_cases Or.inl fun h => Or.inr (nonempty_of_ne_empty h)
+  by_cases Or.inl fun h => Or.inr (nonempty_of_ne_empty h)
 #align finset.eq_empty_or_nonempty Finset.eq_empty_or_nonempty
 
 @[simp, norm_cast]
@@ -602,7 +602,7 @@ theorem coe_eq_empty {s : Finset α} : (s : Set α) = ∅ ↔ s = ∅ := by rw [
 
 @[simp]
 theorem is_empty_coe_sort {s : Finset α} : IsEmpty ↥s ↔ s = ∅ := by
-  simpa using @Set.is_empty_coe_sort α s
+  simpa using @Set.isEmpty_coe_sort α s
 #align finset.is_empty_coe_sort Finset.is_empty_coe_sort
 
 instance : IsEmpty (∅ : Finset α) :=
@@ -1138,7 +1138,7 @@ theorem insert_inj_on (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ) :
   (insert_inj h).1
 #align finset.insert_inj_on Finset.insert_inj_on
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem ssubset_iff : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   exact_mod_cast @Set.ssubset_iff_insert α s t
 #align finset.ssubset_iff Finset.ssubset_iff
@@ -2323,7 +2323,7 @@ theorem piecewise_eq_of_not_mem {i : α} (hi : i ∉ s) : s.piecewise f g i = g 
   simp [piecewise, hi]
 #align finset.piecewise_eq_of_not_mem Finset.piecewise_eq_of_not_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀ i ∈ s, f i = f' i)
     (hg : ∀ (i) (_ : i ∉ s), g i = g' i) : s.piecewise f g = s.piecewise f' g' :=
   funext fun i => if_ctx_congr Iff.rfl (hf i) (hg i)
@@ -2413,7 +2413,7 @@ theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {
   piecewise_cases s f g (fun y => h x ≤ y) (Hf x) (Hg x)
 #align finset.le_piecewise_of_le_of_le Finset.le_piecewise_of_le_of_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : ∀ x ∈ s, f x ≤ f' x) (Hg : ∀ (x) (_ : x ∉ s), g x ≤ g' x) :
     s.piecewise f g ≤ s.piecewise f' g' := fun x => by by_cases hx : x ∈ s <;> simp [hx, *]
@@ -3327,7 +3327,7 @@ theorem disj_Union_filter_eq_of_maps_to [DecidableEq β] {s : Finset α} {t : Fi
     (t.disjUnion (fun a => s.filter fun c => f c = a) fun x' hx y' hy hne =>
         disjoint_filter_filter' _ _
           (by 
-            simp_rw [Pi.disjoint_iff, PropCat.disjoint_iff]
+            simp_rw [Pi.disjoint_iff, Prop.disjoint_iff]
             rintro i ⟨rfl, rfl⟩
             exact hne rfl)) =
       s :=
@@ -3630,7 +3630,9 @@ theorem disjoint_to_finset_iff_disjoint : Disjoint l.toFinset l'.toFinset ↔ l.
 
 end List
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Assert that we define `finset` without the material on `list.sublists`.
 -- Note that we cannot use `list.sublists` itself as that is defined very early.
+assert_not_exists list.sublists_len
+
+assert_not_exists multiset.powerset
+

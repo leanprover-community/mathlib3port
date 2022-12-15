@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Algebra.limits
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,16 +125,16 @@ open HasLimits
 
 /- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
 /-- The category of R-algebras has all limits. -/
-irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (AlgebraCat.{max v w} R) :=
+irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} (AlgebraCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>
       { HasLimit := fun F =>
           has_limit.mk
             { Cone := limit_cone F
               IsLimit := limit_cone_is_limit F } } }
-#align Algebra.has_limits_of_size AlgebraCat.has_limits_of_size
+#align Algebra.has_limits_of_size AlgebraCat.hasLimitsOfSize
 
 instance has_limits : HasLimits (AlgebraCat.{w} R) :=
-  AlgebraCat.has_limits_of_size.{w, w, u}
+  AlgebraCat.hasLimitsOfSize.{w, w, u}
 #align Algebra.has_limits AlgebraCat.has_limits
 
 /-- The forgetful functor from R-algebras to rings preserves all limits.

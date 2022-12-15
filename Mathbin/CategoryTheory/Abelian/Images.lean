@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.images
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ protected abbrev factorThruImage : P ⟶ Abelian.image f :=
 #align category_theory.abelian.factor_thru_image CategoryTheory.Abelian.factorThruImage
 
 /-- `f` factors through its image via the canonical morphism `p`. -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 protected theorem image.fac : Abelian.factorThruImage f ≫ image.ι f = f :=
   kernel.lift_ι _ _ _
 #align category_theory.abelian.image.fac CategoryTheory.Abelian.image.fac
@@ -131,7 +131,7 @@ theorem coimage_image_comparison_eq_coimage_image_comparison' :
 #align
   category_theory.abelian.coimage_image_comparison_eq_coimage_image_comparison' CategoryTheory.Abelian.coimage_image_comparison_eq_coimage_image_comparison'
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem coimage_image_factorisation : coimage.π f ≫ coimageImageComparison f ≫ image.ι f = f := by
   simp [coimage_image_comparison]
 #align

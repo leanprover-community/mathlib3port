@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Alistair Tucker
 
 ! This file was ported from Lean 3 source module topology.algebra.order.intermediate_value
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,8 +69,8 @@ theorem intermediate_value_univ₂ [PreconnectedSpace X] {a b : X} {f g : X → 
     (hg : Continuous g) (ha : f a ≤ g a) (hb : g b ≤ f b) : ∃ x, f x = g x := by
   obtain ⟨x, h, hfg, hgf⟩ : (univ ∩ { x | f x ≤ g x ∧ g x ≤ f x }).Nonempty
   exact
-    is_preconnected_closed_iff.1 PreconnectedSpace.is_preconnected_univ _ _ (isClosedLe hf hg)
-      (isClosedLe hg hf) (fun x hx => le_total _ _) ⟨a, trivial, ha⟩ ⟨b, trivial, hb⟩
+    is_preconnected_closed_iff.1 PreconnectedSpace.is_preconnected_univ _ _ (is_closed_le hf hg)
+      (is_closed_le hg hf) (fun x hx => le_total _ _) ⟨a, trivial, ha⟩ ⟨b, trivial, hb⟩
   exact ⟨x, le_antisymm hfg hgf⟩
 #align intermediate_value_univ₂ intermediate_value_univ₂
 
@@ -287,7 +287,7 @@ theorem IsPreconnected.Iio_cSup_subset {s : Set α} (hs : IsPreconnected s) (hb 
   @IsPreconnected.Ioi_cInf_subset αᵒᵈ _ _ _ s hs ha hb
 #align is_preconnected.Iio_cSup_subset IsPreconnected.Iio_cSup_subset
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr or.inr, ",", expr mem_singleton, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr or.inr, ",", expr mem_singleton, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- A preconnected set in a conditionally complete linear order is either one of the intervals
 `[Inf s, Sup s]`, `[Inf s, Sup s)`, `(Inf s, Sup s]`, `(Inf s, Sup s)`, `[Inf s, +∞)`,
 `(Inf s, +∞)`, `(-∞, Sup s]`, `(-∞, Sup s)`, `(-∞, +∞)`, or `∅`. The converse statement requires
@@ -301,7 +301,7 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
   rcases s.eq_empty_or_nonempty with (rfl | hne)
   ·
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr or.inr, \",\", expr mem_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr or.inr, \",\", expr mem_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   have hs' : IsConnected s := ⟨hne, hs⟩
   by_cases hb : BddBelow s <;> by_cases ha : BddAbove s
   · rcases mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset (hs'.Ioo_cInf_cSup_subset hb ha)
@@ -392,7 +392,7 @@ theorem IsClosed.Icc_subset_of_forall_exists_gt {a b : α} {s : Set α} (hs : Is
   have : IsClosed (s ∩ Icc a y) := by
     suffices s ∩ Icc a y = s ∩ Icc a b ∩ Icc a y by
       rw [this]
-      exact IsClosed.inter hs isClosedIcc
+      exact IsClosed.inter hs is_closed_Icc
     rw [inter_assoc]
     congr
     exact (inter_eq_self_of_subset_right <| Icc_subset_Icc_right hy.2).symm
@@ -423,7 +423,7 @@ theorem is_preconnected_Icc_aux (x y : α) (s t : Set α) (hxy : x ≤ y) (hs : 
   by_contra hst
   suffices : Icc x y ⊆ s
   exact hst ⟨y, xyab <| right_mem_Icc.2 hxy, this <| right_mem_Icc.2 hxy, hy.2⟩
-  apply (IsClosed.inter hs isClosedIcc).Icc_subset_of_forall_mem_nhds_within hx.2
+  apply (IsClosed.inter hs is_closed_Icc).Icc_subset_of_forall_mem_nhds_within hx.2
   rintro z ⟨zs, hz⟩
   have zt : z ∈ tᶜ := fun zt => hst ⟨z, xyab <| Ico_subset_Icc_self hz, zs, zt⟩
   have : tᶜ ∩ Ioc z y ∈ 𝓝[>] z := by

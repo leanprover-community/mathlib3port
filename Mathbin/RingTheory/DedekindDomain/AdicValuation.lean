@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.adic_valuation
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ theorem int_valuation_le_one (x : R) : v.intValuationDef x ≤ 1 := by
   by_cases hx : x = 0
   · rw [if_pos hx]
     exact WithZero.zero_le 1
-  · rw [if_neg hx, ← WithZero.coe_one, ← of_add_zero, WithZero.coe_le_coe, of_add_le,
+  · rw [if_neg hx, ← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_le_coe, of_add_le,
       Right.neg_nonpos_iff]
     exact Int.coe_nat_nonneg _
 #align
@@ -136,8 +136,8 @@ theorem int_valuation_lt_one_iff_dvd (r : R) :
   rw [int_valuation_def]
   split_ifs with hr
   · simpa [hr] using WithZero.zero_lt_coe _
-  · rw [← WithZero.coe_one, ← of_add_zero, WithZero.coe_lt_coe, of_add_lt, neg_lt_zero, ←
-      Int.ofNat_zero, Int.coe_nat_lt, zero_lt_iff]
+  · rw [← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_lt_coe, of_add_lt, neg_lt_zero, ←
+      Int.ofNat_zero, Int.ofNat_lt, zero_lt_iff]
     have h : (Ideal.span {r} : Ideal R) ≠ 0 := by
       rw [Ne.def, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact hr
@@ -153,7 +153,7 @@ theorem int_valuation_le_pow_iff_dvd (r : R) (n : ℕ) :
   split_ifs with hr
   · simp_rw [hr, Ideal.dvd_span_singleton, zero_le', Submodule.zero_mem]
   ·
-    rw [WithZero.coe_le_coe, of_add_le, neg_le_neg_iff, Int.coe_nat_le, Ideal.dvd_span_singleton, ←
+    rw [WithZero.coe_le_coe, of_add_le, neg_le_neg_iff, Int.ofNat_le, Ideal.dvd_span_singleton, ←
       Associates.le_singleton_iff,
       Associates.prime_pow_dvd_iff_le (associates.mk_ne_zero'.mpr hr)
         (by apply v.associates_irreducible)]
@@ -170,8 +170,8 @@ theorem IntValuation.map_zero' : v.intValuationDef 0 = 0 :=
 theorem IntValuation.map_one' : v.intValuationDef 1 = 1 := by
   rw [v.int_valuation_def_if_neg (zero_ne_one.symm : (1 : R) ≠ 0), Ideal.span_singleton_one, ←
     Ideal.one_eq_top, Associates.mk_one, Associates.factors_one,
-    Associates.count_zero (by apply v.associates_irreducible), Int.ofNat_zero, neg_zero,
-    of_add_zero, WithZero.coe_one]
+    Associates.count_zero (by apply v.associates_irreducible), Int.ofNat_zero, neg_zero, ofAdd_zero,
+    WithZero.coe_one]
 #align
   is_dedekind_domain.height_one_spectrum.int_valuation.map_one' IsDedekindDomain.HeightOneSpectrum.IntValuation.map_one'
 
@@ -184,7 +184,7 @@ theorem IntValuation.map_mul' (x y : R) :
   · by_cases hy : y = 0
     · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
     · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ←
-        of_add_add, ← Ideal.span_singleton_mul_span_singleton, ← Associates.mk_mul_mk, ← neg_add,
+        ofAdd_add, ← Ideal.span_singleton_mul_span_singleton, ← Associates.mk_mul_mk, ← neg_add,
         Associates.count_mul (by apply associates.mk_ne_zero'.mpr hx)
           (by apply associates.mk_ne_zero'.mpr hy) (by apply v.associates_irreducible)]
       rfl
@@ -196,8 +196,8 @@ theorem IntValuation.le_max_iff_min_le {a b c : ℕ} :
         max (Multiplicative.ofAdd (-a : ℤ)) (Multiplicative.ofAdd (-b : ℤ)) ↔
       min a b ≤ c :=
   by
-  rw [le_max_iff, of_add_le, of_add_le, neg_le_neg_iff, neg_le_neg_iff, Int.coe_nat_le,
-    Int.coe_nat_le, ← min_le_iff]
+  rw [le_max_iff, of_add_le, of_add_le, neg_le_neg_iff, neg_le_neg_iff, Int.ofNat_le, Int.ofNat_le,
+    ← min_le_iff]
 #align
   is_dedekind_domain.height_one_spectrum.int_valuation.le_max_iff_min_le IsDedekindDomain.HeightOneSpectrum.IntValuation.le_max_iff_min_le
 
@@ -218,7 +218,7 @@ theorem IntValuation.map_add_le_max' (x y : R) :
       · rw [int_valuation_def, if_pos hxy]
         exact zero_le'
       · rw [v.int_valuation_def_if_neg hxy, v.int_valuation_def_if_neg hx,
-          v.int_valuation_def_if_neg hy, WithZero.le_max_iff, int_valuation.le_max_iff_min_le]
+          v.int_valuation_def_if_neg hy, [anonymous], int_valuation.le_max_iff_min_le]
         set nmin :=
           min ((Associates.mk v.as_ideal).count (Associates.mk (Ideal.span {x})).factors)
             ((Associates.mk v.as_ideal).count (Associates.mk (Ideal.span {y})).factors)

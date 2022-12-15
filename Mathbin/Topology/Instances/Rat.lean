@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.rat
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,9 +69,9 @@ theorem Nat.uniform_embedding_coe_rat : UniformEmbedding (coe : ℕ → ℚ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
 #align nat.uniform_embedding_coe_rat Nat.uniform_embedding_coe_rat
 
-theorem Nat.closedEmbeddingCoeRat : ClosedEmbedding (coe : ℕ → ℚ) :=
-  closedEmbeddingOfPairwiseLeDist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
-#align nat.closed_embedding_coe_rat Nat.closedEmbeddingCoeRat
+theorem Nat.closed_embedding_coe_rat : ClosedEmbedding (coe : ℕ → ℚ) :=
+  closed_embedding_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
+#align nat.closed_embedding_coe_rat Nat.closed_embedding_coe_rat
 
 @[norm_cast, simp]
 theorem Int.dist_cast_rat (x y : ℤ) : dist (x : ℚ) y = dist x y := by
@@ -82,14 +82,14 @@ theorem Int.uniform_embedding_coe_rat : UniformEmbedding (coe : ℤ → ℚ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by simpa using Int.pairwise_one_le_dist
 #align int.uniform_embedding_coe_rat Int.uniform_embedding_coe_rat
 
-theorem Int.closedEmbeddingCoeRat : ClosedEmbedding (coe : ℤ → ℚ) :=
-  closedEmbeddingOfPairwiseLeDist zero_lt_one <| by simpa using Int.pairwise_one_le_dist
-#align int.closed_embedding_coe_rat Int.closedEmbeddingCoeRat
+theorem Int.closed_embedding_coe_rat : ClosedEmbedding (coe : ℤ → ℚ) :=
+  closed_embedding_of_pairwise_le_dist zero_lt_one <| by simpa using Int.pairwise_one_le_dist
+#align int.closed_embedding_coe_rat Int.closed_embedding_coe_rat
 
 namespace Rat
 
 instance : NoncompactSpace ℚ :=
-  Int.closedEmbeddingCoeRat.NoncompactSpace
+  Int.closed_embedding_coe_rat.NoncompactSpace
 
 -- TODO(Mario): Find a way to use rat_add_continuous_lemma
 theorem uniform_continuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p.2 :=

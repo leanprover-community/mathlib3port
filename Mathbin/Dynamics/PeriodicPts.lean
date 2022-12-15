@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.periodic_pts
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -620,9 +620,9 @@ theorem pow_smul_eq_iff_minimal_period_dvd {n : ℕ} :
 theorem zpow_smul_eq_iff_minimal_period_dvd {n : ℤ} :
     a ^ n • b = b ↔ (Function.minimalPeriod ((· • ·) a) b : ℤ) ∣ n := by
   cases n
-  · rw [Int.ofNat_eq_coe, zpow_coe_nat, Int.coe_nat_dvd, pow_smul_eq_iff_minimal_period_dvd]
+  · rw [Int.ofNat_eq_coe, zpow_ofNat, Int.coe_nat_dvd, pow_smul_eq_iff_minimal_period_dvd]
   ·
-    rw [Int.negSucc_coe, zpow_neg, zpow_coe_nat, inv_smul_eq_iff, eq_comm, dvd_neg, Int.coe_nat_dvd,
+    rw [Int.negSucc_coe, zpow_neg, zpow_ofNat, inv_smul_eq_iff, eq_comm, dvd_neg, Int.coe_nat_dvd,
       pow_smul_eq_iff_minimal_period_dvd]
 #align mul_action.zpow_smul_eq_iff_minimal_period_dvd MulAction.zpow_smul_eq_iff_minimal_period_dvd
 

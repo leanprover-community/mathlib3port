@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.homology
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -212,7 +212,7 @@ abbrev cyclesMap (f : C₁ ⟶ C₂) (i : ι) : (C₁.cycles i : V) ⟶ (C₂.cy
   Subobject.factorThru _ ((C₁.cycles i).arrow ≫ f.f i) (kernel_subobject_factors _ _ (by simp))
 #align cycles_map cyclesMap
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem cycles_map_arrow (f : C₁ ⟶ C₂) (i : ι) :
     cyclesMap f i ≫ (C₂.cycles i).arrow = (C₁.cycles i).arrow ≫ f.f i := by simp
 #align cycles_map_arrow cycles_map_arrow
@@ -278,7 +278,7 @@ variable [HasEqualizers V] [HasImages V] [HasImageMaps V]
 
 variable {C₁ C₂ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem boundaries_to_cycles_naturality (i : ι) :
     boundariesMap f i ≫ C₂.boundariesToCycles i = C₁.boundariesToCycles i ≫ cyclesMap f i := by
   ext

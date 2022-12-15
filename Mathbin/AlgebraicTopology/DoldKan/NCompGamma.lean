@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.n_comp_gamma
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem P_infty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : 
 #align
   algebraic_topology.dold_kan.P_infty_comp_map_mono_eq_zero AlgebraicTopology.DoldKan.P_infty_comp_map_mono_eq_zero
 
-@[reassoc]
+@[reassoc.1]
 theorem Γ₀_obj_termwise_map_mono_comp_P_infty (X : SimplicialObject C) {Δ Δ' : SimplexCategory}
     (i : Δ ⟶ Δ') [Mono i] :
     Γ₀.Obj.Termwise.mapMono (AlternatingFaceMapComplex.obj X) i ≫ pInfty.f Δ.len =

@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.operations
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1332,17 +1332,17 @@ variable [MulOneClass M']
 
 @[to_additive]
 instance [HasSmul M' α] (S : Submonoid M') : HasSmul S α :=
-  HasSmul.comp _ S.Subtype
+  SMul.comp _ S.Subtype
 
 @[to_additive]
-instance smul_comm_class_left [HasSmul M' β] [HasSmul α β] [SmulCommClass M' α β]
-    (S : Submonoid M') : SmulCommClass S α β :=
+instance smul_comm_class_left [HasSmul M' β] [HasSmul α β] [SMulCommClass M' α β]
+    (S : Submonoid M') : SMulCommClass S α β :=
   ⟨fun a => (smul_comm (a : M') : _)⟩
 #align submonoid.smul_comm_class_left Submonoid.smul_comm_class_left
 
 @[to_additive]
-instance smul_comm_class_right [HasSmul α β] [HasSmul M' β] [SmulCommClass α M' β]
-    (S : Submonoid M') : SmulCommClass α S β :=
+instance smul_comm_class_right [HasSmul α β] [HasSmul M' β] [SMulCommClass α M' β]
+    (S : Submonoid M') : SMulCommClass α S β :=
   ⟨fun a s => (smul_comm a (s : M') : _)⟩
 #align submonoid.smul_comm_class_right Submonoid.smul_comm_class_right
 
@@ -1356,7 +1356,7 @@ theorem smul_def [HasSmul M' α] {S : Submonoid M'} (g : S) (m : α) : g • m =
   rfl
 #align submonoid.smul_def Submonoid.smul_def
 
-instance [HasSmul M' α] [HasFaithfulSmul M' α] (S : Submonoid M') : HasFaithfulSmul S α :=
+instance [HasSmul M' α] [FaithfulSMul M' α] (S : Submonoid M') : FaithfulSMul S α :=
   ⟨fun x y h => Subtype.ext <| eq_of_smul_eq_smul h⟩
 
 end MulOneClass

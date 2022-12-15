@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.local_extr
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -364,7 +364,7 @@ does not require differentiability of `f` because we define `deriv f c = 0` when
 differentiable at `c`. -/
 theorem exists_deriv_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l))
     (hfb : Tendsto f (𝓝[<] b) (𝓝 l)) : ∃ c ∈ ioo a b, deriv f c = 0 :=
-  Classical.by_cases
+  by_cases
     (fun h : ∀ x ∈ ioo a b, DifferentiableAt ℝ f x =>
       show ∃ c ∈ ioo a b, deriv f c = 0 from
         exists_has_deriv_at_eq_zero' hab hfa hfb fun x hx => (h x hx).HasDerivAt)

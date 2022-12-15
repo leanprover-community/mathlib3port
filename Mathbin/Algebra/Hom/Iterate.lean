@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.iterate
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,15 +81,15 @@ theorem iterate_map_zpow (f : G →* G) (n : ℕ) (a) (m : ℤ) : (f^[n]) (a ^ m
   Commute.iterate_left (fun x => f.map_zpow x m) n a
 #align monoid_hom.iterate_map_zpow MonoidHom.iterate_map_zpow
 
-theorem coe_pow {M} [CommMonoid M] (f : Monoid.EndCat M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
+theorem coe_pow {M} [CommMonoid M] (f : Monoid.End M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) _ _
 #align monoid_hom.coe_pow MonoidHom.coe_pow
 
 end MonoidHom
 
-theorem Monoid.EndCat.coe_pow {M} [Monoid M] (f : Monoid.EndCat M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
+theorem Monoid.End.coe_pow {M} [Monoid M] (f : Monoid.End M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) _ _
-#align monoid.End.coe_pow Monoid.EndCat.coe_pow
+#align monoid.End.coe_pow Monoid.End.coe_pow
 
 -- we define these manually so that we can pick a better argument order
 namespace AddMonoidHom
@@ -110,10 +110,9 @@ attribute [to_additive, to_additive_reorder 5] MonoidHom.iterate_map_zpow
 
 end AddMonoidHom
 
-theorem AddMonoid.EndCat.coe_pow {A} [AddMonoid A] (f : AddMonoid.EndCat A) (n : ℕ) :
-    ⇑(f ^ n) = f^[n] :=
+theorem AddMonoid.End.coe_pow {A} [AddMonoid A] (f : AddMonoid.End A) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) _ _
-#align add_monoid.End.coe_pow AddMonoid.EndCat.coe_pow
+#align add_monoid.End.coe_pow AddMonoid.End.coe_pow
 
 namespace RingHom
 

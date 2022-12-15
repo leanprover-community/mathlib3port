@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.integral.lebesgue
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1187,7 +1187,7 @@ theorem fin_meas_supp_iff_support : f.FinMeasSupp μ ↔ μ (support f) < ∞ :=
 #align
   measure_theory.simple_func.fin_meas_supp_iff_support MeasureTheory.SimpleFunc.fin_meas_supp_iff_support
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 theorem fin_meas_supp_iff : f.FinMeasSupp μ ↔ ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ := by
   constructor
   · refine' fun h y hy => lt_of_le_of_lt (measure_mono _) h
@@ -2152,7 +2152,7 @@ theorem lintegral_supr_ae {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurabl
     _ = ⨆ n, ∫⁻ a, g n a ∂μ :=
       lintegral_supr (fun n => measurableConst.piecewise hs.2.1 (hf n))
         (monotone_nat_of_le_succ fun n a =>
-          Classical.by_cases (fun h : a ∈ s => by simp [g, if_pos h]) fun h : a ∉ s => by
+          by_cases (fun h : a ∈ s => by simp [g, if_pos h]) fun h : a ∉ s => by
             simp only [g, if_neg h]; have := hs.1; rw [subset_def] at this; have := mt (this a) h
             simp only [not_not, mem_set_of_eq] at this; exact this n)
     _ = ⨆ n, ∫⁻ a, f n a ∂μ := by simp only [lintegral_congr_ae (g_eq_f.mono fun a ha => ha _)]
@@ -2384,8 +2384,8 @@ theorem lintegral_supr_directed_of_measurable [Countable β] {f : β → α → 
 #align
   measure_theory.lintegral_supr_directed_of_measurable MeasureTheory.lintegral_supr_directed_of_measurable
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in filter_upwards #[[], ["with", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr hz₁, ",", expr hz₂, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], ["with", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr hz₁, ",", expr hz₂, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Monotone convergence for a supremum over a directed family and indexed by a countable type. -/
 theorem lintegral_supr_directed [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, AeMeasurable (f b) μ)
     (h_directed : Directed (· ≤ ·) f) : (∫⁻ a, ⨆ b, f b a ∂μ) = ⨆ b, ∫⁻ a, f b a ∂μ := by
@@ -2393,7 +2393,7 @@ theorem lintegral_supr_directed [Countable β] {f : β → α → ℝ≥0∞} (h
   let p : α → (β → Ennreal) → Prop := fun x f' => Directed LE.le f'
   have hp : ∀ᵐ x ∂μ, p x fun i => f i x := by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in filter_upwards #[[], [\"with\", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [\"with\", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     obtain ⟨z, hz₁, hz₂⟩ := h_directed i j
     exact ⟨z, hz₁ x, hz₂ x⟩
   have h_ae_seq_directed : Directed LE.le (aeSeq hf p) := by
@@ -2404,7 +2404,7 @@ theorem lintegral_supr_directed [Countable β] {f : β → α → ℝ≥0∞} (h
         by_cases hx : x ∈ aeSeqSet hf p
         · repeat' rw [aeSeq.ae_seq_eq_fun_of_mem_ae_seq_set hf hx]
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr hz₁, \",\", expr hz₂, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr hz₁, \",\", expr hz₂, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         · simp only [aeSeq, hx, if_false]
           exact le_rfl
   convert lintegral_supr_directed_of_measurable (aeSeq.measurable hf p) h_ae_seq_directed using 1

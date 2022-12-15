@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -608,7 +608,7 @@ theorem AnalyticOn.sub {s : Set E} (hf : AnalyticOn 𝕜 f s) (hg : AnalyticOn �
     AnalyticOn 𝕜 (f - g) s := fun z hz => (hf z hz).sub (hg z hz)
 #align analytic_on.sub AnalyticOn.sub
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ≠ » 0) -/
 theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Fin 0 → E) :
     pf 0 v = f x := by 
   have v_eq : v = fun i => 0 := Subsingleton.elim _ _
@@ -650,7 +650,7 @@ theorem ContinuousLinearMap.compAnalyticOn {s : Set E} (g : F →L[𝕜] G) (h :
   exact ⟨g.comp_formal_multilinear_series p, r, g.comp_has_fpower_series_on_ball hp⟩
 #align continuous_linear_map.comp_analytic_on ContinuousLinearMap.compAnalyticOn
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr div_le_div_of_le_left, ",", expr sub_pos.2, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr pow_nonneg, ",", expr hC.lt.le, ",", expr ha.1.le, ",", expr norm_nonneg, ",", expr nnreal.coe_nonneg, ",", expr ha.2, ",", expr (sub_le_sub_iff_left
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr div_le_div_of_le_left, ",", expr sub_pos.2, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr pow_nonneg, ",", expr hC.lt.le, ",", expr ha.1.le, ",", expr norm_nonneg, ",", expr nnreal.coe_nonneg, ",", expr ha.2, ",", expr (sub_le_sub_iff_left
     _).2, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
@@ -681,7 +681,7 @@ theorem HasFpowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0}
   suffices ‖p.partial_sum n y - f (x + y)‖ ≤ C * (a * (‖y‖ / r')) ^ n / (1 - a * (‖y‖ / r')) by
     refine' this.trans _
     trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr div_le_div_of_le_left, \",\", expr sub_pos.2, \",\", expr div_nonneg, \",\", expr mul_nonneg, \",\", expr pow_nonneg, \",\", expr hC.lt.le, \",\", expr ha.1.le, \",\", expr norm_nonneg, \",\", expr nnreal.coe_nonneg, \",\", expr ha.2, \",\", expr (sub_le_sub_iff_left\n    _).2, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr div_le_div_of_le_left, \",\", expr sub_pos.2, \",\", expr div_nonneg, \",\", expr mul_nonneg, \",\", expr pow_nonneg, \",\", expr hC.lt.le, \",\", expr ha.1.le, \",\", expr norm_nonneg, \",\", expr nnreal.coe_nonneg, \",\", expr ha.2, \",\", expr (sub_le_sub_iff_left\n    _).2, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
       infer_instance
   apply norm_sub_le_of_geometric_bound_of_has_sum (ya.trans_lt ha.2) _ (hf.has_sum this)
   intro n
@@ -734,7 +734,7 @@ theorem HasFpowerSeriesAt.is_O_sub_partial_sum_pow (hf : HasFpowerSeriesAt f p x
 #align has_fpower_series_at.is_O_sub_partial_sum_pow HasFpowerSeriesAt.is_O_sub_partial_sum_pow
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr mul_le_mul, ",", expr hp, ",", expr pow_le_pow_of_le_left, ",", expr hy'.le, ",", expr norm_nonneg, ",", expr pow_nonneg, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr nat.cast_nonneg, ",", expr hC.le, ",", expr r'.coe_nonneg, ",", expr ha.1.le, "]"],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr mul_le_mul, ",", expr hp, ",", expr pow_le_pow_of_le_left, ",", expr hy'.le, ",", expr norm_nonneg, ",", expr pow_nonneg, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr nat.cast_nonneg, ",", expr hC.le, ",", expr r'.coe_nonneg, ",", expr ha.1.le, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
@@ -779,7 +779,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal
           ring
         _ ≤ C * a ^ (n + 2) / r' ^ (n + 2) * r' ^ n * (↑(n + 2) * ‖y - (x, x)‖ * ‖y.1 - y.2‖) := by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr mul_le_mul, \",\", expr hp, \",\", expr pow_le_pow_of_le_left, \",\", expr hy'.le, \",\", expr norm_nonneg, \",\", expr pow_nonneg, \",\", expr div_nonneg, \",\", expr mul_nonneg, \",\", expr nat.cast_nonneg, \",\", expr hC.le, \",\", expr r'.coe_nonneg, \",\", expr ha.1.le, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr mul_le_mul, \",\", expr hp, \",\", expr pow_le_pow_of_le_left, \",\", expr hy'.le, \",\", expr norm_nonneg, \",\", expr pow_nonneg, \",\", expr div_nonneg, \",\", expr mul_nonneg, \",\", expr nat.cast_nonneg, \",\", expr hC.le, \",\", expr r'.coe_nonneg, \",\", expr ha.1.le, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         _ = B n := by 
           field_simp [B, pow_succ, hr'0.ne']
           simp only [mul_assoc, mul_comm, mul_left_comm]
@@ -801,7 +801,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal
 #align
   has_fpower_series_on_ball.is_O_image_sub_image_sub_deriv_principal HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ‖y - x‖ ‖z - x‖) * ‖y - z‖`. -/
@@ -1234,7 +1234,7 @@ def changeOriginIndexEquiv :
       by apply this <;> simp only [hs, add_tsub_cancel_right]
     rintro _ _ rfl rfl hkl hs'
     simp only [Equiv.refl_toEmbedding, Fin.cast_refl, Finset.map_refl, eq_self_iff_true,
-      OrderIso.refl_to_equiv, and_self_iff, heq_iff_eq]
+      OrderIso.refl_toEquiv, and_self_iff, heq_iff_eq]
   right_inv := by 
     rintro ⟨n, s⟩
     simp [tsub_add_cancel_of_le (card_finset_fin_le s), Fin.cast_to_equiv]
@@ -1474,12 +1474,12 @@ theorem has_fpower_series_at_iff :
     simpa [nndist_eq_nnnorm, Real.lt_to_nnreal_iff_coe_lt] using hyr
 #align has_fpower_series_at_iff has_fpower_series_at_iff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]] -/
 theorem has_fpower_series_at_iff' :
     HasFpowerSeriesAt f p z₀ ↔ ∀ᶠ z in 𝓝 z₀, HasSum (fun n => (z - z₀) ^ n • p.coeff n) (f z) := by
   rw [← map_add_left_nhds_zero, eventually_map, has_fpower_series_at_iff]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]]"
   rw [add_sub_cancel']
 #align has_fpower_series_at_iff' has_fpower_series_at_iff'
 

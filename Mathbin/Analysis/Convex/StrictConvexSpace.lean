@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.strict_convex_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ theorem norm_add_lt_of_not_same_ray (h : ¬SameRay ℝ x y) : ‖x + y‖ < ‖x
 #align norm_add_lt_of_not_same_ray norm_add_lt_of_not_same_ray
 
 theorem lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : ‖x‖ - ‖y‖ < ‖x - y‖ := by
-  nth_rw 1 [← sub_add_cancel x y]  at h⊢
+  nth_rw 1 [← sub_add_cancel x y] at h⊢
   exact sub_lt_iff_lt_add.2 (norm_add_lt_of_not_same_ray fun H' => h <| H'.add_left SameRay.rfl)
 #align lt_norm_sub_of_not_same_ray lt_norm_sub_of_not_same_ray
 
@@ -274,8 +274,8 @@ theorem eq_line_map_of_dist_eq_mul_of_dist_eq_mul {x y z : PE} (hxy : dist x y =
 theorem eq_midpoint_of_dist_eq_half {x y z : PE} (hx : dist x y = dist x z / 2)
     (hy : dist y z = dist x z / 2) : y = midpoint ℝ x z := by
   apply eq_line_map_of_dist_eq_mul_of_dist_eq_mul
-  · rwa [inv_of_eq_inv, ← div_eq_inv_mul]
-  · rwa [inv_of_eq_inv, ← one_div, sub_half, one_div, ← div_eq_inv_mul]
+  · rwa [invOf_eq_inv, ← div_eq_inv_mul]
+  · rwa [invOf_eq_inv, ← one_div, sub_half, one_div, ← div_eq_inv_mul]
 #align eq_midpoint_of_dist_eq_half eq_midpoint_of_dist_eq_half
 
 namespace Isometry

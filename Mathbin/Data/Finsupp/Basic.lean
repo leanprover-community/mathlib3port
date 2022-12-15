@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -982,11 +982,11 @@ theorem filter_eq_indicator : ⇑(f.filter p) = Set.indicator { x | p x } f :=
 
 theorem filter_eq_zero_iff : f.filter p = 0 ↔ ∀ x, p x → f x = 0 := by
   simp only [FunLike.ext_iff, filter_eq_indicator, zero_apply, Set.indicator_apply_eq_zero,
-    Set.mem_set_of_eq]
+    Set.mem_setOf_eq]
 #align finsupp.filter_eq_zero_iff Finsupp.filter_eq_zero_iff
 
 theorem filter_eq_self_iff : f.filter p = f ↔ ∀ x, f x ≠ 0 → p x := by
-  simp only [FunLike.ext_iff, filter_eq_indicator, Set.indicator_apply_eq_self, Set.mem_set_of_eq,
+  simp only [FunLike.ext_iff, filter_eq_indicator, Set.indicator_apply_eq_self, Set.mem_setOf_eq,
     not_imp_comm]
 #align finsupp.filter_eq_self_iff Finsupp.filter_eq_self_iff
 
@@ -1533,8 +1533,8 @@ end
 
 section
 
-instance [Zero M] [SmulZeroClass R M] :
-    SmulZeroClass R
+instance [Zero M] [SMulZeroClass R M] :
+    SMulZeroClass R
       (α →₀ M) where 
   smul a v := v.mapRange ((· • ·) a) (smul_zero _)
   smul_zero a := by 
@@ -1548,28 +1548,28 @@ Throughout this section, some `monoid` and `semiring` arguments are specified wi
 
 
 @[simp]
-theorem coe_smul [AddMonoid M] [DistribSmul R M] (b : R) (v : α →₀ M) : ⇑(b • v) = b • v :=
+theorem coe_smul [AddMonoid M] [DistribSMul R M] (b : R) (v : α →₀ M) : ⇑(b • v) = b • v :=
   rfl
 #align finsupp.coe_smul Finsupp.coe_smul
 
-theorem smul_apply [AddMonoid M] [DistribSmul R M] (b : R) (v : α →₀ M) (a : α) :
+theorem smul_apply [AddMonoid M] [DistribSMul R M] (b : R) (v : α →₀ M) (a : α) :
     (b • v) a = b • v a :=
   rfl
 #align finsupp.smul_apply Finsupp.smul_apply
 
-theorem IsSmulRegular.finsupp [AddMonoid M] [DistribSmul R M] {k : R} (hk : IsSmulRegular M k) :
+theorem IsSmulRegular.finsupp [AddMonoid M] [DistribSMul R M] {k : R} (hk : IsSmulRegular M k) :
     IsSmulRegular (α →₀ M) k := fun _ _ h => ext fun i => hk (congr_fun h i)
 #align is_smul_regular.finsupp IsSmulRegular.finsupp
 
-instance [Nonempty α] [AddMonoid M] [DistribSmul R M] [HasFaithfulSmul R M] :
-    HasFaithfulSmul R (α →₀ M) where eq_of_smul_eq_smul r₁ r₂ h :=
+instance [Nonempty α] [AddMonoid M] [DistribSMul R M] [FaithfulSMul R M] :
+    FaithfulSMul R (α →₀ M) where eq_of_smul_eq_smul r₁ r₂ h :=
     let ⟨a⟩ := ‹Nonempty α›
     eq_of_smul_eq_smul fun m : M => by simpa using congr_fun (h (single a m)) a
 
 variable (α M)
 
-instance [AddZeroClass M] [DistribSmul R M] :
-    DistribSmul R (α →₀ M) where 
+instance [AddZeroClass M] [DistribSMul R M] :
+    DistribSMul R (α →₀ M) where 
   smul := (· • ·)
   smul_add a x y := ext fun _ => smul_add _ _ _
   smul_zero x := ext fun _ => smul_zero _
@@ -1585,8 +1585,8 @@ instance [Monoid R] [Monoid S] [AddMonoid M] [DistribMulAction R M] [DistribMulA
     IsScalarTower R S (α →₀ M) where smul_assoc r s a := ext fun _ => smul_assoc _ _ _
 
 instance [Monoid R] [Monoid S] [AddMonoid M] [DistribMulAction R M] [DistribMulAction S M]
-    [SmulCommClass R S M] :
-    SmulCommClass R S (α →₀ M) where smul_comm r s a := ext fun _ => smul_comm _ _ _
+    [SMulCommClass R S M] :
+    SMulCommClass R S (α →₀ M) where smul_comm r s a := ext fun _ => smul_comm _ _ _
 
 instance [Monoid R] [AddMonoid M] [DistribMulAction R M] [DistribMulAction Rᵐᵒᵖ M]
     [IsCentralScalar R M] :
@@ -1678,13 +1678,13 @@ theorem sum_smul_index [Semiring R] [AddCommMonoid M] {g : α →₀ R} {b : R} 
   Finsupp.sum_map_range_index h0
 #align finsupp.sum_smul_index Finsupp.sum_smul_index
 
-theorem sum_smul_index' [AddMonoid M] [DistribSmul R M] [AddCommMonoid N] {g : α →₀ M} {b : R}
+theorem sum_smul_index' [AddMonoid M] [DistribSMul R M] [AddCommMonoid N] {g : α →₀ M} {b : R}
     {h : α → M → N} (h0 : ∀ i, h i 0 = 0) : (b • g).Sum h = g.Sum fun i c => h i (b • c) :=
   Finsupp.sum_map_range_index h0
 #align finsupp.sum_smul_index' Finsupp.sum_smul_index'
 
 /-- A version of `finsupp.sum_smul_index'` for bundled additive maps. -/
-theorem sum_smul_index_add_monoid_hom [AddMonoid M] [AddCommMonoid N] [DistribSmul R M] {g : α →₀ M}
+theorem sum_smul_index_add_monoid_hom [AddMonoid M] [AddCommMonoid N] [DistribSMul R M] {g : α →₀ M}
     {b : R} {h : α → M →+ N} : ((b • g).Sum fun a => h a) = g.Sum fun i c => h i (b • c) :=
   sum_map_range_index fun i => (h i).map_zero
 #align finsupp.sum_smul_index_add_monoid_hom Finsupp.sum_smul_index_add_monoid_hom
@@ -1755,7 +1755,7 @@ def restrictSupportEquiv (s : Set α) (M : Type _) [AddCommMonoid M] :
     apply Subtype.eq
     ext a
     dsimp only
-    refine' Classical.by_cases (fun h : a ∈ Set.range (Subtype.val : s → α) => _) fun h => _
+    refine' by_cases (fun h : a ∈ Set.range (Subtype.val : s → α) => _) fun h => _
     · rcases h with ⟨x, rfl⟩
       rw [map_domain_apply Subtype.val_injective, subtype_domain_apply]
     · convert map_domain_notin_range _ _ h

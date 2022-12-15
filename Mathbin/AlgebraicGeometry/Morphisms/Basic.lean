@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3079,7 +3079,7 @@ theorem universally_is_local_at_target (P : MorphismProperty SchemeCat)
   · rw [category.assoc, category.assoc, ← pullback.condition, ← pullback.condition_assoc, H.w]
   refine' (is_pullback.of_right _ (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback _ _)).flip
   rw [pullback.lift_fst, ← pullback.condition]
-  exact (is_pullback.of_has_pullback _ _).paste_horiz H.flip
+  exact (is_pullback.of_has_pullback _ _).pasteHoriz H.flip
 #align
   algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universally_is_local_at_target
 

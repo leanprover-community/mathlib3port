@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Chris Hughes, Michael Howes
 
 ! This file was ported from Lean 3 source module algebra.group.conj
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ theorem conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻�
 theorem conj_zpow {i : ℤ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻¹ := by
   induction i
   · simp
-  · simp [zpow_neg_succ_of_nat, conj_pow]
+  · simp [zpow_negSucc, conj_pow]
 #align conj_zpow conj_zpow
 
 theorem conj_injective {x : α} : Function.Injective fun g : α => x * g * x⁻¹ :=
@@ -333,4 +333,5 @@ theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.carrier = ConjClasses.mk
 
 end ConjClasses
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+assert_not_exists multiset
+

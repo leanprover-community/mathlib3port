@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.with_seminorms
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -340,7 +340,7 @@ theorem WithSeminorms.continuous_seminorm [Module ℝ E] [NormedAlgebra ℝ 𝕜
   exact Filter.mem_infi_of_mem i (Filter.preimage_mem_comap <| Metric.ball_mem_nhds _ one_pos)
 #align with_seminorms.continuous_seminorm WithSeminorms.continuous_seminorm
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]] -/
 /-- The topology induced by a family of seminorms is exactly the infimum of the ones induced by
 each seminorm individually. We express this as a characterization of `with_seminorms p`. -/
 theorem SeminormFamily.with_seminorms_iff_topological_space_eq_infi (p : SeminormFamily 𝕜 E ι) :
@@ -352,7 +352,7 @@ theorem SeminormFamily.with_seminorms_iff_topological_space_eq_infi (p : Seminor
     TopologicalAddGroup.ext_iff inferInstance (topological_add_group_infi fun i => inferInstance),
     nhds_infi]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
   exact @comap_norm_nhds_zero _ (p i).toAddGroupSeminorm.toSeminormedAddGroup
   all_goals infer_instance
 #align
@@ -360,7 +360,7 @@ theorem SeminormFamily.with_seminorms_iff_topological_space_eq_infi (p : Seminor
 
 omit t
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]] -/
 /-- The uniform structure induced by a family of seminorms is exactly the infimum of the ones
 induced by each seminorm individually. We express this as a characterization of
 `with_seminorms p`. -/
@@ -372,7 +372,7 @@ theorem SeminormFamily.with_seminorms_iff_uniform_space_eq_infi [u : UniformSpac
     UniformAddGroup.ext_iff inferInstance (uniform_add_group_infi fun i => inferInstance),
     to_topological_space_infi, nhds_infi]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
   exact @comap_norm_nhds_zero _ (p i).toAddGroupSeminorm.toSeminormedAddGroup
   all_goals infer_instance
 #align

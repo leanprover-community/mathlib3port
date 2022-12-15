@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.continuous_map_dense
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,8 +62,8 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (u «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (F «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
@@ -82,7 +82,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     refine' Lp.induction hp _ _ _ _
     · exact this
     · exact fun f g hf hg hfg' => AddSubgroup.add_mem _
-    · exact AddSubgroup.isClosedTopologicalClosure _
+    · exact AddSubgroup.is_closed_topological_closure _
   -- Let `s` be a finite-measure measurable set, let's approximate `c` times its indicator function
   intro c s hs hsμ
   refine' mem_closure_iff_frequently.mpr _

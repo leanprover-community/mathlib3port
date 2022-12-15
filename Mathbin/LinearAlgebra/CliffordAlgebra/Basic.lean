@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Utensil Song
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -331,10 +331,9 @@ def invertibleιOfInvertible (m : M) [Invertible (Q m)] :
     Invertible (ι Q m) where 
   invOf := ι Q (⅟ (Q m) • m)
   inv_of_mul_self := by
-    rw [map_smul, smul_mul_assoc, ι_sq_scalar, Algebra.smul_def, ← map_mul, inv_of_mul_self,
-      map_one]
+    rw [map_smul, smul_mul_assoc, ι_sq_scalar, Algebra.smul_def, ← map_mul, invOf_mul_self, map_one]
   mul_inv_of_self := by
-    rw [map_smul, mul_smul_comm, ι_sq_scalar, Algebra.smul_def, ← map_mul, inv_of_mul_self, map_one]
+    rw [map_smul, mul_smul_comm, ι_sq_scalar, Algebra.smul_def, ← map_mul, invOf_mul_self, map_one]
 #align clifford_algebra.invertible_ι_of_invertible CliffordAlgebra.invertibleιOfInvertible
 
 /-- For a vector with invertible quadratic form, $v^{-1} = \frac{v}{Q(v)}$ -/
@@ -347,21 +346,21 @@ theorem inv_of_ι (m : M) [Invertible (Q m)] [Invertible (ι Q m)] : ⅟ (ι Q m
 theorem is_unit_ι_of_is_unit {m : M} (h : IsUnit (Q m)) : IsUnit (ι Q m) := by
   cases h.nonempty_invertible
   letI := invertible_ι_of_invertible Q m
-  exact is_unit_of_invertible (ι Q m)
+  exact isUnit_of_invertible (ι Q m)
 #align clifford_algebra.is_unit_ι_of_is_unit CliffordAlgebra.is_unit_ι_of_is_unit
 
 /-- $aba^{-1}$ is a vector. -/
 theorem ι_mul_ι_mul_inv_of_ι (a b : M) [Invertible (ι Q a)] [Invertible (Q a)] :
     ι Q a * ι Q b * ⅟ (ι Q a) = ι Q ((⅟ (Q a) * QuadraticForm.polar Q a b) • a - b) := by
   rw [inv_of_ι, map_smul, mul_smul_comm, ι_mul_ι_mul_ι, ← map_smul, smul_sub, smul_smul, smul_smul,
-    inv_of_mul_self, one_smul]
+    invOf_mul_self, one_smul]
 #align clifford_algebra.ι_mul_ι_mul_inv_of_ι CliffordAlgebra.ι_mul_ι_mul_inv_of_ι
 
 /-- $a^{-1}ba$ is a vector. -/
 theorem inv_of_ι_mul_ι_mul_ι (a b : M) [Invertible (ι Q a)] [Invertible (Q a)] :
     ⅟ (ι Q a) * ι Q b * ι Q a = ι Q ((⅟ (Q a) * QuadraticForm.polar Q a b) • a - b) := by
   rw [inv_of_ι, map_smul, smul_mul_assoc, smul_mul_assoc, ι_mul_ι_mul_ι, ← map_smul, smul_sub,
-    smul_smul, smul_smul, inv_of_mul_self, one_smul]
+    smul_smul, smul_smul, invOf_mul_self, one_smul]
 #align clifford_algebra.inv_of_ι_mul_ι_mul_ι CliffordAlgebra.inv_of_ι_mul_ι_mul_ι
 
 end CliffordAlgebra

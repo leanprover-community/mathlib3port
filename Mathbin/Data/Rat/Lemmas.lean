@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.lemmas
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ open Rat
 theorem num_dvd (a) {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a := by
   cases' e : a /. b with n d h c
   rw [Rat.num_denom', Rat.mk_eq b0 (ne_of_gt (Int.coe_nat_pos.2 h))] at e
-  refine' Int.nat_abs_dvd.1 <| Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| c.dvd_of_dvd_mul_right _
+  refine' Int.natAbs_dvd.1 <| Int.dvd_natAbs.1 <| Int.coe_nat_dvd.2 <| c.dvd_of_dvd_mul_right _
   have := congr_arg Int.natAbs e
   simp only [Int.natAbs_mul, Int.natAbs_ofNat] at this; simp [this]
 #align rat.num_dvd Rat.num_dvd
@@ -36,8 +36,8 @@ theorem denom_dvd (a b : ℤ) : ((a /. b).denom : ℤ) ∣ b := by
   by_cases b0 : b = 0; · simp [b0]
   cases' e : a /. b with n d h c
   rw [num_denom', mk_eq b0 (ne_of_gt (Int.coe_nat_pos.2 h))] at e
-  refine' Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| c.symm.dvd_of_dvd_mul_left _
-  rw [← Int.natAbs_mul, ← Int.coe_nat_dvd, Int.dvd_nat_abs, ← e]; simp
+  refine' Int.dvd_natAbs.1 <| Int.coe_nat_dvd.2 <| c.symm.dvd_of_dvd_mul_left _
+  rw [← Int.natAbs_mul, ← Int.coe_nat_dvd, Int.dvd_natAbs, ← e]; simp
 #align rat.denom_dvd Rat.denom_dvd
 
 theorem num_denom_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) :
@@ -52,7 +52,7 @@ theorem num_denom_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) :
     rw [qdf]
     exact Rat.num_dvd _ hd
   refine' ⟨n / q.num, _, _⟩
-  · rw [Int.div_mul_cancel hqdn]
+  · rw [Int.ediv_mul_cancel hqdn]
   · refine' Int.eq_mul_div_of_mul_eq_mul_of_dvd_left _ hqdn this
     rw [qdf]
     exact Rat.num_ne_zero_of_ne_zero ((mk_ne_zero hd).mpr hn)
@@ -242,7 +242,7 @@ theorem coe_int_div_self (n : ℤ) : ((n / n : ℤ) : ℚ) = n / n := by
   · subst hn
     simp only [Int.cast_zero, Int.zero_div, zero_div]
   · have : (n : ℚ) ≠ 0 := by rwa [← coe_int_inj] at hn
-    simp only [Int.div_self hn, Int.cast_one, Ne.def, not_false_iff, div_self this]
+    simp only [Int.ediv_self hn, Int.cast_one, Ne.def, not_false_iff, div_self this]
 #align rat.coe_int_div_self Rat.coe_int_div_self
 
 @[norm_cast]
@@ -252,7 +252,7 @@ theorem coe_nat_div_self (n : ℕ) : ((n / n : ℕ) : ℚ) = n / n :=
 
 theorem coe_int_div (a b : ℤ) (h : b ∣ a) : ((a / b : ℤ) : ℚ) = a / b := by
   rcases h with ⟨c, rfl⟩
-  simp only [mul_comm b, Int.mul_div_assoc c (dvd_refl b), Int.cast_mul, mul_div_assoc,
+  simp only [mul_comm b, Int.mul_ediv_assoc c (dvd_refl b), Int.cast_mul, mul_div_assoc,
     coe_int_div_self]
 #align rat.coe_int_div Rat.coe_int_div
 

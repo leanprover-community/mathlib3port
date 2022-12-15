@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.pointwise
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ theorem mem_neg {g : M} {S : Submodule R M} : g ∈ -S ↔ -g ∈ S :=
 
 This is available as an instance in the `pointwise` locale. -/
 protected def hasInvolutivePointwiseNeg :
-    HasInvolutiveNeg (Submodule R M) where 
+    InvolutiveNeg (Submodule R M) where 
   neg := Neg.neg
   neg_neg S := SetLike.coe_injective <| neg_neg _
 #align submodule.has_involutive_pointwise_neg Submodule.hasInvolutivePointwiseNeg
@@ -189,7 +189,7 @@ instance : CanonicallyOrderedAddMonoid (Submodule R M) :=
 
 section
 
-variable [Monoid α] [DistribMulAction α M] [SmulCommClass α R M]
+variable [Monoid α] [DistribMulAction α M] [SMulCommClass α R M]
 
 /-- The action on a submodule corresponding to applying the action to every element.
 
@@ -225,7 +225,7 @@ theorem pointwise_smul_to_add_submonoid (a : α) (S : Submodule R M) :
 
 @[simp]
 theorem pointwise_smul_to_add_subgroup {R M : Type _} [Ring R] [AddCommGroup M]
-    [DistribMulAction α M] [Module R M] [SmulCommClass α R M] (a : α) (S : Submodule R M) :
+    [DistribMulAction α M] [Module R M] [SMulCommClass α R M] (a : α) (S : Submodule R M) :
     (a • S).toAddSubgroup = a • S.toAddSubgroup :=
   rfl
 #align submodule.pointwise_smul_to_add_subgroup Submodule.pointwise_smul_to_add_subgroup
@@ -253,7 +253,7 @@ theorem span_smul (a : α) (s : Set M) : span R (a • s) = a • span R s :=
   Eq.symm (span_image _).symm
 #align submodule.span_smul Submodule.span_smul
 
-instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ M] [SmulCommClass αᵐᵒᵖ R M]
+instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ M] [SMulCommClass αᵐᵒᵖ R M]
     [IsCentralScalar α M] : IsCentralScalar α (Submodule R M) :=
   ⟨fun a S =>
     (congr_arg fun f : Module.EndCat R M => S.map f) <| LinearMap.ext <| op_smul_eq_smul _⟩
@@ -261,7 +261,7 @@ instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ M] [SmulCommClas
 
 @[simp]
 theorem smul_le_self_of_tower {α : Type _} [Semiring α] [Module α R] [Module α M]
-    [SmulCommClass α R M] [IsScalarTower α R M] (a : α) (S : Submodule R M) : a • S ≤ S := by
+    [SMulCommClass α R M] [IsScalarTower α R M] (a : α) (S : Submodule R M) : a • S ≤ S := by
   rintro y ⟨x, hx, rfl⟩
   exact smul_of_tower_mem _ a hx
 #align submodule.smul_le_self_of_tower Submodule.smul_le_self_of_tower
@@ -270,7 +270,7 @@ end
 
 section
 
-variable [Semiring α] [Module α M] [SmulCommClass α R M]
+variable [Semiring α] [Module α M] [SMulCommClass α R M]
 
 /-- The action on a submodule corresponding to applying the action to every element.
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Mon.limits
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ open HasLimits
 
 /-- The category of monoids has all limits. -/
 @[to_additive "The category of additive monoids has all limits."]
-instance has_limits_of_size :
+instance hasLimitsOfSize :
     HasLimitsOfSize.{v}
       MonCat.{max v
           u} where HasLimitsOfShape J 𝒥 :=
@@ -116,11 +116,11 @@ instance has_limits_of_size :
         has_limit.mk
           { Cone := limit_cone F
             IsLimit := limit_cone_is_limit F } }
-#align Mon.has_limits_of_size MonCat.has_limits_of_size
+#align Mon.has_limits_of_size MonCat.hasLimitsOfSize
 
 @[to_additive]
 instance has_limits : HasLimits MonCat.{u} :=
-  MonCat.has_limits_of_size.{u, u}
+  MonCat.hasLimitsOfSize.{u, u}
 #align Mon.has_limits MonCat.has_limits
 
 /-- The forgetful functor from monoids to types preserves all limits.
@@ -203,16 +203,16 @@ def limitConeIsLimit (F : J ⥤ CommMonCat.{max v u}) : IsLimit (limitCone F) :=
 
 /-- The category of commutative monoids has all limits. -/
 @[to_additive "The category of commutative monoids has all limits."]
-instance has_limits_of_size :
+instance hasLimitsOfSize :
     HasLimitsOfSize.{v, v}
       CommMonCat.{max v
           u} where HasLimitsOfShape J 𝒥 :=
     { HasLimit := fun F => has_limit_of_created F (forget₂ CommMonCat MonCat.{max v u}) }
-#align CommMon.has_limits_of_size CommMonCat.has_limits_of_size
+#align CommMon.has_limits_of_size CommMonCat.hasLimitsOfSize
 
 @[to_additive]
 instance has_limits : HasLimits CommMonCat.{u} :=
-  CommMonCat.has_limits_of_size.{u, u}
+  CommMonCat.hasLimitsOfSize.{u, u}
 #align CommMon.has_limits CommMonCat.has_limits
 
 /-- The forgetful functor from commutative monoids to monoids preserves all limits.

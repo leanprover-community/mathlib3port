@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.multiset.fintype
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ instance : Fintype { p : α × ℕ | p.2 < m.count p.1 } :=
       rintro ⟨x, i⟩
       simp only [Finset.mem_bUnion, Multiset.mem_to_finset, Finset.mem_map, Finset.mem_range,
         Function.Embedding.coeFn_mk, Prod.mk.inj_iff, exists_prop, exists_eq_right_right,
-        Set.mem_set_of_eq, and_iff_right_iff_imp]
+        Set.mem_setOf_eq, and_iff_right_iff_imp]
       exact fun h => multiset.count_pos.mp (pos_of_gt h))
 
 /-- Construct a finset whose elements enumerate the elements of the multiset `m`.

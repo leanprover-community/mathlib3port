@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.algebra.field
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,10 +168,10 @@ theorem Subfield.le_topological_closure (s : Subfield α) : s ≤ s.topologicalC
   subset_closure
 #align subfield.le_topological_closure Subfield.le_topological_closure
 
-theorem Subfield.isClosedTopologicalClosure (s : Subfield α) :
+theorem Subfield.is_closed_topological_closure (s : Subfield α) :
     IsClosed (s.topologicalClosure : Set α) :=
-  isClosedClosure
-#align subfield.is_closed_topological_closure Subfield.isClosedTopologicalClosure
+  is_closed_closure
+#align subfield.is_closed_topological_closure Subfield.is_closed_topological_closure
 
 theorem Subfield.topological_closure_minimal (s : Subfield α) {t : Subfield α} (h : s ≤ t)
     (ht : IsClosed (t : Set α)) : s.topologicalClosure ≤ t :=

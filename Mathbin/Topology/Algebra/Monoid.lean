@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.algebra.monoid
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,19 +265,19 @@ section PointwiseLimits
 variable (M₁ M₂ : Type _) [TopologicalSpace M₂] [T2Space M₂]
 
 @[to_additive]
-theorem isClosedSetOfMapOne [One M₁] [One M₂] : IsClosed { f : M₁ → M₂ | f 1 = 1 } :=
-  isClosedEq (continuous_apply 1) continuous_const
-#align is_closed_set_of_map_one isClosedSetOfMapOne
+theorem is_closed_set_of_map_one [One M₁] [One M₂] : IsClosed { f : M₁ → M₂ | f 1 = 1 } :=
+  is_closed_eq (continuous_apply 1) continuous_const
+#align is_closed_set_of_map_one is_closed_set_of_map_one
 
 @[to_additive]
-theorem isClosedSetOfMapMul [Mul M₁] [Mul M₂] [HasContinuousMul M₂] :
+theorem is_closed_set_of_map_mul [Mul M₁] [Mul M₂] [HasContinuousMul M₂] :
     IsClosed { f : M₁ → M₂ | ∀ x y, f (x * y) = f x * f y } := by
   simp only [set_of_forall]
   exact
-    isClosedInter fun x =>
-      isClosedInter fun y =>
-        isClosedEq (continuous_apply _) ((continuous_apply _).mul (continuous_apply _))
-#align is_closed_set_of_map_mul isClosedSetOfMapMul
+    is_closed_Inter fun x =>
+      is_closed_Inter fun y =>
+        is_closed_eq (continuous_apply _) ((continuous_apply _).mul (continuous_apply _))
+#align is_closed_set_of_map_mul is_closed_set_of_map_mul
 
 variable {M₁ M₂} [MulOneClass M₁] [MulOneClass M₂] [HasContinuousMul M₂] {F : Type _}
   [MonoidHomClass F M₁ M₂] {l : Filter α}
@@ -292,8 +292,8 @@ def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂)
     (hf : f ∈ closure (range fun (f : F) (x : M₁) => f x)) :
     M₁ →* M₂ where 
   toFun := f
-  map_one' := (isClosedSetOfMapOne M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_one) hf
-  map_mul' := (isClosedSetOfMapMul M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_mul) hf
+  map_one' := (is_closed_set_of_map_one M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_one) hf
+  map_mul' := (is_closed_set_of_map_mul M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_mul) hf
 #align monoid_hom_of_mem_closure_range_coe monoidHomOfMemClosureRangeCoe
 
 /-- Construct a bundled monoid homomorphism from a pointwise limit of monoid homomorphisms. -/
@@ -309,9 +309,9 @@ def monoidHomOfTendsto (f : M₁ → M₂) (g : α → F) [l.ne_bot]
 variable (M₁ M₂)
 
 @[to_additive]
-theorem MonoidHom.isClosedRangeCoe : IsClosed (range (coeFn : (M₁ →* M₂) → M₁ → M₂)) :=
-  isClosedOfClosureSubset fun f hf => ⟨monoidHomOfMemClosureRangeCoe f hf, rfl⟩
-#align monoid_hom.is_closed_range_coe MonoidHom.isClosedRangeCoe
+theorem MonoidHom.is_closed_range_coe : IsClosed (range (coeFn : (M₁ →* M₂) → M₁ → M₂)) :=
+  is_closed_of_closure_subset fun f hf => ⟨monoidHomOfMemClosureRangeCoe f hf, rfl⟩
+#align monoid_hom.is_closed_range_coe MonoidHom.is_closed_range_coe
 
 end PointwiseLimits
 
@@ -377,9 +377,9 @@ theorem Submonoid.le_topological_closure (s : Submonoid M) : s ≤ s.topological
 #align submonoid.le_topological_closure Submonoid.le_topological_closure
 
 @[to_additive]
-theorem Submonoid.isClosedTopologicalClosure (s : Submonoid M) :
-    IsClosed (s.topologicalClosure : Set M) := by convert isClosedClosure
-#align submonoid.is_closed_topological_closure Submonoid.isClosedTopologicalClosure
+theorem Submonoid.is_closed_topological_closure (s : Submonoid M) :
+    IsClosed (s.topologicalClosure : Set M) := by convert is_closed_closure
+#align submonoid.is_closed_topological_closure Submonoid.is_closed_topological_closure
 
 @[to_additive]
 theorem Submonoid.topological_closure_minimal (s : Submonoid M) {t : Submonoid M} (h : s ≤ t)
@@ -573,13 +573,13 @@ implies continuous scalar multiplication by constants.
 Notably, this instances applies when `R = Aᵐᵒᵖ` -/
 @[to_additive
       "If the action of `R` on `A` commutes with left-addition, then\ncontinuous addition implies continuous affine addition by constants.\n\nNotably, this instances applies when `R = Aᵃᵒᵖ`. "]
-instance (priority := 100) SmulCommClass.has_continuous_const_smul {R A : Type _} [Monoid A]
-    [HasSmul R A] [SmulCommClass R A A] [TopologicalSpace A] [HasContinuousMul A] :
+instance (priority := 100) SMulCommClass.has_continuous_const_smul {R A : Type _} [Monoid A]
+    [HasSmul R A] [SMulCommClass R A A] [TopologicalSpace A] [HasContinuousMul A] :
     HasContinuousConstSmul R
       A where continuous_const_smul q := by
     simp (config := { singlePass := true }) only [← mul_smul_one q (_ : A)]
     exact continuous_id.mul continuous_const
-#align smul_comm_class.has_continuous_const_smul SmulCommClass.has_continuous_const_smul
+#align smul_comm_class.has_continuous_const_smul SMulCommClass.has_continuous_const_smul
 
 end HasContinuousMul
 

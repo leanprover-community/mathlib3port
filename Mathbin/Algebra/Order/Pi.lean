@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.order.pi
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,8 +43,8 @@ instance orderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedComm
 #align pi.ordered_comm_monoid Pi.orderedCommMonoid
 
 @[to_additive]
-instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i)]
-    [∀ i, HasExistsMulOfLe (α i)] : HasExistsMulOfLe (∀ i, α i) :=
+instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i)] [∀ i, ExistsMulOfLE (α i)] :
+    ExistsMulOfLE (∀ i, α i) :=
   ⟨fun a b h =>
     ⟨fun i => (exists_mul_of_le <| h i).some, funext fun i => (exists_mul_of_le <| h i).some_spec⟩⟩
 

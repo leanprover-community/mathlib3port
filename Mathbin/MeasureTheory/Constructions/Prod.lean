@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.prod
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1167,7 +1167,7 @@ theorem integral_prod :
       prod_apply hs]
   · intro f g hfg i_f i_g hf hg
     simp_rw [integral_add' i_f i_g, integral_integral_add' i_f i_g, hf, hg]
-  · exact isClosedEq continuous_integral continuous_integral_integral
+  · exact is_closed_eq continuous_integral continuous_integral_integral
   · intro f g hfg i_f hf
     convert hf using 1
     · exact integral_congr_ae hfg.symm

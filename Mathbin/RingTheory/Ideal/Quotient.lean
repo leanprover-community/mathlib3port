@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.quotient
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -180,7 +180,7 @@ instance no_zero_divisors (I : Ideal R) [hI : I.IsPrime] :
 
 instance is_domain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
   let _ := Quotient.nontrivial hI.1
-  NoZeroDivisors.to_is_domain _
+  NoZeroDivisors.toIsDomain _
 #align ideal.quotient.is_domain Ideal.Quotient.is_domain
 
 theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime := by
@@ -191,7 +191,7 @@ theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime := 
   · haveI : Nontrivial (R ⧸ I) := ⟨H.3⟩
     exact zero_ne_one
   · simp only [← eq_zero_iff_mem, (mk I).map_mul] at h⊢
-    haveI := @IsDomain.to_no_zero_divisors (R ⧸ I) _ H
+    haveI := @IsDomain.toNoZeroDivisors (R ⧸ I) _ H
     exact eq_zero_or_eq_zero_of_mul_eq_zero h
 #align ideal.quotient.is_domain_iff_prime Ideal.Quotient.is_domain_iff_prime
 
@@ -239,7 +239,7 @@ theorem maximal_of_is_field (I : Ideal R) (hqf : IsField (R ⧸ I)) : I.IsMaxima
 theorem maximal_ideal_iff_is_field_quotient (I : Ideal R) : I.IsMaximal ↔ IsField (R ⧸ I) :=
   ⟨fun h =>
     letI := @quotient.field _ _ I h
-    Field.to_is_field _,
+    Field.toIsField _,
     maximal_of_is_field _⟩
 #align
   ideal.quotient.maximal_ideal_iff_is_field_quotient Ideal.Quotient.maximal_ideal_iff_is_field_quotient

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.topology
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,15 +75,15 @@ theorem boundedStdSimplex : Metric.Bounded (stdSimplex ℝ ι) :=
 #align bounded_std_simplex boundedStdSimplex
 
 /-- `std_simplex ℝ ι` is closed. -/
-theorem isClosedStdSimplex : IsClosed (stdSimplex ℝ ι) :=
+theorem is_closed_std_simplex : IsClosed (stdSimplex ℝ ι) :=
   (std_simplex_eq_inter ℝ ι).symm ▸
-    IsClosed.inter (isClosedInter fun i => isClosedLe continuous_const (continuous_apply i))
-      (isClosedEq ((continuous_finset_sum _) fun x _ => continuous_apply x) continuous_const)
-#align is_closed_std_simplex isClosedStdSimplex
+    IsClosed.inter (is_closed_Inter fun i => is_closed_le continuous_const (continuous_apply i))
+      (is_closed_eq ((continuous_finset_sum _) fun x _ => continuous_apply x) continuous_const)
+#align is_closed_std_simplex is_closed_std_simplex
 
 /-- `std_simplex ℝ ι` is compact. -/
 theorem is_compact_std_simplex : IsCompact (stdSimplex ℝ ι) :=
-  Metric.is_compact_iff_is_closed_bounded.2 ⟨isClosedStdSimplex ι, boundedStdSimplex ι⟩
+  Metric.is_compact_iff_is_closed_bounded.2 ⟨is_closed_std_simplex ι, boundedStdSimplex ι⟩
 #align is_compact_std_simplex is_compact_std_simplex
 
 end stdSimplex
@@ -280,10 +280,10 @@ theorem Set.Finite.compact_convex_hull {s : Set E} (hs : s.Finite) : IsCompact (
 #align set.finite.compact_convex_hull Set.Finite.compact_convex_hull
 
 /-- Convex hull of a finite set is closed. -/
-theorem Set.Finite.isClosedConvexHull [T2Space E] {s : Set E} (hs : s.Finite) :
+theorem Set.Finite.is_closed_convex_hull [T2Space E] {s : Set E} (hs : s.Finite) :
     IsClosed (convexHull ℝ s) :=
   hs.compact_convex_hull.IsClosed
-#align set.finite.is_closed_convex_hull Set.Finite.isClosedConvexHull
+#align set.finite.is_closed_convex_hull Set.Finite.is_closed_convex_hull
 
 open AffineMap
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.euclidean_dist
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,9 +88,9 @@ theorem is_compact_closed_ball {x : E} {r : ℝ} : IsCompact (closedBall x r) :=
   exact (is_compact_closed_ball _ _).image to_euclidean.symm.continuous
 #align euclidean.is_compact_closed_ball Euclidean.is_compact_closed_ball
 
-theorem isClosedClosedBall {x : E} {r : ℝ} : IsClosed (closedBall x r) :=
+theorem is_closed_closed_ball {x : E} {r : ℝ} : IsClosed (closedBall x r) :=
   is_compact_closed_ball.IsClosed
-#align euclidean.is_closed_closed_ball Euclidean.isClosedClosedBall
+#align euclidean.is_closed_closed_ball Euclidean.is_closed_closed_ball
 
 theorem closure_ball (x : E) {r : ℝ} (h : r ≠ 0) : closure (ball x r) = closedBall x r := by
   rw [ball_eq_preimage, ← to_euclidean.preimage_closure, closure_ball (toEuclidean x) h,

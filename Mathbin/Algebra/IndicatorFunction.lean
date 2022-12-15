@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module algebra.indicator_function
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -365,7 +365,7 @@ theorem mul_indicator_mul' (s : Set α) (f g : α → M) :
 @[simp, to_additive]
 theorem mul_indicator_compl_mul_self_apply (s : Set α) (f : α → M) (a : α) :
     mulIndicator (sᶜ) f a * mulIndicator s f a = f a :=
-  Classical.by_cases (fun ha : a ∈ s => by simp [ha]) fun ha => by simp [ha]
+  by_cases (fun ha : a ∈ s => by simp [ha]) fun ha => by simp [ha]
 #align set.mul_indicator_compl_mul_self_apply Set.mul_indicator_compl_mul_self_apply
 
 @[simp, to_additive]
@@ -377,7 +377,7 @@ theorem mul_indicator_compl_mul_self (s : Set α) (f : α → M) :
 @[simp, to_additive]
 theorem mul_indicator_self_mul_compl_apply (s : Set α) (f : α → M) (a : α) :
     mulIndicator s f a * mulIndicator (sᶜ) f a = f a :=
-  Classical.by_cases (fun ha : a ∈ s => by simp [ha]) fun ha => by simp [ha]
+  by_cases (fun ha : a ∈ s => by simp [ha]) fun ha => by simp [ha]
 #align set.mul_indicator_self_mul_compl_apply Set.mul_indicator_self_mul_compl_apply
 
 @[simp, to_additive]
@@ -682,7 +682,7 @@ theorem mul_indicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : a ∉ s → 
   · simpa [ha] using hg ha
 #align set.mul_indicator_apply_le' Set.mul_indicator_apply_le'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[to_additive]
 theorem mul_indicator_le' (hfg : ∀ a ∈ s, f a ≤ g a) (hg : ∀ (a) (_ : a ∉ s), 1 ≤ g a) :
     mulIndicator s f ≤ g := fun a => mul_indicator_apply_le' (hfg _) (hg _)
@@ -694,7 +694,7 @@ theorem le_mul_indicator_apply {y} (hfg : a ∈ s → y ≤ g a) (hf : a ∉ s �
   @mul_indicator_apply_le' α Mᵒᵈ ‹_› _ _ _ _ _ hfg hf
 #align set.le_mul_indicator_apply Set.le_mul_indicator_apply
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[to_additive]
 theorem le_mul_indicator (hfg : ∀ a ∈ s, f a ≤ g a) (hf : ∀ (a) (_ : a ∉ s), f a ≤ 1) :
     f ≤ mulIndicator s g := fun a => le_mul_indicator_apply (hfg _) (hf _)
@@ -739,7 +739,7 @@ theorem mul_indicator_le_mul_indicator_of_subset (h : s ⊆ t) (hf : ∀ a, 1 �
     one_le_mul_indicator_apply fun _ => hf _
 #align set.mul_indicator_le_mul_indicator_of_subset Set.mul_indicator_le_mul_indicator_of_subset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
 @[to_additive]
 theorem mul_indicator_le_self' (hf : ∀ (x) (_ : x ∉ s), 1 ≤ f x) : mulIndicator s f ≤ f :=
   mul_indicator_le' (fun _ _ => le_rfl) hf

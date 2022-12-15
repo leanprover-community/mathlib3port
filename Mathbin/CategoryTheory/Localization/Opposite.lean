@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.localization.opposite
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,18 +49,17 @@ def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E]
 #align
   category_theory.localization.strict_universal_property_fixed_target.op CategoryTheory.Localization.StrictUniversalPropertyFixedTarget.op
 
-instance is_localization_op : W.q.op.IsLocalization W.op :=
+instance isLocalizationOp : W.q.op.IsLocalization W.op :=
   Functor.IsLocalization.mk' W.q.op W.op (strictUniversalPropertyFixedTargetQ W _).op
     (strictUniversalPropertyFixedTargetQ W _).op
-#align
-  category_theory.localization.is_localization_op CategoryTheory.Localization.is_localization_op
+#align category_theory.localization.is_localization_op CategoryTheory.Localization.isLocalizationOp
 
 end Localization
 
 namespace Functor
 
 instance IsLocalization.op [h : L.IsLocalization W] : L.op.IsLocalization W.op :=
-  IsLocalization.of_equivalence_target W.q.op W.op L.op (Localization.equivalenceFromModel L W).op
+  IsLocalization.ofEquivalenceTarget W.q.op W.op L.op (Localization.equivalenceFromModel L W).op
     (NatIso.op (Localization.qCompEquivalenceFromModelFunctorIso L W).symm)
 #align category_theory.functor.is_localization.op CategoryTheory.Functor.IsLocalization.op
 

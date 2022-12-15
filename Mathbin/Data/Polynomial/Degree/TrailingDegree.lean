@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.trailing_degree
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ def trailingDegree (p : R[X]) : ℕ∞ :=
 #align polynomial.trailing_degree Polynomial.trailingDegree
 
 theorem trailing_degree_lt_wf : WellFounded fun p q : R[X] => trailingDegree p < trailingDegree q :=
-  InvImage.wf trailingDegree (WithTop.well_founded_lt Nat.lt_wfRel)
+  InvImage.wf trailingDegree (WithTop.wellFounded_lt Nat.lt_wfRel)
 #align polynomial.trailing_degree_lt_wf Polynomial.trailing_degree_lt_wf
 
 /-- `nat_trailing_degree p` forces `trailing_degree p` to `ℕ`, by defining

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.direct_limit
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,16 +68,16 @@ theorem coe_nat_le_rec (m n : ℕ) (h : m ≤ n) :
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le h
   ext x
   induction' k with k ih
-  · rw [nat_le_rec, Nat.le_rec_on_self, embedding.refl_apply, Nat.le_rec_on_self]
+  · rw [nat_le_rec, Nat.leRecOn_self, embedding.refl_apply, Nat.leRecOn_self]
   ·
-    rw [Nat.le_rec_on_succ le_self_add, nat_le_rec, Nat.le_rec_on_succ le_self_add, ← nat_le_rec,
+    rw [Nat.leRecOn_succ le_self_add, nat_le_rec, Nat.leRecOn_succ le_self_add, ← nat_le_rec,
       embedding.comp_apply, ih]
 #align
   first_order.language.directed_system.coe_nat_le_rec FirstOrder.Language.DirectedSystem.coe_nat_le_rec
 
 instance natLeRec.directed_system : DirectedSystem G' fun i j h => natLeRec f' i j h :=
-  ⟨fun i x h => congr (congr rfl (Nat.le_rec_on_self _)) rfl, fun i j k ij jk => by
-    simp [Nat.le_rec_on_trans ij jk]⟩
+  ⟨fun i x h => congr (congr rfl (Nat.leRecOn_self _)) rfl, fun i j k ij jk => by
+    simp [Nat.leRecOn_trans ij jk]⟩
 #align
   first_order.language.directed_system.nat_le_rec.directed_system FirstOrder.Language.DirectedSystem.natLeRec.directed_system
 

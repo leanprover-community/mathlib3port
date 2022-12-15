@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Scott Morrison, Floris van Doorn
 
 ! This file was ported from Lean 3 source module category_theory.limits.is_limit
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ structure IsLimit (t : Cone F) where
 
 restate_axiom is_limit.fac'
 
-attribute [simp, reassoc] is_limit.fac
+attribute [simp, reassoc.1] is_limit.fac
 
 restate_axiom is_limit.uniq'
 
@@ -82,7 +82,7 @@ def map {F G : J ⥤ C} (s : Cone F) {t : Cone G} (P : IsLimit t) (α : F ⟶ G)
   P.lift ((Cones.postcompose α).obj s)
 #align category_theory.limits.is_limit.map CategoryTheory.Limits.IsLimit.map
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem map_π {F G : J ⥤ C} (c : Cone F) {d : Cone G} (hd : IsLimit d) (α : F ⟶ G) (j : J) :
     hd.map c α ≫ d.π.app j = c.π.app j ≫ α.app j :=
   fac _ _ _
@@ -153,28 +153,28 @@ def conePointUniqueUpToIso {s t : Cone F} (P : IsLimit s) (Q : IsLimit t) : s.x 
 #align
   category_theory.limits.is_limit.cone_point_unique_up_to_iso CategoryTheory.Limits.IsLimit.conePointUniqueUpToIso
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem cone_point_unique_up_to_iso_hom_comp {s t : Cone F} (P : IsLimit s) (Q : IsLimit t)
     (j : J) : (conePointUniqueUpToIso P Q).Hom ≫ t.π.app j = s.π.app j :=
   (uniqueUpToIso P Q).Hom.w _
 #align
   category_theory.limits.is_limit.cone_point_unique_up_to_iso_hom_comp CategoryTheory.Limits.IsLimit.cone_point_unique_up_to_iso_hom_comp
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem cone_point_unique_up_to_iso_inv_comp {s t : Cone F} (P : IsLimit s) (Q : IsLimit t)
     (j : J) : (conePointUniqueUpToIso P Q).inv ≫ s.π.app j = t.π.app j :=
   (uniqueUpToIso P Q).inv.w _
 #align
   category_theory.limits.is_limit.cone_point_unique_up_to_iso_inv_comp CategoryTheory.Limits.IsLimit.cone_point_unique_up_to_iso_inv_comp
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem lift_comp_cone_point_unique_up_to_iso_hom {r s t : Cone F} (P : IsLimit s) (Q : IsLimit t) :
     P.lift r ≫ (conePointUniqueUpToIso P Q).Hom = Q.lift r :=
   Q.uniq _ _ (by simp)
 #align
   category_theory.limits.is_limit.lift_comp_cone_point_unique_up_to_iso_hom CategoryTheory.Limits.IsLimit.lift_comp_cone_point_unique_up_to_iso_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem lift_comp_cone_point_unique_up_to_iso_inv {r s t : Cone F} (P : IsLimit s) (Q : IsLimit t) :
     Q.lift r ≫ (conePointUniqueUpToIso P Q).inv = P.lift r :=
   P.uniq _ _ (by simp)
@@ -329,21 +329,21 @@ def conePointsIsoOfNatIso {F G : J ⥤ C} {s : Cone F} {t : Cone G} (P : IsLimit
 #align
   category_theory.limits.is_limit.cone_points_iso_of_nat_iso CategoryTheory.Limits.IsLimit.conePointsIsoOfNatIso
 
-@[reassoc]
+@[reassoc.1]
 theorem cone_points_iso_of_nat_iso_hom_comp {F G : J ⥤ C} {s : Cone F} {t : Cone G} (P : IsLimit s)
     (Q : IsLimit t) (w : F ≅ G) (j : J) :
     (conePointsIsoOfNatIso P Q w).Hom ≫ t.π.app j = s.π.app j ≫ w.Hom.app j := by simp
 #align
   category_theory.limits.is_limit.cone_points_iso_of_nat_iso_hom_comp CategoryTheory.Limits.IsLimit.cone_points_iso_of_nat_iso_hom_comp
 
-@[reassoc]
+@[reassoc.1]
 theorem cone_points_iso_of_nat_iso_inv_comp {F G : J ⥤ C} {s : Cone F} {t : Cone G} (P : IsLimit s)
     (Q : IsLimit t) (w : F ≅ G) (j : J) :
     (conePointsIsoOfNatIso P Q w).inv ≫ s.π.app j = t.π.app j ≫ w.inv.app j := by simp
 #align
   category_theory.limits.is_limit.cone_points_iso_of_nat_iso_inv_comp CategoryTheory.Limits.IsLimit.cone_points_iso_of_nat_iso_inv_comp
 
-@[reassoc]
+@[reassoc.1]
 theorem lift_comp_cone_points_iso_of_nat_iso_hom {F G : J ⥤ C} {r s : Cone F} {t : Cone G}
     (P : IsLimit s) (Q : IsLimit t) (w : F ≅ G) :
     P.lift r ≫ (conePointsIsoOfNatIso P Q w).Hom = Q.map r w.Hom :=
@@ -351,7 +351,7 @@ theorem lift_comp_cone_points_iso_of_nat_iso_hom {F G : J ⥤ C} {r s : Cone F} 
 #align
   category_theory.limits.is_limit.lift_comp_cone_points_iso_of_nat_iso_hom CategoryTheory.Limits.IsLimit.lift_comp_cone_points_iso_of_nat_iso_hom
 
-@[reassoc]
+@[reassoc.1]
 theorem lift_comp_cone_points_iso_of_nat_iso_inv {F G : J ⥤ C} {r s : Cone G} {t : Cone F}
     (P : IsLimit t) (Q : IsLimit s) (w : F ≅ G) :
     Q.lift r ≫ (conePointsIsoOfNatIso P Q w).inv = P.map r w.inv :=
@@ -602,7 +602,7 @@ structure IsColimit (t : Cocone F) where
 
 restate_axiom is_colimit.fac'
 
-attribute [simp, reassoc] is_colimit.fac
+attribute [simp, reassoc.1] is_colimit.fac
 
 restate_axiom is_colimit.uniq'
 
@@ -618,7 +618,7 @@ def map {F G : J ⥤ C} {s : Cocone F} (P : IsColimit s) (t : Cocone G) (α : F 
   P.desc ((Cocones.precompose α).obj t)
 #align category_theory.limits.is_colimit.map CategoryTheory.Limits.IsColimit.map
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_map {F G : J ⥤ C} {c : Cocone F} (hc : IsColimit c) (d : Cocone G) (α : F ⟶ G) (j : J) :
     c.ι.app j ≫ IsColimit.map hc d α = α.app j ≫ d.ι.app j :=
   fac _ _ _
@@ -693,28 +693,28 @@ def coconePointUniqueUpToIso {s t : Cocone F} (P : IsColimit s) (Q : IsColimit t
 #align
   category_theory.limits.is_colimit.cocone_point_unique_up_to_iso CategoryTheory.Limits.IsColimit.coconePointUniqueUpToIso
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem comp_cocone_point_unique_up_to_iso_hom {s t : Cocone F} (P : IsColimit s) (Q : IsColimit t)
     (j : J) : s.ι.app j ≫ (coconePointUniqueUpToIso P Q).Hom = t.ι.app j :=
   (uniqueUpToIso P Q).Hom.w _
 #align
   category_theory.limits.is_colimit.comp_cocone_point_unique_up_to_iso_hom CategoryTheory.Limits.IsColimit.comp_cocone_point_unique_up_to_iso_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem comp_cocone_point_unique_up_to_iso_inv {s t : Cocone F} (P : IsColimit s) (Q : IsColimit t)
     (j : J) : t.ι.app j ≫ (coconePointUniqueUpToIso P Q).inv = s.ι.app j :=
   (uniqueUpToIso P Q).inv.w _
 #align
   category_theory.limits.is_colimit.comp_cocone_point_unique_up_to_iso_inv CategoryTheory.Limits.IsColimit.comp_cocone_point_unique_up_to_iso_inv
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem cocone_point_unique_up_to_iso_hom_desc {r s t : Cocone F} (P : IsColimit s)
     (Q : IsColimit t) : (coconePointUniqueUpToIso P Q).Hom ≫ Q.desc r = P.desc r :=
   P.uniq _ _ (by simp)
 #align
   category_theory.limits.is_colimit.cocone_point_unique_up_to_iso_hom_desc CategoryTheory.Limits.IsColimit.cocone_point_unique_up_to_iso_hom_desc
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem cocone_point_unique_up_to_iso_inv_desc {r s t : Cocone F} (P : IsColimit s)
     (Q : IsColimit t) : (coconePointUniqueUpToIso P Q).inv ≫ P.desc r = Q.desc r :=
   Q.uniq _ _ (by simp)
@@ -879,21 +879,21 @@ def coconePointsIsoOfNatIso {F G : J ⥤ C} {s : Cocone F} {t : Cocone G} (P : I
 #align
   category_theory.limits.is_colimit.cocone_points_iso_of_nat_iso CategoryTheory.Limits.IsColimit.coconePointsIsoOfNatIso
 
-@[reassoc]
+@[reassoc.1]
 theorem comp_cocone_points_iso_of_nat_iso_hom {F G : J ⥤ C} {s : Cocone F} {t : Cocone G}
     (P : IsColimit s) (Q : IsColimit t) (w : F ≅ G) (j : J) :
     s.ι.app j ≫ (coconePointsIsoOfNatIso P Q w).Hom = w.Hom.app j ≫ t.ι.app j := by simp
 #align
   category_theory.limits.is_colimit.comp_cocone_points_iso_of_nat_iso_hom CategoryTheory.Limits.IsColimit.comp_cocone_points_iso_of_nat_iso_hom
 
-@[reassoc]
+@[reassoc.1]
 theorem comp_cocone_points_iso_of_nat_iso_inv {F G : J ⥤ C} {s : Cocone F} {t : Cocone G}
     (P : IsColimit s) (Q : IsColimit t) (w : F ≅ G) (j : J) :
     t.ι.app j ≫ (coconePointsIsoOfNatIso P Q w).inv = w.inv.app j ≫ s.ι.app j := by simp
 #align
   category_theory.limits.is_colimit.comp_cocone_points_iso_of_nat_iso_inv CategoryTheory.Limits.IsColimit.comp_cocone_points_iso_of_nat_iso_inv
 
-@[reassoc]
+@[reassoc.1]
 theorem cocone_points_iso_of_nat_iso_hom_desc {F G : J ⥤ C} {s : Cocone F} {r t : Cocone G}
     (P : IsColimit s) (Q : IsColimit t) (w : F ≅ G) :
     (coconePointsIsoOfNatIso P Q w).Hom ≫ Q.desc r = P.map _ w.Hom :=
@@ -901,7 +901,7 @@ theorem cocone_points_iso_of_nat_iso_hom_desc {F G : J ⥤ C} {s : Cocone F} {r 
 #align
   category_theory.limits.is_colimit.cocone_points_iso_of_nat_iso_hom_desc CategoryTheory.Limits.IsColimit.cocone_points_iso_of_nat_iso_hom_desc
 
-@[reassoc]
+@[reassoc.1]
 theorem cocone_points_iso_of_nat_iso_inv_desc {F G : J ⥤ C} {s : Cocone G} {r t : Cocone F}
     (P : IsColimit t) (Q : IsColimit s) (w : F ≅ G) :
     (coconePointsIsoOfNatIso P Q w).inv ≫ P.desc r = Q.map _ w.inv :=

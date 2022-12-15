@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -982,7 +982,7 @@ section LinearOrderedCommRing
 
 variable [LinearOrderedCommRing R] {a : ℍ[R]}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr sq_nonneg, ",", expr add_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr sq_nonneg, ",", expr add_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 @[simp]
 theorem norm_sq_eq_zero : normSq a = 0 ↔ a = 0 := by
   refine' ⟨fun h => _, fun h => h.symm ▸ norm_sq.map_zero⟩
@@ -990,19 +990,19 @@ theorem norm_sq_eq_zero : normSq a = 0 ↔ a = 0 := by
   exact ext a 0 (pow_eq_zero h.1.1.1) (pow_eq_zero h.1.1.2) (pow_eq_zero h.1.2) (pow_eq_zero h.2)
   all_goals
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr sq_nonneg, \",\", expr add_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr sq_nonneg, \",\", expr add_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align quaternion.norm_sq_eq_zero Quaternion.norm_sq_eq_zero
 
 theorem norm_sq_ne_zero : normSq a ≠ 0 ↔ a ≠ 0 :=
   not_congr norm_sq_eq_zero
 #align quaternion.norm_sq_ne_zero Quaternion.norm_sq_ne_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr sq_nonneg, ",", expr add_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr sq_nonneg, ",", expr add_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 @[simp]
 theorem norm_sq_nonneg : 0 ≤ normSq a := by
   rw [norm_sq_def']
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr sq_nonneg, \",\", expr add_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr sq_nonneg, \",\", expr add_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align quaternion.norm_sq_nonneg Quaternion.norm_sq_nonneg
 
 @[simp]
@@ -1019,7 +1019,7 @@ instance : NoZeroDivisors ℍ[R] :=
       (eq_zero_or_eq_zero_of_mul_eq_zero this).imp norm_sq_eq_zero.1 norm_sq_eq_zero.1 }
 
 instance : IsDomain ℍ[R] :=
-  NoZeroDivisors.to_is_domain _
+  NoZeroDivisors.toIsDomain _
 
 end LinearOrderedCommRing
 

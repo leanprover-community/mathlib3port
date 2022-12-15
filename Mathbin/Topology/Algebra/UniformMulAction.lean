@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_mul_action
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ variable (R : Type u) (M : Type v) (N : Type w) (X : Type x) (Y : Type y) [Unifo
   [UniformSpace Y]
 
 /-- An additive action such that for all `c`, the map `λ x, c +ᵥ x` is uniformly continuous. -/
-class HasUniformContinuousConstVadd [HasVadd M X] : Prop where
+class HasUniformContinuousConstVadd [VAdd M X] : Prop where
   uniform_continuous_const_vadd : ∀ c : M, UniformContinuous ((· +ᵥ ·) c : X → X)
 #align has_uniform_continuous_const_vadd HasUniformContinuousConstVadd
 
@@ -163,8 +163,8 @@ instance [HasSmul N X] [HasSmul M N] [HasUniformContinuousConstSmul M X]
     exact congr_arg (fun f => completion.map f x) (funext (smul_assoc _ _))⟩
 
 @[to_additive]
-instance [HasSmul N X] [SmulCommClass M N X] [HasUniformContinuousConstSmul M X]
-    [HasUniformContinuousConstSmul N X] : SmulCommClass M N (Completion X) :=
+instance [HasSmul N X] [SMulCommClass M N X] [HasUniformContinuousConstSmul M X]
+    [HasUniformContinuousConstSmul N X] : SMulCommClass M N (Completion X) :=
   ⟨fun m n x => by
     have hmn : m • n • x = (completion.map (HasSmul.smul m) ∘ completion.map (HasSmul.smul n)) x :=
       rfl

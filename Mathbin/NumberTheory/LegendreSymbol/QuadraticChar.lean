@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.quadratic_char
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -260,7 +260,7 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
   by_cases h₀ : a = 0
   ·
     simp only [h₀, pow_eq_zero_iff, Nat.succ_pos', Int.ofNat_succ, Int.ofNat_zero, MulChar.map_zero,
-      Set.set_of_eq_eq_singleton, Set.to_finset_card, Set.card_singleton]
+      Set.setOf_eq_eq_singleton, Set.to_finset_card, Set.card_singleton]
   · set s := { x : F | x ^ 2 = a }.toFinset with hs
     by_cases h : IsSquare a
     · rw [(quadratic_char_one_iff_is_square h₀).mpr h]
@@ -271,7 +271,7 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
         simp only [Finset.mem_filter, Finset.mem_univ, true_and_iff, List.to_finset_cons,
           List.to_finset_nil, insert_emptyc_eq, Finset.mem_insert, Finset.mem_singleton]
         rw [← pow_two] at h
-        simp only [hs, Set.mem_to_finset, Set.mem_set_of_eq, h]
+        simp only [hs, Set.mem_to_finset, Set.mem_setOf_eq, h]
         constructor
         · exact eq_or_eq_neg_of_sq_eq_sq _ _
         · rintro (h₂ | h₂) <;> rw [h₂]
@@ -281,7 +281,7 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
       exact Finset.card_doubleton (Ne.symm (mt (Ring.eq_self_iff_eq_zero_of_char_ne_two hF).mp h₀))
     · rw [quadratic_char_neg_one_iff_not_is_square.mpr h]
       simp only [Int.coe_nat_eq_zero, Finset.card_eq_zero, Set.to_finset_card,
-        Fintype.card_of_finset, Set.mem_set_of_eq, add_left_neg]
+        Fintype.card_of_finset, Set.mem_setOf_eq, add_left_neg]
       ext x
       simp only [iff_false_iff, Finset.mem_filter, Finset.mem_univ, true_and_iff,
         Finset.not_mem_empty]

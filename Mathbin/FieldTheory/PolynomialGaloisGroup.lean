@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.polynomial_galois_group
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,27 +93,27 @@ instance [h : Fact (p.Splits (RingHom.id F))] : Unique p.Gal :=
   uniqueGalOfSplits _ h.1
 
 instance uniqueGalZero : Unique (0 : F[X]).Gal :=
-  uniqueGalOfSplits _ (splitsZero _)
+  uniqueGalOfSplits _ (splits_zero _)
 #align polynomial.gal.unique_gal_zero Polynomial.Gal.uniqueGalZero
 
 instance uniqueGalOne : Unique (1 : F[X]).Gal :=
-  uniqueGalOfSplits _ (splitsOne _)
+  uniqueGalOfSplits _ (splits_one _)
 #align polynomial.gal.unique_gal_one Polynomial.Gal.uniqueGalOne
 
 instance uniqueGalC (x : F) : Unique (c x).Gal :=
-  uniqueGalOfSplits _ (splitsC _ _)
+  uniqueGalOfSplits _ (splits_C _ _)
 #align polynomial.gal.unique_gal_C Polynomial.Gal.uniqueGalC
 
 instance uniqueGalX : Unique (x : F[X]).Gal :=
-  uniqueGalOfSplits _ (splitsX _)
+  uniqueGalOfSplits _ (splits_X _)
 #align polynomial.gal.unique_gal_X Polynomial.Gal.uniqueGalX
 
 instance uniqueGalXSubC (x : F) : Unique (X - c x).Gal :=
-  uniqueGalOfSplits _ (splitsXSubC _)
+  uniqueGalOfSplits _ (splits_X_sub_C _)
 #align polynomial.gal.unique_gal_X_sub_C Polynomial.Gal.uniqueGalXSubC
 
 instance uniqueGalXPow (n : ℕ) : Unique (X ^ n : F[X]).Gal :=
-  uniqueGalOfSplits _ (splitsXPow _ _)
+  uniqueGalOfSplits _ (splits_X_pow _ _)
 #align polynomial.gal.unique_gal_X_pow Polynomial.Gal.uniqueGalXPow
 
 instance [h : Fact (p.Splits (algebraMap F E))] : Algebra p.SplittingField E :=
@@ -240,7 +240,7 @@ def restrictDvd (hpq : p ∣ q) : q.Gal →* p.Gal :=
   if hq : q = 0 then 1
   else
     @restrict F _ p _ _ _
-      ⟨splitsOfSplitsOfDvd (algebraMap F q.SplittingField) hq (SplittingField.splits q) hpq⟩
+      ⟨splits_of_splits_of_dvd (algebraMap F q.SplittingField) hq (SplittingField.splits q) hpq⟩
 #align polynomial.gal.restrict_dvd Polynomial.Gal.restrictDvd
 
 theorem restrict_dvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) :
@@ -289,7 +289,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
   · rwa [Ne.def, mul_eq_zero, map_eq_zero, map_eq_zero, ← mul_eq_zero]
 #align polynomial.gal.restrict_prod_injective Polynomial.Gal.restrict_prod_injective
 
-theorem mulSplitsInSplittingFieldOfMul {p₁ q₁ p₂ q₂ : F[X]} (hq₁ : q₁ ≠ 0) (hq₂ : q₂ ≠ 0)
+theorem mul_splits_in_splitting_field_of_mul {p₁ q₁ p₂ q₂ : F[X]} (hq₁ : q₁ ≠ 0) (hq₂ : q₂ ≠ 0)
     (h₁ : p₁.Splits (algebraMap F q₁.SplittingField))
     (h₂ : p₂.Splits (algebraMap F q₂.SplittingField)) :
     (p₁ * p₂).Splits (algebraMap F (q₁ * q₂).SplittingField) := by
@@ -305,10 +305,10 @@ theorem mulSplitsInSplittingFieldOfMul {p₁ q₁ p₂ q₂ : F[X]} (hq₁ : q�
             (dvd_mul_left q₂ q₁))).comp_algebra_map]
     exact splits_comp_of_splits _ _ h₂
 #align
-  polynomial.gal.mul_splits_in_splitting_field_of_mul Polynomial.Gal.mulSplitsInSplittingFieldOfMul
+  polynomial.gal.mul_splits_in_splitting_field_of_mul Polynomial.Gal.mul_splits_in_splitting_field_of_mul
 
 /-- `p` splits in the splitting field of `p ∘ q`, for `q` non-constant. -/
-theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) :
+theorem splits_in_splitting_field_of_comp (hq : q.natDegree ≠ 0) :
     p.Splits (algebraMap F (p.comp q).SplittingField) := by
   let P : F[X] → Prop := fun r => r.Splits (algebraMap F (r.comp q).SplittingField)
   have key1 : ∀ {r : F[X]}, Irreducible r → P r := by
@@ -344,11 +344,12 @@ theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) :
   exact
     WfDvdMonoid.induction_on_irreducible p (splits_zero _) (fun _ => splits_of_is_unit _)
       fun _ _ _ h => key2 (key1 h)
-#align polynomial.gal.splits_in_splitting_field_of_comp Polynomial.Gal.splitsInSplittingFieldOfComp
+#align
+  polynomial.gal.splits_in_splitting_field_of_comp Polynomial.Gal.splits_in_splitting_field_of_comp
 
 /-- `polynomial.gal.restrict` for the composition of polynomials. -/
 def restrictComp (hq : q.natDegree ≠ 0) : (p.comp q).Gal →* p.Gal :=
-  @restrict F _ p _ _ _ ⟨splitsInSplittingFieldOfComp p q hq⟩
+  @restrict F _ p _ _ _ ⟨splits_in_splitting_field_of_comp p q hq⟩
 #align polynomial.gal.restrict_comp Polynomial.Gal.restrictComp
 
 theorem restrict_comp_surjective (hq : q.natDegree ≠ 0) :
@@ -390,7 +391,7 @@ theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.na
 section Rationals
 
 theorem splits_ℚ_ℂ {p : ℚ[X]} : Fact (p.Splits (algebraMap ℚ ℂ)) :=
-  ⟨IsAlgClosed.splitsCodomain p⟩
+  ⟨IsAlgClosed.splits_codomain p⟩
 #align polynomial.gal.splits_ℚ_ℂ Polynomial.Gal.splits_ℚ_ℂ
 
 attribute [local instance] splits_ℚ_ℂ
@@ -466,7 +467,7 @@ theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducib
   have h1 : Fintype.card (p.root_set ℂ) = p.nat_degree := by
     simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
     rw [Multiset.to_finset_card_of_nodup, ← nat_degree_eq_card_roots]
-    · exact IsAlgClosed.splitsCodomain p
+    · exact IsAlgClosed.splits_codomain p
     · exact nodup_roots ((separable_map (algebraMap ℚ ℂ)).mpr p_irr.separable)
   have h2 : Fintype.card p.gal = Fintype.card (gal_action_hom p ℂ).range :=
     Fintype.card_congr (MonoidHom.ofInjective (gal_action_hom_injective p ℂ)).toEquiv

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.independence
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,7 +185,7 @@ theorem Indep.symm {m₁ m₂ : MeasurableSpace Ω} [MeasurableSpace Ω] {μ : M
 theorem indepBotRight (m' : MeasurableSpace Ω) {m : MeasurableSpace Ω} {μ : Measure Ω}
     [IsProbabilityMeasure μ] : Indep m' ⊥ μ := by
   intro s t hs ht
-  rw [Set.mem_set_of_eq, MeasurableSpace.measurable_set_bot_iff] at ht
+  rw [Set.mem_setOf_eq, MeasurableSpace.measurable_set_bot_iff] at ht
   cases ht
   · rw [ht, Set.inter_empty, measure_empty, mul_zero]
   · rw [ht, Set.inter_univ, measure_univ, mul_one]
@@ -525,7 +525,7 @@ theorem IndepSet.indepGenerateFromLt [Preorder ι] [IsProbabilityMeasure μ] {s 
   convert
     hs.indep_generate_from_of_disjoint hsm {i} { j | j < i }
       (set.disjoint_singleton_left.mpr (lt_irrefl _))
-  simp only [Set.mem_singleton_iff, exists_prop, exists_eq_left, Set.set_of_eq_eq_singleton']
+  simp only [Set.mem_singleton_iff, exists_prop, exists_eq_left, Set.setOf_eq_eq_singleton']
 #align
   probability_theory.Indep_set.indep_generate_from_lt ProbabilityTheory.IndepSet.indepGenerateFromLt
 
@@ -535,7 +535,7 @@ theorem IndepSet.indepGenerateFromLe [LinearOrder ι] [IsProbabilityMeasure μ] 
   convert
     hs.indep_generate_from_of_disjoint hsm {k} { j | j ≤ i }
       (set.disjoint_singleton_left.mpr hk.not_le)
-  simp only [Set.mem_singleton_iff, exists_prop, exists_eq_left, Set.set_of_eq_eq_singleton']
+  simp only [Set.mem_singleton_iff, exists_prop, exists_eq_left, Set.setOf_eq_eq_singleton']
 #align
   probability_theory.Indep_set.indep_generate_from_le ProbabilityTheory.IndepSet.indepGenerateFromLe
 
@@ -680,12 +680,12 @@ theorem Indep.indepSetOfMeasurableSet {m₁ m₂ m0 : MeasurableSpace Ω} {μ : 
     (ht : measurable_set[m₂] t) : IndepSet s t μ := by
   refine' fun s' t' hs' ht' => h_indep s' t' _ _
   · refine' generate_from_induction (fun u => measurable_set[m₁] u) {s} _ _ _ _ hs'
-    · simp only [hs, Set.mem_singleton_iff, Set.mem_set_of_eq, forall_eq]
+    · simp only [hs, Set.mem_singleton_iff, Set.mem_setOf_eq, forall_eq]
     · exact @MeasurableSet.empty _ m₁
     · exact fun u hu => hu.compl
     · exact fun f hf => MeasurableSet.union hf
   · refine' generate_from_induction (fun u => measurable_set[m₂] u) {t} _ _ _ _ ht'
-    · simp only [ht, Set.mem_singleton_iff, Set.mem_set_of_eq, forall_eq]
+    · simp only [ht, Set.mem_singleton_iff, Set.mem_setOf_eq, forall_eq]
     · exact @MeasurableSet.empty _ m₂
     · exact fun u hu => hu.compl
     · exact fun f hf => MeasurableSet.union hf
@@ -808,7 +808,7 @@ theorem IndepFun.indepFunFinset [IsProbabilityMeasure μ] {ι : Type _} {β : ι
   have hπS_gen : (measurable_space.pi.comap fun a (i : S) => f i a) = generate_from πS := by
     rw [generate_from_pi.symm, comap_generate_from]
     · congr with s
-      simp only [Set.mem_image, Set.mem_set_of_eq, exists_prop]
+      simp only [Set.mem_image, Set.mem_setOf_eq, exists_prop]
     · infer_instance
   let πTβ :=
     Set.pi (Set.univ : Set T) ''
@@ -818,7 +818,7 @@ theorem IndepFun.indepFunFinset [IsProbabilityMeasure μ] {ι : Type _} {β : ι
   have hπT_gen : (measurable_space.pi.comap fun a (i : T) => f i a) = generate_from πT := by
     rw [generate_from_pi.symm, comap_generate_from]
     · congr with s
-      simp only [Set.mem_image, Set.mem_set_of_eq, exists_prop]
+      simp only [Set.mem_image, Set.mem_setOf_eq, exists_prop]
     · infer_instance
   -- To prove independence, we prove independence of the generating π-systems.
   refine'
@@ -826,7 +826,7 @@ theorem IndepFun.indepFunFinset [IsProbabilityMeasure μ] {ι : Type _} {β : ι
       (Measurable.comap_le (measurable_pi_iff.mpr fun i => hf_meas i)) hπS_pi hπT_pi hπS_gen hπT_gen
       _
   rintro _ _ ⟨s, ⟨sets_s, hs1, hs2⟩, rfl⟩ ⟨t, ⟨sets_t, ht1, ht2⟩, rfl⟩
-  simp only [Set.mem_univ_pi, Set.mem_set_of_eq] at hs1 ht1
+  simp only [Set.mem_univ_pi, Set.mem_setOf_eq] at hs1 ht1
   rw [← hs2, ← ht2]
   classical 
     let sets_s' : ∀ i : ι, Set (β i) := fun i =>
@@ -1066,7 +1066,7 @@ For the example of `f = at_top`, we can take `p = bdd_above` and `ns : ι → se
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem indepBsuprLimsup (h_le : ∀ n, s n ≤ m0) (h_indep : IndepCat s μ) (hf : ∀ t, p t → tᶜ ∈ f)
     {t : Set ι} (ht : p t) : Indep (⨆ n ∈ t, s n) (limsup s f) μ := by
   refine' indep_of_indep_of_le_right (indep_bsupr_compl h_le h_indep t) _

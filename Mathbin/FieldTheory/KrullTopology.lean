@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sebastian Monnet
 
 ! This file was ported from Lean 3 source module field_theory.krull_topology
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,11 +75,11 @@ theorem IntermediateField.map_id {K L : Type _} [Field K] [Field L] [Algebra K L
 
 /-- Mapping a finite dimensional intermediate field along an algebra equivalence gives
 a finite-dimensional intermediate field. -/
-instance imFiniteDimensional {K L : Type _} [Field K] [Field L] [Algebra K L]
+instance im_finite_dimensional {K L : Type _} [Field K] [Field L] [Algebra K L]
     {E : IntermediateField K L} (σ : L ≃ₐ[K] L) [FiniteDimensional K E] :
     FiniteDimensional K (E.map σ.toAlgHom) :=
-  LinearEquiv.finiteDimensional (IntermediateField.intermediateFieldMap σ E).toLinearEquiv
-#align im_finite_dimensional imFiniteDimensional
+  LinearEquiv.finite_dimensional (IntermediateField.intermediateFieldMap σ E).toLinearEquiv
+#align im_finite_dimensional im_finite_dimensional
 
 /-- Given a field extension `L/K`, `finite_exts K L` is the set of
 intermediate field extensions `L/E/K` such that `E/K` is finite -/
@@ -95,10 +95,10 @@ def fixedByFinite (K L : Type _) [Field K] [Field L] [Algebra K L] : Set (Subgro
 #align fixed_by_finite fixedByFinite
 
 /-- For an field extension `L/K`, the intermediate field `K` is finite-dimensional over `K` -/
-theorem IntermediateField.finiteDimensionalBot (K L : Type _) [Field K] [Field L] [Algebra K L] :
+theorem IntermediateField.finite_dimensional_bot (K L : Type _) [Field K] [Field L] [Algebra K L] :
     FiniteDimensional K (⊥ : IntermediateField K L) :=
-  finiteDimensionalOfDimEqOne IntermediateField.dim_bot
-#align intermediate_field.finite_dimensional_bot IntermediateField.finiteDimensionalBot
+  finite_dimensional_of_dim_eq_one IntermediateField.dim_bot
+#align intermediate_field.finite_dimensional_bot IntermediateField.finite_dimensional_bot
 
 /-- This lemma says that `Gal(L/K) = L ≃ₐ[K] L` -/
 theorem IntermediateField.fixingSubgroup.bot {K L : Type _} [Field K] [Field L] [Algebra K L] :
@@ -114,16 +114,16 @@ theorem IntermediateField.fixingSubgroup.bot {K L : Type _} [Field K] [Field L] 
 /-- If `L/K` is a field extension, then we have `Gal(L/K) ∈ fixed_by_finite K L` -/
 theorem top_fixed_by_finite {K L : Type _} [Field K] [Field L] [Algebra K L] :
     ⊤ ∈ fixedByFinite K L :=
-  ⟨⊥, IntermediateField.finiteDimensionalBot K L, IntermediateField.fixingSubgroup.bot⟩
+  ⟨⊥, IntermediateField.finite_dimensional_bot K L, IntermediateField.fixingSubgroup.bot⟩
 #align top_fixed_by_finite top_fixed_by_finite
 
 /-- If `E1` and `E2` are finite-dimensional intermediate fields, then so is their compositum.
 This rephrases a result already in mathlib so that it is compatible with our type classes -/
-theorem finiteDimensionalSup {K L : Type _} [Field K] [Field L] [Algebra K L]
+theorem finite_dimensional_sup {K L : Type _} [Field K] [Field L] [Algebra K L]
     (E1 E2 : IntermediateField K L) (h1 : FiniteDimensional K E1) (h2 : FiniteDimensional K E2) :
     FiniteDimensional K ↥(E1 ⊔ E2) :=
-  IntermediateField.finiteDimensionalSup E1 E2
-#align finite_dimensional_sup finiteDimensionalSup
+  IntermediateField.finite_dimensional_sup E1 E2
+#align finite_dimensional_sup finite_dimensional_sup
 
 /-- An element of `L ≃ₐ[K] L` is in `Gal(L/E)` if and only if it fixes every element of `E`-/
 theorem IntermediateField.mem_fixing_subgroup_iff {K L : Type _} [Field K] [Field L] [Algebra K L]
@@ -148,7 +148,7 @@ def galBasis (K L : Type _) [Field K] [Field L] [Algebra K L] :
   inter_sets := by 
     rintro X Y ⟨H1, ⟨E1, h_E1, rfl⟩, rfl⟩ ⟨H2, ⟨E2, h_E2, rfl⟩, rfl⟩
     use (IntermediateField.fixingSubgroup (E1 ⊔ E2)).carrier
-    refine' ⟨⟨_, ⟨_, finiteDimensionalSup E1 E2 h_E1 h_E2, rfl⟩, rfl⟩, _⟩
+    refine' ⟨⟨_, ⟨_, finite_dimensional_sup E1 E2 h_E1 h_E2, rfl⟩, rfl⟩, _⟩
     rw [Set.subset_inter_iff]
     exact
       ⟨IntermediateField.fixingSubgroup.antimono le_sup_left,
@@ -182,7 +182,7 @@ def galGroupBasis (K L : Type _) [Field K] [Field L] [Algebra K L] :
     rintro σ U ⟨H, ⟨E, hE, rfl⟩, rfl⟩
     let F : IntermediateField K L := E.map σ.symm.to_alg_hom
     refine' ⟨F.fixing_subgroup.carrier, ⟨⟨F.fixing_subgroup, ⟨F, _, rfl⟩, rfl⟩, fun g hg => _⟩⟩
-    · apply imFiniteDimensional σ.symm
+    · apply im_finite_dimensional σ.symm
       exact hE
     change σ * g * σ⁻¹ ∈ E.fixing_subgroup
     rw [IntermediateField.mem_fixing_subgroup_iff]
@@ -231,11 +231,11 @@ theorem IntermediateField.fixing_subgroup_is_open {K L : Type _} [Field K] [Fiel
 
 /-- Given a tower of fields `L/E/K`, with `E/K` finite, the subgroup `Gal(L/E) ≤ L ≃ₐ[K] L` is
   closed. -/
-theorem IntermediateField.fixingSubgroupIsClosed {K L : Type _} [Field K] [Field L] [Algebra K L]
+theorem IntermediateField.fixing_subgroup_is_closed {K L : Type _} [Field K] [Field L] [Algebra K L]
     (E : IntermediateField K L) [FiniteDimensional K E] :
     IsClosed (E.fixingSubgroup : Set (L ≃ₐ[K] L)) :=
-  OpenSubgroup.isClosed ⟨E.fixingSubgroup, E.fixing_subgroup_is_open⟩
-#align intermediate_field.fixing_subgroup_is_closed IntermediateField.fixingSubgroupIsClosed
+  OpenSubgroup.is_closed ⟨E.fixingSubgroup, E.fixing_subgroup_is_open⟩
+#align intermediate_field.fixing_subgroup_is_closed IntermediateField.fixing_subgroup_is_closed
 
 /-- If `L/K` is an algebraic extension, then the Krull topology on `L ≃ₐ[K] L` is Hausdorff. -/
 theorem krullTopologyT2 {K L : Type _} [Field K] [Field L] [Algebra K L]
@@ -249,7 +249,7 @@ theorem krullTopologyT2 {K L : Type _} [Field K] [Field L] [Algebra K L]
         rw [AlgEquiv.apply_symm_apply f (g x), ne_comm]
         exact hx
       let E : IntermediateField K L := IntermediateField.adjoin K {x}
-      let h_findim : FiniteDimensional K E := IntermediateField.adjoin.finiteDimensional (h_int x)
+      let h_findim : FiniteDimensional K E := IntermediateField.adjoin.finite_dimensional (h_int x)
       let H := E.fixing_subgroup
       have h_basis : (H : Set (L ≃ₐ[K] L)) ∈ galGroupBasis K L := ⟨H, ⟨E, ⟨h_findim, rfl⟩⟩, rfl⟩
       have h_nhd := GroupFilterBasis.mem_nhds_one (galGroupBasis K L) h_basis
@@ -286,7 +286,7 @@ theorem krull_topology_totally_disconnected {K L : Type _} [Field K] [Field L] [
   have hστ : σ⁻¹ * τ ≠ 1 := by rwa [Ne.def, inv_mul_eq_one]
   rcases FunLike.exists_ne hστ with ⟨x, hx : (σ⁻¹ * τ) x ≠ x⟩
   let E := IntermediateField.adjoin K ({x} : Set L)
-  haveI := IntermediateField.adjoin.finiteDimensional (h_int x)
+  haveI := IntermediateField.adjoin.finite_dimensional (h_int x)
   refine'
     ⟨leftCoset σ E.fixing_subgroup,
       ⟨E.fixing_subgroup_is_open.left_coset σ, E.fixing_subgroup_is_closed.left_coset σ⟩,

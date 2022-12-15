@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.complement
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -187,7 +187,7 @@ theorem is_complement'_top_right : IsComplement' H ⊤ ↔ H = ⊥ :=
 @[to_additive]
 theorem mem_left_transversals_iff_exists_unique_inv_mul_mem :
     S ∈ leftTransversals T ↔ ∀ g : G, ∃! s : S, (s : G)⁻¹ * g ∈ T := by
-  rw [left_transversals, Set.mem_set_of_eq, is_complement_iff_exists_unique]
+  rw [left_transversals, Set.mem_setOf_eq, is_complement_iff_exists_unique]
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
     exact
@@ -203,7 +203,7 @@ theorem mem_left_transversals_iff_exists_unique_inv_mul_mem :
 @[to_additive]
 theorem mem_right_transversals_iff_exists_unique_mul_inv_mem :
     S ∈ rightTransversals T ↔ ∀ g : G, ∃! s : S, g * (s : G)⁻¹ ∈ T := by
-  rw [right_transversals, Set.mem_set_of_eq, is_complement_iff_exists_unique]
+  rw [right_transversals, Set.mem_setOf_eq, is_complement_iff_exists_unique]
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
     exact
@@ -622,7 +622,7 @@ theorem transfer_transversal_apply'' (q : orbitRel.Quotient (zpowers g) (G ⧸ H
     ← zpow_one_add, Int.cast_add, Int.cast_neg, Int.cast_one, int_cast_cast, cast_id', id.def, ←
     sub_eq_neg_add, cast_sub_one, add_sub_cancel'_right]
   by_cases hk : k = 0
-  · rw [if_pos hk, if_pos hk, zpow_coe_nat]
+  · rw [if_pos hk, if_pos hk, zpow_ofNat]
   · rw [if_neg hk, if_neg hk]
 #align subgroup.transfer_transversal_apply'' Subgroup.transfer_transversal_apply''
 

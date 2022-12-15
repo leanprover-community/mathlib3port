@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1038,7 +1038,7 @@ theorem seq_of_forall_finite_exists {γ : Type _} {P : γ → Set γ → Prop}
     fun n => by
     classical 
       refine' Nat.strongRecOn' n fun n ih => _
-      rw [Nat.strong_rec_on_beta']
+      rw [Nat.strongRecOn'_beta]
       convert Classical.choose_spec (h _ _)
       ext x
       constructor
@@ -1233,11 +1233,11 @@ theorem Infinite.exists_not_mem_finset {s : Set α} (hs : s.Infinite) (f : Finse
 
 
 theorem finite_is_top (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Finite :=
-  (subsingleton_is_top α).Finite
+  (subsingleton_isTop α).Finite
 #align set.finite_is_top Set.finite_is_top
 
 theorem finite_is_bot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.Finite :=
-  (subsingleton_is_bot α).Finite
+  (subsingleton_isBot α).Finite
 #align set.finite_is_bot Set.finite_is_bot
 
 theorem Infinite.exists_lt_map_eq_of_maps_to [LinearOrder α] {s : Set α} {t : Set β} {f : α → β}
@@ -1386,7 +1386,7 @@ theorem Union_univ_pi_of_monotone {ι ι' : Type _} [LinearOrder ι'] [Nonempty 
 
 theorem finite_range_find_greatest {P : α → ℕ → Prop} [∀ x, DecidablePred (P x)] {b : ℕ} :
     (range fun x => Nat.findGreatest (P x) b).Finite :=
-  (finite_le_nat b).Subset <| range_subset_iff.2 fun x => Nat.find_greatest_le _
+  (finite_le_nat b).Subset <| range_subset_iff.2 fun x => Nat.findGreatest_le _
 #align set.finite_range_find_greatest Set.finite_range_find_greatest
 
 theorem Finite.exists_maximal_wrt [PartialOrder β] (f : α → β) (s : Set α) (h : Set.Finite s) :

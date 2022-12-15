@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.field.pi
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,7 +20,7 @@ We split this from `algebra.order.field.basic` to avoid importing the finiteness
 
 variable {α ι : Type _} [LinearOrderedSemifield α]
 
-theorem Pi.exists_forall_pos_add_lt [HasExistsAddOfLe α] [Finite ι] {x y : ι → α}
+theorem Pi.exists_forall_pos_add_lt [ExistsAddOfLE α] [Finite ι] {x y : ι → α}
     (h : ∀ i, x i < y i) : ∃ ε, 0 < ε ∧ ∀ i, x i + ε < y i := by
   cases nonempty_fintype ι
   cases isEmpty_or_nonempty ι

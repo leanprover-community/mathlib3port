@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.injective_resolution
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ def desc {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y) (J : InjectiveRe
 #align category_theory.InjectiveResolution.desc CategoryTheory.InjectiveResolutionCat.desc
 
 /-- The resolution maps intertwine the descent of a morphism and that morphism. -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y)
     (J : InjectiveResolutionCat Z) : J.ι ≫ desc f I J = (CochainComplex.single₀ C).map f ≫ I.ι := by
   ext n
@@ -195,13 +195,13 @@ def homotopyEquiv {X : C} (I J : InjectiveResolutionCat X) :
 #align
   category_theory.InjectiveResolution.homotopy_equiv CategoryTheory.InjectiveResolutionCat.homotopyEquiv
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem homotopy_equiv_hom_ι {X : C} (I J : InjectiveResolutionCat X) :
     I.ι ≫ (homotopyEquiv I J).Hom = J.ι := by simp [HomotopyEquiv]
 #align
   category_theory.InjectiveResolution.homotopy_equiv_hom_ι CategoryTheory.InjectiveResolutionCat.homotopy_equiv_hom_ι
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem homotopy_equiv_inv_ι {X : C} (I J : InjectiveResolutionCat X) :
     J.ι ≫ (homotopyEquiv I J).inv = I.ι := by simp [HomotopyEquiv]
 #align

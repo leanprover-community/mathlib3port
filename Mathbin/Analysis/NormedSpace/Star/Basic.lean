@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -327,7 +327,7 @@ open ContinuousLinearMap
 
 variable (𝕜) [DenselyNormedField 𝕜] [NonUnitalNormedRing E] [StarRing E] [CstarRing E]
 
-variable [NormedSpace 𝕜 E] [IsScalarTower 𝕜 E E] [SmulCommClass 𝕜 E E] (a : E)
+variable [NormedSpace 𝕜 E] [IsScalarTower 𝕜 E E] [SMulCommClass 𝕜 E E] (a : E)
 
 /-- In a C⋆-algebra `E`, either unital or non-unital, multiplication on the left by `a : E` has
 norm equal to the norm of `a`. -/

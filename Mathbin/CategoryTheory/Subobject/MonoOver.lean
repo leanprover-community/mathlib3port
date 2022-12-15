@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.mono_over
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ instance is_thin {X : C} : Quiver.IsThin (MonoOver X) := fun f g =>
     erw [← cancel_mono g.arrow, over.w h₁, over.w h₂]⟩
 #align category_theory.mono_over.is_thin CategoryTheory.MonoOver.is_thin
 
-@[reassoc]
+@[reassoc.1]
 theorem w {f g : MonoOver X} (k : f ⟶ g) : k.left ≫ g.arrow = f.arrow :=
   Over.w _
 #align category_theory.mono_over.w CategoryTheory.MonoOver.w

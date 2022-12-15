@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -441,8 +441,8 @@ theorem mul_add_inv_left {g : R →+* P} (h : ∀ y : M, IsUnit (g y)) (y : M) (
   by
   rw [mul_comm, ← one_mul z₁, ← Units.inv_mul (IsUnit.liftRight (g.to_monoid_hom.restrict M) h y),
     mul_assoc, ← mul_add, Units.inv_mul_eq_iff_eq_mul, Units.inv_mul_cancel_left,
-    IsUnit.coe_lift_right]
-  simp only [RingHom.to_monoid_hom_eq_coe, MonoidHom.restrict_apply, RingHom.coe_monoid_hom]
+    IsUnit.coe_liftRight]
+  simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.restrict_apply, [anonymous]]
 #align is_localization.mul_add_inv_left IsLocalization.mul_add_inv_left
 
 theorem lift_spec_mul_add {g : R →+* P} (hg : ∀ y : M, IsUnit (g y)) (z w w' v) :
@@ -520,7 +520,7 @@ theorem monoid_hom_ext ⦃j k : S →* P⦄
 /-- See note [partially-applied ext lemmas] -/
 theorem ring_hom_ext ⦃j k : S →+* P⦄ (h : j.comp (algebraMap R S) = k.comp (algebraMap R S)) :
     j = k :=
-  RingHom.coe_monoid_hom_injective <| monoid_hom_ext M <| MonoidHom.ext <| RingHom.congr_fun h
+  RingHom.coe_monoidHom_injective <| monoid_hom_ext M <| MonoidHom.ext <| RingHom.congr_fun h
 #align is_localization.ring_hom_ext IsLocalization.ring_hom_ext
 
 /- This is not an instance because the submonoid `M` would become a metavariable
@@ -875,12 +875,12 @@ private unsafe def tac :=
   sorry
 #align localization.tac localization.tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1382507049.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1382507049.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1382507049.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1382507049.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1382507049.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1382507049.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1382507049.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1382507049.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1382507049.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1382507049.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1382507049.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1382507049.tac -/
 instance : CommSemiring (Localization M) :=
   { Localization.commMonoidWithZero M with 
     zero := 0
@@ -1244,7 +1244,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 theorem is_domain_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A} [IsLocalization M S]
     (hM : M ≤ nonZeroDivisors A) : IsDomain S := by
-  apply NoZeroDivisors.to_is_domain _
+  apply NoZeroDivisors.toIsDomain _
   ·
     exact
       ⟨⟨(algebraMap A S) 0, (algebraMap A S) 1, fun h =>
@@ -1283,7 +1283,7 @@ theorem IsField.localization_map_bijective {R Rₘ : Type _} [CommRing R] [CommR
 theorem Field.localization_map_bijective {K Kₘ : Type _} [Field K] [CommRing Kₘ] {M : Submonoid K}
     (hM : (0 : K) ∉ M) [Algebra K Kₘ] [IsLocalization M Kₘ] :
     Function.Bijective (algebraMap K Kₘ) :=
-  (Field.to_is_field K).localization_map_bijective hM
+  (Field.toIsField K).localization_map_bijective hM
 #align field.localization_map_bijective Field.localization_map_bijective
 
 -- this looks weird due to the `letI` inside the above lemma, but trying to do it the other

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.sylow
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -716,14 +716,14 @@ section Pointwise
 
 open Pointwise
 
-theorem characteristic_of_normal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
+theorem characteristicOfNormal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
     (h : (P : Subgroup G).Normal) : (P : Subgroup G).Characteristic := by
   haveI := Sylow.subsingleton_of_normal P h
   rw [characteristic_iff_map_eq]
   intro Φ
   show (Φ • P).toSubgroup = P.to_subgroup
   congr
-#align sylow.characteristic_of_normal Sylow.characteristic_of_normal
+#align sylow.characteristic_of_normal Sylow.characteristicOfNormal
 
 end Pointwise
 

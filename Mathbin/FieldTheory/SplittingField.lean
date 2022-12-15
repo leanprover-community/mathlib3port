@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.splitting_field
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -404,7 +404,7 @@ theorem splits_iff (f : K[X]) [IsSplittingField K L f] :
 theorem mul (f g : F[X]) (hf : f ≠ 0) (hg : g ≠ 0) [IsSplittingField F K f]
     [IsSplittingField K L (g.map <| algebraMap F K)] : IsSplittingField F L (f * g) :=
   ⟨(IsScalarTower.algebra_map_eq F K L).symm ▸
-      splitsMul _ (splitsCompOfSplits _ _ (splits K f))
+      splits_mul _ (splits_comp_of_splits _ _ (splits K f))
         ((splits_map_iff _ _).1 (splits L <| g.map <| algebraMap F K)),
     by
     rw [Polynomial.map_mul,
@@ -442,7 +442,7 @@ def lift [Algebra K F] (f : K[X]) [IsSplittingField K L f]
       Algebra.toTop
 #align polynomial.is_splitting_field.lift Polynomial.IsSplittingField.lift
 
-theorem finiteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensional K L :=
+theorem finite_dimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensional K L :=
   ⟨@Algebra.top_to_submodule K L _ _ _ ▸
       adjoin_roots L f ▸
         fg_adjoin_of_finite (Finset.finite_to_set _) fun y hy =>
@@ -455,10 +455,10 @@ theorem finiteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensiona
                 (eval₂_eq_eval_map _).trans <|
                   (mem_roots <| map_ne_zero hf).1 (Multiset.mem_to_finset.mp hy)⟩⟩
 #align
-  polynomial.is_splitting_field.finite_dimensional Polynomial.IsSplittingField.finiteDimensional
+  polynomial.is_splitting_field.finite_dimensional Polynomial.IsSplittingField.finite_dimensional
 
 instance (f : K[X]) : FiniteDimensional K f.SplittingField :=
-  finiteDimensional f.SplittingField f
+  finite_dimensional f.SplittingField f
 
 /-- Any splitting field is isomorphic to `splitting_field f`. -/
 def algEquiv (f : K[X]) [IsSplittingField K L f] : L ≃ₐ[K] SplittingField f := by
@@ -502,7 +502,7 @@ open Polynomial
 
 variable [Field K] [Field L] [Algebra K L] {p : K[X]}
 
-theorem splitsOfSplits {F : IntermediateField K L} (h : p.Splits (algebraMap K L))
+theorem splits_of_splits {F : IntermediateField K L} (h : p.Splits (algebraMap K L))
     (hF : ∀ x ∈ p.rootSet L, x ∈ F) : p.Splits (algebraMap K F) := by
   simp_rw [root_set, Finset.mem_coe, Multiset.mem_to_finset] at hF
   rw [splits_iff_exists_multiset]
@@ -513,7 +513,7 @@ theorem splitsOfSplits {F : IntermediateField K L} (h : p.Splits (algebraMap K L
   simp_rw [Polynomial.map_mul, Polynomial.map_multiset_prod, Multiset.map_pmap, Polynomial.map_sub,
     map_C, map_X]
   rfl
-#align intermediate_field.splits_of_splits IntermediateField.splitsOfSplits
+#align intermediate_field.splits_of_splits IntermediateField.splits_of_splits
 
 end IntermediateField
 

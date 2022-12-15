@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.products
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,7 +148,7 @@ def conesEquiv (B : C) (F : Discrete J ⥤ Over B) :
   category_theory.over.construct_products.cones_equiv CategoryTheory.Over.ConstructProducts.conesEquiv
 
 /-- Use the above equivalence to prove we have a limit. -/
-theorem has_over_limit_discrete_of_wide_pullback_limit {B : C} (F : Discrete J ⥤ Over B)
+theorem hasOverLimitDiscreteOfWidePullbackLimit {B : C} (F : Discrete J ⥤ Over B)
     [HasLimit (widePullbackDiagramOfDiagramOver B F)] : HasLimit F :=
   HasLimit.mk
     { Cone := _
@@ -156,14 +156,14 @@ theorem has_over_limit_discrete_of_wide_pullback_limit {B : C} (F : Discrete J �
         IsLimit.ofRightAdjoint (conesEquiv B F).Functor
           (limit.isLimit (widePullbackDiagramOfDiagramOver B F)) }
 #align
-  category_theory.over.construct_products.has_over_limit_discrete_of_wide_pullback_limit CategoryTheory.Over.ConstructProducts.has_over_limit_discrete_of_wide_pullback_limit
+  category_theory.over.construct_products.has_over_limit_discrete_of_wide_pullback_limit CategoryTheory.Over.ConstructProducts.hasOverLimitDiscreteOfWidePullbackLimit
 
 /-- Given a wide pullback in `C`, construct a product in `C/B`. -/
-theorem over_product_of_wide_pullback [HasLimitsOfShape (WidePullbackShape J) C] {B : C} :
+theorem overProductOfWidePullback [HasLimitsOfShape (WidePullbackShape J) C] {B : C} :
     HasLimitsOfShape (Discrete J) (Over B) :=
-  { HasLimit := fun F => has_over_limit_discrete_of_wide_pullback_limit F }
+  { HasLimit := fun F => hasOverLimitDiscreteOfWidePullbackLimit F }
 #align
-  category_theory.over.construct_products.over_product_of_wide_pullback CategoryTheory.Over.ConstructProducts.over_product_of_wide_pullback
+  category_theory.over.construct_products.over_product_of_wide_pullback CategoryTheory.Over.ConstructProducts.overProductOfWidePullback
 
 /-- Given a pullback in `C`, construct a binary product in `C/B`. -/
 theorem over_binary_product_of_pullback [HasPullbacks C] {B : C} : HasBinaryProducts (Over B) :=
@@ -173,16 +173,16 @@ theorem over_binary_product_of_pullback [HasPullbacks C] {B : C} : HasBinaryProd
 
 /-- Given all wide pullbacks in `C`, construct products in `C/B`. -/
 theorem over_products_of_wide_pullbacks [HasWidePullbacks.{w} C] {B : C} :
-    HasProducts.{w} (Over B) := fun J => over_product_of_wide_pullback
+    HasProducts.{w} (Over B) := fun J => overProductOfWidePullback
 #align
   category_theory.over.construct_products.over_products_of_wide_pullbacks CategoryTheory.Over.ConstructProducts.over_products_of_wide_pullbacks
 
 /-- Given all finite wide pullbacks in `C`, construct finite products in `C/B`. -/
-theorem over_finite_products_of_finite_wide_pullbacks [HasFiniteWidePullbacks C] {B : C} :
+theorem overFiniteProductsOfFiniteWidePullbacks [HasFiniteWidePullbacks C] {B : C} :
     HasFiniteProducts (Over B) :=
-  ⟨fun n => over_product_of_wide_pullback⟩
+  ⟨fun n => overProductOfWidePullback⟩
 #align
-  category_theory.over.construct_products.over_finite_products_of_finite_wide_pullbacks CategoryTheory.Over.ConstructProducts.over_finite_products_of_finite_wide_pullbacks
+  category_theory.over.construct_products.over_finite_products_of_finite_wide_pullbacks CategoryTheory.Over.ConstructProducts.overFiniteProductsOfFiniteWidePullbacks
 
 end ConstructProducts
 

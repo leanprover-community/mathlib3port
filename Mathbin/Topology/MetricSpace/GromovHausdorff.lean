@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gromov_hausdorff
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -326,7 +326,7 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
     -- check that the induced "distance" is a candidate
     have Fgood : F ∈ candidates X Y := by
       simp only [candidates, forall_const, and_true_iff, add_comm, eq_self_iff_true, dist_eq_zero,
-        and_self_iff, Set.mem_set_of_eq]
+        and_self_iff, Set.mem_setOf_eq]
       repeat' constructor
       ·
         exact fun x y =>

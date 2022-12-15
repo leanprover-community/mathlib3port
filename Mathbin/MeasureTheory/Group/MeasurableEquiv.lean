@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.measurable_equiv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -212,7 +212,7 @@ end Mul
 /-- Inversion as a measurable automorphism of a group or group with zero. -/
 @[to_additive "Negation as a measurable automorphism of an additive group.",
   simps (config := { fullyApplied := false }) toEquiv apply]
-def inv (G) [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] :
+def inv (G) [MeasurableSpace G] [InvolutiveInv G] [HasMeasurableInv G] :
     G ≃ᵐ G where 
   toEquiv := Equiv.inv G
   measurableToFun := measurableInv
@@ -220,7 +220,7 @@ def inv (G) [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] :
 #align measurable_equiv.inv MeasurableEquiv.inv
 
 @[simp, to_additive]
-theorem symm_inv {G} [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] :
+theorem symm_inv {G} [MeasurableSpace G] [InvolutiveInv G] [HasMeasurableInv G] :
     (inv G).symm = inv G :=
   rfl
 #align measurable_equiv.symm_inv MeasurableEquiv.symm_inv

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.int.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,9 +39,9 @@ namespace Nat
 instance : WfDvdMonoid ℕ :=
   ⟨by
     refine'
-      RelHomClass.well_founded
+      RelHomClass.wellFounded
         (⟨fun x : ℕ => if x = 0 then (⊤ : ℕ∞) else x, _⟩ : DvdNotUnit →r (· < ·))
-        (WithTop.well_founded_lt Nat.lt_wfRel)
+        (WithTop.wellFounded_lt Nat.lt_wfRel)
     intro a b h
     cases a
     · exfalso
@@ -246,9 +246,9 @@ theorem sq_of_coprime {a b c : ℤ} (h : IsCoprime a b) (heq : a * b = c ^ 2) :
 theorem nat_abs_euclidean_domain_gcd (a b : ℤ) :
     Int.natAbs (EuclideanDomain.gcd a b) = Int.gcd a b := by
   apply Nat.dvd_antisymm <;> rw [← Int.coe_nat_dvd]
-  · rw [Int.nat_abs_dvd]
+  · rw [Int.natAbs_dvd]
     exact Int.dvd_gcd (EuclideanDomain.gcd_dvd_left _ _) (EuclideanDomain.gcd_dvd_right _ _)
-  · rw [Int.dvd_nat_abs]
+  · rw [Int.dvd_natAbs]
     exact EuclideanDomain.dvd_gcd (Int.gcd_dvd_left _ _) (Int.gcd_dvd_right _ _)
 #align int.nat_abs_euclidean_domain_gcd Int.nat_abs_euclidean_domain_gcd
 
@@ -336,7 +336,7 @@ theorem Nat.factors_multiset_prod_of_irreducible {s : Multiset ℕ}
 namespace multiplicity
 
 theorem finite_int_iff_nat_abs_finite {a b : ℤ} : Finite a b ↔ Finite a.natAbs b.natAbs := by
-  simp only [finite_def, ← Int.nat_abs_dvd_iff_dvd, Int.nat_abs_pow]
+  simp only [finite_def, ← Int.natAbs_dvd_natAbs, Int.nat_abs_pow]
 #align multiplicity.finite_int_iff_nat_abs_finite multiplicity.finite_int_iff_nat_abs_finite
 
 theorem finite_int_iff {a b : ℤ} : Finite a b ↔ a.natAbs ≠ 1 ∧ b ≠ 0 := by
@@ -358,14 +358,14 @@ theorem induction_on_primes {P : ℕ → Prop} (h₀ : P 0) (h₁ : P 1)
   apply UniqueFactorizationMonoid.induction_on_prime
   exact h₀
   · intro n h
-    rw [Nat.is_unit_iff.1 h]
+    rw [Nat.isUnit_iff.1 h]
     exact h₁
   · intro a p _ hp ha
     exact h p a hp.nat_prime ha
 #align induction_on_primes induction_on_primes
 
 theorem Int.associated_nat_abs (k : ℤ) : Associated k k.natAbs :=
-  associated_of_dvd_dvd (Int.coe_nat_dvd_right.mpr dvd_rfl) (Int.nat_abs_dvd.mpr dvd_rfl)
+  associated_of_dvd_dvd (Int.coe_nat_dvd_right.mpr dvd_rfl) (Int.natAbs_dvd.mpr dvd_rfl)
 #align int.associated_nat_abs Int.associated_nat_abs
 
 theorem Int.prime_iff_nat_abs_prime {k : ℤ} : Prime k ↔ Nat.Prime k.natAbs :=
@@ -373,7 +373,7 @@ theorem Int.prime_iff_nat_abs_prime {k : ℤ} : Prime k ↔ Nat.Prime k.natAbs :
 #align int.prime_iff_nat_abs_prime Int.prime_iff_nat_abs_prime
 
 theorem Int.associated_iff_nat_abs {a b : ℤ} : Associated a b ↔ a.natAbs = b.natAbs := by
-  rw [← dvd_dvd_iff_associated, ← Int.nat_abs_dvd_iff_dvd, ← Int.nat_abs_dvd_iff_dvd,
+  rw [← dvd_dvd_iff_associated, ← Int.natAbs_dvd_natAbs, ← Int.natAbs_dvd_natAbs,
     dvd_dvd_iff_associated]
   exact associated_iff_eq
 #align int.associated_iff_nat_abs Int.associated_iff_nat_abs
@@ -387,9 +387,8 @@ namespace Int
 
 theorem zmultiples_nat_abs (a : ℤ) :
     AddSubgroup.zmultiples (a.natAbs : ℤ) = AddSubgroup.zmultiples a :=
-  le_antisymm
-    (AddSubgroup.zmultiples_subset (mem_zmultiples_iff.mpr (dvd_nat_abs.mpr (dvd_refl a))))
-    (AddSubgroup.zmultiples_subset (mem_zmultiples_iff.mpr (nat_abs_dvd.mpr (dvd_refl a))))
+  le_antisymm (AddSubgroup.zmultiples_subset (mem_zmultiples_iff.mpr (dvd_natAbs.mpr (dvd_refl a))))
+    (AddSubgroup.zmultiples_subset (mem_zmultiples_iff.mpr (natAbs_dvd.mpr (dvd_refl a))))
 #align int.zmultiples_nat_abs Int.zmultiples_nat_abs
 
 theorem span_nat_abs (a : ℤ) : Ideal.span ({a.natAbs} : Set ℤ) = Ideal.span {a} := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.embeddings
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x�
   have hx := IsSeparable.is_integral ℚ x
   rw [← norm_algebra_map' A, ← coeff_map (algebraMap ℚ A)]
   refine'
-    coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splitsCodomain _)
+    coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splits_codomain _)
       (minpoly.nat_degree_le hx) (fun z hz => _) i
   classical 
     rw [← Multiset.mem_to_finset] at hz

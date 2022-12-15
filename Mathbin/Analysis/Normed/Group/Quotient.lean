@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.quotient
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ theorem quotient_norm_neg {S : AddSubgroup M} (x : M ⧸ S) : ‖-x‖ = ‖x‖
   constructor
   · rintro ⟨m, rfl : mk' S m = x, rfl⟩
     rw [← norm_neg]
-    exact ⟨-m, by simp only [(mk' S).map_neg, Set.mem_set_of_eq], rfl⟩
+    exact ⟨-m, by simp only [(mk' S).map_neg, Set.mem_setOf_eq], rfl⟩
   · rintro ⟨m, hm : mk' S m = -x, rfl⟩
     exact ⟨-m, by simpa [eq_comm] using eq_neg_iff_eq_neg.mp ((mk'_apply _ _).symm.trans hm)⟩
 #align quotient_norm_neg quotient_norm_neg
@@ -149,7 +149,7 @@ theorem quotient_norm_mk_le (S : AddSubgroup M) (m : M) : ‖mk' S m‖ ≤ ‖m
   · rintro _ ⟨n, h, rfl⟩
     apply norm_nonneg
   · apply Set.mem_image_of_mem
-    rw [Set.mem_set_of_eq]
+    rw [Set.mem_setOf_eq]
 #align quotient_norm_mk_le quotient_norm_mk_le
 
 /-- The norm of the projection is smaller or equal to the norm of the original element. -/

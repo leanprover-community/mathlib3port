@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,7 +206,7 @@ theorem balancedInter₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜
   balancedInter fun _ => balancedInter <| h _
 #align balanced_Inter₂ balancedInter₂
 
-variable [HasSmul 𝕝 E] [SmulCommClass 𝕜 𝕝 E]
+variable [HasSmul 𝕝 E] [SMulCommClass 𝕜 𝕝 E]
 
 theorem Balanced.smul (a : 𝕝) (hs : Balanced 𝕜 s) : Balanced 𝕜 (a • s) := fun b hb =>
   (smul_comm _ _ _).Subset.trans <| smul_set_mono <| hs _ hb
@@ -404,7 +404,7 @@ theorem Absorbent.zero_mem (hs : Absorbent 𝕜 s) : (0 : E) ∈ s :=
   absorbs_zero_iff.1 <| absorbent_iff_forall_absorbs_singleton.1 hs _
 #align absorbent.zero_mem Absorbent.zero_mem
 
-variable [Module ℝ E] [SmulCommClass ℝ 𝕜 E]
+variable [Module ℝ E] [SMulCommClass ℝ 𝕜 E]
 
 theorem balancedConvexHullOfBalanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (convexHull ℝ s) := by
   suffices Convex ℝ { x | ∀ a : 𝕜, ‖a‖ ≤ 1 → a • x ∈ convexHull ℝ s } by

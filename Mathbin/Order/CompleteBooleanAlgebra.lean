@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.complete_boolean_algebra
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _}
 #align pi.complete_boolean_algebra Pi.completeBooleanAlgebra
 
 instance PropCat.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
-  { PropCat.booleanAlgebra, PropCat.completeLattice with
+  { Prop.booleanAlgebra, PropCat.completeLattice with
     infi_sup_le_sup_Inf := fun p s =>
       Iff.mp <| by simp only [forall_or_left, CompleteLattice.inf, infi_Prop_eq, sup_Prop_eq]
     inf_Sup_le_supr_inf := fun p s =>

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup.kernels
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ def fork {V W : SemiNormedGroupCat.{u}} (f g : V ⟶ W) : Fork f g :=
       sub_eq_zero] using this
 #align SemiNormedGroup.fork SemiNormedGroupCat.fork
 
-instance has_limit_parallel_pair {V W : SemiNormedGroupCat.{u}} (f g : V ⟶ W) :
+instance hasLimitParallelPair {V W : SemiNormedGroupCat.{u}} (f g : V ⟶ W) :
     HasLimit
       (parallelPair f
         g) where exists_limit :=
@@ -118,11 +118,11 @@ instance has_limit_parallel_pair {V W : SemiNormedGroupCat.{u}} (f g : V ⟶ W) 
             dsimp
             rw [← h]
             rfl }
-#align SemiNormedGroup.has_limit_parallel_pair SemiNormedGroupCat.has_limit_parallel_pair
+#align SemiNormedGroup.has_limit_parallel_pair SemiNormedGroupCat.hasLimitParallelPair
 
 instance : Limits.HasEqualizers.{u, u + 1} SemiNormedGroupCat :=
   (@has_equalizers_of_has_limit_parallel_pair SemiNormedGroupCat _) fun V W f g =>
-    SemiNormedGroupCat.has_limit_parallel_pair f g
+    SemiNormedGroupCat.hasLimitParallelPair f g
 
 end EqualizersAndKernels
 
@@ -196,7 +196,7 @@ theorem explicit_cokernel_π_surjective {X Y : SemiNormedGroupCat.{u}} {f : X �
 #align
   SemiNormedGroup.explicit_cokernel_π_surjective SemiNormedGroupCat.explicit_cokernel_π_surjective
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem comp_explicit_cokernel_π {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y) :
     f ≫ explicitCokernelπ f = 0 := by
   convert (cokernel_cocone f).w walking_parallel_pair_hom.left
@@ -212,7 +212,7 @@ theorem explicit_cokernel_π_apply_dom_eq_zero {X Y : SemiNormedGroupCat.{u}} {f
 #align
   SemiNormedGroup.explicit_cokernel_π_apply_dom_eq_zero SemiNormedGroupCat.explicit_cokernel_π_apply_dom_eq_zero
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem explicit_cokernel_π_desc {X Y Z : SemiNormedGroupCat.{u}} {f : X ⟶ Y} {g : Y ⟶ Z}
     (w : f ≫ g = 0) : explicitCokernelπ f ≫ explicitCokernelDesc w = g :=
   (isColimitCokernelCocone f).fac _ _

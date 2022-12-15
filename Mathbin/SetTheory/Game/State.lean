@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.state
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ class State (S : Type u) where
   right_bound : ∀ {s t : S} (m : t ∈ R s), turn_bound t < turn_bound s
 #align pgame.state Pgame.State
 
-open State
+open StateM
 
 variable {S : Type u} [State S]
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.eisenstein
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -304,7 +304,7 @@ theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] :
     intro h
     obtain ⟨k, hk⟩ := Int.coe_nat_dvd.1 h
     rw [← mul_assoc, mul_one, mul_assoc] at hk
-    nth_rw 1 [← Nat.mul_one p]  at hk
+    nth_rw 1 [← Nat.mul_one p] at hk
     rw [mul_right_inj' hp.out.ne_zero] at hk
     exact Nat.Prime.not_dvd_one hp.out (Dvd.intro k hk.symm)
 #align cyclotomic_comp_X_add_one_is_eisenstein_at cyclotomicCompXAddOneIsEisensteinAt
@@ -350,7 +350,7 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
     intro h
     obtain ⟨k, hk⟩ := Int.coe_nat_dvd.1 h
     rw [← mul_assoc, mul_one, mul_assoc] at hk
-    nth_rw 1 [← Nat.mul_one p]  at hk
+    nth_rw 1 [← Nat.mul_one p] at hk
     rw [mul_right_inj' hp.out.ne_zero] at hk
     exact Nat.Prime.not_dvd_one hp.out (Dvd.intro k hk.symm)
 #align
@@ -631,9 +631,9 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
       map_pow, ← _root_.map_mul, ← map_pow, ← _root_.map_mul] at hQ
     -- We can now finish the proof.
     have hppdiv : p ^ B.dim ∣ p ^ B.dim * r := dvd_mul_of_dvd_left dvd_rfl _
-    rwa [← IsFractionRing.injective R K hQ, mul_comm, ← Units.coe_neg_one, mul_pow, ← Units.coe_pow,
-      ← Units.coe_pow, mul_assoc, IsUnit.dvd_mul_left _ _ _ ⟨_, rfl⟩, mul_comm, ←
-      Nat.succ_eq_add_one, hn] at hppdiv
+    rwa [← IsFractionRing.injective R K hQ, mul_comm, ← Units.coe_neg_one, mul_pow, ←
+      Units.val_pow_eq_pow_val, ← Units.val_pow_eq_pow_val, mul_assoc,
+      IsUnit.dvd_mul_left _ _ _ ⟨_, rfl⟩, mul_comm, ← Nat.succ_eq_add_one, hn] at hppdiv
 #align
   mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at
 

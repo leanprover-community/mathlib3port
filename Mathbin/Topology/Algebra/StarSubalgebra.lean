@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.algebra.star_subalgebra
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,16 +54,16 @@ theorem embedding_inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂)
 #align star_subalgebra.embedding_inclusion StarSubalgebra.embedding_inclusion
 
 /-- The `star_subalgebra.inclusion` of a closed star subalgebra is a `closed_embedding`. -/
-theorem closedEmbeddingInclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂)
+theorem closed_embedding_inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂)
     (hS₁ : IsClosed (S₁ : Set A)) : ClosedEmbedding (inclusion h) :=
   { embedding_inclusion h with
-    closedRange :=
+    closed_range :=
       is_closed_induced_iff.2
         ⟨S₁, hS₁, by 
           convert (Set.range_subtype_map id _).symm
           rw [Set.image_id]
           rfl⟩ }
-#align star_subalgebra.closed_embedding_inclusion StarSubalgebra.closedEmbeddingInclusion
+#align star_subalgebra.closed_embedding_inclusion StarSubalgebra.closed_embedding_inclusion
 
 variable [TopologicalSemiring A] [HasContinuousStar A]
 
@@ -87,15 +87,15 @@ theorem le_topological_closure (s : StarSubalgebra R A) : s ≤ s.topologicalClo
   subset_closure
 #align star_subalgebra.le_topological_closure StarSubalgebra.le_topological_closure
 
-theorem isClosedTopologicalClosure (s : StarSubalgebra R A) :
+theorem is_closed_topological_closure (s : StarSubalgebra R A) :
     IsClosed (s.topologicalClosure : Set A) :=
-  isClosedClosure
-#align star_subalgebra.is_closed_topological_closure StarSubalgebra.isClosedTopologicalClosure
+  is_closed_closure
+#align star_subalgebra.is_closed_topological_closure StarSubalgebra.is_closed_topological_closure
 
 instance {A : Type _} [UniformSpace A] [CompleteSpace A] [Semiring A] [StarRing A]
     [TopologicalSemiring A] [HasContinuousStar A] [Algebra R A] [StarModule R A]
     {S : StarSubalgebra R A} : CompleteSpace S.topologicalClosure :=
-  isClosedClosure.complete_space_coe
+  is_closed_closure.complete_space_coe
 
 theorem topological_closure_minimal {s t : StarSubalgebra R A} (h : s ≤ t)
     (ht : IsClosed (t : Set A)) : s.topologicalClosure ≤ t :=
@@ -104,7 +104,8 @@ theorem topological_closure_minimal {s t : StarSubalgebra R A} (h : s ≤ t)
 
 theorem topological_closure_mono : Monotone (topologicalClosure : _ → StarSubalgebra R A) :=
   fun S₁ S₂ h =>
-  topological_closure_minimal (h.trans <| le_topological_closure S₂) (isClosedTopologicalClosure S₂)
+  topological_closure_minimal (h.trans <| le_topological_closure S₂)
+    (is_closed_topological_closure S₂)
 #align star_subalgebra.topological_closure_mono StarSubalgebra.topological_closure_mono
 
 /-- If a star subalgebra of a topological star algebra is commutative, then so is its topological
@@ -202,14 +203,14 @@ instance {R A} [CommRing R] [StarRing R] [TopologicalSpace A] [Ring A] [Algebra 
     [IsStarNormal x] : CommRing (elementalStarAlgebra R x) :=
   StarSubalgebra.commRingTopologicalClosure _ mul_comm
 
-protected theorem isClosed (x : A) : IsClosed (elementalStarAlgebra R x : Set A) :=
-  isClosedClosure
-#align elemental_star_algebra.is_closed elementalStarAlgebra.isClosed
+protected theorem is_closed (x : A) : IsClosed (elementalStarAlgebra R x : Set A) :=
+  is_closed_closure
+#align elemental_star_algebra.is_closed elementalStarAlgebra.is_closed
 
 instance {A : Type _} [UniformSpace A] [CompleteSpace A] [Semiring A] [StarRing A]
     [TopologicalSemiring A] [HasContinuousStar A] [Algebra R A] [StarModule R A] (x : A) :
     CompleteSpace (elementalStarAlgebra R x) :=
-  isClosedClosure.complete_space_coe
+  is_closed_closure.complete_space_coe
 
 theorem le_of_is_closed_of_mem {S : StarSubalgebra R A} (hS : IsClosed (S : Set A)) {x : A}
     (hx : x ∈ S) : elementalStarAlgebra R x ≤ S :=
@@ -217,17 +218,17 @@ theorem le_of_is_closed_of_mem {S : StarSubalgebra R A} (hS : IsClosed (S : Set 
 #align elemental_star_algebra.le_of_is_closed_of_mem elementalStarAlgebra.le_of_is_closed_of_mem
 
 /-- The coercion from an elemental algebra to the full algebra as a `closed_embedding`. -/
-theorem closedEmbeddingCoe (x : A) : ClosedEmbedding (coe : elementalStarAlgebra R x → A) :=
+theorem closed_embedding_coe (x : A) : ClosedEmbedding (coe : elementalStarAlgebra R x → A) :=
   { induced := rfl
     inj := Subtype.coe_injective
-    closedRange := by 
-      convert elementalStarAlgebra.isClosed R x
+    closed_range := by 
+      convert elementalStarAlgebra.is_closed R x
       exact
         Set.ext fun y =>
           ⟨by 
             rintro ⟨y, rfl⟩
             exact y.prop, fun hy => ⟨⟨y, hy⟩, rfl⟩⟩ }
-#align elemental_star_algebra.closed_embedding_coe elementalStarAlgebra.closedEmbeddingCoe
+#align elemental_star_algebra.closed_embedding_coe elementalStarAlgebra.closed_embedding_coe
 
 theorem star_alg_hom_class_ext [T2Space B] {F : Type _} {a : A}
     [StarAlgHomClass F R (elementalStarAlgebra R a) B] {φ ψ : F} (hφ : Continuous φ)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,9 +74,9 @@ restate_axiom preadditive.add_comp'
 
 restate_axiom preadditive.comp_add'
 
-attribute [simp, reassoc] preadditive.add_comp
+attribute [simp, reassoc.1] preadditive.add_comp
 
-attribute [reassoc] preadditive.comp_add
+attribute [reassoc.1] preadditive.comp_add
 
 -- (the linter doesn't like `simp` on this lemma)
 attribute [simp] preadditive.comp_add
@@ -148,29 +148,29 @@ def compHom : (P ⟶ Q) →+ (Q ⟶ R) →+ (P ⟶ R) :=
     AddMonoidHom.ext fun g => (rightComp _ g).map_add f₁ f₂
 #align category_theory.preadditive.comp_hom CategoryTheory.Preadditive.compHom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem sub_comp : (f - f') ≫ g = f ≫ g - f' ≫ g :=
   map_sub (rightComp P g) f f'
 #align category_theory.preadditive.sub_comp CategoryTheory.Preadditive.sub_comp
 
 -- The redundant simp lemma linter says that simp can prove the reassoc version of this lemma.
-@[reassoc, simp]
+@[reassoc.1, simp]
 theorem comp_sub : f ≫ (g - g') = f ≫ g - f ≫ g' :=
   map_sub (leftComp R f) g g'
 #align category_theory.preadditive.comp_sub CategoryTheory.Preadditive.comp_sub
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem neg_comp : (-f) ≫ g = -f ≫ g :=
   map_neg (rightComp P g) f
 #align category_theory.preadditive.neg_comp CategoryTheory.Preadditive.neg_comp
 
 -- The redundant simp lemma linter says that simp can prove the reassoc version of this lemma.
-@[reassoc, simp]
+@[reassoc.1, simp]
 theorem comp_neg : f ≫ (-g) = -f ≫ g :=
   map_neg (leftComp R f) g
 #align category_theory.preadditive.comp_neg CategoryTheory.Preadditive.comp_neg
 
-@[reassoc]
+@[reassoc.1]
 theorem neg_comp_neg : (-f) ≫ (-g) = f ≫ g := by simp
 #align category_theory.preadditive.neg_comp_neg CategoryTheory.Preadditive.neg_comp_neg
 
@@ -190,13 +190,13 @@ theorem comp_zsmul (n : ℤ) : f ≫ (n • g) = n • f ≫ g :=
   map_zsmul (leftComp R f) n g
 #align category_theory.preadditive.comp_zsmul CategoryTheory.Preadditive.comp_zsmul
 
-@[reassoc]
+@[reassoc.1]
 theorem comp_sum {P Q R : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :
     (f ≫ ∑ j in s, g j) = ∑ j in s, f ≫ g j :=
   map_sum (leftComp R f) _ _
 #align category_theory.preadditive.comp_sum CategoryTheory.Preadditive.comp_sum
 
-@[reassoc]
+@[reassoc.1]
 theorem sum_comp {P Q R : C} {J : Type _} (s : Finset J) (f : J → (P ⟶ Q)) (g : Q ⟶ R) :
     (∑ j in s, f j) ≫ g = ∑ j in s, f j ≫ g :=
   map_sum (rightComp P g) _ _

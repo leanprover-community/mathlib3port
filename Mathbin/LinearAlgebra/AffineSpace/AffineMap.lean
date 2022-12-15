@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_map
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -217,7 +217,7 @@ theorem mk'_linear (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p h) : (mk' f f' p h)
 
 section HasSmul
 
-variable {R : Type _} [Monoid R] [DistribMulAction R V2] [SmulCommClass k R V2]
+variable {R : Type _} [Monoid R] [DistribMulAction R V2] [SMulCommClass k R V2]
 
 /-- The space of affine maps to a module inherits an `R`-action from the action on its codomain. -/
 instance :
@@ -739,7 +739,7 @@ include V1
 
 section DistribMulAction
 
-variable [Monoid R] [DistribMulAction R V2] [SmulCommClass k R V2]
+variable [Monoid R] [DistribMulAction R V2] [SMulCommClass k R V2]
 
 /-- The space of affine maps to a module inherits an `R`-action from the action on its codomain. -/
 instance :
@@ -752,7 +752,7 @@ end DistribMulAction
 
 section Module
 
-variable [Semiring R] [Module R V2] [SmulCommClass k R V2]
+variable [Semiring R] [Module R V2] [SMulCommClass k R V2]
 
 /-- The space of affine maps taking values in an `R`-module is an `R`-module. -/
 instance : Module R (P1 →ᵃ[k] V2) :=

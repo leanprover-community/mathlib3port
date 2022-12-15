@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.order
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ protected def Nonneg (r : ℚ) : Prop :=
 theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a := by
   generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
   simp [Rat.Nonneg]
-  have d0 := Int.coe_nat_lt.2 h₁
+  have d0 := Int.ofNat_lt.2 h₁
   have := (mk_eq (ne_of_gt h) (ne_of_gt d0)).1 ha
   constructor <;> intro h₂
   · apply nonneg_of_mul_nonneg_left _ d0
@@ -246,12 +246,16 @@ theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.denom := by
 
 end Rat
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- We make some assertions here about declarations that do not need to be in the import dependencies
 -- for this file, but have been in the past.
+assert_not_exists fintype
+
+assert_not_exists set.Icc
+
+assert_not_exists galois_connection
+
 -- These are less significant, but should not be relaxed until at least after port to Lean 4.
+assert_not_exists LinearOrderedCommGroupWithZero
+
 -- This one doesn't exist anywhere!
 -- assert_not_exists positive.add_comm_semigroup

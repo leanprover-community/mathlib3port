@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Heather Macbeth, Yaël Dillies
 
 ! This file was ported from Lean 3 source module tactic.positivity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -675,7 +675,7 @@ private theorem div_ne_zero_of_ne_zero_of_pos (ha : a ≠ 0) (hb : 0 < b) : a / 
 end LinearOrderedSemifield
 
 private theorem int_div_self_pos {a : ℤ} (ha : 0 < a) : 0 < a / a := by
-  rw [Int.div_self ha.ne']
+  rw [Int.ediv_self ha.ne']
   exact zero_lt_one
 #align tactic.int_div_self_pos tactic.int_div_self_pos
 

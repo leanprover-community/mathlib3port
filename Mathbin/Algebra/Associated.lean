@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module algebra.associated
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem not_unit : ¬IsUnit p :=
 #align prime.not_unit Prime.not_unit
 
 theorem not_dvd_one : ¬p ∣ 1 :=
-  mt (is_unit_of_dvd_one _) hp.not_unit
+  mt (isUnit_of_dvd_one _) hp.not_unit
 #align prime.not_dvd_one Prime.not_dvd_one
 
 theorem ne_one : p ≠ 1 := fun h => hp.2.1 (h.symm ▸ isUnit_one)
@@ -56,7 +56,7 @@ theorem dvd_or_dvd (hp : Prime p) {a b : α} (h : p ∣ a * b) : p ∣ a ∨ p �
 theorem dvd_of_dvd_pow (hp : Prime p) {a : α} {n : ℕ} (h : p ∣ a ^ n) : p ∣ a := by
   induction' n with n ih
   · rw [pow_zero] at h
-    have := is_unit_of_dvd_one _ h
+    have := isUnit_of_dvd_one _ h
     have := not_unit hp
     contradiction
   rw [pow_succ] at h
@@ -173,7 +173,7 @@ structure Irreducible [Monoid α] (p : α) : Prop where
 namespace Irreducible
 
 theorem not_dvd_one [CommMonoid α] {p : α} (hp : Irreducible p) : ¬p ∣ 1 :=
-  mt (is_unit_of_dvd_one _) hp.not_unit
+  mt (isUnit_of_dvd_one _) hp.not_unit
 #align irreducible.not_dvd_one Irreducible.not_dvd_one
 
 theorem is_unit_or_is_unit [Monoid α] {p : α} (hp : Irreducible p) {a b : α} (h : p = a * b) :
@@ -226,7 +226,7 @@ theorem irreducible_or_factor {α} [Monoid α] (x : α) (h : ¬IsUnit x) :
   haveI := Classical.dec
   refine' or_iff_not_imp_right.2 fun H => _
   simp [h, irreducible_iff] at H⊢
-  refine' fun a b h => Classical.by_contradiction fun o => _
+  refine' fun a b h => by_contradiction fun o => _
   simp [not_or] at o
   exact H _ o.1 _ o.2 h.symm
 #align irreducible_or_factor irreducible_or_factor
@@ -316,7 +316,7 @@ protected theorem Prime.irreducible (hp : Prime p) : Irreducible p :=
     (show a * b ∣ a ∨ a * b ∣ b from hab ▸ hp.dvd_or_dvd (hab ▸ dvd_rfl)).elim
       (fun ⟨x, hx⟩ =>
         Or.inr
-          (is_unit_iff_dvd_one.2
+          (isUnit_iff_dvd_one.2
             ⟨x,
               mul_right_cancel₀ (show a ≠ 0 from fun h => by simp_all [Prime]) <| by
                 conv => 
@@ -325,7 +325,7 @@ protected theorem Prime.irreducible (hp : Prime p) : Irreducible p :=
                   simp [mul_comm, mul_assoc, mul_left_comm]⟩))
       fun ⟨x, hx⟩ =>
       Or.inl
-        (is_unit_iff_dvd_one.2
+        (isUnit_iff_dvd_one.2
           ⟨x,
             mul_right_cancel₀ (show b ≠ 0 from fun h => by simp_all [Prime]) <| by
               conv => 
@@ -1104,14 +1104,13 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
   | _, m, ⟨hp0, hp1, h⟩, ⟨d, rfl⟩ =>
     match h m d dvd_rfl with
     | Or.inl h =>
-      (Classical.by_cases fun this : m = 0 => by simp [this]) fun this : m ≠ 0 => by
+      (by_cases fun this : m = 0 => by simp [this]) fun this : m ≠ 0 => by
         have : m * d ≤ m * 1 := by simpa using h
         have : d ≤ 1 := Associates.le_of_mul_le_mul_left m d 1 ‹m ≠ 0› this
         have : d = 1 := bot_unique this
         simp [this]
     | Or.inr h =>
-      (Classical.by_cases fun this : d = 0 => by simp [this] at hp0 <;> contradiction)
-        fun this : d ≠ 0 =>
+      (by_cases fun this : d = 0 => by simp [this] at hp0 <;> contradiction) fun this : d ≠ 0 =>
         have : d * m ≤ d * 1 := by simpa [mul_comm] using h
         Or.inl <| bot_unique <| Associates.le_of_mul_le_mul_left d m 1 ‹d ≠ 0› this
 #align associates.one_or_eq_of_le_of_prime Associates.one_or_eq_of_le_of_prime
@@ -1193,14 +1192,14 @@ theorem DvdNotUnit.ne [CancelCommMonoidWithZero α] {p q : α} (h : DvdNotUnit p
 theorem pow_injective_of_not_unit [CancelCommMonoidWithZero α] {q : α} (hq : ¬IsUnit q)
     (hq' : q ≠ 0) : Function.Injective fun n : ℕ => q ^ n := by
   refine' injective_of_lt_imp_ne fun n m h => DvdNotUnit.ne ⟨pow_ne_zero n hq', q ^ (m - n), _, _⟩
-  · exact not_is_unit_of_not_is_unit_dvd hq (dvd_pow (dvd_refl _) (Nat.sub_pos_of_lt h).ne')
+  · exact not_isUnit_of_not_isUnit_dvd hq (dvd_pow (dvd_refl _) (Nat.sub_pos_of_lt h).ne')
   · exact (pow_mul_pow_sub q h.le).symm
 #align pow_injective_of_not_unit pow_injective_of_not_unit
 
 theorem dvd_prime_pow [CancelCommMonoidWithZero α] {p q : α} (hp : Prime p) (n : ℕ) :
     q ∣ p ^ n ↔ ∃ i ≤ n, Associated q (p ^ i) := by
   induction' n with n ih generalizing q
-  · simp [← is_unit_iff_dvd_one, associated_one_iff_is_unit]
+  · simp [← isUnit_iff_dvd_one, associated_one_iff_is_unit]
   refine' ⟨fun h => _, fun ⟨i, hi, hq⟩ => hq.dvd.trans (pow_dvd_pow p hi)⟩
   rw [pow_succ] at h
   rcases hp.left_dvd_or_dvd_right_of_dvd_mul h with (⟨q, rfl⟩ | hno)
@@ -1214,4 +1213,5 @@ theorem dvd_prime_pow [CancelCommMonoidWithZero α] {p q : α} (hp : Prime p) (n
 
 end CancelCommMonoidWithZero
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+assert_not_exists multiset
+

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module dynamics.fixed_points.topology
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ theorem is_fixed_pt_of_tendsto_iterate {x y : α} (hy : Tendsto (fun n => (f^[n]
 #align is_fixed_pt_of_tendsto_iterate is_fixed_pt_of_tendsto_iterate
 
 /-- The set of fixed points of a continuous map is a closed set. -/
-theorem isClosedFixedPoints (hf : Continuous f) : IsClosed (fixedPoints f) :=
-  isClosedEq hf continuous_id
-#align is_closed_fixed_points isClosedFixedPoints
+theorem is_closed_fixed_points (hf : Continuous f) : IsClosed (fixedPoints f) :=
+  is_closed_eq hf continuous_id
+#align is_closed_fixed_points is_closed_fixed_points
 

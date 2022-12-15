@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.triv_sq_zero_ext
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,8 +183,8 @@ instance [HasSmul T R] [HasSmul T M] [HasSmul S R] [HasSmul S M] [HasSmul T S] [
     [IsScalarTower T S M] : IsScalarTower T S (tsze R M) :=
   Prod.is_scalar_tower
 
-instance [HasSmul T R] [HasSmul T M] [HasSmul S R] [HasSmul S M] [SmulCommClass T S R]
-    [SmulCommClass T S M] : SmulCommClass T S (tsze R M) :=
+instance [HasSmul T R] [HasSmul T M] [HasSmul S R] [HasSmul S M] [SMulCommClass T S R]
+    [SMulCommClass T S M] : SMulCommClass T S (tsze R M) :=
   Prod.smul_comm_class
 
 instance [HasSmul S R] [HasSmul S M] [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsCentralScalar S R]

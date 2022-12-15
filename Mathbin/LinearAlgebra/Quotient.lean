@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,8 +138,8 @@ theorem mk_smul (r : S) (x : M) : (mk (r • x) : M ⧸ p) = r • mk x :=
 #align submodule.quotient.mk_smul Submodule.Quotient.mk_smul
 
 instance smul_comm_class (T : Type _) [HasSmul T R] [HasSmul T M] [IsScalarTower T R M]
-    [SmulCommClass S T M] :
-    SmulCommClass S T
+    [SMulCommClass S T M] :
+    SMulCommClass S T
       (M ⧸ P) where smul_comm x y := Quotient.ind' fun z => congr_arg mk (smul_comm _ _ _)
 #align submodule.quotient.smul_comm_class Submodule.Quotient.smul_comm_class
 
@@ -170,21 +170,21 @@ instance mulAction (P : Submodule R M) : MulAction R (M ⧸ P) :=
   Quotient.mulAction' P
 #align submodule.quotient.mul_action Submodule.Quotient.mulAction
 
-instance smulZeroClass' [HasSmul S R] [SmulZeroClass S M] [IsScalarTower S R M]
-    (P : Submodule R M) : SmulZeroClass S (M ⧸ P) :=
+instance smulZeroClass' [HasSmul S R] [SMulZeroClass S M] [IsScalarTower S R M]
+    (P : Submodule R M) : SMulZeroClass S (M ⧸ P) :=
   ZeroHom.smulZeroClass ⟨mk, mk_zero _⟩ P
 #align submodule.quotient.smul_zero_class' Submodule.Quotient.smulZeroClass'
 
-instance smulZeroClass (P : Submodule R M) : SmulZeroClass R (M ⧸ P) :=
+instance smulZeroClass (P : Submodule R M) : SMulZeroClass R (M ⧸ P) :=
   Quotient.smulZeroClass' P
 #align submodule.quotient.smul_zero_class Submodule.Quotient.smulZeroClass
 
-instance distribSmul' [HasSmul S R] [DistribSmul S M] [IsScalarTower S R M] (P : Submodule R M) :
-    DistribSmul S (M ⧸ P) :=
-  Function.Surjective.distribSmul ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) P
+instance distribSmul' [HasSmul S R] [DistribSMul S M] [IsScalarTower S R M] (P : Submodule R M) :
+    DistribSMul S (M ⧸ P) :=
+  Function.Surjective.distribSMul ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) P
 #align submodule.quotient.distrib_smul' Submodule.Quotient.distribSmul'
 
-instance distribSmul (P : Submodule R M) : DistribSmul R (M ⧸ P) :=
+instance distribSmul (P : Submodule R M) : DistribSMul R (M ⧸ P) :=
   Quotient.distribSmul' P
 #align submodule.quotient.distrib_smul Submodule.Quotient.distribSmul
 

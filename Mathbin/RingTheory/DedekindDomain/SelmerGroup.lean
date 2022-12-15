@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.selmer_group
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,7 +174,7 @@ end HeightOneSpectrum
 
 variable {S S' : Set <| HeightOneSpectrum R} {n : ℕ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The Selmer group `K⟮S, n⟯`. -/
 def selmerGroup :
     Subgroup <|
@@ -239,8 +239,8 @@ theorem from_unit_ker [hn : Fact <| 0 < n] :
     rcases(QuotientGroup.eq_one_iff _).mp (Subtype.mk.inj hx) with ⟨⟨v, i, vi, iv⟩, hx⟩
     have hv : ↑(_ ^ n : Kˣ) = algebraMap R K _ := congr_arg Units.val hx
     have hi : ↑(_ ^ n : Kˣ)⁻¹ = algebraMap R K _ := congr_arg Units.inv hx
-    rw [Units.coe_pow] at hv
-    rw [← inv_pow, Units.inv_mk, Units.coe_pow] at hi
+    rw [Units.val_pow_eq_pow_val] at hv
+    rw [← inv_pow, Units.inv_mk, Units.val_pow_eq_pow_val] at hi
     rcases@IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ v _ hn.out
         (hv.symm ▸ is_integral_algebra_map) with
       ⟨v', rfl⟩
@@ -252,7 +252,7 @@ theorem from_unit_ker [hn : Fact <| 0 < n] :
     rw [Units.val_mk, ← map_pow] at hv
     exact
       ⟨⟨v', i', vi, iv⟩, by
-        simpa only [Units.ext_iff, pow_monoid_hom_apply, Units.coe_pow] using
+        simpa only [Units.ext_iff, pow_monoid_hom_apply, Units.val_pow_eq_pow_val] using
           NoZeroSmulDivisors.algebra_map_injective R K hv⟩
   · rintro ⟨_, hx⟩
     rw [← hx]

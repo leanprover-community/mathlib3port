@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,7 +171,7 @@ protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
   tactic.intros >> sorry
 #align pseudo_metric_space.edist_dist_tac pseudo_metric_space.edist_dist_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pseudo_metric_space.edist_dist_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pseudo_metric_space.edist_dist_tac -/
 /-- Pseudo metric and Metric spaces
 
 A pseudo metric space is endowed with a distance for which the requirement `d(x,y)=0 → x = y` might
@@ -921,14 +921,14 @@ theorem uniform_continuous_iff [PseudoMetricSpace β] {f : α → β} :
   uniformity_basis_dist.uniform_continuous_iff uniformity_basis_dist
 #align metric.uniform_continuous_iff Metric.uniform_continuous_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniform_continuous_on_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
       ∀ ε > 0, ∃ δ > 0, ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniformity_basis_dist.uniform_continuous_on_iff Metric.uniformity_basis_dist
 #align metric.uniform_continuous_on_iff Metric.uniform_continuous_on_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniform_continuous_on_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
       ∀ ε > 0, ∃ δ > 0, ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
@@ -995,7 +995,7 @@ theorem totally_bounded_of_finite_discretization {s : Set α}
 #align
   metric.totally_bounded_of_finite_discretization Metric.totally_bounded_of_finite_discretization
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
     ∀ ε > 0, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε := by
   intro ε ε_pos
@@ -1052,7 +1052,7 @@ theorem tendsto_uniformly_iff {ι : Type _} {F : ι → β → α} {f : β → �
   simp
 #align metric.tendsto_uniformly_iff Metric.tendsto_uniformly_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), dist x y < ε :=
   uniformity_basis_dist.cauchy_iff
@@ -1633,7 +1633,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
 the distance between its elements is arbitrarily small -/
@@ -2031,21 +2031,21 @@ namespace Metric
 
 variable {x y z : α} {ε ε₁ ε₂ : ℝ} {s : Set α}
 
-theorem isClosedBall : IsClosed (closedBall x ε) :=
-  isClosedLe (continuous_id.dist continuous_const) continuous_const
-#align metric.is_closed_ball Metric.isClosedBall
+theorem is_closed_ball : IsClosed (closedBall x ε) :=
+  is_closed_le (continuous_id.dist continuous_const) continuous_const
+#align metric.is_closed_ball Metric.is_closed_ball
 
-theorem isClosedSphere : IsClosed (sphere x ε) :=
-  isClosedEq (continuous_id.dist continuous_const) continuous_const
-#align metric.is_closed_sphere Metric.isClosedSphere
+theorem is_closed_sphere : IsClosed (sphere x ε) :=
+  is_closed_eq (continuous_id.dist continuous_const) continuous_const
+#align metric.is_closed_sphere Metric.is_closed_sphere
 
 @[simp]
 theorem closure_closed_ball : closure (closedBall x ε) = closedBall x ε :=
-  isClosedBall.closure_eq
+  is_closed_ball.closure_eq
 #align metric.closure_closed_ball Metric.closure_closed_ball
 
 theorem closure_ball_subset_closed_ball : closure (ball x ε) ⊆ closedBall x ε :=
-  closure_minimal ball_subset_closed_ball isClosedBall
+  closure_minimal ball_subset_closed_ball is_closed_ball
 #align metric.closure_ball_subset_closed_ball Metric.closure_ball_subset_closed_ball
 
 theorem frontier_ball_subset_sphere : frontier (ball x ε) ⊆ sphere x ε :=
@@ -2085,7 +2085,7 @@ theorem closed_ball_zero' (x : α) : closedBall x 0 = closure {x} :=
   Subset.antisymm
     (fun y hy =>
       mem_closure_iff.2 fun ε ε0 => ⟨x, mem_singleton x, (mem_closed_ball.1 hy).trans_lt ε0⟩)
-    (closure_minimal (singleton_subset_iff.2 (dist_self x).le) isClosedBall)
+    (closure_minimal (singleton_subset_iff.2 (dist_self x).le) is_closed_ball)
 #align metric.closed_ball_zero' Metric.closed_ball_zero'
 
 theorem dense_iff {s : Set α} : Dense s ↔ ∀ x, ∀ r > 0, (ball x r ∩ s).Nonempty :=
@@ -2315,7 +2315,7 @@ end Pi
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
 theorem finite_cover_balls_of_compact {α : Type u} [PseudoMetricSpace α] {s : Set α}
@@ -2346,7 +2346,7 @@ export ProperSpace (is_compact_closed_ball)
 /-- In a proper pseudometric space, all spheres are compact. -/
 theorem is_compact_sphere {α : Type _} [PseudoMetricSpace α] [ProperSpace α] (x : α) (r : ℝ) :
     IsCompact (sphere x r) :=
-  is_compact_of_is_closed_subset (is_compact_closed_ball x r) isClosedSphere
+  is_compact_of_is_closed_subset (is_compact_closed_ball x r) is_closed_sphere
     sphere_subset_closed_ball
 #align is_compact_sphere is_compact_sphere
 
@@ -2398,7 +2398,7 @@ theorem properSpaceOfCompactClosedBallOfLe (R : ℝ)
 -- A compact pseudometric space is proper 
 -- see Note [lower instance priority]
 instance (priority := 100) properOfCompact [CompactSpace α] : ProperSpace α :=
-  ⟨fun x r => isClosedBall.IsCompact⟩
+  ⟨fun x r => is_closed_ball.IsCompact⟩
 #align proper_of_compact properOfCompact
 
 -- see Note [lower instance priority]
@@ -2408,7 +2408,7 @@ instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyC
     is_compact_closed_ball _ _
 #align locally_compact_of_proper locally_compact_of_proper
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 -- see Note [lower instance priority]
 /-- A proper space is complete -/
 instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace α :=
@@ -2508,7 +2508,7 @@ theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (
 
 namespace Metric
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
 def Bounded (s : Set α) : Prop :=
@@ -2588,7 +2588,7 @@ theorem Bounded.subset_ball_lt (h : Bounded s) (a : ℝ) (c : α) : ∃ r, a < r
 
 theorem boundedClosureOfBounded (h : Bounded s) : Bounded (closure s) :=
   let ⟨C, h⟩ := h
-  ⟨C, fun a ha b hb => (isClosedLe' C).closure_subset <| map_mem_closure₂ continuous_dist ha hb h⟩
+  ⟨C, fun a ha b hb => (is_closed_le' C).closure_subset <| map_mem_closure₂ continuous_dist ha hb h⟩
 #align metric.bounded_closure_of_bounded Metric.boundedClosureOfBounded
 
 alias bounded_closure_of_bounded ← bounded.closure
@@ -2773,7 +2773,7 @@ theorem is_compact_of_is_closed_bounded [ProperSpace α] (hc : IsClosed s) (hb :
 
 /-- The **Heine–Borel theorem**: In a proper space, the closure of a bounded set is compact. -/
 theorem Bounded.is_compact_closure [ProperSpace α] (h : Bounded s) : IsCompact (closure s) :=
-  is_compact_of_is_closed_bounded isClosedClosure h.closure
+  is_compact_of_is_closed_bounded is_closed_closure h.closure
 #align metric.bounded.is_compact_closure Metric.Bounded.is_compact_closure
 
 /-- The **Heine–Borel theorem**:
@@ -2784,7 +2784,7 @@ theorem is_compact_iff_is_closed_bounded [T2Space α] [ProperSpace α] :
 #align metric.is_compact_iff_is_closed_bounded Metric.is_compact_iff_is_closed_bounded
 
 theorem compact_space_iff_bounded_univ [ProperSpace α] : CompactSpace α ↔ Bounded (univ : Set α) :=
-  ⟨@boundedOfCompactSpace α _ _, fun hb => ⟨is_compact_of_is_closed_bounded isClosedUniv hb⟩⟩
+  ⟨@boundedOfCompactSpace α _ _, fun hb => ⟨is_compact_of_is_closed_bounded is_closed_univ hb⟩⟩
 #align metric.compact_space_iff_bounded_univ Metric.compact_space_iff_bounded_univ
 
 section ConditionallyCompleteLinearOrder
@@ -2855,14 +2855,14 @@ theorem diam_pair : diam ({x, y} : Set α) = dist x y := by
   simp only [diam, Emetric.diam_pair, dist_edist]
 #align metric.diam_pair Metric.diam_pair
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr ne_of_lt, ",", expr edist_lt_top, ",", expr max_lt, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr ne_of_lt, ",", expr edist_lt_top, ",", expr max_lt, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- Does not work as a simp-lemma, since {x, y, z} reduces to (insert z (insert y {x}))
 theorem diam_triple :
     Metric.diam ({x, y, z} : Set α) = max (max (dist x y) (dist x z)) (dist y z) := by
   simp only [Metric.diam, Emetric.diam_triple, dist_edist]
   rw [Ennreal.to_real_max, Ennreal.to_real_max] <;>
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr ne_of_lt, \",\", expr edist_lt_top, \",\", expr max_lt, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr ne_of_lt, \",\", expr edist_lt_top, \",\", expr max_lt, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align metric.diam_triple Metric.diam_triple
 
 /-- If the distance between any two points in a set is bounded by some constant `C`,
@@ -2946,7 +2946,7 @@ theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : Bounded t) : diam s ≤ dia
   exact Emetric.diam_mono h
 #align metric.diam_mono Metric.diam_mono
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_nonneg, ",", expr diam_nonneg, ",", expr dist_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_nonneg, ",", expr diam_nonneg, ",", expr dist_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- The diameter of a union is controlled by the sum of the diameters, and the distance between
 any two points in each of the sets. This lemma is true without any side condition, since it is
 obviously true if `s ∪ t` is unbounded. -/
@@ -2964,7 +2964,7 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
     exact Emetric.diam_union xs yt
   · rw [diam_eq_zero_of_unbounded H]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr diam_nonneg, \",\", expr dist_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr diam_nonneg, \",\", expr dist_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align metric.diam_union Metric.diam_union
 
 /-- If two sets intersect, the diameter of the union is bounded by the sum of the diameters. -/
@@ -3225,16 +3225,16 @@ instance (priority := 100) MetricSpace.toEmetricSpace : EmetricSpace γ :=
   Emetric.ofT0PseudoEmetricSpace γ
 #align metric.metric_space.to_emetric_space Metric.MetricSpace.toEmetricSpace
 
-theorem isClosedOfPairwiseLeDist {s : Set γ} {ε : ℝ} (hε : 0 < ε)
+theorem is_closed_of_pairwise_le_dist {s : Set γ} {ε : ℝ} (hε : 0 < ε)
     (hs : s.Pairwise fun x y => ε ≤ dist x y) : IsClosed s :=
-  isClosedOfSpacedOut (dist_mem_uniformity hε) <| by simpa using hs
-#align metric.is_closed_of_pairwise_le_dist Metric.isClosedOfPairwiseLeDist
+  is_closed_of_spaced_out (dist_mem_uniformity hε) <| by simpa using hs
+#align metric.is_closed_of_pairwise_le_dist Metric.is_closed_of_pairwise_le_dist
 
-theorem closedEmbeddingOfPairwiseLeDist {α : Type _} [TopologicalSpace α] [DiscreteTopology α]
+theorem closed_embedding_of_pairwise_le_dist {α : Type _} [TopologicalSpace α] [DiscreteTopology α]
     {ε : ℝ} (hε : 0 < ε) {f : α → γ} (hf : Pairwise fun x y => ε ≤ dist (f x) (f y)) :
     ClosedEmbedding f :=
-  closedEmbeddingOfSpacedOut (dist_mem_uniformity hε) <| by simpa using hf
-#align metric.closed_embedding_of_pairwise_le_dist Metric.closedEmbeddingOfPairwiseLeDist
+  closed_embedding_of_spaced_out (dist_mem_uniformity hε) <| by simpa using hf
+#align metric.closed_embedding_of_pairwise_le_dist Metric.closed_embedding_of_pairwise_le_dist
 
 /-- If `f : β → α` sends any two distinct points to points at distance at least `ε > 0`, then
 `f` is a uniform embedding with respect to the discrete uniformity on `β`. -/

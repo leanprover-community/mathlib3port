@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -247,7 +247,7 @@ instance : Inhabited (Derivation R A M) :=
 
 section Scalar
 
-variable {S : Type _} [Monoid S] [DistribMulAction S M] [SmulCommClass R S M] [SmulCommClass S A M]
+variable {S : Type _} [Monoid S] [DistribMulAction S M] [SMulCommClass R S M] [SMulCommClass S A M]
 
 instance (priority := 100) : HasSmul S (Derivation R A M) :=
   ⟨fun r D =>
@@ -290,8 +290,8 @@ instance [DistribMulAction Sᵐᵒᵖ M] [IsCentralScalar S M] :
 
 end Scalar
 
-instance (priority := 100) {S : Type _} [Semiring S] [Module S M] [SmulCommClass R S M]
-    [SmulCommClass S A M] : Module S (Derivation R A M) :=
+instance (priority := 100) {S : Type _} [Semiring S] [Module S M] [SMulCommClass R S M]
+    [SMulCommClass S A M] : Module S (Derivation R A M) :=
   Function.Injective.module S coeFnAddMonoidHom coe_injective coe_smul
 
 instance [IsScalarTower R A M] : IsScalarTower R A (Derivation R A M) :=
@@ -446,7 +446,7 @@ theorem leibniz_of_mul_eq_one {a b : A} (h : a * b = 1) : D a = -a ^ 2 • D b :
 #align derivation.leibniz_of_mul_eq_one Derivation.leibniz_of_mul_eq_one
 
 theorem leibniz_inv_of [Invertible a] : D (⅟ a) = -⅟ a ^ 2 • D a :=
-  D.leibniz_of_mul_eq_one <| inv_of_mul_self a
+  D.leibniz_of_mul_eq_one <| invOf_mul_self a
 #align derivation.leibniz_inv_of Derivation.leibniz_inv_of
 
 theorem leibniz_inv {K : Type _} [Field K] [Module K M] [Algebra R K] (D : Derivation R K M)
@@ -1342,7 +1342,7 @@ theorem KaehlerDifferential.map_surjective_of_surjective
 /-- The lift of the map `Ω[A⁄R] →ₗ[A] Ω[B⁄R]` to the base change along `A → B`.
 This is the first map in the exact sequence `B ⊗[A] Ω[A⁄R] → Ω[B⁄R] → Ω[B⁄A] → 0`. -/
 noncomputable def KaehlerDifferential.mapBaseChange : B ⊗[A] Ω[A⁄R] →ₗ[B] Ω[B⁄R] :=
-  (TensorProduct.is_base_change A (Ω[A⁄R]) B).lift (KaehlerDifferential.map R R A B)
+  (TensorProduct.isBaseChange A (Ω[A⁄R]) B).lift (KaehlerDifferential.map R R A B)
 #align kaehler_differential.map_base_change KaehlerDifferential.mapBaseChange
 
 @[simp]

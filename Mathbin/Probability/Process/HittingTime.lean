@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.hitting_time
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -240,7 +240,7 @@ theorem hittingIsStoppingTime [ConditionallyCompleteLinearOrder ι] [IsWellOrder
     simp [h_le]
   · have h_set_eq_Union : { ω | hitting u s n n' ω ≤ i } = ⋃ j ∈ Set.icc n i, u j ⁻¹' s := by
       ext x
-      rw [Set.mem_set_of_eq, hitting_le_iff_of_lt _ hi]
+      rw [Set.mem_setOf_eq, hitting_le_iff_of_lt _ hi]
       simp only [Set.mem_Icc, exists_prop, Set.mem_Union, Set.mem_preimage]
     rw [h_set_eq_Union]
     exact
@@ -276,7 +276,7 @@ theorem isStoppingTimeHittingIsStoppingTime [ConditionallyCompleteLinearOrder ι
     simp [← exists_or, ← or_and_right, le_or_lt]
   have h₂ : (⋃ i > n, { x | τ x = i } ∩ { x | hitting u s i N x ≤ n }) = ∅ := by
     ext x
-    simp only [gt_iff_lt, Set.mem_Union, Set.mem_inter_iff, Set.mem_set_of_eq, exists_prop,
+    simp only [gt_iff_lt, Set.mem_Union, Set.mem_inter_iff, Set.mem_setOf_eq, exists_prop,
       Set.mem_empty_iff_false, iff_false_iff, not_exists, not_and, not_le]
     rintro m hm rfl
     exact lt_of_lt_of_le hm (le_hitting (hτbdd _) _)

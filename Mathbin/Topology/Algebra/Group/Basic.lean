@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,10 +92,10 @@ theorem is_closed_map_mul_left (a : G) : IsClosedMap fun x => a * x :=
   (Homeomorph.mulLeft a).IsClosedMap
 #align is_closed_map_mul_left is_closed_map_mul_left
 
-@[to_additive IsClosed.leftAddCoset]
-theorem IsClosed.leftCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (leftCoset x U) :=
+@[to_additive IsClosed.left_add_coset]
+theorem IsClosed.left_coset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (leftCoset x U) :=
   is_closed_map_mul_left x _ h
-#align is_closed.left_coset IsClosed.leftCoset
+#align is_closed.left_coset IsClosed.left_coset
 
 /-- Multiplication from the right in a topological group as a homeomorphism. -/
 @[to_additive "Addition from the right in a topological additive group as a homeomorphism."]
@@ -132,10 +132,10 @@ theorem is_closed_map_mul_right (a : G) : IsClosedMap fun x => x * a :=
   (Homeomorph.mulRight a).IsClosedMap
 #align is_closed_map_mul_right is_closed_map_mul_right
 
-@[to_additive IsClosed.rightAddCoset]
-theorem IsClosed.rightCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (rightCoset U x) :=
+@[to_additive IsClosed.right_add_coset]
+theorem IsClosed.right_coset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (rightCoset U x) :=
   is_closed_map_mul_right x _ h
-#align is_closed.right_coset IsClosed.rightCoset
+#align is_closed.right_coset IsClosed.right_coset
 
 @[to_additive]
 theorem discreteTopologyOfOpenSingletonOne (h : IsOpen ({1} : Set G)) : DiscreteTopology G := by
@@ -268,11 +268,11 @@ section PointwiseLimits
 variable (G₁ G₂ : Type _) [TopologicalSpace G₂] [T2Space G₂]
 
 @[to_additive]
-theorem isClosedSetOfMapInv [Inv G₁] [Inv G₂] [HasContinuousInv G₂] :
+theorem is_closed_set_of_map_inv [Inv G₁] [Inv G₂] [HasContinuousInv G₂] :
     IsClosed { f : G₁ → G₂ | ∀ x, f x⁻¹ = (f x)⁻¹ } := by
   simp only [set_of_forall]
-  refine' isClosedInter fun i => isClosedEq (continuous_apply _) (continuous_apply _).inv
-#align is_closed_set_of_map_inv isClosedSetOfMapInv
+  refine' is_closed_Inter fun i => is_closed_eq (continuous_apply _) (continuous_apply _).inv
+#align is_closed_set_of_map_inv is_closed_set_of_map_inv
 
 end PointwiseLimits
 
@@ -286,7 +286,7 @@ end ContinuousInv
 
 section ContinuousInvolutiveInv
 
-variable [TopologicalSpace G] [HasInvolutiveInv G] [HasContinuousInv G] {s : Set G}
+variable [TopologicalSpace G] [InvolutiveInv G] [HasContinuousInv G] {s : Set G}
 
 @[to_additive]
 theorem IsCompact.inv (hs : IsCompact s) : IsCompact s⁻¹ := by
@@ -298,7 +298,7 @@ variable (G)
 
 /-- Inversion in a topological group as a homeomorphism. -/
 @[to_additive "Negation in a topological group as a homeomorphism."]
-protected def Homeomorph.inv (G : Type _) [TopologicalSpace G] [HasInvolutiveInv G]
+protected def Homeomorph.inv (G : Type _) [TopologicalSpace G] [InvolutiveInv G]
     [HasContinuousInv G] : G ≃ₜ G :=
   { Equiv.inv G with 
     continuous_to_fun := continuous_inv
@@ -633,9 +633,9 @@ theorem Subgroup.le_topological_closure (s : Subgroup G) : s ≤ s.topologicalCl
 #align subgroup.le_topological_closure Subgroup.le_topological_closure
 
 @[to_additive]
-theorem Subgroup.isClosedTopologicalClosure (s : Subgroup G) :
-    IsClosed (s.topologicalClosure : Set G) := by convert isClosedClosure
-#align subgroup.is_closed_topological_closure Subgroup.isClosedTopologicalClosure
+theorem Subgroup.is_closed_topological_closure (s : Subgroup G) :
+    IsClosed (s.topologicalClosure : Set G) := by convert is_closed_closure
+#align subgroup.is_closed_topological_closure Subgroup.is_closed_topological_closure
 
 @[to_additive]
 theorem Subgroup.topological_closure_minimal (s : Subgroup G) {t : Subgroup G} (h : s ≤ t)
@@ -1225,11 +1225,11 @@ section
 variable (G) [TopologicalSpace G] [Group G] [TopologicalGroup G]
 
 @[to_additive]
-theorem TopologicalGroup.t1Space (h : @IsClosed G _ {1}) : T1Space G :=
+theorem TopologicalGroup.t1_space (h : @IsClosed G _ {1}) : T1Space G :=
   ⟨fun x => by 
     convert is_closed_map_mul_right x _ h
     simp⟩
-#align topological_group.t1_space TopologicalGroup.t1Space
+#align topological_group.t1_space TopologicalGroup.t1_space
 
 @[to_additive]
 instance (priority := 100) TopologicalGroup.regularSpace : RegularSpace G := by
@@ -1238,7 +1238,7 @@ instance (priority := 100) TopologicalGroup.regularSpace : RegularSpace G := by
     continuous_mul.tendsto' _ _ (mul_one a)
   rcases mem_nhds_prod_iff.mp (this hs) with ⟨U, hU, V, hV, hUV⟩
   rw [← image_subset_iff, image_prod] at hUV
-  refine' ⟨closure U, mem_of_superset hU subset_closure, isClosedClosure, _⟩
+  refine' ⟨closure U, mem_of_superset hU subset_closure, is_closed_closure, _⟩
   calc
     closure U ⊆ closure U * interior V := subset_mul_left _ (mem_interior_iff_mem_nhds.2 hV)
     _ = U * interior V := is_open_interior.closure_mul U
@@ -1266,7 +1266,7 @@ instance Subgroup.t3QuotientOfIsClosed (S : Subgroup G) [Subgroup.Normal S] [IsC
   suffices T1Space (G ⧸ S) by exact @TopologicalGroup.t3Space _ _ _ _ this
   have hS : IsClosed (S : Set G) := inferInstance
   rw [← QuotientGroup.ker_mk S] at hS
-  exact TopologicalGroup.t1Space (G ⧸ S) (quotient_map_quotient_mk.is_closed_preimage.mp hS)
+  exact TopologicalGroup.t1_space (G ⧸ S) (quotient_map_quotient_mk.is_closed_preimage.mp hS)
 #align subgroup.t3_quotient_of_is_closed Subgroup.t3QuotientOfIsClosed
 
 /-- A subgroup `S` of a topological group `G` acts on `G` properly discontinuously on the left, if
@@ -1439,7 +1439,7 @@ theorem local_is_compact_is_closed_nhds_of_group [LocallyCompactSpace G] {U : Se
         exact hV _ yv _ zv
       
   exact
-    ⟨closure V, is_compact_of_is_closed_subset Lcomp isClosedClosure VL, isClosedClosure,
+    ⟨closure V, is_compact_of_is_closed_subset Lcomp is_closed_closure VL, is_closed_closure,
       VL.trans LU, interior_mono subset_closure (mem_interior_iff_mem_nhds.2 Vnhds)⟩
 #align local_is_compact_is_closed_nhds_of_group local_is_compact_is_closed_nhds_of_group
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.subsemiring.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1336,13 +1336,13 @@ theorem smul_def [HasSmul R' α] {S : Subsemiring R'} (g : S) (m : α) : g • m
   rfl
 #align subsemiring.smul_def Subsemiring.smul_def
 
-instance smul_comm_class_left [HasSmul R' β] [HasSmul α β] [SmulCommClass R' α β]
-    (S : Subsemiring R') : SmulCommClass S α β :=
+instance smul_comm_class_left [HasSmul R' β] [HasSmul α β] [SMulCommClass R' α β]
+    (S : Subsemiring R') : SMulCommClass S α β :=
   S.toSubmonoid.smul_comm_class_left
 #align subsemiring.smul_comm_class_left Subsemiring.smul_comm_class_left
 
-instance smul_comm_class_right [HasSmul α β] [HasSmul R' β] [SmulCommClass α R' β]
-    (S : Subsemiring R') : SmulCommClass α S β :=
+instance smul_comm_class_right [HasSmul α β] [HasSmul R' β] [SMulCommClass α R' β]
+    (S : Subsemiring R') : SMulCommClass α S β :=
   S.toSubmonoid.smul_comm_class_right
 #align subsemiring.smul_comm_class_right Subsemiring.smul_comm_class_right
 
@@ -1351,7 +1351,7 @@ instance [HasSmul α β] [HasSmul R' α] [HasSmul R' β] [IsScalarTower R' α β
     IsScalarTower S α β :=
   S.toSubmonoid.IsScalarTower
 
-instance [HasSmul R' α] [HasFaithfulSmul R' α] (S : Subsemiring R') : HasFaithfulSmul S α :=
+instance [HasSmul R' α] [FaithfulSMul R' α] (S : Subsemiring R') : FaithfulSMul S α :=
   S.toSubmonoid.HasFaithfulSmul
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
@@ -1387,12 +1387,12 @@ instance [Semiring α] [MulSemiringAction R' α] (S : Subsemiring R') : MulSemir
   S.toSubmonoid.MulSemiringAction
 
 /-- The center of a semiring acts commutatively on that semiring. -/
-instance center.smul_comm_class_left : SmulCommClass (center R') R' R' :=
+instance center.smul_comm_class_left : SMulCommClass (center R') R' R' :=
   Submonoid.center.smul_comm_class_left
 #align subsemiring.center.smul_comm_class_left Subsemiring.center.smul_comm_class_left
 
 /-- The center of a semiring acts commutatively on that semiring. -/
-instance center.smul_comm_class_right : SmulCommClass R' (center R') R' :=
+instance center.smul_comm_class_right : SMulCommClass R' (center R') R' :=
   Submonoid.center.smul_comm_class_right
 #align subsemiring.center.smul_comm_class_right Subsemiring.center.smul_comm_class_right
 

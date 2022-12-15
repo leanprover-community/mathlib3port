@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Patrick Massot
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -364,7 +364,7 @@ def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) :
     contrapose! h
     simpa using h
   add_mem' x y x_in y_in := lt_of_le_of_lt (v.map_add x y) (max_lt x_in y_in)
-  neg_mem' x x_in := by rwa [Set.mem_set_of_eq, map_neg]
+  neg_mem' x x_in := by rwa [Set.mem_setOf_eq, map_neg]
 #align valuation.lt_add_subgroup Valuation.ltAddSubgroup
 
 end Group
@@ -395,8 +395,8 @@ theorem trans (h₁₂ : v₁.IsEquiv v₂) (h₂₃ : v₂.IsEquiv v₃) : v₁
   Iff.trans (h₁₂ _ _) (h₂₃ _ _)
 #align valuation.is_equiv.trans Valuation.IsEquiv.trans
 
-theorem ofEq {v' : Valuation R Γ₀} (h : v = v') : v.IsEquiv v' := by subst h
-#align valuation.is_equiv.of_eq Valuation.IsEquiv.ofEq
+theorem of_eq {v' : Valuation R Γ₀} (h : v = v') : v.IsEquiv v' := by subst h
+#align valuation.is_equiv.of_eq Valuation.IsEquiv.of_eq
 
 theorem map {v' : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀) (hf : Monotone f) (inf : Injective f)
     (h : v.IsEquiv v') : (v.map f hf).IsEquiv (v'.map f hf) :=
@@ -428,15 +428,15 @@ end IsEquiv
 -- end of namespace
 section
 
-theorem isEquivOfMapStrictMono [LinearOrderedCommMonoidWithZero Γ₀]
+theorem is_equiv_of_map_strict_mono [LinearOrderedCommMonoidWithZero Γ₀]
     [LinearOrderedCommMonoidWithZero Γ'₀] [Ring R] {v : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀)
     (H : StrictMono f) : IsEquiv (v.map f H.Monotone) v := fun x y =>
   ⟨H.le_iff_le.mp, fun h => H.Monotone h⟩
-#align valuation.is_equiv_of_map_strict_mono Valuation.isEquivOfMapStrictMono
+#align valuation.is_equiv_of_map_strict_mono Valuation.is_equiv_of_map_strict_mono
 
-theorem isEquivOfValLeOne [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
-    (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) (h : ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1) :
-    v.IsEquiv v' := by 
+theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
+    [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀)
+    (h : ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1) : v.IsEquiv v' := by
   intro x y
   by_cases hy : y = 0; · simp [hy, zero_iff]
   rw [show y = 1 * y by rw [one_mul]]
@@ -452,12 +452,12 @@ theorem isEquivOfValLeOne [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedC
     replace hy := v'.ne_zero_iff.mpr hy
     replace H := le_of_le_mul_right hy H
     rwa [h]
-#align valuation.is_equiv_of_val_le_one Valuation.isEquivOfValLeOne
+#align valuation.is_equiv_of_val_le_one Valuation.is_equiv_of_val_le_one
 
 theorem is_equiv_iff_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
     [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) :
     v.IsEquiv v' ↔ ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1 :=
-  ⟨fun h x => by simpa using h x 1, isEquivOfValLeOne _ _⟩
+  ⟨fun h x => by simpa using h x 1, is_equiv_of_val_le_one _ _⟩
 #align valuation.is_equiv_iff_val_le_one Valuation.is_equiv_iff_val_le_one
 
 theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
@@ -1096,7 +1096,7 @@ theorem trans (h₁₂ : v₁.IsEquiv v₂) (h₂₃ : v₂.IsEquiv v₃) : v₁
 #align add_valuation.is_equiv.trans AddValuation.IsEquiv.trans
 
 theorem of_eq {v' : AddValuation R Γ₀} (h : v = v') : v.IsEquiv v' :=
-  Valuation.IsEquiv.ofEq h
+  Valuation.IsEquiv.of_eq h
 #align add_valuation.is_equiv.of_eq AddValuation.IsEquiv.of_eq
 
 theorem map {v' : AddValuation R Γ₀} (f : Γ₀ →+ Γ'₀) (ht : f ⊤ = ⊤) (hf : Monotone f)

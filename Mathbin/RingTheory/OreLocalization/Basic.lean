@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 
 ! This file was ported from Lean 3 source module ring_theory.ore_localization.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -800,7 +800,7 @@ def universalHom : R[S⁻¹] →+* T :=
       rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨r₃, s₃, h₃, h₃'⟩
       rw [h₃']
       clear h₃'
-      simp only [universal_mul_hom_apply, RingHom.coe_monoid_hom, RingHom.to_monoid_hom_eq_coe,
+      simp only [universal_mul_hom_apply, [anonymous], RingHom.toMonoidHom_eq_coe,
         MonoidHom.to_fun_eq_coe]
       simp only [mul_inv_rev, MonoidHom.map_mul, RingHom.map_add, RingHom.map_mul, Units.val_mul]
       rw [add_mul, ← mul_assoc, mul_assoc (f r₁), hf, ← Units.val_mul]
@@ -842,7 +842,7 @@ theorem universal_hom_commutes {r : R} : universalHom f fS hf (numeratorHom r) =
 
 theorem universal_hom_unique (φ : R[S⁻¹] →+* T) (huniv : ∀ r : R, φ (numeratorHom r) = f r) :
     φ = universalHom f fS hf :=
-  RingHom.coe_monoid_hom_injective <|
+  RingHom.coe_monoidHom_injective <|
     universal_mul_hom_unique (RingHom.toMonoidHom f) fS hf (↑φ) huniv
 #align ore_localization.universal_hom_unique OreLocalization.universal_hom_unique
 

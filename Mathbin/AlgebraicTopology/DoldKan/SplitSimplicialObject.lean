@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.split_simplicial_object
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ
   · exact 0
 #align simplicial_object.splitting.π_summand SimplicialObject.Splitting.πSummand
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_π_summand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A ≫ s.πSummand A = 𝟙 _ := by
   dsimp [ι_summand, π_summand]
@@ -61,7 +61,7 @@ theorem ι_π_summand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A
   simp only [eq_self_iff_true, if_true]
 #align simplicial_object.splitting.ι_π_summand_eq_id SimplicialObject.Splitting.ι_π_summand_eq_id
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_π_summand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A B : IndexSet Δ)
     (h : B ≠ A) : s.ιSummand A ≫ s.πSummand B = 0 := by
   dsimp [ι_summand, π_summand]
@@ -84,7 +84,7 @@ theorem decomposition_id (Δ : SimplexCategoryᵒᵖ) :
   · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff]
 #align simplicial_object.splitting.decomposition_id SimplicialObject.Splitting.decomposition_id
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem σ_comp_π_summand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ s.πSummand (IndexSet.id (op [n + 1])) = 0 := by
   apply s.hom_ext'
@@ -138,7 +138,7 @@ theorem comp_P_infty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
 #align
   simplicial_object.splitting.comp_P_infty_eq_zero_iff SimplicialObject.Splitting.comp_P_infty_eq_zero_iff
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem P_infty_comp_π_summand_id (n : ℕ) :
     pInfty.f n ≫ s.πSummand (IndexSet.id (op [n])) = s.πSummand (IndexSet.id (op [n])) := by
   conv_rhs => rw [← id_comp (s.π_summand _)]
@@ -148,7 +148,7 @@ theorem P_infty_comp_π_summand_id (n : ℕ) :
 #align
   simplicial_object.splitting.P_infty_comp_π_summand_id SimplicialObject.Splitting.P_infty_comp_π_summand_id
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem π_summand_comp_ι_summand_comp_P_infty_eq_P_infty (n : ℕ) :
     s.πSummand (IndexSet.id (op [n])) ≫ s.ιSummand (IndexSet.id (op [n])) ≫ pInfty.f n =
       pInfty.f n :=

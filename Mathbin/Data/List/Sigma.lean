@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Sean Leather
 
 ! This file was ported from Lean 3 source module data.list.sigma
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -247,7 +247,7 @@ theorem mem_lookup {a} {b : β a} {l : List (Sigma β)} (nd : l.Nodupkeys) (h : 
 #align list.mem_lookup List.mem_lookup
 
 theorem map_lookup_eq_find (a : α) :
-    ∀ l : List (Sigma β), (lookup a l).map (Sigma.mk a) = find (fun s => a = s.1) l
+    ∀ l : List (Sigma β), (lookup a l).map (Sigma.mk a) = find? (fun s => a = s.1) l
   | [] => rfl
   | ⟨a', b'⟩ :: l => by 
     by_cases h : a = a'
@@ -306,7 +306,7 @@ theorem lookup_all_eq_nil {a : α} :
     · simp [h, lookup_all_eq_nil]
 #align list.lookup_all_eq_nil List.lookup_all_eq_nil
 
-theorem head_lookup_all (a : α) : ∀ l : List (Sigma β), head' (lookupAll a l) = lookup a l
+theorem head_lookup_all (a : α) : ∀ l : List (Sigma β), head? (lookupAll a l) = lookup a l
   | [] => by simp
   | ⟨a', b⟩ :: l => by
     by_cases h : a = a' <;>

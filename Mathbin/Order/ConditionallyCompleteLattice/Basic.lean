@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module order.conditionally_complete_lattice.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,7 +250,7 @@ instance (α : Type _) [ConditionallyCompleteLattice α] : ConditionallyComplete
     cInf_le := @ConditionallyCompleteLattice.le_cSup α _ }
 
 instance (α : Type _) [ConditionallyCompleteLinearOrder α] : ConditionallyCompleteLinearOrder αᵒᵈ :=
-  { OrderDual.conditionallyCompleteLattice α, OrderDual.linearOrder α with }
+  { OrderDual.conditionallyCompleteLattice α, OrderDual.instLinearOrderOrderDual α with }
 
 end OrderDual
 
@@ -907,7 +907,7 @@ variable [IsWellOrder α (· < ·)]
 
 theorem Inf_eq_argmin_on (hs : s.Nonempty) :
     inf s = argminOn id (@IsWellFounded.wf α (· < ·) _) s hs :=
-  IsLeast.cInf_eq ⟨argmin_on_mem _ _ _ _, fun a ha => argmin_on_le id _ _ ha⟩
+  IsLeast.cInf_eq ⟨argminOn_mem _ _ _ _, fun a ha => argminOn_le id _ _ ha⟩
 #align Inf_eq_argmin_on Inf_eq_argmin_on
 
 theorem is_least_Inf (hs : s.Nonempty) : IsLeast s (inf s) := by
@@ -1476,5 +1476,6 @@ theorem WithTop.supr_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyComple
 
 end WithTopBot
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Guard against import creep
+assert_not_exists multiset
+

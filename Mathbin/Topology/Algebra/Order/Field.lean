@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson, Devon Tuma, Eric Rodriguez, Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.algebra.order.field
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -273,7 +273,7 @@ theorem Filter.Tendsto.inv_tendsto_zero (h : Tendsto f l (𝓝[>] 0)) : Tendsto 
 A version for positive real powers exists as `tendsto_rpow_neg_at_top`. -/
 theorem tendsto_pow_neg_at_top {n : ℕ} (hn : n ≠ 0) :
     Tendsto (fun x : α => x ^ (-(n : ℤ))) atTop (𝓝 0) := by
-  simpa only [zpow_neg, zpow_coe_nat] using (@tendsto_pow_at_top α _ _ hn).inv_tendsto_at_top
+  simpa only [zpow_neg, zpow_ofNat] using (@tendsto_pow_at_top α _ _ hn).inv_tendsto_at_top
 #align tendsto_pow_neg_at_top tendsto_pow_neg_at_top
 
 theorem tendsto_zpow_at_top_zero {n : ℤ} (hn : n < 0) : Tendsto (fun x : α => x ^ n) atTop (𝓝 0) :=
@@ -310,7 +310,7 @@ theorem tendsto_const_mul_zpow_at_top_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 
   refine' ⟨fun h => _, fun h => _⟩
   · by_cases hn : 0 ≤ n
     · lift n to ℕ using hn
-      simp only [zpow_coe_nat] at h
+      simp only [zpow_ofNat] at h
       rw [tendsto_const_mul_pow_nhds_iff hc, ← Int.coe_nat_eq_zero] at h
       exact Or.inl h
     · rw [not_le] at hn
@@ -325,7 +325,7 @@ theorem tendsto_const_mul_zpow_at_top_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 
 -- `linear_ordered_semifield` instance, which would also remove the need for the
 -- `nnreal` instance of `has_continuous_inv₀`.
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing :
+instance (priority := 100) LinearOrderedField.to_topological_division_ring :
     TopologicalDivisionRing
       α where continuous_at_inv₀ := by
     suffices ∀ {x : α}, 0 < x → ContinuousAt Inv.inv x by
@@ -358,7 +358,7 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing :
     rw [inv_div, abs_of_pos <| mul_pos ht hx', sq, ← mul_div_assoc']
     exact mul_lt_mul_of_pos_left hx ht
 #align
-  linear_ordered_field.to_topological_division_ring LinearOrderedField.toTopologicalDivisionRing
+  linear_ordered_field.to_topological_division_ring LinearOrderedField.to_topological_division_ring
 
 theorem nhds_within_pos_comap_mul_left {x : α} (hx : 0 < x) :
     comap (fun ε => x * ε) (𝓝[>] 0) = 𝓝[>] 0 := by

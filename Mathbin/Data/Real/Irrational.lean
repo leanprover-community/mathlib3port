@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.irrational
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem irrational_nrt_of_notint_nrt {x : ℝ} (n : ℕ) (m : ℤ) (hxr : x ^ n 
   rw [num_denom', cast_pow, cast_mk, div_pow, div_eq_iff_mul_eq c2, ← Int.cast_pow, ← Int.cast_pow,
     ← Int.cast_mul, Int.cast_inj] at hxr
   have hdivn : ↑D ^ n ∣ N ^ n := Dvd.intro_left m hxr
-  rw [← Int.dvd_nat_abs, ← Int.coe_nat_pow, Int.coe_nat_dvd, Int.nat_abs_pow,
+  rw [← Int.dvd_natAbs, ← Int.coe_nat_pow, Int.coe_nat_dvd, Int.nat_abs_pow,
     Nat.pow_dvd_pow_iff hnpos] at hdivn
   obtain rfl : D = 1 := by rw [← Nat.gcd_eq_right hdivn, C.gcd_eq_one]
   refine' hv ⟨N, _⟩
@@ -77,7 +77,7 @@ theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (
   rcases Nat.eq_zero_or_pos n with (rfl | hnpos)
   · rw [eq_comm, pow_zero, ← Int.cast_one, Int.cast_inj] at hxr
     simpa [hxr,
-      multiplicity.one_right (mt is_unit_iff_dvd_one.1 (mt Int.coe_nat_dvd.1 hp.1.not_dvd_one)),
+      multiplicity.one_right (mt isUnit_iff_dvd_one.1 (mt Int.coe_nat_dvd.1 hp.1.not_dvd_one)),
       Nat.zero_mod] using hv
   refine' irrational_nrt_of_notint_nrt _ _ hxr _ hnpos
   rintro ⟨y, rfl⟩
@@ -102,8 +102,7 @@ theorem irrational_sqrt_of_multiplicity_odd (m : ℤ) (hm : 0 < m) (p : ℕ) [hp
 
 theorem Nat.Prime.irrational_sqrt {p : ℕ} (hp : Nat.Prime p) : Irrational (sqrt p) :=
   @irrational_sqrt_of_multiplicity_odd p (Int.coe_nat_pos.2 hp.Pos) p ⟨hp⟩ <| by
-    simp [multiplicity_self
-          (mt is_unit_iff_dvd_one.1 (mt Int.coe_nat_dvd.1 hp.not_dvd_one) : _)] <;>
+    simp [multiplicity_self (mt isUnit_iff_dvd_one.1 (mt Int.coe_nat_dvd.1 hp.not_dvd_one) : _)] <;>
       rfl
 #align nat.prime.irrational_sqrt Nat.Prime.irrational_sqrt
 
@@ -483,7 +482,7 @@ theorem of_pow : ∀ n : ℕ, Irrational (x ^ n) → Irrational x
 theorem of_zpow : ∀ m : ℤ, Irrational (x ^ m) → Irrational x
   | (n : ℕ) => of_pow n
   | -[n+1] => fun h => by 
-    rw [zpow_neg_succ_of_nat] at h
+    rw [zpow_negSucc] at h
     exact h.of_inv.of_pow _
 #align irrational.of_zpow Irrational.of_zpow
 

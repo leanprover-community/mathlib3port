@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Ines Wright, Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.nilpotent
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,7 +157,7 @@ theorem upper_central_series_zero : upperCentralSeries G 0 = ⊥ :=
 theorem upper_central_series_one : upperCentralSeries G 1 = center G := by
   ext
   simp only [upperCentralSeries, upperCentralSeriesAux, upperCentralSeriesStep, center, Set.center,
-    mem_mk, mem_bot, Set.mem_set_of_eq]
+    mem_mk, mem_bot, Set.mem_setOf_eq]
   exact forall_congr' fun y => by rw [mul_inv_eq_one, mul_inv_eq_iff_eq_mul, eq_comm]
 #align upper_central_series_one upper_central_series_one
 

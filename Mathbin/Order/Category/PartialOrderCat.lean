@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.category.PartialOrder
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ def preorderToPartialOrderForgetAdjunction :
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f =>
-            ⟨f ∘ toAntisymmetrization (· ≤ ·), f.mono.comp to_antisymmetrization_mono⟩
+            ⟨f ∘ toAntisymmetrization (· ≤ ·), f.mono.comp toAntisymmetrization_mono⟩
           invFun := fun f =>
             ⟨fun a => (Quotient.liftOn' a f) fun a b h => (AntisymmRel.image h f.mono).Eq,
               fun a b => (Quotient.inductionOn₂' a b) fun a b h => f.mono h⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.morphism_property
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -212,14 +212,14 @@ theorem StableUnderBaseChange.respects_iso {P : MorphismProperty C} (hP : Stable
 theorem StableUnderBaseChange.fst {P : MorphismProperty C} (hP : StableUnderBaseChange P)
     {X Y S : C} (f : X ⟶ S) (g : Y ⟶ S) [HasPullback f g] (H : P g) :
     P (pullback.fst : pullback f g ⟶ X) :=
-  hP (IsPullback.of_has_pullback f g).flip H
+  hP (IsPullback.ofHasPullback f g).flip H
 #align
   category_theory.morphism_property.stable_under_base_change.fst CategoryTheory.MorphismProperty.StableUnderBaseChange.fst
 
 theorem StableUnderBaseChange.snd {P : MorphismProperty C} (hP : StableUnderBaseChange P)
     {X Y S : C} (f : X ⟶ S) (g : Y ⟶ S) [HasPullback f g] (H : P f) :
     P (pullback.snd : pullback f g ⟶ Y) :=
-  hP (IsPullback.of_has_pullback f g) H
+  hP (IsPullback.ofHasPullback f g) H
 #align
   category_theory.morphism_property.stable_under_base_change.snd CategoryTheory.MorphismProperty.StableUnderBaseChange.snd
 
@@ -277,22 +277,21 @@ theorem StableUnderCobaseChange.mk {P : MorphismProperty C} [HasPushouts C] (hP�
 
 theorem StableUnderCobaseChange.respects_iso {P : MorphismProperty C}
     (hP : StableUnderCobaseChange P) : RespectsIso P :=
-  RespectsIso.of_respects_arrow_iso _ fun f g e =>
-    hP (IsPushout.of_horiz_is_iso (CommSq.mk e.Hom.w))
+  RespectsIso.of_respects_arrow_iso _ fun f g e => hP (IsPushout.ofHorizIsIso (CommSq.mk e.Hom.w))
 #align
   category_theory.morphism_property.stable_under_cobase_change.respects_iso CategoryTheory.MorphismProperty.StableUnderCobaseChange.respects_iso
 
 theorem StableUnderCobaseChange.inl {P : MorphismProperty C} (hP : StableUnderCobaseChange P)
     {A B A' : C} (f : A ⟶ A') (g : A ⟶ B) [HasPushout f g] (H : P g) :
     P (pushout.inl : A' ⟶ pushout f g) :=
-  hP (IsPushout.of_has_pushout f g) H
+  hP (IsPushout.ofHasPushout f g) H
 #align
   category_theory.morphism_property.stable_under_cobase_change.inl CategoryTheory.MorphismProperty.StableUnderCobaseChange.inl
 
 theorem StableUnderCobaseChange.inr {P : MorphismProperty C} (hP : StableUnderCobaseChange P)
     {A B A' : C} (f : A ⟶ A') (g : A ⟶ B) [HasPushout f g] (H : P f) :
     P (pushout.inr : B ⟶ pushout f g) :=
-  hP (IsPushout.of_has_pushout f g).flip H
+  hP (IsPushout.ofHasPushout f g).flip H
 #align
   category_theory.morphism_property.stable_under_cobase_change.inr CategoryTheory.MorphismProperty.StableUnderCobaseChange.inr
 
@@ -627,7 +626,7 @@ theorem universally_respects_iso (P : MorphismProperty C) : P.universally.Respec
 
 theorem universally_stable_under_base_change (P : MorphismProperty C) :
     P.universally.StableUnderBaseChange := fun X Y Y' S f g f' g' H h₁ Y'' X'' i₁ i₂ f'' H' =>
-  h₁ _ _ _ (H'.paste_vert H.flip)
+  h₁ _ _ _ (H'.pasteVert H.flip)
 #align
   category_theory.morphism_property.universally_stable_under_base_change CategoryTheory.MorphismProperty.universally_stable_under_base_change
 

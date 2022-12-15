@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.enriched.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,14 +95,14 @@ def eComp (X Y Z : C) : ((X ⟶[V] Y) ⊗ Y ⟶[V] Z) ⟶ X ⟶[V] Z :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- We don't just use `restate_axiom` here; that would leave `V` as an implicit argument.
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem e_id_comp (X Y : C) :
     (λ_ (X ⟶[V] Y)).inv ≫ (eId V X ⊗ 𝟙 _) ≫ eComp V X X Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.id_comp X Y
 #align category_theory.e_id_comp CategoryTheory.e_id_comp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem e_comp_id (X Y : C) :
     (ρ_ (X ⟶[V] Y)).inv ≫ (𝟙 _ ⊗ eId V Y) ≫ eComp V X Y Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.comp_id X Y
@@ -110,7 +110,7 @@ theorem e_comp_id (X Y : C) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem e_assoc (W X Y Z : C) :
     (α_ _ _ _).inv ≫ (eComp V W X Y ⊗ 𝟙 _) ≫ eComp V W Y Z =
       (𝟙 _ ⊗ eComp V X Y Z) ≫ eComp V W X Z :=
@@ -338,9 +338,9 @@ restate_axiom enriched_functor.map_id'
 
 restate_axiom enriched_functor.map_comp'
 
-attribute [simp, reassoc] enriched_functor.map_id
+attribute [simp, reassoc.1] enriched_functor.map_id
 
-attribute [simp, reassoc] enriched_functor.map_comp
+attribute [simp, reassoc.1] enriched_functor.map_comp
 
 /-- The identity enriched functor. -/
 @[simps]

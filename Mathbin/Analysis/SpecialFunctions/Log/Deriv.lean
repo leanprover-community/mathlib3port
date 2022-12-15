@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.deriv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,7 +221,7 @@ theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) :
 
 open BigOperators
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr div_le_div, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr pow_le_pow_of_le_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr div_le_div, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr pow_le_pow_of_le_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- A crude lemma estimating the difference between `log (1-x)` and its Taylor series at `0`,
 where the main point of the bound is that it tends to `0`. The goal is to deduce the series
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
@@ -253,7 +253,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
         have : 1 - |x| ≤ |1 - y| := le_trans (by linarith [hy.2]) (le_abs_self _)
         simp only [← pow_abs, abs_div, abs_neg]
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr div_le_div, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr pow_le_pow_of_le_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr div_le_div, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr pow_le_pow_of_le_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       
   -- third step: apply the mean value inequality
   have C : ‖F x - F 0‖ ≤ |x| ^ n / (1 - |x|) * ‖x - 0‖ := by
@@ -268,7 +268,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
   simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'] using C
 #align real.abs_log_sub_add_sum_range_le Real.abs_log_sub_add_sum_range_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr div_le_div_of_le_left, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr add_le_add_right, ",", expr i.cast_nonneg, "]"],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr div_le_div_of_le_left, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr add_le_add_right, ",", expr i.cast_nonneg, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Power series expansion of the logarithm around `1`. -/
 theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
@@ -291,7 +291,7 @@ theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
         rw [norm_eq_abs, abs_div, ← pow_abs, abs_of_nonneg this]
       _ ≤ |x| ^ (i + 1) / (0 + 1) := by
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr div_le_div_of_le_left, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr add_le_add_right, \",\", expr i.cast_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr div_le_div_of_le_left, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr add_le_add_right, \",\", expr i.cast_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         norm_num
       _ ≤ |x| ^ i := by
         simpa [pow_succ'] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_lt h)
@@ -316,7 +316,7 @@ theorem has_sum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     convert h₁.add (has_sum_pow_div_log_of_abs_lt_1 h)
     ring_nf
   · intro m hm
-    rw [range_two_mul, Set.mem_set_of_eq, ← Nat.even_add_one] at hm
+    rw [range_two_mul, Set.mem_setOf_eq, ← Nat.even_add_one] at hm
     dsimp [term]
     rw [Even.neg_pow hm, neg_one_mul, neg_add_self]
 #align real.has_sum_log_sub_log_of_abs_lt_1 Real.has_sum_log_sub_log_of_abs_lt_1

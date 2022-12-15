@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -482,7 +482,7 @@ theorem measure_bUnion_eq_supr {s : ι → Set α} {t : Set ι} (ht : t.Countabl
   rw [bUnion_eq_Union, measure_Union_eq_supr hd.directed_coe, ← supr_subtype'']
 #align measure_theory.measure_bUnion_eq_supr MeasureTheory.measure_bUnion_eq_supr
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s k) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s k) -/
 /-- Continuity from above: the measure of the intersection of a decreasing sequence of measurable
 sets is the infimum of the measures. -/
 theorem measure_Inter_eq_infi [Countable ι] {s : ι → Set α} (h : ∀ i, MeasurableSet (s i))
@@ -592,8 +592,8 @@ theorem measure_limsup_eq_zero {s : ℕ → Set α} (hs : (∑' i, μ (s i)) ≠
   exact fun ⟨i, hi⟩ => ⟨i + (m - n), by simpa only [add_assoc, tsub_add_cancel_of_le hnm] using hi⟩
 #align measure_theory.measure_limsup_eq_zero MeasureTheory.measure_limsup_eq_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem measure_liminf_eq_zero {s : ℕ → Set α} (h : (∑' i, μ (s i)) ≠ ⊤) : μ (liminf s atTop) = 0 :=
   by 
   rw [← le_zero_iff]
@@ -822,7 +822,7 @@ theorem smul_apply {m : MeasurableSpace α} (c : R) (μ : Measure α) (s : Set �
   rfl
 #align measure_theory.measure.smul_apply MeasureTheory.Measure.smul_apply
 
-instance [SmulCommClass R R' ℝ≥0∞] [MeasurableSpace α] : SmulCommClass R R' (Measure α) :=
+instance [SMulCommClass R R' ℝ≥0∞] [MeasurableSpace α] : SMulCommClass R R' (Measure α) :=
   ⟨fun _ _ _ => ext fun _ _ => smul_comm _ _ _⟩
 
 instance [HasSmul R R'] [IsScalarTower R R' ℝ≥0∞] [MeasurableSpace α] :
@@ -1742,7 +1742,7 @@ theorem restrict_eq_self_of_ae_mem {m0 : MeasurableSpace α} ⦃s : Set α⦄ �
 #align
   measure_theory.measure.restrict_eq_self_of_ae_mem MeasureTheory.Measure.restrict_eq_self_of_ae_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem restrict_congr_meas (hs : MeasurableSet s) :
     μ.restrict s = ν.restrict s ↔ ∀ (t) (_ : t ⊆ s), MeasurableSet t → μ t = ν t :=
   ⟨fun H t hts ht => by
@@ -2459,6 +2459,45 @@ theorem preimage_null (h : QuasiMeasurePreserving f μa μb) {s : Set β} (hs : 
 #align
   measure_theory.measure.quasi_measure_preserving.preimage_null MeasureTheory.Measure.QuasiMeasurePreserving.preimage_null
 
+theorem preimage_mono_ae {s t : Set β} (hf : QuasiMeasurePreserving f μa μb) (h : s ≤ᵐ[μb] t) :
+    f ⁻¹' s ≤ᵐ[μa] f ⁻¹' t :=
+  eventually_map.mp <|
+    Eventually.filter_mono (tendsto_ae_map hf.AeMeasurable) (Eventually.filter_mono hf.ae_map_le h)
+#align
+  measure_theory.measure.quasi_measure_preserving.preimage_mono_ae MeasureTheory.Measure.QuasiMeasurePreserving.preimage_mono_ae
+
+theorem preimage_ae_eq {s t : Set β} (hf : QuasiMeasurePreserving f μa μb) (h : s =ᵐ[μb] t) :
+    f ⁻¹' s =ᵐ[μa] f ⁻¹' t :=
+  EventuallyLe.antisymm (hf.preimage_mono_ae h.le) (hf.preimage_mono_ae h.symm.le)
+#align
+  measure_theory.measure.quasi_measure_preserving.preimage_ae_eq MeasureTheory.Measure.QuasiMeasurePreserving.preimage_ae_eq
+
+theorem preimage_iterate_ae_eq {s : Set α} {f : α → α} (hf : QuasiMeasurePreserving f μ μ) (k : ℕ)
+    (hs : f ⁻¹' s =ᵐ[μ] s) : f^[k] ⁻¹' s =ᵐ[μ] s := by
+  induction' k with k ih; · simp
+  rw [iterate_succ, preimage_comp]
+  exact eventually_eq.trans (hf.preimage_ae_eq ih) hs
+#align
+  measure_theory.measure.quasi_measure_preserving.preimage_iterate_ae_eq MeasureTheory.Measure.QuasiMeasurePreserving.preimage_iterate_ae_eq
+
+theorem image_zpow_ae_eq {s : Set α} {e : α ≃ α} (he : QuasiMeasurePreserving e μ μ)
+    (he' : QuasiMeasurePreserving e.symm μ μ) (k : ℤ) (hs : e '' s =ᵐ[μ] s) :
+    ⇑(e ^ k) '' s =ᵐ[μ] s := by 
+  rw [Equiv.image_eq_preimage]
+  obtain ⟨k, rfl | rfl⟩ := k.eq_coe_or_neg
+  · replace hs : ⇑e⁻¹ ⁻¹' s =ᵐ[μ] s
+    · rwa [Equiv.image_eq_preimage] at hs
+    replace he' : ⇑e⁻¹^[k] ⁻¹' s =ᵐ[μ] s := he'.preimage_iterate_ae_eq k hs
+    rwa [Equiv.Perm.iterate_eq_pow e⁻¹ k, inv_pow e k] at he'
+  · rw [zpow_neg, zpow_ofNat]
+    replace hs : e ⁻¹' s =ᵐ[μ] s
+    · convert he.preimage_ae_eq hs.symm
+      rw [Equiv.preimage_image]
+    replace he : ⇑e^[k] ⁻¹' s =ᵐ[μ] s := he.preimage_iterate_ae_eq k hs
+    rwa [Equiv.Perm.iterate_eq_pow e k] at he
+#align
+  measure_theory.measure.quasi_measure_preserving.image_zpow_ae_eq MeasureTheory.Measure.QuasiMeasurePreserving.image_zpow_ae_eq
+
 theorem limsup_preimage_iterate_ae_eq {f : α → α} (hf : QuasiMeasurePreserving f μ μ)
     (hs : f ⁻¹' s =ᵐ[μ] s) :-- Need `@` below because of diamond; see gh issue #16932
         @limsup
@@ -2518,7 +2557,7 @@ section Pointwise
 
 open Pointwise
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 @[to_additive]
 theorem pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one {G α : Type _} [Group G] [MulAction G α]
     [MeasurableSpace α] {μ : Measure α} {s : Set α}
@@ -2882,7 +2921,7 @@ theorem bsupr_measure_Iic [Preorder α] {s : Set α} (hsc : s.Countable)
   rw [← measure_bUnion_eq_supr hsc]
   · congr
     exact Union₂_eq_univ_iff.2 hst
-  · exact directed_on_iff_directed.2 ((hdir.directed_coe.mono_comp _) fun x y => Iic_subset_Iic.2)
+  · exact directedOn_iff_directed.2 ((hdir.directed_coe.mono_comp _) fun x y => Iic_subset_Iic.2)
 #align measure_theory.bsupr_measure_Iic MeasureTheory.bsupr_measure_Iic
 
 variable [PartialOrder α] {a b : α}
@@ -3496,8 +3535,8 @@ theorem exists_subset_measure_lt_top [SigmaFinite μ] {r : ℝ≥0∞} (hs : Mea
 all members of the countable family of finite measure spanning sets has zero measure. -/
 theorem forall_measure_inter_spanning_sets_eq_zero [MeasurableSpace α] {μ : Measure α}
     [SigmaFinite μ] (s : Set α) : (∀ n, μ (s ∩ spanningSets μ n) = 0) ↔ μ s = 0 := by
-  nth_rw
-    1 [show s = ⋃ n, s ∩ spanning_sets μ n by rw [← inter_Union, Union_spanning_sets, inter_univ]]
+  nth_rw 1 [show s = ⋃ n, s ∩ spanning_sets μ n by
+      rw [← inter_Union, Union_spanning_sets, inter_univ]]
   rw [measure_Union_null_iff]
 #align
   measure_theory.measure.forall_measure_inter_spanning_sets_eq_zero MeasureTheory.Measure.forall_measure_inter_spanning_sets_eq_zero
@@ -3567,7 +3606,7 @@ theorem countable_meas_pos_of_disjoint_Union {ι : Type _} [MeasurableSpace α] 
 #align
   measure_theory.measure.countable_meas_pos_of_disjoint_Union MeasureTheory.Measure.countable_meas_pos_of_disjoint_Union
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t' «expr ⊇ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t' «expr ⊇ » t) -/
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
 satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
 This only holds when `μ` is σ-finite. For a version without this assumption (but requiring
@@ -3832,8 +3871,8 @@ instance isLocallyFiniteMeasureSmulNnreal [TopologicalSpace α] (μ : Measure α
   rcases μ.exists_is_open_measure_lt_top x with ⟨o, xo, o_open, μo⟩
   refine' ⟨o, o_open.mem_nhds xo, _⟩
   apply Ennreal.mul_lt_top _ μo.ne
-  simp only [RingHom.to_monoid_hom_eq_coe, RingHom.coe_monoid_hom, Ennreal.coe_ne_top,
-    Ennreal.coe_of_nnreal_hom, Ne.def, not_false_iff]
+  simp only [RingHom.toMonoidHom_eq_coe, [anonymous], Ennreal.coe_ne_top, Ennreal.coe_of_nnreal_hom,
+    Ne.def, not_false_iff]
 #align
   measure_theory.is_locally_finite_measure_smul_nnreal MeasureTheory.isLocallyFiniteMeasureSmulNnreal
 
@@ -3855,7 +3894,7 @@ theorem Metric.Bounded.measure_lt_top [PseudoMetricSpace α] [ProperSpace α] {�
     [IsFiniteMeasureOnCompacts μ] ⦃s : Set α⦄ (hs : Metric.Bounded s) : μ s < ∞ :=
   calc
     μ s ≤ μ (closure s) := measure_mono subset_closure
-    _ < ∞ := (Metric.is_compact_of_is_closed_bounded isClosedClosure hs.closure).measure_lt_top
+    _ < ∞ := (Metric.is_compact_of_is_closed_bounded is_closed_closure hs.closure).measure_lt_top
     
 #align metric.bounded.measure_lt_top Metric.Bounded.measure_lt_top
 
@@ -4391,7 +4430,7 @@ namespace IsCompact
 
 variable [TopologicalSpace α] [MeasurableSpace α] {μ : Measure α} {s : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (U «expr ⊇ » s) -/
 /-- If `s` is a compact set and `μ` is finite at `𝓝 x` for every `x ∈ s`, then `s` admits an open
 superset of finite measure. -/
 theorem exists_open_superset_measure_lt_top' (h : IsCompact s)
@@ -4411,7 +4450,7 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s)
 #align
   is_compact.exists_open_superset_measure_lt_top' IsCompact.exists_open_superset_measure_lt_top'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (U «expr ⊇ » s) -/
 /-- If `s` is a compact set and `μ` is a locally finite measure, then `s` admits an open superset of
 finite measure. -/
 theorem exists_open_superset_measure_lt_top (h : IsCompact s) (μ : Measure α)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,7 +174,7 @@ theorem coe_vanishing_ideal (t : Set (PrimeSpectrum R)) :
 
 theorem mem_vanishing_ideal (t : Set (PrimeSpectrum R)) (f : R) :
     f ∈ vanishingIdeal t ↔ ∀ x : PrimeSpectrum R, x ∈ t → f ∈ x.asIdeal := by
-  rw [← SetLike.mem_coe, coe_vanishing_ideal, Set.mem_set_of_eq]
+  rw [← SetLike.mem_coe, coe_vanishing_ideal, Set.mem_setOf_eq]
 #align prime_spectrum.mem_vanishing_ideal PrimeSpectrum.mem_vanishing_ideal
 
 @[simp]
@@ -452,10 +452,10 @@ theorem is_closed_iff_zero_locus_radical_ideal (Z : Set (PrimeSpectrum R)) :
 #align
   prime_spectrum.is_closed_iff_zero_locus_radical_ideal PrimeSpectrum.is_closed_iff_zero_locus_radical_ideal
 
-theorem isClosedZeroLocus (s : Set R) : IsClosed (zeroLocus s) := by
+theorem is_closed_zero_locus (s : Set R) : IsClosed (zeroLocus s) := by
   rw [is_closed_iff_zero_locus]
   exact ⟨s, rfl⟩
-#align prime_spectrum.is_closed_zero_locus PrimeSpectrum.isClosedZeroLocus
+#align prime_spectrum.is_closed_zero_locus PrimeSpectrum.is_closed_zero_locus
 
 theorem is_closed_singleton_iff_is_maximal (x : PrimeSpectrum R) :
     IsClosed ({x} : Set (PrimeSpectrum R)) ↔ x.asIdeal.IsMaximal := by
@@ -653,22 +653,22 @@ theorem comap_injective_of_surjective (f : R →+* S) (hf : Function.Surjective 
       (congr_arg PrimeSpectrum.asIdeal h : (comap f x).asIdeal = (comap f y).asIdeal))
 #align prime_spectrum.comap_injective_of_surjective PrimeSpectrum.comap_injective_of_surjective
 
-theorem comapSingletonIsClosedOfSurjective (f : R →+* S) (hf : Function.Surjective f)
+theorem comap_singleton_is_closed_of_surjective (f : R →+* S) (hf : Function.Surjective f)
     (x : PrimeSpectrum S) (hx : IsClosed ({x} : Set (PrimeSpectrum S))) :
     IsClosed ({comap f x} : Set (PrimeSpectrum R)) :=
   haveI : x.as_ideal.is_maximal := (is_closed_singleton_iff_is_maximal x).1 hx
   (is_closed_singleton_iff_is_maximal _).2 (Ideal.comap_is_maximal_of_surjective f hf)
 #align
-  prime_spectrum.comap_singleton_is_closed_of_surjective PrimeSpectrum.comapSingletonIsClosedOfSurjective
+  prime_spectrum.comap_singleton_is_closed_of_surjective PrimeSpectrum.comap_singleton_is_closed_of_surjective
 
-theorem comapSingletonIsClosedOfIsIntegral (f : R →+* S) (hf : f.IsIntegral) (x : PrimeSpectrum S)
-    (hx : IsClosed ({x} : Set (PrimeSpectrum S))) :
+theorem comap_singleton_is_closed_of_is_integral (f : R →+* S) (hf : f.IsIntegral)
+    (x : PrimeSpectrum S) (hx : IsClosed ({x} : Set (PrimeSpectrum S))) :
     IsClosed ({comap f x} : Set (PrimeSpectrum R)) :=
   (is_closed_singleton_iff_is_maximal _).2
     (Ideal.is_maximal_comap_of_is_integral_of_is_maximal' f hf x.asIdeal <|
       (is_closed_singleton_iff_is_maximal x).1 hx)
 #align
-  prime_spectrum.comap_singleton_is_closed_of_is_integral PrimeSpectrum.comapSingletonIsClosedOfIsIntegral
+  prime_spectrum.comap_singleton_is_closed_of_is_integral PrimeSpectrum.comap_singleton_is_closed_of_is_integral
 
 variable (S)
 
@@ -766,18 +766,19 @@ theorem range_comap_of_surjective (hf : Surjective f) : Set.range (comap f) = ze
   rw [zero_locus_bot]
 #align prime_spectrum.range_comap_of_surjective PrimeSpectrum.range_comap_of_surjective
 
-theorem isClosedRangeComapOfSurjective (hf : Surjective f) : IsClosed (Set.range (comap f)) := by
+theorem is_closed_range_comap_of_surjective (hf : Surjective f) : IsClosed (Set.range (comap f)) :=
+  by 
   rw [range_comap_of_surjective _ f hf]
   exact is_closed_zero_locus ↑(ker f)
 #align
-  prime_spectrum.is_closed_range_comap_of_surjective PrimeSpectrum.isClosedRangeComapOfSurjective
+  prime_spectrum.is_closed_range_comap_of_surjective PrimeSpectrum.is_closed_range_comap_of_surjective
 
-theorem closedEmbeddingComapOfSurjective (hf : Surjective f) : ClosedEmbedding (comap f) :=
+theorem closed_embedding_comap_of_surjective (hf : Surjective f) : ClosedEmbedding (comap f) :=
   { induced := (comap_inducing_of_surjective S f hf).induced
     inj := comap_injective_of_surjective f hf
-    closedRange := isClosedRangeComapOfSurjective S f hf }
+    closed_range := is_closed_range_comap_of_surjective S f hf }
 #align
-  prime_spectrum.closed_embedding_comap_of_surjective PrimeSpectrum.closedEmbeddingComapOfSurjective
+  prime_spectrum.closed_embedding_comap_of_surjective PrimeSpectrum.closed_embedding_comap_of_surjective
 
 end SpecOfSurjective
 
@@ -900,7 +901,7 @@ theorem localization_away_comap_range (S : Type v) [CommRing S] [Algebra R S] (r
     [IsLocalization.Away r S] : Set.range (comap (algebraMap R S)) = basicOpen r := by
   rw [localization_comap_range S (Submonoid.powers r)]
   ext
-  simp only [mem_zero_locus, basic_open_eq_zero_locus_compl, SetLike.mem_coe, Set.mem_set_of_eq,
+  simp only [mem_zero_locus, basic_open_eq_zero_locus_compl, SetLike.mem_coe, Set.mem_setOf_eq,
     Set.singleton_subset_iff, Set.mem_compl_iff, disjoint_iff_inf_le]
   constructor
   · intro h₁ h₂

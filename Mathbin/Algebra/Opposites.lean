@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.opposites
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -219,7 +219,7 @@ instance [Sub α] : Sub αᵐᵒᵖ where sub x y := op (unop x - unop y)
 
 instance [Neg α] : Neg αᵐᵒᵖ where neg x := op <| -unop x
 
-instance [HasInvolutiveNeg α] : HasInvolutiveNeg αᵐᵒᵖ :=
+instance [InvolutiveNeg α] : InvolutiveNeg αᵐᵒᵖ :=
   { MulOpposite.hasNeg α with neg_neg := fun a => unop_injective <| neg_neg _ }
 
 @[to_additive]
@@ -229,7 +229,7 @@ instance [Mul α] : Mul αᵐᵒᵖ where mul x y := op (unop y * unop x)
 instance [Inv α] : Inv αᵐᵒᵖ where inv x := op <| (unop x)⁻¹
 
 @[to_additive]
-instance [HasInvolutiveInv α] : HasInvolutiveInv αᵐᵒᵖ :=
+instance [InvolutiveInv α] : InvolutiveInv αᵐᵒᵖ :=
   { MulOpposite.hasInv α with inv_inv := fun a => unop_injective <| inv_inv _ }
 
 @[to_additive]
@@ -457,7 +457,7 @@ theorem unop_mul [Mul α] (a b : αᵃᵒᵖ) : unop (a * b) = unop a * unop b :
 
 instance [Inv α] : Inv αᵃᵒᵖ where inv a := op (unop a)⁻¹
 
-instance [HasInvolutiveInv α] : HasInvolutiveInv αᵃᵒᵖ :=
+instance [InvolutiveInv α] : InvolutiveInv αᵃᵒᵖ :=
   { AddOpposite.hasInv with inv_inv := fun a => unop_injective <| inv_inv _ }
 
 #print AddOpposite.op_inv /-

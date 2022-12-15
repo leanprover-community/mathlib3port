@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Zhangir Azerbayev
 
 ! This file was ported from Lean 3 source module linear_algebra.alternating
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -230,7 +230,7 @@ as `multilinear_map`
 
 section HasSmul
 
-variable {S : Type _} [Monoid S] [DistribMulAction S N] [SmulCommClass R S N]
+variable {S : Type _} [Monoid S] [DistribMulAction S N] [SMulCommClass R S N]
 
 instance : HasSmul S (AlternatingMap R M N ι) :=
   ⟨fun c f =>
@@ -331,7 +331,7 @@ instance : AddCommGroup (AlternatingMap R M N' ι) :=
 
 section DistribMulAction
 
-variable {S : Type _} [Monoid S] [DistribMulAction S N] [SmulCommClass R S N]
+variable {S : Type _} [Monoid S] [DistribMulAction S N] [SMulCommClass R S N]
 
 instance :
     DistribMulAction S
@@ -346,7 +346,7 @@ end DistribMulAction
 
 section Module
 
-variable {S : Type _} [Semiring S] [Module S N] [SmulCommClass R S N]
+variable {S : Type _} [Semiring S] [Module S N] [SMulCommClass R S N]
 
 /-- The space of multilinear maps over an algebra over `R` is a module over `R`, for the pointwise
 addition and scalar multiplication. -/
@@ -521,7 +521,7 @@ theorem comp_linear_map_inj (f : M₂ →ₗ[R] M) (hf : Function.Surjective f)
 
 section DomLcongr
 
-variable (ι R N) (S : Type _) [Semiring S] [Module S N] [SmulCommClass R S N]
+variable (ι R N) (S : Type _) [Semiring S] [Module S N] [SMulCommClass R S N]
 
 /-- Construct a linear equivalence between maps from a linear equivalence between domains. -/
 @[simps apply]
@@ -1060,7 +1060,7 @@ theorem MultilinearMap.dom_coprod_alternization (a : MultilinearMap R' (fun _ : 
     rw [QuotientGroup.eq']
   -- eliminate a multiplication
   rw [← Finset.map_univ_equiv (Equiv.mulLeft σ), Finset.filter_map, Finset.sum_map]
-  simp_rw [Equiv.coe_toEmbedding, Equiv.coe_mul_left, (· ∘ ·), mul_inv_rev, inv_mul_cancel_right,
+  simp_rw [Equiv.coe_toEmbedding, Equiv.coe_mulLeft, (· ∘ ·), mul_inv_rev, inv_mul_cancel_right,
     Subgroup.inv_mem_iff, MonoidHom.mem_range, Finset.univ_filter_exists,
     Finset.sum_image (perm.sum_congr_hom_injective.inj_on _)]
   -- now we're ready to clean up the RHS, pulling out the summation
@@ -1071,9 +1071,9 @@ theorem MultilinearMap.dom_coprod_alternization (a : MultilinearMap R' (fun _ : 
   ext1 ⟨al, ar⟩
   dsimp only
   -- pull out the pair of smuls on the RHS, by rewriting to `_ →ₗ[ℤ] _` and back
-  rw [← AddEquiv.coe_to_add_monoid_hom, ← AddMonoidHom.coe_to_int_linear_map,
+  rw [← AddEquiv.coe_toAddMonoidHom, ← AddMonoidHom.coe_to_int_linear_map,
     LinearMap.map_smul_of_tower, LinearMap.map_smul_of_tower, AddMonoidHom.coe_to_int_linear_map,
-    AddEquiv.coe_to_add_monoid_hom, MultilinearMap.dom_dom_congr_equiv_apply]
+    AddEquiv.coe_toAddMonoidHom, MultilinearMap.dom_dom_congr_equiv_apply]
   -- pick up the pieces
   rw [MultilinearMap.dom_dom_congr_mul, perm.sign_mul, perm.sum_congr_hom_apply,
     MultilinearMap.dom_coprod_dom_dom_congr_sum_congr, perm.sign_sum_congr, mul_smul, mul_smul]

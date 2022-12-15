@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.quadratic_form.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -371,7 +371,7 @@ variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 section HasSmul
 
-variable [Monoid S] [DistribMulAction S R] [SmulCommClass S R R]
+variable [Monoid S] [DistribMulAction S R] [SMulCommClass S R R]
 
 /-- `quadratic_form R M` inherits the scalar action from any algebra over `R`.
 
@@ -470,7 +470,7 @@ theorem sum_apply {ι : Type _} (Q : ι → QuadraticForm R M) (s : Finset ι) (
 
 end Sum
 
-instance [Monoid S] [DistribMulAction S R] [SmulCommClass S R R] :
+instance [Monoid S] [DistribMulAction S R] [SMulCommClass S R R] :
     DistribMulAction S
       (QuadraticForm R
         M) where 
@@ -483,7 +483,7 @@ instance [Monoid S] [DistribMulAction S R] [SmulCommClass S R R] :
     ext
     simp only [zero_apply, smul_apply, smul_zero]
 
-instance [Semiring S] [Module S R] [SmulCommClass S R R] :
+instance [Semiring S] [Module S R] [SMulCommClass S R R] :
     Module S
       (QuadraticForm R
         M) where 
@@ -685,7 +685,7 @@ theorem to_quadratic_form_add (B₁ B₂ : BilinForm R M) :
 #align bilin_form.to_quadratic_form_add BilinForm.to_quadratic_form_add
 
 @[simp]
-theorem to_quadratic_form_smul [Monoid S] [DistribMulAction S R] [SmulCommClass S R R] (a : S)
+theorem to_quadratic_form_smul [Monoid S] [DistribMulAction S R] [SMulCommClass S R R] (a : S)
     (B : BilinForm R M) : (a • B).toQuadraticForm = a • B.toQuadraticForm :=
   rfl
 #align bilin_form.to_quadratic_form_smul BilinForm.to_quadratic_form_smul
@@ -813,7 +813,7 @@ theorem associated_to_quadratic_form (B : BilinForm R M) (x y : M) :
 
 theorem associated_left_inverse (h : B₁.IsSymm) : associatedHom S B₁.toQuadraticForm = B₁ :=
   BilinForm.ext fun x y => by
-    rw [associated_to_quadratic_form, is_symm.eq h x y, ← two_mul, ← mul_assoc, inv_of_mul_self,
+    rw [associated_to_quadratic_form, is_symm.eq h x y, ← two_mul, ← mul_assoc, invOf_mul_self,
       one_mul]
 #align quadratic_form.associated_left_inverse QuadraticForm.associated_left_inverse
 
@@ -823,7 +823,7 @@ theorem to_quadratic_form_associated : (associatedHom S Q).toQuadraticForm = Q :
       (associatedHom S Q).toQuadraticForm x = ⅟ 2 * (Q x + Q x) := by
         simp only [add_assoc, add_sub_cancel', one_mul, to_quadratic_form_apply, add_mul,
           associated_apply, map_add_self, bit0]
-      _ = Q x := by rw [← two_mul (Q x), ← mul_assoc, inv_of_mul_self, one_mul]
+      _ = Q x := by rw [← two_mul (Q x), ← mul_assoc, invOf_mul_self, one_mul]
       
 #align quadratic_form.to_quadratic_form_associated QuadraticForm.to_quadratic_form_associated
 
@@ -840,7 +840,7 @@ theorem associated_eq_self_apply (x : M) : associatedHom S Q x x = Q x := by
     convert this
     simp only [bit0, add_mul, one_mul]
     abel
-  simp only [← mul_assoc, one_mul, inv_of_mul_self]
+  simp only [← mul_assoc, one_mul, invOf_mul_self]
 #align quadratic_form.associated_eq_self_apply QuadraticForm.associated_eq_self_apply
 
 /-- `associated'` is the `ℤ`-linear map that sends a quadratic form on a module `M` over `R` to its
@@ -905,7 +905,7 @@ def Anisotropic (Q : QuadraticForm R M) : Prop :=
   ∀ x, Q x = 0 → x = 0
 #align quadratic_form.anisotropic QuadraticForm.Anisotropic
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) :
     ¬Anisotropic Q ↔ ∃ (x : _)(_ : x ≠ 0), Q x = 0 := by
   simp only [anisotropic, not_forall, exists_prop, and_comm']
@@ -941,7 +941,7 @@ variable {R₂ : Type u} [OrderedRing R₂] [AddCommMonoid M] [Module R₂ M]
 
 variable {Q₂ : QuadraticForm R₂ M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def PosDef (Q₂ : QuadraticForm R₂ M) : Prop :=
   ∀ (x) (_ : x ≠ 0), 0 < Q₂ x
@@ -958,7 +958,7 @@ theorem PosDef.nonneg {Q : QuadraticForm R₂ M} (hQ : PosDef Q) (x : M) : 0 ≤
 #align quadratic_form.pos_def.nonneg QuadraticForm.PosDef.nonneg
 
 theorem PosDef.anisotropic {Q : QuadraticForm R₂ M} (hQ : Q.PosDef) : Q.Anisotropic := fun x hQx =>
-  Classical.by_contradiction fun hx =>
+  by_contradiction fun hx =>
     lt_irrefl (0 : R₂) <| by 
       have := hQ _ hx
       rw [hQx] at this
@@ -1181,7 +1181,7 @@ variable (R₁)
 
 The weights are applied using `•`; typically this definition is used either with `S = R₁` or
 `[algebra S R₁]`, although this is stated more generally. -/
-def weightedSumSquares [Monoid S] [DistribMulAction S R₁] [SmulCommClass S R₁ R₁] (w : ι → S) :
+def weightedSumSquares [Monoid S] [DistribMulAction S R₁] [SMulCommClass S R₁ R₁] (w : ι → S) :
     QuadraticForm R₁ (ι → R₁) :=
   ∑ i : ι, w i • proj i i
 #align quadratic_form.weighted_sum_squares QuadraticForm.weightedSumSquares
@@ -1189,7 +1189,7 @@ def weightedSumSquares [Monoid S] [DistribMulAction S R₁] [SmulCommClass S R�
 end
 
 @[simp]
-theorem weighted_sum_squares_apply [Monoid S] [DistribMulAction S R₁] [SmulCommClass S R₁ R₁]
+theorem weighted_sum_squares_apply [Monoid S] [DistribMulAction S R₁] [SMulCommClass S R₁ R₁]
     (w : ι → S) (v : ι → R₁) : weightedSumSquares R₁ w v = ∑ i : ι, w i • (v i * v i) :=
   QuadraticForm.sum_apply _ _ _
 #align quadratic_form.weighted_sum_squares_apply QuadraticForm.weighted_sum_squares_apply

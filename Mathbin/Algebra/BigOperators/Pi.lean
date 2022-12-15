@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.big_operators.pi
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ variable [∀ i, NonAssocSemiring (f i)]
 @[ext]
 theorem RingHom.functions_ext [Finite I] (G : Type _) [NonAssocSemiring G] (g h : (∀ i, f i) →+* G)
     (H : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
-  RingHom.coe_add_monoid_hom_injective <|
+  RingHom.coe_addMonoidHom_injective <|
     @AddMonoidHom.functions_ext I _ f _ _ G _ (g : (∀ i, f i) →+ G) h H
 #align ring_hom.functions_ext RingHom.functions_ext
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.star.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,8 +44,10 @@ advantage of not requiring a topology.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+assert_not_exists finset
+
+assert_not_exists subgroup
+
 universe u v
 
 open MulOpposite
@@ -540,8 +542,8 @@ theorem Ring.inverse_star [Semiring R] [StarRing R] (a : R) :
 instance Invertible.star {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r] :
     Invertible (star r) where 
   invOf := star (⅟ r)
-  inv_of_mul_self := by rw [← star_mul, mul_inv_of_self, star_one]
-  mul_inv_of_self := by rw [← star_mul, inv_of_mul_self, star_one]
+  inv_of_mul_self := by rw [← star_mul, mul_invOf_self, star_one]
+  mul_inv_of_self := by rw [← star_mul, invOf_mul_self, star_one]
 #align invertible.star Invertible.star
 
 theorem star_inv_of {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r]

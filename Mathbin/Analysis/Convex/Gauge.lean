@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.gauge
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,12 +66,12 @@ theorem gauge_def : gauge s x = inf ({ r ∈ Set.ioi 0 | x ∈ r • s }) :=
   rfl
 #align gauge_def gauge_def
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]] -/
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
 theorem gauge_def' : gauge s x = inf ({ r ∈ Set.ioi 0 | r⁻¹ • x ∈ s }) := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
   exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
 #align gauge_def' gauge_def'
 
@@ -156,7 +156,7 @@ theorem gauge_le_of_mem (ha : 0 ≤ a) (hx : x ∈ a • s) : gauge s x ≤ a :=
 theorem gauge_le_eq (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : Absorbent ℝ s) (ha : 0 ≤ a) :
     { x | gauge s x ≤ a } = ⋂ (r : ℝ) (H : a < r), r • s := by
   ext
-  simp_rw [Set.mem_Inter, Set.mem_set_of_eq]
+  simp_rw [Set.mem_Inter, Set.mem_setOf_eq]
   refine' ⟨fun h r hr => _, fun h => le_of_forall_pos_lt_add fun ε hε => _⟩
   · have hr' := ha.trans_lt hr
     rw [mem_smul_set_iff_inv_smul_mem₀ hr'.ne']
@@ -266,7 +266,7 @@ theorem gauge_smul_of_nonneg [MulActionWithZero α E] [IsScalarTower α ℝ (Set
     exact smul_mem_smul_set hx
 #align gauge_smul_of_nonneg gauge_smul_of_nonneg
 
-theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SmulCommClass α ℝ ℝ]
+theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SMulCommClass α ℝ ℝ]
     [IsScalarTower α ℝ ℝ] [IsScalarTower α ℝ E] {s : Set E} {a : α} (ha : 0 ≤ a) :
     gauge (a • s) = a⁻¹ • gauge s := by
   obtain rfl | ha' := ha.eq_or_lt
@@ -288,7 +288,7 @@ theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SmulCommClass α ℝ
     rw [smul_inv₀, smul_assoc, inv_inv]
 #align gauge_smul_left_of_nonneg gauge_smul_left_of_nonneg
 
-theorem gauge_smul_left [Module α E] [SmulCommClass α ℝ ℝ] [IsScalarTower α ℝ ℝ]
+theorem gauge_smul_left [Module α E] [SMulCommClass α ℝ ℝ] [IsScalarTower α ℝ ℝ]
     [IsScalarTower α ℝ E] {s : Set E} (symmetric : ∀ x ∈ s, -x ∈ s) (a : α) :
     gauge (a • s) = (|a|)⁻¹ • gauge s := by
   rw [← gauge_smul_left_of_nonneg (abs_nonneg a)]

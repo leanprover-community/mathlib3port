@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.vitali
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ open Nnreal Classical Ennreal TopologicalSpace
 
 namespace Vitali
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 /-- Vitali covering theorem: given a set `t` of subsets of a type, one may extract a disjoint
 subfamily `u` such that the `τ`-enlargment of this family covers all elements of `t`, where `τ > 1`
 is any fixed number.
@@ -89,7 +89,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
     refine' zorn_subset _ fun U UT hU => _
     refine' ⟨⋃₀U, _, fun s hs => subset_sUnion_of_mem hs⟩
     simp only [Set.sUnion_subset_iff, and_imp, exists_prop, forall_exists_index, mem_sUnion,
-      Set.mem_set_of_eq]
+      Set.mem_setOf_eq]
     refine'
       ⟨fun u hu => (UT hu).1, (pairwise_disjoint_sUnion hU.directed_on).2 fun u hu => (UT hu).2.1,
         fun a hat b u uU hbu hab => _⟩
@@ -166,7 +166,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
 #align
   vitali.exists_disjoint_subfamily_covering_enlargment Vitali.exists_disjoint_subfamily_covering_enlargment
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
 extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by the 5-times
 dilations of balls in `u`. -/
@@ -206,8 +206,8 @@ theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace �
 #align
   vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball Vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (u «expr ⊆ » t') -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 /-- The measurable Vitali covering theorem. Assume one is given a family `t` of closed sets with
 nonempty interior, such that each `a ∈ t` is included in a ball `B (x, r)` and covers a definite
 proportion of the ball `B (x, 3 r)` for a given measure `μ` (think of the situation where `μ` is
@@ -354,7 +354,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     by 
     intro z hz
     set k := ⋃ (a : v) (ha : a ∈ w), B a with hk
-    have k_closed : IsClosed k := isClosedBUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
+    have k_closed : IsClosed k := is_closed_bUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
     have z_notmem_k : z ∉ k := by
       simp only [not_exists, exists_prop, mem_Union, mem_sep_iff, forall_exists_index,
         SetCoe.exists, not_and, exists_and_right, Subtype.coe_mk]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,9 +204,9 @@ theorem compl_inv : (sᶜ)⁻¹ = s⁻¹ᶜ :=
 
 end Inv
 
-section HasInvolutiveInv
+section InvolutiveInv
 
-variable [HasInvolutiveInv α] {s t : Set α} {a : α}
+variable [InvolutiveInv α] {s t : Set α} {a : α}
 
 @[to_additive]
 theorem inv_mem_inv : a⁻¹ ∈ s⁻¹ ↔ a ∈ s := by simp only [mem_inv, inv_inv]
@@ -228,7 +228,7 @@ theorem image_inv : Inv.inv '' s = s⁻¹ :=
 #align set.image_inv Set.image_inv
 
 @[simp, to_additive]
-instance : HasInvolutiveInv (Set α) where 
+instance : InvolutiveInv (Set α) where 
   inv := Inv.inv
   inv_inv s := by simp only [← inv_preimage, preimage_preimage, inv_inv, preimage_id']
 
@@ -263,7 +263,7 @@ theorem image_op_inv : op '' s⁻¹ = (op '' s)⁻¹ := by
   simp_rw [← image_inv, Function.Semiconj.set_image op_inv s]
 #align set.image_op_inv Set.image_op_inv
 
-end HasInvolutiveInv
+end InvolutiveInv
 
 end Inv
 
@@ -1033,12 +1033,12 @@ theorem Nonempty.one_mem_div (h : s.Nonempty) : (1 : α) ∈ s / s :=
 
 @[to_additive]
 theorem is_unit_singleton (a : α) : IsUnit ({a} : Set α) :=
-  (Group.is_unit a).Set
+  (Group.isUnit a).Set
 #align set.is_unit_singleton Set.is_unit_singleton
 
 @[simp, to_additive]
 theorem is_unit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by
-  simp only [is_unit_iff, Group.is_unit, and_true_iff]
+  simp only [is_unit_iff, Group.isUnit, and_true_iff]
 #align set.is_unit_iff_singleton Set.is_unit_iff_singleton
 
 @[simp, to_additive]

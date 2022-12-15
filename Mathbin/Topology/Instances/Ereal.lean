@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.instances.ereal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,7 +221,7 @@ theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} :
 /-! ### Neighborhoods of infinity -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
 theorem nhds_top : 𝓝 (⊤ : Ereal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
 #align ereal.nhds_top Ereal.nhds_top
@@ -248,7 +248,7 @@ theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → Ereal} {f : Filter �
   simp only [nhds_top', mem_Ioi, tendsto_infi, tendsto_principal]
 #align ereal.tendsto_nhds_top_iff_real Ereal.tendsto_nhds_top_iff_real
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
 theorem nhds_bot : 𝓝 (⊥ : Ereal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 #align ereal.nhds_bot Ereal.nhds_bot

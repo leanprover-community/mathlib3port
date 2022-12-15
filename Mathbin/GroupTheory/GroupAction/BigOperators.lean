@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.group_action.big_operators
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,10 +26,10 @@ open BigOperators
 
 section
 
-variable [AddMonoid β] [DistribSmul α β]
+variable [AddMonoid β] [DistribSMul α β]
 
 theorem List.smul_sum {r : α} {l : List β} : r • l.Sum = (l.map ((· • ·) r)).Sum :=
-  (DistribSmul.toAddMonoidHom β r).map_list_sum l
+  (DistribSMul.toAddMonoidHom β r).map_list_sum l
 #align list.smul_sum List.smul_sum
 
 end
@@ -46,15 +46,15 @@ end
 
 section
 
-variable [AddCommMonoid β] [DistribSmul α β]
+variable [AddCommMonoid β] [DistribSMul α β]
 
 theorem Multiset.smul_sum {r : α} {s : Multiset β} : r • s.Sum = (s.map ((· • ·) r)).Sum :=
-  (DistribSmul.toAddMonoidHom β r).map_multiset_sum s
+  (DistribSMul.toAddMonoidHom β r).map_multiset_sum s
 #align multiset.smul_sum Multiset.smul_sum
 
 theorem Finset.smul_sum {r : α} {f : γ → β} {s : Finset γ} :
     (r • ∑ x in s, f x) = ∑ x in s, r • f x :=
-  (DistribSmul.toAddMonoidHom β r).map_sum f s
+  (DistribSMul.toAddMonoidHom β r).map_sum f s
 #align finset.smul_sum Finset.smul_sum
 
 end

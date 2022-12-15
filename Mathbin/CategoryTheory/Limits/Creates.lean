@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.creates
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,28 +149,28 @@ def liftedLimitIsLimit {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone 
 #align category_theory.lifted_limit_is_limit CategoryTheory.liftedLimitIsLimit
 
 /-- If `F` creates the limit of `K` and `K ⋙ F` has a limit, then `K` has a limit. -/
-theorem has_limit_of_created (K : J ⥤ C) (F : C ⥤ D) [HasLimit (K ⋙ F)] [CreatesLimit K F] :
+theorem hasLimitOfCreated (K : J ⥤ C) (F : C ⥤ D) [HasLimit (K ⋙ F)] [CreatesLimit K F] :
     HasLimit K :=
   HasLimit.mk
     { Cone := liftLimit (limit.isLimit (K ⋙ F))
       IsLimit := liftedLimitIsLimit _ }
-#align category_theory.has_limit_of_created CategoryTheory.has_limit_of_created
+#align category_theory.has_limit_of_created CategoryTheory.hasLimitOfCreated
 
 /-- If `F` creates limits of shape `J`, and `D` has limits of shape `J`, then
 `C` has limits of shape `J`.
 -/
-theorem has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape (F : C ⥤ D)
-    [HasLimitsOfShape J D] [CreatesLimitsOfShape J F] : HasLimitsOfShape J C :=
-  ⟨fun G => has_limit_of_created G F⟩
+theorem hasLimitsOfShapeOfHasLimitsOfShapeCreatesLimitsOfShape (F : C ⥤ D) [HasLimitsOfShape J D]
+    [CreatesLimitsOfShape J F] : HasLimitsOfShape J C :=
+  ⟨fun G => hasLimitOfCreated G F⟩
 #align
-  category_theory.has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape CategoryTheory.has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape
+  category_theory.has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape CategoryTheory.hasLimitsOfShapeOfHasLimitsOfShapeCreatesLimitsOfShape
 
 /-- If `F` creates limits, and `D` has all limits, then `C` has all limits. -/
-theorem has_limits_of_has_limits_creates_limits (F : C ⥤ D) [HasLimitsOfSize.{w, w'} D]
+theorem hasLimitsOfHasLimitsCreatesLimits (F : C ⥤ D) [HasLimitsOfSize.{w, w'} D]
     [CreatesLimitsOfSize.{w, w'} F] : HasLimitsOfSize.{w, w'} C :=
   ⟨fun J I => has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape F⟩
 #align
-  category_theory.has_limits_of_has_limits_creates_limits CategoryTheory.has_limits_of_has_limits_creates_limits
+  category_theory.has_limits_of_has_limits_creates_limits CategoryTheory.hasLimitsOfHasLimitsCreatesLimits
 
 -- Interface to the `creates_colimit` class.
 /-- `lift_colimit t` is the cocone for `K` given by lifting the colimit `t` for `K ⋙ F`. -/
@@ -192,28 +192,28 @@ def liftedColimitIsColimit {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c :
 #align category_theory.lifted_colimit_is_colimit CategoryTheory.liftedColimitIsColimit
 
 /-- If `F` creates the limit of `K` and `K ⋙ F` has a limit, then `K` has a limit. -/
-theorem has_colimit_of_created (K : J ⥤ C) (F : C ⥤ D) [HasColimit (K ⋙ F)] [CreatesColimit K F] :
+theorem hasColimitOfCreated (K : J ⥤ C) (F : C ⥤ D) [HasColimit (K ⋙ F)] [CreatesColimit K F] :
     HasColimit K :=
   HasColimit.mk
     { Cocone := liftColimit (colimit.isColimit (K ⋙ F))
       IsColimit := liftedColimitIsColimit _ }
-#align category_theory.has_colimit_of_created CategoryTheory.has_colimit_of_created
+#align category_theory.has_colimit_of_created CategoryTheory.hasColimitOfCreated
 
 /-- If `F` creates colimits of shape `J`, and `D` has colimits of shape `J`, then
 `C` has colimits of shape `J`.
 -/
-theorem has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape (F : C ⥤ D)
+theorem hasColimitsOfShapeOfHasColimitsOfShapeCreatesColimitsOfShape (F : C ⥤ D)
     [HasColimitsOfShape J D] [CreatesColimitsOfShape J F] : HasColimitsOfShape J C :=
-  ⟨fun G => has_colimit_of_created G F⟩
+  ⟨fun G => hasColimitOfCreated G F⟩
 #align
-  category_theory.has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape CategoryTheory.has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape
+  category_theory.has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape CategoryTheory.hasColimitsOfShapeOfHasColimitsOfShapeCreatesColimitsOfShape
 
 /-- If `F` creates colimits, and `D` has all colimits, then `C` has all colimits. -/
-theorem has_colimits_of_has_colimits_creates_colimits (F : C ⥤ D) [HasColimitsOfSize.{w, w'} D]
+theorem hasColimitsOfHasColimitsCreatesColimits (F : C ⥤ D) [HasColimitsOfSize.{w, w'} D]
     [CreatesColimitsOfSize.{w, w'} F] : HasColimitsOfSize.{w, w'} C :=
   ⟨fun J I => has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape F⟩
 #align
-  category_theory.has_colimits_of_has_colimits_creates_colimits CategoryTheory.has_colimits_of_has_colimits_creates_colimits
+  category_theory.has_colimits_of_has_colimits_creates_colimits CategoryTheory.hasColimitsOfHasColimitsCreatesColimits
 
 instance (priority := 10) reflectsLimitsOfShapeOfCreatesLimitsOfShape (F : C ⥤ D)
     [CreatesLimitsOfShape J F] : ReflectsLimitsOfShape J F where

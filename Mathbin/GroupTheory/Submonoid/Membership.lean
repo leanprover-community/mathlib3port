@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.membership
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -452,7 +452,7 @@ def powLogEquiv [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n
   invFun m := Multiplicative.ofAdd (log m)
   left_inv := log_pow_eq_self h
   right_inv := pow_log_eq_self
-  map_mul' _ _ := by simp only [pow, map_mul, of_add_add, to_add_mul]
+  map_mul' _ _ := by simp only [pow, map_mul, ofAdd_add, toAdd_mul]
 #align submonoid.pow_log_equiv Submonoid.powLogEquiv
 
 theorem log_mul [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m)
@@ -470,7 +470,7 @@ theorem map_powers {N : Type _} {F : Type _} [Monoid N] [MonoidHomClass F M N] (
   simp only [powers_eq_closure, map_mclosure f, Set.image_singleton]
 #align submonoid.map_powers Submonoid.map_powers
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/
 @[to_additive
       "If all the elements of a set `s` commute, then `closure s` forms an additive\ncommutative monoid."]
@@ -500,16 +500,16 @@ theorem IsScalarTower.of_mclosure_eq_top {N α} [Monoid M] [MulAction M N] [HasS
 #align is_scalar_tower.of_mclosure_eq_top IsScalarTower.of_mclosure_eq_top
 
 @[to_additive]
-theorem SmulCommClass.of_mclosure_eq_top {N α} [Monoid M] [HasSmul N α] [MulAction M α] {s : Set M}
+theorem SMulCommClass.of_mclosure_eq_top {N α} [Monoid M] [HasSmul N α] [MulAction M α] {s : Set M}
     (htop : Submonoid.closure s = ⊤) (hs : ∀ x ∈ s, ∀ (y : N) (z : α), x • y • z = y • x • z) :
-    SmulCommClass M N α := by
+    SMulCommClass M N α := by
   refine' ⟨fun x => Submonoid.induction_of_closure_eq_top_left htop x _ _⟩
   · intro y z
     rw [one_smul, one_smul]
   · clear x
     intro x hx x' hx' y z
     rw [mul_smul, mul_smul, hx', hs x hx]
-#align smul_comm_class.of_mclosure_eq_top SmulCommClass.of_mclosure_eq_top
+#align smul_comm_class.of_mclosure_eq_top SMulCommClass.of_mclosure_eq_top
 
 namespace Submonoid
 
@@ -635,10 +635,10 @@ theorem of_mul_image_powers_eq_multiples_of_mul [Monoid M] {x : M} :
   constructor
   · rintro ⟨y, ⟨n, hy1⟩, hy2⟩
     use n
-    simpa [← of_mul_pow, hy1]
+    simpa [← ofMul_pow, hy1]
   · rintro ⟨n, hn⟩
     refine' ⟨x ^ n, ⟨n, rfl⟩, _⟩
-    rwa [of_mul_pow]
+    rwa [ofMul_pow]
 #align of_mul_image_powers_eq_multiples_of_mul of_mul_image_powers_eq_multiples_of_mul
 
 theorem of_add_image_multiples_eq_powers_of_add [AddMonoid A] {x : A} :

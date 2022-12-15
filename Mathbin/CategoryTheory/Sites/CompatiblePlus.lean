@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.compatible_plus
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ def diagramCompIso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
 #align
   category_theory.grothendieck_topology.diagram_comp_iso CategoryTheory.GrothendieckTopology.diagramCompIso
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem diagram_comp_iso_hom_ι (X : C) (W : (J.cover X)ᵒᵖ) (i : W.unop.arrow) :
     (J.diagramCompIso F P X).Hom.app W ≫ multiequalizer.ι _ i = F.map (multiequalizer.ι _ _) := by
   delta diagram_comp_iso
@@ -127,7 +127,7 @@ def plusCompIso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
 #align
   category_theory.grothendieck_topology.plus_comp_iso CategoryTheory.GrothendieckTopology.plusCompIso
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_plus_comp_iso_hom (X) (W) :
     F.map (colimit.ι _ W) ≫ (J.plusCompIso F P).Hom.app X =
       (J.diagramCompIso F P X.unop).Hom.app W ≫ colimit.ι _ W :=
@@ -146,7 +146,7 @@ theorem ι_plus_comp_iso_hom (X) (W) :
 #align
   category_theory.grothendieck_topology.ι_plus_comp_iso_hom CategoryTheory.GrothendieckTopology.ι_plus_comp_iso_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ ⥤ D)
     [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
     [∀ (X : C) (W : J.cover X) (P : Cᵒᵖ ⥤ D), PreservesLimit (W.index P).multicospan F]
@@ -180,7 +180,7 @@ def plusFunctorWhiskerLeftIso (P : Cᵒᵖ ⥤ D)
 #align
   category_theory.grothendieck_topology.plus_functor_whisker_left_iso CategoryTheory.GrothendieckTopology.plusFunctorWhiskerLeftIso
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
     whiskerRight (J.plusMap η) F ≫ (J.plusCompIso F Q).Hom =
       (J.plusCompIso F P).Hom ≫ J.plusMap (whiskerRight η F) :=
@@ -215,7 +215,7 @@ def plusFunctorWhiskerRightIso :
 #align
   category_theory.grothendieck_topology.plus_functor_whisker_right_iso CategoryTheory.GrothendieckTopology.plusFunctorWhiskerRightIso
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_right_to_plus_comp_plus_comp_iso_hom :
     whiskerRight (J.toPlus _) _ ≫ (J.plusCompIso F P).Hom = J.toPlus _ := by
   ext

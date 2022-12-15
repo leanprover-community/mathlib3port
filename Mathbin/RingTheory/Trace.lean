@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.trace
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -259,7 +259,7 @@ theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) :
   contrapose! hx
   obtain ⟨s, ⟨b⟩⟩ := hx
   refine' is_integral_of_mem_of_fg K⟮⟯.toSubalgebra _ x _
-  · exact (Submodule.fg_iff_finite_dimensional _).mpr (FiniteDimensional.ofFintypeBasis b)
+  · exact (Submodule.fg_iff_finite_dimensional _).mpr (FiniteDimensional.of_fintype_basis b)
   · exact subset_adjoin K _ (Set.mem_singleton x)
 #align
   intermediate_field.adjoin_simple.trace_gen_eq_zero IntermediateField.AdjoinSimple.trace_gen_eq_zero
@@ -331,7 +331,7 @@ theorem Algebra.is_integral_trace [FiniteDimensional L F] {x : F} (hx : IsIntegr
     use minpoly R x, minpoly.monic hx
     rw [← aeval_def] at hy⊢
     exact minpoly.aeval_of_is_scalar_tower R x y hy
-  · apply IsAlgClosed.splitsCodomain
+  · apply IsAlgClosed.splits_codomain
   · infer_instance
 #align algebra.is_integral_trace Algebra.is_integral_trace
 
@@ -388,7 +388,7 @@ theorem trace_eq_sum_embeddings [FiniteDimensional K L] [IsSeparable K L] {x : L
     algebraMap K E (Algebra.trace K L x) = ∑ σ : L →ₐ[K] E, σ x := by
   have hx := IsSeparable.is_integral K x
   rw [trace_eq_trace_adjoin K x, Algebra.smul_def, RingHom.map_mul, ← adjoin.power_basis_gen hx,
-    trace_eq_sum_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splitsCodomain _), ←
+    trace_eq_sum_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splits_codomain _), ←
     Algebra.smul_def, algebra_map_smul]
   · exact (sum_embeddings_eq_finrank_mul L E (adjoin.power_basis hx)).symm
   · haveI := is_separable_tower_bot_of_is_separable K K⟮⟯ L
@@ -578,7 +578,7 @@ theorem det_trace_matrix_ne_zero' [IsSeparable K L] : det (traceMatrix K pb.Basi
 
 theorem det_trace_form_ne_zero [IsSeparable K L] [DecidableEq ι] (b : Basis ι K L) :
     det (BilinForm.toMatrix b (traceForm K L)) ≠ 0 := by
-  haveI : FiniteDimensional K L := FiniteDimensional.ofFintypeBasis b
+  haveI : FiniteDimensional K L := FiniteDimensional.of_fintype_basis b
   let pb : PowerBasis K L := Field.powerBasisOfFiniteOfSeparable _ _
   rw [← BilinForm.to_matrix_mul_basis_to_matrix pb.basis b, ←
     det_comm' (pb.basis.to_matrix_mul_to_matrix_flip b) _, ← Matrix.mul_assoc, det_mul]

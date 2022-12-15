@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.pointwise
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ theorem mul_to_submodule {R : Type _} {A : Type _} [CommSemiring R] [CommSemirin
     mul_comm T.to_submodule, ← mul_assoc, mul_self] at this
 #align subalgebra.mul_to_submodule Subalgebra.mul_to_submodule
 
-variable {R' : Type _} [Semiring R'] [MulSemiringAction R' A] [SmulCommClass R' R A]
+variable {R' : Type _} [Semiring R'] [MulSemiringAction R' A] [SMulCommClass R' R A]
 
 /-- The action on a subalgebra corresponding to applying the action to every element.
 
@@ -104,7 +104,7 @@ theorem pointwise_smul_to_submodule (m : R') (S : Subalgebra R A) :
 
 @[simp]
 theorem pointwise_smul_to_subring {R' R A : Type _} [Semiring R'] [CommRing R] [Ring A]
-    [MulSemiringAction R' A] [Algebra R A] [SmulCommClass R' R A] (m : R') (S : Subalgebra R A) :
+    [MulSemiringAction R' A] [Algebra R A] [SMulCommClass R' R A] (m : R') (S : Subalgebra R A) :
     (m • S).toSubring = m • S.toSubring :=
   rfl
 #align subalgebra.pointwise_smul_to_subring Subalgebra.pointwise_smul_to_subring

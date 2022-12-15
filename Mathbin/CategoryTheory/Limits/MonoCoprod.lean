@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.limits.mono_coprod
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,13 +48,13 @@ class MonoCoprod : Prop where
 
 variable {C}
 
-instance (priority := 100) mono_coprod_of_has_zero_morphisms [HasZeroMorphisms C] : MonoCoprod C :=
+instance (priority := 100) monoCoprodOfHasZeroMorphisms [HasZeroMorphisms C] : MonoCoprod C :=
   ⟨fun A B c hc => by
     haveI : is_split_mono c.inl :=
       is_split_mono.mk' (split_mono.mk (hc.desc (binary_cofan.mk (𝟙 A) 0)) (is_colimit.fac _ _ _))
     infer_instance⟩
 #align
-  category_theory.limits.mono_coprod_of_has_zero_morphisms CategoryTheory.Limits.mono_coprod_of_has_zero_morphisms
+  category_theory.limits.mono_coprod_of_has_zero_morphisms CategoryTheory.Limits.monoCoprodOfHasZeroMorphisms
 
 namespace MonoCoprod
 
@@ -94,7 +94,7 @@ theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B)(hc : IsColimit c), Mono 
     simpa only [mono_inl_iff hc' hc₁] using hc₂⟩
 #align category_theory.limits.mono_coprod.mk' CategoryTheory.Limits.MonoCoprod.mk'
 
-instance mono_coprod_type : MonoCoprod (Type u) :=
+instance monoCoprodType : MonoCoprod (Type u) :=
   MonoCoprod.mk' fun A B => by
     refine' ⟨binary_cofan.mk (Sum.inl : A ⟶ Sum A B) Sum.inr, _, _⟩
     · refine'
@@ -116,7 +116,7 @@ instance mono_coprod_type : MonoCoprod (Type u) :=
       dsimp at h
       simpa only using h
 #align
-  category_theory.limits.mono_coprod.mono_coprod_type CategoryTheory.Limits.MonoCoprod.mono_coprod_type
+  category_theory.limits.mono_coprod.mono_coprod_type CategoryTheory.Limits.MonoCoprod.monoCoprodType
 
 end MonoCoprod
 

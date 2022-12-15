@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.tensor_product
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1095,12 +1095,12 @@ theorem End_tensor_End_alg_hom_apply (f : EndCat R M) (g : EndCat R N) :
 
 end Module
 
-theorem Subalgebra.finiteDimensionalSup {K L : Type _} [Field K] [CommRing L] [Algebra K L]
+theorem Subalgebra.finite_dimensional_sup {K L : Type _} [Field K] [CommRing L] [Algebra K L]
     (E1 E2 : Subalgebra K L) [FiniteDimensional K E1] [FiniteDimensional K E2] :
     FiniteDimensional K ↥(E1 ⊔ E2) := by
   rw [← E1.range_val, ← E2.range_val, ← Algebra.TensorProduct.product_map_range]
-  exact (Algebra.TensorProduct.productMap E1.val E2.val).toLinearMap.finiteDimensionalRange
-#align subalgebra.finite_dimensional_sup Subalgebra.finiteDimensionalSup
+  exact (Algebra.TensorProduct.productMap E1.val E2.val).toLinearMap.finite_dimensional_range
+#align subalgebra.finite_dimensional_sup Subalgebra.finite_dimensional_sup
 
 namespace TensorProduct.Algebra
 
@@ -1131,7 +1131,7 @@ theorem module_aux_apply (a : A) (b : B) (m : M) : moduleAux (a ⊗ₜ[R] b) m =
   simp [module_aux]
 #align tensor_product.algebra.module_aux_apply TensorProduct.Algebra.module_aux_apply
 
-variable [SmulCommClass A B M]
+variable [SMulCommClass A B M]
 
 /-- If `M` is a representation of two different `R`-algebras `A` and `B` whose actions commute,
 then it is a representation the `R`-algebra `A ⊗[R] B`.

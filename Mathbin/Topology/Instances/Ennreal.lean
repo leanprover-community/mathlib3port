@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -169,7 +169,7 @@ def ltTopHomeomorphNnreal : { a | a < ∞ } ≃ₜ ℝ≥0 := by
     simp only [mem_set_of_eq, lt_top_iff_ne_top]
 #align ennreal.lt_top_homeomorph_nnreal Ennreal.ltTopHomeomorphNnreal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
 #align ennreal.nhds_top Ennreal.nhds_top
@@ -216,7 +216,7 @@ theorem tendsto_of_real_at_top : Tendsto Ennreal.ofReal atTop (𝓝 ∞) :=
   tendsto_coe_nhds_top.2 tendsto_real_to_nnreal_at_top
 #align ennreal.tendsto_of_real_at_top Ennreal.tendsto_of_real_at_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot, Iio]
 #align ennreal.nhds_zero Ennreal.nhds_zero
@@ -480,7 +480,7 @@ theorem continuous_on_sub :
     ContinuousOn (fun p : ℝ≥0∞ × ℝ≥0∞ => p.fst - p.snd) { p : ℝ≥0∞ × ℝ≥0∞ | p ≠ ⟨∞, ∞⟩ } := by
   rw [ContinuousOn]
   rintro ⟨x, y⟩ hp
-  simp only [Ne.def, Set.mem_set_of_eq, Prod.mk.inj_iff] at hp
+  simp only [Ne.def, Set.mem_setOf_eq, Prod.mk.inj_iff] at hp
   refine' tendsto_nhds_within_of_tendsto_nhds (tendsto_sub (not_and_distrib.mp hp))
 #align ennreal.continuous_on_sub Ennreal.continuous_on_sub
 
@@ -752,7 +752,7 @@ end TopologicalSpace
 
 section Liminf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x : ι → ℝ}
     (hx : liminf (fun n => (‖x n‖₊ : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, x n < R := by
   by_contra h
@@ -769,7 +769,7 @@ theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x :
   filter_upwards [h r] with i hi using hi.trans ((coe_nnnorm (x i)).symm ▸ le_abs_self (x i))
 #align ennreal.exists_frequently_lt_of_liminf_ne_top Ennreal.exists_frequently_lt_of_liminf_ne_top
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem exists_frequently_lt_of_liminf_ne_top' {ι : Type _} {l : Filter ι} {x : ι → ℝ}
     (hx : liminf (fun n => (‖x n‖₊ : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, R < x n := by
   by_contra h
@@ -997,7 +997,7 @@ theorem tsum_supr_eq {α : Type _} (a : α) {f : α → ℝ≥0∞} : (∑' b : 
               (∑ b in s, ⨆ h : a = b, f b) ≤ ∑ b in {a}, ⨆ h : a = b, f b :=
                 Finset.sum_le_sum_of_ne_zero fun b _ hb =>
                   suffices a = b by simpa using this.symm
-                  Classical.by_contradiction fun h => by simpa [h] using hb
+                  by_contradiction fun h => by simpa [h] using hb
               _ = f a := by simp
               )
     (calc
@@ -1541,7 +1541,7 @@ theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s
     have C : ∀ n m N, N ≤ n → N ≤ m → edist (s n) (s m) ≤ b N := by
       refine' fun m n N hm hn => le_Sup _
       use Prod.mk m n
-      simp only [and_true_iff, eq_self_iff_true, Set.mem_set_of_eq]
+      simp only [and_true_iff, eq_self_iff_true, Set.mem_setOf_eq]
       exact ⟨hm, hn⟩
     --Prove that it tends to `0`, by using the Cauchy property of `s`
     have D : tendsto b at_top (𝓝 0) := by
@@ -1552,7 +1552,7 @@ theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s
       have : b n ≤ δ :=
         Sup_le
           (by 
-            simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp, Prod.exists]
+            simp only [and_imp, Set.mem_image, Set.mem_setOf_eq, exists_imp, Prod.exists]
             intro d p q hp hq hd
             rw [← hd]
             exact le_of_lt (hN p (le_trans hn hp) q (le_trans hn hq)))
@@ -1635,9 +1635,9 @@ theorem cauchy_seq_of_edist_le_of_tsum_ne_top {f : ℕ → α} (d : ℕ → ℝ�
   exact cauchy_seq_of_edist_le_of_summable d hf hd
 #align cauchy_seq_of_edist_le_of_tsum_ne_top cauchy_seq_of_edist_le_of_tsum_ne_top
 
-theorem Emetric.isClosedBall {a : α} {r : ℝ≥0∞} : IsClosed (closedBall a r) :=
-  isClosedLe (continuous_id.edist continuous_const) continuous_const
-#align emetric.is_closed_ball Emetric.isClosedBall
+theorem Emetric.is_closed_ball {a : α} {r : ℝ≥0∞} : IsClosed (closedBall a r) :=
+  is_closed_le (continuous_id.edist continuous_const) continuous_const
+#align emetric.is_closed_ball Emetric.is_closed_ball
 
 @[simp]
 theorem Emetric.diam_closure (s : Set α) : diam (closure s) = diam s := by
@@ -1652,17 +1652,17 @@ theorem Metric.diam_closure {α : Type _} [PseudoMetricSpace α] (s : Set α) :
     Metric.diam (closure s) = diam s := by simp only [Metric.diam, Emetric.diam_closure]
 #align metric.diam_closure Metric.diam_closure
 
-theorem isClosedSetOfLipschitzOnWith {α β} [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0)
-    (s : Set α) : IsClosed { f : α → β | LipschitzOnWith K f s } := by
+theorem is_closed_set_of_lipschitz_on_with {α β} [PseudoEmetricSpace α] [PseudoEmetricSpace β]
+    (K : ℝ≥0) (s : Set α) : IsClosed { f : α → β | LipschitzOnWith K f s } := by
   simp only [LipschitzOnWith, set_of_forall]
-  refine' isClosedBInter fun x hx => isClosedBInter fun y hy => isClosedLe _ _
+  refine' is_closed_bInter fun x hx => is_closed_bInter fun y hy => is_closed_le _ _
   exacts[Continuous.edist (continuous_apply x) (continuous_apply y), continuous_const]
-#align is_closed_set_of_lipschitz_on_with isClosedSetOfLipschitzOnWith
+#align is_closed_set_of_lipschitz_on_with is_closed_set_of_lipschitz_on_with
 
-theorem isClosedSetOfLipschitzWith {α β} [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0) :
-    IsClosed { f : α → β | LipschitzWith K f } := by
-  simp only [← lipschitz_on_univ, isClosedSetOfLipschitzOnWith]
-#align is_closed_set_of_lipschitz_with isClosedSetOfLipschitzWith
+theorem is_closed_set_of_lipschitz_with {α β} [PseudoEmetricSpace α] [PseudoEmetricSpace β]
+    (K : ℝ≥0) : IsClosed { f : α → β | LipschitzWith K f } := by
+  simp only [← lipschitz_on_univ, is_closed_set_of_lipschitz_on_with]
+#align is_closed_set_of_lipschitz_with is_closed_set_of_lipschitz_with
 
 namespace Real
 

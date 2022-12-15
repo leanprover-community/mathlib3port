@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.gaussian_int
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -251,7 +251,7 @@ theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.
 
 theorem nat_abs_norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) :
     (x % y).norm.natAbs < y.norm.natAbs :=
-  Int.coe_nat_lt.1 (by simp [-Int.coe_nat_lt, norm_mod_lt x hy])
+  Int.ofNat_lt.1 (by simp [-Int.ofNat_lt, norm_mod_lt x hy])
 #align gaussian_int.nat_abs_norm_mod_lt GaussianInt.nat_abs_norm_mod_lt
 
 theorem norm_le_norm_mul_left (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) :
@@ -259,7 +259,7 @@ theorem norm_le_norm_mul_left (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) :
   rw [Zsqrtd.norm_mul, Int.natAbs_mul] <;>
     exact
       le_mul_of_one_le_right (Nat.zero_le _)
-        (Int.coe_nat_le.1 (by rw [coe_nat_abs_norm] <;> exact Int.add_one_le_of_lt (norm_pos.2 hy)))
+        (Int.ofNat_le.1 (by rw [coe_nat_abs_norm] <;> exact Int.add_one_le_of_lt (norm_pos.2 hy)))
 #align gaussian_int.norm_le_norm_mul_left GaussianInt.norm_le_norm_mul_left
 
 instance : Nontrivial ℤ[i] :=
@@ -361,7 +361,7 @@ theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime]
 theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (hp3 : p % 4 = 3) :
     Prime (p : ℤ[i]) :=
   irreducible_iff_prime.1 <|
-    Classical.by_contradiction fun hpi =>
+    by_contradiction fun hpi =>
       let ⟨a, b, hab⟩ := sq_add_sq_of_nat_prime_of_not_irreducible p hpi
       have : ∀ a b : Zmod 4, a ^ 2 + b ^ 2 ≠ p := by
         erw [← Zmod.nat_cast_mod p 4, hp3] <;> exact by decide

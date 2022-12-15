@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.big_operators.finprod
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,7 +149,7 @@ theorem finprod_false (f : False → M) : (∏ᶠ i, f i) = 1 :=
   finprod_of_is_empty _
 #align finprod_false finprod_false
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » a) -/
 @[to_additive]
 theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f x = 1) :
     (∏ᶠ x, f x) = f a := by
@@ -362,7 +362,7 @@ theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : F
   exact (h hxs).2 hx
 #align finprod_cond_eq_prod_of_cond_iff finprod_cond_eq_prod_of_cond_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ≠ » a) -/
 @[to_additive]
 theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : (mulSupport f).Finite) :
     (∏ᶠ (i) (_ : i ≠ a), f i) = ∏ i in hf.toFinset.erase a, f i := by
@@ -671,7 +671,7 @@ theorem finprod_mem_singleton : (∏ᶠ i ∈ ({a} : Set α), f i) = f a := by
   rw [← Finset.coe_singleton, finprod_mem_coe_finset, Finset.prod_singleton]
 #align finprod_mem_singleton finprod_mem_singleton
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr = » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr = » a) -/
 @[simp, to_additive]
 theorem finprod_cond_eq_left : (∏ᶠ (i) (_ : i = a), f i) = f a :=
   finprod_mem_singleton
@@ -893,7 +893,7 @@ theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀
   exact finprod_mem_bUnion h ht₀ ht₁
 #align finprod_mem_sUnion finprod_mem_sUnion
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ≠ » a) -/
 @[to_additive]
 theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) :
     (f a * ∏ᶠ (i) (_ : i ≠ a), f i) = ∏ᶠ i, f i := by
@@ -936,493 +936,15 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
   finprod_nonneg fun x => finprod_nonneg <| hf x
 #align finprod_cond_nonneg finprod_cond_nonneg
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      []
-      [(Term.attributes
-        "@["
-        [(Term.attrInstance
-          (Term.attrKind [])
-          (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
-        "]")]
-      []
-      []
-      []
-      [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `single_le_finprod [])
-      (Command.declSig
-       [(Term.implicitBinder "{" [`M] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-        (Term.instBinder "[" [] (Term.app `OrderedCommMonoid [`M]) "]")
-        (Term.explicitBinder "(" [`i] [":" `α] [] ")")
-        (Term.implicitBinder "{" [`f] [":" (Term.arrow `α "→" `M)] "}")
-        (Term.explicitBinder
-         "("
-         [`hf]
-         [":" (Term.proj (Term.app `mulSupport [`f]) "." `Finite)]
-         []
-         ")")
-        (Term.explicitBinder
-         "("
-         [`h]
-         [":" (Term.forall "∀" [`j] [] "," («term_≤_» (num "1") "≤" (Term.app `f [`j])))]
-         []
-         ")")]
-       (Term.typeSpec
-        ":"
-        («term_≤_»
-         (Term.app `f [`i])
-         "≤"
-         (BigOperators.Algebra.BigOperators.Finprod.finprod
-          "∏ᶠ"
-          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-          ", "
-          (Term.app `f [`j])))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (calcTactic
-             "calc"
-             (calcStep
-              («term_≤_»
-               (Term.app `f [`i])
-               "≤"
-               (BigOperators.Algebra.BigOperators.Basic.finset.prod
-                "∏"
-                (Std.ExtendedBinder.extBinders
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-                " in "
-                (Term.app `insert [`i `hf.to_finset])
-                ", "
-                (Term.app `f [`j])))
-              ":="
-              (Term.app
-               `Finset.single_le_prod'
-               [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
-                (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])]))
-             [(calcStep
-               («term_=_»
-                (Term.hole "_")
-                "="
-                (BigOperators.Algebra.BigOperators.Finprod.finprod
-                 "∏ᶠ"
-                 (Std.ExtendedBinder.extBinders
-                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-                 ", "
-                 (Term.app `f [`j])))
-               ":="
-               (Term.proj
-                (Term.app
-                 `finprod_eq_prod_of_mul_support_to_finset_subset
-                 [(Term.hole "_")
-                  `hf
-                  (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")])])
-                "."
-                `symm))]))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (calcTactic
-            "calc"
-            (calcStep
-             («term_≤_»
-              (Term.app `f [`i])
-              "≤"
-              (BigOperators.Algebra.BigOperators.Basic.finset.prod
-               "∏"
-               (Std.ExtendedBinder.extBinders
-                (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-               " in "
-               (Term.app `insert [`i `hf.to_finset])
-               ", "
-               (Term.app `f [`j])))
-             ":="
-             (Term.app
-              `Finset.single_le_prod'
-              [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
-               (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])]))
-            [(calcStep
-              («term_=_»
-               (Term.hole "_")
-               "="
-               (BigOperators.Algebra.BigOperators.Finprod.finprod
-                "∏ᶠ"
-                (Std.ExtendedBinder.extBinders
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-                ", "
-                (Term.app `f [`j])))
-              ":="
-              (Term.proj
-               (Term.app
-                `finprod_eq_prod_of_mul_support_to_finset_subset
-                [(Term.hole "_")
-                 `hf
-                 (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")])])
-               "."
-               `symm))]))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (calcTactic
-        "calc"
-        (calcStep
-         («term_≤_»
-          (Term.app `f [`i])
-          "≤"
-          (BigOperators.Algebra.BigOperators.Basic.finset.prod
-           "∏"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-           " in "
-           (Term.app `insert [`i `hf.to_finset])
-           ", "
-           (Term.app `f [`j])))
-         ":="
-         (Term.app
-          `Finset.single_le_prod'
-          [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
-           (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])]))
-        [(calcStep
-          («term_=_»
-           (Term.hole "_")
-           "="
-           (BigOperators.Algebra.BigOperators.Finprod.finprod
-            "∏ᶠ"
-            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-            ", "
-            (Term.app `f [`j])))
-          ":="
-          (Term.proj
-           (Term.app
-            `finprod_eq_prod_of_mul_support_to_finset_subset
-            [(Term.hole "_")
-             `hf
-             (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")])])
-           "."
-           `symm))]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (calcTactic
-       "calc"
-       (calcStep
-        («term_≤_»
-         (Term.app `f [`i])
-         "≤"
-         (BigOperators.Algebra.BigOperators.Basic.finset.prod
-          "∏"
-          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-          " in "
-          (Term.app `insert [`i `hf.to_finset])
-          ", "
-          (Term.app `f [`j])))
-        ":="
-        (Term.app
-         `Finset.single_le_prod'
-         [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
-          (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])]))
-       [(calcStep
-         («term_=_»
-          (Term.hole "_")
-          "="
-          (BigOperators.Algebra.BigOperators.Finprod.finprod
-           "∏ᶠ"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-           ", "
-           (Term.app `f [`j])))
-         ":="
-         (Term.proj
-          (Term.app
-           `finprod_eq_prod_of_mul_support_to_finset_subset
-           [(Term.hole "_") `hf (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")])])
-          "."
-          `symm))])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj
-       (Term.app
-        `finprod_eq_prod_of_mul_support_to_finset_subset
-        [(Term.hole "_") `hf (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")])])
-       "."
-       `symm)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.app
-       `finprod_eq_prod_of_mul_support_to_finset_subset
-       [(Term.hole "_") `hf (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `Finset.subset_insert
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")])
-     ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `hf
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `finprod_eq_prod_of_mul_support_to_finset_subset
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.app
-      `finprod_eq_prod_of_mul_support_to_finset_subset
-      [(Term.hole "_")
-       `hf
-       (Term.paren "(" (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")]) ")")])
-     ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
-       (Term.hole "_")
-       "="
-       (BigOperators.Algebra.BigOperators.Finprod.finprod
-        "∏ᶠ"
-        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-        ", "
-        (Term.app `f [`j])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (BigOperators.Algebra.BigOperators.Finprod.finprod
-       "∏ᶠ"
-       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-       ", "
-       (Term.app `f [`j]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `f [`j])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `j
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
-      (Term.app
-       `Finset.single_le_prod'
-       [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
-        (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `Finset.mem_insert_self
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])
-     ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `h [`j])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `j
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `hj
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `j
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
-     ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `Finset.single_le_prod'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_≤_»
-       (Term.app `f [`i])
-       "≤"
-       (BigOperators.Algebra.BigOperators.Basic.finset.prod
-        "∏"
-        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-        " in "
-        (Term.app `insert [`i `hf.to_finset])
-        ", "
-        (Term.app `f [`j])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (BigOperators.Algebra.BigOperators.Basic.finset.prod
-       "∏"
-       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
-       " in "
-       (Term.app `insert [`i `hf.to_finset])
-       ", "
-       (Term.app `f [`j]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `f [`j])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `j
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `insert [`i `hf.to_finset])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `hf.to_finset
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `insert
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.app `f [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  theorem
-    single_le_finprod
-    { M : Type _ }
-        [ OrderedCommMonoid M ]
-        ( i : α )
-        { f : α → M }
-        ( hf : mulSupport f . Finite )
-        ( h : ∀ j , 1 ≤ f j )
-      : f i ≤ ∏ᶠ j , f j
-    :=
-      by
-        skip
-          <;>
-          calc
-            f i ≤ ∏ j in insert i hf.to_finset , f j
-              :=
-              Finset.single_le_prod' fun j hj => h j Finset.mem_insert_self _ _
-            _ = ∏ᶠ j , f j
-              :=
-              finprod_eq_prod_of_mul_support_to_finset_subset _ hf Finset.subset_insert _ _ . symm
+@[to_additive]
+theorem single_le_finprod {M : Type _} [OrderedCommMonoid M] (i : α) {f : α → M}
+    (hf : (mulSupport f).Finite) (h : ∀ j, 1 ≤ f j) : f i ≤ ∏ᶠ j, f j := by
+  classical calc
+      f i ≤ ∏ j in insert i hf.to_finset, f j :=
+        Finset.single_le_prod' (fun j hj => h j) (Finset.mem_insert_self _ _)
+      _ = ∏ᶠ j, f j :=
+        (finprod_eq_prod_of_mul_support_to_finset_subset _ hf (Finset.subset_insert _ _)).symm
+      
 #align single_le_finprod single_le_finprod
 
 theorem finprod_eq_zero {M₀ : Type _} [CommMonoidWithZero M₀] (f : α → M₀) (x : α) (hx : f x = 0)

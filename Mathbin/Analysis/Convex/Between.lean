@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.between
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -350,7 +350,7 @@ theorem wbtw_swap_left_iff [NoZeroSmulDivisors R V] {x y : P} (z : P) :
     rw [← @vsub_eq_zero_iff_eq V, vadd_vsub, vsub_vadd_eq_vsub_sub, smul_sub, smul_smul, ← sub_smul,
       ← add_smul, smul_eq_zero] at hx
     rcases hx with (h | h)
-    · nth_rw 1 [← mul_one tx]  at h
+    · nth_rw 1 [← mul_one tx] at h
       rw [← mul_sub, add_eq_zero_iff_neg_eq] at h
       have h' : ty = 0 := by 
         refine' le_antisymm _ hty.1

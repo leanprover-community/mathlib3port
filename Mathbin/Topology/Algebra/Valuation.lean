@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.valuation
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,7 +158,7 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 instance (priority := 100) : TopologicalRing R :=
   (to_uniform_space_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topological_ring
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔
       F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -363,7 +363,7 @@ theorem sets_iff_generate {s : Set (Set α)} {f : Filter α} : f ≤ Filter.gene
       inter_mem hx hy
 #align filter.sets_iff_generate Filter.sets_iff_generate
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem mem_generate_iff {s : Set <| Set α} {U : Set α} :
     U ∈ generate s ↔ ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ ⋂₀ t ⊆ U := by
   constructor <;> intro h
@@ -646,7 +646,7 @@ theorem mem_infi {ι} {s : ι → Filter α} {U : Set α} :
     exact mem_infi_of_Inter Ifin V_in subset.rfl
 #align filter.mem_infi Filter.mem_infi
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem mem_infi' {ι} {s : ι → Filter α} {U : Set α} :
     (U ∈ ⨅ i, s i) ↔
       ∃ I : Set ι,
@@ -1179,7 +1179,7 @@ theorem eventually_false_iff_eq_bot {f : Filter α} : (∀ᶠ x in f, False) ↔
 
 @[simp]
 theorem eventually_const {f : Filter α} [t : NeBot f] {p : Prop} : (∀ᶠ x in f, p) ↔ p :=
-  Classical.by_cases (fun h : p => by simp [h]) fun h => by simpa [h] using t.ne
+  by_cases (fun h : p => by simp [h]) fun h => by simpa [h] using t.ne
 #align filter.eventually_const Filter.eventually_const
 
 theorem eventually_iff_exists_mem {p : α → Prop} {f : Filter α} :
@@ -1248,7 +1248,7 @@ attribute [protected] Finset.eventually_all
 @[simp]
 theorem eventually_or_distrib_left {f : Filter α} {p : Prop} {q : α → Prop} :
     (∀ᶠ x in f, p ∨ q x) ↔ p ∨ ∀ᶠ x in f, q x :=
-  Classical.by_cases (fun h : p => by simp [h]) fun h => by simp [h]
+  by_cases (fun h : p => by simp [h]) fun h => by simp [h]
 #align filter.eventually_or_distrib_left Filter.eventually_or_distrib_left
 
 @[simp]
@@ -1399,7 +1399,7 @@ theorem frequently_false (f : Filter α) : ¬∃ᶠ x in f, False := by simp
 
 @[simp]
 theorem frequently_const {f : Filter α} [NeBot f] {p : Prop} : (∃ᶠ x in f, p) ↔ p :=
-  Classical.by_cases (fun h : p => by simpa [h] ) fun h => by simp [h]
+  by_cases (fun h : p => by simpa [h] ) fun h => by simp [h]
 #align filter.frequently_const Filter.frequently_const
 
 @[simp]
@@ -3148,6 +3148,14 @@ theorem Tendsto.if {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {p : 
   split_ifs
   exacts[hp₀ h, hp₁ h]
 #align filter.tendsto.if Filter.Tendsto.if
+
+theorem Tendsto.if' {α β : Type _} {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {p : α → Prop}
+    [DecidablePred p] (hf : Tendsto f l₁ l₂) (hg : Tendsto g l₁ l₂) :
+    Tendsto (fun a => if p a then f a else g a) l₁ l₂ := by
+  replace hf : tendsto f (l₁ ⊓ 𝓟 { x | p x }) l₂ := tendsto_inf_left hf
+  replace hg : tendsto g (l₁ ⊓ 𝓟 { x | ¬p x }) l₂ := tendsto_inf_left hg
+  exact hf.if hg
+#align filter.tendsto.if' Filter.Tendsto.if'
 
 theorem Tendsto.piecewise {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {s : Set α}
     [∀ x, Decidable (x ∈ s)] (h₀ : Tendsto f (l₁ ⊓ 𝓟 s) l₂) (h₁ : Tendsto g (l₁ ⊓ 𝓟 (sᶜ)) l₂) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.max
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,29 +78,41 @@ export NoMinOrder (exists_lt)
 
 export NoMaxOrder (exists_gt)
 
+#print nonempty_lt /-
 instance nonempty_lt [LT α] [NoMinOrder α] (a : α) : Nonempty { x // x < a } :=
   nonempty_subtype.2 (exists_lt a)
 #align nonempty_lt nonempty_lt
+-/
 
+#print nonempty_gt /-
 instance nonempty_gt [LT α] [NoMaxOrder α] (a : α) : Nonempty { x // a < x } :=
   nonempty_subtype.2 (exists_gt a)
 #align nonempty_gt nonempty_gt
+-/
 
-instance OrderDual.no_bot_order (α : Type _) [LE α] [NoTopOrder α] : NoBotOrder αᵒᵈ :=
+#print OrderDual.noBotOrder /-
+instance OrderDual.noBotOrder (α : Type _) [LE α] [NoTopOrder α] : NoBotOrder αᵒᵈ :=
   ⟨fun a => @exists_not_le α _ _ a⟩
-#align order_dual.no_bot_order OrderDual.no_bot_order
+#align order_dual.no_bot_order OrderDual.noBotOrder
+-/
 
-instance OrderDual.no_top_order (α : Type _) [LE α] [NoBotOrder α] : NoTopOrder αᵒᵈ :=
+#print OrderDual.noTopOrder /-
+instance OrderDual.noTopOrder (α : Type _) [LE α] [NoBotOrder α] : NoTopOrder αᵒᵈ :=
   ⟨fun a => @exists_not_ge α _ _ a⟩
-#align order_dual.no_top_order OrderDual.no_top_order
+#align order_dual.no_top_order OrderDual.noTopOrder
+-/
 
-instance OrderDual.no_min_order (α : Type _) [LT α] [NoMaxOrder α] : NoMinOrder αᵒᵈ :=
+#print OrderDual.noMinOrder /-
+instance OrderDual.noMinOrder (α : Type _) [LT α] [NoMaxOrder α] : NoMinOrder αᵒᵈ :=
   ⟨fun a => @exists_gt α _ _ a⟩
-#align order_dual.no_min_order OrderDual.no_min_order
+#align order_dual.no_min_order OrderDual.noMinOrder
+-/
 
-instance OrderDual.no_max_order (α : Type _) [LT α] [NoMinOrder α] : NoMaxOrder αᵒᵈ :=
+#print OrderDual.noMaxOrder /-
+instance OrderDual.noMaxOrder (α : Type _) [LT α] [NoMinOrder α] : NoMaxOrder αᵒᵈ :=
   ⟨fun a => @exists_lt α _ _ a⟩
-#align order_dual.no_max_order OrderDual.no_max_order
+#align order_dual.no_max_order OrderDual.noMaxOrder
+-/
 
 instance no_max_order_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α × β) :=
   ⟨fun ⟨a, b⟩ => by 
@@ -241,79 +253,103 @@ def IsMax (a : α) : Prop :=
 #align is_max IsMax
 -/
 
+#print not_isBot /-
 @[simp]
-theorem not_is_bot [NoBotOrder α] (a : α) : ¬IsBot a := fun h =>
+theorem not_isBot [NoBotOrder α] (a : α) : ¬IsBot a := fun h =>
   let ⟨b, hb⟩ := exists_not_ge a
   hb <| h _
-#align not_is_bot not_is_bot
+#align not_is_bot not_isBot
+-/
 
+#print not_isTop /-
 @[simp]
-theorem not_is_top [NoTopOrder α] (a : α) : ¬IsTop a := fun h =>
+theorem not_isTop [NoTopOrder α] (a : α) : ¬IsTop a := fun h =>
   let ⟨b, hb⟩ := exists_not_le a
   hb <| h _
-#align not_is_top not_is_top
+#align not_is_top not_isTop
+-/
 
-protected theorem IsBot.is_min (h : IsBot a) : IsMin a := fun b _ => h b
-#align is_bot.is_min IsBot.is_min
+#print IsBot.isMin /-
+protected theorem IsBot.isMin (h : IsBot a) : IsMin a := fun b _ => h b
+#align is_bot.is_min IsBot.isMin
+-/
 
-protected theorem IsTop.is_max (h : IsTop a) : IsMax a := fun b _ => h b
-#align is_top.is_max IsTop.is_max
+#print IsTop.isMax /-
+protected theorem IsTop.isMax (h : IsTop a) : IsMax a := fun b _ => h b
+#align is_top.is_max IsTop.isMax
+-/
 
+#print isBot_toDual_iff /-
 @[simp]
-theorem is_bot_to_dual_iff : IsBot (toDual a) ↔ IsTop a :=
+theorem isBot_toDual_iff : IsBot (toDual a) ↔ IsTop a :=
   Iff.rfl
-#align is_bot_to_dual_iff is_bot_to_dual_iff
+#align is_bot_to_dual_iff isBot_toDual_iff
+-/
 
+#print isTop_toDual_iff /-
 @[simp]
-theorem is_top_to_dual_iff : IsTop (toDual a) ↔ IsBot a :=
+theorem isTop_toDual_iff : IsTop (toDual a) ↔ IsBot a :=
   Iff.rfl
-#align is_top_to_dual_iff is_top_to_dual_iff
+#align is_top_to_dual_iff isTop_toDual_iff
+-/
 
+#print isMin_toDual_iff /-
 @[simp]
-theorem is_min_to_dual_iff : IsMin (toDual a) ↔ IsMax a :=
+theorem isMin_toDual_iff : IsMin (toDual a) ↔ IsMax a :=
   Iff.rfl
-#align is_min_to_dual_iff is_min_to_dual_iff
+#align is_min_to_dual_iff isMin_toDual_iff
+-/
 
+#print isMax_toDual_iff /-
 @[simp]
-theorem is_max_to_dual_iff : IsMax (toDual a) ↔ IsMin a :=
+theorem isMax_toDual_iff : IsMax (toDual a) ↔ IsMin a :=
   Iff.rfl
-#align is_max_to_dual_iff is_max_to_dual_iff
+#align is_max_to_dual_iff isMax_toDual_iff
+-/
 
+#print isBot_ofDual_iff /-
 @[simp]
-theorem is_bot_of_dual_iff {a : αᵒᵈ} : IsBot (ofDual a) ↔ IsTop a :=
+theorem isBot_ofDual_iff {a : αᵒᵈ} : IsBot (ofDual a) ↔ IsTop a :=
   Iff.rfl
-#align is_bot_of_dual_iff is_bot_of_dual_iff
+#align is_bot_of_dual_iff isBot_ofDual_iff
+-/
 
+#print isTop_ofDual_iff /-
 @[simp]
-theorem is_top_of_dual_iff {a : αᵒᵈ} : IsTop (ofDual a) ↔ IsBot a :=
+theorem isTop_ofDual_iff {a : αᵒᵈ} : IsTop (ofDual a) ↔ IsBot a :=
   Iff.rfl
-#align is_top_of_dual_iff is_top_of_dual_iff
+#align is_top_of_dual_iff isTop_ofDual_iff
+-/
 
+#print isMin_ofDual_iff /-
 @[simp]
-theorem is_min_of_dual_iff {a : αᵒᵈ} : IsMin (ofDual a) ↔ IsMax a :=
+theorem isMin_ofDual_iff {a : αᵒᵈ} : IsMin (ofDual a) ↔ IsMax a :=
   Iff.rfl
-#align is_min_of_dual_iff is_min_of_dual_iff
+#align is_min_of_dual_iff isMin_ofDual_iff
+-/
 
+#print isMax_ofDual_iff /-
 @[simp]
-theorem is_max_of_dual_iff {a : αᵒᵈ} : IsMax (ofDual a) ↔ IsMin a :=
+theorem isMax_ofDual_iff {a : αᵒᵈ} : IsMax (ofDual a) ↔ IsMin a :=
   Iff.rfl
-#align is_max_of_dual_iff is_max_of_dual_iff
+#align is_max_of_dual_iff isMax_ofDual_iff
+-/
 
-alias is_bot_to_dual_iff ↔ _ IsTop.to_dual
+alias isBot_toDual_iff ↔ _ IsTop.to_dual
 
-alias is_top_to_dual_iff ↔ _ IsBot.to_dual
+alias isTop_toDual_iff ↔ _ IsBot.to_dual
 
-alias is_min_to_dual_iff ↔ _ IsMax.to_dual
+alias isMin_toDual_iff ↔ _ IsMax.to_dual
 
-alias is_max_to_dual_iff ↔ _ IsMin.to_dual
+alias isMax_toDual_iff ↔ _ IsMin.to_dual
 
-alias is_bot_of_dual_iff ↔ _ IsTop.of_dual
+alias isBot_ofDual_iff ↔ _ IsTop.of_dual
 
-alias is_top_of_dual_iff ↔ _ IsBot.of_dual
+alias isTop_ofDual_iff ↔ _ IsBot.of_dual
 
-alias is_min_of_dual_iff ↔ _ IsMax.of_dual
+alias isMin_ofDual_iff ↔ _ IsMax.of_dual
 
-alias is_max_of_dual_iff ↔ _ IsMin.of_dual
+alias isMax_ofDual_iff ↔ _ IsMin.of_dual
 
 end LE
 
@@ -351,63 +387,87 @@ theorem IsMax.not_lt (h : IsMax a) : ¬a < b := fun hb => hb.not_le <| h hb.le
 #align is_max.not_lt IsMax.not_lt
 -/
 
+#print not_isMin_of_lt /-
 @[simp]
-theorem not_is_min_of_lt (h : b < a) : ¬IsMin a := fun ha => ha.not_lt h
-#align not_is_min_of_lt not_is_min_of_lt
+theorem not_isMin_of_lt (h : b < a) : ¬IsMin a := fun ha => ha.not_lt h
+#align not_is_min_of_lt not_isMin_of_lt
+-/
 
+#print not_isMax_of_lt /-
 @[simp]
-theorem not_is_max_of_lt (h : a < b) : ¬IsMax a := fun ha => ha.not_lt h
-#align not_is_max_of_lt not_is_max_of_lt
+theorem not_isMax_of_lt (h : a < b) : ¬IsMax a := fun ha => ha.not_lt h
+#align not_is_max_of_lt not_isMax_of_lt
+-/
 
-alias not_is_min_of_lt ← LT.lt.not_is_min
+alias not_isMin_of_lt ← LT.lt.not_is_min
 
-alias not_is_max_of_lt ← LT.lt.not_is_max
+alias not_isMax_of_lt ← LT.lt.not_is_max
 
-theorem is_min_iff_forall_not_lt : IsMin a ↔ ∀ b, ¬b < a :=
+#print isMin_iff_forall_not_lt /-
+theorem isMin_iff_forall_not_lt : IsMin a ↔ ∀ b, ¬b < a :=
   ⟨fun h _ => h.not_lt, fun h b hba => of_not_not fun hab => h _ <| hba.lt_of_not_le hab⟩
-#align is_min_iff_forall_not_lt is_min_iff_forall_not_lt
+#align is_min_iff_forall_not_lt isMin_iff_forall_not_lt
+-/
 
-theorem is_max_iff_forall_not_lt : IsMax a ↔ ∀ b, ¬a < b :=
+#print isMax_iff_forall_not_lt /-
+theorem isMax_iff_forall_not_lt : IsMax a ↔ ∀ b, ¬a < b :=
   ⟨fun h _ => h.not_lt, fun h b hba => of_not_not fun hab => h _ <| hba.lt_of_not_le hab⟩
-#align is_max_iff_forall_not_lt is_max_iff_forall_not_lt
+#align is_max_iff_forall_not_lt isMax_iff_forall_not_lt
+-/
 
+#print not_isMin_iff /-
 @[simp]
-theorem not_is_min_iff : ¬IsMin a ↔ ∃ b, b < a := by
+theorem not_isMin_iff : ¬IsMin a ↔ ∃ b, b < a := by
   simp_rw [lt_iff_le_not_le, IsMin, not_forall, exists_prop]
-#align not_is_min_iff not_is_min_iff
+#align not_is_min_iff not_isMin_iff
+-/
 
+#print not_isMax_iff /-
 @[simp]
-theorem not_is_max_iff : ¬IsMax a ↔ ∃ b, a < b := by
+theorem not_isMax_iff : ¬IsMax a ↔ ∃ b, a < b := by
   simp_rw [lt_iff_le_not_le, IsMax, not_forall, exists_prop]
-#align not_is_max_iff not_is_max_iff
+#align not_is_max_iff not_isMax_iff
+-/
 
+#print not_isMin /-
 @[simp]
-theorem not_is_min [NoMinOrder α] (a : α) : ¬IsMin a :=
-  not_is_min_iff.2 <| exists_lt a
-#align not_is_min not_is_min
+theorem not_isMin [NoMinOrder α] (a : α) : ¬IsMin a :=
+  not_isMin_iff.2 <| exists_lt a
+#align not_is_min not_isMin
+-/
 
+#print not_isMax /-
 @[simp]
-theorem not_is_max [NoMaxOrder α] (a : α) : ¬IsMax a :=
-  not_is_max_iff.2 <| exists_gt a
-#align not_is_max not_is_max
+theorem not_isMax [NoMaxOrder α] (a : α) : ¬IsMax a :=
+  not_isMax_iff.2 <| exists_gt a
+#align not_is_max not_isMax
+-/
 
 namespace Subsingleton
 
 variable [Subsingleton α]
 
-protected theorem is_bot (a : α) : IsBot a := fun _ => (Subsingleton.elim _ _).le
-#align subsingleton.is_bot Subsingleton.is_bot
+#print Subsingleton.isBot /-
+protected theorem isBot (a : α) : IsBot a := fun _ => (Subsingleton.elim _ _).le
+#align subsingleton.is_bot Subsingleton.isBot
+-/
 
-protected theorem is_top (a : α) : IsTop a := fun _ => (Subsingleton.elim _ _).le
-#align subsingleton.is_top Subsingleton.is_top
+#print Subsingleton.isTop /-
+protected theorem isTop (a : α) : IsTop a := fun _ => (Subsingleton.elim _ _).le
+#align subsingleton.is_top Subsingleton.isTop
+-/
 
-protected theorem is_min (a : α) : IsMin a :=
-  (Subsingleton.is_bot _).IsMin
-#align subsingleton.is_min Subsingleton.is_min
+#print Subsingleton.isMin /-
+protected theorem isMin (a : α) : IsMin a :=
+  (Subsingleton.isBot _).IsMin
+#align subsingleton.is_min Subsingleton.isMin
+-/
 
-protected theorem is_max (a : α) : IsMax a :=
-  (Subsingleton.is_top _).IsMax
-#align subsingleton.is_max Subsingleton.is_max
+#print Subsingleton.isMax /-
+protected theorem isMax (a : α) : IsMax a :=
+  (Subsingleton.isTop _).IsMax
+#align subsingleton.is_max Subsingleton.isMax
+-/
 
 end Subsingleton
 
@@ -559,21 +619,45 @@ theorem IsMax.snd (hx : IsMax x) : IsMax x.2 := fun c hc =>
   (hx <| show x ≤ (x.1, c) from (and_iff_right le_rfl).2 hc).2
 #align is_max.snd IsMax.snd
 
-theorem Prod.is_bot_iff : IsBot x ↔ IsBot x.1 ∧ IsBot x.2 :=
+/- warning: prod.is_bot_iff -> Prod.isBot_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) (And (IsBot.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsBot.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, Iff (IsBot.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) (And (IsBot.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x)) (IsBot.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x)))
+Case conversion may be inaccurate. Consider using '#align prod.is_bot_iff Prod.isBot_iffₓ'. -/
+theorem Prod.isBot_iff : IsBot x ↔ IsBot x.1 ∧ IsBot x.2 :=
   ⟨fun hx => ⟨hx.fst, hx.snd⟩, fun h => h.1.prod_mk h.2⟩
-#align prod.is_bot_iff Prod.is_bot_iff
+#align prod.is_bot_iff Prod.isBot_iff
 
-theorem Prod.is_top_iff : IsTop x ↔ IsTop x.1 ∧ IsTop x.2 :=
+/- warning: prod.is_top_iff -> Prod.isTop_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) (And (IsTop.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsTop.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, Iff (IsTop.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) (And (IsTop.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x)) (IsTop.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x)))
+Case conversion may be inaccurate. Consider using '#align prod.is_top_iff Prod.isTop_iffₓ'. -/
+theorem Prod.isTop_iff : IsTop x ↔ IsTop x.1 ∧ IsTop x.2 :=
   ⟨fun hx => ⟨hx.fst, hx.snd⟩, fun h => h.1.prod_mk h.2⟩
-#align prod.is_top_iff Prod.is_top_iff
+#align prod.is_top_iff Prod.isTop_iff
 
-theorem Prod.is_min_iff : IsMin x ↔ IsMin x.1 ∧ IsMin x.2 :=
+/- warning: prod.is_min_iff -> Prod.isMin_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) (And (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsMin.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, Iff (IsMin.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) (And (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x)) (IsMin.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x)))
+Case conversion may be inaccurate. Consider using '#align prod.is_min_iff Prod.isMin_iffₓ'. -/
+theorem Prod.isMin_iff : IsMin x ↔ IsMin x.1 ∧ IsMin x.2 :=
   ⟨fun hx => ⟨hx.fst, hx.snd⟩, fun h => h.1.prod_mk h.2⟩
-#align prod.is_min_iff Prod.is_min_iff
+#align prod.is_min_iff Prod.isMin_iff
 
-theorem Prod.is_max_iff : IsMax x ↔ IsMax x.1 ∧ IsMax x.2 :=
+/- warning: prod.is_max_iff -> Prod.isMax_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) (And (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsMax.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, Iff (IsMax.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) (And (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x)) (IsMax.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x)))
+Case conversion may be inaccurate. Consider using '#align prod.is_max_iff Prod.isMax_iffₓ'. -/
+theorem Prod.isMax_iff : IsMax x ↔ IsMax x.1 ∧ IsMax x.2 :=
   ⟨fun hx => ⟨hx.fst, hx.snd⟩, fun h => h.1.prod_mk h.2⟩
-#align prod.is_max_iff Prod.is_max_iff
+#align prod.is_max_iff Prod.isMax_iff
 
 end Prod
 

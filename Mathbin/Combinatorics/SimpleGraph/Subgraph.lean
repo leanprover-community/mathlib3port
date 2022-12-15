@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hunter Monroe, Kyle Miller, Alena Gusakov
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.subgraph
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -732,7 +732,7 @@ theorem eq_singleton_subgraph_iff_verts_eq (H : G.Subgraph) {v : V} :
   refine' ⟨fun h => by simp [h], fun h => _⟩
   ext
   · rw [h, singleton_subgraph_verts]
-  · simp only [PropCat.bot_eq_false, singleton_subgraph_adj, Pi.bot_apply, iff_false_iff]
+  · simp only [Prop.bot_eq_false, singleton_subgraph_adj, Pi.bot_apply, iff_false_iff]
     intro ha
     have ha1 := ha.fst_mem
     have ha2 := ha.snd_mem
@@ -1037,7 +1037,7 @@ theorem induce_self_verts : G'.induce G'.verts = G' := by
 
 theorem singleton_subgraph_eq_induce {v : V} :
     G.singletonSubgraph v = (⊤ : G.Subgraph).induce {v} := by
-  ext <;> simp (config := { contextual := true }) [-Set.bot_eq_empty, PropCat.bot_eq_false]
+  ext <;> simp (config := { contextual := true }) [-Set.bot_eq_empty, Prop.bot_eq_false]
 #align
   simple_graph.subgraph.singleton_subgraph_eq_induce SimpleGraph.Subgraph.singleton_subgraph_eq_induce
 

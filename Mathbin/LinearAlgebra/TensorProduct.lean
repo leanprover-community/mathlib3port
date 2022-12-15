@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_product
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -219,9 +219,9 @@ theorem Smul.aux_of {R' : Type _} [HasSmul R' M] (r : R') (m : M) (n : N) :
   rfl
 #align tensor_product.smul.aux_of TensorProduct.Smul.aux_of
 
-variable [SmulCommClass R R' M]
+variable [SMulCommClass R R' M]
 
-variable [SmulCommClass R R'' M]
+variable [SMulCommClass R R'' M]
 
 /-- Given two modules over a commutative semiring `R`, if one of the factors carries a
 (distributive) action of a second type of scalars `R'`, which commutes with the action of `R`, then
@@ -346,7 +346,7 @@ section
 -- Like `R'`, `R'₂` provides a `distrib_mul_action R'₂ (M ⊗[R] N)`
 variable {R'₂ : Type _} [Monoid R'₂] [DistribMulAction R'₂ M]
 
-variable [SmulCommClass R R'₂ M] [HasSmul R'₂ R']
+variable [SMulCommClass R R'₂ M] [HasSmul R'₂ R']
 
 /-- `is_scalar_tower R'₂ R' M` implies `is_scalar_tower R'₂ R' (M ⊗[R] N)` -/
 instance is_scalar_tower_left [IsScalarTower R'₂ R' M] : IsScalarTower R'₂ R' (M ⊗[R] N) :=
@@ -753,7 +753,7 @@ theorem map_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) (m : M) (n : N) : map f
 theorem map_range_eq_span_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     (map f g).range = Submodule.span R { t | ∃ m n, f m ⊗ₜ g n = t } := by
   simp only [← Submodule.map_top, ← span_tmul_eq_top, Submodule.map_span, Set.mem_image,
-    Set.mem_set_of_eq]
+    Set.mem_setOf_eq]
   congr ; ext t
   constructor
   · rintro ⟨_, ⟨⟨m, n, rfl⟩, rfl⟩⟩

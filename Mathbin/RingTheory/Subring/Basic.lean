@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 
 ! This file was ported from Lean 3 source module ring_theory.subring.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ instance (priority := 75) toCommRing {R} [CommRing R] [SetLike S R] [SubringClas
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
 /-- A subring of a domain is a domain. -/
 instance (priority := 75) {R} [Ring R] [IsDomain R] [SetLike S R] [SubringClass S R] : IsDomain s :=
-  NoZeroDivisors.to_is_domain _
+  NoZeroDivisors.toIsDomain _
 
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
 /-- A subring of an `ordered_ring` is an `ordered_ring`. -/
@@ -489,7 +489,7 @@ instance {R} [Ring R] [NoZeroDivisors R] (s : Subring R) : NoZeroDivisors s :=
 
 /-- A subring of a domain is a domain. -/
 instance {R} [Ring R] [IsDomain R] (s : Subring R) : IsDomain s :=
-  NoZeroDivisors.to_is_domain _
+  NoZeroDivisors.toIsDomain _
 
 /-- A subring of an `ordered_ring` is an `ordered_ring`. -/
 instance toOrderedRing {R} [OrderedRing R] (s : Subring R) : OrderedRing s :=
@@ -1411,13 +1411,13 @@ theorem smul_def [HasSmul R α] {S : Subring R} (g : S) (m : α) : g • m = (g 
   rfl
 #align subring.smul_def Subring.smul_def
 
-instance smul_comm_class_left [HasSmul R β] [HasSmul α β] [SmulCommClass R α β] (S : Subring R) :
-    SmulCommClass S α β :=
+instance smul_comm_class_left [HasSmul R β] [HasSmul α β] [SMulCommClass R α β] (S : Subring R) :
+    SMulCommClass S α β :=
   S.toSubsemiring.smul_comm_class_left
 #align subring.smul_comm_class_left Subring.smul_comm_class_left
 
-instance smul_comm_class_right [HasSmul α β] [HasSmul R β] [SmulCommClass α R β] (S : Subring R) :
-    SmulCommClass α S β :=
+instance smul_comm_class_right [HasSmul α β] [HasSmul R β] [SMulCommClass α R β] (S : Subring R) :
+    SMulCommClass α S β :=
   S.toSubsemiring.smul_comm_class_right
 #align subring.smul_comm_class_right Subring.smul_comm_class_right
 
@@ -1426,7 +1426,7 @@ instance [HasSmul α β] [HasSmul R α] [HasSmul R β] [IsScalarTower R α β] (
     IsScalarTower S α β :=
   S.toSubsemiring.IsScalarTower
 
-instance [HasSmul R α] [HasFaithfulSmul R α] (S : Subring R) : HasFaithfulSmul S α :=
+instance [HasSmul R α] [FaithfulSMul R α] (S : Subring R) : FaithfulSMul S α :=
   S.toSubsemiring.HasFaithfulSmul
 
 /-- The action by a subring is the action by the underlying ring. -/
@@ -1458,12 +1458,12 @@ instance [Semiring α] [MulSemiringAction R α] (S : Subring R) : MulSemiringAct
   S.toSubmonoid.MulSemiringAction
 
 /-- The center of a semiring acts commutatively on that semiring. -/
-instance center.smul_comm_class_left : SmulCommClass (center R) R R :=
+instance center.smul_comm_class_left : SMulCommClass (center R) R R :=
   Subsemiring.center.smul_comm_class_left
 #align subring.center.smul_comm_class_left Subring.center.smul_comm_class_left
 
 /-- The center of a semiring acts commutatively on that semiring. -/
-instance center.smul_comm_class_right : SmulCommClass R (center R) R :=
+instance center.smul_comm_class_right : SMulCommClass R (center R) R :=
   Subsemiring.center.smul_comm_class_right
 #align subring.center.smul_comm_class_right Subring.center.smul_comm_class_right
 

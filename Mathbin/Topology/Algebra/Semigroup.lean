@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module topology.algebra.semigroup
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,7 +21,7 @@ We also state a corresponding lemma guaranteeing that a subset of `M` contains a
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (m m' «expr ∈ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (m m' «expr ∈ » N) -/
 /-- Any nonempty compact Hausdorff semigroup where right-multiplication is continuous contains
 an idempotent, i.e. an `m` such that `m * m = m`. -/
 @[to_additive
@@ -53,14 +53,14 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
         · rwa [← scaling_eq_self] at hm
         · rintro m'' ⟨mem'', eq'' : _ = m⟩ m' ⟨mem', eq' : _ = m⟩
           refine' ⟨N_mul _ mem'' _ mem', _⟩
-          rw [Set.mem_set_of_eq, mul_assoc, eq', eq'']
+          rw [Set.mem_setOf_eq, mul_assoc, eq', eq'']
       apply Set.inter_subset_left
     -- Thus `m * m = m` as desired.
     rw [← absorbing_eq_self] at hm
     exact hm.2
   refine' zorn_superset _ fun c hcs hc => _
   refine'
-    ⟨⋂₀ c, ⟨isClosedSInter fun t ht => (hcs ht).1, _, fun m hm m' hm' => _⟩, fun s hs =>
+    ⟨⋂₀ c, ⟨is_closed_sInter fun t ht => (hcs ht).1, _, fun m hm m' hm' => _⟩, fun s hs =>
       Set.sInter_subset_of_mem hs⟩
   · obtain rfl | hcnemp := c.eq_empty_or_nonempty
     · rw [Set.sInter_empty]
@@ -68,7 +68,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     convert
       @IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ _ _ hcnemp.coe_sort
         (coe : c → Set M) _ _ _ _
-    · simp only [Subtype.range_coe_subtype, Set.set_of_mem_eq]
+    · simp only [Subtype.range_coe_subtype, Set.setOf_mem_eq]
     · refine' DirectedOn.directed_coe (IsChain.directed_on hc.symm)
     exacts[fun i => (hcs i.Prop).2.1, fun i => (hcs i.Prop).1.IsCompact, fun i => (hcs i.Prop).1]
   · rw [Set.mem_sInter]
@@ -76,7 +76,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
 #align
   exists_idempotent_of_compact_t2_of_continuous_mul_left exists_idempotent_of_compact_t2_of_continuous_mul_left
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- A version of `exists_idempotent_of_compact_t2_of_continuous_mul_left` where the idempotent lies
 in some specified nonempty compact subsemigroup. -/
 @[to_additive exists_idempotent_in_compact_add_subsemigroup

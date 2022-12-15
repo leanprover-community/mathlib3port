@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.int
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,9 +46,9 @@ theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℤ → ℝ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
 #align int.uniform_embedding_coe_real Int.uniform_embedding_coe_real
 
-theorem closedEmbeddingCoeReal : ClosedEmbedding (coe : ℤ → ℝ) :=
-  closedEmbeddingOfPairwiseLeDist zero_lt_one pairwise_one_le_dist
-#align int.closed_embedding_coe_real Int.closedEmbeddingCoeReal
+theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℤ → ℝ) :=
+  closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
+#align int.closed_embedding_coe_real Int.closed_embedding_coe_real
 
 instance : MetricSpace ℤ :=
   Int.uniform_embedding_coe_real.comapMetricSpace _

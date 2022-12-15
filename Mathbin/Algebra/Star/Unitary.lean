@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.unitary
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ unitary
 def unitary (R : Type _) [Monoid R] [StarSemigroup R] :
     Submonoid R where 
   carrier := { U | star U * U = 1 ∧ U * star U = 1 }
-  one_mem' := by simp only [mul_one, and_self_iff, Set.mem_set_of_eq, star_one]
+  one_mem' := by simp only [mul_one, and_self_iff, Set.mem_setOf_eq, star_one]
   mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ => by
     refine' ⟨_, _⟩
     ·

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.closed
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -307,11 +307,11 @@ def topologyOfClosureOperator (c : ∀ X : C, ClosureOperator (Sieve X))
   sieves X := { S | c X S = ⊤ }
   top_mem' X := top_unique ((c X).le_closure _)
   pullback_stable' X Y S f hS := by 
-    rw [Set.mem_set_of_eq] at hS
-    rw [Set.mem_set_of_eq, hc, hS, sieve.pullback_top]
+    rw [Set.mem_setOf_eq] at hS
+    rw [Set.mem_setOf_eq, hc, hS, sieve.pullback_top]
   transitive' X S hS R hR := by 
-    rw [Set.mem_set_of_eq] at hS
-    rw [Set.mem_set_of_eq, ← (c X).idempotent, eq_top_iff, ← hS]
+    rw [Set.mem_setOf_eq] at hS
+    rw [Set.mem_setOf_eq, ← (c X).idempotent, eq_top_iff, ← hS]
     apply (c X).Monotone fun Y f hf => _
     rw [sieve.pullback_eq_top_iff_mem, ← hc]
     apply hR hf

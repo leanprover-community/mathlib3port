@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.graded_monoid
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,6 +148,12 @@ namespace Gmonoid
 
 variable {A} [AddMonoid ι] [GhasMul A] [GhasOne A]
 
+/- warning: graded_monoid.gmonoid.gnpow_rec -> GradedMonoid.Gmonoid.gnpowRec is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {A : ι -> Type.{u2}} [_inst_1 : AddMonoid.{u1} ι] [_inst_2 : GradedMonoid.GhasMul.{u1, u2} ι A (AddZeroClass.toHasAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_1))] [_inst_3 : GradedMonoid.GhasOne.{u1, u2} ι A (AddZeroClass.toHasZero.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_1))] (n : Nat) {i : ι}, (A i) -> (A (HasSmul.smul.{0, u1} Nat ι (AddMonoid.SMul.{u1} ι _inst_1) n i))
+but is expected to have type
+  PUnit.{max (succ (succ u1)) (succ (succ u2))}
+Case conversion may be inaccurate. Consider using '#align graded_monoid.gmonoid.gnpow_rec GradedMonoid.Gmonoid.gnpowRecₓ'. -/
 /-- A default implementation of power on a graded monoid, like `npow_rec`.
 `gmonoid.gnpow` should be used instead. -/
 def gnpowRec : ∀ (n : ℕ) {i}, A i → A (n • i)
@@ -182,8 +188,8 @@ unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
 
 end Gmonoid
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_zero_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_succ_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_zero_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_succ_tac -/
 /-- A graded version of `monoid`.
 
 Like `monoid.npow`, this has an optional `gmonoid.gnpow` field to allow definitional control of

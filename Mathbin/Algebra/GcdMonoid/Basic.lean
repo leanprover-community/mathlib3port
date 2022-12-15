@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,8 +98,8 @@ def normalize : α →*₀ α where
   map_zero' := by simp
   map_one' := by rw [norm_unit_one, Units.val_one, mul_one]
   map_mul' x y :=
-    (Classical.by_cases fun hx : x = 0 => by rw [hx, zero_mul, zero_mul, zero_mul]) fun hx =>
-      (Classical.by_cases fun hy : y = 0 => by rw [hy, mul_zero, zero_mul, mul_zero]) fun hy => by
+    (by_cases fun hx : x = 0 => by rw [hx, zero_mul, zero_mul, zero_mul]) fun hx =>
+      (by_cases fun hy : y = 0 => by rw [hy, mul_zero, zero_mul, mul_zero]) fun hy => by
         simp only [norm_unit_mul hx hy, Units.val_mul] <;> simp only [mul_assoc, mul_left_comm y]
 #align normalize normalize
 
@@ -165,7 +165,7 @@ theorem normalize_eq_normalize {a b : α} (hab : a ∣ b) (hba : b ∣ a) : norm
   by 
   nontriviality α
   rcases associated_of_dvd_dvd hab hba with ⟨u, rfl⟩
-  refine' Classical.by_cases (by rintro rfl <;> simp only [zero_mul]) fun ha : a ≠ 0 => _
+  refine' by_cases (by rintro rfl <;> simp only [zero_mul]) fun ha : a ≠ 0 => _
   suffices a * ↑(norm_unit a) = a * ↑u * ↑(norm_unit a) * ↑u⁻¹ by
     simpa only [normalize_apply, mul_assoc, norm_unit_mul ha u.ne_zero, norm_unit_coe_units]
   calc
@@ -408,7 +408,7 @@ theorem gcd_same [NormalizedGcdMonoid α] (a : α) : gcd a a = normalize a :=
 @[simp]
 theorem gcd_mul_left [NormalizedGcdMonoid α] (a b c : α) :
     gcd (a * b) (a * c) = normalize a * gcd b c :=
-  (Classical.by_cases (by rintro rfl <;> simp only [zero_mul, gcd_zero_left, normalize_zero]))
+  (by_cases (by rintro rfl <;> simp only [zero_mul, gcd_zero_left, normalize_zero]))
     fun ha : a ≠ 0 =>
     suffices gcd (a * b) (a * c) = normalize (a * gcd b c) by
       simpa only [normalize.map_mul, normalize_gcd]
@@ -564,12 +564,12 @@ theorem gcd_pow_left_dvd_pow_gcd [GcdMonoid α] {a b : α} {k : ℕ} : gcd (a ^ 
 theorem pow_dvd_of_mul_eq_pow [GcdMonoid α] {a b c d₁ d₂ : α} (ha : a ≠ 0) (hab : IsUnit (gcd a b))
     {k : ℕ} (h : a * b = c ^ k) (hc : c = d₁ * d₂) (hd₁ : d₁ ∣ a) : d₁ ^ k ≠ 0 ∧ d₁ ^ k ∣ a := by
   have h1 : IsUnit (gcd (d₁ ^ k) b) := by
-    apply is_unit_of_dvd_one
+    apply isUnit_of_dvd_one
     trans gcd d₁ b ^ k
     · exact gcd_pow_left_dvd_pow_gcd
     · apply IsUnit.dvd
       apply IsUnit.pow
-      apply is_unit_of_dvd_one
+      apply isUnit_of_dvd_one
       apply dvd_trans _ hab.dvd
       apply gcd_dvd_gcd hd₁ (dvd_refl b)
   have h2 : d₁ ^ k ∣ a * b := by 
@@ -792,7 +792,7 @@ theorem lcm_eq_one_iff [NormalizedGcdMonoid α] (a b : α) : lcm a b = 1 ↔ a �
 @[simp]
 theorem lcm_mul_left [NormalizedGcdMonoid α] (a b c : α) :
     lcm (a * b) (a * c) = normalize a * lcm b c :=
-  (Classical.by_cases (by rintro rfl <;> simp only [zero_mul, lcm_zero_left, normalize_zero]))
+  (by_cases (by rintro rfl <;> simp only [zero_mul, lcm_zero_left, normalize_zero]))
     fun ha : a ≠ 0 =>
     suffices lcm (a * b) (a * c) = normalize (a * lcm b c) by
       simpa only [normalize.map_mul, normalize_lcm]
@@ -1316,7 +1316,7 @@ instance (priority := 100) :
   dvd_gcd a b c hac hab := by 
     split_ifs with h; · apply dvd_zero
     cases' not_and_distrib.mp h with h h <;>
-        refine' is_unit_iff_dvd_one.mp (is_unit_of_dvd_unit _ (IsUnit.mk0 _ h)) <;>
+        refine' is_unit_iff_dvd_one.mp (isUnit_of_dvd_unit _ (IsUnit.mk0 _ h)) <;>
       assumption
   gcd_mul_lcm a b := by 
     by_cases ha : a = 0; · simp [ha]

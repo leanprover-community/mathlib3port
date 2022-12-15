@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.perfection
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -508,7 +508,7 @@ theorem v_p_lt_pre_val {x : ModP K v O hv p} : v p < preVal K v O hv p x ↔ x �
 
 theorem pre_val_eq_zero {x : ModP K v O hv p} : preVal K v O hv p x = 0 ↔ x = 0 :=
   ⟨fun hvx =>
-    Classical.by_contradiction fun hx0 : x ≠ 0 => by
+    by_contradiction fun hx0 : x ≠ 0 => by
       rw [← v_p_lt_pre_val, hvx] at hx0
       exact not_lt_zero' hx0,
     fun hx => hx.symm ▸ pre_val_zero⟩
@@ -704,7 +704,7 @@ instance : IsDomain (PreTilt K v O hv p) := by
       contrapose! hfg
       rw [Valuation.map_mul]
       exact mul_ne_zero hfg.1 hfg.2⟩
-  exact NoZeroDivisors.to_is_domain _
+  exact NoZeroDivisors.toIsDomain _
 
 end PreTilt
 

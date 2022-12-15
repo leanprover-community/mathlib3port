@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.pi
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,12 +123,12 @@ variable [∀ i, HasLimit (F ⋙ pi.eval C i)]
 and we have limits for each of the `F ⋙ pi.eval C i`,
 then `F` has a limit.
 -/
-theorem has_limit_of_has_limit_comp_eval : HasLimit F :=
+theorem hasLimitOfHasLimitCompEval : HasLimit F :=
   HasLimit.mk
     { Cone := coneOfConeCompEval fun i => Limit.cone _
       IsLimit := coneOfConeEvalIsLimit fun i => limit.isLimit _ }
 #align
-  category_theory.pi.has_limit_of_has_limit_comp_eval CategoryTheory.pi.has_limit_of_has_limit_comp_eval
+  category_theory.pi.has_limit_of_has_limit_comp_eval CategoryTheory.pi.hasLimitOfHasLimitCompEval
 
 end
 
@@ -140,12 +140,12 @@ variable [∀ i, HasColimit (F ⋙ pi.eval C i)]
 and colimits exist for each of the `F ⋙ pi.eval C i`,
 there is a colimit for `F`.
 -/
-theorem has_colimit_of_has_colimit_comp_eval : HasColimit F :=
+theorem hasColimitOfHasColimitCompEval : HasColimit F :=
   HasColimit.mk
     { Cocone := coconeOfCoconeCompEval fun i => Colimit.cocone _
       IsColimit := coconeOfCoconeEvalIsColimit fun i => colimit.isColimit _ }
 #align
-  category_theory.pi.has_colimit_of_has_colimit_comp_eval CategoryTheory.pi.has_colimit_of_has_colimit_comp_eval
+  category_theory.pi.has_colimit_of_has_colimit_comp_eval CategoryTheory.pi.hasColimitOfHasColimitCompEval
 
 end
 

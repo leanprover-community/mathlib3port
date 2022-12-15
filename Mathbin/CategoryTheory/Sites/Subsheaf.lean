@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.subsheaf
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ instance {G G' : Subpresheaf F} (h : G ≤ G') : Mono (Subpresheaf.homOfLe h) :=
         funext fun x =>
           Subtype.ext <| (congr_arg Subtype.val <| (congr_fun (congr_app e U) x : _) : _)⟩
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Subpresheaf.hom_of_le_ι {G G' : Subpresheaf F} (h : G ≤ G') :
     Subpresheaf.homOfLe h ≫ G'.ι = G.ι := by 
   ext
@@ -149,7 +149,7 @@ def Subpresheaf.lift (f : F' ⟶ F) (hf : ∀ U x, f.app U x ∈ G.obj U) :
 #align
   category_theory.grothendieck_topology.subpresheaf.lift CategoryTheory.GrothendieckTopology.Subpresheaf.lift
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Subpresheaf.lift_ι (f : F' ⟶ F) (hf : ∀ U x, f.app U x ∈ G.obj U) : G.lift f hf ≫ G.ι = f :=
   by 
   ext
@@ -404,7 +404,7 @@ def toImagePresheafSheafify (f : F' ⟶ F) : F' ⟶ ((imagePresheaf f).sheafify 
 
 variable {J}
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem to_image_presheaf_ι (f : F' ⟶ F) : toImagePresheaf f ≫ (imagePresheaf f).ι = f :=
   (imagePresheaf f).lift_ι _ _
 #align
@@ -453,7 +453,7 @@ def imageSheafι {F F' : SheafCat J (Type w)} (f : F ⟶ F') : imageSheaf f ⟶ 
 #align
   category_theory.grothendieck_topology.image_sheaf_ι CategoryTheory.GrothendieckTopology.imageSheafι
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem to_image_sheaf_ι {F F' : SheafCat J (Type w)} (f : F ⟶ F') :
     toImageSheaf f ≫ imageSheafι f = f := by 
   ext1

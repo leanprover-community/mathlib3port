@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbtree.insert
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ theorem ins.induction [DecidableRel lt] {p : Rbnode α → Prop} (t x) (is_leaf 
       · apply is_black_gt_not_red <;> assumption
 #align rbnode.ins.induction Rbnode.ins.induction
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_balance1 {l y r v t lo hi} :
     IsSearchable lt l lo (some y) →
       IsSearchable lt r (some y) (some v) →
@@ -144,7 +144,7 @@ theorem is_searchable_balance1 {l y r v t lo hi} :
       is_searchable_tactic
 #align rbnode.is_searchable_balance1 Rbnode.is_searchable_balance1
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_balance1_node {t} [IsTrans α lt] :
     ∀ {y s lo hi},
       IsSearchable lt t lo (some y) →
@@ -161,7 +161,7 @@ theorem is_searchable_balance1_node {t} [IsTrans α lt] :
   all_goals apply is_searchable_balance1 <;> assumption
 #align rbnode.is_searchable_balance1_node Rbnode.is_searchable_balance1_node
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_balance2 {l y r v t lo hi} :
     IsSearchable lt t lo (some v) →
       IsSearchable lt l (some v) (some y) →
@@ -172,7 +172,7 @@ theorem is_searchable_balance2 {l y r v t lo hi} :
       is_searchable_tactic
 #align rbnode.is_searchable_balance2 Rbnode.is_searchable_balance2
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_balance2_node {t} [IsTrans α lt] :
     ∀ {y s lo hi},
       IsSearchable lt s lo (some y) →
@@ -190,7 +190,7 @@ theorem is_searchable_balance2_node {t} [IsTrans α lt] :
   all_goals apply is_searchable_balance2; assumption'
 #align rbnode.is_searchable_balance2_node Rbnode.is_searchable_balance2_node
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
     ∀ {lo hi} (h : IsSearchable lt t lo hi),
       Lift lt lo (some x) → Lift lt (some x) hi → IsSearchable lt (ins lt t x) lo hi :=
@@ -230,7 +230,7 @@ theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
     simp [*]
 #align rbnode.is_searchable_ins Rbnode.is_searchable_ins
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_mk_insert_result {c t} :
     IsSearchable lt t none none → IsSearchable lt (mkInsertResult c t) none none := by
   classical 
@@ -479,15 +479,15 @@ private unsafe def simp_fi : tactic Unit :=
   sorry
 #align rbnode.simp_fi rbnode.simp_fi
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
 theorem find_ins_of_eqv [DecidableRel lt] [IsStrictWeakOrder α lt] {x y : α} {t : Rbnode α}
     (he : x ≈[lt]y) :
     ∀ {lo hi} (hs : IsSearchable lt t lo hi) (hlt₁ : Lift lt lo (some x))
@@ -585,7 +585,7 @@ attribute [local simp]
 
 variable [IsStrictWeakOrder α lt] [DecidableRel lt]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem find_balance1_lt {l r t v x y lo hi} (h : lt x y) (hl : IsSearchable lt l lo (some v))
     (hr : IsSearchable lt r (some v) (some y)) (ht : IsSearchable lt t (some y) hi) :
     find lt (balance1 l v r y t) x = find lt (red_node l v r) x := by
@@ -607,8 +607,8 @@ unsafe def ins_ne_leaf_tac :=
   sorry
 #align rbnode.ins_ne_leaf_tac rbnode.ins_ne_leaf_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
 theorem find_balance1_node_lt {t s x y lo hi} (hlt : lt y x) (ht : IsSearchable lt t lo (some x))
     (hs : IsSearchable lt s (some x) hi)
     (hne : t ≠ leaf := by
@@ -623,7 +623,7 @@ theorem find_balance1_node_lt {t s x y lo hi} (hlt : lt y x) (ht : IsSearchable 
     apply find_balance1_lt; assumption'
 #align rbnode.find_balance1_node_lt Rbnode.find_balance1_node_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem find_balance1_gt {l r t v x y lo hi} (h : lt y x) (hl : IsSearchable lt l lo (some v))
     (hr : IsSearchable lt r (some v) (some y)) (ht : IsSearchable lt t (some y) hi) :
     find lt (balance1 l v r y t) x = find lt t x := by
@@ -637,8 +637,8 @@ theorem find_balance1_gt {l r t v x y lo hi} (h : lt y x) (hl : IsSearchable lt 
     simp [*]
 #align rbnode.find_balance1_gt Rbnode.find_balance1_gt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
 theorem find_balance1_node_gt {t s x y lo hi} (h : lt x y) (ht : IsSearchable lt t lo (some x))
     (hs : IsSearchable lt s (some x) hi)
     (hne : t ≠ leaf := by
@@ -652,7 +652,7 @@ theorem find_balance1_node_gt {t s x y lo hi} (h : lt x y) (ht : IsSearchable lt
     apply find_balance1_gt; assumption'
 #align rbnode.find_balance1_node_gt Rbnode.find_balance1_node_gt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem find_balance1_eqv {l r t v x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     (hl : IsSearchable lt l lo (some v)) (hr : IsSearchable lt r (some v) (some y))
     (ht : IsSearchable lt t (some y) hi) : find lt (balance1 l v r y t) x = some y := by
@@ -666,8 +666,8 @@ theorem find_balance1_eqv {l r t v x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     simp [*]
 #align rbnode.find_balance1_eqv Rbnode.find_balance1_eqv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
 theorem find_balance1_node_eqv {t s x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     (ht : IsSearchable lt t lo (some y)) (hs : IsSearchable lt s (some y) hi)
     (hne : t ≠ leaf := by
@@ -682,7 +682,7 @@ theorem find_balance1_node_eqv {t s x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     apply find_balance1_eqv; assumption'
 #align rbnode.find_balance1_node_eqv Rbnode.find_balance1_node_eqv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem find_balance2_lt {l v r t x y lo hi} (h : lt x y) (hl : IsSearchable lt l (some y) (some v))
     (hr : IsSearchable lt r (some v) hi) (ht : IsSearchable lt t lo (some y)) :
     find lt (balance2 l v r y t) x = find lt t x := by
@@ -696,8 +696,8 @@ theorem find_balance2_lt {l v r t x y lo hi} (h : lt x y) (hl : IsSearchable lt 
     simp [*]
 #align rbnode.find_balance2_lt Rbnode.find_balance2_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
 theorem find_balance2_node_lt {s t x y lo hi} (h : lt x y) (ht : IsSearchable lt t (some y) hi)
     (hs : IsSearchable lt s lo (some y))
     (hne : t ≠ leaf := by
@@ -711,7 +711,7 @@ theorem find_balance2_node_lt {s t x y lo hi} (h : lt x y) (ht : IsSearchable lt
     apply find_balance2_lt; assumption'
 #align rbnode.find_balance2_node_lt Rbnode.find_balance2_node_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem find_balance2_gt {l v r t x y lo hi} (h : lt y x) (hl : IsSearchable lt l (some y) (some v))
     (hr : IsSearchable lt r (some v) hi) (ht : IsSearchable lt t lo (some y)) :
     find lt (balance2 l v r y t) x = find lt (red_node l v r) x := by
@@ -728,8 +728,8 @@ theorem find_balance2_gt {l v r t x y lo hi} (h : lt y x) (hl : IsSearchable lt 
   · apply weak_trichotomous lt y_1 x <;> intros <;> simp [*]
 #align rbnode.find_balance2_gt Rbnode.find_balance2_gt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
 theorem find_balance2_node_gt {s t x y lo hi} (h : lt y x) (ht : IsSearchable lt t (some y) hi)
     (hs : IsSearchable lt s lo (some y))
     (hne : t ≠ leaf := by
@@ -744,7 +744,7 @@ theorem find_balance2_node_gt {s t x y lo hi} (h : lt y x) (ht : IsSearchable lt
     apply find_balance2_gt; assumption'
 #align rbnode.find_balance2_node_gt Rbnode.find_balance2_node_gt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem find_balance2_eqv {l v r t x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     (hl : IsSearchable lt l (some y) (some v)) (hr : IsSearchable lt r (some v) hi)
     (ht : IsSearchable lt t lo (some y)) : find lt (balance2 l v r y t) x = some y := by
@@ -758,8 +758,8 @@ theorem find_balance2_eqv {l v r t x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     simp [*]
 #align rbnode.find_balance2_eqv Rbnode.find_balance2_eqv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ins_ne_leaf_tac -/
 theorem find_balance2_node_eqv {t s x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     (ht : IsSearchable lt t (some y) hi) (hs : IsSearchable lt s lo (some y))
     (hne : t ≠ leaf := by
@@ -774,24 +774,24 @@ theorem find_balance2_node_eqv {t s x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     apply find_balance2_eqv; assumption'
 #align rbnode.find_balance2_node_eqv Rbnode.find_balance2_node_eqv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3968712505.simp_fi -/
 theorem find_ins_of_disj {x y : α} {t : Rbnode α} (hn : lt x y ∨ lt y x) :
     ∀ {lo hi} (hs : IsSearchable lt t lo hi) (hlt₁ : Lift lt lo (some x))
       (hlt₂ : Lift lt (some x) hi), find lt (ins lt t x) y = find lt t y :=

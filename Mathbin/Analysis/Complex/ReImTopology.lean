@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.re_im_topology
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,9 +211,9 @@ theorem IsOpen.re_prod_im (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ℂ t) :
   (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
 #align is_open.re_prod_im IsOpen.re_prod_im
 
-theorem IsClosed.reProdIm (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×ℂ t) :=
+theorem IsClosed.re_prod_im (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×ℂ t) :=
   (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
-#align is_closed.re_prod_im IsClosed.reProdIm
+#align is_closed.re_prod_im IsClosed.re_prod_im
 
 theorem Metric.Bounded.reProdIm (hs : Bounded s) (ht : Bounded t) : Bounded (s ×ℂ t) :=
   equivRealProdₗ.antilipschitz.boundedPreimage (hs.Prod ht)

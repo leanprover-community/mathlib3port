@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.polynomial.reverse
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,7 +226,7 @@ theorem eval₂_reflect_mul_pow (i : R →+* S) (x : S) [Invertible x] (N : ℕ)
   · intro n r hr0 hnN
     simp only [rev_at_le hnN, reflect_C_mul_X_pow, eval₂_X_pow, eval₂_C, eval₂_mul]
     conv in x ^ N => rw [← Nat.sub_add_cancel hnN]
-    rw [pow_add, ← mul_assoc, mul_assoc (i r), ← mul_pow, inv_of_mul_self, one_pow, mul_one]
+    rw [pow_add, ← mul_assoc, mul_assoc (i r), ← mul_pow, invOf_mul_self, one_pow, mul_one]
   · intros
     simp [*, add_mul]
 #align polynomial.eval₂_reflect_mul_pow Polynomial.eval₂_reflect_mul_pow
@@ -238,7 +238,7 @@ theorem eval₂_reflect_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (N : 
   · intro h
     rw [h, zero_mul]
   · intro h
-    rw [← mul_one (eval₂ i (⅟ x) _), ← one_pow N, ← mul_inv_of_self x, mul_pow, ← mul_assoc, h,
+    rw [← mul_one (eval₂ i (⅟ x) _), ← one_pow N, ← mul_invOf_self x, mul_pow, ← mul_assoc, h,
       zero_mul]
 #align polynomial.eval₂_reflect_eq_zero_iff Polynomial.eval₂_reflect_eq_zero_iff
 

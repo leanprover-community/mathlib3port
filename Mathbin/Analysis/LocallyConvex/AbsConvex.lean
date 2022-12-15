@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.abs_convex
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ variable (𝕜 E) {s : Set E}
 
 variable [NontriviallyNormedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
-variable [Module ℝ E] [SmulCommClass ℝ 𝕜 E]
+variable [Module ℝ E] [SMulCommClass ℝ 𝕜 E]
 
 variable [TopologicalSpace E] [LocallyConvexSpace ℝ E] [HasContinuousSmul 𝕜 E]
 
@@ -161,7 +161,7 @@ theorem gauge_seminorm_family_ball (s : AbsConvexOpenSets 𝕜 E) :
 
 variable [TopologicalAddGroup E] [HasContinuousSmul 𝕜 E]
 
-variable [SmulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
+variable [SMulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
 
 /-- The topology of a locally convex space is induced by the gauge seminorm family. -/
 theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) := by

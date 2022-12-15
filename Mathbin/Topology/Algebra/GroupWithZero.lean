@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.group_with_zero
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -275,8 +275,8 @@ variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀]
 theorem continuous_at_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) :
     ContinuousAt (fun x => x ^ m) x := by 
   cases m
-  · simpa only [zpow_of_nat] using continuous_at_pow x m
-  · simp only [zpow_neg_succ_of_nat]
+  · simpa only [zpow_ofNat] using continuous_at_pow x m
+  · simp only [zpow_negSucc]
     have hx : x ≠ 0 := h.resolve_right (Int.neg_succ_of_nat_lt_zero m).not_le
     exact (continuous_at_pow x (m + 1)).inv₀ (pow_ne_zero _ hx)
 #align continuous_at_zpow₀ continuous_at_zpow₀

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.prod
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ their codomains.
 
 See note [bundled maps over different rings] for why separate `R` and `S` semirings are used. -/
 @[simps]
-def prodEquiv [Module S M₂] [Module S M₃] [SmulCommClass R S M₂] [SmulCommClass R S M₃] :
+def prodEquiv [Module S M₂] [Module S M₃] [SMulCommClass R S M₂] [SMulCommClass R S M₃] :
     ((M →ₗ[R] M₂) × (M →ₗ[R] M₃)) ≃ₗ[S]
       M →ₗ[R] M₂ × M₃ where 
   toFun f := f.1.Prod f.2
@@ -275,7 +275,7 @@ their domains.
 
 See note [bundled maps over different rings] for why separate `R` and `S` semirings are used. -/
 @[simps]
-def coprodEquiv [Module S M₃] [SmulCommClass R S M₃] :
+def coprodEquiv [Module S M₃] [SMulCommClass R S M₃] :
     ((M →ₗ[R] M₃) × (M₂ →ₗ[R] M₃)) ≃ₗ[S]
       M × M₂ →ₗ[R] M₃ where 
   toFun f := f.1.coprod f.2
@@ -361,7 +361,7 @@ theorem prod_map_zero : (0 : M →ₗ[R] M₂).prod_map (0 : M₃ →ₗ[R] M₄
 #align linear_map.prod_map_zero LinearMap.prod_map_zero
 
 @[simp]
-theorem prod_map_smul [Module S M₃] [Module S M₄] [SmulCommClass R S M₃] [SmulCommClass R S M₄]
+theorem prod_map_smul [Module S M₃] [Module S M₄] [SMulCommClass R S M₃] [SMulCommClass R S M₄]
     (s : S) (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : prodMap (s • f) (s • g) = s • prodMap f g :=
   rfl
 #align linear_map.prod_map_smul LinearMap.prod_map_smul
@@ -370,7 +370,7 @@ variable (R M M₂ M₃ M₄)
 
 /-- `linear_map.prod_map` as a `linear_map` -/
 @[simps]
-def prodMapLinear [Module S M₃] [Module S M₄] [SmulCommClass R S M₃] [SmulCommClass R S M₄] :
+def prodMapLinear [Module S M₃] [Module S M₄] [SMulCommClass R S M₃] [SMulCommClass R S M₄] :
     (M →ₗ[R] M₃) × (M₂ →ₗ[R] M₄) →ₗ[S]
       M × M₂ →ₗ[R] M₃ × M₄ where 
   toFun f := prodMap f.1 f.2

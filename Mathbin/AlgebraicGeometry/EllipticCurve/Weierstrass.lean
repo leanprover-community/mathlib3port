@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,7 +238,7 @@ def baseChange : WeierstrassCurve A :=
     algebraMap R A C.a₆⟩
 #align weierstrass_curve.base_change WeierstrassCurve.baseChange
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
 @[simp]
 theorem base_change_b₂ : (C.base_change A).b₂ = algebraMap R A C.b₂ := by
   simp only [b₂, base_change_a₁, base_change_a₂]
@@ -246,7 +246,7 @@ theorem base_change_b₂ : (C.base_change A).b₂ = algebraMap R A C.b₂ := by
     map_simp
 #align weierstrass_curve.base_change_b₂ WeierstrassCurve.base_change_b₂
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
 @[simp]
 theorem base_change_b₄ : (C.base_change A).b₄ = algebraMap R A C.b₄ := by
   simp only [b₄, base_change_a₁, base_change_a₃, base_change_a₄]
@@ -254,7 +254,7 @@ theorem base_change_b₄ : (C.base_change A).b₄ = algebraMap R A C.b₄ := by
     map_simp
 #align weierstrass_curve.base_change_b₄ WeierstrassCurve.base_change_b₄
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
 @[simp]
 theorem base_change_b₆ : (C.base_change A).b₆ = algebraMap R A C.b₆ := by
   simp only [b₆, base_change_a₃, base_change_a₆]
@@ -262,7 +262,7 @@ theorem base_change_b₆ : (C.base_change A).b₆ = algebraMap R A C.b₆ := by
     map_simp
 #align weierstrass_curve.base_change_b₆ WeierstrassCurve.base_change_b₆
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
 @[simp]
 theorem base_change_b₈ : (C.base_change A).b₈ = algebraMap R A C.b₈ := by
   simp only [b₈, base_change_a₁, base_change_a₂, base_change_a₃, base_change_a₄, base_change_a₆]
@@ -270,7 +270,7 @@ theorem base_change_b₈ : (C.base_change A).b₈ = algebraMap R A C.b₈ := by
     map_simp
 #align weierstrass_curve.base_change_b₈ WeierstrassCurve.base_change_b₈
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
 @[simp]
 theorem base_change_c₄ : (C.base_change A).c₄ = algebraMap R A C.c₄ := by
   simp only [c₄, base_change_b₂, base_change_b₄]
@@ -278,7 +278,7 @@ theorem base_change_c₄ : (C.base_change A).c₄ = algebraMap R A C.c₄ := by
     map_simp
 #align weierstrass_curve.base_change_c₄ WeierstrassCurve.base_change_c₄
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
 @[simp]
 theorem base_change_c₆ : (C.base_change A).c₆ = algebraMap R A C.c₆ := by
   simp only [c₆, base_change_b₂, base_change_b₄, base_change_b₆]
@@ -286,7 +286,7 @@ theorem base_change_c₆ : (C.base_change A).c₆ = algebraMap R A C.c₆ := by
     map_simp
 #align weierstrass_curve.base_change_c₆ WeierstrassCurve.base_change_c₆
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
 @[simp, nolint simp_nf]
 theorem base_change_Δ : (C.base_change A).Δ = algebraMap R A C.Δ := by
   simp only [Δ, base_change_b₂, base_change_b₄, base_change_b₆, base_change_b₈]
@@ -316,7 +316,7 @@ theorem two_torsion_polynomial_disc : C.twoTorsionPolynomial.disc = 16 * C.Δ :=
 theorem two_torsion_polynomial_disc_is_unit [Invertible (2 : R)] :
     IsUnit C.twoTorsionPolynomial.disc ↔ IsUnit C.Δ := by
   rw [two_torsion_polynomial_disc, IsUnit.mul_iff, show (16 : R) = 2 ^ 4 by norm_num1]
-  exact and_iff_right (is_unit_of_invertible <| 2 ^ 4)
+  exact and_iff_right (isUnit_of_invertible <| 2 ^ 4)
 #align
   weierstrass_curve.two_torsion_polynomial_disc_is_unit WeierstrassCurve.two_torsion_polynomial_disc_is_unit
 
@@ -369,15 +369,15 @@ When `R` is a field, any two Weierstrass equations isomorphic to `E` are related
 @[simps]
 def variableChange : EllipticCurve R :=
   ⟨E.variableChange u r s t, u⁻¹ ^ 12 * E.Δ', by
-    rw [Units.val_mul, Units.coe_pow, coe_Δ', E.variable_change_Δ]⟩
+    rw [Units.val_mul, Units.val_pow_eq_pow_val, coe_Δ', E.variable_change_Δ]⟩
 #align elliptic_curve.variable_change EllipticCurve.variableChange
 
 theorem coe_variable_change_Δ' : (↑(E.variableChange u r s t).Δ' : R) = ↑u⁻¹ ^ 12 * E.Δ' := by
-  rw [variable_change_Δ', Units.val_mul, Units.coe_pow]
+  rw [variable_change_Δ', Units.val_mul, Units.val_pow_eq_pow_val]
 #align elliptic_curve.coe_variable_change_Δ' EllipticCurve.coe_variable_change_Δ'
 
 theorem coe_variable_change_Δ'_inv : (↑(E.variableChange u r s t).Δ'⁻¹ : R) = u ^ 12 * ↑E.Δ'⁻¹ := by
-  rw [variable_change_Δ', mul_inv, inv_pow, inv_inv, Units.val_mul, Units.coe_pow]
+  rw [variable_change_Δ', mul_inv, inv_pow, inv_inv, Units.val_mul, Units.val_pow_eq_pow_val]
 #align elliptic_curve.coe_variable_change_Δ'_inv EllipticCurve.coe_variable_change_Δ'_inv
 
 @[simp]
@@ -400,7 +400,7 @@ variable (A : Type v) [CommRing A] [Algebra R A]
 @[simps]
 def baseChange : EllipticCurve A :=
   ⟨E.base_change A, Units.map (↑(algebraMap R A)) E.Δ', by
-    rw [Units.coe_map, RingHom.coe_monoid_hom, coe_Δ', E.base_change_Δ]⟩
+    rw [Units.coe_map, [anonymous], coe_Δ', E.base_change_Δ]⟩
 #align elliptic_curve.base_change EllipticCurve.baseChange
 
 theorem coe_base_change_Δ' : ↑(E.base_change A).Δ' = algebraMap R A E.Δ' :=
@@ -411,7 +411,7 @@ theorem coe_base_change_Δ'_inv : ↑(E.base_change A).Δ'⁻¹ = algebraMap R A
   rfl
 #align elliptic_curve.coe_base_change_Δ'_inv EllipticCurve.coe_base_change_Δ'_inv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2481242939.map_simp -/
 @[simp]
 theorem base_change_j : (E.base_change A).j = algebraMap R A E.j := by
   simp only [j, coe_base_change_Δ'_inv, base_change_to_weierstrass_curve, E.base_change_c₄]

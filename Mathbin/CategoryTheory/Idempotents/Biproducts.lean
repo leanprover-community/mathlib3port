@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.biproducts
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
 
 end Biproducts
 
-theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
+theorem karoubiHasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
   { out := fun n =>
       { HasBiproduct := fun F => by
           classical 
@@ -111,13 +111,13 @@ theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiprodu
                 exact h rfl
               simp only [eq_to_hom_refl, id_comp, (F j).idem] } }
 #align
-  category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubi_has_finite_biproducts
+  category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubiHasFiniteBiproducts
 
 instance {D : Type _} [Category D] [AdditiveCategory D] :
     AdditiveCategory (Karoubi
         D) where 
   toPreadditive := inferInstance
-  to_has_finite_biproducts := karoubi_has_finite_biproducts
+  toHasFiniteBiproducts := karoubiHasFiniteBiproducts
 
 /-- `P.complement` is the formal direct factor of `P.X` given by the idempotent
 endomorphism `𝟙 P.X - P.p` -/
@@ -130,7 +130,7 @@ def complement (P : Karoubi C) : Karoubi
 #align category_theory.idempotents.karoubi.complement CategoryTheory.Idempotents.Karoubi.complement
 
 instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
-  has_binary_biproduct_of_total
+  hasBinaryBiproductOfTotal
     { x := P.x
       fst := P.decompIdP
       snd := P.complement.decompIdP

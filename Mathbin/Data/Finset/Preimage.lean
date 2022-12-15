@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.preimage
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,122 +89,9 @@ theorem image_subset_iff_subset_preimage [DecidableEq β] {f : α → β} {s : F
   image_subset_iff.trans <| by simp only [subset_iff, mem_preimage]
 #align finset.image_subset_iff_subset_preimage Finset.image_subset_iff_subset_preimage
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [] [] [] [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `map_subset_iff_subset_preimage [])
-      (Command.declSig
-       [(Term.implicitBinder
-         "{"
-         [`f]
-         [":" (Function.Logic.Embedding.Basic.«term_↪_» `α " ↪ " `β)]
-         "}")
-        (Term.implicitBinder "{" [`s] [":" (Term.app `Finset [`α])] "}")
-        (Term.implicitBinder "{" [`t] [":" (Term.app `Finset [`β])] "}")]
-       (Term.typeSpec
-        ":"
-        («term_↔_»
-         («term_⊆_» (Term.app (Term.proj `s "." `map) [`f]) "⊆" `t)
-         "↔"
-         («term_⊆_»
-          `s
-          "⊆"
-          (Term.app
-           (Term.proj `t "." `Preimage)
-           [`f
-            (Term.app (Term.proj (Term.proj `f "." `Injective) "." `InjOn) [(Term.hole "_")])])))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Tactic.rwSeq
-             "rw"
-             []
-             (Tactic.rwRuleSeq
-              "["
-              [(Tactic.rwRule [] `map_eq_image)
-               ","
-               (Tactic.rwRule [] `image_subset_iff_subset_preimage)]
-              "]")
-             []))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.rwSeq
-            "rw"
-            []
-            (Tactic.rwRuleSeq
-             "["
-             [(Tactic.rwRule [] `map_eq_image)
-              ","
-              (Tactic.rwRule [] `image_subset_iff_subset_preimage)]
-             "]")
-            []))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.rwSeq
-        "rw"
-        []
-        (Tactic.rwRuleSeq
-         "["
-         [(Tactic.rwRule [] `map_eq_image) "," (Tactic.rwRule [] `image_subset_iff_subset_preimage)]
-         "]")
-        []))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.rwSeq
-       "rw"
-       []
-       (Tactic.rwRuleSeq
-        "["
-        [(Tactic.rwRule [] `map_eq_image) "," (Tactic.rwRule [] `image_subset_iff_subset_preimage)]
-        "]")
-       [])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `image_subset_iff_subset_preimage
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `map_eq_image
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  map_subset_iff_subset_preimage
-  { f : α ↪ β } { s : Finset α } { t : Finset β }
-    : s . map f ⊆ t ↔ s ⊆ t . Preimage f f . Injective . InjOn _
-  := by skip <;> rw [ map_eq_image , image_subset_iff_subset_preimage ]
+theorem map_subset_iff_subset_preimage {f : α ↪ β} {s : Finset α} {t : Finset β} :
+    s.map f ⊆ t ↔ s ⊆ t.Preimage f (f.Injective.InjOn _) := by
+  classical rw [map_eq_image, image_subset_iff_subset_preimage]
 #align finset.map_subset_iff_subset_preimage Finset.map_subset_iff_subset_preimage
 
 theorem image_preimage [DecidableEq β] (f : α → β) (s : Finset β) [∀ x, Decidable (x ∈ Set.range f)]
@@ -223,7 +110,7 @@ theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s 
     s.Preimage f (f.Injective.InjOn _) ⊆ t := fun x hx => (mem_map' f).1 (hs (mem_preimage.1 hx))
 #align finset.preimage_subset Finset.preimage_subset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} :
     s ⊆ t.map f ↔ ∃ (u : _)(_ : u ⊆ t), s = u.map f := by
   classical 

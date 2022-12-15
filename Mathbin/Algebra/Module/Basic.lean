@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,17 +73,17 @@ instance (priority := 100) Module.toMulActionWithZero : MulActionWithZero R M :=
 instance AddCommMonoid.natModule :
     Module ℕ M where 
   one_smul := one_nsmul
-  mul_smul m n a := mul_nsmul a m n
+  mul_smul m n a := mul_nsmul' a m n
   smul_add n a b := nsmul_add a b n
   smul_zero := nsmul_zero
   zero_smul := zero_nsmul
   add_smul r s x := add_nsmul x r s
 #align add_comm_monoid.nat_module AddCommMonoid.natModule
 
-theorem AddMonoid.EndCat.nat_cast_def (n : ℕ) :
-    (↑n : AddMonoid.EndCat M) = DistribMulAction.toAddMonoidEnd ℕ M n :=
+theorem AddMonoid.End.nat_cast_def (n : ℕ) :
+    (↑n : AddMonoid.End M) = DistribMulAction.toAddMonoidEnd ℕ M n :=
   rfl
-#align add_monoid.End.nat_cast_def AddMonoid.EndCat.nat_cast_def
+#align add_monoid.End.nat_cast_def AddMonoid.End.nat_cast_def
 
 theorem add_smul : (r + s) • x = r • x + s • x :=
   Module.add_smul r s x
@@ -105,7 +105,7 @@ theorem two_smul' : (2 : R) • x = bit0 x :=
 @[simp]
 theorem inv_of_two_smul_add_inv_of_two_smul [Invertible (2 : R)] (x : M) :
     (⅟ 2 : R) • x + (⅟ 2 : R) • x = x :=
-  Convex.combo_self inv_of_two_add_inv_of_two _
+  Convex.combo_self invOf_two_add_invOf_two _
 #align inv_of_two_smul_add_inv_of_two_smul inv_of_two_smul_add_inv_of_two_smul
 
 /-- Pullback a `module` structure along an injective additive monoid homomorphism.
@@ -154,7 +154,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 def Module.compHom [Semiring S] (f : S →+* R) : Module S M :=
   { MulActionWithZero.compHom M f.toMonoidWithZeroHom, DistribMulAction.compHom M (f : S →* R) with
-    smul := HasSmul.Comp.smul f
+    smul := SMul.comp.smul f
     add_smul := fun r s x => by simp [add_smul] }
 #align module.comp_hom Module.compHom
 
@@ -164,7 +164,7 @@ variable (R) (M)
 
 This is a stronger version of `distrib_mul_action.to_add_monoid_End` -/
 @[simps apply_apply]
-def Module.toAddMonoidEnd : R →+* AddMonoid.EndCat M :=
+def Module.toAddMonoidEnd : R →+* AddMonoid.End M :=
   { DistribMulAction.toAddMonoidEnd R M with
     map_zero' := AddMonoidHom.ext fun r => by simp
     map_add' := fun x y => AddMonoidHom.ext fun r => by simp [add_smul] }
@@ -225,10 +225,10 @@ instance AddCommGroup.intModule :
   add_smul r s x := add_zsmul x r s
 #align add_comm_group.int_module AddCommGroup.intModule
 
-theorem AddMonoid.EndCat.int_cast_def (z : ℤ) :
-    (↑z : AddMonoid.EndCat M) = DistribMulAction.toAddMonoidEnd ℤ M z :=
+theorem AddMonoid.End.int_cast_def (z : ℤ) :
+    (↑z : AddMonoid.End M) = DistribMulAction.toAddMonoidEnd ℤ M z :=
   rfl
-#align add_monoid.End.int_cast_def AddMonoid.EndCat.int_cast_def
+#align add_monoid.End.int_cast_def AddMonoid.End.int_cast_def
 
 /-- A structure containing most informations as in a module, except the fields `zero_smul`
 and `smul_zero`. As these fields can be deduced from the other ones when `M` is an `add_comm_group`,
@@ -364,7 +364,7 @@ protected theorem RingHom.smul_def [Semiring R] (f : R →+* R) (a : R) : f • 
 #align ring_hom.smul_def RingHom.smul_def
 
 /-- `ring_hom.apply_distrib_mul_action` is faithful. -/
-instance RingHom.apply_has_faithful_smul [Semiring R] : HasFaithfulSmul (R →+* R) R :=
+instance RingHom.apply_has_faithful_smul [Semiring R] : FaithfulSMul (R →+* R) R :=
   ⟨RingHom.ext⟩
 #align ring_hom.apply_has_faithful_smul RingHom.apply_has_faithful_smul
 
@@ -541,15 +541,15 @@ instance IsScalarTower.rat {R : Type u} {M : Type v} [Ring R] [AddCommGroup M] [
     IsScalarTower ℚ R M where smul_assoc r x y := map_rat_smul ((smulAddHom R M).flip y) r x
 #align is_scalar_tower.rat IsScalarTower.rat
 
-instance SmulCommClass.rat {R : Type u} {M : Type v} [Semiring R] [AddCommGroup M] [Module R M]
+instance SMulCommClass.rat {R : Type u} {M : Type v} [Semiring R] [AddCommGroup M] [Module R M]
     [Module ℚ M] :
-    SmulCommClass ℚ R M where smul_comm r x y := (map_rat_smul (smulAddHom R M x) r y).symm
-#align smul_comm_class.rat SmulCommClass.rat
+    SMulCommClass ℚ R M where smul_comm r x y := (map_rat_smul (smulAddHom R M x) r y).symm
+#align smul_comm_class.rat SMulCommClass.rat
 
-instance SmulCommClass.rat' {R : Type u} {M : Type v} [Semiring R] [AddCommGroup M] [Module R M]
-    [Module ℚ M] : SmulCommClass R ℚ M :=
-  SmulCommClass.symm _ _ _
-#align smul_comm_class.rat' SmulCommClass.rat'
+instance SMulCommClass.rat' {R : Type u} {M : Type v} [Semiring R] [AddCommGroup M] [Module R M]
+    [Module ℚ M] : SMulCommClass R ℚ M :=
+  SMulCommClass.symm _ _ _
+#align smul_comm_class.rat' SMulCommClass.rat'
 
 section NoZeroSmulDivisors
 
@@ -745,4 +745,5 @@ theorem Int.smul_one_eq_coe {R : Type _} [Ring R] (m : ℤ) : m • (1 : R) = �
   rw [zsmul_eq_mul, mul_one]
 #align int.smul_one_eq_coe Int.smul_one_eq_coe
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+assert_not_exists multiset
+

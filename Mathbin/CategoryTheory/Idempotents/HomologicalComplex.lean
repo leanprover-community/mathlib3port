@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.homological_complex
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,19 +35,19 @@ namespace HomologicalComplex
 
 variable {P Q : Karoubi (HomologicalComplex C c)} (f : P ⟶ Q) (n : ι)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem p_comp_d : P.p.f n ≫ f.f.f n = f.f.f n :=
   HomologicalComplex.congr_hom (p_comp f) n
 #align
   category_theory.idempotents.karoubi.homological_complex.p_comp_d CategoryTheory.Idempotents.Karoubi.HomologicalComplex.p_comp_d
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem comp_p_d : f.f.f n ≫ Q.p.f n = f.f.f n :=
   HomologicalComplex.congr_hom (comp_p f) n
 #align
   category_theory.idempotents.karoubi.homological_complex.comp_p_d CategoryTheory.Idempotents.Karoubi.HomologicalComplex.comp_p_d
 
-@[reassoc]
+@[reassoc.1]
 theorem p_comm_f : P.p.f n ≫ f.f.f n = f.f.f n ≫ Q.p.f n :=
   HomologicalComplex.congr_hom (p_comm f) n
 #align
@@ -55,7 +55,7 @@ theorem p_comm_f : P.p.f n ≫ f.f.f n = f.f.f n ≫ Q.p.f n :=
 
 variable (P)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem p_idem : P.p.f n ≫ P.p.f n = P.p.f n :=
   HomologicalComplex.congr_hom P.idem n
 #align

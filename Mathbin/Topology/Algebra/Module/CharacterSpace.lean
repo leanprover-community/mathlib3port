@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module topology.algebra.module.character_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,14 +128,14 @@ theorem union_zero :
 #align weak_dual.character_space.union_zero WeakDual.characterSpace.union_zero
 
 /-- The `character_space 𝕜 A` along with `0` is always a closed set in `weak_dual 𝕜 A`. -/
-theorem unionZeroIsClosed [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (characterSpace 𝕜 A ∪ {0}) :=
-  by 
+theorem union_zero_is_closed [T2Space 𝕜] [HasContinuousMul 𝕜] :
+    IsClosed (characterSpace 𝕜 A ∪ {0}) := by
   simp only [union_zero, Set.set_of_forall]
   exact
-    isClosedInter fun x =>
-      isClosedInter fun y =>
-        isClosedEq (eval_continuous _) <| (eval_continuous _).mul (eval_continuous _)
-#align weak_dual.character_space.union_zero_is_closed WeakDual.characterSpace.unionZeroIsClosed
+    is_closed_Inter fun x =>
+      is_closed_Inter fun y =>
+        is_closed_eq (eval_continuous _) <| (eval_continuous _).mul (eval_continuous _)
+#align weak_dual.character_space.union_zero_is_closed WeakDual.characterSpace.union_zero_is_closed
 
 end NonUnitalNonAssocSemiring
 
@@ -178,12 +178,12 @@ theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
 
 /-- under suitable mild assumptions on `𝕜`, the character space is a closed set in
 `weak_dual 𝕜 A`. -/
-protected theorem isClosed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] :
+protected theorem is_closed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] :
     IsClosed (characterSpace 𝕜 A) := by
-  rw [eq_set_map_one_map_mul, Set.set_of_and]
-  refine' IsClosed.inter (isClosedEq (eval_continuous _) continuous_const) _
+  rw [eq_set_map_one_map_mul, Set.setOf_and]
+  refine' IsClosed.inter (is_closed_eq (eval_continuous _) continuous_const) _
   simpa only [(union_zero 𝕜 A).symm] using union_zero_is_closed _ _
-#align weak_dual.character_space.is_closed WeakDual.characterSpace.isClosed
+#align weak_dual.character_space.is_closed WeakDual.characterSpace.is_closed
 
 end Unital
 

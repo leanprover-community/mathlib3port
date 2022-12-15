@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.real
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,7 +179,7 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
     exact (abs_nonneg _).trans hx
   by_contra h
   change μ _ ≠ 0 at h
-  simp only [← zero_lt_iff, Set.compl_def, Set.mem_set_of_eq, not_le] at h
+  simp only [← zero_lt_iff, Set.compl_def, Set.mem_setOf_eq, not_le] at h
   suffices (μ { x | ↑R < |(μ[f|m]) x| }).toReal * ↑R < (μ { x | ↑R < |(μ[f|m]) x| }).toReal * ↑R by
     exact this.ne rfl
   refine' lt_of_lt_of_le (set_integral_gt_gt R.coe_nonneg _ _ h.ne.symm) _
@@ -229,7 +229,7 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
                 _).trans
           (zero_le _)⟩
     filter_upwards [@condexp_congr_ae _ _ _ _ _ (ℱ n) m0 μ _ _ hne] with x hx
-    simp only [zero_le', Set.set_of_true, Set.indicator_univ, Pi.zero_apply, hx, condexp_zero]
+    simp only [zero_le', Set.setOf_true, Set.indicator_univ, Pi.zero_apply, hx, condexp_zero]
   obtain ⟨δ, hδ, h⟩ := hg.snorm_indicator_le μ le_rfl Ennreal.one_ne_top hε
   set C : ℝ≥0 := ⟨δ, hδ.le⟩⁻¹ * (snorm g 1 μ).toNnreal with hC
   have hCpos : 0 < C := mul_pos (Nnreal.inv_pos.2 hδ) (Ennreal.to_nnreal_pos hne hg.snorm_lt_top.ne)

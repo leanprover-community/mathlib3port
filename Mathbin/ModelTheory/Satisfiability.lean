@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.satisfiability
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -562,7 +562,7 @@ theorem is_satisfiable [Nonempty M] : (L.completeTheory M).IsSatisfiable :=
   first_order.language.complete_theory.is_satisfiable FirstOrder.Language.completeTheory.is_satisfiable
 
 theorem mem_or_not_mem (φ : L.Sentence) : φ ∈ L.completeTheory M ∨ φ.Not ∈ L.completeTheory M := by
-  simp_rw [complete_theory, Set.mem_set_of_eq, sentence.realize, formula.realize_not, or_not]
+  simp_rw [complete_theory, Set.mem_setOf_eq, sentence.realize, formula.realize_not, or_not]
 #align
   first_order.language.complete_theory.mem_or_not_mem FirstOrder.Language.completeTheory.mem_or_not_mem
 

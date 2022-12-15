@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison, Ainsley Pahljina
 
 ! This file was ported from Lean 3 source module number_theory.lucas_lehmer
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ theorem mersenne_int_ne_zero (p : ℕ) (w : 0 < p) : (2 ^ p - 1 : ℤ) ≠ 0 := 
 theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i := by
   cases i <;> dsimp [s_mod]
   · exact sup_eq_right.mp rfl
-  · apply Int.mod_nonneg
+  · apply Int.emod_nonneg
     exact mersenne_int_ne_zero p w
 #align lucas_lehmer.s_mod_nonneg LucasLehmer.s_mod_nonneg
 
@@ -114,7 +114,7 @@ theorem s_mod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by cases i 
 
 theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 := by
   rw [← s_mod_mod]
-  convert Int.mod_lt _ _
+  convert Int.emod_lt _ _
   · refine' (abs_of_nonneg _).symm
     simp only [sub_nonneg, ge_iff_le]
     exact_mod_cast Nat.one_le_two_pow p
@@ -725,7 +725,7 @@ unsafe def run_test : tactic Unit := do
 
 end LucasLehmer
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
 /-- We verify that the tactic works to prove `127.prime`. -/
 example : (mersenne 7).Prime :=
   lucas_lehmer_sufficiency _ (by norm_num)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.ring.boolean_ring
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -316,7 +316,7 @@ private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a *
 @[simp]
 theorem of_boolalg_symm_diff (a b : AsBoolalg α) : ofBoolalg (a ∆ b) = ofBoolalg a + ofBoolalg b :=
   by 
-  rw [symm_diff_eq_sup_sdiff_inf]
+  rw [symmDiff_eq_sup_sdiff_inf]
   exact of_boolalg_symm_diff_aux _ _
 #align of_boolalg_symm_diff of_boolalg_symm_diff
 
@@ -447,20 +447,20 @@ following data:
 def GeneralizedBooleanAlgebra.toNonUnitalCommRing [GeneralizedBooleanAlgebra α] :
     NonUnitalCommRing α where 
   add := (· ∆ ·)
-  add_assoc := symm_diff_assoc
+  add_assoc := symmDiff_assoc
   zero := ⊥
-  zero_add := bot_symm_diff
-  add_zero := symm_diff_bot
+  zero_add := bot_symmDiff
+  add_zero := symmDiff_bot
   zero_mul _ := bot_inf_eq
   mul_zero _ := inf_bot_eq
   neg := id
-  add_left_neg := symm_diff_self
-  add_comm := symm_diff_comm
+  add_left_neg := symmDiff_self
+  add_comm := symmDiff_comm
   mul := (· ⊓ ·)
   mul_assoc _ _ _ := inf_assoc
   mul_comm _ _ := inf_comm
-  left_distrib := inf_symm_diff_distrib_left
-  right_distrib := inf_symm_diff_distrib_right
+  left_distrib := inf_symmDiff_distrib_left
+  right_distrib := inf_symmDiff_distrib_right
 #align
   generalized_boolean_algebra.to_non_unital_comm_ring GeneralizedBooleanAlgebra.toNonUnitalCommRing
 

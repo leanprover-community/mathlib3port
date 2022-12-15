@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.comm_sq
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ structure CommSq {W X Y Z : C} (f : W ⟶ X) (g : W ⟶ Y) (h : X ⟶ Z) (i : Y 
   w : f ≫ h = g ≫ i
 #align category_theory.comm_sq CategoryTheory.CommSq
 
-attribute [reassoc] comm_sq.w
+attribute [reassoc.1] comm_sq.w
 
 namespace CommSq
 
@@ -210,12 +210,12 @@ noncomputable def lift [hsq : HasLift sq] : B ⟶ X :=
   hsq.exists_lift.some.l
 #align category_theory.comm_sq.lift CategoryTheory.CommSq.lift
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem fac_left [hsq : HasLift sq] : i ≫ sq.lift = f :=
   hsq.exists_lift.some.fac_left
 #align category_theory.comm_sq.fac_left CategoryTheory.CommSq.fac_left
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem fac_right [hsq : HasLift sq] : sq.lift ≫ p = g :=
   hsq.exists_lift.some.fac_right
 #align category_theory.comm_sq.fac_right CategoryTheory.CommSq.fac_right

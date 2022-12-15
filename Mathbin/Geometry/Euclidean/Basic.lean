@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -999,17 +999,17 @@ theorem Concyclic.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (h : Concy
 
 /-- The empty set is concyclic. -/
 theorem concyclicEmpty : Concyclic (∅ : Set P) :=
-  ⟨cosphericalEmpty, coplanarEmpty ℝ P⟩
+  ⟨cosphericalEmpty, coplanar_empty ℝ P⟩
 #align euclidean_geometry.concyclic_empty EuclideanGeometry.concyclicEmpty
 
 /-- A single point is concyclic. -/
 theorem concyclicSingleton (p : P) : Concyclic ({p} : Set P) :=
-  ⟨cosphericalSingleton p, coplanarSingleton ℝ p⟩
+  ⟨cosphericalSingleton p, coplanar_singleton ℝ p⟩
 #align euclidean_geometry.concyclic_singleton EuclideanGeometry.concyclicSingleton
 
 /-- Two points are concyclic. -/
 theorem concyclicPair (p₁ p₂ : P) : Concyclic ({p₁, p₂} : Set P) :=
-  ⟨cosphericalPair p₁ p₂, coplanarPair ℝ p₁ p₂⟩
+  ⟨cosphericalPair p₁ p₂, coplanar_pair ℝ p₁ p₂⟩
 #align euclidean_geometry.concyclic_pair EuclideanGeometry.concyclicPair
 
 end EuclideanGeometry

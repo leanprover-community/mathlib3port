@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot, Yury Kudryashov, Rémy Degenne
 
 ! This file was ported from Lean 3 source module data.set.intervals.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -344,10 +344,10 @@ instance [NoMinOrder α] : NoMinOrder (iic a) :=
     ⟨⟨b, hb.le.trans a.2⟩, hb⟩⟩
 
 instance [NoMaxOrder α] : NoMaxOrder (ioi a) :=
-  OrderDual.no_max_order (iio (toDual a))
+  OrderDual.noMaxOrder (iio (toDual a))
 
 instance [NoMaxOrder α] : NoMaxOrder (ici a) :=
-  OrderDual.no_max_order (iic (toDual a))
+  OrderDual.noMaxOrder (iic (toDual a))
 
 @[simp]
 theorem Icc_eq_empty (h : ¬a ≤ b) : icc a b = ∅ :=
@@ -856,7 +856,7 @@ theorem Ioi_insert : insert a (ioi a) = ici a :=
 
 theorem mem_Ici_Ioi_of_subset_of_subset {s : Set α} (ho : ioi a ⊆ s) (hc : s ⊆ ici a) :
     s ∈ ({ici a, ioi a} : Set (Set α)) :=
-  Classical.by_cases
+  by_cases
     (fun h : a ∈ s =>
       Or.inl <| Subset.antisymm hc <| by rw [← Ioi_union_left, union_subset_iff] <;> simp [*])
     fun h =>
@@ -868,7 +868,7 @@ theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : iio a ⊆ s) (hc : s 
   @mem_Ici_Ioi_of_subset_of_subset αᵒᵈ _ a s ho hc
 #align set.mem_Iic_Iio_of_subset_of_subset Set.mem_Iic_Iio_of_subset_of_subset
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr subset_diff_singleton, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr subset_diff_singleton, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : ioo a b ⊆ s) (hc : s ⊆ icc a b) :
     s ∈ ({icc a b, ico a b, ioc a b, ioo a b} : Set (Set α)) := by
   classical 
@@ -887,7 +887,7 @@ theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : ioo a b ⊆ s
     · refine' Or.inr <| Or.inr <| Or.inr <| subset.antisymm _ ho
       rw [← Ico_diff_left, ← Icc_diff_right]
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr subset_diff_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr subset_diff_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset Set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset
 
 theorem eq_left_or_mem_Ioo_of_mem_Ico {x : α} (hmem : x ∈ ico a b) : x = a ∨ x ∈ ioo a b :=

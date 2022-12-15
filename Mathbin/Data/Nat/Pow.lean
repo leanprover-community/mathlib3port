@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.pow
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,28 +21,20 @@ namespace Nat
 /-! ### `pow` -/
 
 
-/- warning: nat.pow_le_pow_of_le_left -> Nat.pow_le_pow_of_le_left is a dubious translation:
-lean 3 declaration is
-  forall {x : Nat} {y : Nat}, (LE.le.{0} Nat Nat.hasLe x y) -> (forall (i : Nat), LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) y i))
-but is expected to have type
-  forall {x : Nat} {y : Nat}, (LE.le.{0} Nat instLENat x y) -> (forall (i : Nat), LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) y i))
-Case conversion may be inaccurate. Consider using '#align nat.pow_le_pow_of_le_left Nat.pow_le_pow_of_le_leftₓ'. -/
+#print Nat.pow_le_pow_of_le_left /-
 -- This is redundant with `pow_le_pow_of_le_left'`,
 -- We leave a version in the `nat` namespace as well.
 -- (The global `pow_le_pow_of_le_left` needs an extra hypothesis `0 ≤ x`.)
 protected theorem pow_le_pow_of_le_left {x y : ℕ} (H : x ≤ y) : ∀ i : ℕ, x ^ i ≤ y ^ i :=
   pow_le_pow_of_le_left' H
 #align nat.pow_le_pow_of_le_left Nat.pow_le_pow_of_le_left
+-/
 
-/- warning: nat.pow_le_pow_of_le_right -> Nat.pow_le_pow_of_le_right is a dubious translation:
-lean 3 declaration is
-  forall {x : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) x) -> (forall {i : Nat} {j : Nat}, (LE.le.{0} Nat Nat.hasLe i j) -> (LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x j)))
-but is expected to have type
-  forall {x : Nat}, (GT.gt.{0} Nat instLTNat x (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (forall {i : Nat} {j : Nat}, (LE.le.{0} Nat instLENat i j) -> (LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) x j)))
-Case conversion may be inaccurate. Consider using '#align nat.pow_le_pow_of_le_right Nat.pow_le_pow_of_le_rightₓ'. -/
+#print Nat.pow_le_pow_of_le_right /-
 theorem pow_le_pow_of_le_right {x : ℕ} (H : 0 < x) {i j : ℕ} (h : i ≤ j) : x ^ i ≤ x ^ j :=
   pow_le_pow' H h
 #align nat.pow_le_pow_of_le_right Nat.pow_le_pow_of_le_right
+-/
 
 theorem pow_lt_pow_of_lt_left {x y : ℕ} (H : x < y) {i} (h : 0 < i) : x ^ i < y ^ i :=
   pow_lt_pow_of_lt_left H (zero_le _) h

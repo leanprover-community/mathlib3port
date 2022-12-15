@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.linear.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,9 +60,9 @@ restate_axiom linear.smul_comp'
 
 restate_axiom linear.comp_smul'
 
-attribute [simp, reassoc] linear.smul_comp
+attribute [simp, reassoc.1] linear.smul_comp
 
-attribute [reassoc, simp] linear.comp_smul
+attribute [reassoc.1, simp] linear.comp_smul
 
 -- (the linter doesn't like `simp` on the `_assoc` lemma)
 end CategoryTheory

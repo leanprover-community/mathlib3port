@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.normal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ variable (F K)
 
 instance normalSelf : Normal F F :=
   ⟨fun x => is_integral_algebra_map.IsAlgebraic F, fun x =>
-    (minpoly.eq_X_sub_C' x).symm ▸ splitsXSubC _⟩
+    (minpoly.eq_X_sub_C' x).symm ▸ splits_X_sub_C _⟩
 #align normal_self normalSelf
 
 variable {K}
@@ -106,7 +106,7 @@ theorem Normal.towerTopOfNormal [h : Normal F E] : Normal K E :=
     rw [algebra_map_eq F K E] at hhx
     exact
       ⟨is_integral_of_is_scalar_tower hx,
-        Polynomial.splitsOfSplitsOfDvd (algebraMap K E)
+        Polynomial.splits_of_splits_of_dvd (algebraMap K E)
           (Polynomial.map_ne_zero (minpoly.ne_zero hx))
           ((Polynomial.splits_map_iff (algebraMap F K) (algebraMap K E)).mpr hhx)
           (minpoly.dvd_map_of_is_scalar_tower F K x)⟩
@@ -139,9 +139,9 @@ theorem Normal.ofAlgEquiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
     have H := map_is_integral f.to_alg_hom hx
     rw [AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.coe_alg_hom, AlgEquiv.apply_symm_apply] at H
     use H
-    apply Polynomial.splitsOfSplitsOfDvd (algebraMap F E') (minpoly.ne_zero hx)
+    apply Polynomial.splits_of_splits_of_dvd (algebraMap F E') (minpoly.ne_zero hx)
     · rw [← AlgHom.comp_algebra_map f.to_alg_hom]
-      exact Polynomial.splitsCompOfSplits (algebraMap F E) f.to_alg_hom.to_ring_hom hhx
+      exact Polynomial.splits_comp_of_splits (algebraMap F E) f.to_alg_hom.to_ring_hom hhx
     · apply minpoly.dvd _ _
       rw [← AddEquiv.map_eq_zero_iff f.symm.to_add_equiv]
       exact
@@ -170,7 +170,7 @@ theorem Normal.ofIsSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : N
   let D := AdjoinRoot q
   haveI := Fact.mk q_irred
   let pbED := AdjoinRoot.powerBasis q_irred.ne_zero
-  haveI : FiniteDimensional E D := PowerBasis.finiteDimensional pbED
+  haveI : FiniteDimensional E D := PowerBasis.finite_dimensional pbED
   have finrankED : FiniteDimensional.finrank E D = q.nat_degree := PowerBasis.finrank pbED
   letI : Algebra F D := RingHom.toAlgebra ((algebraMap E D).comp (algebraMap F E))
   haveI : IsScalarTower F E D := of_algebra_map_eq fun _ => rfl
@@ -248,14 +248,14 @@ instance normalSupr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i,
     apply Normal.ofIsSplittingField (∏ i in s, minpoly F i.2)
     refine' is_splitting_field_supr _ fun i hi => adjoin_root_set_is_splitting_field _
     · exact finset.prod_ne_zero_iff.mpr fun i hi => minpoly.ne_zero ((h i.1).IsIntegral i.2)
-    · exact Polynomial.splitsCompOfSplits _ (algebraMap (t i.1) K) ((h i.1).Splits i.2)
+    · exact Polynomial.splits_comp_of_splits _ (algebraMap (t i.1) K) ((h i.1).Splits i.2)
   have hE : E ≤ ⨆ i, t i := by
     refine' supr_le fun i => supr_le fun hi => le_supr_of_le i.1 _
     rw [adjoin_le_iff, ← image_root_set ((h i.1).Splits i.2) (t i.1).val]
     exact fun _ ⟨a, _, h⟩ => h ▸ a.2
   have := hF.splits ⟨x, hx⟩
   rw [minpoly_eq, Subtype.coe_mk, ← minpoly_eq] at this
-  exact Polynomial.splitsCompOfSplits _ (inclusion hE).toRingHom this
+  exact Polynomial.splits_comp_of_splits _ (inclusion hE).toRingHom this
 #align intermediate_field.normal_supr IntermediateField.normalSupr
 
 variable {F K} {L : Type _} [Field L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
@@ -387,7 +387,7 @@ noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
         ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _
         (IntermediateField.adjoin_univ _ _) fun x hx =>
         ⟨is_integral_of_is_scalar_tower (h.out x).1,
-          splitsOfSplitsOfDvd _ (map_ne_zero (minpoly.ne_zero (h.out x).1))
+          splits_of_splits_of_dvd _ (map_ne_zero (minpoly.ne_zero (h.out x).1))
             (by 
               rw [splits_map_iff, ← IsScalarTower.algebra_map_eq]
               exact (h.out x).2)
@@ -506,12 +506,12 @@ instance normal [h : Normal F L] : Normal F (normalClosure F K L) := by
         h.splits _)
 #align normal_closure.normal normalClosure.normal
 
-instance isFiniteDimensional [FiniteDimensional F K] : FiniteDimensional F (normalClosure F K L) :=
-  by
+instance is_finite_dimensional [FiniteDimensional F K] :
+    FiniteDimensional F (normalClosure F K L) := by
   haveI : ∀ f : K →ₐ[F] L, FiniteDimensional F f.fieldRange := fun f =>
     f.to_linear_map.finite_dimensional_range
-  apply IntermediateField.finiteDimensionalSuprOfFinite
-#align normal_closure.is_finite_dimensional normalClosure.isFiniteDimensional
+  apply IntermediateField.finite_dimensional_supr_of_finite
+#align normal_closure.is_finite_dimensional normalClosure.is_finite_dimensional
 
 end normalClosure
 

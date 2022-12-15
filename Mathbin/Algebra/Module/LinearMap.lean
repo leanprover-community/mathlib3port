@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.linear_map
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -816,11 +816,11 @@ variable [Module R M] [Module R₂ M₂] [Module R₃ M₃]
 
 variable {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
-variable [Monoid S] [DistribMulAction S M₂] [SmulCommClass R₂ S M₂]
+variable [Monoid S] [DistribMulAction S M₂] [SMulCommClass R₂ S M₂]
 
-variable [Monoid S₃] [DistribMulAction S₃ M₃] [SmulCommClass R₃ S₃ M₃]
+variable [Monoid S₃] [DistribMulAction S₃ M₃] [SMulCommClass R₃ S₃ M₃]
 
-variable [Monoid T] [DistribMulAction T M₂] [SmulCommClass R₂ T M₂]
+variable [Monoid T] [DistribMulAction T M₂] [SMulCommClass R₂ T M₂]
 
 instance : HasSmul S (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a f =>
@@ -837,7 +837,7 @@ theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : ⇑(a • f) = a •
   rfl
 #align linear_map.coe_smul LinearMap.coe_smul
 
-instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
+instance [SMulCommClass S T M₂] : SMulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a b f => ext fun x => smul_comm _ _ _⟩
 
 -- example application of this instance: if S -> T -> R are homomorphisms of commutative rings and
@@ -845,7 +845,7 @@ instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M�
 instance [HasSmul S T] [IsScalarTower S T M₂] :
     IsScalarTower S T (M →ₛₗ[σ₁₂] M₂) where smul_assoc _ _ _ := ext fun _ => smul_assoc _ _ _
 
-instance [DistribMulAction Sᵐᵒᵖ M₂] [SmulCommClass R₂ Sᵐᵒᵖ M₂] [IsCentralScalar S M₂] :
+instance [DistribMulAction Sᵐᵒᵖ M₂] [SMulCommClass R₂ Sᵐᵒᵖ M₂] [IsCentralScalar S M₂] :
     IsCentralScalar S (M →ₛₗ[σ₁₂] M₂) where op_smul_eq_smul a b := ext fun x => op_smul_eq_smul _ _
 
 end HasSmul
@@ -993,11 +993,11 @@ variable {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R �
 
 section HasSmul
 
-variable [Monoid S] [DistribMulAction S M₂] [SmulCommClass R₂ S M₂]
+variable [Monoid S] [DistribMulAction S M₂] [SMulCommClass R₂ S M₂]
 
-variable [Monoid S₃] [DistribMulAction S₃ M₃] [SmulCommClass R₃ S₃ M₃]
+variable [Monoid S₃] [DistribMulAction S₃ M₃] [SMulCommClass R₃ S₃ M₃]
 
-variable [Monoid T] [DistribMulAction T M₂] [SmulCommClass R₂ T M₂]
+variable [Monoid T] [DistribMulAction T M₂] [SMulCommClass R₂ T M₂]
 
 instance :
     DistribMulAction S
@@ -1017,8 +1017,8 @@ theorem smul_comp (a : S₃) (g : M₂ →ₛₗ[σ₂₃] M₃) (f : M →ₛ�
 omit σ₁₃
 
 -- TODO: generalize this to semilinear maps
-theorem comp_smul [Module R M₂] [Module R M₃] [SmulCommClass R S M₂] [DistribMulAction S M₃]
-    [SmulCommClass R S M₃] [CompatibleSmul M₃ M₂ S R] (g : M₃ →ₗ[R] M₂) (a : S) (f : M →ₗ[R] M₃) :
+theorem comp_smul [Module R M₂] [Module R M₃] [SMulCommClass R S M₂] [DistribMulAction S M₃]
+    [SMulCommClass R S M₃] [CompatibleSmul M₃ M₂ S R] (g : M₃ →ₗ[R] M₂) (a : S) (f : M →ₗ[R] M₃) :
     g.comp (a • f) = a • g.comp f :=
   ext fun x => g.map_smul_of_tower _ _
 #align linear_map.comp_smul LinearMap.comp_smul
@@ -1027,7 +1027,7 @@ end HasSmul
 
 section Module
 
-variable [Semiring S] [Module S M₂] [SmulCommClass R₂ S M₂]
+variable [Semiring S] [Module S M₂] [SMulCommClass R₂ S M₂]
 
 instance :
     Module S (M →ₛₗ[σ₁₂]
@@ -1130,20 +1130,20 @@ theorem Module.EndCat.int_cast_apply (z : ℤ) (m : N₁) : (↑z : Module.EndCa
 
 section
 
-variable [Monoid S] [DistribMulAction S M] [SmulCommClass R S M]
+variable [Monoid S] [DistribMulAction S M] [SMulCommClass R S M]
 
 instance Module.EndCat.is_scalar_tower : IsScalarTower S (Module.EndCat R M) (Module.EndCat R M) :=
   ⟨smul_comp⟩
 #align module.End.is_scalar_tower Module.EndCat.is_scalar_tower
 
 instance Module.EndCat.smul_comm_class [HasSmul S R] [IsScalarTower S R M] :
-    SmulCommClass S (Module.EndCat R M) (Module.EndCat R M) :=
+    SMulCommClass S (Module.EndCat R M) (Module.EndCat R M) :=
   ⟨fun s _ _ => (comp_smul _ s _).symm⟩
 #align module.End.smul_comm_class Module.EndCat.smul_comm_class
 
 instance Module.EndCat.smul_comm_class' [HasSmul S R] [IsScalarTower S R M] :
-    SmulCommClass (Module.EndCat R M) S (Module.EndCat R M) :=
-  SmulCommClass.symm _ _ _
+    SMulCommClass (Module.EndCat R M) S (Module.EndCat R M) :=
+  SMulCommClass.symm _ _ _
 #align module.End.smul_comm_class' Module.EndCat.smul_comm_class'
 
 end
@@ -1171,16 +1171,16 @@ protected theorem smul_def (f : Module.EndCat R M) (a : M) : f • a = f a :=
 #align linear_map.smul_def LinearMap.smul_def
 
 /-- `linear_map.apply_module` is faithful. -/
-instance apply_has_faithful_smul : HasFaithfulSmul (Module.EndCat R M) M :=
+instance apply_has_faithful_smul : FaithfulSMul (Module.EndCat R M) M :=
   ⟨fun _ _ => LinearMap.ext⟩
 #align linear_map.apply_has_faithful_smul LinearMap.apply_has_faithful_smul
 
 instance apply_smul_comm_class :
-    SmulCommClass R (Module.EndCat R M) M where smul_comm r e m := (e.map_smul r m).symm
+    SMulCommClass R (Module.EndCat R M) M where smul_comm r e m := (e.map_smul r m).symm
 #align linear_map.apply_smul_comm_class LinearMap.apply_smul_comm_class
 
 instance apply_smul_comm_class' :
-    SmulCommClass (Module.EndCat R M) R M where smul_comm := LinearMap.map_smul
+    SMulCommClass (Module.EndCat R M) R M where smul_comm := LinearMap.map_smul
 #align linear_map.apply_smul_comm_class' LinearMap.apply_smul_comm_class'
 
 instance apply_is_scalar_tower {R M : Type _} [CommSemiring R] [AddCommMonoid M] [Module R M] :
@@ -1199,7 +1199,7 @@ namespace DistribMulAction
 
 variable (R M) [Semiring R] [AddCommMonoid M] [Module R M]
 
-variable [Monoid S] [DistribMulAction S M] [SmulCommClass S R M]
+variable [Monoid S] [DistribMulAction S M] [SMulCommClass S R M]
 
 /-- Each element of the monoid defines a linear map.
 
@@ -1229,7 +1229,7 @@ namespace Module
 
 variable (R M) [Semiring R] [AddCommMonoid M] [Module R M]
 
-variable [Semiring S] [Module S M] [SmulCommClass S R M]
+variable [Semiring S] [Module S M] [SMulCommClass S R M]
 
 /-- Each element of the semiring defines a module endomorphism.
 

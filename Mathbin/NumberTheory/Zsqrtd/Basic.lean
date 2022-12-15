@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ section
 
 parameter {d : ℤ}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
 instance : DecidableEq (ℤ√d) := by
   run_tac
     tactic.mk_dec_eq_instance
@@ -590,7 +590,7 @@ theorem norm_nonneg (hd : d ≤ 0) (n : ℤ√d) : 0 ≤ n.norm :=
 
 theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
   ⟨fun h =>
-    is_unit_iff_dvd_one.2 <|
+    isUnit_iff_dvd_one.2 <|
       (le_total 0 (norm x)).casesOn
         (fun hx =>
           show x ∣ 1 from
@@ -603,7 +603,7 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
             rwa [← Int.coe_nat_inj', Int.ofNat_natAbs_of_nonpos hx, ← @Int.cast_inj (ℤ√d) _ _,
               Int.cast_neg, norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h⟩,
     fun h => by 
-    let ⟨y, hy⟩ := is_unit_iff_dvd_one.1 h
+    let ⟨y, hy⟩ := isUnit_iff_dvd_one.1 h
     have := congr_arg (Int.natAbs ∘ norm) hy
     rw [Function.comp_apply, Function.comp_apply, norm_mul, Int.natAbs_mul, norm_one,
       Int.natAbs_one, eq_comm, Nat.mul_eq_one_iff] at this
@@ -611,7 +611,7 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
 #align zsqrtd.norm_eq_one_iff Zsqrtd.norm_eq_one_iff
 
 theorem is_unit_iff_norm_is_unit {d : ℤ} (z : ℤ√d) : IsUnit z ↔ IsUnit z.norm := by
-  rw [Int.is_unit_iff_nat_abs_eq, norm_eq_one_iff]
+  rw [Int.isUnit_iff_natAbs_eq, norm_eq_one_iff]
 #align zsqrtd.is_unit_iff_norm_is_unit Zsqrtd.is_unit_iff_norm_is_unit
 
 theorem norm_eq_one_iff' {d : ℤ} (hd : d ≤ 0) (z : ℤ√d) : z.norm = 1 ↔ IsUnit z := by
@@ -704,20 +704,20 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
     rcases nonneg_cases hb with ⟨z, w, rfl | rfl | rfl⟩
   · trivial
   · refine' nonnegg_cases_right fun i h => sq_le_of_le _ _ (nonnegg_pos_neg.1 hb)
-    · exact Int.coe_nat_le.1 (le_of_neg_le_neg (@Int.le.intro _ _ y (by simp [add_comm, *])))
+    · exact Int.ofNat_le.1 (le_of_neg_le_neg (@Int.le.intro _ _ y (by simp [add_comm, *])))
     · apply Nat.le_add_left
   · refine' nonnegg_cases_left fun i h => sq_le_of_le _ _ (nonnegg_neg_pos.1 hb)
-    · exact Int.coe_nat_le.1 (le_of_neg_le_neg (@Int.le.intro _ _ x (by simp [add_comm, *])))
+    · exact Int.ofNat_le.1 (le_of_neg_le_neg (@Int.le.intro _ _ x (by simp [add_comm, *])))
     · apply Nat.le_add_left
   · refine' nonnegg_cases_right fun i h => sq_le_of_le _ _ (nonnegg_pos_neg.1 ha)
-    · exact Int.coe_nat_le.1 (le_of_neg_le_neg (@Int.le.intro _ _ w (by simp [*])))
+    · exact Int.ofNat_le.1 (le_of_neg_le_neg (@Int.le.intro _ _ w (by simp [*])))
     · apply Nat.le_add_right
   ·
     simpa [add_comm] using
       nonnegg_pos_neg.2 (sq_le_add (nonnegg_pos_neg.1 ha) (nonnegg_pos_neg.1 hb))
   · exact nonneg_add_lem ha hb
   · refine' nonnegg_cases_left fun i h => sq_le_of_le _ _ (nonnegg_neg_pos.1 ha)
-    · exact Int.coe_nat_le.1 (le_of_neg_le_neg (Int.le.intro h))
+    · exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro h))
     · apply Nat.le_add_right
   · dsimp
     rw [add_comm, add_comm ↑y]
@@ -972,7 +972,7 @@ instance :
       (ℤ√d) where eq_zero_or_eq_zero_of_mul_eq_zero := @Zsqrtd.eq_zero_or_eq_zero_of_mul_eq_zero
 
 instance : IsDomain (ℤ√d) :=
-  NoZeroDivisors.to_is_domain _
+  NoZeroDivisors.toIsDomain _
 
 protected theorem mul_pos (a b : ℤ√d) (a0 : 0 < a) (b0 : 0 < b) : 0 < a * b := fun ab =>
   Or.elim

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology_resolution
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -560,17 +560,17 @@ theorem ε_to_single₀_comp_eq :
 #align
   group_cohomology.resolution.ε_to_single₀_comp_eq GroupCohomology.resolution.ε_to_single₀_comp_eq
 
-theorem quasi_iso_of_forget₂_ε_to_single₀ :
+theorem quasiIsoOfForget₂εToSingle₀ :
     QuasiIso (((forget₂ _ (ModuleCat.{u} k)).mapHomologicalComplex _).map (εToSingle₀ k G)) := by
-  have h : QuasiIso (forget₂_to_Module_homotopy_equiv k G).hom := HomotopyEquiv.to_quasi_iso _
+  have h : QuasiIso (forget₂_to_Module_homotopy_equiv k G).hom := HomotopyEquiv.toQuasiIso _
   rw [← ε_to_single₀_comp_eq k G] at h
   haveI := h
-  exact quasi_iso_of_comp_right _ ((ChainComplex.single₀MapHomologicalComplex _).hom.app _)
+  exact quasiIsoOfCompRight _ ((ChainComplex.single₀MapHomologicalComplex _).hom.app _)
 #align
-  group_cohomology.resolution.quasi_iso_of_forget₂_ε_to_single₀ GroupCohomology.resolution.quasi_iso_of_forget₂_ε_to_single₀
+  group_cohomology.resolution.quasi_iso_of_forget₂_ε_to_single₀ GroupCohomology.resolution.quasiIsoOfForget₂εToSingle₀
 
 instance : QuasiIso (εToSingle₀ k G) :=
-  (forget₂ _ (ModuleCat.{u} k)).quasi_iso_of_map_quasi_iso _ (quasi_iso_of_forget₂_ε_to_single₀ k G)
+  (forget₂ _ (ModuleCat.{u} k)).quasiIsoOfMapQuasiIso _ (quasiIsoOfForget₂εToSingle₀ k G)
 
 end Exactness
 

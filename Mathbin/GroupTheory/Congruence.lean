@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.congruence
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1090,8 +1090,8 @@ protected theorem div : ∀ {w x y z}, c w x → c y z → c (w / y) (x / z) := 
 /-- Multiplicative congruence relations preserve integer powers. -/
 @[to_additive AddCon.zsmul "Additive congruence relations preserve integer scaling."]
 protected theorem zpow : ∀ (n : ℤ) {w x}, c w x → c (w ^ n) (x ^ n)
-  | Int.ofNat n, w, x, h => by simpa only [zpow_of_nat] using c.pow _ h
-  | -[n+1], w, x, h => by simpa only [zpow_neg_succ_of_nat] using c.inv (c.pow _ h)
+  | Int.ofNat n, w, x, h => by simpa only [zpow_ofNat] using c.pow _ h
+  | -[n+1], w, x, h => by simpa only [zpow_negSucc] using c.inv (c.pow _ h)
 #align con.zpow Con.zpow
 
 /-- The inversion induced on the quotient by a congruence relation on a type with a

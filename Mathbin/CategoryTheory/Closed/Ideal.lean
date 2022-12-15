@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.ideal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,9 +108,9 @@ variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₁} D]
 
 variable (i : D ⥤ C)
 
-theorem reflective_products [HasFiniteProducts C] [Reflective i] : HasFiniteProducts D :=
-  ⟨fun n => has_limits_of_shape_of_reflective i⟩
-#align category_theory.reflective_products CategoryTheory.reflective_products
+theorem reflectiveProducts [HasFiniteProducts C] [Reflective i] : HasFiniteProducts D :=
+  ⟨fun n => hasLimitsOfShapeOfReflective i⟩
+#align category_theory.reflective_products CategoryTheory.reflectiveProducts
 
 attribute [local instance] reflective_products
 

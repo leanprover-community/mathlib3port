@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module probability.strong_law
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -346,7 +346,7 @@ theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg
         exact Set.mem_Union.2 ⟨N, hω, hN⟩
       ·
         simp (config := { contextual := true }) only [Set.mem_Ioc, Set.mem_Ioi,
-          Set.Union_subset_iff, Set.set_of_subset_set_of, imp_true_iff]
+          Set.Union_subset_iff, Set.setOf_subset_setOf, imp_true_iff]
     rw [this]
     apply tendsto_measure_Union
     intro m n hmn x hx

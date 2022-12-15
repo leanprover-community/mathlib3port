@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.finite.polynomial
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -199,7 +199,7 @@ variable [CommRing K]
 
 noncomputable instance decidableRestrictDegree (m : ℕ) :
     DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) := by
-  simp only [Set.mem_set_of_eq] <;> infer_instance
+  simp only [Set.mem_setOf_eq] <;> infer_instance
 #align mv_polynomial.decidable_restrict_degree MvPolynomial.decidableRestrictDegree
 
 end CommRing

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.commuting_probability
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ variable {M}
 theorem comm_prob_eq_one_iff [h : Nonempty M] :
     commProb M = 1 ↔ Commutative ((· * ·) : M → M → M) := by
   haveI := Fintype.ofFinite M
-  rw [commProb, ← Set.coe_set_of, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
+  rw [commProb, ← Set.coe_setOf, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
   rw [div_eq_one_iff_eq, ← Nat.cast_pow, Nat.cast_inj, sq, ← card_prod,
     set_fintype_card_eq_univ_iff, Set.eq_univ_iff_forall]
   · exact ⟨fun h x y => h (x, y), fun h x => h x.1 x.2⟩

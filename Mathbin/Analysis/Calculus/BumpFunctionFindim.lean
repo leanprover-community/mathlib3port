@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.bump_function_findim
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,10 +62,10 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
     rw [tsupport, ← Euclidean.closure_ball _ d_pos.ne']
     exact closure_mono f_supp
   refine' ⟨f, f_tsupp.trans hd, _, _, _, _⟩
-  · refine' is_compact_of_is_closed_bounded isClosedClosure _
+  · refine' is_compact_of_is_closed_bounded is_closed_closure _
     have : bounded (Euclidean.closedBall x d) := euclidean.is_compact_closed_ball.bounded
     apply this.mono _
-    refine' (IsClosed.closure_subset_iff Euclidean.isClosedClosedBall).2 _
+    refine' (IsClosed.closure_subset_iff Euclidean.is_closed_closed_ball).2 _
     exact f_supp.trans Euclidean.ball_subset_closed_ball
   · apply c.cont_diff.comp
     exact ContinuousLinearEquiv.contDiff _

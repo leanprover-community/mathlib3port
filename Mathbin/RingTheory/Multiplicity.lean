@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.multiplicity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -314,7 +314,7 @@ theorem is_unit_right {a b : α} (ha : ¬IsUnit a) (hb : IsUnit b) : multiplicit
   eq_coe_iff.2
     ⟨show a ^ 0 ∣ b by simp only [pow_zero, one_dvd], by
       rw [pow_one]
-      exact fun h => mt (is_unit_of_dvd_unit h) ha hb⟩
+      exact fun h => mt (isUnit_of_dvd_unit h) ha hb⟩
 #align multiplicity.is_unit_right multiplicity.is_unit_right
 
 theorem one_right {a : α} (ha : ¬IsUnit a) : multiplicity a 1 = 0 :=
@@ -530,7 +530,7 @@ theorem finite_mul_iff {p a b : α} (hp : Prime p) : Finite p (a * b) ↔ Finite
 #align multiplicity.finite_mul_iff multiplicity.finite_mul_iff
 
 theorem finite_pow {p a : α} (hp : Prime p) : ∀ {k : ℕ} (ha : Finite p a), Finite p (a ^ k)
-  | 0, ha => ⟨0, by simp [mt is_unit_iff_dvd_one.2 hp.2.1]⟩
+  | 0, ha => ⟨0, by simp [mt isUnit_iff_dvd_one.2 hp.2.1]⟩
   | k + 1, ha => by rw [pow_succ] <;> exact finite_mul hp ha (finite_pow ha)
 #align multiplicity.finite_pow multiplicity.finite_pow
 
@@ -543,7 +543,7 @@ theorem multiplicity_self {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : multiplic
     eq_coe_iff.2
       ⟨by simp, fun ⟨b, hb⟩ =>
         ha
-          (is_unit_iff_dvd_one.2
+          (isUnit_iff_dvd_one.2
             ⟨b,
               mul_left_cancel₀ ha0 <| by 
                 clear _fun_match
@@ -558,7 +558,7 @@ theorem get_multiplicity_self {a : α} (ha : Finite a a) : get (multiplicity a a
         rw [← mul_one a, pow_add, pow_one, mul_assoc, mul_assoc,
             mul_right_inj' (ne_zero_of_finite ha)] at hb <;>
           exact
-            mt is_unit_iff_dvd_one.2 (not_unit_of_finite ha) ⟨b, by clear _fun_match <;> simp_all⟩⟩)
+            mt isUnit_iff_dvd_one.2 (not_unit_of_finite ha) ⟨b, by clear _fun_match <;> simp_all⟩⟩)
 #align multiplicity.get_multiplicity_self multiplicity.get_multiplicity_self
 
 protected theorem mul' {p a b : α} (hp : Prime p) (h : (multiplicity p (a * b)).Dom) :

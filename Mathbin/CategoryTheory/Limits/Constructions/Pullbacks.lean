@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.pullbacks
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,8 +28,8 @@ namespace CategoryTheory.Limits
 
 /-- If the product `X ⨯ Y` and the equalizer of `π₁ ≫ f` and `π₂ ≫ g` exist, then the
     pullback of `f` and `g` exists: It is given by composing the equalizer with the projections. -/
-theorem has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair {C : Type u}
-    [𝒞 : Category.{v} C] {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasLimit (pair X Y)]
+theorem hasLimitCospanOfHasLimitPairOfHasLimitParallelPair {C : Type u} [𝒞 : Category.{v} C]
+    {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasLimit (pair X Y)]
     [HasLimit (parallelPair (Prod.fst ≫ f) (Prod.snd ≫ g))] : HasLimit (cospan f g) :=
   let π₁ : X ⨯ Y ⟶ X := prod.fst
   let π₂ : X ⨯ Y ⟶ Y := prod.snd
@@ -51,7 +51,7 @@ theorem has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair {C : Type 
           · simpa using h₁
           · simpa using h₂ }
 #align
-  category_theory.limits.has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair CategoryTheory.Limits.has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair
+  category_theory.limits.has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair CategoryTheory.Limits.hasLimitCospanOfHasLimitPairOfHasLimitParallelPair
 
 section
 
@@ -62,7 +62,7 @@ attribute [local instance] has_limit_cospan_of_has_limit_pair_of_has_limit_paral
     pullbacks. -/
 theorem has_pullbacks_of_has_binary_products_of_has_equalizers (C : Type u) [𝒞 : Category.{v} C]
     [HasBinaryProducts C] [HasEqualizers C] : HasPullbacks C :=
-  { HasLimit := fun F => has_limit_of_iso (diagramIsoCospan F).symm }
+  { HasLimit := fun F => hasLimitOfIso (diagramIsoCospan F).symm }
 #align
   category_theory.limits.has_pullbacks_of_has_binary_products_of_has_equalizers CategoryTheory.Limits.has_pullbacks_of_has_binary_products_of_has_equalizers
 
@@ -70,8 +70,8 @@ end
 
 /-- If the coproduct `Y ⨿ Z` and the coequalizer of `f ≫ ι₁` and `g ≫ ι₂` exist, then the
     pushout of `f` and `g` exists: It is given by composing the inclusions with the coequalizer. -/
-theorem has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair {C : Type u}
-    [𝒞 : Category.{v} C] {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) [HasColimit (pair Y Z)]
+theorem hasColimitSpanOfHasColimitPairOfHasColimitParallelPair {C : Type u} [𝒞 : Category.{v} C]
+    {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) [HasColimit (pair Y Z)]
     [HasColimit (parallelPair (f ≫ coprod.inl) (g ≫ coprod.inr))] : HasColimit (span f g) :=
   let ι₁ : Y ⟶ Y ⨿ Z := coprod.inl
   let ι₂ : Z ⟶ Y ⨿ Z := coprod.inr
@@ -94,7 +94,7 @@ theorem has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair {C : T
           · simpa using h₁
           · simpa using h₂ }
 #align
-  category_theory.limits.has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair CategoryTheory.Limits.has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair
+  category_theory.limits.has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair CategoryTheory.Limits.hasColimitSpanOfHasColimitPairOfHasColimitParallelPair
 
 section
 

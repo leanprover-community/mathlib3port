@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.algebra.constructions
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem inducing_embed_product : Inducing (embedProduct M) :=
 
 @[to_additive]
 theorem embedding_embed_product : Embedding (embedProduct M) :=
-  ⟨inducing_embed_product, embed_product_injective M⟩
+  ⟨inducing_embed_product, embedProduct_injective M⟩
 #align units.embedding_embed_product Units.embedding_embed_product
 
 @[to_additive]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.least_greatest
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,6 +42,7 @@ integer numbers, least element, greatest element
 
 namespace Int
 
+#print Int.leastOfBdd /-
 /-- A computable version of `exists_least_of_bdd`: given a decidable predicate on the
 integers, with an explicit lower bound and a proof that it is somewhere true, return
 the least value for which the predicate is true. -/
@@ -53,297 +54,38 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
     | _, ⟨n, rfl⟩, Hn => ⟨n, Hn⟩
   ⟨b + (Nat.find EX : ℤ), Nat.find_spec EX, fun z h =>
     match z, le.dest (Hb _ h), h with
-    | _, ⟨n, rfl⟩, h => add_le_add_left (Int.coe_nat_le.2 <| Nat.find_min' _ h) _⟩
+    | _, ⟨n, rfl⟩, h => add_le_add_left (Int.ofNat_le.2 <| Nat.find_min' _ h) _⟩
 #align int.least_of_bdd Int.leastOfBdd
+-/
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment
-        "/--"
-        "If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded below and nonempty,\nthen this set has the least element. This lemma uses classical logic to avoid assumption\n`[decidable_pred P]`. See `int.least_of_bdd` for a constructive counterpart. -/")]
-      []
-      []
-      []
-      []
-      [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `exists_least_of_bdd [])
-      (Command.declSig
-       [(Term.implicitBinder "{" [`P] [":" (Term.arrow (termℤ "ℤ") "→" (Term.prop "Prop"))] "}")
-        (Term.explicitBinder
-         "("
-         [`Hbdd]
-         [":"
-          («term∃_,_»
-           "∃"
-           (Lean.explicitBinders
-            (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
-           ","
-           (Term.forall
-            "∀"
-            [`z]
-            [(Term.typeSpec ":" (termℤ "ℤ"))]
-            ","
-            (Term.arrow (Term.app `P [`z]) "→" («term_≤_» `b "≤" `z))))]
-         []
-         ")")
-        (Term.explicitBinder
-         "("
-         [`Hinh]
-         [":"
-          («term∃_,_»
-           "∃"
-           (Lean.explicitBinders
-            (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] [":" (termℤ "ℤ")]))
-           ","
-           (Term.app `P [`z]))]
-         []
-         ")")]
-       (Term.typeSpec
-        ":"
-        («term∃_,_»
-         "∃"
-         (Lean.explicitBinders
-          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `lb)] [":" (termℤ "ℤ")]))
-         ","
-         («term_∧_»
-          (Term.app `P [`lb])
-          "∧"
-          (Term.forall
-           "∀"
-           [`z]
-           [(Term.typeSpec ":" (termℤ "ℤ"))]
-           ","
-           (Term.arrow (Term.app `P [`z]) "→" («term_≤_» `lb "≤" `z)))))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Tactic.exact
-             "exact"
-             (Term.let
-              "let"
-              (Term.letDecl
-               (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-              []
-              (Term.let
-               "let"
-               (Term.letDecl
-                (Term.letPatDecl
-                 (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-                 []
-                 []
-                 ":="
-                 (Term.app `least_of_bdd [`b `Hb `Hinh])))
-               []
-               (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")))))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.exact
-            "exact"
-            (Term.let
-             "let"
-             (Term.letDecl
-              (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-             []
-             (Term.let
-              "let"
-              (Term.letDecl
-               (Term.letPatDecl
-                (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-                []
-                []
-                ":="
-                (Term.app `least_of_bdd [`b `Hb `Hinh])))
-              []
-              (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")))))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.exact
-        "exact"
-        (Term.let
-         "let"
-         (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-         []
-         (Term.let
-          "let"
-          (Term.letDecl
-           (Term.letPatDecl
-            (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-            []
-            []
-            ":="
-            (Term.app `least_of_bdd [`b `Hb `Hinh])))
-          []
-          (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact
-       "exact"
-       (Term.let
-        "let"
-        (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-        []
-        (Term.let
-         "let"
-         (Term.letDecl
-          (Term.letPatDecl
-           (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-           []
-           []
-           ":="
-           (Term.app `least_of_bdd [`b `Hb `Hinh])))
-         []
-         (Term.anonymousCtor "⟨" [`lb "," `H] "⟩"))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.let
-       "let"
-       (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-       []
-       (Term.let
-        "let"
-        (Term.letDecl
-         (Term.letPatDecl
-          (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-          []
-          []
-          ":="
-          (Term.app `least_of_bdd [`b `Hb `Hinh])))
-        []
-        (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.let
-       "let"
-       (Term.letDecl
-        (Term.letPatDecl
-         (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-         []
-         []
-         ":="
-         (Term.app `least_of_bdd [`b `Hb `Hinh])))
-       []
-       (Term.anonymousCtor "⟨" [`lb "," `H] "⟩"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `lb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `least_of_bdd [`b `Hb `Hinh])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Hinh
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `Hb
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `b
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `least_of_bdd
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `lb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Hbdd
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Hb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `b
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-    If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded below and nonempty,
-    then this set has the least element. This lemma uses classical logic to avoid assumption
-    `[decidable_pred P]`. See `int.least_of_bdd` for a constructive counterpart. -/
-  theorem
-    exists_least_of_bdd
-    { P : ℤ → Prop } ( Hbdd : ∃ b : ℤ , ∀ z : ℤ , P z → b ≤ z ) ( Hinh : ∃ z : ℤ , P z )
-      : ∃ lb : ℤ , P lb ∧ ∀ z : ℤ , P z → lb ≤ z
-    := by skip <;> exact let ⟨ b , Hb ⟩ := Hbdd let ⟨ lb , H ⟩ := least_of_bdd b Hb Hinh ⟨ lb , H ⟩
+/- warning: int.exists_least_of_bdd -> Int.exists_least_of_bdd is a dubious translation:
+lean 3 declaration is
+  forall {P : Int -> Prop}, (Exists.{1} Int (fun (b : Int) => forall (z : Int), (P z) -> (LE.le.{0} Int Int.hasLe b z))) -> (Exists.{1} Int (fun (z : Int) => P z)) -> (Exists.{1} Int (fun (lb : Int) => And (P lb) (forall (z : Int), (P z) -> (LE.le.{0} Int Int.hasLe lb z))))
+but is expected to have type
+  forall {P : Int -> Prop} [Hbdd : DecidablePred.{1} Int P], (Exists.{1} Int (fun (z : Int) => forall (z_1 : Int), (P z_1) -> (LE.le.{0} Int Int.instLEInt z z_1))) -> (Exists.{1} Int (fun (z : Int) => P z)) -> (Exists.{1} Int (fun (lb : Int) => And (P lb) (forall (z : Int), (P z) -> (LE.le.{0} Int Int.instLEInt lb z))))
+Case conversion may be inaccurate. Consider using '#align int.exists_least_of_bdd Int.exists_least_of_bddₓ'. -/
+/-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded below and nonempty,
+then this set has the least element. This lemma uses classical logic to avoid assumption
+`[decidable_pred P]`. See `int.least_of_bdd` for a constructive counterpart. -/
+theorem exists_least_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : ℤ, P z → b ≤ z)
+    (Hinh : ∃ z : ℤ, P z) : ∃ lb : ℤ, P lb ∧ ∀ z : ℤ, P z → lb ≤ z := by
+  classical exact
+      let ⟨b, Hb⟩ := Hbdd
+      let ⟨lb, H⟩ := least_of_bdd b Hb Hinh
+      ⟨lb, H⟩
 #align int.exists_least_of_bdd Int.exists_least_of_bdd
 
-theorem coe_least_of_bdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb : ∀ z : ℤ, P z → b ≤ z)
+#print Int.coe_leastOfBdd_eq /-
+theorem coe_leastOfBdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb : ∀ z : ℤ, P z → b ≤ z)
     (Hb' : ∀ z : ℤ, P z → b' ≤ z) (Hinh : ∃ z : ℤ, P z) :
     (leastOfBdd b Hb Hinh : ℤ) = leastOfBdd b' Hb' Hinh := by
   rcases least_of_bdd b Hb Hinh with ⟨n, hn, h2n⟩
   rcases least_of_bdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
   exact le_antisymm (h2n _ hn') (h2n' _ hn)
-#align int.coe_least_of_bdd_eq Int.coe_least_of_bdd_eq
+#align int.coe_least_of_bdd_eq Int.coe_leastOfBdd_eq
+-/
 
+#print Int.greatestOfBdd /-
 /-- A computable version of `exists_greatest_of_bdd`: given a decidable predicate on the
 integers, with an explicit upper bound and a proof that it is somewhere true, return
 the greatest value for which the predicate is true. -/
@@ -356,296 +98,34 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
   let ⟨lb, Plb, al⟩ := leastOfBdd (-b) Hbdd' Hinh'
   ⟨-lb, Plb, fun z h => le_neg.1 <| al _ <| by rwa [neg_neg]⟩
 #align int.greatest_of_bdd Int.greatestOfBdd
+-/
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment
-        "/--"
-        "If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded above and nonempty,\nthen this set has the greatest element. This lemma uses classical logic to avoid assumption\n`[decidable_pred P]`. See `int.greatest_of_bdd` for a constructive counterpart. -/")]
-      []
-      []
-      []
-      []
-      [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `exists_greatest_of_bdd [])
-      (Command.declSig
-       [(Term.implicitBinder "{" [`P] [":" (Term.arrow (termℤ "ℤ") "→" (Term.prop "Prop"))] "}")
-        (Term.explicitBinder
-         "("
-         [`Hbdd]
-         [":"
-          («term∃_,_»
-           "∃"
-           (Lean.explicitBinders
-            (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
-           ","
-           (Term.forall
-            "∀"
-            [`z]
-            [(Term.typeSpec ":" (termℤ "ℤ"))]
-            ","
-            (Term.arrow (Term.app `P [`z]) "→" («term_≤_» `z "≤" `b))))]
-         []
-         ")")
-        (Term.explicitBinder
-         "("
-         [`Hinh]
-         [":"
-          («term∃_,_»
-           "∃"
-           (Lean.explicitBinders
-            (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] [":" (termℤ "ℤ")]))
-           ","
-           (Term.app `P [`z]))]
-         []
-         ")")]
-       (Term.typeSpec
-        ":"
-        («term∃_,_»
-         "∃"
-         (Lean.explicitBinders
-          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ub)] [":" (termℤ "ℤ")]))
-         ","
-         («term_∧_»
-          (Term.app `P [`ub])
-          "∧"
-          (Term.forall
-           "∀"
-           [`z]
-           [(Term.typeSpec ":" (termℤ "ℤ"))]
-           ","
-           (Term.arrow (Term.app `P [`z]) "→" («term_≤_» `z "≤" `ub)))))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (Tactic.exact
-             "exact"
-             (Term.let
-              "let"
-              (Term.letDecl
-               (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-              []
-              (Term.let
-               "let"
-               (Term.letDecl
-                (Term.letPatDecl
-                 (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-                 []
-                 []
-                 ":="
-                 (Term.app `greatest_of_bdd [`b `Hb `Hinh])))
-               []
-               (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")))))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.exact
-            "exact"
-            (Term.let
-             "let"
-             (Term.letDecl
-              (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-             []
-             (Term.let
-              "let"
-              (Term.letDecl
-               (Term.letPatDecl
-                (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-                []
-                []
-                ":="
-                (Term.app `greatest_of_bdd [`b `Hb `Hinh])))
-              []
-              (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")))))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.exact
-        "exact"
-        (Term.let
-         "let"
-         (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-         []
-         (Term.let
-          "let"
-          (Term.letDecl
-           (Term.letPatDecl
-            (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-            []
-            []
-            ":="
-            (Term.app `greatest_of_bdd [`b `Hb `Hinh])))
-          []
-          (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact
-       "exact"
-       (Term.let
-        "let"
-        (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-        []
-        (Term.let
-         "let"
-         (Term.letDecl
-          (Term.letPatDecl
-           (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-           []
-           []
-           ":="
-           (Term.app `greatest_of_bdd [`b `Hb `Hinh])))
-         []
-         (Term.anonymousCtor "⟨" [`lb "," `H] "⟩"))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.let
-       "let"
-       (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
-       []
-       (Term.let
-        "let"
-        (Term.letDecl
-         (Term.letPatDecl
-          (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-          []
-          []
-          ":="
-          (Term.app `greatest_of_bdd [`b `Hb `Hinh])))
-        []
-        (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.let
-       "let"
-       (Term.letDecl
-        (Term.letPatDecl
-         (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-         []
-         []
-         ":="
-         (Term.app `greatest_of_bdd [`b `Hb `Hinh])))
-       []
-       (Term.anonymousCtor "⟨" [`lb "," `H] "⟩"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `lb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `greatest_of_bdd [`b `Hb `Hinh])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Hinh
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `Hb
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `b
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `greatest_of_bdd
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `lb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Hbdd
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Hb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `b
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-    If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded above and nonempty,
-    then this set has the greatest element. This lemma uses classical logic to avoid assumption
-    `[decidable_pred P]`. See `int.greatest_of_bdd` for a constructive counterpart. -/
-  theorem
-    exists_greatest_of_bdd
-    { P : ℤ → Prop } ( Hbdd : ∃ b : ℤ , ∀ z : ℤ , P z → z ≤ b ) ( Hinh : ∃ z : ℤ , P z )
-      : ∃ ub : ℤ , P ub ∧ ∀ z : ℤ , P z → z ≤ ub
-    :=
-      by
-        skip <;> exact let ⟨ b , Hb ⟩ := Hbdd let ⟨ lb , H ⟩ := greatest_of_bdd b Hb Hinh ⟨ lb , H ⟩
+/- warning: int.exists_greatest_of_bdd -> Int.exists_greatest_of_bdd is a dubious translation:
+lean 3 declaration is
+  forall {P : Int -> Prop}, (Exists.{1} Int (fun (b : Int) => forall (z : Int), (P z) -> (LE.le.{0} Int Int.hasLe z b))) -> (Exists.{1} Int (fun (z : Int) => P z)) -> (Exists.{1} Int (fun (ub : Int) => And (P ub) (forall (z : Int), (P z) -> (LE.le.{0} Int Int.hasLe z ub))))
+but is expected to have type
+  forall {P : Int -> Prop} [Hbdd : DecidablePred.{1} Int P], (Exists.{1} Int (fun (z : Int) => forall (z_1 : Int), (P z_1) -> (LE.le.{0} Int Int.instLEInt z_1 z))) -> (Exists.{1} Int (fun (z : Int) => P z)) -> (Exists.{1} Int (fun (ub : Int) => And (P ub) (forall (z : Int), (P z) -> (LE.le.{0} Int Int.instLEInt z ub))))
+Case conversion may be inaccurate. Consider using '#align int.exists_greatest_of_bdd Int.exists_greatest_of_bddₓ'. -/
+/-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded above and nonempty,
+then this set has the greatest element. This lemma uses classical logic to avoid assumption
+`[decidable_pred P]`. See `int.greatest_of_bdd` for a constructive counterpart. -/
+theorem exists_greatest_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : ℤ, P z → z ≤ b)
+    (Hinh : ∃ z : ℤ, P z) : ∃ ub : ℤ, P ub ∧ ∀ z : ℤ, P z → z ≤ ub := by
+  classical exact
+      let ⟨b, Hb⟩ := Hbdd
+      let ⟨lb, H⟩ := greatest_of_bdd b Hb Hinh
+      ⟨lb, H⟩
 #align int.exists_greatest_of_bdd Int.exists_greatest_of_bdd
 
-theorem coe_greatest_of_bdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ}
-    (Hb : ∀ z : ℤ, P z → z ≤ b) (Hb' : ∀ z : ℤ, P z → z ≤ b') (Hinh : ∃ z : ℤ, P z) :
+#print Int.coe_greatestOfBdd_eq /-
+theorem coe_greatestOfBdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb : ∀ z : ℤ, P z → z ≤ b)
+    (Hb' : ∀ z : ℤ, P z → z ≤ b') (Hinh : ∃ z : ℤ, P z) :
     (greatestOfBdd b Hb Hinh : ℤ) = greatestOfBdd b' Hb' Hinh := by
   rcases greatest_of_bdd b Hb Hinh with ⟨n, hn, h2n⟩
   rcases greatest_of_bdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
   exact le_antisymm (h2n' _ hn) (h2n _ hn')
-#align int.coe_greatest_of_bdd_eq Int.coe_greatest_of_bdd_eq
+#align int.coe_greatest_of_bdd_eq Int.coe_greatestOfBdd_eq
+-/
 
 end Int
 

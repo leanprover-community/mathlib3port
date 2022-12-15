@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -748,7 +748,8 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
     by 
     intro t ht
     set B := ⋃ (p : α × ℝ) (hp : p ∈ t), closed_ball p.1 p.2 with hB
-    have B_closed : IsClosed B := isClosedBUnion (Finset.finite_to_set _) fun i hi => is_closed_ball
+    have B_closed : IsClosed B :=
+      is_closed_bUnion (Finset.finite_to_set _) fun i hi => is_closed_ball
     set s' := s \ B with hs'
     have : ∀ x ∈ s', ∃ r ∈ f x ∩ Ioo 0 1, Disjoint B (closed_ball x r) := by
       intro x hx
@@ -966,8 +967,8 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite �
 #align
   besicovitch.exists_disjoint_closed_ball_covering_ae Besicovitch.exists_disjoint_closed_ball_covering_ae
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (U «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (v «expr ⊇ » s') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ⊇ » s') -/
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
 add up to at most `μ s + ε`, for any positive `ε`. This works even if one restricts the set of
 allowed radii around a point `x` to a set `f x` which accumulates at `0`. -/

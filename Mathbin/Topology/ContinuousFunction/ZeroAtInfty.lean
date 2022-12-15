@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -359,8 +359,8 @@ instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSe
     rw [← smul_eq_mul, ← smul_eq_mul, smul_assoc]
 
 instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSemiring β]
-    [Module R β] [HasContinuousConstSmul R β] [SmulCommClass R β β] :
-    SmulCommClass R C₀(α, β)
+    [Module R β] [HasContinuousConstSmul R β] [SMulCommClass R β β] :
+    SMulCommClass R C₀(α, β)
       C₀(α, β) where smul_comm r f g := by 
     ext
     simp only [smul_eq_mul, coe_smul, coe_mul, Pi.smul_apply, Pi.mul_apply]
@@ -464,7 +464,7 @@ theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → C₀(α, β)} {f
 theorem isometryToBcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by tauto
 #align zero_at_infty_continuous_map.isometry_to_bcf ZeroAtInftyContinuousMap.isometryToBcf
 
-theorem closedRangeToBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ β)) := by
+theorem closed_range_to_bcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ β)) := by
   refine' is_closed_iff_cluster_pt.mpr fun f hf => _
   rw [cluster_pt_principal_iff] at hf
   have : tendsto f (cocompact α) (𝓝 0) := by
@@ -482,13 +482,13 @@ theorem closedRangeToBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ �
     ⟨⟨f.to_continuous_map, this⟩, by 
       ext
       rfl⟩
-#align zero_at_infty_continuous_map.closed_range_to_bcf ZeroAtInftyContinuousMap.closedRangeToBcf
+#align zero_at_infty_continuous_map.closed_range_to_bcf ZeroAtInftyContinuousMap.closed_range_to_bcf
 
 /-- Continuous functions vanishing at infinity taking values in a complete space form a
 complete space. -/
 instance [CompleteSpace β] : CompleteSpace C₀(α, β) :=
   (complete_space_iff_is_complete_range isometryToBcf.UniformInducing).mpr
-    closedRangeToBcf.IsComplete
+    closed_range_to_bcf.IsComplete
 
 end Metric
 

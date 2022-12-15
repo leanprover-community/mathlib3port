@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.euclidean_domain.instances
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,9 +37,9 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
     R := fun a b => a.natAbs < b.natAbs
     r_well_founded := measure_wf fun a => Int.natAbs a
     remainder_lt := fun a b b0 =>
-      Int.coe_nat_lt.1 <| by
-        rw [Int.natAbs_of_nonneg (Int.mod_nonneg _ b0), ← Int.abs_eq_nat_abs]
-        exact Int.mod_lt _ b0
+      Int.ofNat_lt.1 <| by
+        rw [Int.natAbs_of_nonneg (Int.emod_nonneg _ b0), ← Int.abs_eq_natAbs]
+        exact Int.emod_lt _ b0
     mul_left_not_lt := fun a b b0 =>
       not_lt_of_ge <| by 
         rw [← mul_one a.nat_abs, Int.natAbs_mul]

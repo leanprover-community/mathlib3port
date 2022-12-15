@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.krein_milman
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
   · exact ⟨s, ⟨hsnemp, hscomp.is_closed, IsExtreme.rfl⟩, fun _ => False.elim⟩
   refine'
     ⟨⋂₀ F,
-      ⟨_, isClosedSInter fun t ht => (hFS ht).2.1,
+      ⟨_, is_closed_sInter fun t ht => (hFS ht).2.1,
         (is_extreme_sInter hFnemp) fun t ht => (hFS ht).2.2⟩,
       fun t ht => sInter_subset_of_mem ht⟩
   haveI : Nonempty ↥F := hFnemp.to_subtype
@@ -107,7 +107,7 @@ theorem closure_convex_hull_extreme_points (hscomp : IsCompact s) (hAconv : Conv
   by_contra hs
   obtain ⟨x, hxA, hxt⟩ := not_subset.1 hs
   obtain ⟨l, r, hlr, hrx⟩ :=
-    geometric_hahn_banach_closed_point (convex_convex_hull _ _).closure isClosedClosure hxt
+    geometric_hahn_banach_closed_point (convex_convex_hull _ _).closure is_closed_closure hxt
   have h : IsExposed ℝ s ({ y ∈ s | ∀ z ∈ s, l z ≤ l y }) := fun _ => ⟨l, rfl⟩
   obtain ⟨z, hzA, hz⟩ := hscomp.exists_forall_ge ⟨x, hxA⟩ l.continuous.continuous_on
   obtain ⟨y, hy⟩ := (h.is_compact hscomp).has_extreme_point ⟨z, hzA, hz⟩

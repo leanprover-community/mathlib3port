@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.algebra.open_subgroup
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,7 +152,7 @@ instance : Inhabited (OpenSubgroup G) :=
   ⟨⊤⟩
 
 @[to_additive]
-theorem isClosed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) := by
+theorem is_closed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) := by
   apply is_open_compl_iff.1
   refine' is_open_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
   · intro u hux
@@ -162,7 +162,7 @@ theorem isClosed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G
     simp
   · exact U.is_open.preimage (continuous_mul_right _)
   · simp [U.one_mem]
-#align open_subgroup.is_closed OpenSubgroup.isClosed
+#align open_subgroup.is_closed OpenSubgroup.is_closed
 
 section
 

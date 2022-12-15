@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.plus
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -268,7 +268,7 @@ def toPlus :
     simp
 #align category_theory.grothendieck_topology.to_plus CategoryTheory.GrothendieckTopology.toPlus
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem to_plus_naturality {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
     η ≫ J.toPlus Q = J.toPlus _ ≫ J.plusMap η := by
   ext
@@ -370,7 +370,7 @@ def plusLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) : 
   J.plusMap η ≫ (J.isoToPlus Q hQ).inv
 #align category_theory.grothendieck_topology.plus_lift CategoryTheory.GrothendieckTopology.plusLift
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem to_plus_plus_lift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) :
     J.toPlus P ≫ J.plusLift η hQ = η := by 
   dsimp [plus_lift]

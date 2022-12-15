@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,7 +235,7 @@ theorem to_span_singleton_add (x y : E) :
   simp [to_span_singleton_apply]
 #align continuous_linear_map.to_span_singleton_add ContinuousLinearMap.to_span_singleton_add
 
-theorem to_span_singleton_smul' (𝕜') [NormedField 𝕜'] [NormedSpace 𝕜' E] [SmulCommClass 𝕜 𝕜' E]
+theorem to_span_singleton_smul' (𝕜') [NormedField 𝕜'] [NormedSpace 𝕜' E] [SMulCommClass 𝕜 𝕜' E]
     (c : 𝕜') (x : E) : toSpanSingleton 𝕜 (c • x) = c • toSpanSingleton 𝕜 x := by
   ext1
   rw [to_span_singleton_apply, smul_apply, to_span_singleton_apply, smul_comm]
@@ -456,7 +456,7 @@ theorem norm_id_of_nontrivial_seminorm (h : ∃ x : E, ‖x‖ ≠ 0) : ‖id �
 #align
   continuous_linear_map.norm_id_of_nontrivial_seminorm ContinuousLinearMap.norm_id_of_nontrivial_seminorm
 
-theorem op_norm_smul_le {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' F] [SmulCommClass 𝕜₂ 𝕜' F]
+theorem op_norm_smul_le {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' F] [SMulCommClass 𝕜₂ 𝕜' F]
     (c : 𝕜') (f : E →SL[σ₁₂] F) : ‖c • f‖ ≤ ‖c‖ * ‖f‖ :=
   (c • f).op_norm_le_bound (mul_nonneg (norm_nonneg _) (op_norm_nonneg _)) fun _ => by
     erw [norm_smul, mul_assoc]
@@ -610,7 +610,7 @@ theorem op_nnnorm_eq_of_bounds {φ : E →SL[σ₁₂] F} (M : ℝ≥0) (h_above
   Subtype.ext <| op_norm_eq_of_bounds (zero_le M) h_above <| Subtype.forall'.mpr h_below
 #align continuous_linear_map.op_nnnorm_eq_of_bounds ContinuousLinearMap.op_nnnorm_eq_of_bounds
 
-instance toNormedSpace {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' F] [SmulCommClass 𝕜₂ 𝕜' F] :
+instance toNormedSpace {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' F] [SMulCommClass 𝕜₂ 𝕜' F] :
     NormedSpace 𝕜' (E →SL[σ₁₂] F) :=
   ⟨op_norm_smul_le⟩
 #align continuous_linear_map.to_normed_space ContinuousLinearMap.toNormedSpace
@@ -669,7 +669,7 @@ variable [RingHomIsometric σ₁₂]
 
 theorem exists_mul_lt_apply_of_lt_op_nnnorm (f : E →SL[σ₁₂] F) {r : ℝ≥0} (hr : r < ‖f‖₊) :
     ∃ x, r * ‖x‖₊ < ‖f x‖₊ := by
-  simpa only [not_forall, not_le, Set.mem_set_of] using
+  simpa only [not_forall, not_le, Set.mem_setOf] using
     not_mem_of_lt_cInf (nnnorm_def f ▸ hr : r < Inf { c : ℝ≥0 | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ })
       (OrderBot.bdd_below _)
 #align
@@ -805,7 +805,7 @@ theorem op_nnnorm_prod (f : E →L[𝕜] Fₗ) (g : E →L[𝕜] Gₗ) : ‖f.Pr
 
 /-- `continuous_linear_map.prod` as a `linear_isometry_equiv`. -/
 def prodₗᵢ (R : Type _) [Semiring R] [Module R Fₗ] [Module R Gₗ] [HasContinuousConstSmul R Fₗ]
-    [HasContinuousConstSmul R Gₗ] [SmulCommClass 𝕜 R Fₗ] [SmulCommClass 𝕜 R Gₗ] :
+    [HasContinuousConstSmul R Gₗ] [SMulCommClass 𝕜 R Fₗ] [SMulCommClass 𝕜 R Gₗ] :
     (E →L[𝕜] Fₗ) × (E →L[𝕜] Gₗ) ≃ₗᵢ[R] E →L[𝕜] Fₗ × Gₗ :=
   ⟨prodₗ R, fun ⟨f, g⟩ => op_norm_prod f g⟩
 #align continuous_linear_map.prodₗᵢ ContinuousLinearMap.prodₗᵢ
@@ -1208,7 +1208,7 @@ section MultiplicationLinear
 section NonUnital
 
 variable (𝕜) (𝕜' : Type _) [NonUnitalSemiNormedRing 𝕜'] [NormedSpace 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' 𝕜']
-  [SmulCommClass 𝕜 𝕜' 𝕜']
+  [SMulCommClass 𝕜 𝕜' 𝕜']
 
 /-- Multiplication in a non-unital normed algebra as a continuous bilinear map. -/
 def mul : 𝕜' →L[𝕜] 𝕜' →L[𝕜] 𝕜' :=
@@ -1344,7 +1344,7 @@ theorem norm_restrict_scalars (f : E →L[𝕜] Fₗ) : ‖f.restrictScalars �
 #align continuous_linear_map.norm_restrict_scalars ContinuousLinearMap.norm_restrict_scalars
 
 variable (𝕜 E Fₗ 𝕜') (𝕜'' : Type _) [Ring 𝕜''] [Module 𝕜'' Fₗ] [HasContinuousConstSmul 𝕜'' Fₗ]
-  [SmulCommClass 𝕜 𝕜'' Fₗ] [SmulCommClass 𝕜' 𝕜'' Fₗ]
+  [SMulCommClass 𝕜 𝕜'' Fₗ] [SMulCommClass 𝕜' 𝕜'' Fₗ]
 
 /-- `continuous_linear_map.restrict_scalars` as a `linear_isometry`. -/
 def restrictScalarsIsometry : (E →L[𝕜] Fₗ) →ₗᵢ[𝕜''] E →L[𝕜'] Fₗ :=
@@ -1858,13 +1858,13 @@ image under coercion to functions `E → F` is a closed set. We don't have a nam
 with weak-* topology in `mathlib`, so we use an equivalent condition (see `is_closed_induced_iff'`).
 
 TODO: reformulate this in terms of a type synonym with the right topology. -/
-theorem isClosedImageCoeOfBoundedOfWeakClosed {s : Set (E' →SL[σ₁₂] F)} (hb : Bounded s)
+theorem is_closed_image_coe_of_bounded_of_weak_closed {s : Set (E' →SL[σ₁₂] F)} (hb : Bounded s)
     (hc : ∀ f, (⇑f : E' → F) ∈ closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) → f ∈ s) :
     IsClosed ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
-  isClosedOfClosureSubset fun f hf =>
+  is_closed_of_closure_subset fun f hf =>
     ⟨ofMemClosureImageCoeBounded f hb hf, hc (ofMemClosureImageCoeBounded f hb hf) hf, rfl⟩
 #align
-  continuous_linear_map.is_closed_image_coe_of_bounded_of_weak_closed ContinuousLinearMap.isClosedImageCoeOfBoundedOfWeakClosed
+  continuous_linear_map.is_closed_image_coe_of_bounded_of_weak_closed ContinuousLinearMap.is_closed_image_coe_of_bounded_of_weak_closed
 
 /-- If a set `s` of semilinear functions is bounded and is closed in the weak-* topology, then its
 image under coercion to functions `E → F` is a compact set. We don't have a name for `E →SL[σ] F`
@@ -1874,7 +1874,8 @@ theorem is_compact_image_coe_of_bounded_of_weak_closed [ProperSpace F] {s : Set 
     (hb : Bounded s)
     (hc : ∀ f, (⇑f : E' → F) ∈ closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) → f ∈ s) :
     IsCompact ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
-  is_compact_image_coe_of_bounded_of_closed_image hb <| isClosedImageCoeOfBoundedOfWeakClosed hb hc
+  is_compact_image_coe_of_bounded_of_closed_image hb <|
+    is_closed_image_coe_of_bounded_of_weak_closed hb hc
 #align
   continuous_linear_map.is_compact_image_coe_of_bounded_of_weak_closed ContinuousLinearMap.is_compact_image_coe_of_bounded_of_weak_closed
 
@@ -1895,11 +1896,11 @@ theorem is_weak_closed_closed_ball (f₀ : E' →SL[σ₁₂] F) (r : ℝ) ⦃f 
 /-- The set of functions `f : E → F` that represent continuous linear maps `f : E →SL[σ₁₂] F`
 at distance `≤ r` from `f₀ : E →SL[σ₁₂] F` is closed in the topology of pointwise convergence.
 This is one of the key steps in the proof of the **Banach-Alaoglu** theorem. -/
-theorem isClosedImageCoeClosedBall (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
+theorem is_closed_image_coe_closed_ball (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
     IsClosed ((coeFn : (E →SL[σ₁₂] F) → E → F) '' closedBall f₀ r) :=
-  isClosedImageCoeOfBoundedOfWeakClosed boundedClosedBall (is_weak_closed_closed_ball f₀ r)
+  is_closed_image_coe_of_bounded_of_weak_closed boundedClosedBall (is_weak_closed_closed_ball f₀ r)
 #align
-  continuous_linear_map.is_closed_image_coe_closed_ball ContinuousLinearMap.isClosedImageCoeClosedBall
+  continuous_linear_map.is_closed_image_coe_closed_ball ContinuousLinearMap.is_closed_image_coe_closed_ball
 
 /-- **Banach-Alaoglu** theorem. The set of functions `f : E → F` that represent continuous linear
 maps `f : E →SL[σ₁₂] F` at distance `≤ r` from `f₀ : E →SL[σ₁₂] F` is compact in the topology of
@@ -1936,14 +1937,16 @@ def extend : Fₗ →SL[σ₁₂] F :=
       refine' h_dense.induction_on₂ _ _
       ·
         exact
-          isClosedEq (cont.comp continuous_add)
+          is_closed_eq (cont.comp continuous_add)
             ((cont.comp continuous_fst).add (cont.comp continuous_snd))
       · intro x y
         simp only [Eq, ← e.map_add]
         exact f.map_add _ _
     map_smul' := fun k => by 
       refine' fun b => h_dense.induction_on b _ _
-      · exact isClosedEq (cont.comp (continuous_const_smul _)) ((continuous_const_smul _).comp cont)
+      ·
+        exact
+          is_closed_eq (cont.comp (continuous_const_smul _)) ((continuous_const_smul _).comp cont)
       · intro x
         rw [← map_smul]
         simp only [Eq]
@@ -1981,7 +1984,7 @@ theorem op_norm_extend_le : ‖ψ‖ ≤ N * ‖f‖ := by
   have uni : UniformInducing e := (uniform_embedding_of_bound _ h_e).to_uniform_inducing
   have eq : ∀ x, ψ (e x) = f x := uniformly_extend_of_ind uni h_dense f.uniform_continuous
   by_cases N0 : 0 ≤ N
-  · refine' op_norm_le_bound ψ _ (isClosedProperty h_dense (isClosedLe _ _) _)
+  · refine' op_norm_le_bound ψ _ (is_closed_property h_dense (is_closed_le _ _) _)
     · exact mul_nonneg N0 (norm_nonneg _)
     · exact continuous_norm.comp (cont ψ)
     · exact continuous_const.mul continuous_norm

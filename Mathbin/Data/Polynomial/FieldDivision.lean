@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.field_division
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -159,7 +159,7 @@ theorem is_unit_iff_degree_eq_zero : IsUnit p ↔ degree p = 0 :=
     have : degree p ≤ 0 := by simp [*, le_refl]
     have hc : coeff p 0 ≠ 0 := fun hc => by
       rw [eq_C_of_degree_le_zero this, hc] at h <;> simpa using h
-    is_unit_iff_dvd_one.2
+    isUnit_iff_dvd_one.2
       ⟨c (coeff p 0)⁻¹, by 
         conv in p => rw [eq_C_of_degree_le_zero this]
         rw [← C_mul, _root_.mul_inv_cancel hc, C_1]⟩⟩
@@ -320,7 +320,7 @@ section
 open EuclideanDomain
 
 theorem gcd_map [Field k] (f : R →+* k) : gcd (p.map f) (q.map f) = (gcd p q).map f :=
-  (Gcd.induction p q fun x => by simp_rw [Polynomial.map_zero, EuclideanDomain.gcd_zero_left])
+  (GCD.induction p q fun x => by simp_rw [Polynomial.map_zero, EuclideanDomain.gcd_zero_left])
     fun x y hx ih => by rw [gcd_val, ← map_mod, ih, ← gcd_val]
 #align polynomial.gcd_map Polynomial.gcd_map
 

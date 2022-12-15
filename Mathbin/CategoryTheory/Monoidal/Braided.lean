@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.braided
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,13 +75,13 @@ class BraidedCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] whe
 
 restate_axiom braided_category.braiding_naturality'
 
-attribute [simp, reassoc] braided_category.braiding_naturality
+attribute [simp, reassoc.1] braided_category.braiding_naturality
 
 restate_axiom braided_category.hexagon_forward'
 
 restate_axiom braided_category.hexagon_reverse'
 
-attribute [reassoc] braided_category.hexagon_forward braided_category.hexagon_reverse
+attribute [reassoc.1] braided_category.hexagon_forward braided_category.hexagon_reverse
 
 open Category
 
@@ -325,7 +325,7 @@ class SymmetricCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] e
 
 restate_axiom symmetric_category.symmetry'
 
-attribute [simp, reassoc] symmetric_category.symmetry
+attribute [simp, reassoc.1] symmetric_category.symmetry
 
 variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory C] [BraidedCategory C]
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.banach
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     refine' (mem_image _ _ _).2 ⟨x, ⟨_, hx⟩⟩
     rwa [mem_ball, dist_eq_norm, sub_zero]
   have : ∃ (n : ℕ)(x : _), x ∈ interior (closure (f '' ball 0 n)) :=
-    nonempty_interior_of_Union_of_closed (fun n => isClosedClosure) A
+    nonempty_interior_of_Union_of_closed (fun n => is_closed_closure) A
   simp only [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at this
   rcases this with ⟨n, a, ε, ⟨εpos, H⟩⟩
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
@@ -450,16 +450,16 @@ theorem range_eq_map_coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G :
 
 /- TODO: remove the assumption `f.ker = ⊥` in the next lemma, by using the map induced by `f` on
 `E / f.ker`, once we have quotient normed spaces. -/
-theorem closedComplementedRangeOfIsComplOfKerEqBot (f : E →L[𝕜] F) (G : Submodule 𝕜 F)
+theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F) (G : Submodule 𝕜 F)
     (h : IsCompl (LinearMap.range f) G) (hG : IsClosed (G : Set F)) (hker : ker f = ⊥) :
     IsClosed (LinearMap.range f : Set F) := by
   haveI : CompleteSpace G := hG.complete_space_coe
   let g := coprod_subtypeL_equiv_of_is_compl f h hker
   rw [congr_arg coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
   apply g.to_homeomorph.is_closed_image.2
-  exact is_closed_univ.prod isClosedSingleton
+  exact is_closed_univ.prod is_closed_singleton
 #align
-  continuous_linear_map.closed_complemented_range_of_is_compl_of_ker_eq_bot ContinuousLinearMap.closedComplementedRangeOfIsComplOfKerEqBot
+  continuous_linear_map.closed_complemented_range_of_is_compl_of_ker_eq_bot ContinuousLinearMap.closed_complemented_range_of_is_compl_of_ker_eq_bot
 
 end ContinuousLinearMap
 
@@ -487,7 +487,7 @@ spaces. To show that `f` is continuous, it suffices to show that for any converg
 theorem LinearMap.continuous_of_seq_closed_graph
     (hg : ∀ (u : ℕ → E) (x y), Tendsto u atTop (𝓝 x) → Tendsto (g ∘ u) atTop (𝓝 y) → y = g x) :
     Continuous g := by
-  refine' g.continuous_of_is_closed_graph (IsSeqClosed.isClosed _)
+  refine' g.continuous_of_is_closed_graph (IsSeqClosed.is_closed _)
   rintro φ ⟨x, y⟩ hφg hφ
   refine' hg (Prod.fst ∘ φ) x y ((continuous_fst.tendsto _).comp hφ) _
   have : g ∘ Prod.fst ∘ φ = Prod.snd ∘ φ := by 

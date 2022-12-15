@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.filtered_colimit_commutes_finite_limit
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -375,7 +375,7 @@ noncomputable def colimitLimitIso (F : J ⥤ K ⥤ C) : colimit (limit F) ≅ li
     HasLimit.isoOfNatIso (colimitFlipIsoCompColim _).symm
 #align category_theory.limits.colimit_limit_iso CategoryTheory.Limits.colimitLimitIso
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     colimit.ι (limit F) a ≫ (colimitLimitIso F).Hom ≫ limit.π (colimit F.flip) b =
       (limit.π F b).app a ≫ (colimit.ι F.flip a).app b :=

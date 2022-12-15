@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.affine
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -720,7 +720,7 @@ theorem dist_eq_iff_eq_smul_rotation_pi_div_two_vadd_midpoint {p₁ p₂ p : P} 
     exact ⟨r, hr.symm⟩
   · rcases hr with ⟨r, rfl⟩
     simp_rw [@dist_eq_norm_vsub V, vsub_vadd_eq_vsub_sub, left_vsub_midpoint, right_vsub_midpoint,
-      inv_of_eq_inv, ← neg_vsub_eq_vsub_rev p₂ p₁, ← mul_self_inj (norm_nonneg _) (norm_nonneg _), ←
+      invOf_eq_inv, ← neg_vsub_eq_vsub_rev p₂ p₁, ← mul_self_inj (norm_nonneg _) (norm_nonneg _), ←
       real_inner_self_eq_norm_mul_norm, inner_sub_sub_self]
     simp [-neg_vsub_eq_vsub_rev]
 #align
@@ -771,10 +771,10 @@ theorem Collinear.oangle_sign_of_same_ray_vsub {p₁ p₂ p₃ p₄ : P} (p₅ :
         obtain ⟨q₁, q₅, q₂⟩ := p
         dsimp only at hp⊢
         obtain ⟨⟨⟨q, hq⟩, v⟩, hv, rfl, rfl, rfl⟩ := hp
-        dsimp only [Subtype.coe_mk, Set.mem_set_of] at hv⊢
+        dsimp only [Subtype.coe_mk, Set.mem_setOf] at hv⊢
         obtain ⟨hvr, -⟩ := hv
         rintro rfl
-        refine' hc₅₁₂ ((collinear_insert_iff_of_mem_affine_span _).2 (collinearPair _ _ _))
+        refine' hc₅₁₂ ((collinear_insert_iff_of_mem_affine_span _).2 (collinear_pair _ _ _))
       · exact hq
       · refine' vadd_mem_of_mem_direction _ hq
         rw [← exists_nonneg_left_iff_same_ray (vsub_ne_zero.2 hp₁p₂.symm)] at hvr
@@ -783,12 +783,12 @@ theorem Collinear.oangle_sign_of_same_ray_vsub {p₁ p₂ p₃ p₄ : P} (p₅ :
         exact smul_vsub_rev_mem_vector_span_pair _ _ _
     have hsp : ∀ p : P × P × P, p ∈ s → ∡ p.1 p.2.1 p.2.2 ≠ 0 ∧ ∡ p.1 p.2.1 p.2.2 ≠ π := by
       intro p hp
-      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_set_of, Set.mem_univ, true_and_iff,
+      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
         Prod.ext_iff] at hp
       obtain ⟨q₁, q₅, q₂⟩ := p
       dsimp only at hp⊢
       obtain ⟨⟨⟨q, hq⟩, v⟩, hv, rfl, rfl, rfl⟩ := hp
-      dsimp only [Subtype.coe_mk, Set.mem_set_of] at hv⊢
+      dsimp only [Subtype.coe_mk, Set.mem_setOf] at hv⊢
       obtain ⟨hvr, hv0⟩ := hv
       rw [← exists_nonneg_left_iff_same_ray (vsub_ne_zero.2 hp₁p₂.symm)] at hvr
       obtain ⟨r, -, rfl⟩ := hvr
@@ -796,20 +796,20 @@ theorem Collinear.oangle_sign_of_same_ray_vsub {p₁ p₂ p₃ p₄ : P} (p₅ :
       rw [oangle_ne_zero_and_ne_pi_iff_affine_independent]
       refine'
         affine_independent_of_ne_of_mem_of_not_mem_of_mem _ hq
-          (fun h => hc₅₁₂ ((collinear_insert_iff_of_mem_affine_span h).2 (collinearPair _ _ _))) _
+          (fun h => hc₅₁₂ ((collinear_insert_iff_of_mem_affine_span h).2 (collinear_pair _ _ _))) _
       · rwa [← @vsub_ne_zero V, vsub_vadd_eq_vsub_sub, vsub_self, zero_sub, neg_ne_zero]
       · refine' vadd_mem_of_mem_direction _ hq
         rw [direction_affine_span]
         exact smul_vsub_rev_mem_vector_span_pair _ _ _
     have hp₁p₂s : (p₁, p₅, p₂) ∈ s := by
-      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_set_of, Set.mem_univ, true_and_iff,
+      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
         Prod.ext_iff]
       refine'
         ⟨⟨⟨p₁, left_mem_affine_span_pair _ _ _⟩, p₂ -ᵥ p₁⟩,
           ⟨SameRay.rfl, vsub_ne_zero.2 hp₁p₂.symm⟩, _⟩
       simp
     have hp₃p₄s : (p₃, p₅, p₄) ∈ s := by
-      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_set_of, Set.mem_univ, true_and_iff,
+      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
         Prod.ext_iff]
       refine'
         ⟨⟨⟨p₃,
@@ -876,7 +876,7 @@ theorem AffineSubspace.SSameSide.oangle_sign_eq {s : AffineSubspace ℝ P} {p₁
   have hf : ContinuousOn (fun p : P × P × P => ∡ p.1 p.2.1 p.2.2) sp := by
     refine' ContinuousAt.continuous_on fun p hp => continuous_at_oangle _ _
     all_goals 
-      simp_rw [sp, Set.mem_image, Set.mem_set_of] at hp
+      simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp
       obtain ⟨p', hp', rfl⟩ := hp
       dsimp only
       rintro rfl
@@ -884,7 +884,7 @@ theorem AffineSubspace.SSameSide.oangle_sign_eq {s : AffineSubspace ℝ P} {p₁
     · exact hp'.2.2 hp₂
   have hsp : ∀ p : P × P × P, p ∈ sp → ∡ p.1 p.2.1 p.2.2 ≠ 0 ∧ ∡ p.1 p.2.1 p.2.2 ≠ π := by
     intro p hp
-    simp_rw [sp, Set.mem_image, Set.mem_set_of] at hp
+    simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp
     obtain ⟨p', hp', rfl⟩ := hp
     dsimp only
     rw [oangle_ne_zero_and_ne_pi_iff_affine_independent]

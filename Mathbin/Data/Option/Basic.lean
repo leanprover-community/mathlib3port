@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.option.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -852,7 +852,7 @@ end Pmap
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u1}} {a : α} {f : α -> β}, Eq.{succ u1} (Option.{u1} β) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toHasSeq.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1})) α β (Option.some.{u1} (α -> β) f) (Option.some.{u1} α a)) (Option.some.{u1} β (f a))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u1}} {a : α} {f : α -> β}, Eq.{succ u1} (Option.{u1} β) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toSeq.{u1, u1} Option.{u1} (Alternative.toApplicative.{u1, u1} Option.{u1} instAlternativeOption.{u1})) α β (Option.some.{u1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2306 : Unit) => Option.some.{u1} α a)) (Option.some.{u1} β (f a))
+  forall {α : Type.{u1}} {β : Type.{u1}} {a : α} {f : α -> β}, Eq.{succ u1} (Option.{u1} β) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toSeq.{u1, u1} Option.{u1} (Alternative.toApplicative.{u1, u1} Option.{u1} instAlternativeOption.{u1})) α β (Option.some.{u1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2283 : Unit) => Option.some.{u1} α a)) (Option.some.{u1} β (f a))
 Case conversion may be inaccurate. Consider using '#align option.seq_some Option.seq_someₓ'. -/
 @[simp]
 theorem seq_some {α β} {a : α} {f : α → β} : some f <*> some a = some (f a) :=
@@ -881,7 +881,7 @@ theorem some_orElse (a : α) (x : Option α) : (some a <|> x) = some a :=
 lean 3 declaration is
   forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.orelse.{u1} α (Option.none.{u1} α) x) x
 but is expected to have type
-  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α (Option.none.{u1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2363 : Unit) => x)) x
+  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α (Option.none.{u1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2340 : Unit) => x)) x
 Case conversion may be inaccurate. Consider using '#align option.none_orelse' Option.none_orElse'ₓ'. -/
 @[simp]
 theorem none_orElse' (x : Option α) : none.orelse x = x := by cases x <;> rfl
@@ -982,7 +982,7 @@ theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = som
 #align option.ne_none_iff_exists' Option.ne_none_iff_exists'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 #print Option.bex_ne_none /-
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ => ⟨get <| ne_none_iff_isSome.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ =>
@@ -990,7 +990,7 @@ theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x
 #align option.bex_ne_none Option.bex_ne_none
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 #print Option.ball_ne_none /-
 theorem ball_ne_none {p : Option α → Prop} : (∀ (x) (_ : x ≠ none), p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by

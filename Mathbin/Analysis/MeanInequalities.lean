@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.mean_inequalities
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -473,7 +473,7 @@ theorem is_greatest_Lp (f : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjugateExpo
       have B : ∀ y : ℝ≥0, y * y ^ p / y = y ^ p := by
         refine' fun y => mul_div_cancel_left_of_imp fun h => _
         simpa [h, hpq.ne_zero]
-      simp only [Set.mem_set_of_eq, div_rpow, ← sum_div, ← rpow_mul,
+      simp only [Set.mem_setOf_eq, div_rpow, ← sum_div, ← rpow_mul,
         div_mul_cancel _ hpq.symm.ne_zero, rpow_one, div_le_iff hf, one_mul, hpq.mul_eq_add, ←
         rpow_sub' _ A, _root_.add_sub_cancel, le_refl, true_and_iff, ← mul_div_assoc, B]
       rw [div_eq_iff, ← rpow_add hf, hpq.inv_add_inv_conj, rpow_one]
@@ -493,7 +493,7 @@ theorem Lp_add_le (f g : ι → ℝ≥0) {p : ℝ} (hp : 1 ≤ p) :
   -- The result is trivial when `p = 1`, so we can assume `1 < p`.
   rcases eq_or_lt_of_le hp with (rfl | hp);
   · simp [Finset.sum_add_distrib]
-  have hpq := Real.isConjugateExponentConjugateExponent hp
+  have hpq := Real.is_conjugate_exponent_conjugate_exponent hp
   have := is_greatest_Lp s (f + g) hpq
   simp only [Pi.add_apply, add_mul, sum_add_distrib] at this
   rcases this.1 with ⟨φ, hφ, H⟩

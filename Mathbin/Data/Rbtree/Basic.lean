@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbtree.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] :
     apply trans_of lt h₁ h₂
 #align rbnode.lo_lt_hi Rbnode.lo_lt_hi
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     ∀ {lo hi hi'} (hc : ¬lt hi' hi ∧ ¬lt hi hi') (hs : IsSearchable lt t lo (some hi)),
       IsSearchable lt t lo (some hi') :=
@@ -87,7 +87,7 @@ theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
 #align
   rbnode.is_searchable_of_is_searchable_of_incomp Rbnode.is_searchable_of_is_searchable_of_incomp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
     ∀ {lo lo' hi} (hc : ¬lt lo' lo ∧ ¬lt lo lo') (hs : IsSearchable lt t (some lo) hi),
       IsSearchable lt t (some lo') hi :=
@@ -104,7 +104,7 @@ theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
 #align
   rbnode.is_searchable_of_incomp_of_is_searchable Rbnode.is_searchable_of_incomp_of_is_searchable
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
     ∀ {lo hi lo'} (hlt : lt lo' lo) (hs : IsSearchable lt t (some lo) hi),
       IsSearchable lt t (some lo') hi :=
@@ -119,7 +119,7 @@ theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
 #align
   rbnode.is_searchable_some_low_of_is_searchable_of_lt Rbnode.is_searchable_some_low_of_is_searchable_of_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_none_low_of_is_searchable_some_low {t} :
     ∀ {y hi} (hlt : IsSearchable lt t (some y) hi), IsSearchable lt t none hi := by
   induction t <;> intros <;>
@@ -130,7 +130,7 @@ theorem is_searchable_none_low_of_is_searchable_some_low {t} :
 #align
   rbnode.is_searchable_none_low_of_is_searchable_some_low Rbnode.is_searchable_none_low_of_is_searchable_some_low
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
     ∀ {lo hi hi'} (hlt : lt hi hi') (hs : IsSearchable lt t lo (some hi)),
       IsSearchable lt t lo (some hi') :=
@@ -146,7 +146,7 @@ theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
 #align
   rbnode.is_searchable_some_high_of_is_searchable_of_lt Rbnode.is_searchable_some_high_of_is_searchable_of_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_none_high_of_is_searchable_some_high {t} :
     ∀ {lo y} (hlt : IsSearchable lt t lo (some y)), IsSearchable lt t lo none := by
   induction t <;> intros <;>

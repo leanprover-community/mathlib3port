@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.hadamard
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem smul_hadamard [Mul α] [HasSmul R α] [IsScalarTower R α α] (k : R) :
 #align matrix.smul_hadamard Matrix.smul_hadamard
 
 @[simp]
-theorem hadamard_smul [Mul α] [HasSmul R α] [SmulCommClass R α α] (k : R) :
+theorem hadamard_smul [Mul α] [HasSmul R α] [SMulCommClass R α α] (k : R) :
     A ⊙ (k • B) = k • A ⊙ B :=
   ext fun _ _ => mul_smul_comm _ _ _
 #align matrix.hadamard_smul Matrix.hadamard_smul

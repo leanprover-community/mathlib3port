@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_integers
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -255,7 +255,7 @@ instance : MetricSpace ℤ_[p] :=
   Subtype.metricSpace
 
 instance complete_space : CompleteSpace ℤ_[p] :=
-  have : IsClosed { x : ℚ_[p] | ‖x‖ ≤ 1 } := isClosedLe continuous_norm continuous_const
+  have : IsClosed { x : ℚ_[p] | ‖x‖ ≤ 1 } := is_closed_le continuous_norm continuous_const
   this.complete_space_coe
 #align padic_int.complete_space PadicInt.complete_space
 
@@ -291,7 +291,7 @@ instance is_absolute_value :
 variable {p}
 
 instance : IsDomain ℤ_[p] :=
-  Function.Injective.is_domain (subring p).Subtype Subtype.coe_injective
+  Function.Injective.isDomain (subring p).Subtype Subtype.coe_injective
 
 end PadicInt
 
@@ -385,7 +385,7 @@ theorem exists_pow_neg_lt {ε : ℝ} (hε : 0 < ε) : ∃ k : ℕ, ↑p ^ (-(k :
   obtain ⟨k, hk⟩ := exists_nat_gt ε⁻¹
   use k
   rw [← inv_lt_inv hε (_root_.zpow_pos_of_pos _ _)]
-  · rw [zpow_neg, inv_inv, zpow_coe_nat]
+  · rw [zpow_neg, inv_inv, zpow_ofNat]
     apply lt_of_lt_of_le hk
     norm_cast
     apply le_of_lt
@@ -491,7 +491,7 @@ theorem inv_mul {z : ℤ_[p]} (hz : ‖z‖ = 1) : z.inv * z = 1 := by rw [mul_c
 
 theorem is_unit_iff {z : ℤ_[p]} : IsUnit z ↔ ‖z‖ = 1 :=
   ⟨fun h => by 
-    rcases is_unit_iff_dvd_one.1 h with ⟨w, eq⟩
+    rcases isUnit_iff_dvd_one.1 h with ⟨w, eq⟩
     refine' le_antisymm (norm_le_one _) _
     have := mul_le_mul_of_nonneg_left (norm_le_one w) (norm_nonneg z)
     rwa [mul_one, ← norm_mul, ← Eq, norm_one] at this, fun h =>
@@ -554,7 +554,7 @@ theorem unit_coeff_spec {x : ℤ_[p]} (hx : x ≠ 0) :
     · simp
     · exact_mod_cast hp.1.NeZero
   convert repr using 2
-  rw [← zpow_coe_nat, Int.natAbs_of_nonneg (valuation_nonneg x)]
+  rw [← zpow_ofNat, Int.natAbs_of_nonneg (valuation_nonneg x)]
 #align padic_int.unit_coeff_spec PadicInt.unit_coeff_spec
 
 end Units
@@ -568,7 +568,7 @@ theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     ‖x‖ ≤ p ^ (-n : ℤ) ↔ ↑n ≤ x.Valuation := by
   rw [norm_eq_pow_val hx]
   lift x.valuation to ℕ using x.valuation_nonneg with k hk
-  simp only [Int.coe_nat_le, zpow_neg, zpow_coe_nat]
+  simp only [Int.ofNat_le, zpow_neg, zpow_ofNat]
   have aux : ∀ n : ℕ, 0 < (p ^ n : ℝ) := by 
     apply pow_pos
     exact_mod_cast hp.1.Pos
@@ -591,7 +591,7 @@ theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     rw [hx, mul_zero]
   · rw [unit_coeff_spec hx]
     lift x.valuation to ℕ using x.valuation_nonneg with k hk
-    simp only [Int.natAbs_ofNat, Units.isUnit, IsUnit.dvd_mul_left, Int.coe_nat_le]
+    simp only [Int.natAbs_ofNat, Units.isUnit, IsUnit.dvd_mul_left, Int.ofNat_le]
     intro H
     obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le H
     simp only [pow_add, dvd_mul_right]
@@ -601,7 +601,7 @@ theorem norm_le_pow_iff_mem_span_pow (x : ℤ_[p]) (n : ℕ) :
     ‖x‖ ≤ p ^ (-n : ℤ) ↔ x ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]) := by
   by_cases hx : x = 0
   · subst hx
-    simp only [norm_zero, zpow_neg, zpow_coe_nat, inv_nonneg, iff_true_iff, Submodule.zero_mem]
+    simp only [norm_zero, zpow_neg, zpow_ofNat, inv_nonneg, iff_true_iff, Submodule.zero_mem]
     exact_mod_cast Nat.zero_le _
   rw [norm_le_pow_iff_le_valuation x hx, mem_span_pow_iff_le_valuation x hx]
 #align padic_int.norm_le_pow_iff_mem_span_pow PadicInt.norm_le_pow_iff_mem_span_pow
@@ -661,7 +661,7 @@ theorem irreducible_p : Irreducible (p : ℤ_[p]) :=
 #align padic_int.irreducible_p PadicInt.irreducible_p
 
 instance : DiscreteValuationRing ℤ_[p] :=
-  DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+  DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
     ⟨p, irreducible_p, fun x hx =>
       ⟨x.Valuation.natAbs, unitCoeff hx, by rw [mul_comm, ← unit_coeff_spec hx]⟩⟩
 

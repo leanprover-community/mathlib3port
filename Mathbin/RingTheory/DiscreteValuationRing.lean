@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 
 ! This file was ported from Lean 3 source module ring_theory.discrete_valuation_ring
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ theorem irreducible_of_span_eq_maximal_ideal {R : Type _} [CommRing R] [LocalRin
   rw [show a * ϖ * (b * ϖ) = ϖ * (ϖ * (a * b)) by ring] at hab
   apply hϖ
   apply eq_zero_of_mul_eq_self_right _ hab.symm
-  exact fun hh => h2 (is_unit_of_dvd_one ϖ ⟨_, hh.symm⟩)
+  exact fun hh => h2 (isUnit_of_dvd_one ϖ ⟨_, hh.symm⟩)
 #align
   discrete_valuation_ring.irreducible_of_span_eq_maximal_ideal DiscreteValuationRing.irreducible_of_span_eq_maximal_ideal
 
@@ -303,7 +303,7 @@ theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRing R] [IsDomain
 in which all irreducible elements are associated
 is a discrete valuation ring.
 -/
-theorem ofUfdOfUniqueIrreducible {R : Type u} [CommRing R] [IsDomain R]
+theorem of_ufd_of_unique_irreducible {R : Type u} [CommRing R] [IsDomain R]
     [UniqueFactorizationMonoid R] (h₁ : ∃ p : R, Irreducible p)
     (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) : DiscreteValuationRing R :=
   by 
@@ -323,20 +323,20 @@ theorem ofUfdOfUniqueIrreducible {R : Type u} [CommRing R] [IsDomain R]
     rwa [UniqueFactorizationMonoid.irreducible_iff_prime, ← Ideal.span_singleton_prime I0]
     infer_instance
 #align
-  discrete_valuation_ring.of_ufd_of_unique_irreducible DiscreteValuationRing.ofUfdOfUniqueIrreducible
+  discrete_valuation_ring.of_ufd_of_unique_irreducible DiscreteValuationRing.of_ufd_of_unique_irreducible
 
 /-- An integral domain in which there is an irreducible element `p`
 such that every nonzero element is associated to a power of `p`
 is a discrete valuation ring.
 -/
-theorem ofHasUnitMulPowIrreducibleFactorization {R : Type u} [CommRing R] [IsDomain R]
+theorem of_has_unit_mul_pow_irreducible_factorization {R : Type u} [CommRing R] [IsDomain R]
     (hR : HasUnitMulPowIrreducibleFactorization R) : DiscreteValuationRing R := by
   letI : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid
   apply of_ufd_of_unique_irreducible _ hR.unique_irreducible
   obtain ⟨p, hp, H⟩ := hR
   exact ⟨p, hp⟩
 #align
-  discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+  discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
 
 section
 

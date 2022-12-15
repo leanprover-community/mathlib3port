@@ -7,7 +7,7 @@ Provides a `subtype_instance` tactic which builds instances for algebraic substr
 (sub-groups, sub-rings...).
 
 ! This file was ported from Lean 3 source module tactic.subtype_instance
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,23 +33,23 @@ unsafe def derive_field_subtype : tactic Unit := do
   if b then do
       sorry
       intros
-      andthen (applyc field) assumption
+      andthen (applyc Field) assumption
     else do
       let s ← find_local ``(Set _)
       let q(Set $(α)) ← infer_type s
-      let e ← mk_const field
+      let e ← mk_const Field
       let expl_arity ← get_expl_arity <| e α
       let xs ← (iota expl_arity).mmap fun _ => intro1
       let args ← xs fun x => mk_app `subtype.val [x]
       let hyps ← xs fun x => mk_app `subtype.property [x]
-      let val ← mk_app field args
+      let val ← mk_app Field args
       let subname ←
         local_context >>=
             List.firstM fun h => do
               let (expr.const n _, args) ← get_app_fn_args <$> infer_type h
               is_def_eq s args reducible
               return n
-      let mem_field ← resolve_constant <| mk_mem_name subname field
+      let mem_field ← resolve_constant <| mk_mem_name subname Field
       let val_mem ← mk_app mem_field hyps
       let q(coeSort $(s)) ← target >>= instantiate_mvars
       tactic.refine ``(@Subtype.mk _ $(s) $(val) $(val_mem))

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.rigid.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,11 +106,11 @@ notation "ε_" => ExactPairing.evaluation
 
 restate_axiom coevaluation_evaluation'
 
-attribute [simp, reassoc] exact_pairing.coevaluation_evaluation
+attribute [simp, reassoc.1] exact_pairing.coevaluation_evaluation
 
 restate_axiom evaluation_coevaluation'
 
-attribute [simp, reassoc] exact_pairing.evaluation_coevaluation
+attribute [simp, reassoc.1] exact_pairing.evaluation_coevaluation
 
 instance exactPairingUnit :
     ExactPairing (𝟙_ C) (𝟙_ C) where 
@@ -255,7 +255,7 @@ theorem left_adjoint_mate_comp {X Y Z : C} [HasLeftDual X] [HasLeftDual Y] {f : 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The composition of right adjoint mates is the adjoint mate of the composition. -/
-@[reassoc]
+@[reassoc.1]
 theorem comp_right_adjoint_mate {X Y Z : C} [HasRightDual X] [HasRightDual Y] [HasRightDual Z]
     {f : X ⟶ Y} {g : Y ⟶ Z} : (f ≫ g)ᘁ = gᘁ ≫ fᘁ := by
   rw [right_adjoint_mate_comp]
@@ -289,7 +289,7 @@ theorem comp_right_adjoint_mate {X Y Z : C} [HasRightDual X] [HasRightDual Y] [H
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The composition of left adjoint mates is the adjoint mate of the composition. -/
-@[reassoc]
+@[reassoc.1]
 theorem comp_left_adjoint_mate {X Y Z : C} [HasLeftDual X] [HasLeftDual Y] [HasLeftDual Z]
     {f : X ⟶ Y} {g : Y ⟶ Z} : (ᘁf ≫ g) = (ᘁg) ≫ ᘁf := by
   rw [left_adjoint_mate_comp]

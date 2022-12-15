@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.sequences
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,7 +151,8 @@ theorem tendsto_nhds_iff_seq_tendsto [FrechetUrysohnSpace X] {f : X → Y} {a : 
     ⟨fun hf u hu => hf.comp hu, fun h =>
       ((nhds_basis_closeds _).tendsto_iff (nhds_basis_closeds _)).2 _⟩
   rintro s ⟨hbs, hsc⟩
-  refine' ⟨closure (f ⁻¹' s), ⟨mt _ hbs, isClosedClosure⟩, fun x => mt fun hx => subset_closure hx⟩
+  refine'
+    ⟨closure (f ⁻¹' s), ⟨mt _ hbs, is_closed_closure⟩, fun x => mt fun hx => subset_closure hx⟩
   rw [← seq_closure_eq_closure]
   rintro ⟨u, hus, hu⟩
   exact hsc.mem_of_tendsto (h u hu) (eventually_of_forall hus)
@@ -188,25 +189,25 @@ instance (priority := 100) TopologicalSpace.FirstCountableTopology.frechet_uryso
 /-- A topological space is said to be a *sequential space* if any sequentially closed set in this
 space is closed. This condition is weaker than being a Fréchet-Urysohn space. -/
 class SequentialSpace (X : Type _) [TopologicalSpace X] : Prop where
-  isClosedOfSeq : ∀ s : Set X, IsSeqClosed s → IsClosed s
+  is_closed_of_seq : ∀ s : Set X, IsSeqClosed s → IsClosed s
 #align sequential_space SequentialSpace
 
 -- see Note [lower instance priority]
 /-- Every Fréchet-Urysohn space is a sequential space. -/
-instance (priority := 100) FrechetUrysohnSpace.toSequentialSpace [FrechetUrysohnSpace X] :
+instance (priority := 100) FrechetUrysohnSpace.to_sequential_space [FrechetUrysohnSpace X] :
     SequentialSpace X :=
   ⟨fun s hs => by rw [← closure_eq_iff_is_closed, ← seq_closure_eq_closure, hs.seq_closure_eq]⟩
-#align frechet_urysohn_space.to_sequential_space FrechetUrysohnSpace.toSequentialSpace
+#align frechet_urysohn_space.to_sequential_space FrechetUrysohnSpace.to_sequential_space
 
 /-- In a sequential space, a sequentially closed set is closed. -/
-protected theorem IsSeqClosed.isClosed [SequentialSpace X] {s : Set X} (hs : IsSeqClosed s) :
+protected theorem IsSeqClosed.is_closed [SequentialSpace X] {s : Set X} (hs : IsSeqClosed s) :
     IsClosed s :=
-  SequentialSpace.isClosedOfSeq s hs
-#align is_seq_closed.is_closed IsSeqClosed.isClosed
+  SequentialSpace.is_closed_of_seq s hs
+#align is_seq_closed.is_closed IsSeqClosed.is_closed
 
 /-- In a sequential space, a set is closed iff it's sequentially closed. -/
 theorem is_seq_closed_iff_is_closed [SequentialSpace X] {M : Set X} : IsSeqClosed M ↔ IsClosed M :=
-  ⟨IsSeqClosed.isClosed, IsClosed.is_seq_closed⟩
+  ⟨IsSeqClosed.is_closed, IsClosed.is_seq_closed⟩
 #align is_seq_closed_iff_is_closed is_seq_closed_iff_is_closed
 
 /-- A function between topological spaces is sequentially continuous if it commutes with limit of
@@ -239,10 +240,10 @@ theorem continuous_iff_seq_continuous [SequentialSpace X] {f : X → Y} :
   ⟨Continuous.seq_continuous, SeqContinuous.continuous⟩
 #align continuous_iff_seq_continuous continuous_iff_seq_continuous
 
-theorem QuotientMap.sequentialSpace [SequentialSpace X] {f : X → Y} (hf : QuotientMap f) :
+theorem QuotientMap.sequential_space [SequentialSpace X] {f : X → Y} (hf : QuotientMap f) :
     SequentialSpace Y :=
-  ⟨fun s hs => hf.isClosedPreimage.mp <| (hs.Preimage <| hf.Continuous.SeqContinuous).IsClosed⟩
-#align quotient_map.sequential_space QuotientMap.sequentialSpace
+  ⟨fun s hs => hf.is_closed_preimage.mp <| (hs.Preimage <| hf.Continuous.SeqContinuous).IsClosed⟩
+#align quotient_map.sequential_space QuotientMap.sequential_space
 
 /-- The quotient of a sequential space is a sequential space. -/
 instance [SequentialSpace X] {s : Setoid X} : SequentialSpace (Quotient s) :=

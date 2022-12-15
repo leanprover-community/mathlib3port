@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_independent
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,10 +133,10 @@ theorem linear_independent_iff' :
         ,
       fun hf l hl =>
       Finsupp.ext fun i =>
-        Classical.by_contradiction fun hni => hni <| hf _ _ hl _ <| Finsupp.mem_support_iff.2 hni⟩
+        by_contradiction fun hni => hni <| hf _ _ hl _ <| Finsupp.mem_support_iff.2 hni⟩
 #align linear_independent_iff' linear_independent_iff'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem linear_independent_iff'' :
     LinearIndependent R v ↔
       ∀ (s : Finset ι) (g : ι → R) (hg : ∀ (i) (_ : i ∉ s), g i = 0),
@@ -429,7 +429,7 @@ theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
   exact Disjoint.mono_left (Finsupp.supported_mono h)
 #align linear_independent.mono LinearIndependent.mono
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem linear_independent_of_finite (s : Set M)
     (H : ∀ (t) (_ : t ⊆ s), Set.Finite t → LinearIndependent R (fun x => x : t → M)) :
     LinearIndependent R (fun x => x : s → M) :=
@@ -528,7 +528,7 @@ theorem LinearIndependent.image {ι} {s : Set ι} {f : ι → M}
 #align linear_independent.image LinearIndependent.image
 
 theorem LinearIndependent.group_smul {G : Type _} [hG : Group G] [DistribMulAction G R]
-    [DistribMulAction G M] [IsScalarTower G R M] [SmulCommClass G R M] {v : ι → M}
+    [DistribMulAction G M] [IsScalarTower G R M] [SMulCommClass G R M] {v : ι → M}
     (hv : LinearIndependent R v) (w : ι → G) : LinearIndependent R (w • v) := by
   rw [linear_independent_iff''] at hv⊢
   intro s g hgs hsum i
@@ -898,7 +898,7 @@ theorem exists_maximal_independent' (s : ι → M) :
   exact ⟨I, hli, fun J hsub hli => Set.Subset.antisymm hsub (hmax ⟨J, hli⟩ hsub)⟩
 #align exists_maximal_independent' exists_maximal_independent'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem exists_maximal_independent (s : ι → M) :
     ∃ I : Set ι,
       (LinearIndependent R fun x : I => s x) ∧
@@ -1064,9 +1064,8 @@ theorem linear_independent_monoid_hom (G : Type _) [Monoid G] (L : Type _) [Comm
           -- On the other hand, since `a` is not already in `s`, for any character `i ∈ s`
           -- there is some element of the monoid on which it differs from `a`.
           have h2 : ∀ i : G →* L, i ∈ s → ∃ y, i y ≠ a y := fun i his =>
-            Classical.by_contradiction fun h =>
-              have hia : i = a :=
-                MonoidHom.ext fun y => Classical.by_contradiction fun hy => h ⟨y, hy⟩
+            by_contradiction fun h =>
+              have hia : i = a := MonoidHom.ext fun y => by_contradiction fun hy => h ⟨y, hy⟩
               has <| hia ▸ his
           -- From these two facts we deduce that `g` actually vanishes on `s`,
           have h3 : ∀ i ∈ s, g i = 0 := fun i his =>
@@ -1276,7 +1275,7 @@ theorem linear_independent_fin2 {f : Fin 2 → V} :
     not_exists, show Fin.tail f default = f 1 by rw [← Fin.succ_zero_eq_one] <;> rfl]
 #align linear_independent_fin2 linear_independent_fin2
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ⊆ » t) -/
 theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s → V)) (hst : s ⊆ t) :
     ∃ (b : _)(_ : b ⊆ t), s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K (coe : b → V) := by
   rcases zorn_subset_nonempty { b | b ⊆ t ∧ LinearIndependent K (coe : b → V) } _ _ ⟨hst, hs⟩ with
@@ -1294,7 +1293,7 @@ theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s �
 
 variable (K t)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ⊆ » t) -/
 theorem exists_linear_independent :
     ∃ (b : _)(_ : b ⊆ t), span K b = span K t ∧ LinearIndependent K (coe : b → V) := by
   obtain ⟨b, hb₁, -, hb₂, hb₃⟩ :=
@@ -1361,7 +1360,7 @@ theorem exists_of_linear_independent_of_finite_span {t : Finset V}
       have hst : s ∩ ↑t = ∅ :=
         eq_empty_of_subset_empty <|
           Subset.trans (by simp [inter_subset_inter, subset.refl]) (le_of_eq hst)
-      Classical.by_cases
+      by_cases
         (fun this : s ⊆ (span K ↑(s' ∪ t) : Submodule K V) =>
           let ⟨u, hust, hsu, Eq⟩ := ih _ hs' hst this
           have hb₁u : b₁ ∉ u := fun h => (hust h).elim hb₁s hb₁t

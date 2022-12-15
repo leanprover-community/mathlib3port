@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 
 ! This file was ported from Lean 3 source module data.real.ereal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ instance : Coe ℝ Ereal :=
   ⟨Real.toEreal⟩
 
 theorem coe_strict_mono : StrictMono (coe : ℝ → Ereal) :=
-  WithBot.coe_strict_mono.comp WithTop.coe_strict_mono
+  WithBot.coe_strictMono.comp WithTop.coe_strictMono
 #align ereal.coe_strict_mono Ereal.coe_strict_mono
 
 theorem coe_injective : Injective (coe : ℝ → Ereal) :=
@@ -743,7 +743,7 @@ theorem coe_zsmul (n : ℤ) (x : ℝ) : (↑(n • x) : Ereal) = n • x :=
   map_zsmul' (⟨coe, coe_zero, coe_add⟩ : ℝ →+ Ereal) coe_neg _ _
 #align ereal.coe_zsmul Ereal.coe_zsmul
 
-instance : HasInvolutiveNeg Ereal where 
+instance : InvolutiveNeg Ereal where 
   neg := Neg.neg
   neg_neg a :=
     match a with

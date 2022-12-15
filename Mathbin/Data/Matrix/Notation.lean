@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.notation
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,8 +54,8 @@ variable {α : Type u} {o n m : ℕ} {m' n' o' : Type _}
 
 open Matrix
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
 /-- Matrices can be reflected whenever their entries can. We insert an `@id (matrix m' n' α)` to
 prevent immediate decay to a function. -/
 unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [reflected_univ.{u_2}]
@@ -63,11 +63,11 @@ unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [refl
     has_reflect (Matrix m' n' α) := fun m =>
   (by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
           reflected _ @id.{max u_1 u_2 u + 1}).subst₂
       ((by
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
             reflected _ @Matrix.{u_1, u_2, u}).subst₃
         q(_) q(_) q(_)) <|
     by 

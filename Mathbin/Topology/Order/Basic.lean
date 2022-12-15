@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.order.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ set of points `(x, y)` with `x ≤ y` is closed in the product space. We introdu
 This property is satisfied for the order topology on a linear order, but it can be satisfied more
 generally, and suffices to derive many interesting properties relating order and topology. -/
 class OrderClosedTopology (α : Type _) [TopologicalSpace α] [Preorder α] : Prop where
-  isClosedLe' : IsClosed { p : α × α | p.1 ≤ p.2 }
+  is_closed_le' : IsClosed { p : α × α | p.1 ≤ p.2 }
 #align order_closed_topology OrderClosedTopology
 
 instance [TopologicalSpace α] [h : FirstCountableTopology α] : FirstCountableTopology αᵒᵈ :=
@@ -129,62 +129,62 @@ instance {p : α → Prop} : OrderClosedTopology (Subtype p) :=
   have this : Continuous fun p : Subtype p × Subtype p => ((p.fst : α), (p.snd : α)) :=
     (continuous_subtype_coe.comp continuous_fst).prod_mk
       (continuous_subtype_coe.comp continuous_snd)
-  OrderClosedTopology.mk (t.isClosedLe'.Preimage this)
+  OrderClosedTopology.mk (t.is_closed_le'.Preimage this)
 
 end Subtype
 
-theorem isClosedLeProd : IsClosed { p : α × α | p.1 ≤ p.2 } :=
-  t.isClosedLe'
-#align is_closed_le_prod isClosedLeProd
+theorem is_closed_le_prod : IsClosed { p : α × α | p.1 ≤ p.2 } :=
+  t.is_closed_le'
+#align is_closed_le_prod is_closed_le_prod
 
-theorem isClosedLe [TopologicalSpace β] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
+theorem is_closed_le [TopologicalSpace β] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
     IsClosed { b | f b ≤ g b } :=
-  continuous_iff_is_closed.mp (hf.prod_mk hg) _ isClosedLeProd
-#align is_closed_le isClosedLe
+  continuous_iff_is_closed.mp (hf.prod_mk hg) _ is_closed_le_prod
+#align is_closed_le is_closed_le
 
-theorem isClosedLe' (a : α) : IsClosed { b | b ≤ a } :=
-  isClosedLe continuous_id continuous_const
-#align is_closed_le' isClosedLe'
+theorem is_closed_le' (a : α) : IsClosed { b | b ≤ a } :=
+  is_closed_le continuous_id continuous_const
+#align is_closed_le' is_closed_le'
 
-theorem isClosedIic {a : α} : IsClosed (iic a) :=
-  isClosedLe' a
-#align is_closed_Iic isClosedIic
+theorem is_closed_Iic {a : α} : IsClosed (iic a) :=
+  is_closed_le' a
+#align is_closed_Iic is_closed_Iic
 
-theorem isClosedGe' (a : α) : IsClosed { b | a ≤ b } :=
-  isClosedLe continuous_const continuous_id
-#align is_closed_ge' isClosedGe'
+theorem is_closed_ge' (a : α) : IsClosed { b | a ≤ b } :=
+  is_closed_le continuous_const continuous_id
+#align is_closed_ge' is_closed_ge'
 
-theorem isClosedIci {a : α} : IsClosed (ici a) :=
-  isClosedGe' a
-#align is_closed_Ici isClosedIci
+theorem is_closed_Ici {a : α} : IsClosed (ici a) :=
+  is_closed_ge' a
+#align is_closed_Ici is_closed_Ici
 
 instance : OrderClosedTopology αᵒᵈ :=
-  ⟨(@OrderClosedTopology.isClosedLe' α _ _ _).Preimage continuous_swap⟩
+  ⟨(@OrderClosedTopology.is_closed_le' α _ _ _).Preimage continuous_swap⟩
 
-theorem isClosedIcc {a b : α} : IsClosed (icc a b) :=
-  IsClosed.inter isClosedIci isClosedIic
-#align is_closed_Icc isClosedIcc
+theorem is_closed_Icc {a b : α} : IsClosed (icc a b) :=
+  IsClosed.inter is_closed_Ici is_closed_Iic
+#align is_closed_Icc is_closed_Icc
 
 @[simp]
 theorem closure_Icc (a b : α) : closure (icc a b) = icc a b :=
-  isClosedIcc.closure_eq
+  is_closed_Icc.closure_eq
 #align closure_Icc closure_Icc
 
 @[simp]
 theorem closure_Iic (a : α) : closure (iic a) = iic a :=
-  isClosedIic.closure_eq
+  is_closed_Iic.closure_eq
 #align closure_Iic closure_Iic
 
 @[simp]
 theorem closure_Ici (a : α) : closure (ici a) = ici a :=
-  isClosedIci.closure_eq
+  is_closed_Ici.closure_eq
 #align closure_Ici closure_Ici
 
 theorem le_of_tendsto_of_tendsto {f g : β → α} {b : Filter β} {a₁ a₂ : α} [NeBot b]
     (hf : Tendsto f b (𝓝 a₁)) (hg : Tendsto g b (𝓝 a₂)) (h : f ≤ᶠ[b] g) : a₁ ≤ a₂ :=
   have : Tendsto (fun b => (f b, g b)) b (𝓝 (a₁, a₂)) := by
     rw [nhds_prod_eq] <;> exact hf.prod_mk hg
-  show (a₁, a₂) ∈ { p : α × α | p.1 ≤ p.2 } from t.isClosedLe'.mem_of_tendsto this h
+  show (a₁, a₂) ∈ { p : α × α | p.1 ≤ p.2 } from t.is_closed_le'.mem_of_tendsto this h
 #align le_of_tendsto_of_tendsto le_of_tendsto_of_tendsto
 
 alias le_of_tendsto_of_tendsto ← tendsto_le_of_eventually_le
@@ -217,43 +217,43 @@ theorem ge_of_tendsto' {f : β → α} {a b : α} {x : Filter β} [NeBot x] (lim
 @[simp]
 theorem closure_le_eq [TopologicalSpace β] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
     closure { b | f b ≤ g b } = { b | f b ≤ g b } :=
-  (isClosedLe hf hg).closure_eq
+  (is_closed_le hf hg).closure_eq
 #align closure_le_eq closure_le_eq
 
 theorem closure_lt_subset_le [TopologicalSpace β] {f g : β → α} (hf : Continuous f)
     (hg : Continuous g) : closure { b | f b < g b } ⊆ { b | f b ≤ g b } :=
-  (closure_minimal fun x => le_of_lt) <| isClosedLe hf hg
+  (closure_minimal fun x => le_of_lt) <| is_closed_le hf hg
 #align closure_lt_subset_le closure_lt_subset_le
 
 theorem ContinuousWithinAt.closure_le [TopologicalSpace β] {f g : β → α} {s : Set β} {x : β}
     (hx : x ∈ closure s) (hf : ContinuousWithinAt f s x) (hg : ContinuousWithinAt g s x)
     (h : ∀ y ∈ s, f y ≤ g y) : f x ≤ g x :=
   show (f x, g x) ∈ { p : α × α | p.1 ≤ p.2 } from
-    OrderClosedTopology.isClosedLe'.closure_subset ((hf.Prod hg).mem_closure hx h)
+    OrderClosedTopology.is_closed_le'.closure_subset ((hf.Prod hg).mem_closure hx h)
 #align continuous_within_at.closure_le ContinuousWithinAt.closure_le
 
 /-- If `s` is a closed set and two functions `f` and `g` are continuous on `s`,
 then the set `{x ∈ s | f x ≤ g x}` is a closed set. -/
-theorem IsClosed.isClosedLe [TopologicalSpace β] {f g : β → α} {s : Set β} (hs : IsClosed s)
+theorem IsClosed.is_closed_le [TopologicalSpace β] {f g : β → α} {s : Set β} (hs : IsClosed s)
     (hf : ContinuousOn f s) (hg : ContinuousOn g s) : IsClosed ({ x ∈ s | f x ≤ g x }) :=
-  (hf.Prod hg).preimageClosedOfClosed hs OrderClosedTopology.isClosedLe'
-#align is_closed.is_closed_le IsClosed.isClosedLe
+  (hf.Prod hg).preimage_closed_of_closed hs OrderClosedTopology.is_closed_le'
+#align is_closed.is_closed_le IsClosed.is_closed_le
 
 theorem le_on_closure [TopologicalSpace β] {f g : β → α} {s : Set β} (h : ∀ x ∈ s, f x ≤ g x)
     (hf : ContinuousOn f (closure s)) (hg : ContinuousOn g (closure s)) ⦃x⦄ (hx : x ∈ closure s) :
     f x ≤ g x :=
   have : s ⊆ { y ∈ closure s | f y ≤ g y } := fun y hy => ⟨subset_closure hy, h y hy⟩
-  (closure_minimal this (isClosedClosure.isClosedLe hf hg) hx).2
+  (closure_minimal this (is_closed_closure.is_closed_le hf hg) hx).2
 #align le_on_closure le_on_closure
 
 theorem IsClosed.epigraph [TopologicalSpace β] {f : β → α} {s : Set β} (hs : IsClosed s)
     (hf : ContinuousOn f s) : IsClosed { p : β × α | p.1 ∈ s ∧ f p.1 ≤ p.2 } :=
-  (hs.Preimage continuous_fst).isClosedLe (hf.comp continuous_on_fst Subset.rfl) continuous_on_snd
+  (hs.Preimage continuous_fst).is_closed_le (hf.comp continuous_on_fst Subset.rfl) continuous_on_snd
 #align is_closed.epigraph IsClosed.epigraph
 
 theorem IsClosed.hypograph [TopologicalSpace β] {f : β → α} {s : Set β} (hs : IsClosed s)
     (hf : ContinuousOn f s) : IsClosed { p : β × α | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
-  (hs.Preimage continuous_fst).isClosedLe continuous_on_snd (hf.comp continuous_on_fst Subset.rfl)
+  (hs.Preimage continuous_fst).is_closed_le continuous_on_snd (hf.comp continuous_on_fst Subset.rfl)
 #align is_closed.hypograph IsClosed.hypograph
 
 omit t
@@ -288,7 +288,7 @@ include t
 instance (priority := 90) OrderClosedTopology.toT2Space : T2Space α :=
   t2_iff_is_closed_diagonal.2 <| by
     simpa only [diagonal, le_antisymm_iff] using
-      t.is_closed_le'.inter (isClosedLe continuous_snd continuous_fst)
+      t.is_closed_le'.inter (is_closed_le continuous_snd continuous_fst)
 #align order_closed_topology.to_t2_space OrderClosedTopology.toT2Space
 
 end PartialOrder
@@ -299,12 +299,12 @@ variable [TopologicalSpace α] [LinearOrder α] [OrderClosedTopology α]
 
 theorem is_open_lt_prod : IsOpen { p : α × α | p.1 < p.2 } := by
   simp_rw [← is_closed_compl_iff, compl_set_of, not_lt]
-  exact isClosedLe continuous_snd continuous_fst
+  exact is_closed_le continuous_snd continuous_fst
 #align is_open_lt_prod is_open_lt_prod
 
 theorem is_open_lt [TopologicalSpace β] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
     IsOpen { b | f b < g b } := by
-  simp [lt_iff_not_ge, -not_le] <;> exact (isClosedLe hg hf).is_open_compl
+  simp [lt_iff_not_ge, -not_le] <;> exact (is_closed_le hg hf).is_open_compl
 #align is_open_lt is_open_lt
 
 variable {a b : α}
@@ -625,7 +625,7 @@ theorem continuous_if_le [TopologicalSpace γ] [∀ x, Decidable (f x ≤ g x)] 
     (hg' : ContinuousOn g' { x | g x ≤ f x }) (hfg : ∀ x, f x = g x → f' x = g' x) :
     Continuous fun x => if f x ≤ g x then f' x else g' x := by
   refine' continuous_if (fun a ha => hfg _ (frontier_le_subset_eq hf hg ha)) _ (hg'.mono _)
-  · rwa [(isClosedLe hf hg).closure_eq]
+  · rwa [(is_closed_le hf hg).closure_eq]
   · simp only [not_le]
     exact closure_lt_subset_le hg hf
 #align continuous_if_le continuous_if_le
@@ -684,6 +684,50 @@ theorem Filter.Tendsto.min {b : Filter β} {a₁ a₂ : α} (hf : Tendsto f b (�
     (hg : Tendsto g b (𝓝 a₂)) : Tendsto (fun b => min (f b) (g b)) b (𝓝 (min a₁ a₂)) :=
   (continuous_min.Tendsto (a₁, a₂)).comp (hf.prod_mk_nhds hg)
 #align filter.tendsto.min Filter.Tendsto.min
+
+theorem Filter.Tendsto.max_right {l : Filter β} {a : α} (h : Tendsto f l (𝓝 a)) :
+    Tendsto (fun i => max a (f i)) l (𝓝 a) := by
+  convert ((continuous_max.comp (@Continuous.Prod.mk α α _ _ a)).Tendsto a).comp h
+  simp
+#align filter.tendsto.max_right Filter.Tendsto.max_right
+
+theorem Filter.Tendsto.max_left {l : Filter β} {a : α} (h : Tendsto f l (𝓝 a)) :
+    Tendsto (fun i => max (f i) a) l (𝓝 a) := by
+  simp_rw [max_comm _ a]
+  exact h.max_right
+#align filter.tendsto.max_left Filter.Tendsto.max_left
+
+theorem Filter.tendsto_nhds_max_right {l : Filter β} {a : α} (h : Tendsto f l (𝓝[>] a)) :
+    Tendsto (fun i => max a (f i)) l (𝓝[>] a) := by
+  obtain ⟨h₁ : tendsto f l (𝓝 a), h₂ : ∀ᶠ i in l, f i ∈ Ioi a⟩ := tendsto_nhds_within_iff.mp h
+  exact tendsto_nhds_within_iff.mpr ⟨h₁.max_right, h₂.mono fun i hi => lt_max_of_lt_right hi⟩
+#align filter.tendsto_nhds_max_right Filter.tendsto_nhds_max_right
+
+theorem Filter.tendsto_nhds_max_left {l : Filter β} {a : α} (h : Tendsto f l (𝓝[>] a)) :
+    Tendsto (fun i => max (f i) a) l (𝓝[>] a) := by
+  simp_rw [max_comm _ a]
+  exact Filter.tendsto_nhds_max_right h
+#align filter.tendsto_nhds_max_left Filter.tendsto_nhds_max_left
+
+theorem Filter.Tendsto.min_right {l : Filter β} {a : α} (h : Tendsto f l (𝓝 a)) :
+    Tendsto (fun i => min a (f i)) l (𝓝 a) :=
+  @Filter.Tendsto.max_right αᵒᵈ β _ _ _ f l a h
+#align filter.tendsto.min_right Filter.Tendsto.min_right
+
+theorem Filter.Tendsto.min_left {l : Filter β} {a : α} (h : Tendsto f l (𝓝 a)) :
+    Tendsto (fun i => min (f i) a) l (𝓝 a) :=
+  @Filter.Tendsto.max_left αᵒᵈ β _ _ _ f l a h
+#align filter.tendsto.min_left Filter.Tendsto.min_left
+
+theorem Filter.tendsto_nhds_min_right {l : Filter β} {a : α} (h : Tendsto f l (𝓝[<] a)) :
+    Tendsto (fun i => min a (f i)) l (𝓝[<] a) :=
+  @Filter.tendsto_nhds_max_right αᵒᵈ β _ _ _ f l a h
+#align filter.tendsto_nhds_min_right Filter.tendsto_nhds_min_right
+
+theorem Filter.tendsto_nhds_min_left {l : Filter β} {a : α} (h : Tendsto f l (𝓝[<] a)) :
+    Tendsto (fun i => min (f i) a) l (𝓝[<] a) :=
+  @Filter.tendsto_nhds_max_left αᵒᵈ β _ _ _ f l a h
+#align filter.tendsto_nhds_min_left Filter.tendsto_nhds_min_left
 
 theorem Dense.exists_lt [NoMinOrder α] {s : Set α} (hs : Dense s) (x : α) : ∃ y ∈ s, y < x :=
   hs.exists_mem_open is_open_Iio (exists_lt x)
@@ -773,22 +817,22 @@ end OrderClosedTopology
 
 instance [Preorder α] [TopologicalSpace α] [OrderClosedTopology α] [Preorder β] [TopologicalSpace β]
     [OrderClosedTopology β] : OrderClosedTopology (α × β) :=
-  ⟨(isClosedLe (continuous_fst.comp continuous_fst) (continuous_fst.comp continuous_snd)).inter
-      (isClosedLe (continuous_snd.comp continuous_fst) (continuous_snd.comp continuous_snd))⟩
+  ⟨(is_closed_le (continuous_fst.comp continuous_fst) (continuous_fst.comp continuous_snd)).inter
+      (is_closed_le (continuous_snd.comp continuous_fst) (continuous_snd.comp continuous_snd))⟩
 
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, OrderClosedTopology (α i)] : OrderClosedTopology (∀ i, α i) := by
   constructor
   simp only [Pi.le_def, set_of_forall]
   exact
-    isClosedInter fun i =>
-      isClosedLe ((continuous_apply i).comp continuous_fst)
+    is_closed_Inter fun i =>
+      is_closed_le ((continuous_apply i).comp continuous_fst)
         ((continuous_apply i).comp continuous_snd)
 
-instance Pi.orderClosedTopology' [Preorder β] [TopologicalSpace β] [OrderClosedTopology β] :
+instance Pi.order_closed_topology' [Preorder β] [TopologicalSpace β] [OrderClosedTopology β] :
     OrderClosedTopology (α → β) :=
-  Pi.orderClosedTopology
-#align pi.order_closed_topology' Pi.orderClosedTopology'
+  Pi.order_closed_topology
+#align pi.order_closed_topology' Pi.order_closed_topology'
 
 /-- The order topology on an ordered type is the topology generated by open intervals. We register
 it on a preorder, but it is mostly interesting in linear orders, where it is also order-closed.
@@ -1186,15 +1230,15 @@ theorem order_separated {a₁ a₂ : α} (h : a₁ < a₂) :
 #align order_separated order_separated
 
 -- see Note [lower instance priority]
-instance (priority := 100) OrderTopology.toOrderClosedTopology :
+instance (priority := 100) OrderTopology.to_order_closed_topology :
     OrderClosedTopology
-      α where isClosedLe' :=
+      α where is_closed_le' :=
     is_open_compl_iff.1 <|
       is_open_prod_iff.mpr fun a₁ a₂ (h : ¬a₁ ≤ a₂) =>
         have h : a₂ < a₁ := lt_of_not_ge h
         let ⟨u, v, hu, hv, ha₁, ha₂, h⟩ := order_separated h
         ⟨v, u, hv, hu, ha₂, ha₁, fun ⟨b₁, b₂⟩ ⟨h₁, h₂⟩ => not_le_of_gt <| h b₂ h₂ b₁ h₁⟩
-#align order_topology.to_order_closed_topology OrderTopology.toOrderClosedTopology
+#align order_topology.to_order_closed_topology OrderTopology.to_order_closed_topology
 
 theorem exists_Ioc_subset_of_mem_nhds {a : α} {s : Set α} (hs : s ∈ 𝓝 a) (h : ∃ l, l < a) :
     ∃ l < a, ioc l a ⊆ s :=
@@ -3566,7 +3610,7 @@ variable [TopologicalSpace α] [LinearOrder α] [OrderTopology α] [DenselyOrder
 element. -/
 theorem closure_Ioi' {a : α} (h : (ioi a).Nonempty) : closure (ioi a) = ici a := by
   apply subset.antisymm
-  · exact closure_minimal Ioi_subset_Ici_self isClosedIci
+  · exact closure_minimal Ioi_subset_Ici_self is_closed_Ici
   · rw [← diff_subset_closure_iff, Ici_diff_Ioi_same, singleton_subset_iff]
     exact is_glb_Ioi.mem_closure h
 #align closure_Ioi' closure_Ioi'
@@ -3593,7 +3637,7 @@ theorem closure_Iio (a : α) [NoMinOrder α] : closure (iio a) = iic a :=
 @[simp]
 theorem closure_Ioo {a b : α} (hab : a ≠ b) : closure (ioo a b) = icc a b := by
   apply subset.antisymm
-  · exact closure_minimal Ioo_subset_Icc_self isClosedIcc
+  · exact closure_minimal Ioo_subset_Icc_self is_closed_Icc
   · cases' hab.lt_or_lt with hab hab
     · rw [← diff_subset_closure_iff, Icc_diff_Ioo_same hab.le]
       have hab' : (Ioo a b).Nonempty := nonempty_Ioo.2 hab
@@ -3607,7 +3651,7 @@ theorem closure_Ioo {a b : α} (hab : a ≠ b) : closure (ioo a b) = icc a b := 
 @[simp]
 theorem closure_Ioc {a b : α} (hab : a ≠ b) : closure (ioc a b) = icc a b := by
   apply subset.antisymm
-  · exact closure_minimal Ioc_subset_Icc_self isClosedIcc
+  · exact closure_minimal Ioc_subset_Icc_self is_closed_Icc
   · apply subset.trans _ (closure_mono Ioo_subset_Ioc_self)
     rw [closure_Ioo hab]
 #align closure_Ioc closure_Ioc
@@ -3616,7 +3660,7 @@ theorem closure_Ioc {a b : α} (hab : a ≠ b) : closure (ioc a b) = icc a b := 
 @[simp]
 theorem closure_Ico {a b : α} (hab : a ≠ b) : closure (ico a b) = icc a b := by
   apply subset.antisymm
-  · exact closure_minimal Ico_subset_Icc_self isClosedIcc
+  · exact closure_minimal Ico_subset_Icc_self is_closed_Icc
   · apply subset.trans _ (closure_mono Ioo_subset_Ico_self)
     rw [closure_Ioo hab]
 #align closure_Ico closure_Ico
@@ -3655,7 +3699,7 @@ theorem interior_Ioc [NoMaxOrder α] {a b : α} : interior (ioc a b) = ioo a b :
 #align interior_Ioc interior_Ioc
 
 theorem closure_interior_Icc {a b : α} (h : a ≠ b) : closure (interior (icc a b)) = icc a b :=
-  (closure_minimal interior_subset isClosedIcc).antisymm <|
+  (closure_minimal interior_subset is_closed_Icc).antisymm <|
     calc
       icc a b = closure (ioo a b) := (closure_Ioo h).symm
       _ ⊆ closure (interior (icc a b)) :=
@@ -3943,7 +3987,7 @@ instance (x : α) [Nontrivial α] : NeBot (𝓝[≠] x) := by
   obtain ⟨z, hz⟩ : ∃ z, a < z ∧ z < x := exists_between hy.1
   exact ⟨z, us ⟨hab ⟨hz.1, hz.2.trans hy.2⟩, hz.2.Ne⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- Let `s` be a dense set in a nontrivial dense linear order `α`. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` does not contain bottom/top elements of `α`. -/

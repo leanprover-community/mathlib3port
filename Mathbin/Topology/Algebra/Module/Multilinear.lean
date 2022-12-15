@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.module.multilinear
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,8 +151,8 @@ theorem to_multilinear_map_zero : (0 : ContinuousMultilinearMap R M₁ M₂).toM
 section HasSmul
 
 variable {R' R'' A : Type _} [Monoid R'] [Monoid R''] [Semiring A] [∀ i, Module A (M₁ i)]
-  [Module A M₂] [DistribMulAction R' M₂] [HasContinuousConstSmul R' M₂] [SmulCommClass A R' M₂]
-  [DistribMulAction R'' M₂] [HasContinuousConstSmul R'' M₂] [SmulCommClass A R'' M₂]
+  [Module A M₂] [DistribMulAction R' M₂] [HasContinuousConstSmul R' M₂] [SMulCommClass A R' M₂]
+  [DistribMulAction R'' M₂] [HasContinuousConstSmul R'' M₂] [SMulCommClass A R'' M₂]
 
 instance : HasSmul R' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c f => { c • f.toMultilinearMap with cont := f.cont.const_smul c }⟩
@@ -170,7 +170,7 @@ theorem to_multilinear_map_smul (c : R') (f : ContinuousMultilinearMap A M₁ M�
 #align
   continuous_multilinear_map.to_multilinear_map_smul ContinuousMultilinearMap.to_multilinear_map_smul
 
-instance [SmulCommClass R' R'' M₂] : SmulCommClass R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
+instance [SMulCommClass R' R'' M₂] : SMulCommClass R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c₁ c₂ f => ext fun x => smul_comm _ _ _⟩
 
 instance [HasSmul R' R''] [IsScalarTower R' R'' M₂] :
@@ -458,8 +458,8 @@ section DistribMulAction
 
 variable {R' R'' A : Type _} [Monoid R'] [Monoid R''] [Semiring A] [∀ i, AddCommMonoid (M₁ i)]
   [AddCommMonoid M₂] [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] [∀ i, Module A (M₁ i)]
-  [Module A M₂] [DistribMulAction R' M₂] [HasContinuousConstSmul R' M₂] [SmulCommClass A R' M₂]
-  [DistribMulAction R'' M₂] [HasContinuousConstSmul R'' M₂] [SmulCommClass A R'' M₂]
+  [Module A M₂] [DistribMulAction R' M₂] [HasContinuousConstSmul R' M₂] [SMulCommClass A R' M₂]
+  [DistribMulAction R'' M₂] [HasContinuousConstSmul R'' M₂] [SMulCommClass A R'' M₂]
 
 instance [HasContinuousAdd M₂] : DistribMulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
   Function.Injective.distribMulAction
@@ -472,7 +472,7 @@ section Module
 
 variable {R' A : Type _} [Semiring R'] [Semiring A] [∀ i, AddCommMonoid (M₁ i)] [AddCommMonoid M₂]
   [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] [HasContinuousAdd M₂] [∀ i, Module A (M₁ i)]
-  [Module A M₂] [Module R' M₂] [HasContinuousConstSmul R' M₂] [SmulCommClass A R' M₂]
+  [Module A M₂] [Module R' M₂] [HasContinuousConstSmul R' M₂] [SMulCommClass A R' M₂]
 
 /-- The space of continuous multilinear maps over an algebra over `R` is a module over `R`, for the
 pointwise addition and scalar multiplication. -/
@@ -496,7 +496,7 @@ def toMultilinearMapLinear :
 @[simps (config := { simpRhs := true })]
 def piLinearEquiv {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoid (M' i)]
     [∀ i, TopologicalSpace (M' i)] [∀ i, HasContinuousAdd (M' i)] [∀ i, Module R' (M' i)]
-    [∀ i, Module A (M' i)] [∀ i, SmulCommClass A R' (M' i)]
+    [∀ i, Module A (M' i)] [∀ i, SMulCommClass A R' (M' i)]
     [∀ i, HasContinuousConstSmul R' (M' i)] :
     (∀ i, ContinuousMultilinearMap A M₁ (M' i)) ≃ₗ[R'] ContinuousMultilinearMap A M₁ (∀ i, M' i) :=
   { piEquiv with 

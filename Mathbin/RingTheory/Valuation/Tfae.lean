@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.tfae
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 #align
   maximal_ideal_is_principal_of_is_dedekind_domain maximal_ideal_is_principal_of_is_dedekind_domain
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers [] [] [] [] [] [])
@@ -302,7 +302,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     ":="
                     `ufm_of_gcd_of_wf_dvd_monoid)))
                  []
-                 (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
+                 (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
                  []
                  (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
@@ -1031,7 +1031,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                    ":="
                    `ufm_of_gcd_of_wf_dvd_monoid)))
                 []
-                (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
+                (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
                 []
                 (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
@@ -1734,7 +1734,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                ":="
                `ufm_of_gcd_of_wf_dvd_monoid)))
             []
-            (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
+            (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
             []
             (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
@@ -2798,7 +2798,7 @@ theorem
               intro
                 haveI := IsBezout.toGcdDomain R
                 haveI : UniqueFactorizationMonoid R := ufm_of_gcd_of_wf_dvd_monoid
-                apply DiscreteValuationRing.ofUfdOfUniqueIrreducible
+                apply DiscreteValuationRing.of_ufd_of_unique_irreducible
                 ·
                   obtain ⟨ x , hx₁ , hx₂ ⟩ := Ring.exists_not_is_unit_of_not_is_field h
                     obtain ⟨ p , hp₁ , hp₂ ⟩ := WfDvdMonoid.exists_irreducible_factor hx₂ hx₁

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.order.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,10 +26,12 @@ universe u v
 /-! ### instances -/
 
 
+#print Nat.orderBot /-
 instance Nat.orderBot : OrderBot ℕ where 
   bot := 0
   bot_le := Nat.zero_le
 #align nat.order_bot Nat.orderBot
+-/
 
 instance : LinearOrderedCommSemiring ℕ :=
   { Nat.commSemiring, Nat.linearOrder with 
@@ -85,19 +87,25 @@ namespace Nat
 /-! ### Equalities and inequalities involving zero and one -/
 
 
+#print Nat.one_le_iff_ne_zero /-
 theorem one_le_iff_ne_zero : 1 ≤ n ↔ n ≠ 0 :=
   (show 1 ≤ n ↔ 0 < n from Iff.rfl).trans pos_iff_ne_zero
 #align nat.one_le_iff_ne_zero Nat.one_le_iff_ne_zero
+-/
 
+#print Nat.one_lt_iff_ne_zero_and_ne_one /-
 theorem one_lt_iff_ne_zero_and_ne_one : ∀ {n : ℕ}, 1 < n ↔ n ≠ 0 ∧ n ≠ 1
   | 0 => by decide
   | 1 => by decide
   | n + 2 => by decide
 #align nat.one_lt_iff_ne_zero_and_ne_one Nat.one_lt_iff_ne_zero_and_ne_one
+-/
 
+#print Nat.mul_ne_zero /-
 protected theorem mul_ne_zero (n0 : n ≠ 0) (m0 : m ≠ 0) : n * m ≠ 0
   | nm => (eq_zero_of_mul_eq_zero nm).elim n0 m0
 #align nat.mul_ne_zero Nat.mul_ne_zero
+-/
 
 #print Nat.mul_eq_zero /-
 @[simp]
@@ -106,22 +114,40 @@ protected theorem mul_eq_zero : m * n = 0 ↔ m = 0 ∨ n = 0 :=
 #align nat.mul_eq_zero Nat.mul_eq_zero
 -/
 
+#print Nat.zero_eq_mul /-
 @[simp]
 protected theorem zero_eq_mul : 0 = m * n ↔ m = 0 ∨ n = 0 := by rw [eq_comm, Nat.mul_eq_zero]
 #align nat.zero_eq_mul Nat.zero_eq_mul
+-/
 
+#print Nat.eq_zero_of_double_le /-
 theorem eq_zero_of_double_le (h : 2 * n ≤ n) : n = 0 :=
   add_right_eq_self.mp <| le_antisymm ((two_mul n).symm.trans_le h) le_add_self
 #align nat.eq_zero_of_double_le Nat.eq_zero_of_double_le
+-/
 
+#print Nat.eq_zero_of_mul_le /-
 theorem eq_zero_of_mul_le (hb : 2 ≤ n) (h : n * m ≤ m) : m = 0 :=
   eq_zero_of_double_le <| le_trans (Nat.mul_le_mul_right _ hb) h
 #align nat.eq_zero_of_mul_le Nat.eq_zero_of_mul_le
+-/
 
+/- warning: nat.zero_max -> Nat.zero_max is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat}, Eq.{1} Nat (LinearOrder.max.{0} Nat Nat.linearOrder (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) n
+but is expected to have type
+  forall {n : Nat}, Eq.{1} Nat (Max.max.{0} Nat Nat.instMaxNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) n
+Case conversion may be inaccurate. Consider using '#align nat.zero_max Nat.zero_maxₓ'. -/
 theorem zero_max : max 0 n = n :=
   max_eq_right (zero_le _)
 #align nat.zero_max Nat.zero_max
 
+/- warning: nat.min_eq_zero_iff -> Nat.min_eq_zero_iff is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (LinearOrder.min.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
+but is expected to have type
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (Min.min.{0} Nat Nat.instMinNat m n) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
+Case conversion may be inaccurate. Consider using '#align nat.min_eq_zero_iff Nat.min_eq_zero_iffₓ'. -/
 @[simp]
 theorem min_eq_zero_iff : min m n = 0 ↔ m = 0 ∨ n = 0 := by
   constructor
@@ -132,6 +158,12 @@ theorem min_eq_zero_iff : min m n = 0 ↔ m = 0 ∨ n = 0 := by
   · rintro (rfl | rfl) <;> simp
 #align nat.min_eq_zero_iff Nat.min_eq_zero_iff
 
+/- warning: nat.max_eq_zero_iff -> Nat.max_eq_zero_iff is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
+but is expected to have type
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
+Case conversion may be inaccurate. Consider using '#align nat.max_eq_zero_iff Nat.max_eq_zero_iffₓ'. -/
 @[simp]
 theorem max_eq_zero_iff : max m n = 0 ↔ m = 0 ∧ n = 0 := by
   constructor
@@ -145,45 +177,68 @@ theorem max_eq_zero_iff : max m n = 0 ↔ m = 0 ∧ n = 0 := by
     simp
 #align nat.max_eq_zero_iff Nat.max_eq_zero_iff
 
+/- warning: nat.add_eq_max_iff -> Nat.add_eq_max_iff is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n) (LinearOrder.max.{0} Nat Nat.linearOrder m n)) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
+but is expected to have type
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n) (Max.max.{0} Nat Nat.instMaxNat m n)) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
+Case conversion may be inaccurate. Consider using '#align nat.add_eq_max_iff Nat.add_eq_max_iffₓ'. -/
 theorem add_eq_max_iff : m + n = max m n ↔ m = 0 ∨ n = 0 := by
   rw [← min_eq_zero_iff]
   cases' le_total m n with H H <;> simp [H]
 #align nat.add_eq_max_iff Nat.add_eq_max_iff
 
+/- warning: nat.add_eq_min_iff -> Nat.add_eq_min_iff is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n) (LinearOrder.min.{0} Nat Nat.linearOrder m n)) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
+but is expected to have type
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n) (Min.min.{0} Nat Nat.instMinNat m n)) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
+Case conversion may be inaccurate. Consider using '#align nat.add_eq_min_iff Nat.add_eq_min_iffₓ'. -/
 theorem add_eq_min_iff : m + n = min m n ↔ m = 0 ∧ n = 0 := by
   rw [← max_eq_zero_iff]
   cases' le_total m n with H H <;> simp [H]
 #align nat.add_eq_min_iff Nat.add_eq_min_iff
 
+#print Nat.one_le_of_lt /-
 theorem one_le_of_lt (h : n < m) : 1 ≤ m :=
   lt_of_le_of_lt (Nat.zero_le _) h
 #align nat.one_le_of_lt Nat.one_le_of_lt
+-/
 
+#print Nat.eq_one_of_mul_eq_one_right /-
 theorem eq_one_of_mul_eq_one_right (H : m * n = 1) : m = 1 :=
   eq_one_of_dvd_one ⟨n, H.symm⟩
 #align nat.eq_one_of_mul_eq_one_right Nat.eq_one_of_mul_eq_one_right
+-/
 
+#print Nat.eq_one_of_mul_eq_one_left /-
 theorem eq_one_of_mul_eq_one_left (H : m * n = 1) : n = 1 :=
   eq_one_of_mul_eq_one_right (by rwa [mul_comm])
 #align nat.eq_one_of_mul_eq_one_left Nat.eq_one_of_mul_eq_one_left
+-/
 
 /-! ### `succ` -/
 
 
+#print Nat.two_le_iff /-
 theorem two_le_iff : ∀ n, 2 ≤ n ↔ n ≠ 0 ∧ n ≠ 1
   | 0 => by simp
   | 1 => by simp
   | n + 2 => by simp
 #align nat.two_le_iff Nat.two_le_iff
+-/
 
+#print Nat.lt_one_iff /-
 @[simp]
 theorem lt_one_iff {n : ℕ} : n < 1 ↔ n = 0 :=
   lt_succ_iff.trans nonpos_iff_eq_zero
 #align nat.lt_one_iff Nat.lt_one_iff
+-/
 
 /-! ### `add` -/
 
 
+#print Nat.add_pos_left /-
 theorem add_pos_left {m : ℕ} (h : 0 < m) (n : ℕ) : 0 < m + n :=
   calc
     m + n > 0 + n := Nat.add_lt_add_right h n
@@ -191,11 +246,15 @@ theorem add_pos_left {m : ℕ} (h : 0 < m) (n : ℕ) : 0 < m + n :=
     _ ≥ 0 := zero_le n
     
 #align nat.add_pos_left Nat.add_pos_left
+-/
 
+#print Nat.add_pos_right /-
 theorem add_pos_right (m : ℕ) {n : ℕ} (h : 0 < n) : 0 < m + n := by rw [add_comm];
   exact add_pos_left h m
 #align nat.add_pos_right Nat.add_pos_right
+-/
 
+#print Nat.add_pos_iff_pos_or_pos /-
 theorem add_pos_iff_pos_or_pos (m n : ℕ) : 0 < m + n ↔ 0 < m ∨ 0 < n :=
   Iff.intro
     (by 
@@ -209,20 +268,28 @@ theorem add_pos_iff_pos_or_pos (m n : ℕ) : 0 < m + n ↔ 0 < m ∨ 0 < n :=
       · apply add_pos_left mpos
       apply add_pos_right _ npos)
 #align nat.add_pos_iff_pos_or_pos Nat.add_pos_iff_pos_or_pos
+-/
 
+#print Nat.add_eq_one_iff /-
 theorem add_eq_one_iff : m + n = 1 ↔ m = 0 ∧ n = 1 ∨ m = 1 ∧ n = 0 := by
   cases n <;> simp [succ_eq_add_one, ← add_assoc, succ_inj']
 #align nat.add_eq_one_iff Nat.add_eq_one_iff
+-/
 
+#print Nat.add_eq_two_iff /-
 theorem add_eq_two_iff : m + n = 2 ↔ m = 0 ∧ n = 2 ∨ m = 1 ∧ n = 1 ∨ m = 2 ∧ n = 0 := by
   cases n <;> simp [(succ_ne_zero 1).symm, succ_eq_add_one, ← add_assoc, succ_inj', add_eq_one_iff]
 #align nat.add_eq_two_iff Nat.add_eq_two_iff
+-/
 
+#print Nat.add_eq_three_iff /-
 theorem add_eq_three_iff :
     m + n = 3 ↔ m = 0 ∧ n = 3 ∨ m = 1 ∧ n = 2 ∨ m = 2 ∧ n = 1 ∨ m = 3 ∧ n = 0 := by
   cases n <;> simp [(succ_ne_zero 1).symm, succ_eq_add_one, ← add_assoc, succ_inj', add_eq_two_iff]
 #align nat.add_eq_three_iff Nat.add_eq_three_iff
+-/
 
+#print Nat.le_add_one_iff /-
 theorem le_add_one_iff : m ≤ n + 1 ↔ m ≤ n ∨ m = n + 1 :=
   ⟨fun h =>
     match Nat.eq_or_lt_of_le h with
@@ -230,27 +297,34 @@ theorem le_add_one_iff : m ≤ n + 1 ↔ m ≤ n ∨ m = n + 1 :=
     | Or.inr h => Or.inl <| Nat.le_of_succ_le_succ h,
     Or.ndrec (fun h => le_trans h <| Nat.le_add_right _ _) le_of_eq⟩
 #align nat.le_add_one_iff Nat.le_add_one_iff
+-/
 
+#print Nat.le_and_le_add_one_iff /-
 theorem le_and_le_add_one_iff : n ≤ m ∧ m ≤ n + 1 ↔ m = n ∨ m = n + 1 := by
   rw [le_add_one_iff, and_or_left, ← le_antisymm_iff, eq_comm, and_iff_right_of_imp]
   rintro rfl
   exact n.le_succ
 #align nat.le_and_le_add_one_iff Nat.le_and_le_add_one_iff
+-/
 
+#print Nat.add_succ_lt_add /-
 theorem add_succ_lt_add (hab : m < n) (hcd : k < l) : m + k + 1 < n + l := by
   rw [add_assoc]
   exact add_lt_add_of_lt_of_le hab (Nat.succ_le_iff.2 hcd)
 #align nat.add_succ_lt_add Nat.add_succ_lt_add
+-/
 
 /-! ### `pred` -/
 
 
+#print Nat.pred_le_iff /-
 theorem pred_le_iff : pred m ≤ n ↔ m ≤ succ n :=
   ⟨le_succ_of_pred_le, by 
     cases m
     · exact fun _ => zero_le n
     exact le_of_succ_le_succ⟩
 #align nat.pred_le_iff Nat.pred_le_iff
+-/
 
 /-! ### `sub`
 
@@ -264,14 +338,19 @@ instance : OrderedSub ℕ := by
   · simp
   · simp only [sub_succ, add_succ, succ_add, ih, pred_le_iff]
 
+#print Nat.lt_pred_iff /-
 theorem lt_pred_iff : n < pred m ↔ succ n < m :=
   show n < m - 1 ↔ n + 1 < m from lt_tsub_iff_right
 #align nat.lt_pred_iff Nat.lt_pred_iff
+-/
 
+#print Nat.lt_of_lt_pred /-
 theorem lt_of_lt_pred (h : m < n - 1) : m < n :=
   lt_of_succ_lt (lt_pred_iff.1 h)
 #align nat.lt_of_lt_pred Nat.lt_of_lt_pred
+-/
 
+#print Nat.le_or_le_of_add_eq_add_pred /-
 theorem le_or_le_of_add_eq_add_pred (h : k + l = m + n - 1) : m ≤ k ∨ n ≤ l := by
   cases' le_or_lt m k with h' h' <;> [left, right]
   · exact h'
@@ -283,15 +362,19 @@ theorem le_or_le_of_add_eq_add_pred (h : k + l = m + n - 1) : m ≤ k ∨ n ≤ 
     rw [m.add_sub_assoc hn, add_lt_add_iff_left] at h'
     exact Nat.le_of_pred_lt h'
 #align nat.le_or_le_of_add_eq_add_pred Nat.le_or_le_of_add_eq_add_pred
+-/
 
+#print Nat.sub_succ' /-
 /-- A version of `nat.sub_succ` in the form `_ - 1` instead of `nat.pred _`. -/
 theorem sub_succ' (m n : ℕ) : m - n.succ = m - n - 1 :=
   rfl
 #align nat.sub_succ' Nat.sub_succ'
+-/
 
 /-! ### `mul` -/
 
 
+#print Nat.mul_eq_one_iff /-
 theorem mul_eq_one_iff : ∀ {m n : ℕ}, m * n = 1 ↔ m = 1 ∧ n = 1
   | 0, 0 => by decide
   | 0, 1 => by decide
@@ -305,62 +388,85 @@ theorem mul_eq_one_iff : ∀ {m n : ℕ}, m * n = 1 ↔ m = 1 ∧ n = 1
         simp [h.1.2, h.2],
       fun h => by simp only [h, mul_one]⟩
 #align nat.mul_eq_one_iff Nat.mul_eq_one_iff
+-/
 
+#print Nat.succ_mul_pos /-
 theorem succ_mul_pos (m : ℕ) (hn : 0 < n) : 0 < succ m * n :=
   mul_pos (succ_pos m) hn
 #align nat.succ_mul_pos Nat.succ_mul_pos
+-/
 
+#print Nat.mul_self_le_mul_self /-
 theorem mul_self_le_mul_self (h : m ≤ n) : m * m ≤ n * n :=
   mul_le_mul h h (zero_le _) (zero_le _)
 #align nat.mul_self_le_mul_self Nat.mul_self_le_mul_self
+-/
 
+#print Nat.mul_self_lt_mul_self /-
 theorem mul_self_lt_mul_self : ∀ {m n : ℕ}, m < n → m * m < n * n
   | 0, n, h => mul_pos h h
   | succ m, n, h => mul_lt_mul h (le_of_lt h) (succ_pos _) (zero_le _)
 #align nat.mul_self_lt_mul_self Nat.mul_self_lt_mul_self
+-/
 
+#print Nat.mul_self_le_mul_self_iff /-
 theorem mul_self_le_mul_self_iff : m ≤ n ↔ m * m ≤ n * n :=
   ⟨mul_self_le_mul_self, le_imp_le_of_lt_imp_lt mul_self_lt_mul_self⟩
 #align nat.mul_self_le_mul_self_iff Nat.mul_self_le_mul_self_iff
+-/
 
+#print Nat.mul_self_lt_mul_self_iff /-
 theorem mul_self_lt_mul_self_iff : m < n ↔ m * m < n * n :=
   le_iff_le_iff_lt_iff_lt.1 mul_self_le_mul_self_iff
 #align nat.mul_self_lt_mul_self_iff Nat.mul_self_lt_mul_self_iff
+-/
 
+#print Nat.le_mul_self /-
 theorem le_mul_self : ∀ n : ℕ, n ≤ n * n
   | 0 => le_rfl
   | n + 1 => by simp
 #align nat.le_mul_self Nat.le_mul_self
+-/
 
+#print Nat.le_mul_of_pos_left /-
 theorem le_mul_of_pos_left (h : 0 < n) : m ≤ n * m := by
   conv => 
     lhs
     rw [← one_mul m]
   exact mul_le_mul_of_nonneg_right h.nat_succ_le (by decide)
 #align nat.le_mul_of_pos_left Nat.le_mul_of_pos_left
+-/
 
+#print Nat.le_mul_of_pos_right /-
 theorem le_mul_of_pos_right (h : 0 < n) : m ≤ m * n := by
   conv => 
     lhs
     rw [← mul_one m]
   exact mul_le_mul_of_nonneg_left h.nat_succ_le (by decide)
 #align nat.le_mul_of_pos_right Nat.le_mul_of_pos_right
+-/
 
+#print Nat.mul_self_inj /-
 theorem mul_self_inj : m * m = n * n ↔ m = n :=
   le_antisymm_iff.trans
     (le_antisymm_iff.trans (and_congr mul_self_le_mul_self_iff mul_self_le_mul_self_iff)).symm
 #align nat.mul_self_inj Nat.mul_self_inj
+-/
 
+#print Nat.le_add_pred_of_pos /-
 theorem le_add_pred_of_pos (n : ℕ) {i : ℕ} (hi : i ≠ 0) : n ≤ i + (n - 1) := by
   refine' le_trans _ add_tsub_le_assoc
   simp [add_comm, Nat.add_sub_assoc, one_le_iff_ne_zero.2 hi]
 #align nat.le_add_pred_of_pos Nat.le_add_pred_of_pos
+-/
 
+#print Nat.lt_mul_self_iff /-
 @[simp]
 theorem lt_mul_self_iff : ∀ {n : ℕ}, n < n * n ↔ 1 < n
   | 0 => iff_of_false (lt_irrefl _) zero_le_one.not_lt
   | n + 1 => lt_mul_iff_one_lt_left n.succ_pos
 #align nat.lt_mul_self_iff Nat.lt_mul_self_iff
+-/
 
 /-!
 ### Recursion and induction principles
@@ -370,6 +476,7 @@ proved above, and some of the results in later sections depend on the definition
 -/
 
 
+#print Nat.diag_induction /-
 /-- Given a predicate on two naturals `P : ℕ → ℕ → Prop`, `P a b` is true for all `a < b` if
 `P (a + 1) (a + 1)` is true for all `a`, `P 0 (b + 1)` is true for all `b` and for all
 `a < b`, `P (a + 1) b` is true and `P a (b + 1)` is true implies `P (a + 1) (b + 1)` is true. -/
@@ -386,22 +493,28 @@ theorem diag_induction (P : ℕ → ℕ → Prop) (ha : ∀ a, P (a + 1) (a + 1)
     apply diag_induction a (b + 1)
     apply lt_of_le_of_lt (Nat.le_succ _) h termination_by' ⟨_, measure_wf fun p => p.1 + p.2.1⟩
 #align nat.diag_induction Nat.diag_induction
+-/
 
+#print Nat.set_induction_bounded /-
 /-- A subset of `ℕ` containing `k : ℕ` and closed under `nat.succ` contains every `n ≥ k`. -/
 theorem set_induction_bounded {S : Set ℕ} (hk : k ∈ S) (h_ind : ∀ k : ℕ, k ∈ S → k + 1 ∈ S)
     (hnk : k ≤ n) : n ∈ S :=
   @leRecOn (fun n => n ∈ S) k n hnk h_ind hk
 #align nat.set_induction_bounded Nat.set_induction_bounded
+-/
 
+#print Nat.set_induction /-
 /-- A subset of `ℕ` containing zero and closed under `nat.succ` contains all of `ℕ`. -/
 theorem set_induction {S : Set ℕ} (hb : 0 ∈ S) (h_ind : ∀ k : ℕ, k ∈ S → k + 1 ∈ S) (n : ℕ) :
     n ∈ S :=
   set_induction_bounded hb h_ind (zero_le n)
 #align nat.set_induction Nat.set_induction
+-/
 
 /-! ### `div` -/
 
 
+#print Nat.div_le_of_le_mul' /-
 protected theorem div_le_of_le_mul' (h : m ≤ k * n) : m / k ≤ n :=
   (Nat.eq_zero_or_pos k).elim (fun k0 => by rw [k0, Nat.div_zero] <;> apply zero_le) fun k0 =>
     (mul_le_mul_left k0).1 <|
@@ -411,7 +524,9 @@ protected theorem div_le_of_le_mul' (h : m ≤ k * n) : m / k ≤ n :=
         _ ≤ k * n := h
         
 #align nat.div_le_of_le_mul' Nat.div_le_of_le_mul'
+-/
 
+#print Nat.div_le_self' /-
 protected theorem div_le_self' (m n : ℕ) : m / n ≤ m :=
   (Nat.eq_zero_or_pos n).elim (fun n0 => by rw [n0, Nat.div_zero] <;> apply zero_le) fun n0 =>
     Nat.div_le_of_le_mul' <|
@@ -420,7 +535,9 @@ protected theorem div_le_self' (m n : ℕ) : m / n ≤ m :=
         _ ≤ n * m := Nat.mul_le_mul_right _ n0
         
 #align nat.div_le_self' Nat.div_le_self'
+-/
 
+#print Nat.div_lt_of_lt_mul /-
 protected theorem div_lt_of_lt_mul (h : m < n * k) : m / n < k :=
   lt_of_mul_lt_mul_left
     (calc
@@ -430,12 +547,16 @@ protected theorem div_lt_of_lt_mul (h : m < n * k) : m / n < k :=
       )
     (Nat.zero_le n)
 #align nat.div_lt_of_lt_mul Nat.div_lt_of_lt_mul
+-/
 
+#print Nat.eq_zero_of_le_div /-
 theorem eq_zero_of_le_div (hn : 2 ≤ n) (h : m ≤ m / n) : m = 0 :=
   eq_zero_of_mul_le hn <| by
     rw [mul_comm] <;> exact (Nat.le_div_iff_mul_le' (lt_of_lt_of_le (by decide) hn)).1 h
 #align nat.eq_zero_of_le_div Nat.eq_zero_of_le_div
+-/
 
+#print Nat.div_mul_div_le_div /-
 theorem div_mul_div_le_div (m n k : ℕ) : m / k * n / m ≤ n / k :=
   if hm0 : m = 0 then by simp [hm0]
   else
@@ -447,11 +568,15 @@ theorem div_mul_div_le_div (m n k : ℕ) : m / k * n / m ≤ n / k :=
           Nat.mul_div_mul _ _ (Nat.pos_of_ne_zero hm0)]
       
 #align nat.div_mul_div_le_div Nat.div_mul_div_le_div
+-/
 
+#print Nat.eq_zero_of_le_half /-
 theorem eq_zero_of_le_half (h : n ≤ n / 2) : n = 0 :=
   eq_zero_of_le_div le_rfl h
 #align nat.eq_zero_of_le_half Nat.eq_zero_of_le_half
+-/
 
+#print Nat.mul_div_mul_comm_of_dvd_dvd /-
 theorem mul_div_mul_comm_of_dvd_dvd (hmk : k ∣ m) (hnl : l ∣ n) :
     m * n / (k * l) = m / k * (n / l) := by
   rcases k.eq_zero_or_pos with (rfl | hk0); · simp
@@ -461,6 +586,7 @@ theorem mul_div_mul_comm_of_dvd_dvd (hmk : k ∣ m) (hnl : l ∣ n) :
   rw [mul_mul_mul_comm, Nat.mul_div_cancel_left _ hk0, Nat.mul_div_cancel_left _ hl0,
     Nat.mul_div_cancel_left _ (mul_pos hk0 hl0)]
 #align nat.mul_div_mul_comm_of_dvd_dvd Nat.mul_div_mul_comm_of_dvd_dvd
+-/
 
 theorem le_half_of_half_lt_sub {a b : ℕ} (h : a / 2 < a - b) : b ≤ a / 2 := by
   rw [Nat.le_div_iff_mul_le two_pos]
@@ -478,22 +604,29 @@ theorem half_le_of_sub_le_half {a b : ℕ} (h : a - b ≤ a / 2) : a / 2 ≤ b :
 /-! ### `mod`, `dvd` -/
 
 
+#print Nat.two_mul_odd_div_two /-
 theorem two_mul_odd_div_two (hn : n % 2 = 1) : 2 * (n / 2) = n - 1 := by
   conv => 
     rhs
     rw [← Nat.mod_add_div n 2, hn, add_tsub_cancel_left]
 #align nat.two_mul_odd_div_two Nat.two_mul_odd_div_two
+-/
 
+#print Nat.div_dvd_of_dvd /-
 theorem div_dvd_of_dvd (h : n ∣ m) : m / n ∣ m :=
   ⟨n, (Nat.div_mul_cancel h).symm⟩
 #align nat.div_dvd_of_dvd Nat.div_dvd_of_dvd
+-/
 
+#print Nat.div_div_self /-
 protected theorem div_div_self (h : n ∣ m) (hm : m ≠ 0) : m / (m / n) = n := by
   rcases h with ⟨_, rfl⟩
   rw [mul_ne_zero_iff] at hm
   rw [mul_div_right _ (Nat.pos_of_ne_zero hm.1), mul_div_left _ (Nat.pos_of_ne_zero hm.2)]
 #align nat.div_div_self Nat.div_div_self
+-/
 
+#print Nat.mod_mul_right_div_self /-
 theorem mod_mul_right_div_self (m n k : ℕ) : m % (n * k) / n = m / n % k := by
   rcases Nat.eq_zero_or_pos n with (rfl | hn); · simp
   rcases Nat.eq_zero_or_pos k with (rfl | hk); · simp
@@ -501,33 +634,50 @@ theorem mod_mul_right_div_self (m n k : ℕ) : m % (n * k) / n = m / n % k := by
   rw [mul_assoc, add_mul_div_left _ _ hn, add_mul_mod_self_left,
     mod_eq_of_lt (Nat.div_lt_of_lt_mul (mod_lt _ (mul_pos hn hk)))]
 #align nat.mod_mul_right_div_self Nat.mod_mul_right_div_self
+-/
 
+#print Nat.mod_mul_left_div_self /-
 theorem mod_mul_left_div_self (m n k : ℕ) : m % (k * n) / n = m / n % k := by
   rw [mul_comm k, mod_mul_right_div_self]
 #align nat.mod_mul_left_div_self Nat.mod_mul_left_div_self
+-/
 
+#print Nat.not_dvd_of_pos_of_lt /-
 theorem not_dvd_of_pos_of_lt (h1 : 0 < n) (h2 : n < m) : ¬m ∣ n := by
   rintro ⟨k, rfl⟩
   rcases Nat.eq_zero_or_pos k with (rfl | hk)
   · exact lt_irrefl 0 h1
   · exact not_lt.2 (le_mul_of_pos_right hk) h2
 #align nat.not_dvd_of_pos_of_lt Nat.not_dvd_of_pos_of_lt
+-/
 
+#print Nat.sub_mod_eq_zero_of_mod_eq /-
 /-- If `m` and `n` are equal mod `k`, `m - n` is zero mod `k`. -/
 theorem sub_mod_eq_zero_of_mod_eq (h : m % k = n % k) : (m - n) % k = 0 := by
   rw [← Nat.mod_add_div m k, ← Nat.mod_add_div n k, ← h, tsub_add_eq_tsub_tsub,
     add_tsub_cancel_left, ← mul_tsub, Nat.mul_mod_right]
 #align nat.sub_mod_eq_zero_of_mod_eq Nat.sub_mod_eq_zero_of_mod_eq
+-/
 
+#print Nat.one_mod /-
 @[simp]
 theorem one_mod (n : ℕ) : 1 % (n + 2) = 1 :=
   Nat.mod_eq_of_lt (add_lt_add_right n.succ_pos 1)
 #align nat.one_mod Nat.one_mod
+-/
 
+#print Nat.dvd_sub_mod /-
 theorem dvd_sub_mod (k : ℕ) : n ∣ k - k % n :=
   ⟨k / n, tsub_eq_of_eq_add_rev (Nat.mod_add_div k n).symm⟩
 #align nat.dvd_sub_mod Nat.dvd_sub_mod
+-/
 
+/- warning: nat.add_mod_eq_ite -> Nat.add_mod_eq_ite is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat} {k : Nat}, Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n) k) (ite.{1} Nat (LE.le.{0} Nat Nat.hasLe k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n k))) (Nat.decidableLe k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n k))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n k)) k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n k)))
+but is expected to have type
+  forall {m : Nat} {n : Nat} {k : Nat}, Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n) k) (ite.{1} Nat (LE.le.{0} Nat instLENat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n k))) (Nat.decLe k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n k))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n k)) k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n k)))
+Case conversion may be inaccurate. Consider using '#align nat.add_mod_eq_ite Nat.add_mod_eq_iteₓ'. -/
 theorem add_mod_eq_ite :
     (m + n) % k = if k ≤ m % k + n % k then m % k + n % k - k else m % k + n % k := by
   cases k; · simp
@@ -539,6 +689,7 @@ theorem add_mod_eq_ite :
   · exact Nat.mod_eq_of_lt (lt_of_not_ge h)
 #align nat.add_mod_eq_ite Nat.add_mod_eq_ite
 
+#print Nat.div_mul_div_comm /-
 theorem div_mul_div_comm (hmn : n ∣ m) (hkl : l ∣ k) : m / n * (k / l) = m * k / (n * l) :=
   have exi1 : ∃ x, m = n * x := hmn
   have exi2 : ∃ y, k = l * y := hkl
@@ -557,7 +708,9 @@ theorem div_mul_div_comm (hmn : n ∣ m) (hkl : l ∣ k) : m / n * (k / l) = m *
       repeat' assumption
       cc
 #align nat.div_mul_div_comm Nat.div_mul_div_comm
+-/
 
+#print Nat.div_eq_self /-
 theorem div_eq_self : m / n = m ↔ m = 0 ∨ n = 1 := by
   constructor
   · intro
@@ -572,20 +725,25 @@ theorem div_eq_self : m / n = m ↔ m = 0 ∨ n = 1 := by
         simp_all
   · rintro (rfl | rfl) <;> simp
 #align nat.div_eq_self Nat.div_eq_self
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+#print Nat.div_eq_sub_mod_div /-
 theorem div_eq_sub_mod_div : m / n = (m - m % n) / n := by
   by_cases n0 : n = 0
   · rw [n0, Nat.div_zero, Nat.div_zero]
   · rw [← mod_add_div m n]
     rw [add_tsub_cancel_left, mul_div_right _ (Nat.pos_of_ne_zero n0)]
 #align nat.div_eq_sub_mod_div Nat.div_eq_sub_mod_div
+-/
 
+#print Nat.not_dvd_of_between_consec_multiples /-
 /-- `m` is not divisible by `n` if it is between `n * k` and `n * (k + 1)` for some `k`. -/
 theorem not_dvd_of_between_consec_multiples (h1 : n * k < m) (h2 : m < n * (k + 1)) : ¬n ∣ m := by
   rintro ⟨d, rfl⟩
   exact Monotone.ne_of_lt_of_lt_nat (Covariant.monotone_of_const n) k h1 h2 d rfl
 #align nat.not_dvd_of_between_consec_multiples Nat.not_dvd_of_between_consec_multiples
+-/
 
 /-! ### `find` -/
 
@@ -594,11 +752,14 @@ section Find
 
 variable {p q : ℕ → Prop} [DecidablePred p] [DecidablePred q]
 
+#print Nat.find_pos /-
 @[simp]
 theorem find_pos (h : ∃ n : ℕ, p n) : 0 < Nat.find h ↔ ¬p 0 := by
   rw [pos_iff_ne_zero, Ne, Nat.find_eq_zero]
 #align nat.find_pos Nat.find_pos
+-/
 
+#print Nat.find_add /-
 theorem find_add {hₘ : ∃ m, p (m + n)} {hₙ : ∃ n, p n} (hn : n ≤ Nat.find hₙ) :
     Nat.find hₘ + n = Nat.find hₙ := by
   refine' ((le_find_iff _ _).2 fun m hm hpm => hm.not_le _).antisymm _
@@ -610,6 +771,7 @@ theorem find_add {hₘ : ∃ m, p (m + n)} {hₙ : ∃ n, p n} (hn : n ≤ Nat.f
     rw [tsub_le_iff_right]
     exact find_le hpm
 #align nat.find_add Nat.find_add
+-/
 
 end Find
 
@@ -620,7 +782,8 @@ section FindGreatest
 
 variable {P Q : ℕ → Prop} [DecidablePred P]
 
-theorem find_greatest_eq_iff :
+#print Nat.findGreatest_eq_iff /-
+theorem findGreatest_eq_iff :
     Nat.findGreatest P k = m ↔ m ≤ k ∧ (m ≠ 0 → P m) ∧ ∀ ⦃n⦄, m < n → n ≤ k → ¬P n := by
   induction' k with k ihk generalizing m
   · rw [eq_comm, Iff.comm]
@@ -645,38 +808,50 @@ theorem find_greatest_eq_iff :
         refine' ⟨lt_succ_iff.1 (hle.lt_of_ne _), hP, fun n hlt hle => hm hlt (hle.trans k.le_succ)⟩
         rintro rfl
         exact hk (hP k.succ_ne_zero)
-#align nat.find_greatest_eq_iff Nat.find_greatest_eq_iff
+#align nat.find_greatest_eq_iff Nat.findGreatest_eq_iff
+-/
 
-theorem find_greatest_eq_zero_iff : Nat.findGreatest P k = 0 ↔ ∀ ⦃n⦄, 0 < n → n ≤ k → ¬P n := by
+#print Nat.findGreatest_eq_zero_iff /-
+theorem findGreatest_eq_zero_iff : Nat.findGreatest P k = 0 ↔ ∀ ⦃n⦄, 0 < n → n ≤ k → ¬P n := by
   simp [find_greatest_eq_iff]
-#align nat.find_greatest_eq_zero_iff Nat.find_greatest_eq_zero_iff
+#align nat.find_greatest_eq_zero_iff Nat.findGreatest_eq_zero_iff
+-/
 
-theorem find_greatest_spec (hmb : m ≤ n) (hm : P m) : P (Nat.findGreatest P n) := by
+#print Nat.findGreatest_spec /-
+theorem findGreatest_spec (hmb : m ≤ n) (hm : P m) : P (Nat.findGreatest P n) := by
   by_cases h : Nat.findGreatest P n = 0
   · cases m
     · rwa [h]
     exact ((find_greatest_eq_zero_iff.1 h) m.zero_lt_succ hmb hm).elim
   · exact (find_greatest_eq_iff.1 rfl).2.1 h
-#align nat.find_greatest_spec Nat.find_greatest_spec
+#align nat.find_greatest_spec Nat.findGreatest_spec
+-/
 
-theorem find_greatest_le (n : ℕ) : Nat.findGreatest P n ≤ n :=
-  (find_greatest_eq_iff.1 rfl).1
-#align nat.find_greatest_le Nat.find_greatest_le
+#print Nat.findGreatest_le /-
+theorem findGreatest_le (n : ℕ) : Nat.findGreatest P n ≤ n :=
+  (findGreatest_eq_iff.1 rfl).1
+#align nat.find_greatest_le Nat.findGreatest_le
+-/
 
-theorem le_find_greatest (hmb : m ≤ n) (hm : P m) : m ≤ Nat.findGreatest P n :=
-  le_of_not_lt fun hlt => (find_greatest_eq_iff.1 rfl).2.2 hlt hmb hm
-#align nat.le_find_greatest Nat.le_find_greatest
+#print Nat.le_findGreatest /-
+theorem le_findGreatest (hmb : m ≤ n) (hm : P m) : m ≤ Nat.findGreatest P n :=
+  le_of_not_lt fun hlt => (findGreatest_eq_iff.1 rfl).2.2 hlt hmb hm
+#align nat.le_find_greatest Nat.le_findGreatest
+-/
 
-theorem find_greatest_mono_right (P : ℕ → Prop) [DecidablePred P] : Monotone (Nat.findGreatest P) :=
+#print Nat.findGreatest_mono_right /-
+theorem findGreatest_mono_right (P : ℕ → Prop) [DecidablePred P] : Monotone (Nat.findGreatest P) :=
   by 
   refine' monotone_nat_of_le_succ fun n => _
   rw [find_greatest_succ]
   split_ifs
   · exact (find_greatest_le n).trans (le_succ _)
   · rfl
-#align nat.find_greatest_mono_right Nat.find_greatest_mono_right
+#align nat.find_greatest_mono_right Nat.findGreatest_mono_right
+-/
 
-theorem find_greatest_mono_left [DecidablePred Q] (hPQ : P ≤ Q) :
+#print Nat.findGreatest_mono_left /-
+theorem findGreatest_mono_left [DecidablePred Q] (hPQ : P ≤ Q) :
     Nat.findGreatest P ≤ Nat.findGreatest Q := by
   intro n
   induction' n with n hn
@@ -684,21 +859,28 @@ theorem find_greatest_mono_left [DecidablePred Q] (hPQ : P ≤ Q) :
   by_cases P (n + 1)
   · rw [find_greatest_eq h, find_greatest_eq (hPQ _ h)]
   · rw [find_greatest_of_not h]
-    exact hn.trans (Nat.find_greatest_mono_right _ <| le_succ _)
-#align nat.find_greatest_mono_left Nat.find_greatest_mono_left
+    exact hn.trans (Nat.findGreatest_mono_right _ <| le_succ _)
+#align nat.find_greatest_mono_left Nat.findGreatest_mono_left
+-/
 
-theorem find_greatest_mono [DecidablePred Q] (hPQ : P ≤ Q) (hmn : m ≤ n) :
+#print Nat.findGreatest_mono /-
+theorem findGreatest_mono [DecidablePred Q] (hPQ : P ≤ Q) (hmn : m ≤ n) :
     Nat.findGreatest P m ≤ Nat.findGreatest Q n :=
-  (Nat.find_greatest_mono_right _ hmn).trans <| find_greatest_mono_left hPQ _
-#align nat.find_greatest_mono Nat.find_greatest_mono
+  (Nat.findGreatest_mono_right _ hmn).trans <| findGreatest_mono_left hPQ _
+#align nat.find_greatest_mono Nat.findGreatest_mono
+-/
 
-theorem find_greatest_is_greatest (hk : Nat.findGreatest P n < k) (hkb : k ≤ n) : ¬P k :=
-  (find_greatest_eq_iff.1 rfl).2.2 hk hkb
-#align nat.find_greatest_is_greatest Nat.find_greatest_is_greatest
+#print Nat.findGreatest_is_greatest /-
+theorem findGreatest_is_greatest (hk : Nat.findGreatest P n < k) (hkb : k ≤ n) : ¬P k :=
+  (findGreatest_eq_iff.1 rfl).2.2 hk hkb
+#align nat.find_greatest_is_greatest Nat.findGreatest_is_greatest
+-/
 
-theorem find_greatest_of_ne_zero (h : Nat.findGreatest P n = m) (h0 : m ≠ 0) : P m :=
-  (find_greatest_eq_iff.1 h).2.1 h0
-#align nat.find_greatest_of_ne_zero Nat.find_greatest_of_ne_zero
+#print Nat.findGreatest_of_ne_zero /-
+theorem findGreatest_of_ne_zero (h : Nat.findGreatest P n = m) (h0 : m ≠ 0) : P m :=
+  (findGreatest_eq_iff.1 h).2.1 h0
+#align nat.find_greatest_of_ne_zero Nat.findGreatest_of_ne_zero
+-/
 
 end FindGreatest
 
@@ -794,6 +976,7 @@ theorem bit_le_bit1_iff : ∀ {b : Bool}, bit b m ≤ bit1 n ↔ m ≤ n
 /-! ### decidability of predicates -/
 
 
+#print Nat.decidableLoHi /-
 instance decidableLoHi (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] :
     Decidable (∀ x, lo ≤ x → x < hi → P x) :=
   decidable_of_iff (∀ x < hi - lo, P (lo + x))
@@ -802,12 +985,15 @@ instance decidableLoHi (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] :
       rwa [add_tsub_cancel_of_le hl] at this, fun al x h =>
       al _ (Nat.le_add_right _ _) (lt_tsub_iff_left.mp h)⟩
 #align nat.decidable_lo_hi Nat.decidableLoHi
+-/
 
+#print Nat.decidableLoHiLe /-
 instance decidableLoHiLe (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] :
     Decidable (∀ x, lo ≤ x → x ≤ hi → P x) :=
   decidable_of_iff (∀ x, lo ≤ x → x < hi + 1 → P x) <|
     ball_congr fun x hl => imp_congr lt_succ_iff Iff.rfl
 #align nat.decidable_lo_hi_le Nat.decidableLoHiLe
+-/
 
 end Nat
 

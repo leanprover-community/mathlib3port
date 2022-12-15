@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Johan Commelin, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,27 +165,27 @@ theorem right_triangle : whiskerLeft G adj.Unit ≫ whiskerRight adj.counit G = 
   simp
 #align category_theory.adjunction.right_triangle CategoryTheory.Adjunction.right_triangle
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem left_triangle_components :
     F.map (adj.Unit.app X) ≫ adj.counit.app (F.obj X) = 𝟙 (F.obj X) :=
   congr_arg (fun t : NatTrans _ (𝟭 C ⋙ F) => t.app X) adj.left_triangle
 #align
   category_theory.adjunction.left_triangle_components CategoryTheory.Adjunction.left_triangle_components
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem right_triangle_components {Y : D} :
     adj.Unit.app (G.obj Y) ≫ G.map (adj.counit.app Y) = 𝟙 (G.obj Y) :=
   congr_arg (fun t : NatTrans _ (G ⋙ 𝟭 C) => t.app Y) adj.right_triangle
 #align
   category_theory.adjunction.right_triangle_components CategoryTheory.Adjunction.right_triangle_components
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem counit_naturality {X Y : D} (f : X ⟶ Y) :
     F.map (G.map f) ≫ adj.counit.app Y = adj.counit.app X ≫ f :=
   adj.counit.naturality f
 #align category_theory.adjunction.counit_naturality CategoryTheory.Adjunction.counit_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem unit_naturality {X Y : C} (f : X ⟶ Y) :
     adj.Unit.app X ≫ G.map (F.map f) = f ≫ adj.Unit.app Y :=
   (adj.Unit.naturality f).symm

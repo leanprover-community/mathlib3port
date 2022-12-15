@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Moritz Doll
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_pmap
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -374,9 +374,9 @@ theorem sup_h_of_disjoint (f g : E →ₗ.[R] F) (h : Disjoint f.domain g.domain
 
 section Smul
 
-variable {M N : Type _} [Monoid M] [DistribMulAction M F] [SmulCommClass R M F]
+variable {M N : Type _} [Monoid M] [DistribMulAction M F] [SMulCommClass R M F]
 
-variable [Monoid N] [DistribMulAction N F] [SmulCommClass R N F]
+variable [Monoid N] [DistribMulAction N F] [SMulCommClass R N F]
 
 instance : HasSmul M (E →ₗ.[R] F) :=
   ⟨fun a f =>
@@ -397,7 +397,7 @@ theorem coe_smul (a : M) (f : E →ₗ.[R] F) : ⇑(a • f) = a • f :=
   rfl
 #align linear_pmap.coe_smul LinearPmap.coe_smul
 
-instance [SmulCommClass M N F] : SmulCommClass M N (E →ₗ.[R] F) :=
+instance [SMulCommClass M N F] : SMulCommClass M N (E →ₗ.[R] F) :=
   ⟨fun a b f => ext' <| smul_comm a b f.toFun⟩
 
 instance [HasSmul M N] [IsScalarTower M N F] : IsScalarTower M N (E →ₗ.[R] F) :=
@@ -412,7 +412,7 @@ end Smul
 
 section Vadd
 
-instance : HasVadd (E →ₗ[R] F) (E →ₗ.[R] F) :=
+instance : VAdd (E →ₗ[R] F) (E →ₗ.[R] F) :=
   ⟨fun f g =>
     { domain := g.domain
       toFun := f.comp g.domain.Subtype + g.toFun }⟩
@@ -644,7 +644,7 @@ theorem mem_graph_iff (f : E →ₗ.[R] F) {x : E × F} :
 theorem mem_graph (f : E →ₗ.[R] F) (x : domain f) : ((x : E), f x) ∈ f.graph := by simp
 #align linear_pmap.mem_graph LinearPmap.mem_graph
 
-variable {M : Type _} [Monoid M] [DistribMulAction M F] [SmulCommClass R M F] (y : M)
+variable {M : Type _} [Monoid M] [DistribMulAction M F] [SMulCommClass R M F] (y : M)
 
 /-- The graph of `z • f` as a pushforward. -/
 theorem smul_graph (f : E →ₗ.[R] F) (z : M) :

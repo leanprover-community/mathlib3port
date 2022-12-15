@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin H. Wilson
 
 ! This file was ported from Lean 3 source module order.filter.curry
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,14 +58,14 @@ def curry (f : Filter α) (g : Filter β) :
     Filter (α ×
         β) where 
   sets := { s | ∀ᶠ a : α in f, ∀ᶠ b : β in g, (a, b) ∈ s }
-  univ_sets := by simp only [Set.mem_set_of_eq, Set.mem_univ, eventually_true]
+  univ_sets := by simp only [Set.mem_setOf_eq, Set.mem_univ, eventually_true]
   sets_of_superset := by 
     intro x y hx hxy
-    simp only [Set.mem_set_of_eq] at hx⊢
+    simp only [Set.mem_setOf_eq] at hx⊢
     exact hx.mono fun a ha => ha.mono fun b hb => Set.mem_of_subset_of_mem hxy hb
   inter_sets := by 
     intro x y hx hy
-    simp only [Set.mem_set_of_eq, Set.mem_inter_iff] at hx hy⊢
+    simp only [Set.mem_setOf_eq, Set.mem_inter_iff] at hx hy⊢
     exact (hx.and hy).mono fun a ha => (ha.1.And ha.2).mono fun b hb => hb
 #align filter.curry Filter.curry
 
@@ -85,7 +85,7 @@ theorem Tendsto.curry {f : α → β → γ} {la : Filter α} {lb : Filter β} {
     (∀ᶠ a in la, Tendsto (fun b : β => f a b) lb lc) → Tendsto (↿f) (la.curry lb) lc := by
   intro h
   rw [tendsto_def]
-  simp only [curry, Filter.mem_mk, Set.mem_set_of_eq, Set.mem_preimage]
+  simp only [curry, Filter.mem_mk, Set.mem_setOf_eq, Set.mem_preimage]
   simp_rw [tendsto_def] at h
   refine' fun s hs => h.mono fun a ha => eventually_iff.mpr _
   simpa [Function.HasUncurry.uncurry, Set.preimage] using ha s hs

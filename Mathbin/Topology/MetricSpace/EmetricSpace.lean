@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -294,7 +294,7 @@ namespace Emetric
 instance (priority := 900) : IsCountablyGenerated (𝓤 α) :=
   is_countably_generated_of_seq ⟨_, uniformity_basis_edist_inv_nat.eq_infi⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection {a b «expr ∈ » s} -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection {a b «expr ∈ » s} -/
 /-- ε-δ characterization of uniform continuity on a set for pseudoemetric spaces -/
 theorem uniform_continuous_on_iff [PseudoEmetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -338,7 +338,7 @@ theorem controlled_of_uniform_embedding [PseudoEmetricSpace β] {f : α → β} 
   exact ⟨uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
 #align emetric.controlled_of_uniform_embedding Emetric.controlled_of_uniform_embedding
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 /-- ε-δ characterization of Cauchy sequences on pseudoemetric spaces -/
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ f ≠ ⊥ ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), edist x y < ε := by
@@ -751,14 +751,14 @@ theorem is_open_ball : IsOpen (ball x ε) :=
   is_open_iff.2 fun y => exists_ball_subset_ball
 #align emetric.is_open_ball Emetric.is_open_ball
 
-theorem isClosedBallTop : IsClosed (ball x ⊤) :=
+theorem is_closed_ball_top : IsClosed (ball x ⊤) :=
   is_open_compl_iff.1 <|
     is_open_iff.2 fun y hy =>
       ⟨⊤, Ennreal.coe_lt_top,
         (ball_disjoint <| by 
             rw [Ennreal.top_add]
             exact le_of_not_lt hy).subset_compl_right⟩
-#align emetric.is_closed_ball_top Emetric.isClosedBallTop
+#align emetric.is_closed_ball_top Emetric.is_closed_ball_top
 
 theorem ball_mem_nhds (x : α) {ε : ℝ≥0∞} (ε0 : 0 < ε) : ball x ε ∈ 𝓝 x :=
   is_open_ball.mem_nhds (mem_ball_self ε0)
@@ -800,7 +800,7 @@ theorem inseparable_iff : Inseparable x y ↔ edist x y = 0 := by
   simp [inseparable_iff_mem_closure, mem_closure_iff, edist_comm, forall_lt_iff_le']
 #align emetric.inseparable_iff Emetric.inseparable_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 /-- In a pseudoemetric space, Cauchy sequences are characterized by the fact that, eventually,
 the pseudoedistance between its elements is arbitrarily small -/
@@ -831,7 +831,7 @@ theorem totally_bounded_iff {s : Set α} :
     ⟨t, ft, h.trans <| Union₂_mono fun y yt z => hε⟩⟩
 #align emetric.totally_bounded_iff Emetric.totally_bounded_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem totally_bounded_iff' {s : Set α} :
     TotallyBounded s ↔ ∀ ε > 0, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
   ⟨fun H ε ε0 => (totally_bounded_iff_subset.1 H) _ (edist_mem_uniformity ε0), fun H r ru =>
@@ -842,7 +842,7 @@ theorem totally_bounded_iff' {s : Set α} :
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- For a set `s` in a pseudo emetric space, if for every `ε > 0` there exists a countable
 set that is `ε`-dense in `s`, then there exists a countable subset `t ⊆ s` that is dense in `s`. -/
 theorem subset_countable_closure_of_almost_dense_set (s : Set α)
@@ -878,7 +878,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
 #align
   emetric.subset_countable_closure_of_almost_dense_set Emetric.subset_countable_closure_of_almost_dense_set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A compact set in a pseudo emetric space is separable, i.e., it is a subset of the closure of a
 countable set.  -/
 theorem subset_countable_closure_of_compact {s : Set α} (hs : IsCompact s) :
@@ -1213,7 +1213,7 @@ end Pi
 
 namespace Emetric
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A compact set in an emetric space is separable, i.e., it is the closure of a countable set. -/
 theorem countable_closure_of_compact {s : Set γ} (hs : IsCompact s) :
     ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s = closure t := by

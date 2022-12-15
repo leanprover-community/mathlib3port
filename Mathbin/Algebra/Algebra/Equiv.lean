@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.equiv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -696,16 +696,16 @@ protected theorem smul_def (f : A₁ ≃ₐ[R] A₁) (a : A₁) : f • a = f a 
   rfl
 #align alg_equiv.smul_def AlgEquiv.smul_def
 
-instance apply_has_faithful_smul : HasFaithfulSmul (A₁ ≃ₐ[R] A₁) A₁ :=
+instance apply_has_faithful_smul : FaithfulSMul (A₁ ≃ₐ[R] A₁) A₁ :=
   ⟨fun _ _ => AlgEquiv.ext⟩
 #align alg_equiv.apply_has_faithful_smul AlgEquiv.apply_has_faithful_smul
 
 instance apply_smul_comm_class :
-    SmulCommClass R (A₁ ≃ₐ[R] A₁) A₁ where smul_comm r e a := (e.map_smul r a).symm
+    SMulCommClass R (A₁ ≃ₐ[R] A₁) A₁ where smul_comm r e a := (e.map_smul r a).symm
 #align alg_equiv.apply_smul_comm_class AlgEquiv.apply_smul_comm_class
 
 instance apply_smul_comm_class' :
-    SmulCommClass (A₁ ≃ₐ[R] A₁) R A₁ where smul_comm e r a := e.map_smul r a
+    SMulCommClass (A₁ ≃ₐ[R] A₁) R A₁ where smul_comm e r a := e.map_smul r a
 #align alg_equiv.apply_smul_comm_class' AlgEquiv.apply_smul_comm_class'
 
 @[simp]
@@ -758,7 +758,7 @@ variable {M G : Type _} (R A : Type _) [CommSemiring R] [Semiring A] [Algebra R 
 
 section
 
-variable [Group G] [MulSemiringAction G A] [SmulCommClass G R A]
+variable [Group G] [MulSemiringAction G A] [SMulCommClass G R A]
 
 /-- Each element of the group defines a algebra equivalence.
 
@@ -769,7 +769,7 @@ def toAlgEquiv (g : G) : A ≃ₐ[R] A :=
   { MulSemiringAction.toRingEquiv _ _ g, MulSemiringAction.toAlgHom R A g with }
 #align mul_semiring_action.to_alg_equiv MulSemiringAction.toAlgEquiv
 
-theorem to_alg_equiv_injective [HasFaithfulSmul G A] :
+theorem to_alg_equiv_injective [FaithfulSMul G A] :
     Function.Injective (MulSemiringAction.toAlgEquiv R A : G → A ≃ₐ[R] A) := fun m₁ m₂ h =>
   eq_of_smul_eq_smul fun r => AlgEquiv.ext_iff.1 h r
 #align mul_semiring_action.to_alg_equiv_injective MulSemiringAction.to_alg_equiv_injective

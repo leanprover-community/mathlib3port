@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.cone.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -979,11 +979,11 @@ theorem inner_dual_cone_eq_Inter_inner_dual_cone_singleton :
 #align
   inner_dual_cone_eq_Inter_inner_dual_cone_singleton inner_dual_cone_eq_Inter_inner_dual_cone_singleton
 
-theorem isClosedInnerDualCone : IsClosed (s.innerDualCone : Set H) :=
+theorem is_closed_inner_dual_cone : IsClosed (s.innerDualCone : Set H) :=
   by
   -- reduce the problem to showing that dual cone of a singleton `{x}` is closed
   rw [inner_dual_cone_eq_Inter_inner_dual_cone_singleton]
-  apply isClosedInter
+  apply is_closed_Inter
   intro x
   -- the dual cone of a singleton `{x}` is the preimage of `[0, ∞)` under `inner x`
   have h : ↑({x} : Set H).innerDualCone = (inner x : H → ℝ) ⁻¹' Set.ici 0 := by
@@ -991,7 +991,7 @@ theorem isClosedInnerDualCone : IsClosed (s.innerDualCone : Set H) :=
   -- the preimage is closed as `inner x` is continuous and `[0, ∞)` is closed
   rw [h]
   exact is_closed_Ici.preimage (by continuity)
-#align is_closed_inner_dual_cone isClosedInnerDualCone
+#align is_closed_inner_dual_cone is_closed_inner_dual_cone
 
 theorem ConvexCone.pointed_of_nonempty_of_is_closed (K : ConvexCone ℝ H) (ne : (K : Set H).Nonempty)
     (hc : IsClosed (K : Set H)) : K.Pointed := by

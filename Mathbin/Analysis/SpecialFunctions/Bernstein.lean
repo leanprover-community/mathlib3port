@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.special_functions.bernstein
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,7 +196,7 @@ This particular formulation will be helpful later.
 -/
 theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)}
     (m : k ∈ s f ε h n xᶜ) : (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 := by
-  simp only [Finset.mem_compl, not_lt, Set.mem_to_finset, Set.mem_set_of_eq, S] at m
+  simp only [Finset.mem_compl, not_lt, Set.mem_to_finset, Set.mem_setOf_eq, S] at m
   erw [zpow_neg, ← div_eq_inv_mul, one_le_div (pow_pos δ_pos 2), sq_le_sq, abs_of_pos δ_pos]
   rwa [dist_comm] at m
 #align bernstein_approximation.le_of_mem_S_compl bernsteinApproximation.le_of_mem_S_compl

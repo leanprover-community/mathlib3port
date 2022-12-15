@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Moritz Doll
 
 ! This file was ported from Lean 3 source module topology.algebra.module.weak_dual
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -232,31 +232,31 @@ instance : CoeFun (WeakDual 𝕜 E) fun _ => E → 𝕜 :=
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it acts on `weak_dual 𝕜 E`. -/
-instance (M) [Monoid M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
+instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
     MulAction M (WeakDual 𝕜 E) :=
   ContinuousLinearMap.mulAction
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it acts distributively on `weak_dual 𝕜 E`. -/
-instance (M) [Monoid M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
+instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
     DistribMulAction M (WeakDual 𝕜 E) :=
   ContinuousLinearMap.distribMulAction
 
 /-- If `𝕜` is a topological module over a semiring `R` and scalar multiplication commutes with the
 multiplication on `𝕜`, then `weak_dual 𝕜 E` is a module over `R`. -/
-instance module' (R) [Semiring R] [Module R 𝕜] [SmulCommClass 𝕜 R 𝕜] [HasContinuousConstSmul R 𝕜] :
+instance module' (R) [Semiring R] [Module R 𝕜] [SMulCommClass 𝕜 R 𝕜] [HasContinuousConstSmul R 𝕜] :
     Module R (WeakDual 𝕜 E) :=
   ContinuousLinearMap.module
 #align weak_dual.module' WeakDual.module'
 
-instance (M) [Monoid M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
+instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
     HasContinuousConstSmul M (WeakDual 𝕜 E) :=
   ⟨fun m =>
     continuous_induced_rng.2 <| (WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).const_smul m⟩
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it continuously acts on `weak_dual 𝕜 E`. -/
-instance (M) [Monoid M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [TopologicalSpace M]
+instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [TopologicalSpace M]
     [HasContinuousSmul M 𝕜] : HasContinuousSmul M (WeakDual 𝕜 E) :=
   ⟨continuous_induced_rng.2 <|
       continuous_fst.smul ((WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).comp continuous_snd)⟩

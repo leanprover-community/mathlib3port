@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.succ_pred.linear_locally_finite
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,7 +176,7 @@ instance (priority := 100) LinearOrder.pred_archimedean_of_succ_archimedean [Suc
     · rw [pred_succ_iterate_of_not_is_max]
       rw [Nat.succ_sub_succ_eq_sub, tsub_zero]
       suffices : (succ^[n]) i < (succ^[n.succ]) i
-      exact not_is_max_of_lt this
+      exact not_isMax_of_lt this
       refine' lt_of_le_of_ne _ _
       · rw [Function.iterate_succ']
         exact le_succ _
@@ -356,11 +356,11 @@ theorem to_Z_le_iff (i j : ι) : toZ i0 i ≤ toZ i0 j ↔ i ≤ j :=
 #align to_Z_le_iff to_Z_le_iff
 
 theorem to_Z_iterate_succ [NoMaxOrder ι] (n : ℕ) : toZ i0 ((succ^[n]) i0) = n :=
-  to_Z_iterate_succ_of_not_is_max n (not_is_max _)
+  to_Z_iterate_succ_of_not_is_max n (not_isMax _)
 #align to_Z_iterate_succ to_Z_iterate_succ
 
 theorem to_Z_iterate_pred [NoMinOrder ι] (n : ℕ) : toZ i0 ((pred^[n]) i0) = -n :=
-  to_Z_iterate_pred_of_not_is_min n (not_is_min _)
+  to_Z_iterate_pred_of_not_is_min n (not_isMin _)
 #align to_Z_iterate_pred to_Z_iterate_pred
 
 theorem injective_to_Z : Function.Injective (toZ i0) := fun i j hij =>
@@ -447,7 +447,7 @@ def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] :
     · rw [Int.to_nat_le]
       exact to_Z_iterate_succ_le _
     by_cases hn_max : IsMax ((succ^[↑n]) (⊥ : ι))
-    · rw [← is_top_iff_is_max, isTop_iff_eq_top] at hn_max
+    · rw [← isTop_iff_is_max, isTop_iff_eq_top] at hn_max
       rw [hn_max]
       exact nat.lt_succ_iff.mp (finset.mem_range.mp n.prop)
     · rw [to_Z_iterate_succ_of_not_is_max _ hn_max]

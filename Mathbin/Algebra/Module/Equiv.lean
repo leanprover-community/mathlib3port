@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.equiv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -710,16 +710,16 @@ protected theorem smul_def (f : M ≃ₗ[R] M) (a : M) : f • a = f a :=
 #align linear_equiv.smul_def LinearEquiv.smul_def
 
 /-- `linear_equiv.apply_distrib_mul_action` is faithful. -/
-instance apply_has_faithful_smul : HasFaithfulSmul (M ≃ₗ[R] M) M :=
+instance apply_has_faithful_smul : FaithfulSMul (M ≃ₗ[R] M) M :=
   ⟨fun _ _ => LinearEquiv.ext⟩
 #align linear_equiv.apply_has_faithful_smul LinearEquiv.apply_has_faithful_smul
 
 instance apply_smul_comm_class :
-    SmulCommClass R (M ≃ₗ[R] M) M where smul_comm r e m := (e.map_smul r m).symm
+    SMulCommClass R (M ≃ₗ[R] M) M where smul_comm r e m := (e.map_smul r m).symm
 #align linear_equiv.apply_smul_comm_class LinearEquiv.apply_smul_comm_class
 
 instance apply_smul_comm_class' :
-    SmulCommClass (M ≃ₗ[R] M) R M where smul_comm := LinearEquiv.map_smul
+    SMulCommClass (M ≃ₗ[R] M) R M where smul_comm := LinearEquiv.map_smul
 #align linear_equiv.apply_smul_comm_class' LinearEquiv.apply_smul_comm_class'
 
 end Automorphisms
@@ -769,7 +769,7 @@ namespace DistribMulAction
 
 variable (R M) [Semiring R] [AddCommMonoid M] [Module R M]
 
-variable [Group S] [DistribMulAction S M] [SmulCommClass S R M]
+variable [Group S] [DistribMulAction S M] [SMulCommClass S R M]
 
 /-- Each element of the group defines a linear equivalence.
 

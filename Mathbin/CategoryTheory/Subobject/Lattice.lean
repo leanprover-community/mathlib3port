@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.lattice
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ theorem top_arrow (X : C) : (⊤ : MonoOver X).arrow = 𝟙 X :=
 
 /-- `map f` sends `⊤ : mono_over X` to `⟨X, f⟩ : mono_over Y`. -/
 def mapTop (f : X ⟶ Y) [Mono f] : (map f).obj ⊤ ≅ mk' f :=
-  isoOfBothWays (homMk (𝟙 _) rfl) (homMk (𝟙 _) (by simp [id_comp f]))
+  iso_of_both_ways (homMk (𝟙 _) rfl) (homMk (𝟙 _) (by simp [id_comp f]))
 #align category_theory.mono_over.map_top CategoryTheory.MonoOver.mapTop
 
 section
@@ -67,7 +67,7 @@ variable [HasPullbacks C]
 /-- The pullback of the top object in `mono_over Y`
 is (isomorphic to) the top object in `mono_over X`. -/
 def pullbackTop (f : X ⟶ Y) : (pullback f).obj ⊤ ≅ ⊤ :=
-  isoOfBothWays (leTop _) (homMk (pullback.lift f (𝟙 _) (by tidy)) (pullback.lift_snd _ _ _))
+  iso_of_both_ways (leTop _) (homMk (pullback.lift f (𝟙 _) (by tidy)) (pullback.lift_snd _ _ _))
 #align category_theory.mono_over.pullback_top CategoryTheory.MonoOver.pullbackTop
 
 /-- There is a morphism from `⊤ : mono_over A` to the pullback of a monomorphism along itself;
@@ -79,7 +79,7 @@ def topLePullbackSelf {A B : C} (f : A ⟶ B) [Mono f] :
 
 /-- The pullback of a monomorphism along itself is isomorphic to the top object. -/
 def pullbackSelf {A B : C} (f : A ⟶ B) [Mono f] : (pullback f).obj (mk' f) ≅ ⊤ :=
-  isoOfBothWays (leTop _) (topLePullbackSelf _)
+  iso_of_both_ways (leTop _) (topLePullbackSelf _)
 #align category_theory.mono_over.pullback_self CategoryTheory.MonoOver.pullbackSelf
 
 end
@@ -109,7 +109,7 @@ def botLe {X : C} (f : MonoOver X) : ⊥ ⟶ f :=
 
 /-- `map f` sends `⊥ : mono_over X` to `⊥ : mono_over Y`. -/
 def mapBot (f : X ⟶ Y) [Mono f] : (map f).obj ⊥ ≅ ⊥ :=
-  isoOfBothWays (homMk (initial.to _) (by simp)) (homMk (𝟙 _) (by simp))
+  iso_of_both_ways (homMk (initial.to _) (by simp)) (homMk (𝟙 _) (by simp))
 #align category_theory.mono_over.map_bot CategoryTheory.MonoOver.mapBot
 
 end Bot
@@ -248,7 +248,7 @@ instance top_arrow_is_iso {B : C} : IsIso (⊤ : Subobject B).arrow := by
   infer_instance
 #align category_theory.subobject.top_arrow_is_iso CategoryTheory.Subobject.top_arrow_is_iso
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem underlying_iso_inv_top_arrow {B : C} :
     (underlyingIso _).inv ≫ (⊤ : Subobject B).arrow = 𝟙 B :=
   underlying_iso_arrow _
@@ -662,7 +662,7 @@ def inf {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (widePullbackι s)
 #align category_theory.subobject.Inf CategoryTheory.Subobject.inf
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (f «expr ∈ » s) -/
 theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : inf s ≤ f := by
   fapply le_of_comm
   · refine'
@@ -721,7 +721,7 @@ def sup {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (image.ι (smallCoproductDesc s))
 #align category_theory.subobject.Sup CategoryTheory.Subobject.sup
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (f «expr ∈ » s) -/
 theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s := by
   fapply le_of_comm
   · dsimp [Sup]

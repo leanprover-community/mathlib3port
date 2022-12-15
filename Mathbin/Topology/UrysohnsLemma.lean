@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.urysohns_lemma
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,13 +87,13 @@ open neighborhood `U`. -/
 @[protect_proj]
 structure CU (X : Type _) [TopologicalSpace X] where
   (c U : Set X)
-  closedC : IsClosed C
+  closed_C : IsClosed C
   open_U : IsOpen U
   Subset : C ⊆ U
 #align urysohns.CU Urysohns.CU
 
 instance : Inhabited (CU X) :=
-  ⟨⟨∅, univ, isClosedEmpty, is_open_univ, empty_subset _⟩⟩
+  ⟨⟨∅, univ, is_closed_empty, is_open_univ, empty_subset _⟩⟩
 
 variable [NormalSpace X]
 
@@ -104,10 +104,10 @@ such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.left` is the pair `(c.C, u)`. 
 @[simps c]
 def left (c : CU X) : CU X where 
   c := c.c
-  U := (normal_exists_closure_subset c.closedC c.open_U c.Subset).some
-  closedC := c.closedC
-  open_U := (normal_exists_closure_subset c.closedC c.open_U c.Subset).some_spec.1
-  Subset := (normal_exists_closure_subset c.closedC c.open_U c.Subset).some_spec.2.1
+  U := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some
+  closed_C := c.closed_C
+  open_U := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.1
+  Subset := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.2.1
 #align urysohns.CU.left Urysohns.CU.left
 
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
@@ -116,11 +116,11 @@ such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.right` is the pair `(closure u
 def right (c : CU X) :
     CU
       X where 
-  c := closure (normal_exists_closure_subset c.closedC c.open_U c.Subset).some
+  c := closure (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some
   U := c.U
-  closedC := isClosedClosure
+  closed_C := is_closed_closure
   open_U := c.open_U
-  Subset := (normal_exists_closure_subset c.closedC c.open_U c.Subset).some_spec.2.2
+  Subset := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.2.2
 #align urysohns.CU.right Urysohns.CU.right
 
 theorem left_U_subset_right_C (c : CU X) : c.left.U ⊆ c.right.c :=
@@ -161,14 +161,14 @@ theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.appro
 theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x := by
   induction' n with n ihn generalizing c
   · exact indicator_nonneg (fun _ _ => zero_le_one) _
-  · simp only [approx, midpoint_eq_smul_add, inv_of_eq_inv]
+  · simp only [approx, midpoint_eq_smul_add, invOf_eq_inv]
     refine' mul_nonneg (inv_nonneg.2 zero_le_two) (add_nonneg _ _) <;> apply ihn
 #align urysohns.CU.approx_nonneg Urysohns.CU.approx_nonneg
 
 theorem approx_le_one (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ 1 := by
   induction' n with n ihn generalizing c
   · exact indicator_apply_le' (fun _ => le_rfl) fun _ => zero_le_one
-  · simp only [approx, midpoint_eq_smul_add, inv_of_eq_inv, smul_eq_mul, ← div_eq_inv_mul]
+  · simp only [approx, midpoint_eq_smul_add, invOf_eq_inv, smul_eq_mul, ← div_eq_inv_mul]
     refine' Iff.mpr (div_le_one zero_lt_two) (add_le_add _ _) <;> apply ihn
 #align urysohns.CU.approx_le_one Urysohns.CU.approx_le_one
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gromov_hausdorff_realized
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,13 +77,13 @@ private def max_var : ℝ≥0 :=
   2 * ⟨diam (univ : Set X), diam_nonneg⟩ + 1 + 2 * ⟨diam (univ : Set Y), diam_nonneg⟩
 #align Gromov_Hausdorff.max_var Gromov_Hausdorff.max_var
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr diam_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr diam_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 private theorem one_le_max_var : 1 ≤ maxVar X Y :=
   calc
     (1 : Real) = 2 * 0 + 1 + 2 * 0 := by simp
     _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := by
       trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr diam_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr diam_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
         norm_num
     
 #align Gromov_Hausdorff.one_le_max_var Gromov_Hausdorff.one_le_max_var
@@ -116,7 +116,7 @@ variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X]
 
 attribute [local instance] inhabited_of_nonempty'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_right, ",", expr diam_nonneg, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_right, ",", expr diam_nonneg, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc
     dist x y ≤ diam (univ : Set (Sum X Y)) :=
@@ -136,7 +136,7 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
     _ = 1 * diam (univ : Set X) + 1 + 1 * diam (univ : Set Y) := by simp
     _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := by
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_right, \",\", expr diam_nonneg, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_right, \",\", expr diam_nonneg, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       norm_num; norm_num
     
 #align Gromov_Hausdorff.max_var_bound Gromov_Hausdorff.max_var_bound
@@ -269,7 +269,7 @@ theorem candidates_b_of_candidates_mem (f : ProdSpaceFun X Y) (fA : f ∈ candid
 private theorem dist_mem_candidates :
     (fun p : Sum X Y × Sum X Y => dist p.1 p.2) ∈ candidates X Y := by
   simp only [candidates, dist_comm, forall_const, and_true_iff, add_comm, eq_self_iff_true,
-    and_self_iff, Sum.forall, Set.mem_set_of_eq, dist_self]
+    and_self_iff, Sum.forall, Set.mem_setOf_eq, dist_self]
   repeat'
     first
       |constructor|exact fun a y z =>
@@ -300,17 +300,17 @@ private theorem candidates_b_nonempty : (candidatesB X Y).Nonempty :=
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
 private theorem closed_candidates_b : IsClosed (candidatesB X Y) := by
   have I1 : ∀ x y, IsClosed { f : Cb X Y | f (inl x, inl y) = dist x y } := fun x y =>
-    isClosedEq continuous_eval_const continuous_const
+    is_closed_eq continuous_eval_const continuous_const
   have I2 : ∀ x y, IsClosed { f : Cb X Y | f (inr x, inr y) = dist x y } := fun x y =>
-    isClosedEq continuous_eval_const continuous_const
+    is_closed_eq continuous_eval_const continuous_const
   have I3 : ∀ x y, IsClosed { f : Cb X Y | f (x, y) = f (y, x) } := fun x y =>
-    isClosedEq continuous_eval_const continuous_eval_const
+    is_closed_eq continuous_eval_const continuous_eval_const
   have I4 : ∀ x y z, IsClosed { f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z) } := fun x y z =>
-    isClosedLe continuous_eval_const (continuous_eval_const.add continuous_eval_const)
+    is_closed_le continuous_eval_const (continuous_eval_const.add continuous_eval_const)
   have I5 : ∀ x, IsClosed { f : Cb X Y | f (x, x) = 0 } := fun x =>
-    isClosedEq continuous_eval_const continuous_const
+    is_closed_eq continuous_eval_const continuous_const
   have I6 : ∀ x y, IsClosed { f : Cb X Y | f (x, y) ≤ max_var X Y } := fun x y =>
-    isClosedLe continuous_eval_const continuous_const
+    is_closed_le continuous_eval_const continuous_const
   have :
     candidates_b X Y =
       (((((⋂ (x) (y), { f : Cb X Y | f (@inl X Y x, @inl X Y y) = dist x y }) ∩
@@ -328,7 +328,7 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) := by
       |apply
         IsClosed.inter _
           _|apply
-        isClosedInter
+        is_closed_Inter
           _|apply I1 _ _|apply I2 _ _|apply I3 _ _|apply I4 _ _ _|apply I5 _|apply I6 _ _|intro x
 #align Gromov_Hausdorff.closed_candidates_b Gromov_Hausdorff.closed_candidates_b
 

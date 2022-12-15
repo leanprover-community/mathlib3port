@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.connected
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ theorem Set.Subsingleton.is_preconnected {s : Set α} (hs : s.Subsingleton) : Is
   hs.induction_on is_preconnected_empty fun x => is_preconnected_singleton
 #align set.subsingleton.is_preconnected Set.Subsingleton.is_preconnected
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If any point of a set is joined to a fixed point by a preconnected subset,
 then the original set is preconnected as well. -/
 theorem is_preconnected_of_forall {s : Set α} (x : α)
@@ -114,8 +114,8 @@ theorem is_preconnected_of_forall {s : Set α} (x : α)
   exact this.imp fun z hz => ⟨ts hz.1, hz.2⟩
 #align is_preconnected_of_forall is_preconnected_of_forall
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If any two points of a set are contained in a preconnected subset,
 then the original set is preconnected as well. -/
 theorem is_preconnected_of_forall_pair {s : Set α}
@@ -171,9 +171,9 @@ theorem IsPreconnected.sUnion_directed {S : Set (Set α)} (K : DirectedOn (· �
   exact Hnuv.mono Kruv
 #align is_preconnected.sUnion_directed IsPreconnected.sUnion_directed
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i j «expr ∈ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (p «expr ⊆ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
 theorem IsPreconnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι → Set α}
@@ -209,7 +209,7 @@ theorem IsPreconnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : 
   exact ⟨⋃ j ∈ p, s j, bUnion_subset_bUnion_left hpt, mem_bUnion hip hxi, mem_bUnion hjp hyj, hp⟩
 #align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.bUnion_of_refl_trans_gen
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
 theorem IsConnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι → Set α}
@@ -736,11 +736,11 @@ theorem connected_component_disjoint {x y : α} (h : connectedComponent x ≠ co
     h ((connected_component_eq h1).trans (connected_component_eq h2).symm)
 #align connected_component_disjoint connected_component_disjoint
 
-theorem isClosedConnectedComponent {x : α} : IsClosed (connectedComponent x) :=
+theorem is_closed_connected_component {x : α} : IsClosed (connectedComponent x) :=
   closure_subset_iff_is_closed.1 <|
     is_connected_connected_component.closure.subset_connected_component <|
       subset_closure mem_connected_component
-#align is_closed_connected_component isClosedConnectedComponent
+#align is_closed_connected_component is_closed_connected_component
 
 theorem Continuous.image_connected_component_subset [TopologicalSpace β] {f : α → β}
     (h : Continuous f) (a : α) : f '' connectedComponent a ⊆ connectedComponent (f a) :=
@@ -880,7 +880,7 @@ theorem nonempty_inter [PreconnectedSpace α] {s t : Set α} :
 
 theorem is_clopen_iff [PreconnectedSpace α] {s : Set α} : IsClopen s ↔ s = ∅ ∨ s = univ :=
   ⟨fun hs =>
-    Classical.by_contradiction fun h =>
+    by_contradiction fun h =>
       have h1 : s ≠ ∅ ∧ sᶜ ≠ ∅ :=
         ⟨mt Or.inl h,
           mt (fun h2 => Or.inr <| (by rw [← compl_compl s, h2, compl_empty] : s = univ)) h⟩
@@ -1128,7 +1128,7 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
     rw [mem_preimage, hs]
     exact mem_connected_component
   have hT : IsClosed (f ⁻¹' connectedComponent t) :=
-    (hcl (connectedComponent t)).1 isClosedConnectedComponent
+    (hcl (connectedComponent t)).1 is_closed_connected_component
   -- To show it's preconnected we decompose (f ⁻¹' connected_component t) as a subset of two
   -- closed disjoint sets in α. We want to show that it's a subset of either.
   rw [is_preconnected_iff_subset_of_fully_disjoint_closed hT]
@@ -1188,7 +1188,7 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
   -- Now we do cases on whether (connected_component t) is a subset of T₁ or T₂ to show
   -- that the preimage is a subset of u or v.
   cases
-    (is_preconnected_iff_subset_of_fully_disjoint_closed isClosedConnectedComponent).1
+    (is_preconnected_iff_subset_of_fully_disjoint_closed is_closed_connected_component).1
       is_preconnected_connected_component T₁ T₂ hT₁ hT₂ T_decomp T_disjoint
   · left
     rw [subset.antisymm_iff] at T₁_u
@@ -1205,7 +1205,7 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
 theorem QuotientMap.preimage_connected_component [TopologicalSpace β] {f : α → β}
     (hf : QuotientMap f) (h_fibers : ∀ y : β, IsConnected (f ⁻¹' {y})) (a : α) :
     f ⁻¹' connectedComponent (f a) = connectedComponent a :=
-  ((preimage_connected_component_connected h_fibers (fun _ => hf.isClosedPreimage.symm)
+  ((preimage_connected_component_connected h_fibers (fun _ => hf.is_closed_preimage.symm)
             _).subset_connected_component
         mem_connected_component).antisymm
     (hf.Continuous.maps_to_connected_component a)
@@ -1236,15 +1236,15 @@ theorem locally_connected_space_iff_open_connected_basis :
 #align
   locally_connected_space_iff_open_connected_basis locally_connected_space_iff_open_connected_basis
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (V «expr ⊆ » U) -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (V «expr ⊆ » U) -/
 theorem locally_connected_space_iff_open_connected_subsets :
     LocallyConnectedSpace α ↔
       ∀ (x : α), ∀ U ∈ 𝓝 x, ∃ (V : _)(_ : V ⊆ U), IsOpen V ∧ x ∈ V ∧ IsConnected V :=
   by 
   rw [locally_connected_space_iff_open_connected_basis]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
   constructor
   · intro h U hU
     rcases h.mem_iff.mp hU with ⟨V, hV, hVU⟩
@@ -1284,7 +1284,7 @@ theorem is_open_connected_component [LocallyConnectedSpace α] {x : α} :
 
 theorem is_clopen_connected_component [LocallyConnectedSpace α] {x : α} :
     IsClopen (connectedComponent x) :=
-  ⟨is_open_connected_component, isClosedConnectedComponent⟩
+  ⟨is_open_connected_component, is_closed_connected_component⟩
 #align is_clopen_connected_component is_clopen_connected_component
 
 theorem locally_connected_space_iff_connected_component_in_open :
@@ -1317,14 +1317,14 @@ theorem locally_connected_space_iff_connected_subsets :
     exact Filter.mem_of_superset hVy (hV.subset_connected_component_in (mem_of_mem_nhds hVy) hVU)
 #align locally_connected_space_iff_connected_subsets locally_connected_space_iff_connected_subsets
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
 theorem locally_connected_space_iff_connected_basis :
     LocallyConnectedSpace α ↔
       ∀ x, (𝓝 x).HasBasis (fun s : Set α => s ∈ 𝓝 x ∧ IsPreconnected s) id :=
   by 
   rw [locally_connected_space_iff_connected_subsets]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
   exact filter.has_basis_self.symm
 #align locally_connected_space_iff_connected_basis locally_connected_space_iff_connected_basis
 
@@ -1709,7 +1709,7 @@ theorem is_preconnected_of_forall_constant {s : Set α}
     apply (continuous_on_indicator_iff_clopen _ _).mpr ⟨_, _⟩
     · exact continuous_subtype_coe.is_open_preimage u u_op
     · rw [preimage_subtype_coe_eq_compl hsuv H]
-      exact (continuous_subtype_coe.is_open_preimage v v_op).isClosedCompl
+      exact (continuous_subtype_coe.is_open_preimage v v_op).is_closed_compl
   simpa [(u.mem_iff_bool_indicator _).mp x_in_u, (u.not_mem_iff_bool_indicator _).mp hy] using
     hs _ this x x_in_s y y_in_s
 #align is_preconnected_of_forall_constant is_preconnected_of_forall_constant

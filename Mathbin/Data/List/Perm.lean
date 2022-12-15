@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.perm
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -284,7 +284,7 @@ theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
       exact perm_append_comm.trans (perm_append_comm.cons _)
 #align list.filter_append_perm List.filter_append_perm
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (l₁' list.perm l₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (l₁' list.perm l₁) -/
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' := by
   induction' p with x l₂ l₂' p IH x y l₂ l₂ m₂ r₂ p₁ p₂ IH₁ IH₂ generalizing l₁ s
@@ -383,7 +383,7 @@ end Rel
 
 section Subperm
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (l list.perm l₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (l list.perm l₁) -/
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
   multiplicities of elements, and is used for the `≤` relation on multisets. -/
@@ -1210,7 +1210,7 @@ theorem Perm.drop_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : x
 #align list.perm.drop_inter List.Perm.drop_inter
 
 theorem Perm.slice_inter {α} [DecidableEq α] {xs ys : List α} (n m : ℕ) (h : xs ~ ys)
-    (h' : ys.Nodup) : List.slice n m xs ~ ys ∩ List.slice n m xs := by
+    (h' : ys.Nodup) : List.dropSlice n m xs ~ ys ∩ List.dropSlice n m xs := by
   simp only [slice_eq]
   have : n ≤ n + m := Nat.le_add_right _ _
   have := h.nodup_iff.2 h'
@@ -1259,13 +1259,13 @@ theorem length_permutations (l : List α) : length (permutations l) = (length l)
   length_permutations_aux l []
 #align list.length_permutations List.length_permutations
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (ts' list.perm «expr[ ,]»([])) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (ts' list.perm «expr[ ,]»([])) -/
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
     l ~ is → l ∈ permutations is := by simpa [permutations, perm_nil] using H
 #align list.mem_permutations_of_perm_lemma List.mem_permutations_of_perm_lemma
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (is' list.perm is) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (is' list.perm is) -/
 theorem mem_permutations_aux_of_perm :
     ∀ {ts is l : List α},
       l ~ is ++ ts → (∃ (is' : _)(_ : is' ~ is), l = is' ++ ts) ∨ l ∈ permutationsAux ts is :=

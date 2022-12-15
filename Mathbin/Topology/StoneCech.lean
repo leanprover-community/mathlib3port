@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.stone_cech
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,12 +57,12 @@ theorem ultrafilter_is_open_basic (s : Set α) : IsOpen { u : Ultrafilter α | s
 #align ultrafilter_is_open_basic ultrafilter_is_open_basic
 
 /-- The basic open sets for the topology on ultrafilters are also closed. -/
-theorem ultrafilterIsClosedBasic (s : Set α) : IsClosed { u : Ultrafilter α | s ∈ u } := by
+theorem ultrafilter_is_closed_basic (s : Set α) : IsClosed { u : Ultrafilter α | s ∈ u } := by
   rw [← is_open_compl_iff]
   convert ultrafilter_is_open_basic (sᶜ)
   ext u
   exact ultrafilter.compl_mem_iff_not_mem.symm
-#align ultrafilter_is_closed_basic ultrafilterIsClosedBasic
+#align ultrafilter_is_closed_basic ultrafilter_is_closed_basic
 
 /-- Every ultrafilter `u` on `ultrafilter α` converges to a unique
   point of `ultrafilter α`, namely `mjoin u`. -/
@@ -100,7 +100,7 @@ instance : TotallyDisconnectedSpace (Ultrafilter α) := by
   intro s hs
   rw [connected_component_eq_Inter_clopen, Set.mem_Inter] at hB
   let Z := { F : Ultrafilter α | s ∈ F }
-  have hZ : IsClopen Z := ⟨ultrafilter_is_open_basic s, ultrafilterIsClosedBasic s⟩
+  have hZ : IsClopen Z := ⟨ultrafilter_is_open_basic s, ultrafilter_is_closed_basic s⟩
   exact hB ⟨Z, hZ, hs⟩
 
 theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) ≤ b := by

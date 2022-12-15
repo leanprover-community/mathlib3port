@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Floris van Doorn
 
 ! This file was ported from Lean 3 source module category_theory.limits.cones
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,7 +135,7 @@ instance inhabitedCone (F : Discrete PUnit ⥤ C) : Inhabited (Cone F) :=
       π := { app := fun ⟨⟨⟩⟩ => 𝟙 _ } }⟩
 #align category_theory.limits.inhabited_cone CategoryTheory.Limits.inhabitedCone
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Cone.w {F : J ⥤ C} (c : Cone F) {j j' : J} (f : j ⟶ j') :
     c.π.app j ≫ F.map f = c.π.app j' := by
   rw [← c.π.naturality f]
@@ -158,7 +158,7 @@ instance inhabitedCocone (F : Discrete PUnit ⥤ C) : Inhabited (Cocone F) :=
       ι := { app := fun ⟨⟨⟩⟩ => 𝟙 _ } }⟩
 #align category_theory.limits.inhabited_cocone CategoryTheory.Limits.inhabitedCocone
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Cocone.w {F : J ⥤ C} (c : Cocone F) {j j' : J} (f : j ⟶ j') :
     F.map f ≫ c.ι.app j' = c.ι.app j := by
   rw [c.ι.naturality f]
@@ -267,7 +267,7 @@ structure ConeMorphism (A B : Cone F) where
 
 restate_axiom cone_morphism.w'
 
-attribute [simp, reassoc] cone_morphism.w
+attribute [simp, reassoc.1] cone_morphism.w
 
 instance inhabitedConeMorphism (A : Cone F) : Inhabited (ConeMorphism A A) :=
   ⟨{ Hom := 𝟙 _ }⟩
@@ -486,7 +486,7 @@ instance inhabitedCoconeMorphism (A : Cocone F) : Inhabited (CoconeMorphism A A)
 
 restate_axiom cocone_morphism.w'
 
-attribute [simp, reassoc] cocone_morphism.w
+attribute [simp, reassoc.1] cocone_morphism.w
 
 @[simps]
 instance Cocone.category :

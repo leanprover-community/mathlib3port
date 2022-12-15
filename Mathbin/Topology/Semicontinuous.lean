@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.semicontinuous
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,19 +274,19 @@ section
 
 variable {γ : Type _} [LinearOrder γ]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
 theorem lower_semicontinuous_iff_is_closed_preimage {f : α → γ} :
     LowerSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' iic y) := by
   rw [lower_semicontinuous_iff_is_open_preimage]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
   rw [← is_open_compl_iff, ← preimage_compl, compl_Iic]
 #align lower_semicontinuous_iff_is_closed_preimage lower_semicontinuous_iff_is_closed_preimage
 
-theorem LowerSemicontinuous.isClosedPreimage {f : α → γ} (hf : LowerSemicontinuous f) (y : γ) :
+theorem LowerSemicontinuous.is_closed_preimage {f : α → γ} (hf : LowerSemicontinuous f) (y : γ) :
     IsClosed (f ⁻¹' iic y) :=
   lower_semicontinuous_iff_is_closed_preimage.1 hf y
-#align lower_semicontinuous.is_closed_preimage LowerSemicontinuous.isClosedPreimage
+#align lower_semicontinuous.is_closed_preimage LowerSemicontinuous.is_closed_preimage
 
 variable [TopologicalSpace γ] [OrderTopology γ]
 
@@ -827,19 +827,19 @@ section
 
 variable {γ : Type _} [LinearOrder γ]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
 theorem upper_semicontinuous_iff_is_closed_preimage {f : α → γ} :
     UpperSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' ici y) := by
   rw [upper_semicontinuous_iff_is_open_preimage]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
   rw [← is_open_compl_iff, ← preimage_compl, compl_Ici]
 #align upper_semicontinuous_iff_is_closed_preimage upper_semicontinuous_iff_is_closed_preimage
 
-theorem UpperSemicontinuous.isClosedPreimage {f : α → γ} (hf : UpperSemicontinuous f) (y : γ) :
+theorem UpperSemicontinuous.is_closed_preimage {f : α → γ} (hf : UpperSemicontinuous f) (y : γ) :
     IsClosed (f ⁻¹' ici y) :=
   upper_semicontinuous_iff_is_closed_preimage.1 hf y
-#align upper_semicontinuous.is_closed_preimage UpperSemicontinuous.isClosedPreimage
+#align upper_semicontinuous.is_closed_preimage UpperSemicontinuous.is_closed_preimage
 
 variable [TopologicalSpace γ] [OrderTopology γ]
 

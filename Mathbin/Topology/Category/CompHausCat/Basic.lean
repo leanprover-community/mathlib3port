@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module topology.category.CompHaus.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -184,11 +184,11 @@ noncomputable instance compHausToTop.createsLimits : CreatesLimits compHausToTop
 #align CompHaus_to_Top.creates_limits compHausToTop.createsLimits
 
 instance CompHausCat.has_limits : Limits.HasLimits CompHausCat :=
-  has_limits_of_has_limits_creates_limits compHausToTop
+  hasLimitsOfHasLimitsCreatesLimits compHausToTop
 #align CompHaus.has_limits CompHausCat.has_limits
 
 instance CompHausCat.has_colimits : Limits.HasColimits CompHausCat :=
-  has_colimits_of_reflective compHausToTop
+  hasColimitsOfReflective compHausToTop
 #align CompHaus.has_colimits CompHausCat.has_colimits
 
 namespace CompHausCat
@@ -210,15 +210,15 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
             ⋂ (i : J) (j : J) (f : i ⟶ j), { u | F.map f (u i) = u j } :=
           by 
           ext1
-          simp only [Set.mem_Inter, Set.mem_set_of_eq]
+          simp only [Set.mem_Inter, Set.mem_setOf_eq]
         rw [this]
-        apply isClosedInter
+        apply is_closed_Inter
         intro i
-        apply isClosedInter
+        apply is_closed_Inter
         intro j
-        apply isClosedInter
+        apply is_closed_Inter
         intro f
-        apply isClosedEq
+        apply is_closed_eq
         · exact (ContinuousMap.continuous (F.map f)).comp (continuous_apply i)
         · exact continuous_apply j
       isHausdorff :=
@@ -249,7 +249,7 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
     let C := Set.range f
     have hC : IsClosed C := (is_compact_range f.continuous).IsClosed
     let D := {y}
-    have hD : IsClosed D := isClosedSingleton
+    have hD : IsClosed D := is_closed_singleton
     have hCD : Disjoint C D := by 
       rw [Set.disjoint_singleton_right]
       rintro ⟨y', hy'⟩

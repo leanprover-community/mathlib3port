@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module order.succ_pred.limit
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ section Preorder
 variable [Preorder α] {a : α}
 
 protected theorem IsMin.is_succ_limit : IsMin a → IsSuccLimit a := fun h b hab =>
-  not_is_min_of_lt hab.lt h
+  not_isMin_of_lt hab.lt h
 #align is_min.is_succ_limit IsMin.is_succ_limit
 
 theorem is_succ_limit_bot [OrderBot α] : IsSuccLimit (⊥ : α) :=
@@ -85,7 +85,7 @@ variable [NoMaxOrder α]
 
 theorem IsSuccLimit.succ_ne (h : IsSuccLimit a) (b : α) : succ b ≠ a := by
   rintro rfl
-  exact not_is_max _ h.is_max
+  exact not_isMax _ h.is_max
 #align order.is_succ_limit.succ_ne Order.IsSuccLimit.succ_ne
 
 @[simp]
@@ -193,7 +193,7 @@ variable [NoMaxOrder α]
 
 @[simp]
 theorem is_succ_limit_rec_on_succ (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ a, IsSuccLimit a → C a)
-    (b : α) : @isSuccLimitRecOn α _ _ C (succ b) hs hl = hs b (not_is_max b) :=
+    (b : α) : @isSuccLimitRecOn α _ _ C (succ b) hs hl = hs b (not_isMax b) :=
   is_succ_limit_rec_on_succ' _ _ _
 #align order.is_succ_limit_rec_on_succ Order.is_succ_limit_rec_on_succ
 
@@ -275,7 +275,7 @@ section Preorder
 variable [Preorder α] {a : α}
 
 protected theorem IsMax.is_pred_limit : IsMax a → IsPredLimit a := fun h b hab =>
-  not_is_max_of_lt hab.lt h
+  not_isMax_of_lt hab.lt h
 #align is_max.is_pred_limit IsMax.is_pred_limit
 
 theorem is_pred_limit_top [OrderTop α] : IsPredLimit (⊤ : α) :=
@@ -300,7 +300,7 @@ variable [NoMinOrder α]
 
 theorem IsPredLimit.pred_ne (h : IsPredLimit a) (b : α) : pred b ≠ a := by
   rintro rfl
-  exact not_is_min _ h.is_min
+  exact not_isMin _ h.is_min
 #align order.is_pred_limit.pred_ne Order.IsPredLimit.pred_ne
 
 @[simp]
@@ -388,7 +388,7 @@ variable [NoMinOrder α]
 
 @[simp]
 theorem is_pred_limit_rec_on_pred (hs : ∀ a, ¬IsMin a → C (pred a)) (hl : ∀ a, IsPredLimit a → C a)
-    (b : α) : @isPredLimitRecOn α _ _ C (pred b) hs hl = hs b (not_is_min b) :=
+    (b : α) : @isPredLimitRecOn α _ _ C (pred b) hs hl = hs b (not_isMin b) :=
   is_succ_limit_rec_on_succ _ _ _
 #align order.is_pred_limit_rec_on_pred Order.is_pred_limit_rec_on_pred
 

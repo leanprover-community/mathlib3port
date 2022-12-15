@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.polynomial.laurent
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,7 +248,7 @@ theorem inv_of_T (n : ℤ) : ⅟ (t n : R[T;T⁻¹]) = t (-n) :=
 #align laurent_polynomial.inv_of_T LaurentPolynomial.inv_of_T
 
 theorem is_unit_T (n : ℤ) : IsUnit (t n : R[T;T⁻¹]) :=
-  is_unit_of_invertible _
+  isUnit_of_invertible _
 #align laurent_polynomial.is_unit_T LaurentPolynomial.is_unit_T
 
 @[elab_as_elim]
@@ -518,7 +518,7 @@ instance : Module R[X] R[T;T⁻¹] :=
 instance (R : Type _) [Semiring R] :
     IsScalarTower R[X] R[X]
       R[T;T⁻¹] where smul_assoc x y z := by
-    simp only [HasSmul.smul, HasSmul.Comp.smul, map_mul, mul_assoc]
+    simp only [HasSmul.smul, SMul.comp.smul, map_mul, mul_assoc]
 
 end Semiring
 

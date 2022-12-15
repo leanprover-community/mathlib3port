@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.pointwise
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ theorem mem_inv {g : G} {S : Submonoid G} : g ∈ S⁻¹ ↔ g⁻¹ ∈ S :=
 #align submonoid.mem_inv Submonoid.mem_inv
 
 @[to_additive]
-instance : HasInvolutiveInv (Submonoid G) :=
+instance : InvolutiveInv (Submonoid G) :=
   (SetLike.coe_injective.HasInvolutiveInv _) fun _ => rfl
 
 @[simp, to_additive]
@@ -224,7 +224,7 @@ protected def pointwiseMulAction :
     ext
     simp
   mul_smul a₁ a₂ S :=
-    (congr_arg (fun f : Monoid.EndCat M => S.map f) (MonoidHom.map_mul _ _ _)).trans
+    (congr_arg (fun f : Monoid.End M => S.map f) (MonoidHom.map_mul _ _ _)).trans
       (S.map_map _ _).symm
 #align submonoid.pointwise_mul_action Submonoid.pointwiseMulAction
 
@@ -261,7 +261,7 @@ theorem smul_closure (a : α) (s : Set M) : a • closure s = closure (a • s) 
 
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ M] [IsCentralScalar α M] :
     IsCentralScalar α (Submonoid M) :=
-  ⟨fun a S => (congr_arg fun f : Monoid.EndCat M => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f : Monoid.End M => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 #align submonoid.pointwise_central_scalar Submonoid.pointwise_central_scalar
 
 end Monoid
@@ -364,9 +364,9 @@ protected def pointwiseMulAction :
         A) where 
   smul a S := S.map (DistribMulAction.toAddMonoidEnd _ A a)
   one_smul S :=
-    (congr_arg (fun f : AddMonoid.EndCat A => S.map f) (MonoidHom.map_one _)).trans S.map_id
+    (congr_arg (fun f : AddMonoid.End A => S.map f) (MonoidHom.map_one _)).trans S.map_id
   mul_smul a₁ a₂ S :=
-    (congr_arg (fun f : AddMonoid.EndCat A => S.map f) (MonoidHom.map_mul _ _ _)).trans
+    (congr_arg (fun f : AddMonoid.End A => S.map f) (MonoidHom.map_mul _ _ _)).trans
       (S.map_map _ _).symm
 #align add_submonoid.pointwise_mul_action AddSubmonoid.pointwiseMulAction
 
@@ -405,7 +405,7 @@ theorem smul_closure (a : α) (s : Set A) : a • closure s = closure (a • s) 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubmonoid A) :=
   ⟨fun a S =>
-    (congr_arg fun f : AddMonoid.EndCat A => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
+    (congr_arg fun f : AddMonoid.End A => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 #align add_submonoid.pointwise_central_scalar AddSubmonoid.pointwise_central_scalar
 
 end Monoid

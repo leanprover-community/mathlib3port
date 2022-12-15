@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,7 +226,7 @@ theorem coe_to_fun_eq {X Y : PresheafedSpaceCat.{v, v, u} C} (f : X ⟶ Y) : (f 
 /-- Sometimes rewriting with `comp_c_app` doesn't work because of dependent type issues.
 In that case, `erw comp_c_app_assoc` might make progress.
 The lemma `comp_c_app_assoc` is also better suited for rewrites in the opposite direction. -/
-@[reassoc, simp]
+@[reassoc.1, simp]
 theorem comp_c_app {X Y Z : PresheafedSpaceCat.{v, v, u} C} (α : X ⟶ Y) (β : Y ⟶ Z) (U) :
     (α ≫ β).c.app U = β.c.app U ≫ α.c.app (op ((Opens.map β.base).obj (unop U))) :=
   rfl

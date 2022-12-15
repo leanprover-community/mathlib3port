@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -350,10 +350,10 @@ theorem finite [IsDomain B] [h₁ : Finite S] [h₂ : IsCyclotomicExtension S A 
 /-- A cyclotomic finite extension of a number field is a number field. -/
 theorem numberField [h : NumberField K] [Finite S] [IsCyclotomicExtension S K L] : NumberField L :=
   { to_char_zero := char_zero_of_injective_algebra_map (algebraMap K L).Injective
-    toFiniteDimensional :=
+    to_finite_dimensional :=
       @Module.Finite.trans _ K L _ _ _ _
         (@algebraRat L _ (char_zero_of_injective_algebra_map (algebraMap K L).Injective)) _ _
-        h.toFiniteDimensional (Finite S K L) }
+        h.to_finite_dimensional (Finite S K L) }
 #align is_cyclotomic_extension.number_field IsCyclotomicExtension.numberField
 
 scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.numberField
@@ -365,12 +365,12 @@ theorem integral [IsDomain B] [IsNoetherianRing A] [Finite S] [IsCyclotomicExten
 #align is_cyclotomic_extension.integral IsCyclotomicExtension.integral
 
 /-- If `S` is finite and `is_cyclotomic_extension S K A`, then `finite_dimensional K A`. -/
-theorem finiteDimensional (C : Type z) [Finite S] [CommRing C] [Algebra K C] [IsDomain C]
+theorem finite_dimensional (C : Type z) [Finite S] [CommRing C] [Algebra K C] [IsDomain C]
     [IsCyclotomicExtension S K C] : FiniteDimensional K C :=
   IsCyclotomicExtension.finite S K C
-#align is_cyclotomic_extension.finite_dimensional IsCyclotomicExtension.finiteDimensional
+#align is_cyclotomic_extension.finite_dimensional IsCyclotomicExtension.finite_dimensional
 
-scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.finiteDimensional
+scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.finite_dimensional
 
 end Fintype
 
@@ -454,21 +454,21 @@ section Field
 variable {n S}
 
 /-- A cyclotomic extension splits `X ^ n - 1` if `n ∈ S`.-/
-theorem splitsXPowSubOne [H : IsCyclotomicExtension S K L] (hS : n ∈ S) :
+theorem splits_X_pow_sub_one [H : IsCyclotomicExtension S K L] (hS : n ∈ S) :
     Splits (algebraMap K L) (X ^ (n : ℕ) - 1) := by
   rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow,
     Polynomial.map_X]
   obtain ⟨z, hz⟩ := ((is_cyclotomic_extension_iff _ _ _).1 H).1 hS
   exact X_pow_sub_one_splits hz
-#align is_cyclotomic_extension.splits_X_pow_sub_one IsCyclotomicExtension.splitsXPowSubOne
+#align is_cyclotomic_extension.splits_X_pow_sub_one IsCyclotomicExtension.splits_X_pow_sub_one
 
 /-- A cyclotomic extension splits `cyclotomic n K` if `n ∈ S` and `ne_zero (n : K)`.-/
-theorem splitsCyclotomic [IsCyclotomicExtension S K L] (hS : n ∈ S) :
+theorem splits_cyclotomic [IsCyclotomicExtension S K L] (hS : n ∈ S) :
     Splits (algebraMap K L) (cyclotomic n K) := by
   refine' splits_of_splits_of_dvd _ (X_pow_sub_C_ne_zero n.pos _) (splits_X_pow_sub_one K L hS) _
   use ∏ i : ℕ in (n : ℕ).properDivisors, Polynomial.cyclotomic i K
   rw [(eq_cyclotomic_iff n.pos _).1 rfl, RingHom.map_one]
-#align is_cyclotomic_extension.splits_cyclotomic IsCyclotomicExtension.splitsCyclotomic
+#align is_cyclotomic_extension.splits_cyclotomic IsCyclotomicExtension.splits_cyclotomic
 
 variable (n S)
 
@@ -478,7 +478,7 @@ variable [IsCyclotomicExtension {n} K L]
 
 /-- If `is_cyclotomic_extension {n} K L`, then `L` is the splitting field of `X ^ n - 1`. -/
 theorem splittingFieldXPowSubOne : IsSplittingField K L (X ^ (n : ℕ) - 1) :=
-  { Splits := splitsXPowSubOne K L (mem_singleton n)
+  { Splits := splits_X_pow_sub_one K L (mem_singleton n)
     adjoin_roots := by 
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]
       congr
@@ -512,7 +512,7 @@ scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.isGalois
 
 /-- If `is_cyclotomic_extension {n} K L`, then `L` is the splitting field of `cyclotomic n K`. -/
 theorem splittingFieldCyclotomic : IsSplittingField K L (cyclotomic n K) :=
-  { Splits := splitsCyclotomic K L (mem_singleton n)
+  { Splits := splits_cyclotomic K L (mem_singleton n)
     adjoin_roots := by 
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]
       letI := Classical.decEq L

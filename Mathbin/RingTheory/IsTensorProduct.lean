@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.is_tensor_product
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,13 +69,13 @@ def IsTensorProduct : Prop :=
 
 variable (R M N) {f}
 
-theorem TensorProduct.is_tensor_product : IsTensorProduct (TensorProduct.mk R M N) := by
+theorem TensorProduct.isTensorProduct : IsTensorProduct (TensorProduct.mk R M N) := by
   delta IsTensorProduct
   convert_to Function.Bijective LinearMap.id using 2
   · apply TensorProduct.ext'
     simp
   · exact Function.bijective_id
-#align tensor_product.is_tensor_product TensorProduct.is_tensor_product
+#align tensor_product.is_tensor_product TensorProduct.isTensorProduct
 
 variable {R M N}
 
@@ -124,7 +124,7 @@ theorem IsTensorProduct.map_eq (hf : IsTensorProduct f) (hg : IsTensorProduct g)
   simp
 #align is_tensor_product.map_eq IsTensorProduct.map_eq
 
-theorem IsTensorProduct.induction_on (h : IsTensorProduct f) {C : M → Prop} (m : M) (h0 : C 0)
+theorem IsTensorProduct.inductionOn (h : IsTensorProduct f) {C : M → Prop} (m : M) (h0 : C 0)
     (htmul : ∀ x y, C (f x y)) (hadd : ∀ x y, C x → C y → C (x + y)) : C m := by
   rw [← h.equiv.right_inv m]
   generalize h.equiv.inv_fun m = y
@@ -135,7 +135,7 @@ theorem IsTensorProduct.induction_on (h : IsTensorProduct f) {C : M → Prop} (m
     apply htmul
   · rw [map_add]
     apply hadd <;> assumption
-#align is_tensor_product.induction_on IsTensorProduct.induction_on
+#align is_tensor_product.induction_on IsTensorProduct.inductionOn
 
 end IsTensorProduct
 
@@ -202,10 +202,10 @@ end
 include h
 
 @[elab_as_elim]
-theorem IsBaseChange.induction_on (x : N) (P : N → Prop) (h₁ : P 0) (h₂ : ∀ m : M, P (f m))
+theorem IsBaseChange.inductionOn (x : N) (P : N → Prop) (h₁ : P 0) (h₂ : ∀ m : M, P (f m))
     (h₃ : ∀ (s : S) (n), P n → P (s • n)) (h₄ : ∀ n₁ n₂, P n₁ → P n₂ → P (n₁ + n₂)) : P x :=
   h.induction_on x h₁ (fun s y => h₃ _ _ (h₂ _)) h₄
-#align is_base_change.induction_on IsBaseChange.induction_on
+#align is_base_change.induction_on IsBaseChange.inductionOn
 
 theorem IsBaseChange.alg_hom_ext (g₁ g₂ : N →ₗ[S] Q) (e : ∀ x, g₁ (f x) = g₂ (f x)) : g₁ = g₂ := by
   ext x
@@ -227,15 +227,15 @@ variable (R M N S)
 
 omit h f
 
-theorem TensorProduct.is_base_change : IsBaseChange S (TensorProduct.mk R S M 1) := by
+theorem TensorProduct.isBaseChange : IsBaseChange S (TensorProduct.mk R S M 1) := by
   delta IsBaseChange
-  convert TensorProduct.is_tensor_product R S M using 1
+  convert TensorProduct.isTensorProduct R S M using 1
   ext (s x)
   change s • 1 ⊗ₜ x = s ⊗ₜ x
   rw [TensorProduct.smul_tmul']
   congr 1
   exact mul_one _
-#align tensor_product.is_base_change TensorProduct.is_base_change
+#align tensor_product.is_base_change TensorProduct.isBaseChange
 
 variable {R M N S}
 
@@ -262,7 +262,7 @@ theorem IsBaseChange.equiv_symm_apply (m : M) : h.Equiv.symm (f m) = 1 ⊗ₜ m 
 
 variable (f)
 
-theorem IsBaseChange.of_lift_unique
+theorem IsBaseChange.ofLiftUnique
     (h :
       ∀ (Q : Type max v₁ v₂ v₃) [AddCommMonoid Q],
         ∀ [Module R Q] [Module S Q],
@@ -323,7 +323,7 @@ theorem IsBaseChange.of_lift_unique
     rw [this]
     simp only [lift.tmul, LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply,
       AlgHom.to_linear_map_apply, _root_.map_one, LinearMap.one_apply]
-#align is_base_change.of_lift_unique IsBaseChange.of_lift_unique
+#align is_base_change.of_lift_unique IsBaseChange.ofLiftUnique
 
 variable {f}
 
@@ -336,11 +336,11 @@ theorem IsBaseChange.iff_lift_unique :
   ⟨fun h => by 
     intros
     exact ⟨h.lift g, h.lift_comp g, fun g' e => h.alg_hom_ext' _ _ (e.trans (h.lift_comp g).symm)⟩,
-    IsBaseChange.of_lift_unique f⟩
+    IsBaseChange.ofLiftUnique f⟩
 #align is_base_change.iff_lift_unique IsBaseChange.iff_lift_unique
 
-theorem IsBaseChange.of_equiv (e : M ≃ₗ[R] N) : IsBaseChange R e.toLinearMap := by
-  apply IsBaseChange.of_lift_unique
+theorem IsBaseChange.ofEquiv (e : M ≃ₗ[R] N) : IsBaseChange R e.toLinearMap := by
+  apply IsBaseChange.ofLiftUnique
   intro Q I₁ I₂ I₃ I₄ g
   have : I₂ = I₃ := by 
     ext (r q)
@@ -353,7 +353,7 @@ theorem IsBaseChange.of_equiv (e : M ≃ₗ[R] N) : IsBaseChange R e.toLinearMap
   rintro y (rfl : _ = _)
   ext
   simp
-#align is_base_change.of_equiv IsBaseChange.of_equiv
+#align is_base_change.of_equiv IsBaseChange.ofEquiv
 
 variable {T O : Type _} [CommRing T] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
 
@@ -363,7 +363,7 @@ variable [IsScalarTower R S O] [IsScalarTower R T O]
 
 theorem IsBaseChange.comp {f : M →ₗ[R] N} (hf : IsBaseChange S f) {g : N →ₗ[S] O}
     (hg : IsBaseChange T g) : IsBaseChange T ((g.restrictScalars R).comp f) := by
-  apply IsBaseChange.of_lift_unique
+  apply IsBaseChange.ofLiftUnique
   intro Q _ _ _ _ i
   letI := Module.compHom Q (algebraMap S T)
   haveI : IsScalarTower S T Q :=
@@ -431,7 +431,7 @@ theorem Algebra.IsPushout.symm (h : Algebra.IsPushout R S R' S') : Algebra.IsPus
     simp [e, h.1.equiv_tmul, Algebra.smul_def]
   constructor
   rw [this]
-  exact (TensorProduct.is_base_change R S R').comp (IsBaseChange.of_equiv e)
+  exact (TensorProduct.isBaseChange R S R').comp (IsBaseChange.ofEquiv e)
 #align algebra.is_pushout.symm Algebra.IsPushout.symm
 
 variable (R S R' S')
@@ -444,15 +444,15 @@ variable {R S R'}
 
 attribute [local instance] Algebra.TensorProduct.rightAlgebra
 
-instance TensorProduct.is_pushout {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
+instance TensorProduct.isPushout {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
     [Algebra R S] [Algebra R T] : Algebra.IsPushout R S T (TensorProduct R S T) :=
-  ⟨TensorProduct.is_base_change R T S⟩
-#align tensor_product.is_pushout TensorProduct.is_pushout
+  ⟨TensorProduct.isBaseChange R T S⟩
+#align tensor_product.is_pushout TensorProduct.isPushout
 
-instance TensorProduct.is_pushout' {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
+instance TensorProduct.isPushout' {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
     [Algebra R S] [Algebra R T] : Algebra.IsPushout R T S (TensorProduct R S T) :=
   Algebra.IsPushout.symm inferInstance
-#align tensor_product.is_pushout' TensorProduct.is_pushout'
+#align tensor_product.is_pushout' TensorProduct.isPushout'
 
 /-- If `S' = S ⊗[R] R'`, then any pair of `R`-algebra homomorphisms `f : S → A` and `g : R' → A`
 such that `f x` and `g y` commutes for all `x, y` descends to a (unique) homomoprhism `S' → A`.

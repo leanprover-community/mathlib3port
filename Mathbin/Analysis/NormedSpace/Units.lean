@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.units
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,9 +106,9 @@ theorem subset_compl_ball : nonunits R ⊆ Metric.ball (1 : R) 1ᶜ :=
 #align nonunits.subset_compl_ball nonunits.subset_compl_ball
 
 -- The `nonunits` in a complete normed ring are a closed set
-protected theorem isClosed : IsClosed (nonunits R) :=
-  Units.is_open.isClosedCompl
-#align nonunits.is_closed nonunits.isClosed
+protected theorem is_closed : IsClosed (nonunits R) :=
+  Units.is_open.is_closed_compl
+#align nonunits.is_closed nonunits.is_closed
 
 end nonunits
 
@@ -149,7 +149,7 @@ theorem inverse_one_sub_nth_order (n : ℕ) :
   use 1, by norm_num
   intro t ht
   simp only [mem_ball, dist_zero_right] at ht
-  simp only [inverse_one_sub t ht, Set.mem_set_of_eq]
+  simp only [inverse_one_sub t ht, Set.mem_setOf_eq]
   have h : 1 = ((range n).Sum fun i => t ^ i) * Units.oneSub t ht + t ^ n := by
     simp only [Units.coe_one_sub]
     rw [geom_sum_mul_neg]
@@ -189,11 +189,11 @@ theorem inverse_one_sub_norm : (fun t : R => inverse (1 - t)) =O[𝓝 0] (fun t 
   simp only [is_O, is_O_with, eventually_iff, Metric.mem_nhds_iff]
   refine' ⟨‖(1 : R)‖ + 1, (2 : ℝ)⁻¹, by norm_num, _⟩
   intro t ht
-  simp only [ball, dist_zero_right, Set.mem_set_of_eq] at ht
+  simp only [ball, dist_zero_right, Set.mem_setOf_eq] at ht
   have ht' : ‖t‖ < 1 := by 
     have : (2 : ℝ)⁻¹ < 1 := by cancel_denoms
     linarith
-  simp only [inverse_one_sub t ht', norm_one, mul_one, Set.mem_set_of_eq]
+  simp only [inverse_one_sub t ht', norm_one, mul_one, Set.mem_setOf_eq]
   change ‖∑' n : ℕ, t ^ n‖ ≤ _
   have := NormedRing.tsum_geometric_of_norm_lt_1 t ht'
   have : (1 - ‖t‖)⁻¹ ≤ 2 := by 
@@ -334,7 +334,7 @@ theorem eq_top_of_norm_lt_one (I : Ideal R) {x : R} (hxI : x ∈ I) (hx : ‖1 -
 
 /-- The `ideal.closure` of a proper ideal in a complete normed ring is proper. -/
 theorem closure_ne_top (I : Ideal R) (hI : I ≠ ⊤) : I.closure ≠ ⊤ := by
-  have h := closure_minimal (coe_subset_nonunits hI) nonunits.isClosed
+  have h := closure_minimal (coe_subset_nonunits hI) nonunits.is_closed
   simpa only [I.closure.eq_top_iff_one, Ne.def] using mt (@h 1) one_not_mem_nonunits
 #align ideal.closure_ne_top Ideal.closure_ne_top
 
@@ -344,9 +344,9 @@ theorem IsMaximal.closure_eq {I : Ideal R} (hI : I.IsMaximal) : I.closure = I :=
 #align ideal.is_maximal.closure_eq Ideal.IsMaximal.closure_eq
 
 /-- Maximal ideals in complete normed rings are closed. -/
-instance IsMaximal.isClosed {I : Ideal R} [hI : I.IsMaximal] : IsClosed (I : Set R) :=
-  isClosedOfClosureSubset <| Eq.subset <| congr_arg (coe : Ideal R → Set R) hI.closure_eq
-#align ideal.is_maximal.is_closed Ideal.IsMaximal.isClosed
+instance IsMaximal.is_closed {I : Ideal R} [hI : I.IsMaximal] : IsClosed (I : Set R) :=
+  is_closed_of_closure_subset <| Eq.subset <| congr_arg (coe : Ideal R → Set R) hI.closure_eq
+#align ideal.is_maximal.is_closed Ideal.IsMaximal.is_closed
 
 end Ideal
 

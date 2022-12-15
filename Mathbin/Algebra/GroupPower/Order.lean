@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.order
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -334,7 +334,7 @@ variable [DivInvMonoid G] [Preorder G] [CovariantClass G G (· * ·) (· ≤ ·)
 @[to_additive zsmul_nonneg]
 theorem one_le_zpow {x : G} (H : 1 ≤ x) {n : ℤ} (hn : 0 ≤ n) : 1 ≤ x ^ n := by
   lift n to ℕ using hn
-  rw [zpow_coe_nat]
+  rw [zpow_ofNat]
   apply one_le_pow_of_one_le' H
 #align one_le_zpow one_le_zpow
 
@@ -590,15 +590,21 @@ theorem abs_neg_one_pow (n : ℕ) : |(-1 : R) ^ n| = 1 := by rw [← pow_abs, ab
 
 /- warning: pow_bit0_nonneg -> pow_bit0_nonneg is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] (a : R) (n : Nat), LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (OrderedAddCommGroup.toPartialOrder.{u1} R (StrictOrderedRing.toOrderedAddCommGroup.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))))) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))))))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.hasPow.{u1} R (Ring.toMonoid.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))))) a (bit0.{0} Nat Nat.hasAdd n))
+  forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] (a : R) (n : Nat), LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (OrderedAddCommGroup.toPartialOrder.{u1} R (StrictOrderedRing.toOrderedAddCommGroup.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))))) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))))))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))))) a (bit0.{0} Nat Nat.hasAdd n))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] (a : R) (n : Nat), LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedRing.toPartialOrder.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (StrictOrderedRing.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (StrictOrderedRing.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))))))) a (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n))
+  forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] (a : R) (n : Nat), LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedRing.toPartialOrder.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) a (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n))
 Case conversion may be inaccurate. Consider using '#align pow_bit0_nonneg pow_bit0_nonnegₓ'. -/
 theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n := by
   rw [pow_bit0]
   exact mul_self_nonneg _
 #align pow_bit0_nonneg pow_bit0_nonneg
 
+/- warning: sq_nonneg -> sq_nonneg is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] (a : R), LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (OrderedAddCommGroup.toPartialOrder.{u1} R (StrictOrderedRing.toOrderedAddCommGroup.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))))) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))))))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))))) a (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] (a : R), LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedRing.toPartialOrder.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
+Case conversion may be inaccurate. Consider using '#align sq_nonneg sq_nonnegₓ'. -/
 theorem sq_nonneg (a : R) : 0 ≤ a ^ 2 :=
   pow_bit0_nonneg a 1
 #align sq_nonneg sq_nonneg

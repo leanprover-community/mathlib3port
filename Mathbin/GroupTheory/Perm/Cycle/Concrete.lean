@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.concrete
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ theorem is_cycle_form_perm (hl : Nodup l) (hn : 2 ≤ l.length) : IsCycle (formP
       have : w ∈ x::y::l := mem_of_form_perm_ne_self _ _ hw
       obtain ⟨k, hk, rfl⟩ := nth_le_of_mem this
       use k
-      simp only [zpow_coe_nat, form_perm_pow_apply_head _ _ hl k, Nat.mod_eq_of_lt hk]
+      simp only [zpow_ofNat, form_perm_pow_apply_head _ _ hl k, Nat.mod_eq_of_lt hk]
 #align list.is_cycle_form_perm List.is_cycle_form_perm
 
 theorem pairwise_same_cycle_form_perm (hl : Nodup l) (hn : 2 ≤ l.length) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.bezout
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -219,7 +219,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                    "]")
                   [])
                  []
-                 (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
+                 (Tactic.apply "apply" (Term.app `RelEmbedding.wellFounded [(Term.hole "_") `h]))
                  []
                  (Tactic.tacticHave_
                   "have"
@@ -412,7 +412,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                   "]")
                  [])
                 []
-                (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
+                (Tactic.apply "apply" (Term.app `RelEmbedding.wellFounded [(Term.hole "_") `h]))
                 []
                 (Tactic.tacticHave_
                  "have"
@@ -597,7 +597,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
               "]")
              [])
             []
-            (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
+            (Tactic.apply "apply" (Term.app `RelEmbedding.wellFounded [(Term.hole "_") `h]))
             []
             (Tactic.tacticHave_
              "have"
@@ -746,7 +746,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
           "]")
          [])
         []
-        (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
+        (Tactic.apply "apply" (Term.app `RelEmbedding.wellFounded [(Term.hole "_") `h]))
         []
         (Tactic.tacticHave_
          "have"
@@ -1367,9 +1367,9 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
+      (Tactic.apply "apply" (Term.app `RelEmbedding.wellFounded [(Term.hole "_") `h]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h])
+      (Term.app `RelEmbedding.wellFounded [(Term.hole "_") `h])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1383,7 +1383,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
      [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `RelEmbedding.well_founded
+      `RelEmbedding.wellFounded
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
@@ -1456,7 +1456,7 @@ theorem
           ·
             rintro ⟨ h ⟩
               rw [ is_noetherian_ring_iff , is_noetherian_iff_fg_well_founded ]
-              apply RelEmbedding.well_founded _ h
+              apply RelEmbedding.wellFounded _ h
               have
                 : ∀ I : { J : Ideal R // J . Fg } , ∃ x : R , ( I : Ideal R ) = Ideal.span { x }
                   :=

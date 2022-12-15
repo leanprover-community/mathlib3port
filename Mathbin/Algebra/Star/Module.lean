@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.module
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,8 +115,7 @@ def selfAdjointPart :
     simp [add_add_add_comm]
   map_smul' r x := by 
     ext
-    simp [← mul_smul,
-      show ⅟ 2 * r = r * ⅟ 2 from Commute.inv_of_left (Commute.one_left r).bit0_left]
+    simp [← mul_smul, show ⅟ 2 * r = r * ⅟ 2 from Commute.invOf_left (Commute.one_left r).bit0_left]
 #align self_adjoint_part selfAdjointPart
 
 /-- The skew-adjoint part of an element of a star module, as a linear map. -/
@@ -136,7 +135,7 @@ def skewAdjointPart :
   map_smul' r x := by 
     ext
     simp [← mul_smul, ← smul_sub,
-      show r * ⅟ 2 = ⅟ 2 * r from Commute.inv_of_right (Commute.one_right r).bit0_right]
+      show r * ⅟ 2 = ⅟ 2 * r from Commute.invOf_right (Commute.one_right r).bit0_right]
 #align skew_adjoint_part skewAdjointPart
 
 theorem StarModule.self_adjoint_part_add_skew_adjoint_part (x : A) :

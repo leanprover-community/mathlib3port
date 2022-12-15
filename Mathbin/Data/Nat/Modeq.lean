@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.modeq
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ theorem Dvd.Dvd.zero_modeq_nat (h : n ∣ a) : 0 ≡ a [MOD n] :=
 
 theorem modeq_iff_dvd : a ≡ b [MOD n] ↔ (n : ℤ) ∣ b - a := by
   rw [modeq, eq_comm, ← Int.coe_nat_inj', Int.coe_nat_mod, Int.coe_nat_mod,
-    Int.mod_eq_mod_iff_mod_sub_eq_zero, Int.dvd_iff_mod_eq_zero]
+    Int.emod_eq_emod_iff_emod_sub_eq_zero, Int.dvd_iff_emod_eq_zero]
 #align nat.modeq_iff_dvd Nat.modeq_iff_dvd
 
 protected theorem Modeq.dvd : a ≡ b [MOD n] → (n : ℤ) ∣ b - a :=
@@ -265,8 +265,8 @@ theorem modeq_cancel_left_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : c * a ≡ c 
   rw [modeq_iff_dvd]
   refine' Int.dvd_of_dvd_mul_right_of_gcd_one _ _
   show (m / d : ℤ) ∣ c / d * (b - a)
-  · rw [mul_comm, ← Int.mul_div_assoc (b - a) (int.coe_nat_dvd.mpr hcd), mul_comm]
-    apply Int.div_dvd_div (int.coe_nat_dvd.mpr hmd)
+  · rw [mul_comm, ← Int.mul_ediv_assoc (b - a) (int.coe_nat_dvd.mpr hcd), mul_comm]
+    apply Int.ediv_dvd_ediv (int.coe_nat_dvd.mpr hmd)
     rw [mul_sub]
     exact modeq_iff_dvd.mp h
   show Int.gcd (m / d) (c / d) = 1
@@ -323,7 +323,7 @@ def chineseRemainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k
         rw [xgcd_val]
         dsimp [chinese_remainder'._match_1]
         rw [modeq_iff_dvd, modeq_iff_dvd,
-          Int.toNat_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero.2 (lcm_ne_zero hn hm)))]
+          Int.toNat_of_nonneg (Int.emod_nonneg _ (Int.coe_nat_ne_zero.2 (lcm_ne_zero hn hm)))]
         have hnonzero : (gcd n m : ℤ) ≠ 0 := by 
           norm_cast
           rw [Nat.gcd_eq_zero_iff, not_and]
@@ -335,15 +335,15 @@ def chineseRemainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k
           try norm_cast
         · rw [← sub_eq_iff_eq_add'] at this
           rw [← this, sub_mul, ← add_sub_assoc, add_comm, add_sub_assoc, ← mul_sub,
-            Int.add_div_of_dvd_left, Int.mul_div_cancel_left _ hnonzero, Int.mul_div_assoc _ h.dvd,
-            ← sub_sub, sub_self, zero_sub, dvd_neg, mul_assoc]
+            Int.add_ediv_of_dvd_left, Int.mul_ediv_cancel_left _ hnonzero,
+            Int.mul_ediv_assoc _ h.dvd, ← sub_sub, sub_self, zero_sub, dvd_neg, mul_assoc]
           exact dvd_mul_right _ _
           norm_cast
           exact dvd_mul_right _ _
         · exact dvd_lcm_left n m
         · rw [← sub_eq_iff_eq_add] at this
-          rw [← this, sub_mul, sub_add, ← mul_sub, Int.sub_div_of_dvd,
-            Int.mul_div_cancel_left _ hnonzero, Int.mul_div_assoc _ h.dvd, ← sub_add, sub_self,
+          rw [← this, sub_mul, sub_add, ← mul_sub, Int.sub_ediv_of_dvd,
+            Int.mul_ediv_cancel_left _ hnonzero, Int.mul_ediv_assoc _ h.dvd, ← sub_add, sub_self,
             zero_add, mul_assoc]
           exact dvd_mul_right _ _
           exact hcoedvd _
@@ -360,7 +360,7 @@ theorem chinese_remainder'_lt_lcm (h : a ≡ b [MOD gcd n m]) (hn : n ≠ 0) (hm
   dsimp only [chinese_remainder']
   rw [dif_neg hn, dif_neg hm, Subtype.coe_mk, xgcd_val, ← Int.toNat_coe_nat (lcm n m)]
   have lcm_pos := int.coe_nat_pos.mpr (Nat.pos_of_ne_zero (lcm_ne_zero hn hm))
-  exact (Int.to_nat_lt_to_nat lcm_pos).mpr (Int.mod_lt_of_pos _ lcm_pos)
+  exact (Int.to_nat_lt_to_nat lcm_pos).mpr (Int.emod_lt_of_pos _ lcm_pos)
 #align nat.chinese_remainder'_lt_lcm Nat.chinese_remainder'_lt_lcm
 
 theorem chinese_remainder_lt_mul (co : Coprime n m) (a b : ℕ) (hn : n ≠ 0) (hm : m ≠ 0) :
@@ -371,9 +371,9 @@ theorem chinese_remainder_lt_mul (co : Coprime n m) (a b : ℕ) (hn : n ≠ 0) (
 theorem modeq_and_modeq_iff_modeq_mul {a b m n : ℕ} (hmn : Coprime m n) :
     a ≡ b [MOD m] ∧ a ≡ b [MOD n] ↔ a ≡ b [MOD m * n] :=
   ⟨fun h => by
-    rw [Nat.modeq_iff_dvd, Nat.modeq_iff_dvd, ← Int.dvd_nat_abs, Int.coe_nat_dvd, ← Int.dvd_nat_abs,
+    rw [Nat.modeq_iff_dvd, Nat.modeq_iff_dvd, ← Int.dvd_natAbs, Int.coe_nat_dvd, ← Int.dvd_natAbs,
       Int.coe_nat_dvd] at h
-    rw [Nat.modeq_iff_dvd, ← Int.dvd_nat_abs, Int.coe_nat_dvd]
+    rw [Nat.modeq_iff_dvd, ← Int.dvd_natAbs, Int.coe_nat_dvd]
     exact hmn.mul_dvd_of_dvd_of_dvd h.1 h.2, fun h =>
     ⟨h.of_modeq_mul_right _, h.of_modeq_mul_left _⟩⟩
 #align nat.modeq_and_modeq_iff_modeq_mul Nat.modeq_and_modeq_iff_modeq_mul

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.ultraproducts
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,19 +53,19 @@ instance setoidPrestructure : L.Prestructure ((u : Filter α).productSetoid M) :
         rel_map := fun n r x => ∀ᶠ a : α in u, RelMap r fun i => x i a }
     fun_equiv := fun n f x y xy => by
       refine' mem_of_superset (Inter_mem.2 xy) fun a ha => _
-      simp only [Set.mem_Inter, Set.mem_set_of_eq] at ha
-      simp only [Set.mem_set_of_eq, ha]
+      simp only [Set.mem_Inter, Set.mem_setOf_eq] at ha
+      simp only [Set.mem_setOf_eq, ha]
     rel_equiv := fun n r x y xy => by 
       rw [← iff_eq_eq]
       refine' ⟨fun hx => _, fun hy => _⟩
       · refine' mem_of_superset (inter_mem hx (Inter_mem.2 xy)) _
         rintro a ⟨ha1, ha2⟩
-        simp only [Set.mem_Inter, Set.mem_set_of_eq] at *
+        simp only [Set.mem_Inter, Set.mem_setOf_eq] at *
         rw [← funext ha2]
         exact ha1
       · refine' mem_of_superset (inter_mem hy (Inter_mem.2 xy)) _
         rintro a ⟨ha1, ha2⟩
-        simp only [Set.mem_Inter, Set.mem_set_of_eq] at *
+        simp only [Set.mem_Inter, Set.mem_setOf_eq] at *
         rw [funext ha2]
         exact ha1 }
 #align

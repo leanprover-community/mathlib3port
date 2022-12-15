@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 
 ! This file was ported from Lean 3 source module algebra.homology.quasi_iso
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,28 +44,26 @@ class QuasiIso (f : C ⟶ D) : Prop where
 
 attribute [instance] QuasiIso.is_iso
 
-instance (priority := 100) quasi_iso_of_iso (f : C ⟶ D) [IsIso f] :
+instance (priority := 100) quasiIsoOfIso (f : C ⟶ D) [IsIso f] :
     QuasiIso
       f where IsIso i := by
     change is_iso ((homologyFunctor V c i).mapIso (as_iso f)).Hom
     infer_instance
-#align quasi_iso_of_iso quasi_iso_of_iso
+#align quasi_iso_of_iso quasiIsoOfIso
 
-instance quasi_iso_comp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] :
+instance quasiIsoComp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] :
     QuasiIso (f ≫ g) where IsIso i := by 
     rw [functor.map_comp]
     infer_instance
-#align quasi_iso_comp quasi_iso_comp
+#align quasi_iso_comp quasiIsoComp
 
-theorem quasi_iso_of_comp_left (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso (f ≫ g)] :
-    QuasiIso g :=
-  { IsIso := fun i => IsIso.of_is_iso_fac_left ((homologyFunctor V c i).map_comp f g).symm }
-#align quasi_iso_of_comp_left quasi_iso_of_comp_left
+theorem quasiIsoOfCompLeft (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso (f ≫ g)] : QuasiIso g :=
+  { IsIso := fun i => IsIso.of_isIso_fac_left ((homologyFunctor V c i).map_comp f g).symm }
+#align quasi_iso_of_comp_left quasiIsoOfCompLeft
 
-theorem quasi_iso_of_comp_right (f : C ⟶ D) (g : D ⟶ E) [QuasiIso g] [QuasiIso (f ≫ g)] :
-    QuasiIso f :=
-  { IsIso := fun i => IsIso.of_is_iso_fac_right ((homologyFunctor V c i).map_comp f g).symm }
-#align quasi_iso_of_comp_right quasi_iso_of_comp_right
+theorem quasiIsoOfCompRight (f : C ⟶ D) (g : D ⟶ E) [QuasiIso g] [QuasiIso (f ≫ g)] : QuasiIso f :=
+  { IsIso := fun i => IsIso.of_isIso_fac_right ((homologyFunctor V c i).map_comp f g).symm }
+#align quasi_iso_of_comp_right quasiIsoOfCompRight
 
 namespace HomotopyEquiv
 
@@ -75,16 +73,16 @@ variable {W : Type _} [Category W] [Preadditive W] [HasCokernels W] [HasImages W
   [HasZeroObject W] [HasImageMaps W]
 
 /-- An homotopy equivalence is a quasi-isomorphism. -/
-theorem to_quasi_iso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : QuasiIso e.Hom :=
+theorem toQuasiIso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : QuasiIso e.Hom :=
   ⟨fun i => by 
     refine' ⟨⟨(homologyFunctor W c i).map e.inv, _⟩⟩
     simp only [← functor.map_comp, ← (homologyFunctor W c i).map_id]
     constructor <;> apply homology_map_eq_of_homotopy
     exacts[e.homotopy_hom_inv_id, e.homotopy_inv_hom_id]⟩
-#align homotopy_equiv.to_quasi_iso HomotopyEquiv.to_quasi_iso
+#align homotopy_equiv.to_quasi_iso HomotopyEquiv.toQuasiIso
 
 theorem to_quasi_iso_inv {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) (i : ι) :
-    (@asIso _ _ _ _ _ (e.to_quasi_iso.1 i)).inv = (homologyFunctor W c i).map e.inv := by
+    (@asIso _ _ _ _ _ (e.toQuasiIso.1 i)).inv = (homologyFunctor W c i).map e.inv := by
   symm
   simp only [← iso.hom_comp_eq_id, as_iso_hom, ← functor.map_comp, ← (homologyFunctor W c i).map_id,
     homology_map_eq_of_homotopy e.homotopy_hom_inv_id _]
@@ -226,7 +224,7 @@ end HomologicalComplex.Hom
 variable {A : Type _} [Category A] [Abelian A] {B : Type _} [Category B] [Abelian B] (F : A ⥤ B)
   [Functor.Additive F] [PreservesFiniteLimits F] [PreservesFiniteColimits F] [Faithful F]
 
-theorem CategoryTheory.Functor.quasi_iso_of_map_quasi_iso {C D : HomologicalComplex A c} (f : C ⟶ D)
+theorem CategoryTheory.Functor.quasiIsoOfMapQuasiIso {C D : HomologicalComplex A c} (f : C ⟶ D)
     (hf : QuasiIso ((F.mapHomologicalComplex _).map f)) : QuasiIso f :=
   ⟨fun i =>
     haveI : is_iso (F.map ((homologyFunctor A c i).map f)) := by
@@ -234,5 +232,5 @@ theorem CategoryTheory.Functor.quasi_iso_of_map_quasi_iso {C D : HomologicalComp
       infer_instance
     is_iso_of_reflects_iso _ F⟩
 #align
-  category_theory.functor.quasi_iso_of_map_quasi_iso CategoryTheory.Functor.quasi_iso_of_map_quasi_iso
+  category_theory.functor.quasi_iso_of_map_quasi_iso CategoryTheory.Functor.quasiIsoOfMapQuasiIso
 

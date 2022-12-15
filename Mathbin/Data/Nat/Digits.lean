@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.digits
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -560,8 +560,8 @@ theorem of_digits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : Li
   · rfl
   · dsimp [of_digits]
     dsimp [Int.Modeq] at *
-    conv_lhs => rw [Int.add_mod, Int.mul_mod, h, ih]
-    conv_rhs => rw [Int.add_mod, Int.mul_mod]
+    conv_lhs => rw [Int.add_emod, Int.mul_emod, h, ih]
+    conv_rhs => rw [Int.add_emod, Int.mul_emod]
 #align nat.of_digits_zmodeq' Nat.of_digits_zmodeq'
 
 theorem of_digits_zmodeq (b : ℤ) (k : ℕ) (L : List ℕ) :

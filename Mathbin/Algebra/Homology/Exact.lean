@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.homology.exact
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ structure Exact [HasZeroMorphisms V] [HasKernels V] {A B C : V} (f : A ⟶ B) (g
 -- `f ≫ g = 0` looks different, we are out of luck and have to add the instance by hand.
 attribute [instance] exact.epi
 
-attribute [reassoc] exact.w
+attribute [reassoc.1] exact.w
 
 section
 
@@ -275,7 +275,7 @@ section HasCokernels
 
 variable [HasZeroMorphisms V] [HasEqualizers V] [HasCokernels V] (f g)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem kernel_comp_cokernel (h : Exact f g) : kernel.ι g ≫ cokernel.π f = 0 := by
   rw [← kernel_subobject_arrow', category.assoc]
   convert comp_zero
@@ -291,7 +291,7 @@ theorem comp_eq_zero_of_exact (h : Exact f g) {X Y : V} {ι : X ⟶ B} (hι : ι
     kernel_comp_cokernel_assoc _ _ h, zero_comp, comp_zero]
 #align category_theory.comp_eq_zero_of_exact CategoryTheory.comp_eq_zero_of_exact
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem fork_ι_comp_cofork_π (h : Exact f g) (s : KernelFork g) (t : CokernelCofork f) :
     Fork.ι s ≫ Cofork.π t = 0 :=
   comp_eq_zero_of_exact f g h (KernelFork.condition s) (CokernelCofork.condition t)

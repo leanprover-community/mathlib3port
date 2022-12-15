@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.thin
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,10 +43,12 @@ section
 
 variable [CategoryStruct.{v₁} C] [Quiver.IsThin C]
 
+#print CategoryTheory.thin_category /-
 /-- Construct a category instance from a category_struct, using the fact that
     hom spaces are subsingletons to prove the axioms. -/
-def thinCategory : Category C where
-#align category_theory.thin_category CategoryTheory.thinCategory
+def thin_category : Category C where
+#align category_theory.thin_category CategoryTheory.thin_category
+-/
 
 end
 
@@ -57,24 +59,30 @@ variable [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 variable [Quiver.IsThin C]
 
+#print CategoryTheory.functor_thin /-
 /-- If `C` is a thin category, then `D ⥤ C` is a thin category. -/
 instance functor_thin : Quiver.IsThin (D ⥤ C) := fun _ _ =>
   ⟨fun α β => NatTrans.ext α β (funext fun _ => Subsingleton.elim _ _)⟩
 #align category_theory.functor_thin CategoryTheory.functor_thin
+-/
 
+#print CategoryTheory.iso_of_both_ways /-
 /-- To show `X ≅ Y` in a thin category, it suffices to just give any morphism in each direction. -/
-def isoOfBothWays {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) :
+def iso_of_both_ways {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) :
     X ≅ Y where 
   Hom := f
   inv := g
-#align category_theory.iso_of_both_ways CategoryTheory.isoOfBothWays
+#align category_theory.iso_of_both_ways CategoryTheory.iso_of_both_ways
+-/
 
+#print CategoryTheory.subsingleton_iso /-
 instance subsingleton_iso {X Y : C} : Subsingleton (X ≅ Y) :=
   ⟨by 
     intro i₁ i₂
     ext1
     apply Subsingleton.elim⟩
 #align category_theory.subsingleton_iso CategoryTheory.subsingleton_iso
+-/
 
 end CategoryTheory
 

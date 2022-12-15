@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.real.cau_seq_completion
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -436,7 +436,7 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f
               from
               sub_lim_zero (by rw [← mul_assoc, mul_right_comm, const_inv hl] <;> exact h₁ _ _ _)
                 (by rw [← mul_assoc] <;> exact h₁ _ _ _)
-      (lim_zero_congr h₂).mpr <| mulLimZeroLeft _ (Setoid.symm (equiv_lim f))
+      (lim_zero_congr h₂).mpr <| mul_lim_zero_left _ (Setoid.symm (equiv_lim f))
 #align cau_seq.lim_inv CauSeq.lim_inv
 
 end

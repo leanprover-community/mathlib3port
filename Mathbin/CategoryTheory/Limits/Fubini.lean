@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.fubini
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,7 +213,7 @@ noncomputable def limitUncurryIsoLimitCompLim : limit (uncurry.obj F) ≅ limit 
 #align
   category_theory.limits.limit_uncurry_iso_limit_comp_lim CategoryTheory.Limits.limitUncurryIsoLimitCompLim
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem limit_uncurry_iso_limit_comp_lim_hom_π_π {j} {k} :
     (limitUncurryIsoLimitCompLim F).Hom ≫ limit.π _ j ≫ limit.π _ k = limit.π _ (j, k) := by
   dsimp [limit_uncurry_iso_limit_comp_lim, is_limit.cone_point_unique_up_to_iso,
@@ -222,7 +222,7 @@ theorem limit_uncurry_iso_limit_comp_lim_hom_π_π {j} {k} :
 #align
   category_theory.limits.limit_uncurry_iso_limit_comp_lim_hom_π_π CategoryTheory.Limits.limit_uncurry_iso_limit_comp_lim_hom_π_π
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem limit_uncurry_iso_limit_comp_lim_inv_π {j} {k} :
     (limitUncurryIsoLimitCompLim F).inv ≫ limit.π _ (j, k) = limit.π _ j ≫ limit.π _ k := by
   rw [← cancel_epi (limit_uncurry_iso_limit_comp_lim F).Hom]
@@ -249,7 +249,7 @@ noncomputable def limitFlipCompLimIsoLimitCompLim : limit (F.flip ⋙ lim) ≅ l
 #align
   category_theory.limits.limit_flip_comp_lim_iso_limit_comp_lim CategoryTheory.Limits.limitFlipCompLimIsoLimitCompLim
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π (j) (k) :
     (limitFlipCompLimIsoLimitCompLim F).Hom ≫ limit.π _ j ≫ limit.π _ k =
       limit.π _ k ≫ limit.π _ j :=
@@ -262,7 +262,7 @@ theorem limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π (j) (k) :
   category_theory.limits.limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π CategoryTheory.Limits.limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π
 
 -- See note [dsimp, simp]
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem limit_flip_comp_lim_iso_limit_comp_lim_inv_π_π (k) (j) :
     (limitFlipCompLimIsoLimitCompLim F).inv ≫ limit.π _ k ≫ limit.π _ j =
       limit.π _ j ≫ limit.π _ k :=
@@ -303,7 +303,7 @@ noncomputable def limitIsoLimitCurryCompLim : limit G ≅ limit (curry.obj G ⋙
 #align
   category_theory.limits.limit_iso_limit_curry_comp_lim CategoryTheory.Limits.limitIsoLimitCurryCompLim
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem limit_iso_limit_curry_comp_lim_hom_π_π {j} {k} :
     (limitIsoLimitCurryCompLim G).Hom ≫ limit.π _ j ≫ limit.π _ k = limit.π _ (j, k) := by
   simp [limit_iso_limit_curry_comp_lim, is_limit.cone_point_unique_up_to_iso,
@@ -311,7 +311,7 @@ theorem limit_iso_limit_curry_comp_lim_hom_π_π {j} {k} :
 #align
   category_theory.limits.limit_iso_limit_curry_comp_lim_hom_π_π CategoryTheory.Limits.limit_iso_limit_curry_comp_lim_hom_π_π
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem limit_iso_limit_curry_comp_lim_inv_π {j} {k} :
     (limitIsoLimitCurryCompLim G).inv ≫ limit.π _ (j, k) = limit.π _ j ≫ limit.π _ k := by
   rw [← cancel_epi (limit_iso_limit_curry_comp_lim G).Hom]

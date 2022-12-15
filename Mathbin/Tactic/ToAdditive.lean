@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yury Kudryashov, Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.to_additive
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -212,7 +212,6 @@ unsafe def map_namespace (src tgt : Name) : Tactic := do
   aux_attr n tgt tt
 #align to_additive.map_namespace to_additive.map_namespace
 
-#print ToAdditive.ValueType /-
 /-- `value_type` is the type of the arguments that can be provided to `to_additive`.
 `to_additive.parser` parses the provided arguments:
 * `replace_all`: replace all multiplicative declarations, do not use the heuristic.
@@ -230,7 +229,6 @@ structure ValueType : Type where
   allowAutoName : Bool
   deriving has_reflect, Inhabited
 #align to_additive.value_type ToAdditive.ValueType
--/
 
 /-- `add_comm_prefix x s` returns `"comm_" ++ s` if `x = tt` and `s` otherwise. -/
 unsafe def add_comm_prefix : Bool → String → String

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,12 +266,12 @@ theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r : ℝ
     | none => h₂⟩
 #align ennreal.forall_ennreal Ennreal.forall_ennreal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ (a) (_ : a ≠ ∞), p a) ↔ ∀ r : ℝ≥0, p r :=
   Option.ball_ne_none
 #align ennreal.forall_ne_top Ennreal.forall_ne_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0, p r :=
   Option.bex_ne_none
 #align ennreal.exists_ne_top Ennreal.exists_ne_top
@@ -493,7 +493,7 @@ theorem cinfi_ne_top [HasInf α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠
   Eq.symm <| (neTopEquivNnreal.symm.Surjective.infi_congr _) fun x => rfl
 #align ennreal.cinfi_ne_top Ennreal.cinfi_ne_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 theorem infi_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0, f x := by rw [infi_subtype', cinfi_ne_top]
 #align ennreal.infi_ne_top Ennreal.infi_ne_top
@@ -502,7 +502,7 @@ theorem csupr_ne_top [HasSup α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠
   @cinfi_ne_top αᵒᵈ _ _
 #align ennreal.csupr_ne_top Ennreal.csupr_ne_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 theorem supr_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0, f x :=
   @infi_ne_top αᵒᵈ _ _
@@ -554,12 +554,12 @@ instance {M N : Type _} [MulAction ℝ≥0∞ M] [MulAction ℝ≥0∞ N] [HasSm
     IsScalarTower ℝ≥0 M N where smul_assoc r := (smul_assoc (r : ℝ≥0∞) : _)
 
 instance smul_comm_class_left {M N : Type _} [MulAction ℝ≥0∞ N] [HasSmul M N]
-    [SmulCommClass ℝ≥0∞ M N] : SmulCommClass ℝ≥0 M N where smul_comm r := (smul_comm (r : ℝ≥0∞) : _)
+    [SMulCommClass ℝ≥0∞ M N] : SMulCommClass ℝ≥0 M N where smul_comm r := (smul_comm (r : ℝ≥0∞) : _)
 #align ennreal.smul_comm_class_left Ennreal.smul_comm_class_left
 
 instance smul_comm_class_right {M N : Type _} [MulAction ℝ≥0∞ N] [HasSmul M N]
-    [SmulCommClass M ℝ≥0∞ N] :
-    SmulCommClass M ℝ≥0 N where smul_comm m r := (smul_comm m (r : ℝ≥0∞) : _)
+    [SMulCommClass M ℝ≥0∞ N] :
+    SMulCommClass M ℝ≥0 N where smul_comm m r := (smul_comm m (r : ℝ≥0∞) : _)
 #align ennreal.smul_comm_class_right Ennreal.smul_comm_class_right
 
 /-- A `distrib_mul_action` over `ℝ≥0∞` restricts to a `distrib_mul_action` over `ℝ≥0`. -/
@@ -903,7 +903,7 @@ protected theorem add_lt_add_of_lt_of_le : c ≠ ∞ → a < b → c ≤ d → a
 #align ennreal.add_lt_add_of_lt_of_le Ennreal.add_lt_add_of_lt_of_le
 
 instance contravariant_class_add_lt : ContravariantClass ℝ≥0∞ ℝ≥0∞ (· + ·) (· < ·) :=
-  WithTop.contravariant_class_add_lt
+  WithTop.contravariantClass_add_lt
 #align ennreal.contravariant_class_add_lt Ennreal.contravariant_class_add_lt
 
 theorem lt_add_right (ha : a ≠ ∞) (hb : b ≠ 0) : a < a + b := by
@@ -1578,7 +1578,7 @@ theorem mul_div_cancel' (h0 : a ≠ 0) (hI : a ≠ ∞) : a * (b / a) = b := by
   rw [mul_comm, div_mul_cancel h0 hI]
 #align ennreal.mul_div_cancel' Ennreal.mul_div_cancel'
 
-instance : HasInvolutiveInv ℝ≥0∞ where 
+instance : InvolutiveInv ℝ≥0∞ where 
   inv := Inv.inv
   inv_inv a := by
     by_cases a = 0 <;> cases a <;> simp_all [none_eq_top, some_eq_coe, -coe_inv, (coe_inv _).symm]
@@ -2015,23 +2015,21 @@ theorem exists_inv_two_pow_lt (ha : a ≠ 0) : ∃ n : ℕ, 2⁻¹ ^ n < a := by
 @[simp, norm_cast]
 theorem coe_zpow (hr : r ≠ 0) (n : ℤ) : (↑(r ^ n) : ℝ≥0∞) = r ^ n := by
   cases n
-  · simp only [Int.ofNat_eq_coe, coe_pow, zpow_coe_nat]
+  · simp only [Int.ofNat_eq_coe, coe_pow, zpow_ofNat]
   · have : r ^ n.succ ≠ 0 := pow_ne_zero (n + 1) hr
-    simp only [zpow_neg_succ_of_nat, coe_inv this, coe_pow]
+    simp only [zpow_negSucc, coe_inv this, coe_pow]
 #align ennreal.coe_zpow Ennreal.coe_zpow
 
 theorem zpow_pos (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : 0 < a ^ n := by
   cases n
   · exact Ennreal.pow_pos ha.bot_lt n
-  ·
-    simp only [h'a, pow_eq_top_iff, zpow_neg_succ_of_nat, Ne.def, not_false_iff, inv_pos,
-      false_and_iff]
+  · simp only [h'a, pow_eq_top_iff, zpow_negSucc, Ne.def, not_false_iff, inv_pos, false_and_iff]
 #align ennreal.zpow_pos Ennreal.zpow_pos
 
 theorem zpow_lt_top (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : a ^ n < ∞ := by
   cases n
   · exact Ennreal.pow_lt_top h'a.lt_top _
-  · simp only [Ennreal.pow_pos ha.bot_lt (n + 1), zpow_neg_succ_of_nat, inv_lt_top]
+  · simp only [Ennreal.pow_pos ha.bot_lt (n + 1), zpow_negSucc, inv_lt_top]
 #align ennreal.zpow_lt_top Ennreal.zpow_lt_top
 
 theorem exists_mem_Ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
@@ -2077,13 +2075,13 @@ theorem Ioo_zero_top_eq_Union_Ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y �
 
 theorem zpow_le_of_le {x : ℝ≥0∞} (hx : 1 ≤ x) {a b : ℤ} (h : a ≤ b) : x ^ a ≤ x ^ b := by
   induction' a with a a <;> induction' b with b b
-  · simp only [Int.ofNat_eq_coe, zpow_coe_nat]
+  · simp only [Int.ofNat_eq_coe, zpow_ofNat]
     exact pow_le_pow hx (Int.le_of_ofNat_le_ofNat h)
   · apply absurd h (not_le_of_gt _)
     exact lt_of_lt_of_le (Int.negSucc_lt_zero _) (Int.ofNat_nonneg _)
-  · simp only [zpow_neg_succ_of_nat, Int.ofNat_eq_coe, zpow_coe_nat]
+  · simp only [zpow_negSucc, Int.ofNat_eq_coe, zpow_ofNat]
     refine' le_trans (inv_le_one.2 _) _ <;> exact Ennreal.one_le_pow_of_one_le hx _
-  · simp only [zpow_neg_succ_of_nat, inv_le_inv]
+  · simp only [zpow_negSucc, inv_le_inv]
     apply pow_le_pow hx
     simpa only [← Int.ofNat_le, neg_le_neg_iff, Int.ofNat_add, Int.ofNat_one, Int.negSucc_eq] using
       h

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.gauss_eisenstein_lemmas
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,8 +38,8 @@ theorem wilsons_lemma : ((p - 1)! : Zmod p) = -1 := by
         rw [← Finset.prod_Ico_id_eq_factorial, prod_nat_cast]
       _ = ∏ x : (Zmod p)ˣ, x := _
       _ = -1 := by
-        simp_rw [← Units.coe_hom_apply, ← (Units.coeHom (Zmod p)).map_prod,
-          prod_univ_units_id_eq_neg_one, Units.coe_hom_apply, Units.val_neg, Units.val_one]
+        simp_rw [← Units.coeHom_apply, ← (Units.coeHom (Zmod p)).map_prod,
+          prod_univ_units_id_eq_neg_one, Units.coeHom_apply, Units.val_neg, Units.val_one]
       
   have hp : 0 < p := (Fact.out p.prime).Pos
   symm

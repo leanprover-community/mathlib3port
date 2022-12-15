@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.bump_function
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ theorem nonempty_support : (support f).Nonempty :=
 
 theorem compact_symm_image_closed_ball :
     IsCompact ((extChartAt I c).symm '' (closedBall (extChartAt I c c) f.r ∩ range I)) :=
-  (Euclidean.is_compact_closed_ball.inter_right I.closedRange).image_of_continuous_on <|
+  (Euclidean.is_compact_closed_ball.inter_right I.closed_range).image_of_continuous_on <|
     (continuous_on_ext_chart_at_symm _ _).mono f.closed_ball_subset
 #align
   smooth_bump_function.compact_symm_image_closed_ball SmoothBumpFunction.compact_symm_image_closed_ball
@@ -232,14 +232,15 @@ theorem nhds_within_range_basis :
       inter_mem (mem_nhds_within_of_mem_nhds <| closed_ball_mem_nhds f.R_pos) self_mem_nhds_within
 #align smooth_bump_function.nhds_within_range_basis SmoothBumpFunction.nhds_within_range_basis
 
-theorem isClosedImageOfIsClosed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) :
+theorem is_closed_image_of_is_closed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) :
     IsClosed (extChartAt I c '' s) := by
   rw [f.image_eq_inter_preimage_of_subset_support hs]
   refine'
-    ContinuousOn.preimageClosedOfClosed
+    ContinuousOn.preimage_closed_of_closed
       ((continuous_on_ext_chart_at_symm _ _).mono f.closed_ball_subset) _ hsc
   exact IsClosed.inter is_closed_closed_ball I.closed_range
-#align smooth_bump_function.is_closed_image_of_is_closed SmoothBumpFunction.isClosedImageOfIsClosed
+#align
+  smooth_bump_function.is_closed_image_of_is_closed SmoothBumpFunction.is_closed_image_of_is_closed
 
 /-- If `f` is a smooth bump function and `s` closed subset of the support of `f` (i.e., of the open
 ball of radius `f.R`), then there exists `0 < r < f.R` such that `s` is a subset of the open ball of
@@ -281,11 +282,11 @@ instance : Inhabited (SmoothBumpFunction I c) :=
 
 variable [T2Space M]
 
-theorem isClosedSymmImageClosedBall :
+theorem is_closed_symm_image_closed_ball :
     IsClosed ((extChartAt I c).symm '' (closedBall (extChartAt I c c) f.r ∩ range I)) :=
   f.compact_symm_image_closed_ball.IsClosed
 #align
-  smooth_bump_function.is_closed_symm_image_closed_ball SmoothBumpFunction.isClosedSymmImageClosedBall
+  smooth_bump_function.is_closed_symm_image_closed_ball SmoothBumpFunction.is_closed_symm_image_closed_ball
 
 theorem tsupport_subset_symm_image_closed_ball :
     tsupport f ⊆ (extChartAt I c).symm '' (closedBall (extChartAt I c c) f.r ∩ range I) := by
@@ -312,7 +313,7 @@ theorem tsupport_subset_chart_at_source : tsupport f ⊆ (chartAt H c).source :=
   smooth_bump_function.tsupport_subset_chart_at_source SmoothBumpFunction.tsupport_subset_chart_at_source
 
 protected theorem has_compact_support : HasCompactSupport f :=
-  is_compact_of_is_closed_subset f.compact_symm_image_closed_ball isClosedClosure
+  is_compact_of_is_closed_subset f.compact_symm_image_closed_ball is_closed_closure
     f.tsupport_subset_symm_image_closed_ball
 #align smooth_bump_function.has_compact_support SmoothBumpFunction.has_compact_support
 

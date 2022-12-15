@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Amelia Livingston
 
 ! This file was ported from Lean 3 source module category_theory.abelian.homology
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,27 +137,27 @@ def lift {W : A} (e : W ⟶ cokernel f) (he : e ≫ cokernel.desc f g w = 0) : W
   kernel.lift _ e he ≫ (homologyIsoKernelDesc _ _ _).inv
 #align homology.lift homology.lift
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem π'_desc' {W : A} (e : kernel g ⟶ W) (he : kernel.lift g f w ≫ e = 0) :
     π' f g w ≫ desc' f g w e he = e := by 
   dsimp [π', desc']
   simp
 #align homology.π'_desc' homology.π'_desc'
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem lift_ι {W : A} (e : W ⟶ cokernel f) (he : e ≫ cokernel.desc f g w = 0) :
     lift f g w e he ≫ ι _ _ _ = e := by 
   dsimp [ι, lift]
   simp
 #align homology.lift_ι homology.lift_ι
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem condition_π' : kernel.lift g f w ≫ π' f g w = 0 := by
   dsimp [π']
   simp
 #align homology.condition_π' homology.condition_π'
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem condition_ι : ι f g w ≫ cokernel.desc f g w = 0 := by
   dsimp [ι]
   simp
@@ -188,13 +188,13 @@ theorem hom_to_ext {W : A} (a b : W ⟶ homology f g w) (h : a ≫ ι f g w = b 
   exact equalizer.hom_ext h
 #align homology.hom_to_ext homology.hom_to_ext
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem π'_ι : π' f g w ≫ ι f g w = kernel.ι _ ≫ cokernel.π _ := by
   dsimp [π', ι, homologyIsoKernelDesc]
   simp
 #align homology.π'_ι homology.π'_ι
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem π'_eq_π : (kernelSubobjectIso _).Hom ≫ π' f g w = π _ _ _ := by
   dsimp [π', homologyIsoCokernelLift]
   simp only [← category.assoc]
@@ -207,7 +207,7 @@ section
 
 variable {X' Y' Z' : A} (f' : X' ⟶ Y') (g' : Y' ⟶ Z') (w' : f' ≫ g' = 0)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem π'_map (α β h) :
     π' _ _ _ ≫ map w w' α β h = kernel.map _ _ α.right β.right (by simp [h, β.w.symm]) ≫ π' _ _ _ :=
   by 
@@ -307,7 +307,7 @@ theorem map_eq_lift_desc'_right (α β h) :
   simp
 #align homology.map_eq_lift_desc'_right homology.map_eq_lift_desc'_right
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem map_ι (α β h) :
     map w w' α β h ≫ ι f' g' w' =
       ι f g w ≫ cokernel.map f f' α.left β.left (by simp [h, β.w.symm]) :=

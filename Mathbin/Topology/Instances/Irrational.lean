@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.instances.irrational
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ instance : DenselyOrdered { x // Irrational x } :=
 theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀ m : ℤ, ε ≤ dist x (m / n) := by
   have A : IsClosed (range (fun m => n⁻¹ * m : ℤ → ℝ)) :=
-    ((is_closed_map_smul₀ (n⁻¹ : ℝ)).comp int.closed_embedding_coe_real.is_closed_map).closedRange
+    ((is_closed_map_smul₀ (n⁻¹ : ℝ)).comp int.closed_embedding_coe_real.is_closed_map).closed_range
   have B : x ∉ range (fun m => n⁻¹ * m : ℤ → ℝ) := by
     rintro ⟨m, rfl⟩
     simpa using hx

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.strong_topology
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -215,7 +215,7 @@ instance [RingHomSurjective σ] [RingHomIsometric σ] [TopologicalSpace F] [Topo
     [HasContinuousSmul 𝕜₂ F] : HasContinuousSmul 𝕜₂ (E →SL[σ] F) :=
   strongTopology.has_continuous_smul σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
     ⟨∅, Bornology.isVonNBoundedEmpty 𝕜₁ E⟩
-    (directed_on_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) fun s hs => hs
+    (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) fun s hs => hs
 
 instance [UniformSpace F] [UniformAddGroup F] : UniformSpace (E →SL[σ] F) :=
   strongUniformity σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
@@ -235,7 +235,7 @@ protected theorem has_basis_nhds_zero_of_basis [TopologicalSpace F] [Topological
       fun Si => { f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
   strongTopology.has_basis_nhds_zero_of_basis σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
     ⟨∅, Bornology.isVonNBoundedEmpty 𝕜₁ E⟩
-    (directed_on_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) h
+    (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) h
 #align
   continuous_linear_map.has_basis_nhds_zero_of_basis ContinuousLinearMap.has_basis_nhds_zero_of_basis
 
@@ -249,7 +249,7 @@ protected theorem has_basis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup 
 instance [TopologicalSpace E'] [TopologicalSpace F'] [TopologicalAddGroup F']
     [HasContinuousConstSmul ℝ F'] [LocallyConvexSpace ℝ F'] : LocallyConvexSpace ℝ (E' →L[ℝ] F') :=
   strongTopology.locally_convex_space _ ⟨∅, Bornology.isVonNBoundedEmpty ℝ E'⟩
-    (directed_on_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union)
+    (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union)
 
 end BoundedSets
 

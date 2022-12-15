@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.action
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,13 +29,13 @@ open MeasureTheory MeasureTheory.Measure Set Function
 
 namespace MeasureTheory
 
-variable {G M α : Type _}
+variable {G M α : Type _} {s : Set α}
 
 /- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] [] -/
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
-class VaddInvariantMeasure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) :
+class VaddInvariantMeasure (M α : Type _) [VAdd M α] {_ : MeasurableSpace α} (μ : Measure α) :
   Prop where
   measure_preimage_vadd : ∀ (c : M) ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 #align measure_theory.vadd_invariant_measure MeasureTheory.VaddInvariantMeasure
@@ -114,7 +114,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
         "@["
         [(Term.attrInstance
           (Term.attrKind [])
-          (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+          (to_additive "to_additive" [] [] (to_additiveRest [] [] [])))]
         "]")]
       []
       []
@@ -689,6 +689,35 @@ theorem measure_eq_zero_iff_eq_empty_of_smul_invariant (hμ : μ ≠ 0) (hU : Is
   measure_theory.measure_eq_zero_iff_eq_empty_of_smul_invariant MeasureTheory.measure_eq_zero_iff_eq_empty_of_smul_invariant
 
 end IsMinimal
+
+theorem smul_ae_eq_self_of_mem_zpowers {x y : G} (hs : (x • s : Set α) =ᵐ[μ] s)
+    (hy : y ∈ Subgroup.zpowers x) : (y • s : Set α) =ᵐ[μ] s := by
+  obtain ⟨k, rfl⟩ := subgroup.mem_zpowers_iff.mp hy
+  let e : α ≃ α := MulAction.toPermHom G α x
+  have he : quasi_measure_preserving e μ μ := (measure_preserving_smul x μ).QuasiMeasurePreserving
+  have he' : quasi_measure_preserving e.symm μ μ :=
+    (measure_preserving_smul x⁻¹ μ).QuasiMeasurePreserving
+  simpa only [MulAction.to_perm_hom_apply, MulAction.to_perm_apply, image_smul, ←
+    MonoidHom.map_zpow] using he.image_zpow_ae_eq he' k hs
+#align measure_theory.smul_ae_eq_self_of_mem_zpowers MeasureTheory.smul_ae_eq_self_of_mem_zpowers
+
+theorem vadd_ae_eq_self_of_mem_zmultiples {G : Type _} [MeasurableSpace G] [AddGroup G]
+    [AddAction G α] [VaddInvariantMeasure G α μ] [HasMeasurableVadd G α] {x y : G}
+    (hs : (x +ᵥ s : Set α) =ᵐ[μ] s) (hy : y ∈ AddSubgroup.zmultiples x) :
+    (y +ᵥ s : Set α) =ᵐ[μ] s := by
+  letI : MeasurableSpace (Multiplicative G) := (by infer_instance : MeasurableSpace G)
+  letI : smul_invariant_measure (Multiplicative G) α μ :=
+    ⟨fun g => vadd_invariant_measure.measure_preimage_vadd μ (Multiplicative.toAdd g)⟩
+  letI : HasMeasurableSmul (Multiplicative G) α :=
+    { measurableConstSmul := fun g => measurable_const_vadd (Multiplicative.toAdd g)
+      measurableSmulConst := fun a =>
+        @measurable_vadd_const (Multiplicative G) α (by infer_instance : VAdd G α) _ _
+          (by infer_instance : HasMeasurableVadd G α) a }
+  exact @smul_ae_eq_self_of_mem_zpowers (Multiplicative G) α _ _ _ _ _ _ _ _ _ _ hs hy
+#align
+  measure_theory.vadd_ae_eq_self_of_mem_zmultiples MeasureTheory.vadd_ae_eq_self_of_mem_zmultiples
+
+attribute [to_additive vadd_ae_eq_self_of_mem_zmultiples] smul_ae_eq_self_of_mem_zpowers
 
 end MeasureTheory
 

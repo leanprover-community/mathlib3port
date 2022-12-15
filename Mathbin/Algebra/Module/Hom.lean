@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.module.hom
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ theorem smul_apply (r : R) (f : A →+ B) (x : A) : (r • f) x = r • f x :=
   rfl
 #align add_monoid_hom.smul_apply AddMonoidHom.smul_apply
 
-instance [SmulCommClass R S B] : SmulCommClass R S (A →+ B) :=
+instance [SMulCommClass R S B] : SMulCommClass R S (A →+ B) :=
   ⟨fun a b f => ext fun x => smul_comm _ _ _⟩
 
 instance [HasSmul R S] [IsScalarTower R S B] : IsScalarTower R S (A →+ B) :=

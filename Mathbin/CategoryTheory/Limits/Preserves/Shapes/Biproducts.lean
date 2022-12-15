@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.biproducts
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,7 +239,7 @@ def biproductComparison : F.obj (⨁ f) ⟶ ⨁ F.obj ∘ f :=
   biproduct.lift fun j => F.map (biproduct.π f j)
 #align category_theory.functor.biproduct_comparison CategoryTheory.Functor.biproductComparison
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem biproduct_comparison_π (j : J) :
     biproductComparison F f ≫ biproduct.π _ j = F.map (biproduct.π f j) :=
   biproduct.lift_π _ _
@@ -251,7 +251,7 @@ def biproductComparison' : ⨁ F.obj ∘ f ⟶ F.obj (⨁ f) :=
   biproduct.desc fun j => F.map (biproduct.ι f j)
 #align category_theory.functor.biproduct_comparison' CategoryTheory.Functor.biproductComparison'
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_biproduct_comparison' (j : J) :
     biproduct.ι _ j ≫ biproductComparison' F f = F.map (biproduct.ι f j) :=
   biproduct.ι_desc _ _
@@ -262,7 +262,7 @@ variable [PreservesZeroMorphisms F]
 
 /-- The composition in the opposite direction is equal to the identity if and only if `F` preserves
     the biproduct, see `preserves_biproduct_of_mono_biproduct_comparison`.  -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem biproduct_comparison'_comp_biproduct_comparison :
     biproductComparison' F f ≫ biproductComparison F f = 𝟙 (⨁ F.obj ∘ f) := by
   classical 
@@ -295,12 +295,12 @@ end
 
 variable [PreservesZeroMorphisms F] [PreservesBiproduct f F]
 
-instance has_biproduct_of_preserves : HasBiproduct (F.obj ∘ f) :=
+instance hasBiproductOfPreserves : HasBiproduct (F.obj ∘ f) :=
   HasBiproduct.mk
     { Bicone := F.mapBicone (Biproduct.bicone f)
       IsBilimit := PreservesBiproduct.preserves (Biproduct.isBilimit _) }
 #align
-  category_theory.functor.has_biproduct_of_preserves CategoryTheory.Functor.has_biproduct_of_preserves
+  category_theory.functor.has_biproduct_of_preserves CategoryTheory.Functor.hasBiproductOfPreserves
 
 /-- If `F` preserves a biproduct, we get a definitionally nice isomorphism
     `F.obj (⨁ f) ≅ ⨁ (F.obj ∘ f)`. -/
@@ -333,12 +333,12 @@ def biprodComparison : F.obj (X ⊞ Y) ⟶ F.obj X ⊞ F.obj Y :=
   biprod.lift (F.map biprod.fst) (F.map biprod.snd)
 #align category_theory.functor.biprod_comparison CategoryTheory.Functor.biprodComparison
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem biprod_comparison_fst : biprodComparison F X Y ≫ biprod.fst = F.map biprod.fst :=
   biprod.lift_fst _ _
 #align category_theory.functor.biprod_comparison_fst CategoryTheory.Functor.biprod_comparison_fst
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem biprod_comparison_snd : biprodComparison F X Y ≫ biprod.snd = F.map biprod.snd :=
   biprod.lift_snd _ _
 #align category_theory.functor.biprod_comparison_snd CategoryTheory.Functor.biprod_comparison_snd
@@ -349,12 +349,12 @@ def biprodComparison' : F.obj X ⊞ F.obj Y ⟶ F.obj (X ⊞ Y) :=
   biprod.desc (F.map biprod.inl) (F.map biprod.inr)
 #align category_theory.functor.biprod_comparison' CategoryTheory.Functor.biprodComparison'
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem inl_biprod_comparison' : biprod.inl ≫ biprodComparison' F X Y = F.map biprod.inl :=
   biprod.inl_desc _ _
 #align category_theory.functor.inl_biprod_comparison' CategoryTheory.Functor.inl_biprod_comparison'
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem inr_biprod_comparison' : biprod.inr ≫ biprodComparison' F X Y = F.map biprod.inr :=
   biprod.inr_desc _ _
 #align category_theory.functor.inr_biprod_comparison' CategoryTheory.Functor.inr_biprod_comparison'
@@ -363,7 +363,7 @@ variable [PreservesZeroMorphisms F]
 
 /-- The composition in the opposite direction is equal to the identity if and only if `F` preserves
     the biproduct, see `preserves_binary_biproduct_of_mono_biprod_comparison`. -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem biprod_comparison'_comp_biprod_comparison :
     biprodComparison' F X Y ≫ biprodComparison F X Y = 𝟙 (F.obj X ⊞ F.obj Y) := by
   ext <;> simp [← functor.map_comp]
@@ -394,12 +394,12 @@ end
 
 variable [PreservesZeroMorphisms F] [PreservesBinaryBiproduct X Y F]
 
-instance has_binary_biproduct_of_preserves : HasBinaryBiproduct (F.obj X) (F.obj Y) :=
+instance hasBinaryBiproductOfPreserves : HasBinaryBiproduct (F.obj X) (F.obj Y) :=
   HasBinaryBiproduct.mk
     { Bicone := F.mapBinaryBicone (BinaryBiproduct.bicone X Y)
       IsBilimit := PreservesBinaryBiproduct.preserves (BinaryBiproduct.isBilimit _ _) }
 #align
-  category_theory.functor.has_binary_biproduct_of_preserves CategoryTheory.Functor.has_binary_biproduct_of_preserves
+  category_theory.functor.has_binary_biproduct_of_preserves CategoryTheory.Functor.hasBinaryBiproductOfPreserves
 
 /-- If `F` preserves a binary biproduct, we get a definitionally nice isomorphism
     `F.obj (X ⊞ Y) ≅ F.obj X ⊞ F.obj Y`. -/

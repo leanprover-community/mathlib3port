@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Best, Riccardo Brasca, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.primitive_roots
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -326,7 +326,7 @@ theorem minpoly_sub_one_eq_cyclotomic_comp [Algebra K A] [IsDomain A] {ζ : A}
 #align
   is_primitive_root.minpoly_sub_one_eq_cyclotomic_comp IsPrimitiveRoot.minpoly_sub_one_eq_cyclotomic_comp
 
-attribute [local instance] IsCyclotomicExtension.finiteDimensional
+attribute [local instance] IsCyclotomicExtension.finite_dimensional
 
 attribute [local instance] IsCyclotomicExtension.isGalois
 
@@ -478,7 +478,7 @@ theorem pow_sub_one_norm_prime_pow_of_one_le {k s : ℕ} (hζ : IsPrimitiveRoot 
       rwa [show 2 = ((2 : ℕ+) : ℕ) by simp, PNat.coe_inj] at htwo
     replace hs : s = k
     · rw [hp, ← PNat.coe_inj, PNat.pow_coe, PNat.coe_bit0, PNat.one_coe] at htwo
-      nth_rw 2 [← pow_one 2]  at htwo
+      nth_rw 2 [← pow_one 2] at htwo
       replace htwo := Nat.pow_right_injective rfl.le htwo
       rw [add_left_eq_self, Nat.sub_eq_zero_iff_le] at htwo
       refine' le_antisymm hs htwo

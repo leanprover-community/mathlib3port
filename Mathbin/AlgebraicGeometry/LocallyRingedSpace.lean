@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.locally_ringed_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -316,7 +316,7 @@ theorem basic_open_zero (X : LocallyRingedSpaceCat) (U : Opens X.carrier) :
     X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ := by
   ext
   simp only [Set.mem_empty_iff_false, TopologicalSpace.Opens.mem_coe, opens.coe_bot, iff_false_iff,
-    RingedSpace.basic_open, isUnit_zero_iff, Set.mem_set_of_eq, map_zero]
+    RingedSpace.basic_open, isUnit_zero_iff, Set.mem_setOf_eq, map_zero]
   rintro ⟨⟨y, _⟩, h, e⟩
   exact zero_ne_one' (X.presheaf.stalk y) h
 #align

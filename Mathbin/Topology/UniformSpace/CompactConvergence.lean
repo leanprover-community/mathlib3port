@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.uniform_space.compact_convergence
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,7 +265,7 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
       _ ⊆ ball (f x) W := hZW
       
   refine'
-    ⟨t, t.fintype_coe_sort, C, fun i => hK.inter_right isClosedClosure, fun i =>
+    ⟨t, t.fintype_coe_sort, C, fun i => hK.inter_right is_closed_closure, fun i =>
       ball (f ((i : K) : α)) W, fun i => is_open_ball _ hW₄, by simp [compact_open.gen, hfC],
       fun g hg x hx => hW₃ (mem_comp_rel.mpr _)⟩
   simp only [mem_Inter, compact_open.gen, mem_set_of_eq, image_subset_iff] at hg

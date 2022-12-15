@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.power_basis
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,9 +84,9 @@ theorem coe_basis (pb : PowerBasis R S) : ⇑pb.Basis = fun i : Fin pb.dim => pb
 #align power_basis.coe_basis PowerBasis.coe_basis
 
 /-- Cannot be an instance because `power_basis` cannot be a class. -/
-theorem finiteDimensional [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional K S :=
-  FiniteDimensional.ofFintypeBasis pb.Basis
-#align power_basis.finite_dimensional PowerBasis.finiteDimensional
+theorem finite_dimensional [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional K S :=
+  FiniteDimensional.of_fintype_basis pb.Basis
+#align power_basis.finite_dimensional PowerBasis.finite_dimensional
 
 theorem finrank [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional.finrank K S = pb.dim := by
   rw [FiniteDimensional.finrank_eq_card_basis pb.basis, Fintype.card_fin]

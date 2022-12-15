@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.center
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,19 +74,19 @@ instance : CommMonoid (center M) :=
 
 /-- The center of a monoid acts commutatively on that monoid. -/
 instance center.smul_comm_class_left :
-    SmulCommClass (center M) M M where smul_comm m x y := (Commute.left_comm (m.Prop x) y).symm
+    SMulCommClass (center M) M M where smul_comm m x y := (Commute.left_comm (m.Prop x) y).symm
 #align submonoid.center.smul_comm_class_left Submonoid.center.smul_comm_class_left
 
 /-- The center of a monoid acts commutatively on that monoid. -/
-instance center.smul_comm_class_right : SmulCommClass M (center M) M :=
-  SmulCommClass.symm _ _ _
+instance center.smul_comm_class_right : SMulCommClass M (center M) M :=
+  SMulCommClass.symm _ _ _
 #align submonoid.center.smul_comm_class_right Submonoid.center.smul_comm_class_right
 
 /-! Note that `smul_comm_class (center M) (center M) M` is already implied by
 `submonoid.smul_comm_class_right` -/
 
 
-example : SmulCommClass (center M) (center M) M := by infer_instance
+example : SMulCommClass (center M) (center M) M := by infer_instance
 
 end
 
@@ -103,5 +103,6 @@ end
 
 end Submonoid
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Guard against import creep
+assert_not_exists finset
+

@@ -6,7 +6,7 @@ Authors: Kevin Buzzard, Patrick Massot
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 
 ! This file was ported from Lean 3 source module group_theory.quotient_group
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -273,12 +273,12 @@ def congr (e : G ≃* H) (he : G'.map ↑e = H') : G ⧸ G' ≃* H ⧸ H' :=
     invFun := map H' G' (↑e.symm) (he ▸ (G'.map_equiv_eq_comap_symm e).le)
     left_inv := fun x => by
       rw [map_map] <;>
-        simp only [map_map, ← MulEquiv.coe_monoid_hom_trans, MulEquiv.self_trans_symm,
-          MulEquiv.coe_monoid_hom_refl, map_id_apply]
+        simp only [map_map, ← MulEquiv.coe_monoidHom_trans, MulEquiv.self_trans_symm,
+          MulEquiv.coe_monoidHom_refl, map_id_apply]
     right_inv := fun x => by
       rw [map_map] <;>
-        simp only [← MulEquiv.coe_monoid_hom_trans, MulEquiv.symm_trans_self,
-          MulEquiv.coe_monoid_hom_refl, map_id_apply] }
+        simp only [← MulEquiv.coe_monoidHom_trans, MulEquiv.symm_trans_self,
+          MulEquiv.coe_monoidHom_refl, map_id_apply] }
 #align quotient_group.congr QuotientGroup.congr
 
 @[simp]

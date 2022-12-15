@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module topology.algebra.continuous_monoid_hom
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -272,7 +272,7 @@ theorem embedding_to_continuous_map :
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (U V W) -/
 @[to_additive]
-theorem closedEmbeddingToContinuousMap [HasContinuousMul B] [T2Space B] :
+theorem closed_embedding_to_continuous_map [HasContinuousMul B] [T2Space B] :
     ClosedEmbedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨embedding_to_continuous_map A B,
     ⟨by
@@ -313,7 +313,7 @@ theorem closedEmbeddingToContinuousMap [HasContinuousMul B] [T2Space B] :
         rintro _ ⟨x, y, hx : (x, y).1 ∈ U, hy : (x, y).2 ∈ V, rfl⟩
         exact h' ⟨hx, hy⟩⟩⟩
 #align
-  continuous_monoid_hom.closed_embedding_to_continuous_map ContinuousMonoidHom.closedEmbeddingToContinuousMap
+  continuous_monoid_hom.closed_embedding_to_continuous_map ContinuousMonoidHom.closed_embedding_to_continuous_map
 
 variable {A B C D E}
 

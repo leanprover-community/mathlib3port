@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.whitney_embedding
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,7 +158,7 @@ theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
     ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Fin n)),
       Smooth I (𝓡 n) e ∧ ClosedEmbedding e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
-  rcases SmoothBumpCovering.exists_is_subordinate I isClosedUniv fun (x : M) _ => univ_mem with
+  rcases SmoothBumpCovering.exists_is_subordinate I is_closed_univ fun (x : M) _ => univ_mem with
     ⟨ι, f, -⟩
   haveI := f.fintype
   rcases f.exists_immersion_euclidean with ⟨n, e, hsmooth, hinj, hinj_mfderiv⟩

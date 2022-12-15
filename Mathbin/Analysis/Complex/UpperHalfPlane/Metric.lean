@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.metric
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,14 +173,14 @@ theorem center_zero (z : ℍ) : center z 0 = z :=
   Subtype.ext <| ext rfl <| by rw [coe_im, coe_im, center_im, Real.cosh_zero, mul_one]
 #align upper_half_plane.center_zero UpperHalfPlane.center_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr two_ne_zero, ",", expr im_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr two_ne_zero, ",", expr im_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem dist_coe_center_sq (z w : ℍ) (r : ℝ) :
     dist (z : ℂ) (w.center r) ^ 2 =
       2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2 :=
   by
   have H : 2 * z.im * w.im ≠ 0 := by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr two_ne_zero, \",\", expr im_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr two_ne_zero, \",\", expr im_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   simp only [Complex.dist_eq, Complex.sq_abs, norm_sq_apply, coe_re, coe_im, center_re, center_im,
     cosh_dist', mul_div_cancel' _ H, sub_sq z.im, mul_pow, Real.cosh_sq, sub_re, sub_im, mul_sub, ←
     sq]
@@ -301,7 +301,7 @@ theorem le_dist_coe (z w : ℍ) : w.im * (1 - exp (-dist z w)) ≤ dist (z : ℂ
     
 #align upper_half_plane.le_dist_coe UpperHalfPlane.le_dist_coe
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr continuous.div, ",", expr continuous.mul, ",", expr continuous_const, ",", expr continuous.arsinh, ",", expr continuous.dist, ",", expr continuous_coe.comp, ",", expr continuous_fst, ",", expr continuous_snd, ",", expr real.continuous_sqrt.comp, ",", expr continuous_im.comp, "]"],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr continuous.div, ",", expr continuous.mul, ",", expr continuous_const, ",", expr continuous.arsinh, ",", expr continuous.dist, ",", expr continuous_coe.comp, ",", expr continuous_fst, ",", expr continuous_snd, ",", expr real.continuous_sqrt.comp, ",", expr continuous_im.comp, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- The hyperbolic metric on the upper half plane. We ensure that the projection to
 `topological_space` is definitionally equal to the subtype topology. -/
@@ -312,7 +312,7 @@ instance : MetricSpace ℍ :=
       have : ∀ x : ℍ × ℍ, 2 * Real.sqrt (x.1.im * x.2.im) ≠ 0 := fun x =>
         mul_ne_zero two_ne_zero (Real.sqrt_pos.2 <| mul_pos x.1.im_pos x.2.im_pos).ne'
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr continuous.div, \",\", expr continuous.mul, \",\", expr continuous_const, \",\", expr continuous.arsinh, \",\", expr continuous.dist, \",\", expr continuous_coe.comp, \",\", expr continuous_fst, \",\", expr continuous_snd, \",\", expr real.continuous_sqrt.comp, \",\", expr continuous_im.comp, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr continuous.div, \",\", expr continuous.mul, \",\", expr continuous_const, \",\", expr continuous.arsinh, \",\", expr continuous.dist, \",\", expr continuous_coe.comp, \",\", expr continuous_fst, \",\", expr continuous_snd, \",\", expr real.continuous_sqrt.comp, \",\", expr continuous_im.comp, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     · letI : MetricSpace ℍ := metric_space_aux
       refine' le_of_nhds_le_nhds fun z => _
       rw [nhds_induced]

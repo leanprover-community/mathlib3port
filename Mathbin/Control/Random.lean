@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.random
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ universe u v w
 /-- A monad to generate random objects using the generator type `g` -/
 @[reducible]
 def RandG (g : Type) (α : Type u) : Type u :=
-  State (ULift.{u} g) α
+  StateM (ULift.{u} g) α
 #align rand_g RandG
 -/
 
@@ -78,7 +78,7 @@ def RandG.next {g : Type} [RandomGen g] : RandG g ℕ :=
 -- mathport name: «expr .. »
 local infixl:41 " .. " => Set.icc
 
-open Stream
+open Stream'
 
 #print BoundedRandom /-
 /-- `bounded_random α` gives us machinery to generate values of type `α` between certain bounds -/
@@ -103,7 +103,7 @@ def shift31Left : ℕ := by apply_normed 2 ^ 31
 
 namespace Rand
 
-open Stream
+open Stream'
 
 variable (α : Type u)
 
@@ -130,9 +130,9 @@ def random : RandG g α :=
 #align rand.random Rand.random
 
 /-- generate an infinite series of random values of type `α` -/
-def randomSeries : RandG g (Stream α) := do
+def randomSeries : RandG g (Stream' α) := do
   let gen ← Uliftable.up (split g)
-  pure <| Stream.corecState (Random.random α g) gen
+  pure <| Stream'.corecState (Random.random α g) gen
 #align rand.random_series Rand.randomSeries
 
 end Random
@@ -146,7 +146,7 @@ def randomR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g 
 
 /-- generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
 def randomSeriesR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) :
-    RandG g (Stream (x .. y)) := do
+    RandG g (Stream' (x .. y)) := do
   let gen ← Uliftable.up (split g)
   pure <| corec_state (BoundedRandom.randomR g x y h) gen
 #align rand.random_series_r Rand.randomSeriesR
@@ -188,7 +188,7 @@ def random : Io α :=
 #align io.random Io.random
 
 /-- randomly generate an infinite series of value of type α -/
-def randomSeries : Io (Stream α) :=
+def randomSeries : Io (Stream' α) :=
   Io.runRand (Rand.randomSeries α)
 #align io.random_series Io.randomSeries
 
@@ -204,7 +204,7 @@ def randomR (x y : α) (p : x ≤ y) : Io (x .. y) :=
 #align io.random_r Io.randomR
 
 /-- randomly generate an infinite series of value of type α between `x` and `y` -/
-def randomSeriesR (x y : α) (h : x ≤ y) : Io (Stream <| x .. y) :=
+def randomSeriesR (x y : α) (h : x ≤ y) : Io (Stream' <| x .. y) :=
   Io.runRand (Rand.randomSeriesR x y h)
 #align io.random_series_r Io.randomSeriesR
 
@@ -238,7 +238,7 @@ unsafe def random_r (x y : α) (h : x ≤ y) : tactic (x .. y) :=
 #align tactic.random_r tactic.random_r
 
 /-- Generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
-unsafe def random_series_r (x y : α) (h : x ≤ y) : tactic (Stream <| x .. y) :=
+unsafe def random_series_r (x y : α) (h : x ≤ y) : tactic (Stream' <| x .. y) :=
   run_rand (Rand.randomSeriesR x y h)
 #align tactic.random_series_r tactic.random_series_r
 
@@ -254,7 +254,7 @@ unsafe def random : tactic α :=
 #align tactic.random tactic.random
 
 /-- randomly generate an infinite series of value of type α -/
-unsafe def random_series : tactic (Stream α) :=
+unsafe def random_series : tactic (Stream' α) :=
   run_rand (Rand.randomSeries α)
 #align tactic.random_series tactic.random_series
 

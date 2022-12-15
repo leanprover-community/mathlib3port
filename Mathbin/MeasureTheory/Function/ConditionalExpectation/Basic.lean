@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,13 +291,13 @@ variable ()
 
 theorem mem_Lp_meas_subgroup_iff_ae_strongly_measurable' {m m0 : MeasurableSpace α} {μ : Measure α}
     {f : lp F p μ} : f ∈ lpMeasSubgroup F m p μ ↔ AeStronglyMeasurable' m f μ := by
-  rw [← AddSubgroup.mem_carrier, Lp_meas_subgroup, Set.mem_set_of_eq]
+  rw [← AddSubgroup.mem_carrier, Lp_meas_subgroup, Set.mem_setOf_eq]
 #align
   measure_theory.mem_Lp_meas_subgroup_iff_ae_strongly_measurable' MeasureTheory.mem_Lp_meas_subgroup_iff_ae_strongly_measurable'
 
 theorem mem_Lp_meas_iff_ae_strongly_measurable' {m m0 : MeasurableSpace α} {μ : Measure α}
     {f : lp F p μ} : f ∈ lpMeas F 𝕜 m p μ ↔ AeStronglyMeasurable' m f μ := by
-  rw [← SetLike.mem_coe, ← Submodule.mem_carrier, Lp_meas, Set.mem_set_of_eq]
+  rw [← SetLike.mem_coe, ← Submodule.mem_carrier, Lp_meas, Set.mem_setOf_eq]
 #align
   measure_theory.mem_Lp_meas_iff_ae_strongly_measurable' MeasureTheory.mem_Lp_meas_iff_ae_strongly_measurable'
 
@@ -571,10 +571,11 @@ theorem is_complete_ae_strongly_measurable' [hp : Fact (1 ≤ p)] [CompleteSpace
 #align
   measure_theory.is_complete_ae_strongly_measurable' MeasureTheory.is_complete_ae_strongly_measurable'
 
-theorem isClosedAeStronglyMeasurable' [hp : Fact (1 ≤ p)] [CompleteSpace F] (hm : m ≤ m0) :
+theorem is_closed_ae_strongly_measurable' [hp : Fact (1 ≤ p)] [CompleteSpace F] (hm : m ≤ m0) :
     IsClosed { f : lp F p μ | AeStronglyMeasurable' m f μ } :=
-  IsComplete.isClosed (is_complete_ae_strongly_measurable' hm)
-#align measure_theory.is_closed_ae_strongly_measurable' MeasureTheory.isClosedAeStronglyMeasurable'
+  IsComplete.is_closed (is_complete_ae_strongly_measurable' hm)
+#align
+  measure_theory.is_closed_ae_strongly_measurable' MeasureTheory.is_closed_ae_strongly_measurable'
 
 end CompleteSubspace
 
@@ -1358,7 +1359,7 @@ theorem condexp_ind_smul_smul (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : 
   rw [to_span_singleton_smul, smul_comp_LpL, smul_apply]
 #align measure_theory.condexp_ind_smul_smul MeasureTheory.condexp_ind_smul_smul
 
-theorem condexp_ind_smul_smul' [NormedSpace ℝ F] [SmulCommClass ℝ 𝕜 F] (hs : MeasurableSet s)
+theorem condexp_ind_smul_smul' [NormedSpace ℝ F] [SMulCommClass ℝ 𝕜 F] (hs : MeasurableSet s)
     (hμs : μ s ≠ ∞) (c : 𝕜) (x : F) :
     condexpIndSmul hm hs hμs (c • x) = c • condexpIndSmul hm hs hμs x := by
   rw [condexp_ind_smul, condexp_ind_smul, to_span_singleton_smul',
@@ -1541,7 +1542,7 @@ theorem condexp_ind_L1_fin_smul (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c 
   rw [Pi.smul_apply, Pi.smul_apply, hy]
 #align measure_theory.condexp_ind_L1_fin_smul MeasureTheory.condexp_ind_L1_fin_smul
 
-theorem condexp_ind_L1_fin_smul' [NormedSpace ℝ F] [SmulCommClass ℝ 𝕜 F] (hs : MeasurableSet s)
+theorem condexp_ind_L1_fin_smul' [NormedSpace ℝ F] [SMulCommClass ℝ 𝕜 F] (hs : MeasurableSet s)
     (hμs : μ s ≠ ∞) (c : 𝕜) (x : F) :
     condexpIndL1Fin hm hs hμs (c • x) = c • condexpIndL1Fin hm hs hμs x := by
   ext1
@@ -1662,7 +1663,7 @@ theorem condexp_ind_L1_smul (c : ℝ) (x : G) :
     exact condexp_ind_L1_fin_smul hs hμs c x
 #align measure_theory.condexp_ind_L1_smul MeasureTheory.condexp_ind_L1_smul
 
-theorem condexp_ind_L1_smul' [NormedSpace ℝ F] [SmulCommClass ℝ 𝕜 F] (c : 𝕜) (x : F) :
+theorem condexp_ind_L1_smul' [NormedSpace ℝ F] [SMulCommClass ℝ 𝕜 F] (c : 𝕜) (x : F) :
     condexpIndL1 hm μ s (c • x) = c • condexpIndL1 hm μ s x := by
   by_cases hs : MeasurableSet s
   swap;
@@ -1743,7 +1744,7 @@ theorem condexp_ind_empty : condexpInd hm μ ∅ = (0 : G →L[ℝ] α →₁[μ
   rfl
 #align measure_theory.condexp_ind_empty MeasureTheory.condexp_ind_empty
 
-theorem condexp_ind_smul' [NormedSpace ℝ F] [SmulCommClass ℝ 𝕜 F] (c : 𝕜) (x : F) :
+theorem condexp_ind_smul' [NormedSpace ℝ F] [SMulCommClass ℝ 𝕜 F] (c : 𝕜) (x : F) :
     condexpInd hm μ s (c • x) = c • condexpInd hm μ s x :=
   condexp_ind_L1_smul' c x
 #align measure_theory.condexp_ind_smul' MeasureTheory.condexp_ind_smul'
@@ -1849,7 +1850,7 @@ theorem set_integral_condexp_L1_clm_of_measure_ne_top (f : α →₁[μ] F') (hs
   refine'
     Lp.induction Ennreal.one_ne_top
       (fun f : α →₁[μ] F' => (∫ x in s, condexp_L1_clm hm μ f x ∂μ) = ∫ x in s, f x ∂μ) _ _
-      (isClosedEq _ _) f
+      (is_closed_eq _ _) f
   · intro x t ht hμt
     simp_rw [condexp_L1_clm_indicator_const ht hμt.ne x]
     rw [Lp.simple_func.coe_indicator_const, set_integral_indicator_const_Lp (hm _ hs)]
@@ -1954,7 +1955,7 @@ theorem condexp_L1_clm_Lp_meas (f : lpMeas F' ℝ m 1 μ) : condexpL1Clm hm μ (
     rw [LinearIsometryEquiv.map_add]
     push_cast
     rw [map_add, hf_eq, hg_eq]
-  · refine' isClosedEq _ _
+  · refine' is_closed_eq _ _
     · refine' (condexp_L1_clm hm μ).Continuous.comp (continuous_induced_dom.comp _)
       exact LinearIsometryEquiv.continuous _
     · refine' continuous_induced_dom.comp _

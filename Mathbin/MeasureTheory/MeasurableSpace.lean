@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -426,15 +426,15 @@ theorem measurableFindGreatest' {p : α → ℕ → Prop} [∀ x, DecidablePred 
   measurableToNat fun x => hN _ N.find_greatest_le
 #align measurable_find_greatest' measurableFindGreatest'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr measurable_set.inter, ",", expr measurable_set.const, ",", expr measurable_set.Inter, ",", expr measurable_set.compl, ",", expr hN, "]"],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr measurable_set.inter, ",", expr measurable_set.const, ",", expr measurable_set.Inter, ",", expr measurable_set.compl, ",", expr hN, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem measurableFindGreatest {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N}
     (hN : ∀ k ≤ N, MeasurableSet { x | p x k }) : Measurable fun x => Nat.findGreatest (p x) N := by
   refine' measurableFindGreatest' fun k hk => _
-  simp only [Nat.find_greatest_eq_iff, set_of_and, set_of_forall, ← compl_set_of]
+  simp only [Nat.findGreatest_eq_iff, set_of_and, set_of_forall, ← compl_set_of]
   repeat'
     trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr measurable_set.inter, \",\", expr measurable_set.const, \",\", expr measurable_set.Inter, \",\", expr measurable_set.compl, \",\", expr hN, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr measurable_set.inter, \",\", expr measurable_set.const, \",\", expr measurable_set.Inter, \",\", expr measurable_set.compl, \",\", expr hN, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
       try intros
 #align measurable_find_greatest measurableFindGreatest
 

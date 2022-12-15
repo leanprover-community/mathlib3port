@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.real.nnreal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,12 +242,12 @@ theorem smul_def {M : Type _} [MulAction ℝ M] (c : ℝ≥0) (x : M) : c • x 
 instance {M N : Type _} [MulAction ℝ M] [MulAction ℝ N] [HasSmul M N] [IsScalarTower ℝ M N] :
     IsScalarTower ℝ≥0 M N where smul_assoc r := (smul_assoc (r : ℝ) : _)
 
-instance smul_comm_class_left {M N : Type _} [MulAction ℝ N] [HasSmul M N] [SmulCommClass ℝ M N] :
-    SmulCommClass ℝ≥0 M N where smul_comm r := (smul_comm (r : ℝ) : _)
+instance smul_comm_class_left {M N : Type _} [MulAction ℝ N] [HasSmul M N] [SMulCommClass ℝ M N] :
+    SMulCommClass ℝ≥0 M N where smul_comm r := (smul_comm (r : ℝ) : _)
 #align nnreal.smul_comm_class_left Nnreal.smul_comm_class_left
 
-instance smul_comm_class_right {M N : Type _} [MulAction ℝ N] [HasSmul M N] [SmulCommClass M ℝ N] :
-    SmulCommClass M ℝ≥0 N where smul_comm m r := (smul_comm m (r : ℝ) : _)
+instance smul_comm_class_right {M N : Type _} [MulAction ℝ N] [HasSmul M N] [SMulCommClass M ℝ N] :
+    SMulCommClass M ℝ≥0 N where smul_comm m r := (smul_comm m (r : ℝ) : _)
 #align nnreal.smul_comm_class_right Nnreal.smul_comm_class_right
 
 /-- A `distrib_mul_action` over `ℝ` restricts to a `distrib_mul_action` over `ℝ≥0`. -/
@@ -1140,7 +1140,7 @@ theorem coe_to_nnreal_le (x : ℝ) : (toNnreal x : ℝ) ≤ |x| :=
 
 theorem cast_nat_abs_eq_nnabs_cast (n : ℤ) : (n.natAbs : ℝ≥0) = nnabs n := by
   ext
-  rw [Nnreal.coe_nat_cast, Int.cast_nat_abs, Real.coe_nnabs]
+  rw [Nnreal.coe_nat_cast, Int.cast_natAbs, Real.coe_nnabs]
 #align real.cast_nat_abs_eq_nnabs_cast Real.cast_nat_abs_eq_nnabs_cast
 
 end Real

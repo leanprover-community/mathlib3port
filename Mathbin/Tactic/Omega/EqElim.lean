@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.eq_elim
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
     simp [a_n, m]
   have h2 : m * sgm v b as n = symmod b m + coeffs.val v (as.map fun x => symmod x m) := by
     simp only [sgm, mul_comm m]
-    rw [Int.div_mul_cancel]
+    rw [Int.ediv_mul_cancel]
     have h4 :
       ∃ c,
         m * c + (symmod b (get n as + 1) + coeffs.val v (as.map fun x : ℤ => symmod x m)) =
@@ -254,7 +254,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         simp only [coeffs_reduce, term.val, m, a_n]
         rw [← coeffs.val_except_add_eq n, coeffs.val_except_update_set, get_set, update_eq]
       
-  rw [← Int.mul_div_cancel (term.val _ _) h3, ← h4, Int.zero_div]
+  rw [← Int.mul_ediv_cancel (term.val _ _) h3, ← h4, Int.zero_div]
 #align omega.coeffs_reduce_correct Omega.coeffs_reduce_correct
 
 -- Requires : t1.coeffs[m] = 1
@@ -342,7 +342,7 @@ theorem sat_empty : Clause.Sat ([], []) :=
   ⟨fun _ => 0, ⟨by decide, by decide⟩⟩
 #align omega.sat_empty Omega.sat_empty
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic tactic.rotate -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.rotate -/
 theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sat
   | [], ([], les), h => h
   | e :: _, ([], les), h => by cases e <;> simp only [eq_elim] <;> apply sat_empty

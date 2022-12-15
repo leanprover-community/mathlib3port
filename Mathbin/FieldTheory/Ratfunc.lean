@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.ratfunc
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -373,12 +373,6 @@ theorem of_fraction_ring_mul (p q : FractionRing K[X]) :
 
 include hdomain
 
-/- warning: ratfunc.div -> Ratfunc.div is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))], (Ratfunc.{u1} K hring) -> (Ratfunc.{u1} K hring) -> (Ratfunc.{u1} K hring)
-but is expected to have type
-  PUnit.{succ (succ u1)}
-Case conversion may be inaccurate. Consider using '#align ratfunc.div Ratfunc.divₓ'. -/
 /-- Division of rational functions. -/
 protected irreducible_def div : Ratfunc K → Ratfunc K → Ratfunc K
   | ⟨p⟩, ⟨q⟩ => ⟨p / q⟩
@@ -392,12 +386,6 @@ theorem of_fraction_ring_div (p q : FractionRing K[X]) :
   unfold Div.div Ratfunc.div
 #align ratfunc.of_fraction_ring_div Ratfunc.of_fraction_ring_div
 
-/- warning: ratfunc.inv -> Ratfunc.inv is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))], (Ratfunc.{u1} K hring) -> (Ratfunc.{u1} K hring)
-but is expected to have type
-  PUnit.{succ (succ u1)}
-Case conversion may be inaccurate. Consider using '#align ratfunc.inv Ratfunc.invₓ'. -/
 /-- Multiplicative inverse of a rational function. -/
 protected irreducible_def inv : Ratfunc K → Ratfunc K
   | ⟨p⟩ => ⟨p⁻¹⟩
@@ -518,23 +506,23 @@ unsafe def smul_tac : tactic Unit :=
 
 include hring
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.smul_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.smul_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.smul_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.smul_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.smul_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.smul_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.smul_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.smul_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.smul_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.smul_tac -/
 instance : CommRing (Ratfunc K) where 
   add := (· + ·)
   add_assoc := by
@@ -748,7 +736,7 @@ def liftRingHom (φ : R[X] →+* L) (hφ : R[X]⁰ ≤ L⁰.comap φ) : Ratfunc 
       induction' x with p q
       induction' y with p' q'
       · rw [← of_fraction_ring_add, Localization.add_mk]
-        simp only [RingHom.to_monoid_with_zero_hom_eq_coe,
+        simp only [RingHom.toMonoidWithZeroHom_eq_coe,
           lift_monoid_with_zero_hom_apply_of_fraction_ring_mk]
         rw [div_add_div, div_eq_div_iff]
         · rw [mul_comm _ p, mul_comm _ p', mul_comm _ (φ p'), add_comm]
@@ -779,8 +767,8 @@ variable (K)
 
 include hdomain
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic ratfunc.frac_tac -/
 instance : Field (Ratfunc K) :=
   { Ratfunc.commRing K, Ratfunc.nontrivial K with
     inv := Inv.inv
@@ -922,7 +910,7 @@ by mapping both the numerator and denominator and quotienting them. -/
 def mapAlgHom (φ : K[X] →ₐ[S] R[X]) (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) : Ratfunc K →ₐ[S] Ratfunc R :=
   { mapRingHom φ hφ with
     commutes' := fun r => by
-      simp_rw [RingHom.to_fun_eq_coe, coe_map_ring_hom_eq_coe_map, algebra_map_apply r,
+      simp_rw [RingHom.toFun_eq_coe, coe_map_ring_hom_eq_coe_map, algebra_map_apply r,
         map_apply_div, map_one, AlgHom.commutes] }
 #align ratfunc.map_alg_hom Ratfunc.mapAlgHom
 
@@ -936,7 +924,7 @@ by mapping both the numerator and denominator and quotienting them. -/
 def liftAlgHom : Ratfunc K →ₐ[S] L :=
   { liftRingHom φ.toRingHom hφ with
     commutes' := fun r => by
-      simp_rw [RingHom.to_fun_eq_coe, AlgHom.to_ring_hom_eq_coe, algebra_map_apply r,
+      simp_rw [RingHom.toFun_eq_coe, AlgHom.to_ring_hom_eq_coe, algebra_map_apply r,
         lift_ring_hom_apply_div, AlgHom.coe_to_ring_hom, map_one, div_one, AlgHom.commutes] }
 #align ratfunc.lift_alg_hom Ratfunc.liftAlgHom
 
@@ -1602,7 +1590,7 @@ theorem int_degree_add_le {x y : Ratfunc K} (hy : y ≠ 0) (hxy : x + y ≠ 0) :
     nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree hx y.denom_ne_zero,
     mul_comm y.denom, ←
     nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree hy x.denom_ne_zero,
-    le_max_iff, sub_le_sub_iff_right, Int.coe_nat_le, sub_le_sub_iff_right, Int.coe_nat_le, ←
+    le_max_iff, sub_le_sub_iff_right, Int.ofNat_le, sub_le_sub_iff_right, Int.ofNat_le, ←
     le_max_iff, mul_comm y.num]
   exact nat_degree_add_le _ _
 #align ratfunc.int_degree_add_le Ratfunc.int_degree_add_le

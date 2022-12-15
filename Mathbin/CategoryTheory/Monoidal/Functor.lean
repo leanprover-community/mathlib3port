@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.functor
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ structure LaxMonoidalFunctor extends C ⥤ D where
 
 restate_axiom lax_monoidal_functor.μ_natural'
 
-attribute [simp, reassoc] lax_monoidal_functor.μ_natural
+attribute [simp, reassoc.1] lax_monoidal_functor.μ_natural
 
 restate_axiom lax_monoidal_functor.left_unitality'
 
@@ -113,7 +113,7 @@ attribute [simp] lax_monoidal_functor.right_unitality
 
 restate_axiom lax_monoidal_functor.associativity'
 
-attribute [simp, reassoc] lax_monoidal_functor.associativity
+attribute [simp, reassoc.1] lax_monoidal_functor.associativity
 
 -- When `rewrite_search` lands, add @[search] attributes to
 -- lax_monoidal_functor.μ_natural lax_monoidal_functor.left_unitality
@@ -123,7 +123,7 @@ section
 variable {C D}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem LaxMonoidalFunctor.left_unitality_inv (F : LaxMonoidalFunctor C D) (X : C) :
     (λ_ (F.obj X)).inv ≫ (F.ε ⊗ 𝟙 (F.obj X)) ≫ F.μ (𝟙_ C) X = F.map (λ_ X).inv := by
   rw [iso.inv_comp_eq, F.left_unitality, category.assoc, category.assoc, ← F.to_functor.map_comp,
@@ -132,7 +132,7 @@ theorem LaxMonoidalFunctor.left_unitality_inv (F : LaxMonoidalFunctor C D) (X : 
   category_theory.lax_monoidal_functor.left_unitality_inv CategoryTheory.LaxMonoidalFunctor.left_unitality_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem LaxMonoidalFunctor.right_unitality_inv (F : LaxMonoidalFunctor C D) (X : C) :
     (ρ_ (F.obj X)).inv ≫ (𝟙 (F.obj X) ⊗ F.ε) ≫ F.μ X (𝟙_ C) = F.map (ρ_ X).inv := by
   rw [iso.inv_comp_eq, F.right_unitality, category.assoc, category.assoc, ← F.to_functor.map_comp,
@@ -144,7 +144,7 @@ theorem LaxMonoidalFunctor.right_unitality_inv (F : LaxMonoidalFunctor C D) (X :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem LaxMonoidalFunctor.associativity_inv (F : LaxMonoidalFunctor C D) (X Y Z : C) :
     (𝟙 (F.obj X) ⊗ F.μ Y Z) ≫ F.μ X (Y ⊗ Z) ≫ F.map (α_ X Y Z).inv =
       (α_ (F.obj X) (F.obj Y) (F.obj Z)).inv ≫ (F.μ X Y ⊗ 𝟙 (F.obj Z)) ≫ F.μ (X ⊗ Y) Z :=
@@ -262,7 +262,7 @@ theorem μ_iso_hom (X Y : C) : (F.μIso X Y).Hom = F.μ X Y :=
   rfl
 #align category_theory.monoidal_functor.μ_iso_hom CategoryTheory.MonoidalFunctor.μ_iso_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem μ_inv_hom_id (X Y : C) : (F.μIso X Y).inv ≫ F.μ X Y = 𝟙 _ :=
   (F.μIso X Y).inv_hom_id
 #align category_theory.monoidal_functor.μ_inv_hom_id CategoryTheory.MonoidalFunctor.μ_inv_hom_id
@@ -277,7 +277,7 @@ theorem ε_iso_hom : F.εIso.Hom = F.ε :=
   rfl
 #align category_theory.monoidal_functor.ε_iso_hom CategoryTheory.MonoidalFunctor.ε_iso_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ε_inv_hom_id : F.εIso.inv ≫ F.ε = 𝟙 _ :=
   F.εIso.inv_hom_id
 #align category_theory.monoidal_functor.ε_inv_hom_id CategoryTheory.MonoidalFunctor.ε_inv_hom_id

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.complex.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1112,30 +1112,30 @@ end ComplexOrder
 -- mathport name: exprabs'
 local notation "abs'" => Abs.abs
 
-theorem isCauSeqRe (f : CauSeq ℂ abs) : IsCauSeq abs' fun n => (f n).re := fun ε ε0 =>
+theorem is_cau_seq_re (f : CauSeq ℂ abs) : IsCauSeq abs' fun n => (f n).re := fun ε ε0 =>
   (f.cauchy ε0).imp fun i H j ij =>
     lt_of_le_of_lt (by simpa using abs_re_le_abs (f j - f i)) (H _ ij)
-#align complex.is_cau_seq_re Complex.isCauSeqRe
+#align complex.is_cau_seq_re Complex.is_cau_seq_re
 
-theorem isCauSeqIm (f : CauSeq ℂ abs) : IsCauSeq abs' fun n => (f n).im := fun ε ε0 =>
+theorem is_cau_seq_im (f : CauSeq ℂ abs) : IsCauSeq abs' fun n => (f n).im := fun ε ε0 =>
   (f.cauchy ε0).imp fun i H j ij =>
     lt_of_le_of_lt (by simpa using abs_im_le_abs (f j - f i)) (H _ ij)
-#align complex.is_cau_seq_im Complex.isCauSeqIm
+#align complex.is_cau_seq_im Complex.is_cau_seq_im
 
 /-- The real part of a complex Cauchy sequence, as a real Cauchy sequence. -/
 noncomputable def cauSeqRe (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
-  ⟨_, isCauSeqRe f⟩
+  ⟨_, is_cau_seq_re f⟩
 #align complex.cau_seq_re Complex.cauSeqRe
 
 /-- The imaginary part of a complex Cauchy sequence, as a real Cauchy sequence. -/
 noncomputable def cauSeqIm (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
-  ⟨_, isCauSeqIm f⟩
+  ⟨_, is_cau_seq_im f⟩
 #align complex.cau_seq_im Complex.cauSeqIm
 
-theorem isCauSeqAbs {f : ℕ → ℂ} (hf : IsCauSeq abs f) : IsCauSeq abs' (abs ∘ f) := fun ε ε0 =>
+theorem is_cau_seq_abs {f : ℕ → ℂ} (hf : IsCauSeq abs f) : IsCauSeq abs' (abs ∘ f) := fun ε ε0 =>
   let ⟨i, hi⟩ := hf ε ε0
   ⟨i, fun j hj => lt_of_le_of_lt (abs.abs_abv_sub_le_abv_sub _ _) (hi j hj)⟩
-#align complex.is_cau_seq_abs Complex.isCauSeqAbs
+#align complex.is_cau_seq_abs Complex.is_cau_seq_abs
 
 /-- The limit of a Cauchy sequence of complex numbers. -/
 noncomputable def limAux (f : CauSeq ℂ abs) : ℂ :=
@@ -1143,8 +1143,8 @@ noncomputable def limAux (f : CauSeq ℂ abs) : ℂ :=
 #align complex.lim_aux Complex.limAux
 
 theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) := fun ε ε0 =>
-  (exists_forall_ge_and (CauSeq.equiv_lim ⟨_, isCauSeqRe f⟩ _ (half_pos ε0))
-        (CauSeq.equiv_lim ⟨_, isCauSeqIm f⟩ _ (half_pos ε0))).imp
+  (exists_forall_ge_and (CauSeq.equiv_lim ⟨_, is_cau_seq_re f⟩ _ (half_pos ε0))
+        (CauSeq.equiv_lim ⟨_, is_cau_seq_im f⟩ _ (half_pos ε0))).imp
     fun i H j ij => by 
     cases' H _ ij with H₁ H₂
     apply lt_of_le_of_lt (abs_le_abs_re_add_abs_im _)
@@ -1177,14 +1177,14 @@ theorem lim_im (f : CauSeq ℂ abs) : lim (cauSeqIm f) = (lim f).im := by
   rw [lim_eq_lim_im_add_lim_re] <;> simp
 #align complex.lim_im Complex.lim_im
 
-theorem isCauSeqConj (f : CauSeq ℂ abs) : IsCauSeq abs fun n => conj (f n) := fun ε ε0 =>
+theorem is_cau_seq_conj (f : CauSeq ℂ abs) : IsCauSeq abs fun n => conj (f n) := fun ε ε0 =>
   let ⟨i, hi⟩ := f.2 ε ε0
   ⟨i, fun j hj => by rw [← RingHom.map_sub, abs_conj] <;> exact hi j hj⟩
-#align complex.is_cau_seq_conj Complex.isCauSeqConj
+#align complex.is_cau_seq_conj Complex.is_cau_seq_conj
 
 /-- The complex conjugate of a complex Cauchy sequence, as a complex Cauchy sequence. -/
 noncomputable def cauSeqConj (f : CauSeq ℂ abs) : CauSeq ℂ abs :=
-  ⟨_, isCauSeqConj f⟩
+  ⟨_, is_cau_seq_conj f⟩
 #align complex.cau_seq_conj Complex.cauSeqConj
 
 theorem lim_conj (f : CauSeq ℂ abs) : lim (cauSeqConj f) = conj (lim f) :=
@@ -1194,7 +1194,7 @@ theorem lim_conj (f : CauSeq ℂ abs) : lim (cauSeqConj f) = conj (lim f) :=
 
 /-- The absolute value of a complex Cauchy sequence, as a real Cauchy sequence. -/
 noncomputable def cauSeqAbs (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
-  ⟨_, isCauSeqAbs f.2⟩
+  ⟨_, is_cau_seq_abs f.2⟩
 #align complex.cau_seq_abs Complex.cauSeqAbs
 
 theorem lim_abs (f : CauSeq ℂ abs) : lim (cauSeqAbs f) = abs (lim f) :=

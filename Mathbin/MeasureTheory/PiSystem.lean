@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Martin Zinkevich, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.pi_system
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ open MeasurableSpace Set
 
 open Classical MeasureTheory
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (s t «expr ∈ » C) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s t «expr ∈ » C) -/
 /-- A π-system is a collection of subsets of `α` that is closed under binary intersection of
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do
   that here. -/
@@ -392,7 +392,7 @@ theorem pi_Union_Inter_singleton_left (s : ι → Set α) (S : Set ι) :
       { s' : Set α | ∃ (t : Finset ι)(htS : ↑t ⊆ S), s' = ⋂ i ∈ t, s i } :=
   by 
   ext1 s'
-  simp_rw [piUnionInter, Set.mem_singleton_iff, exists_prop, Set.mem_set_of_eq]
+  simp_rw [piUnionInter, Set.mem_singleton_iff, exists_prop, Set.mem_setOf_eq]
   refine' ⟨fun h => _, fun ⟨t, htS, h_eq⟩ => ⟨t, htS, s, fun _ _ => rfl, h_eq⟩⟩
   obtain ⟨t, htS, f, hft_eq, rfl⟩ := h
   refine' ⟨t, htS, _⟩
@@ -424,7 +424,7 @@ theorem generate_from_pi_Union_Inter_singleton_left (s : ι → Set α) (S : Set
 theorem is_pi_system_pi_Union_Inter (π : ι → Set (Set α)) (hpi : ∀ x, IsPiSystem (π x))
     (S : Set ι) : IsPiSystem (piUnionInter π S) := by
   rintro t1 ⟨p1, hp1S, f1, hf1m, ht1_eq⟩ t2 ⟨p2, hp2S, f2, hf2m, ht2_eq⟩ h_nonempty
-  simp_rw [piUnionInter, Set.mem_set_of_eq]
+  simp_rw [piUnionInter, Set.mem_setOf_eq]
   let g n := ite (n ∈ p1) (f1 n) Set.univ ∩ ite (n ∈ p2) (f2 n) Set.univ
   have hp_union_ss : ↑(p1 ∪ p2) ⊆ S := by
     simp only [hp1S, hp2S, Finset.coe_union, union_subset_iff, and_self_iff]

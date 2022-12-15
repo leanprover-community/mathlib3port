@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.ring.equiv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -861,10 +861,11 @@ protected theorem is_domain {A : Type _} (B : Type _) [Ring A] [Ring B] [IsDomai
     IsDomain A := by
   haveI : Nontrivial A := ⟨⟨e.symm 0, e.symm 1, e.symm.injective.ne zero_ne_one⟩⟩
   haveI := e.no_zero_divisors B
-  exact NoZeroDivisors.to_is_domain _
+  exact NoZeroDivisors.toIsDomain _
 #align ring_equiv.is_domain RingEquiv.is_domain
 
 end RingEquiv
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Guard against import creep
+assert_not_exists fintype
+

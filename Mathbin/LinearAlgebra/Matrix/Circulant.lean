@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.circulant
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -145,7 +145,7 @@ theorem circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] [Fintype n] [Ad
   intro x
   congr 2
   · simp
-  · simp only [Equiv.coe_add_right, Function.comp_apply, Equiv.coe_trans, Equiv.sub_left_apply]
+  · simp only [Equiv.coe_addRight, Function.comp_apply, Equiv.coe_trans, Equiv.sub_left_apply]
     abel
 #align matrix.circulant_mul_comm Matrix.circulant_mul_comm
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Action
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -260,7 +260,7 @@ instance [HasFiniteProducts V] :
     HasFiniteProducts
       (ActionCat V
         G) where out n :=
-    Adjunction.has_limits_of_shape_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
+    Adjunction.hasLimitsOfShapeOfEquivalence (ActionCat.functorCategoryEquivalence _ _).Functor
 
 instance [HasFiniteLimits V] :
     HasFiniteLimits
@@ -269,10 +269,10 @@ instance [HasFiniteLimits V] :
     adjunction.has_limits_of_shape_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
 
 instance [HasLimits V] : HasLimits (ActionCat V G) :=
-  Adjunction.has_limits_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
+  Adjunction.hasLimitsOfEquivalence (ActionCat.functorCategoryEquivalence _ _).Functor
 
 instance [HasColimits V] : HasColimits (ActionCat V G) :=
-  Adjunction.has_colimits_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
+  Adjunction.hasColimitsOfEquivalence (ActionCat.functorCategoryEquivalence _ _).Functor
 
 end
 
@@ -780,7 +780,7 @@ theorem of_mul_action_apply {G H : Type u} [Monoid G] [MulAction G H] (g : G) (x
   rfl
 #align Action.of_mul_action_apply ActionCat.of_mul_action_apply
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- Given a family `F` of types with `G`-actions, this is the limit cone demonstrating that the
 product of `F` as types is a product in the category of `G`-sets. -/
 def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι → Type max v u)
@@ -797,7 +797,7 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
           naturality' := fun i j x => by 
             ext
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
             cases x
             congr } }
   IsLimit :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.Mat
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,12 +176,12 @@ and so the internal indexing of a biproduct may have nothing to do with the exte
 even though the construction we give uses a sigma type.
 See however `iso_biproduct_embedding`.
 -/
-instance has_finite_biproducts :
+instance hasFiniteBiproducts :
     HasFiniteBiproducts
       (Mat_
         C) where out n :=
     { HasBiproduct := fun f =>
-        has_biproduct_of_total
+        hasBiproductOfTotal
           { x := ⟨Σj, (f j).ι, fun p => (f p.1).x p.2⟩
             π := fun j x y => by 
               dsimp at x⊢
@@ -232,7 +232,7 @@ instance has_finite_biproducts :
               · subst h
                 simp
               · simp [h]) }
-#align category_theory.Mat_.has_finite_biproducts CategoryTheory.Mat_.has_finite_biproducts
+#align category_theory.Mat_.has_finite_biproducts CategoryTheory.Mat_.hasFiniteBiproducts
 
 end Mat_
 
@@ -376,7 +376,7 @@ def additiveObjIsoBiproduct (F : Mat_ C ⥤ D) [Functor.Additive F] (M : Mat_ C)
 
 variable [HasFiniteBiproducts D]
 
-@[reassoc]
+@[reassoc.1]
 theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C}
     (f : M ⟶ N) :
     F.map f ≫ (additiveObjIsoBiproduct F N).hom =
@@ -403,7 +403,7 @@ theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additi
 #align
   category_theory.Mat_.additive_obj_iso_biproduct_naturality CategoryTheory.Mat_.additive_obj_iso_biproduct_naturality
 
-@[reassoc]
+@[reassoc.1]
 theorem additive_obj_iso_biproduct_naturality' (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C}
     (f : M ⟶ N) :
     (additiveObjIsoBiproduct F M).inv ≫ F.map f =

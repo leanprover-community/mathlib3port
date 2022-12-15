@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module group_theory.nielsen_schreier
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,7 +188,7 @@ def loopOfHom {a b : G} (p : a ⟶ b) : EndCat (root' T) :=
   treeHom T a ≫ p ≫ inv (treeHom T b)
 #align is_free_groupoid.spanning_tree.loop_of_hom IsFreeGroupoid.SpanningTree.loopOfHom
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b) -/
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
 theorem loop_of_hom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymmetrify T a b) :
     loopOfHom T (of e) = 𝟙 (root' T) := by

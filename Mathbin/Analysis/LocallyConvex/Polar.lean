@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Kalle Kytölä
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.polar
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.polar s := fun _ _ => by
 
 theorem polar_eq_Inter {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ‖B x y‖ ≤ 1 } := by
   ext
-  simp only [polar_mem_iff, Set.mem_Inter, Set.mem_set_of_eq]
+  simp only [polar_mem_iff, Set.mem_Inter, Set.mem_setOf_eq]
 #align linear_map.polar_eq_Inter LinearMap.polar_eq_Inter
 
 /-- The map `B.polar : set E → set F` forms an order-reversing Galois connection with
@@ -123,12 +123,12 @@ theorem tripolar_eq_polar (s : Set E) : B.polar (B.flip.polar (B.polar s)) = B.p
 #align linear_map.tripolar_eq_polar LinearMap.tripolar_eq_polar
 
 /-- The polar set is closed in the weak topology induced by `B.flip`. -/
-theorem polarWeakClosed (s : Set E) : @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.polar s) :=
-  by 
+theorem polar_weak_closed (s : Set E) :
+    @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.polar s) := by
   rw [polar_eq_Inter]
-  refine' isClosedInter fun x => isClosedInter fun _ => _
-  exact isClosedLe (WeakBilin.eval_continuous B.flip x).norm continuous_const
-#align linear_map.polar_weak_closed LinearMap.polarWeakClosed
+  refine' is_closed_Inter fun x => is_closed_Inter fun _ => _
+  exact is_closed_le (WeakBilin.eval_continuous B.flip x).norm continuous_const
+#align linear_map.polar_weak_closed LinearMap.polar_weak_closed
 
 end NormedRing
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module logic.equiv.local_equiv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ then it should use `e.source ∩ s` or `e.target ∩ t`, not `s ∩ e.source` or
 -- register in the simpset `mfld_simps` several lemmas that are often useful when dealing
 -- with manifolds
 attribute [mfld_simps]
-  id.def Function.comp.left_id Set.mem_set_of_eq Set.image_eq_empty Set.univ_inter Set.preimage_univ Set.prod_mk_mem_set_prod_eq and_true_iff Set.mem_univ Set.mem_image_of_mem true_and_iff Set.mem_inter_iff Set.mem_preimage Function.comp_apply Set.inter_subset_left Set.mem_prod Set.range_id Set.range_prod_map and_self_iff Set.mem_range_self eq_self_iff_true forall_const forall_true_iff Set.inter_univ Set.preimage_id Function.comp.right_id not_false_iff and_imp Set.prod_inter_prod Set.univ_prod_univ true_or_iff or_true_iff Prod.map_mk Set.preimage_inter heq_iff_eq Equiv.sigma_equiv_prod_apply Equiv.sigma_equiv_prod_symm_apply Subtype.coe_mk Equiv.to_fun_as_coe Equiv.inv_fun_as_coe
+  id.def Function.comp.left_id Set.mem_setOf_eq Set.image_eq_empty Set.univ_inter Set.preimage_univ Set.prod_mk_mem_set_prod_eq and_true_iff Set.mem_univ Set.mem_image_of_mem true_and_iff Set.mem_inter_iff Set.mem_preimage Function.comp_apply Set.inter_subset_left Set.mem_prod Set.range_id Set.range_prod_map and_self_iff Set.mem_range_self eq_self_iff_true forall_const forall_true_iff Set.inter_univ Set.preimage_id Function.comp.right_id not_false_iff and_imp Set.prod_inter_prod Set.univ_prod_univ true_or_iff or_true_iff Prod.map_mk Set.preimage_inter heq_iff_eq Equiv.sigma_equiv_prod_apply Equiv.sigma_equiv_prod_symm_apply Subtype.coe_mk Equiv.to_fun_as_coe Equiv.inv_fun_as_coe
 
 /-- Common `@[simps]` configuration options used for manifold-related declarations. -/
 def mfldCfg : SimpsCfg where 

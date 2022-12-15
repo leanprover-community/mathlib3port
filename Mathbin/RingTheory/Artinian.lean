@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.artinian
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,7 @@ variable {R M}
 theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] {s : Set M}
     (hs : LinearIndependent R (coe : s → M)) : s.Finite := by
   refine'
-    Classical.by_contradiction fun hf =>
+    by_contradiction fun hf =>
       (RelEmbedding.well_founded_iff_no_descending_seq.1 (well_founded_submodule_lt R M)).elim' _
   have f : ℕ ↪ s := Set.Infinite.natEmbedding s hf
   have : ∀ n, coe ∘ f '' { m | n ≤ m } ⊆ s := by
@@ -171,7 +171,7 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
     intro a b
     rw [span_le_span_iff hs (this b) (this a),
       Set.image_subset_image_iff (subtype.coe_injective.comp f.injective), Set.subset_def]
-    simp only [Set.mem_set_of_eq]
+    simp only [Set.mem_setOf_eq]
     exact ⟨fun hab x => le_trans hab, fun h => h _ le_rfl⟩
   exact
     ⟨⟨fun n => span R (coe ∘ f '' { m | n ≤ m }), fun x y => by
@@ -187,7 +187,7 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
 theorem set_has_minimal_iff_artinian :
     (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, I ≤ M' → I = M') ↔
       IsArtinian R M :=
-  by rw [is_artinian_iff_well_founded, WellFounded.well_founded_iff_has_min']
+  by rw [is_artinian_iff_well_founded, WellFounded.wellFounded_iff_has_min']
 #align set_has_minimal_iff_artinian set_has_minimal_iff_artinian
 
 theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set <| Submodule R M) (ha : a.Nonempty) :

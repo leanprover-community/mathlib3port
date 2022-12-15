@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.conditional_expectation
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
       refine' funext fun f => integral_congr_ae (ae_restrict_of_ae _)
       simp_rw [Submodule.coe_subtypeL', Submodule.coe_subtype, ← coe_fn_coe_base]
       exact eventually_of_forall fun _ => rfl
-    refine' isClosedEq (Continuous.const_smul _ _) _
+    refine' is_closed_eq (Continuous.const_smul _ _) _
     · rw [heq₁]
       exact continuous_integral.comp (ContinuousLinearMap.continuous _)
     · rw [heq₂]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module data.rat.floor
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,11 +43,11 @@ protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z :
   | ⟨n, d, h, c⟩ => by 
     simp [Rat.floor]
     rw [num_denom']
-    have h' := Int.coe_nat_lt.2 h
+    have h' := Int.ofNat_lt.2 h
     conv => 
       rhs
       rw [coe_int_eq_mk, Rat.le_def zero_lt_one h', mul_one]
-    exact Int.le_div_iff_mul_le h'
+    exact Int.le_ediv_iff_mul_le h'
 #align rat.le_floor Rat.le_floor
 
 instance : FloorRing ℚ :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.products
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -236,19 +236,19 @@ def piComparison [HasProduct f] [HasProduct fun b => G.obj (f b)] :
   Pi.lift fun b => G.map (Pi.π f b)
 #align category_theory.limits.pi_comparison CategoryTheory.Limits.piComparison
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem pi_comparison_comp_π [HasProduct f] [HasProduct fun b => G.obj (f b)] (b : β) :
     piComparison G f ≫ Pi.π _ b = G.map (Pi.π f b) :=
   limit.lift_π _ (Discrete.mk b)
 #align category_theory.limits.pi_comparison_comp_π CategoryTheory.Limits.pi_comparison_comp_π
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
-@[simp, reassoc]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+@[simp, reassoc.1]
 theorem map_lift_pi_comparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C)
     (g : ∀ j, P ⟶ f j) : G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) := by
   ext
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
   simp [← G.map_comp]
 #align category_theory.limits.map_lift_pi_comparison CategoryTheory.Limits.map_lift_pi_comparison
 
@@ -259,20 +259,20 @@ def sigmaComparison [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] :
   Sigma.desc fun b => G.map (Sigma.ι f b)
 #align category_theory.limits.sigma_comparison CategoryTheory.Limits.sigmaComparison
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_comp_sigma_comparison [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (b : β) :
     Sigma.ι _ b ≫ sigmaComparison G f = G.map (Sigma.ι f b) :=
   colimit.ι_desc _ (Discrete.mk b)
 #align category_theory.limits.ι_comp_sigma_comparison CategoryTheory.Limits.ι_comp_sigma_comparison
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
-@[simp, reassoc]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+@[simp, reassoc.1]
 theorem sigma_comparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C)
     (g : ∀ j, f j ⟶ P) :
     sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) := by
   ext
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
   simp [← G.map_comp]
 #align
   category_theory.limits.sigma_comparison_map_desc CategoryTheory.Limits.sigma_comparison_map_desc
@@ -294,14 +294,13 @@ abbrev HasCoproducts :=
 variable {C}
 
 theorem has_smallest_products_of_has_products [HasProducts.{w} C] : HasProducts.{0} C := fun J =>
-  has_limits_of_shape_of_equivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
+  hasLimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
 #align
   category_theory.limits.has_smallest_products_of_has_products CategoryTheory.Limits.has_smallest_products_of_has_products
 
 theorem has_smallest_coproducts_of_has_coproducts [HasCoproducts.{w} C] : HasCoproducts.{0} C :=
   fun J =>
-  has_colimits_of_shape_of_equivalence
-    (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
+  hasColimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
 #align
   category_theory.limits.has_smallest_coproducts_of_has_coproducts CategoryTheory.Limits.has_smallest_coproducts_of_has_coproducts
 
@@ -360,7 +359,7 @@ def productUniqueIso : ∏ f ≅ f default :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitConeOfUnique f).IsLimit
 #align category_theory.limits.product_unique_iso CategoryTheory.Limits.productUniqueIso
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- The colimit cocone for the coproduct over an index type with exactly one term. -/
 @[simps]
 def colimitCoconeOfUnique :
@@ -374,7 +373,7 @@ def colimitCoconeOfUnique :
             eqToHom
               (by
                 trace
-                  "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
+                  "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
                 dsimp
                 congr ) } }
   IsColimit :=
@@ -414,7 +413,7 @@ def Pi.reindex : piObj (f ∘ ε) ≅ piObj f :=
   HasLimit.isoOfEquivalence (Discrete.equivalence ε) (Discrete.natIso fun i => Iso.refl _)
 #align category_theory.limits.pi.reindex CategoryTheory.Limits.Pi.reindex
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).Hom ≫ Pi.π f (ε b) = Pi.π (f ∘ ε) b := by
   dsimp [pi.reindex]
   simp only [has_limit.iso_of_equivalence_hom_π, discrete.nat_iso_inv_app,
@@ -425,7 +424,7 @@ theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).Hom ≫ Pi.π f (ε b) = 
     limit.w (discrete.functor (f ∘ ε)) (discrete.eq_to_hom' (ε.symm_apply_apply b))
 #align category_theory.limits.pi.reindex_hom_π CategoryTheory.Limits.Pi.reindex_hom_π
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Pi.reindex_inv_π (b : β) : (Pi.reindex ε f).inv ≫ Pi.π (f ∘ ε) b = Pi.π f (ε b) := by
   simp [iso.inv_comp_eq]
 #align category_theory.limits.pi.reindex_inv_π CategoryTheory.Limits.Pi.reindex_inv_π
@@ -441,7 +440,7 @@ def Sigma.reindex : sigmaObj (f ∘ ε) ≅ sigmaObj f :=
   HasColimit.isoOfEquivalence (Discrete.equivalence ε) (Discrete.natIso fun i => Iso.refl _)
 #align category_theory.limits.sigma.reindex CategoryTheory.Limits.Sigma.reindex
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Sigma.ι_reindex_hom (b : β) :
     Sigma.ι (f ∘ ε) b ≫ (Sigma.reindex ε f).Hom = Sigma.ι f (ε b) := by
   dsimp [sigma.reindex]
@@ -453,7 +452,7 @@ theorem Sigma.ι_reindex_hom (b : β) :
     colimit.w (discrete.functor f) (discrete.eq_to_hom' (ε.apply_symm_apply (ε b)))]
 #align category_theory.limits.sigma.ι_reindex_hom CategoryTheory.Limits.Sigma.ι_reindex_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Sigma.ι_reindex_inv (b : β) :
     Sigma.ι f (ε b) ≫ (Sigma.reindex ε f).inv = Sigma.ι (f ∘ ε) b := by simp [iso.comp_inv_eq]
 #align category_theory.limits.sigma.ι_reindex_inv CategoryTheory.Limits.Sigma.ι_reindex_inv

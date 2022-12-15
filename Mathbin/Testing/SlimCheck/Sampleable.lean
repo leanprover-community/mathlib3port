@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.sampleable
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -436,8 +436,8 @@ instance Rat.sampleable : Sampleable ℚ :=
     intro i
     rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [Rat.mkPnat]
     mono*
-    · rw [← Int.coe_nat_le, ← Int.abs_eq_nat_abs, ← Int.abs_eq_nat_abs]
-      apply Int.abs_div_le_abs
+    · rw [← Int.ofNat_le, ← Int.abs_eq_natAbs, ← Int.abs_eq_natAbs]
+      apply Int.abs_ediv_le_abs
     · change _ - 1 ≤ y - 1
       apply tsub_le_tsub_right
       apply Nat.div_le_of_le_mul

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.limits
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,7 +171,7 @@ instance (F : K ⥤ SheafCat J D) : CreatesLimit F (sheafToPresheaf J D) :=
 instance : CreatesLimitsOfShape K (sheafToPresheaf J D) where
 
 instance : HasLimitsOfShape K (SheafCat J D) :=
-  has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape (sheafToPresheaf J D)
+  hasLimitsOfShapeOfHasLimitsOfShapeCreatesLimitsOfShape (sheafToPresheaf J D)
 
 end
 
@@ -179,7 +179,7 @@ instance [HasLimits D] : CreatesLimits (sheafToPresheaf J D) :=
   ⟨⟩
 
 instance [HasLimits D] : HasLimits (SheafCat J D) :=
-  has_limits_of_has_limits_creates_limits (sheafToPresheaf J D)
+  hasLimitsOfHasLimitsCreatesLimits (sheafToPresheaf J D)
 
 end Limits
 

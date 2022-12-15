@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -400,7 +400,7 @@ theorem eq_zero_or_pos : ∀ a : Ordinal, a = 0 ∨ 0 < a :=
   eq_bot_or_bot_lt
 #align ordinal.eq_zero_or_pos Ordinal.eq_zero_or_pos
 
-instance : ZeroLeOneClass Ordinal :=
+instance : ZeroLEOneClass Ordinal :=
   ⟨Ordinal.zero_le _⟩
 
 instance NeZero.one : NeZero (1 : Ordinal) :=
@@ -723,10 +723,10 @@ theorem lift_type_eq {α : Type u} {β : Type v} {r s} [IsWellOrder α r] [IsWel
 theorem lift_type_lt {α : Type u} {β : Type v} {r s} [IsWellOrder α r] [IsWellOrder β s] :
     lift.{max v w} (type r) < lift.{max u w} (type s) ↔ Nonempty (r ≺i s) := by
   haveI :=
-        @RelEmbedding.is_well_order _ _ (@Equiv.ulift.{max v w} α ⁻¹'o r) r
+        @RelEmbedding.isWellOrder _ _ (@Equiv.ulift.{max v w} α ⁻¹'o r) r
           (RelIso.preimage Equiv.ulift.{max v w} r) _ <;>
       haveI :=
-        @RelEmbedding.is_well_order _ _ (@Equiv.ulift.{max u w} β ⁻¹'o s) s
+        @RelEmbedding.isWellOrder _ _ (@Equiv.ulift.{max u w} β ⁻¹'o s) s
           (RelIso.preimage Equiv.ulift.{max u w} s) _ <;>
     exact
       ⟨fun ⟨f⟩ =>
@@ -1307,11 +1307,11 @@ def ord (c : Cardinal) : Ordinal :=
       exact fun α β h => (this h).antisymm (this (Setoid.symm h))
       rintro α β ⟨f⟩
       refine' le_cinfi_iff'.2 fun i => _
-      haveI := @RelEmbedding.is_well_order _ _ (f ⁻¹'o i.1) _ (↑(RelIso.preimage f i.1)) i.2
+      haveI := @RelEmbedding.isWellOrder _ _ (f ⁻¹'o i.1) _ (↑(RelIso.preimage f i.1)) i.2
       exact
         (cinfi_le' _
               (Subtype.mk (⇑f ⁻¹'o i.val)
-                (@RelEmbedding.is_well_order _ _ _ _ (↑(RelIso.preimage f i.1)) i.2))).trans_eq
+                (@RelEmbedding.isWellOrder _ _ _ _ (↑(RelIso.preimage f i.1)) i.2))).trans_eq
           (Quot.sound ⟨RelIso.preimage f i.1⟩))
 #align cardinal.ord Cardinal.ord
 
@@ -1339,7 +1339,7 @@ theorem ord_le {c o} : ord c ≤ o ↔ c ≤ o.card :=
           ⟨f.toEmbedding⟩
       · cases' h with f
         have g := RelEmbedding.preimage f s
-        haveI := RelEmbedding.is_well_order g
+        haveI := RelEmbedding.isWellOrder g
         exact le_trans (ord_le_type _) g.ordinal_type_le
 #align cardinal.ord_le Cardinal.ord_le
 

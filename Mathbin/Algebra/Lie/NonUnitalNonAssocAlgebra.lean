@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.non_unital_non_assoc_algebra
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ instance is_scalar_tower : IsScalarTower R (CommutatorRing L) (CommutatorRing L)
 
 /-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 reinterpret the `lie_smul` law as an `smul_comm_class`. -/
-instance smul_comm_class : SmulCommClass R (CommutatorRing L) (CommutatorRing L) :=
+instance smul_comm_class : SMulCommClass R (CommutatorRing L) (CommutatorRing L) :=
   ⟨fun t x y => (lie_smul t x y).symm⟩
 #align lie_algebra.smul_comm_class LieAlgebra.smul_comm_class
 

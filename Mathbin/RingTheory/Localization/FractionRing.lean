@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.fraction_ring
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,7 +248,7 @@ noncomputable def fieldEquivOfRingEquiv [Algebra B L] [IsFractionRing B L] (h : 
     (by 
       ext b
       show b ∈ h.to_equiv '' _ ↔ _
-      erw [h.to_equiv.image_eq_preimage, Set.preimage, Set.mem_set_of_eq,
+      erw [h.to_equiv.image_eq_preimage, Set.preimage, Set.mem_setOf_eq,
         mem_non_zero_divisors_iff_ne_zero, mem_non_zero_divisors_iff_ne_zero]
       exact h.symm.map_ne_zero_iff)
 #align is_fraction_ring.field_equiv_of_ring_equiv IsFractionRing.fieldEquivOfRingEquiv
@@ -263,7 +263,7 @@ theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
   convert is_localization_iff_of_base_ring_equiv _ _ h
   ext x
   erw [Submonoid.map_equiv_eq_comap_symm]
-  simp only [MulEquiv.coe_to_monoid_hom, RingEquiv.to_mul_equiv_eq_coe, Submonoid.mem_comap]
+  simp only [MulEquiv.coe_toMonoidHom, RingEquiv.to_mul_equiv_eq_coe, Submonoid.mem_comap]
   constructor
   · rintro hx z (hz : z * h.symm x = 0)
     rw [← h.map_eq_zero_iff]

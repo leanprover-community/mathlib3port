@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.algebra.tower
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -310,7 +310,7 @@ theorem smul_mem_span_smul_of_mem {s : Set S} {t : Set A} {k : S} (hks : k ∈ s
     exact smul_mem _ _ hc
 #align submodule.smul_mem_span_smul_of_mem Submodule.smul_mem_span_smul_of_mem
 
-variable [SmulCommClass R S A]
+variable [SMulCommClass R S A]
 
 theorem smul_mem_span_smul {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S} {x : A}
     (hx : x ∈ span R t) : k • x ∈ span R (s • t) :=

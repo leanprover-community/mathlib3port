@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.specific_asymptotics
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ theorem pow_div_pow_eventually_eq_at_bot {p q : ℕ} :
 theorem tendsto_zpow_at_top_at_top {n : ℤ} (hn : 0 < n) :
     Tendsto (fun x : 𝕜 => x ^ n) atTop atTop := by
   lift n to ℕ using hn.le
-  simp only [zpow_coe_nat]
+  simp only [zpow_ofNat]
   exact tendsto_pow_at_top (nat.cast_pos.mp hn).ne'
 #align tendsto_zpow_at_top_at_top tendsto_zpow_at_top_at_top
 

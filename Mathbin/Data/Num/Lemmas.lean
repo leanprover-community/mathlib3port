@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.lemmas
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -384,7 +384,7 @@ unsafe def transfer : tactic Unit :=
   sorry
 #align num.transfer num.transfer
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer -/
 instance : AddMonoid Num where 
   add := (· + ·)
   zero := 0
@@ -401,7 +401,7 @@ instance : AddMonoidWithOne Num :=
     nat_cast_zero := of_nat'_zero
     nat_cast_succ := fun _ => of_nat'_succ }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer -/
 instance : CommSemiring Num := by
   refine_struct
           { Num.addMonoid, Num.addMonoidWithOne with
@@ -416,12 +416,12 @@ instance : CommSemiring Num := by
           transfer <;>
     simp [add_comm, mul_add, add_mul, mul_assoc, mul_comm, mul_left_comm]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer_rw -/
 instance : OrderedCancelAddCommMonoid Num :=
   { Num.commSemiring with 
     lt := (· < ·)
@@ -456,9 +456,9 @@ instance : OrderedCancelAddCommMonoid Num :=
         transfer_rw
       apply le_of_add_le_add_left }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer_rw -/
 instance : LinearOrderedSemiring Num :=
   { Num.commSemiring, Num.orderedCancelAddCommMonoid with
     le_total := by 
@@ -477,8 +477,8 @@ instance : LinearOrderedSemiring Num :=
       run_tac
         transfer_rw
       apply mul_lt_mul_of_pos_right
-    decidableLt := Num.decidableLt
-    decidableLe := Num.decidableLe
+    decidableLt := Num.decidableLT
+    decidableLe := Num.decidableLE
     DecidableEq := Num.decidableEq
     exists_pair_ne := ⟨0, 1, by decide⟩ }
 
@@ -617,13 +617,13 @@ unsafe def transfer : tactic Unit :=
   sorry
 #align pos_num.transfer pos_num.transfer
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pos_num.transfer -/
 instance : AddCommSemigroup PosNum := by
   refine' { add := (· + ·).. } <;>
     run_tac
       transfer
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pos_num.transfer -/
 instance : CommMonoid PosNum := by
   refine_struct
         { mul := (· * ·)
@@ -633,7 +633,7 @@ instance : CommMonoid PosNum := by
     run_tac
       transfer
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pos_num.transfer -/
 instance : Distrib PosNum := by
   refine'
       { add := (· + ·)
@@ -642,11 +642,11 @@ instance : Distrib PosNum := by
         transfer
       simp [mul_add, mul_comm]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pos_num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pos_num.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pos_num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pos_num.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pos_num.transfer_rw -/
 instance : LinearOrder PosNum where 
   lt := (· < ·)
   lt_iff_le_not_le := by 
@@ -1457,11 +1457,11 @@ unsafe def transfer : tactic Unit :=
   sorry
 #align znum.transfer znum.transfer
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer_rw -/
 instance : LinearOrder ZNum where 
   lt := (· < ·)
   lt_iff_le_not_le := by 
@@ -1489,12 +1489,12 @@ instance : LinearOrder ZNum where
       transfer_rw
     apply le_total
   DecidableEq := ZNum.decidableEq
-  decidableLe := ZNum.decidableLe
-  decidableLt := ZNum.decidableLt
+  decidableLe := ZNum.decidableLE
+  decidableLt := ZNum.decidableLT
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
 instance : AddCommGroup ZNum where 
   add := (· + ·)
   add_assoc := by
@@ -1520,14 +1520,14 @@ instance : AddMonoidWithOne ZNum :=
       show (Num.ofNat' (n + 1)).toZnum = (Num.ofNat' n).toZnum + 1 by
         rw [Num.of_nat'_succ, Num.add_one, Num.to_znum_succ, ZNum.add_one] }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer_rw -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer_rw -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer_rw -/
 instance : LinearOrderedCommRing ZNum :=
   { ZNum.linearOrder, ZNum.addCommGroup, ZNum.addMonoidWithOne with
     mul := (· * ·)
@@ -1819,7 +1819,7 @@ theorem gcd_to_nat (a b) : (gcd a b : ℕ) = Int.gcd a b :=
 #align znum.gcd_to_nat ZNum.gcd_to_nat
 
 theorem dvd_iff_mod_eq_zero {m n : ZNum} : m ∣ n ↔ n % m = 0 := by
-  rw [← dvd_to_int, Int.dvd_iff_mod_eq_zero, ← to_int_inj, mod_to_int] <;> rfl
+  rw [← dvd_to_int, Int.dvd_iff_emod_eq_zero, ← to_int_inj, mod_to_int] <;> rfl
 #align znum.dvd_iff_mod_eq_zero ZNum.dvd_iff_mod_eq_zero
 
 instance : DecidableRel ((· ∣ ·) : ZNum → ZNum → Prop)

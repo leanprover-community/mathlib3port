@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,9 +22,12 @@ lifting everything to `ℚ`.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+assert_not_exists finset
+
+assert_not_exists module
+
+assert_not_exists submonoid
+
 open Pointwise
 
 /-- The type `ℝ` of real numbers constructed as equivalence classes of Cauchy sequences of rational
@@ -336,16 +339,16 @@ theorem mk_le {f g : CauSeq ℚ abs} : mk f ≤ mk g ↔ f ≤ g := by simp [le_
 #align real.mk_le Real.mk_le
 
 @[elab_as_elim]
-protected theorem indMk {C : Real → Prop} (x : Real) (h : ∀ y, C (mk y)) : C x := by
+protected theorem ind_mk {C : Real → Prop} (x : Real) (h : ∀ y, C (mk y)) : C x := by
   cases' x with x
   induction' x using Quot.induction_on with x
   exact h x
-#align real.ind_mk Real.indMk
+#align real.ind_mk Real.ind_mk
 
 theorem add_lt_add_iff_left {a b : ℝ} (c : ℝ) : c + a < c + b ↔ a < b := by
-  induction a using Real.indMk
-  induction b using Real.indMk
-  induction c using Real.indMk
+  induction a using Real.ind_mk
+  induction b using Real.ind_mk
+  induction c using Real.ind_mk
   simp only [mk_lt, ← mk_add]
   show Pos _ ↔ Pos _; rw [add_sub_add_left_eq_sub]
 #align real.add_lt_add_iff_left Real.add_lt_add_iff_left
@@ -354,15 +357,16 @@ instance : PartialOrder ℝ where
   le := (· ≤ ·)
   lt := (· < ·)
   lt_iff_le_not_le a b :=
-    (Real.indMk a) fun a => (Real.indMk b) fun b => by simpa using lt_iff_le_not_le
-  le_refl a := a.indMk (by intro a <;> rw [mk_le])
+    (Real.ind_mk a) fun a => (Real.ind_mk b) fun b => by simpa using lt_iff_le_not_le
+  le_refl a := a.ind_mk (by intro a <;> rw [mk_le])
   le_trans a b c :=
-    (Real.indMk a) fun a => (Real.indMk b) fun b => (Real.indMk c) fun c => by simpa using le_trans
+    (Real.ind_mk a) fun a =>
+      (Real.ind_mk b) fun b => (Real.ind_mk c) fun c => by simpa using le_trans
   lt_iff_le_not_le a b :=
-    (Real.indMk a) fun a => (Real.indMk b) fun b => by simpa using lt_iff_le_not_le
+    (Real.ind_mk a) fun a => (Real.ind_mk b) fun b => by simpa using lt_iff_le_not_le
   le_antisymm a b :=
-    (Real.indMk a) fun a =>
-      (Real.indMk b) fun b => by simpa [mk_eq] using @CauSeq.le_antisymm _ _ a b
+    (Real.ind_mk a) fun a =>
+      (Real.ind_mk b) fun b => by simpa [mk_eq] using @CauSeq.le_antisymm _ _ a b
 
 instance : Preorder ℝ := by infer_instance
 
@@ -377,9 +381,9 @@ protected theorem zero_lt_one : (0 : ℝ) < 1 := by
 #align real.zero_lt_one Real.zero_lt_one
 
 protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b := by
-  induction' a using Real.indMk with a
-  induction' b using Real.indMk with b
-  simpa only [mk_lt, mk_pos, ← mk_mul] using CauSeq.mulPos
+  induction' a using Real.ind_mk with a
+  induction' b using Real.ind_mk with b
+  simpa only [mk_lt, mk_pos, ← mk_mul] using CauSeq.mul_pos
 #align real.mul_pos Real.mul_pos
 
 instance : StrictOrderedCommRing ℝ :=
@@ -461,42 +465,42 @@ instance : DistribLattice ℝ :=
     sup := (· ⊔ ·)
     le := (· ≤ ·)
     le_sup_left := fun a =>
-      (Real.indMk a) fun a b =>
-        (Real.indMk b) fun b => by 
+      (Real.ind_mk a) fun a b =>
+        (Real.ind_mk b) fun b => by 
           rw [← mk_sup, mk_le]
           exact CauSeq.le_sup_left
     le_sup_right := fun a =>
-      (Real.indMk a) fun a b =>
-        (Real.indMk b) fun b => by 
+      (Real.ind_mk a) fun a b =>
+        (Real.ind_mk b) fun b => by 
           rw [← mk_sup, mk_le]
           exact CauSeq.le_sup_right
     sup_le := fun a =>
-      (Real.indMk a) fun a b =>
-        (Real.indMk b) fun b c =>
-          (Real.indMk c) fun c => by 
+      (Real.ind_mk a) fun a b =>
+        (Real.ind_mk b) fun b c =>
+          (Real.ind_mk c) fun c => by 
             simp_rw [← mk_sup, mk_le]
             exact CauSeq.sup_le
     inf := (· ⊓ ·)
     inf_le_left := fun a =>
-      (Real.indMk a) fun a b =>
-        (Real.indMk b) fun b => by 
+      (Real.ind_mk a) fun a b =>
+        (Real.ind_mk b) fun b => by 
           rw [← mk_inf, mk_le]
           exact CauSeq.inf_le_left
     inf_le_right := fun a =>
-      (Real.indMk a) fun a b =>
-        (Real.indMk b) fun b => by 
+      (Real.ind_mk a) fun a b =>
+        (Real.ind_mk b) fun b => by 
           rw [← mk_inf, mk_le]
           exact CauSeq.inf_le_right
     le_inf := fun a =>
-      (Real.indMk a) fun a b =>
-        (Real.indMk b) fun b c =>
-          (Real.indMk c) fun c => by 
+      (Real.ind_mk a) fun a b =>
+        (Real.ind_mk b) fun b c =>
+          (Real.ind_mk c) fun c => by 
             simp_rw [← mk_inf, mk_le]
             exact CauSeq.le_inf
     le_sup_inf := fun a =>
-      (Real.indMk a) fun a b =>
-        (Real.indMk b) fun b c =>
-          (Real.indMk c) fun c =>
+      (Real.ind_mk a) fun a b =>
+        (Real.ind_mk b) fun b c =>
+          (Real.ind_mk c) fun c =>
             Eq.le
               (by 
                 simp only [← mk_sup, ← mk_inf]
@@ -515,7 +519,7 @@ instance : SemilatticeSup ℝ :=
 open Classical
 
 instance : IsTotal ℝ (· ≤ ·) :=
-  ⟨fun a => (Real.indMk a) fun a b => (Real.indMk b) fun b => by simpa using le_total a b⟩
+  ⟨fun a => (Real.ind_mk a) fun a b => (Real.ind_mk b) fun b => by simpa using le_total a b⟩
 
 noncomputable instance : LinearOrder ℝ :=
   Lattice.toLinearOrder _
@@ -572,7 +576,7 @@ unsafe instance : Repr ℝ where repr r := "real.of_cauchy " ++ repr r.cauchy
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] } -/
 theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j) → x ≤ mk f := by
   intro h
-  induction' x using Real.indMk with x
+  induction' x using Real.ind_mk with x
   apply le_of_not_lt
   rw [mk_lt]
   rintro ⟨K, K0, hK⟩
@@ -603,7 +607,7 @@ theorem mk_near_of_forall_near {f : CauSeq ℚ abs} {x : ℝ} {ε : ℝ}
 
 instance : Archimedean ℝ :=
   archimedean_iff_rat_le.2 fun x =>
-    (Real.indMk x) fun f =>
+    (Real.ind_mk x) fun f =>
       let ⟨M, M0, H⟩ := f.bounded' 0
       ⟨M, mk_le_of_forall_le ⟨0, fun i _ => Rat.cast_le.2 <| le_of_lt (abs_lt.1 (H i)).2⟩⟩
 
@@ -621,7 +625,7 @@ theorem is_cau_seq_iff_lift {f : ℕ → ℚ} : IsCauSeq abs f ↔ IsCauSeq abs 
 
 theorem of_near (f : ℕ → ℚ) (x : ℝ) (h : ∀ ε > 0, ∃ i, ∀ j ≥ i, |(f j : ℝ) - x| < ε) :
     ∃ h', Real.mk ⟨f, h'⟩ = x :=
-  ⟨is_cau_seq_iff_lift.2 (ofNear _ (const abs x) h),
+  ⟨is_cau_seq_iff_lift.2 (of_near _ (const abs x) h),
     sub_eq_zero.1 <|
       abs_eq_zero.1 <|
         (eq_of_le_of_forall_le_of_dense (abs_nonneg _)) fun ε ε0 =>
@@ -636,7 +640,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     ⟨n, le_of_lt hn⟩)
 #align real.exists_floor Real.exists_floor
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
 theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x := by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
   have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by

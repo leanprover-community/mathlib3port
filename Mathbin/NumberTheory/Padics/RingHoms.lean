@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.ring_homs
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,13 +80,13 @@ include hp_prime
 variable {p}
 
 theorem mod_part_lt_p : modPart p r < p := by
-  convert Int.mod_lt _ _
+  convert Int.emod_lt _ _
   · simp
   · exact_mod_cast hp_prime.1.NeZero
 #align padic_int.mod_part_lt_p PadicInt.mod_part_lt_p
 
 theorem mod_part_nonneg : 0 ≤ modPart p r :=
-  Int.mod_nonneg _ <| by exact_mod_cast hp_prime.1.NeZero
+  Int.emod_nonneg _ <| by exact_mod_cast hp_prime.1.NeZero
 #align padic_int.mod_part_nonneg PadicInt.mod_part_nonneg
 
 theorem is_unit_denom (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.denom : ℤ_[p]) := by
@@ -469,7 +469,7 @@ theorem dense_range_nat_cast : DenseRange (Nat.cast : ℕ → ℤ_[p]) := by
 theorem dense_range_int_cast : DenseRange (Int.cast : ℤ → ℤ_[p]) := by
   intro x
   apply dense_range_nat_cast.induction_on x
-  · exact isClosedClosure
+  · exact is_closed_closure
   · intro a
     change (a.cast : ℤ_[p]) with (a : ℤ).cast
     apply subset_closure
@@ -517,7 +517,7 @@ theorem pow_dvd_nth_hom_sub (r : R) (i j : ℕ) (h : i ≤ j) : ↑p ^ i ∣ nth
   simp only [Zmod.cast_id, Zmod.cast_hom_apply, sub_self, Zmod.nat_cast_val, Zmod.int_cast_cast]
 #align padic_int.pow_dvd_nth_hom_sub PadicInt.pow_dvd_nth_hom_sub
 
-theorem isCauSeqNthHom (r : R) : IsCauSeq (padicNorm p) fun n => nthHom f r n := by
+theorem is_cau_seq_nth_hom (r : R) : IsCauSeq (padicNorm p) fun n => nthHom f r n := by
   intro ε hε
   obtain ⟨k, hk⟩ : ∃ k : ℕ, (p ^ (-(↑(k : ℕ) : ℤ)) : ℚ) < ε := exists_pow_neg_lt_rat p hε
   use k
@@ -526,14 +526,14 @@ theorem isCauSeqNthHom (r : R) : IsCauSeq (padicNorm p) fun n => nthHom f r n :=
   norm_cast
   rw [← padicNorm.dvd_iff_norm_le]
   exact_mod_cast pow_dvd_nth_hom_sub f_compat r k j hj
-#align padic_int.is_cau_seq_nth_hom PadicInt.isCauSeqNthHom
+#align padic_int.is_cau_seq_nth_hom PadicInt.is_cau_seq_nth_hom
 
 /-- `nth_hom_seq f_compat r` bundles `padic_int.nth_hom f r`
 as a Cauchy sequence of rationals with respect to the `p`-adic norm.
 The `n`th value of the sequence is `((f n r).val : ℚ)`.
 -/
 def nthHomSeq (r : R) : PadicSeq p :=
-  ⟨fun n => nthHom f r n, isCauSeqNthHom f_compat r⟩
+  ⟨fun n => nthHom f r n, is_cau_seq_nth_hom f_compat r⟩
 #align padic_int.nth_hom_seq PadicInt.nthHomSeq
 
 -- this lemma ran into issues after changing to `ne_zero` and I'm not sure why.
@@ -584,7 +584,7 @@ theorem nth_hom_seq_mul (r s : R) :
 This is itself a ring hom: see `padic_int.lift`.
 -/
 def limNthHom (r : R) : ℤ_[p] :=
-  ofIntSeq (nthHom f r) (isCauSeqNthHom f_compat r)
+  ofIntSeq (nthHom f r) (is_cau_seq_nth_hom f_compat r)
 #align padic_int.lim_nth_hom PadicInt.limNthHom
 
 theorem lim_nth_hom_spec (r : R) :

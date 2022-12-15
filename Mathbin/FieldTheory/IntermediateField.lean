@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.intermediate_field
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -325,7 +325,7 @@ theorem to_subalgebra_to_intermediate_field' (S : Subalgebra K L) (hS : IsField 
 
 @[simp]
 theorem to_intermediate_field'_to_subalgebra (S : IntermediateField K L) :
-    S.toSubalgebra.toIntermediateField' (Field.to_is_field S) = S := by
+    S.toSubalgebra.toIntermediateField' (Field.toIsField S) = S := by
   ext
   rfl
 #align to_intermediate_field'_to_subalgebra to_intermediate_field'_to_subalgebra
@@ -653,13 +653,13 @@ section FiniteDimensional
 
 variable (F E : IntermediateField K L)
 
-instance finiteDimensionalLeft [FiniteDimensional K L] : FiniteDimensional K F :=
+instance finite_dimensional_left [FiniteDimensional K L] : FiniteDimensional K F :=
   left K F L
-#align intermediate_field.finite_dimensional_left IntermediateField.finiteDimensionalLeft
+#align intermediate_field.finite_dimensional_left IntermediateField.finite_dimensional_left
 
-instance finiteDimensionalRight [FiniteDimensional K L] : FiniteDimensional F L :=
+instance finite_dimensional_right [FiniteDimensional K L] : FiniteDimensional F L :=
   right K F L
-#align intermediate_field.finite_dimensional_right IntermediateField.finiteDimensionalRight
+#align intermediate_field.finite_dimensional_right IntermediateField.finite_dimensional_right
 
 @[simp]
 theorem dim_eq_dim_subalgebra : Module.rank K F.toSubalgebra = Module.rank K F :=

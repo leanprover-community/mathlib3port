@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.smooth_manifold_with_corners
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -296,13 +296,13 @@ protected theorem image_eq (s : Set H) : I '' s = I.symm ⁻¹' s ∩ range I :=
   · rw [inter_comm, I.target_eq, I.to_local_equiv_coe_symm]
 #align model_with_corners.image_eq ModelWithCorners.image_eq
 
-protected theorem closedEmbedding : ClosedEmbedding I :=
+protected theorem closed_embedding : ClosedEmbedding I :=
   I.LeftInverse.ClosedEmbedding I.continuous_symm I.Continuous
-#align model_with_corners.closed_embedding ModelWithCorners.closedEmbedding
+#align model_with_corners.closed_embedding ModelWithCorners.closed_embedding
 
-theorem closedRange : IsClosed (range I) :=
-  I.ClosedEmbedding.closedRange
-#align model_with_corners.closed_range ModelWithCorners.closedRange
+theorem closed_range : IsClosed (range I) :=
+  I.ClosedEmbedding.closed_range
+#align model_with_corners.closed_range ModelWithCorners.closed_range
 
 theorem map_nhds_eq (x : H) : map I (𝓝 x) = 𝓝[range I] I x :=
   I.ClosedEmbedding.toEmbedding.map_nhds_eq x

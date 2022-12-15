@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.integral
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ function sending `μ`-a.e. points to `s`, then the average value of `f` belongs 
 theorem Convex.set_average_mem_closure (hs : Convex ℝ s) (h0 : μ t ≠ 0) (ht : μ t ≠ ∞)
     (hfs : ∀ᵐ x ∂μ.restrict t, f x ∈ s) (hfi : IntegrableOn f t μ) :
     (⨍ x in t, f x ∂μ) ∈ closure s :=
-  hs.closure.set_average_mem isClosedClosure h0 ht (hfs.mono fun x hx => subset_closure hx) hfi
+  hs.closure.set_average_mem is_closed_closure h0 ht (hfs.mono fun x hx => subset_closure hx) hfi
 #align convex.set_average_mem_closure Convex.set_average_mem_closure
 
 theorem ConvexOn.average_mem_epigraph [IsFiniteMeasure μ] (hg : ConvexOn ℝ s g)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.list
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,8 +175,8 @@ theorem zip_with_swap_prod_support' (l l' : List α) :
           · simp only [Finset.coe_insert, Set.mem_insert_iff, Finset.mem_coe, to_finset_cons,
               mem_to_finset] at hm⊢
             simp [hm]
-      · simp only [not_not, Set.mem_set_of_eq] at h
-        simp only [h, Set.mem_set_of_eq] at hx
+      · simp only [not_not, Set.mem_setOf_eq] at h
+        simp only [h, Set.mem_setOf_eq] at hx
         rw [swap_apply_ne_self_iff] at hx
         rcases hx with ⟨hyz, rfl | rfl⟩ <;> simp
 #align list.zip_with_swap_prod_support' List.zip_with_swap_prod_support'
@@ -236,7 +236,7 @@ theorem support_form_perm_of_nodup' (l : List α) (h : Nodup l) (h' : ∀ x : α
   · intro x hx
     simp only [Finset.mem_coe, mem_to_finset] at hx
     obtain ⟨n, hn, rfl⟩ := nth_le_of_mem hx
-    rw [Set.mem_set_of_eq, form_perm_apply_nth_le _ h]
+    rw [Set.mem_setOf_eq, form_perm_apply_nth_le _ h]
     intro H
     rw [nodup_iff_nth_le_inj] at h
     specialize h _ _ _ _ H
@@ -332,7 +332,7 @@ theorem form_perm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodup (x :: y 
   rw [Equiv.Perm.ext_iff] at h
   have hx : x' ∈ x :: y :: l := by
     have : x' ∈ { z | form_perm (x :: y :: l) z ≠ z } := by
-      rw [Set.mem_set_of_eq, h x', form_perm_apply_head _ _ _ hd']
+      rw [Set.mem_setOf_eq, h x', form_perm_apply_head _ _ _ hd']
       simp only [mem_cons_iff, nodup_cons] at hd'
       push_neg  at hd'
       exact hd'.left.left.symm

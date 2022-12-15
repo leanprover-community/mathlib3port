@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Tim Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.determinant
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,7 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
                 simp only [Int.cast_mul, Units.val_mul]
               _ = ε τ := by simp only [inv_mul_cancel_right]
               
-          simp_rw [Equiv.coe_mul_right, h]
+          simp_rw [Equiv.coe_mulRight, h]
           simp only [this]
     _ = det M * det N := by simp only [det_apply', Finset.mul_sum, mul_comm, mul_left_comm]
     
@@ -286,7 +286,7 @@ theorem det_smul (A : Matrix n n R) (c : R) : det (c • A) = c ^ Fintype.card n
 
 @[simp]
 theorem det_smul_of_tower {α} [Monoid α] [DistribMulAction α R] [IsScalarTower α R R]
-    [SmulCommClass α R R] (c : α) (A : Matrix n n R) : det (c • A) = c ^ Fintype.card n • det A :=
+    [SMulCommClass α R R] (c : α) (A : Matrix n n R) : det (c • A) = c ^ Fintype.card n • det A :=
   by rw [← smul_one_smul R c A, det_smul, smul_pow, one_pow, smul_mul_assoc, one_mul]
 #align matrix.det_smul_of_tower Matrix.det_smul_of_tower
 

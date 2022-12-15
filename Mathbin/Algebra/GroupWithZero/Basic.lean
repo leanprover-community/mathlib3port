@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -343,7 +343,7 @@ Case conversion may be inaccurate. Consider using '#align eq_zero_of_mul_eq_self
 /-- An element of a `cancel_monoid_with_zero` fixed by right multiplication by an element other
 than one must be zero. -/
 theorem eq_zero_of_mul_eq_self_right (h₁ : b ≠ 1) (h₂ : a * b = a) : a = 0 :=
-  Classical.by_contradiction fun ha => h₁ <| mul_left_cancel₀ ha <| h₂.symm ▸ (mul_one a).symm
+  by_contradiction fun ha => h₁ <| mul_left_cancel₀ ha <| h₂.symm ▸ (mul_one a).symm
 #align eq_zero_of_mul_eq_self_right eq_zero_of_mul_eq_self_right
 
 /- warning: eq_zero_of_mul_eq_self_left -> eq_zero_of_mul_eq_self_left is a dubious translation:
@@ -355,7 +355,7 @@ Case conversion may be inaccurate. Consider using '#align eq_zero_of_mul_eq_self
 /-- An element of a `cancel_monoid_with_zero` fixed by left multiplication by an element other
 than one must be zero. -/
 theorem eq_zero_of_mul_eq_self_left (h₁ : b ≠ 1) (h₂ : b * a = a) : a = 0 :=
-  Classical.by_contradiction fun ha => h₁ <| mul_right_cancel₀ ha <| h₂.symm ▸ (one_mul a).symm
+  by_contradiction fun ha => h₁ <| mul_right_cancel₀ ha <| h₂.symm ▸ (one_mul a).symm
 #align eq_zero_of_mul_eq_self_left eq_zero_of_mul_eq_self_left
 
 end CancelMonoidWithZero
@@ -661,7 +661,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] {a : G₀}, (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_1)) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_1)))))) a) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))) -> (Eq.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align eq_zero_of_one_div_eq_zero eq_zero_of_one_div_eq_zeroₓ'. -/
 theorem eq_zero_of_one_div_eq_zero {a : G₀} (h : 1 / a = 0) : a = 0 :=
-  Classical.by_cases (fun ha => ha) fun ha => ((one_div_ne_zero ha) h).elim
+  by_cases (fun ha => ha) fun ha => ((one_div_ne_zero ha) h).elim
 #align eq_zero_of_one_div_eq_zero eq_zero_of_one_div_eq_zero
 
 /- warning: mul_left_surjective₀ -> mul_left_surjective₀ is a dubious translation:

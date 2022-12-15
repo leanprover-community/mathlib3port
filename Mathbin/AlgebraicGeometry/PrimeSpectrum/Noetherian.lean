@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.noetherian
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ variable (R : Type u) [CommRing R] [IsNoetherianRing R]
 
 variable {A : Type u} [CommRing A] [IsDomain A] [IsNoetherianRing A]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
 theorem exists_prime_spectrum_prod_le (I : Ideal R) :
@@ -57,7 +57,7 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
 #align prime_spectrum.exists_prime_spectrum_prod_le PrimeSpectrum.exists_prime_spectrum_prod_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian integral domain which is not a field, every non-zero ideal contains a non-zero
   product of prime ideals; in a field, the whole ring is a non-zero ideal containing only 0 as
   product or prime ideals ([samuel, § 3.3, Lemma 3]) -/

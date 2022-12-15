@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.specific_functions
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ theorem f_aux_zero_eq : fAux 0 = expNegInvGlue := by
   · simp [h, expNegInvGlue, f_aux, ne_of_gt (not_le.1 h), P_aux]
 #align exp_neg_inv_glue.f_aux_zero_eq expNegInvGlue.f_aux_zero_eq
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr pow_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr pow_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 (given in this statement in unfolded form) is the `n+1`-th auxiliary function, since
 the polynomial `P_aux (n+1)` was chosen precisely to ensure this. -/
@@ -114,7 +114,7 @@ theorem fAuxDeriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
       ring
   all_goals
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr pow_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr pow_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align exp_neg_inv_glue.f_aux_deriv expNegInvGlue.fAuxDeriv
 
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`

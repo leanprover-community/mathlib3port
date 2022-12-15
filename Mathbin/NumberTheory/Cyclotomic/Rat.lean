@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.rat
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,7 +151,7 @@ theorem cyclotomic_ring_is_integral_closure_of_prime_pow :
     convert adjoin_mono _ y.2
     · simp only [eq_iff_true_of_subsingleton]
     · simp only [eq_iff_true_of_subsingleton]
-    · simp only [PNat.pow_coe, Set.singleton_subset_iff, Set.mem_set_of_eq]
+    · simp only [PNat.pow_coe, Set.singleton_subset_iff, Set.mem_setOf_eq]
       exact hζ.pow_eq_one
   · have : IsCyclotomicExtension {p ^ k} ℤ (CyclotomicRing (p ^ k) ℤ ℚ) := by
       convert CyclotomicRing.is_cyclotomic_extension _ ℤ ℚ

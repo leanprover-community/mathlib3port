@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.pullbacks
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,28 +119,28 @@ def PreservesPullback.iso : G.obj (pullback f g) ≅ pullback (G.map f) (G.map g
   IsLimit.conePointUniqueUpToIso (isLimitOfHasPullbackOfPreservesLimit G f g) (limit.isLimit _)
 #align category_theory.limits.preserves_pullback.iso CategoryTheory.Limits.PreservesPullback.iso
 
-@[reassoc]
+@[reassoc.1]
 theorem PreservesPullback.iso_hom_fst :
     (PreservesPullback.iso G f g).Hom ≫ pullback.fst = G.map pullback.fst := by
   simp [preserves_pullback.iso]
 #align
   category_theory.limits.preserves_pullback.iso_hom_fst CategoryTheory.Limits.PreservesPullback.iso_hom_fst
 
-@[reassoc]
+@[reassoc.1]
 theorem PreservesPullback.iso_hom_snd :
     (PreservesPullback.iso G f g).Hom ≫ pullback.snd = G.map pullback.snd := by
   simp [preserves_pullback.iso]
 #align
   category_theory.limits.preserves_pullback.iso_hom_snd CategoryTheory.Limits.PreservesPullback.iso_hom_snd
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem PreservesPullback.iso_inv_fst :
     (PreservesPullback.iso G f g).inv ≫ G.map pullback.fst = pullback.fst := by
   simp [preserves_pullback.iso, iso.inv_comp_eq]
 #align
   category_theory.limits.preserves_pullback.iso_inv_fst CategoryTheory.Limits.PreservesPullback.iso_inv_fst
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem PreservesPullback.iso_inv_snd :
     (PreservesPullback.iso G f g).inv ≫ G.map pullback.snd = pullback.snd := by
   simp [preserves_pullback.iso, iso.inv_comp_eq]
@@ -232,7 +232,7 @@ def PreservesPushout.iso : pushout (G.map f) (G.map g) ≅ G.obj (pushout f g) :
     (isColimitOfHasPushoutOfPreservesColimit G f g)
 #align category_theory.limits.preserves_pushout.iso CategoryTheory.Limits.PreservesPushout.iso
 
-@[reassoc]
+@[reassoc.1]
 theorem PreservesPushout.inl_iso_hom :
     pushout.inl ≫ (PreservesPushout.iso G f g).Hom = G.map pushout.inl := by
   delta preserves_pushout.iso
@@ -240,7 +240,7 @@ theorem PreservesPushout.inl_iso_hom :
 #align
   category_theory.limits.preserves_pushout.inl_iso_hom CategoryTheory.Limits.PreservesPushout.inl_iso_hom
 
-@[reassoc]
+@[reassoc.1]
 theorem PreservesPushout.inr_iso_hom :
     pushout.inr ≫ (PreservesPushout.iso G f g).Hom = G.map pushout.inr := by
   delta preserves_pushout.iso
@@ -248,14 +248,14 @@ theorem PreservesPushout.inr_iso_hom :
 #align
   category_theory.limits.preserves_pushout.inr_iso_hom CategoryTheory.Limits.PreservesPushout.inr_iso_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem PreservesPushout.inl_iso_inv :
     G.map pushout.inl ≫ (PreservesPushout.iso G f g).inv = pushout.inl := by
   simp [preserves_pushout.iso, iso.comp_inv_eq]
 #align
   category_theory.limits.preserves_pushout.inl_iso_inv CategoryTheory.Limits.PreservesPushout.inl_iso_inv
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem PreservesPushout.inr_iso_inv :
     G.map pushout.inr ≫ (PreservesPushout.iso G f g).inv = pushout.inr := by
   simp [preserves_pushout.iso, iso.comp_inv_eq]

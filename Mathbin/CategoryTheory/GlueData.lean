@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.glue_data
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ attribute [simp] glue_data.t_id
 
 attribute [instance] glue_data.f_id glue_data.f_mono glue_data.f_has_pullback
 
-attribute [reassoc] glue_data.t_fac glue_data.cocycle
+attribute [reassoc.1] glue_data.t_fac glue_data.cocycle
 
 namespace GlueData
 
@@ -96,7 +96,7 @@ theorem t'_iji (i j : D.J) : D.t' i j i = pullback.fst ≫ D.t i j ≫ inv pullb
   simp
 #align category_theory.glue_data.t'_iji CategoryTheory.GlueData.t'_iji
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem t_inv (i j : D.J) : D.t i j ≫ D.t j i = 𝟙 _ := by
   have eq : (pullback_symmetry (D.f i i) (D.f i j)).Hom = pullback.snd ≫ inv pullback.fst := by simp
   have := D.cocycle i j i
@@ -120,7 +120,7 @@ instance t'_is_iso (i j k : D.J) : IsIso (D.t' i j k) :=
   ⟨⟨D.t' j k i ≫ D.t' k i j, D.cocycle _ _ _, by simpa using D.cocycle _ _ _⟩⟩
 #align category_theory.glue_data.t'_is_iso CategoryTheory.GlueData.t'_is_iso
 
-@[reassoc]
+@[reassoc.1]
 theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
     D.t' j k i ≫ D.t' k i j =
       (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom :=
@@ -341,17 +341,17 @@ variable [HasMulticoequalizer D.diagram] [PreservesColimit D.diagram.multispan F
 
 omit H
 
-theorem has_colimit_multispan_comp : HasColimit (D.diagram.multispan ⋙ F) :=
+theorem hasColimitMultispanComp : HasColimit (D.diagram.multispan ⋙ F) :=
   ⟨⟨⟨_, PreservesColimit.preserves (colimit.isColimit _)⟩⟩⟩
 #align
-  category_theory.glue_data.has_colimit_multispan_comp CategoryTheory.GlueData.has_colimit_multispan_comp
+  category_theory.glue_data.has_colimit_multispan_comp CategoryTheory.GlueData.hasColimitMultispanComp
 
 include H
 
 attribute [local instance] has_colimit_multispan_comp
 
 theorem has_colimit_map_glue_data_diagram : HasMulticoequalizer (D.mapGlueData F).diagram :=
-  has_colimit_of_iso (D.diagramIso F).symm
+  hasColimitOfIso (D.diagramIso F).symm
 #align
   category_theory.glue_data.has_colimit_map_glue_data_diagram CategoryTheory.GlueData.has_colimit_map_glue_data_diagram
 
@@ -362,7 +362,7 @@ def gluedIso : F.obj D.glued ≅ (D.mapGlueData F).glued :=
   preservesColimitIso F D.diagram.multispan ≪≫ Limits.HasColimit.isoOfNatIso (D.diagramIso F)
 #align category_theory.glue_data.glued_iso CategoryTheory.GlueData.gluedIso
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_glued_iso_hom (i : D.J) : F.map (D.ι i) ≫ (D.gluedIso F).Hom = (D.mapGlueData F).ι i := by
   erw [ι_preserves_colimits_iso_hom_assoc]
   rw [has_colimit.iso_of_nat_iso_ι_hom]
@@ -370,7 +370,7 @@ theorem ι_glued_iso_hom (i : D.J) : F.map (D.ι i) ≫ (D.gluedIso F).Hom = (D.
   rfl
 #align category_theory.glue_data.ι_glued_iso_hom CategoryTheory.GlueData.ι_glued_iso_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_glued_iso_inv (i : D.J) : (D.mapGlueData F).ι i ≫ (D.gluedIso F).inv = F.map (D.ι i) := by
   rw [iso.comp_inv_eq, ι_glued_iso_hom]
 #align category_theory.glue_data.ι_glued_iso_inv CategoryTheory.GlueData.ι_glued_iso_inv

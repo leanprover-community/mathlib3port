@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,7 @@ theorem zero_apply (m : ∀ i, M₁ i) : (0 : MultilinearMap R M₁ M₂) m = 0 
 section HasSmul
 
 variable {R' A : Type _} [Monoid R'] [Semiring A] [∀ i, Module A (M₁ i)] [DistribMulAction R' M₂]
-  [Module A M₂] [SmulCommClass A R' M₂]
+  [Module A M₂] [SMulCommClass A R' M₂]
 
 instance : HasSmul R' (MultilinearMap A M₁ M₂) :=
   ⟨fun c f =>
@@ -841,7 +841,7 @@ theorem map_update_smul [Fintype ι] (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M
 section DistribMulAction
 
 variable {R' A : Type _} [Monoid R'] [Semiring A] [∀ i, Module A (M₁ i)] [DistribMulAction R' M₂]
-  [Module A M₂] [SmulCommClass A R' M₂]
+  [Module A M₂] [SMulCommClass A R' M₂]
 
 instance :
     DistribMulAction R'
@@ -857,11 +857,11 @@ end DistribMulAction
 section Module
 
 variable {R' A : Type _} [Semiring R'] [Semiring A] [∀ i, Module A (M₁ i)] [Module A M₂]
-  [AddCommMonoid M₃] [Module R' M₃] [Module A M₃] [SmulCommClass A R' M₃]
+  [AddCommMonoid M₃] [Module R' M₃] [Module A M₃] [SMulCommClass A R' M₃]
 
 /-- The space of multilinear maps over an algebra over `R` is a module over `R`, for the pointwise
 addition and scalar multiplication. -/
-instance [Module R' M₂] [SmulCommClass A R' M₂] :
+instance [Module R' M₂] [SMulCommClass A R' M₂] :
     Module R'
       (MultilinearMap A M₁
         M₂) where 

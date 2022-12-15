@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.stalks
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ def stalkMap {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (x : X) :
   (stalkFunctor C (α.base x)).map α.c ≫ X.Presheaf.stalkPushforward C α.base x
 #align algebraic_geometry.PresheafedSpace.stalk_map AlgebraicGeometry.PresheafedSpaceCat.stalkMap
 
-@[simp, elementwise, reassoc]
+@[simp, elementwise, reassoc.1]
 theorem stalk_map_germ {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (U : Opens Y.carrier)
     (x : (Opens.map α.base).obj U) :
     Y.Presheaf.germ ⟨α.base x, x.2⟩ ≫ stalkMap α ↑x = α.c.app (op U) ≫ X.Presheaf.germ x := by
@@ -80,7 +80,7 @@ def restrictStalkIso {U : TopCat} (X : PresheafedSpaceCat.{v} C) {f : U ⟶ (X :
 #align
   algebraic_geometry.PresheafedSpace.restrict_stalk_iso AlgebraicGeometry.PresheafedSpaceCat.restrictStalkIso
 
-@[simp, elementwise, reassoc]
+@[simp, elementwise, reassoc.1]
 theorem restrict_stalk_iso_hom_eq_germ {U : TopCat} (X : PresheafedSpaceCat.{v} C)
     {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (V : Opens U) (x : U) (hx : x ∈ V) :
     (X.restrict h).Presheaf.germ ⟨x, hx⟩ ≫ (restrictStalkIso X h x).Hom =
@@ -90,7 +90,7 @@ theorem restrict_stalk_iso_hom_eq_germ {U : TopCat} (X : PresheafedSpaceCat.{v} 
 #align
   algebraic_geometry.PresheafedSpace.restrict_stalk_iso_hom_eq_germ AlgebraicGeometry.PresheafedSpaceCat.restrict_stalk_iso_hom_eq_germ
 
-@[simp, elementwise, reassoc]
+@[simp, elementwise, reassoc.1]
 theorem restrict_stalk_iso_inv_eq_germ {U : TopCat} (X : PresheafedSpaceCat.{v} C)
     {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (V : Opens U) (x : U) (hx : x ∈ V) :
     X.Presheaf.germ ⟨f x, show f x ∈ h.IsOpenMap.Functor.obj V from ⟨x, hx, rfl⟩⟩ ≫
@@ -222,7 +222,7 @@ def stalkIso {X Y : PresheafedSpaceCat.{v} C} (α : X ≅ Y) (x : X) :
 #align
   algebraic_geometry.PresheafedSpace.stalk_map.stalk_iso AlgebraicGeometry.PresheafedSpaceCat.stalkMap.stalkIso
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem stalk_specializes_stalk_map {X Y : PresheafedSpaceCat.{v} C} (f : X ⟶ Y) {x y : X}
     (h : x ⤳ y) :
     Y.Presheaf.stalkSpecializes (f.base.map_specializes h) ≫ stalkMap f x =

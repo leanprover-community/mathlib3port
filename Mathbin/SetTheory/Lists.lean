@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.lists
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -355,7 +355,7 @@ theorem sizeof_pos {b} (l : Lists' α b) : 0 < SizeOf.sizeOf l := by
       andthen unfold_sizeof trivial_nat_lt
 #align lists.sizeof_pos Lists.sizeof_pos
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
 theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
     SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) := by
   run_tac
@@ -363,10 +363,10 @@ theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
   apply sizeof_pos
 #align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 mutual
   @[instance]
   def Equiv.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists α, Decidable (l₁ ~ l₂)

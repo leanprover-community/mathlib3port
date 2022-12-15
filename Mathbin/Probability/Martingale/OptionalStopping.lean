@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.optional_stopping
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ theorem smul_le_stopped_value_hitting [IsFiniteMeasure μ] (hsub : Submartingale
     intro x hx
     simp_rw [le_sup'_iff, mem_range, Nat.lt_succ_iff] at hx
     refine' stopped_value_hitting_mem _
-    simp only [Set.mem_set_of_eq, exists_prop, hn]
+    simp only [Set.mem_setOf_eq, exists_prop, hn]
     exact
       let ⟨j, hj₁, hj₂⟩ := hx
       ⟨j, hj₁, hj₂⟩
@@ -233,9 +233,9 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
                 measurableConst)
               _))
       intro ω hω
-      rw [Set.mem_set_of_eq] at hω
+      rw [Set.mem_setOf_eq] at hω
       have : hitting f { y : ℝ | ↑ε ≤ y } 0 n ω = n := by
-        simp only [hitting, Set.mem_set_of_eq, exists_prop, Pi.coe_nat, Nat.cast_id,
+        simp only [hitting, Set.mem_setOf_eq, exists_prop, Pi.coe_nat, Nat.cast_id,
           ite_eq_right_iff, forall_exists_index, and_imp]
         intro m hm hεm
         exact

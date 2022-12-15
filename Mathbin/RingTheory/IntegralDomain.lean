@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.integral_domain
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,14 +65,14 @@ def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [Decidab
 theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type _} [CommSemiring R] [IsDomain R]
     [GcdMonoid R] [Unique Rˣ] {a b c : R} {n : ℕ} (cp : IsCoprime a b) (h : a * b = c ^ n) :
     ∃ d : R, a = d ^ n := by
-  refine' exists_eq_pow_of_mul_eq_pow (is_unit_of_dvd_one _ _) h
+  refine' exists_eq_pow_of_mul_eq_pow (isUnit_of_dvd_one _ _) h
   obtain ⟨x, y, hxy⟩ := cp
   rw [← hxy]
   exact
     dvd_add (dvd_mul_of_dvd_right (gcd_dvd_left _ _) _) (dvd_mul_of_dvd_right (gcd_dvd_right _ _) _)
 #align exists_eq_pow_of_mul_eq_pow_of_coprime exists_eq_pow_of_mul_eq_pow_of_coprime
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type _} [CommSemiring R] [IsDomain R]
     [GcdMonoid R] [Unique Rˣ] {n : ℕ} {c : R} {s : Finset ι} {f : ι → R}
     (h : ∀ (i j) (_ : i ∈ s) (_ : j ∈ s), i ≠ j → IsCoprime (f i) (f j))
@@ -114,7 +114,7 @@ def Fintype.fieldOfDomain (R) [CommRing R] [IsDomain R] [DecidableEq R] [Fintype
 
 theorem Finite.is_field_of_domain (R) [CommRing R] [IsDomain R] [Finite R] : IsField R := by
   cases nonempty_fintype R
-  exact @Field.to_is_field R (@Fintype.fieldOfDomain R _ _ (Classical.decEq R) _)
+  exact @Field.toIsField R (@Fintype.fieldOfDomain R _ _ (Classical.decEq R) _)
 #align finite.is_field_of_domain Finite.is_field_of_domain
 
 end Ring
@@ -199,7 +199,7 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
       ext g
       rw [MonoidHom.one_apply]
       cases' hx ⟨f.to_hom_units g, g, rfl⟩ with n hn
-      rwa [Subtype.ext_iff, Units.ext_iff, Subtype.coe_mk, MonoidHom.coe_to_hom_units, one_pow,
+      rwa [Subtype.ext_iff, Units.ext_iff, Subtype.coe_mk, MonoidHom.coe_toHomUnits, one_pow,
         eq_comm] at hn
     replace hx1 : (x : R) - 1 ≠ 0
     exact fun h => hx1 (Subtype.eq (Units.ext (sub_eq_zero.1 h)))
@@ -235,7 +235,8 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
         Eq.symm <|
           sum_bij (fun n _ => x ^ n) (by simp only [mem_univ, forall_true_iff])
             (by
-              simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.coe_pow, coe_coe])
+              simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.val_pow_eq_pow_val,
+                coe_coe])
             (fun m n hm hn =>
               pow_injective_of_lt_order_of _ (by simpa only [mem_range] using hm)
                 (by simpa only [mem_range] using hn))

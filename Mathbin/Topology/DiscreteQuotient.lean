@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.discrete_quotient
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ theorem proj_surjective : Function.Surjective S.proj :=
 theorem fiber_eq (x : X) : S.proj ⁻¹' {S.proj x} = setOf (S.Rel x) := by
   ext1 y
   simp only [Set.mem_preimage, Set.mem_singleton_iff, Quotient.eq',
-    DiscreteQuotient.proj.equations._eqn_1, Set.mem_set_of_eq]
+    DiscreteQuotient.proj.equations._eqn_1, Set.mem_setOf_eq]
   exact ⟨fun h => S.symm _ _ h, fun h => S.symm _ _ h⟩
 #align discrete_quotient.fiber_eq DiscreteQuotient.fiber_eq
 
@@ -143,16 +143,16 @@ theorem proj_continuous : Continuous S.proj :=
   IsLocallyConstant.continuous <| proj_is_locally_constant _
 #align discrete_quotient.proj_continuous DiscreteQuotient.proj_continuous
 
-theorem fiberClosed (A : Set S) : IsClosed (S.proj ⁻¹' A) :=
+theorem fiber_closed (A : Set S) : IsClosed (S.proj ⁻¹' A) :=
   IsClosed.preimage S.proj_continuous ⟨trivial⟩
-#align discrete_quotient.fiber_closed DiscreteQuotient.fiberClosed
+#align discrete_quotient.fiber_closed DiscreteQuotient.fiber_closed
 
 theorem fiber_open (A : Set S) : IsOpen (S.proj ⁻¹' A) :=
   IsOpen.preimage S.proj_continuous trivial
 #align discrete_quotient.fiber_open DiscreteQuotient.fiber_open
 
 theorem fiber_clopen (A : Set S) : IsClopen (S.proj ⁻¹' A) :=
-  ⟨fiber_open _ _, fiberClosed _ _⟩
+  ⟨fiber_open _ _, fiber_closed _ _⟩
 #align discrete_quotient.fiber_clopen DiscreteQuotient.fiber_clopen
 
 instance :

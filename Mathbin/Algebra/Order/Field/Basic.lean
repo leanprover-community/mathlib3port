@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.field.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,19 +104,19 @@ theorem div_nonpos_of_nonneg_of_nonpos (ha : 0 ≤ a) (hb : b ≤ 0) : a / b ≤
 
 theorem zpow_nonneg (ha : 0 ≤ a) : ∀ n : ℤ, 0 ≤ a ^ n
   | (n : ℕ) => by 
-    rw [zpow_coe_nat]
+    rw [zpow_ofNat]
     exact pow_nonneg ha _
   | -[n+1] => by 
-    rw [zpow_neg_succ_of_nat]
+    rw [zpow_negSucc]
     exact inv_nonneg.2 (pow_nonneg ha _)
 #align zpow_nonneg zpow_nonneg
 
 theorem zpow_pos_of_pos (ha : 0 < a) : ∀ n : ℤ, 0 < a ^ n
   | (n : ℕ) => by 
-    rw [zpow_coe_nat]
+    rw [zpow_ofNat]
     exact pow_pos ha _
   | -[n+1] => by 
-    rw [zpow_neg_succ_of_nat]
+    rw [zpow_negSucc]
     exact inv_pos.2 (pow_pos ha _)
 #align zpow_pos_of_pos zpow_pos_of_pos
 
@@ -980,7 +980,7 @@ theorem abs_one_div (a : α) : |1 / a| = 1 / |a| := by rw [abs_div, abs_one]
 theorem pow_minus_two_nonneg : 0 ≤ a ^ (-2 : ℤ) := by
   simp only [inv_nonneg, zpow_neg]
   change 0 ≤ a ^ ((2 : ℕ) : ℤ)
-  rw [zpow_coe_nat]
+  rw [zpow_ofNat]
   apply sq_nonneg
 #align pow_minus_two_nonneg pow_minus_two_nonneg
 

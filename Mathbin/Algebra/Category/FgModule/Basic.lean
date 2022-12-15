@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module algebra.category.fgModule.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -166,7 +166,7 @@ instance (V W : FgModule K) : Module.Finite K (V ⟶ W) :=
 instance closedPredicateModuleFinite :
     MonoidalCategory.ClosedPredicate fun V : ModuleCat.{u} K =>
       Module.Finite K
-        V where prop_ihom' X Y hX hY := @LinearMap.finiteDimensional K _ X _ _ hX Y _ _ hY
+        V where prop_ihom' X Y hX hY := @LinearMap.finite_dimensional K _ X _ _ hX Y _ _ hY
 #align fgModule.closed_predicate_module_finite FgModule.closedPredicateModuleFinite
 
 instance : MonoidalClosed (FgModule K) := by dsimp_result => dsimp [FgModule]; infer_instance
@@ -180,7 +180,7 @@ theorem ihom_obj : (ihom V).obj W = FgModule.of K (V.obj →ₗ[K] W.obj) :=
 
 /-- The dual module is the dual in the rigid monoidal category `fgModule K`. -/
 def fgModuleDual : FgModule K :=
-  ⟨ModuleCat.of K (Module.Dual K V.obj), Subspace.Module.Dual.finiteDimensional⟩
+  ⟨ModuleCat.of K (Module.Dual K V.obj), Subspace.Module.Dual.finite_dimensional⟩
 #align fgModule.fgModule_dual FgModule.fgModuleDual
 
 open CategoryTheory.MonoidalCategory

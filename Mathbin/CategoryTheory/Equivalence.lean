@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baumann, Stephen Morgan, Scott Morrison, Floris van Doorn
 
 ! This file was ported from Lean 3 source module category_theory.equivalence
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -452,12 +452,6 @@ end CancellationLemmas
 
 section
 
-/- warning: category_theory.equivalence.pow_nat -> CategoryTheory.Equivalence.powNat is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], (CategoryTheory.Equivalence.{u1, u1, u2, u2} C _inst_1 C _inst_1) -> Nat -> (CategoryTheory.Equivalence.{u1, u1, u2, u2} C _inst_1 C _inst_1)
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C], (CategoryTheory.Equivalence.{u2, u2, u1, u1} C _inst_1 C _inst_1) -> Nat -> (CategoryTheory.Equivalence.{u2, u2, u1, u1} C _inst_1 C _inst_1)
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.pow_nat CategoryTheory.Equivalence.powNatₓ'. -/
 -- There's of course a monoid structure on `C ≌ C`,
 -- but let's not encourage using it.
 -- The power structure is nevertheless useful.
@@ -468,12 +462,6 @@ def powNat (e : C ≌ C) : ℕ → (C ≌ C)
   | n + 2 => e.trans (pow_nat (n + 1))
 #align category_theory.equivalence.pow_nat CategoryTheory.Equivalence.powNat
 
-/- warning: category_theory.equivalence.pow -> CategoryTheory.Equivalence.pow is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], (CategoryTheory.Equivalence.{u1, u1, u2, u2} C _inst_1 C _inst_1) -> Int -> (CategoryTheory.Equivalence.{u1, u1, u2, u2} C _inst_1 C _inst_1)
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C], (CategoryTheory.Equivalence.{u2, u2, u1, u1} C _inst_1 C _inst_1) -> Int -> (CategoryTheory.Equivalence.{u2, u2, u1, u1} C _inst_1 C _inst_1)
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.pow CategoryTheory.Equivalence.powₓ'. -/
 /-- Powers of an auto-equivalence.  Use `(^)` instead. -/
 def pow (e : C ≌ C) : ℤ → (C ≌ C)
   | Int.ofNat n => e.powNat n
@@ -518,7 +506,7 @@ class IsEquivalence (F : C ⥤ D) where mk' ::
 
 restate_axiom is_equivalence.functor_unit_iso_comp'
 
-attribute [simp, reassoc] is_equivalence.functor_unit_iso_comp
+attribute [simp, reassoc.1] is_equivalence.functor_unit_iso_comp
 
 namespace IsEquivalence
 

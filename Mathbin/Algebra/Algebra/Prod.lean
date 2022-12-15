@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.prod
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ variable {R A B}
 def prod (f : A →ₐ[R] B) (g : A →ₐ[R] C) : A →ₐ[R] B × C :=
   { f.toRingHom.Prod g.toRingHom with
     commutes' := fun r => by
-      simp only [to_ring_hom_eq_coe, RingHom.to_fun_eq_coe, RingHom.prod_apply, coe_to_ring_hom,
+      simp only [to_ring_hom_eq_coe, RingHom.toFun_eq_coe, RingHom.prod_apply, coe_to_ring_hom,
         commutes, Prod.algebra_map_apply] }
 #align alg_hom.prod AlgHom.prod
 

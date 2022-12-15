@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.content
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ theorem is_primitive_iff_is_unit_of_C_dvd {p : R[X]} :
 
 @[simp]
 theorem is_primitive_one : IsPrimitive (1 : R[X]) := fun r h =>
-  is_unit_C.mp (is_unit_of_dvd_one (c r) h)
+  is_unit_C.mp (isUnit_of_dvd_one (c r) h)
 #align polynomial.is_primitive_one Polynomial.is_primitive_one
 
 theorem Monic.is_primitive {p : R[X]} (hp : p.Monic) : p.IsPrimitive := by
@@ -218,7 +218,7 @@ theorem C_content_dvd (p : R[X]) : c p.content ∣ p :=
 theorem is_primitive_iff_content_eq_one {p : R[X]} : p.IsPrimitive ↔ p.content = 1 := by
   rw [← normalize_content, normalize_eq_one, is_primitive]
   simp_rw [← dvd_content_iff_C_dvd]
-  exact ⟨fun h => h p.content (dvd_refl p.content), fun h r hdvd => is_unit_of_dvd_unit hdvd h⟩
+  exact ⟨fun h => h p.content (dvd_refl p.content), fun h r hdvd => isUnit_of_dvd_unit hdvd h⟩
 #align polynomial.is_primitive_iff_content_eq_one Polynomial.is_primitive_iff_content_eq_one
 
 theorem IsPrimitive.content_eq_one {p : R[X]} (hp : p.IsPrimitive) : p.content = 1 :=
@@ -369,7 +369,7 @@ theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by
     ·
       rw [mul_assoc, content_C_mul, content_C_mul, mul_comm p.prim_part, mul_assoc, content_C_mul,
         content_C_mul, h, mul_one, content_prim_part, content_prim_part, mul_one, mul_one]
-    rw [← normalize_content, normalize_eq_one, is_unit_iff_dvd_one,
+    rw [← normalize_content, normalize_eq_one, isUnit_iff_dvd_one,
       content_eq_gcd_leading_coeff_content_erase_lead, leading_coeff_mul, gcd_comm]
     apply (gcd_mul_dvd_mul_gcd _ _ _).trans
     rw [content_mul_aux, ih, content_prim_part, mul_one, gcd_comm, ←
@@ -406,7 +406,7 @@ theorem prim_part_mul {p q : R[X]} (h0 : p * q ≠ 0) : (p * q).primPart = p.pri
 theorem IsPrimitive.is_primitive_of_dvd {p q : R[X]} (hp : p.IsPrimitive) (hdvd : q ∣ p) :
     q.IsPrimitive := by 
   rcases hdvd with ⟨r, rfl⟩
-  rw [is_primitive_iff_content_eq_one, ← normalize_content, normalize_eq_one, is_unit_iff_dvd_one]
+  rw [is_primitive_iff_content_eq_one, ← normalize_content, normalize_eq_one, isUnit_iff_dvd_one]
   apply Dvd.intro r.content
   rwa [is_primitive_iff_content_eq_one, content_mul] at hp
 #align polynomial.is_primitive.is_primitive_of_dvd Polynomial.IsPrimitive.is_primitive_of_dvd

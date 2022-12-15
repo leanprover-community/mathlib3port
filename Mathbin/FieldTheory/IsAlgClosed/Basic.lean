@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,20 +61,20 @@ class IsAlgClosed : Prop where
 
 See also `is_alg_closed.splits_domain` for the case where `K` is algebraically closed.
 -/
-theorem IsAlgClosed.splitsCodomain {k K : Type _} [Field k] [IsAlgClosed k] [Field K] {f : K →+* k}
+theorem IsAlgClosed.splits_codomain {k K : Type _} [Field k] [IsAlgClosed k] [Field K] {f : K →+* k}
     (p : K[X]) : p.Splits f := by
   convert IsAlgClosed.splits (p.map f)
   simp [splits_map_iff]
-#align is_alg_closed.splits_codomain IsAlgClosed.splitsCodomain
+#align is_alg_closed.splits_codomain IsAlgClosed.splits_codomain
 
 /-- Every polynomial splits in the field extension `f : K →+* k` if `K` is algebraically closed.
 
 See also `is_alg_closed.splits_codomain` for the case where `k` is algebraically closed.
 -/
-theorem IsAlgClosed.splitsDomain {k K : Type _} [Field k] [IsAlgClosed k] [Field K] {f : k →+* K}
+theorem IsAlgClosed.splits_domain {k K : Type _} [Field k] [IsAlgClosed k] [Field K] {f : k →+* K}
     (p : k[X]) : p.Splits f :=
-  Polynomial.splitsOfSplitsId _ <| IsAlgClosed.splits _
-#align is_alg_closed.splits_domain IsAlgClosed.splitsDomain
+  Polynomial.splits_of_splits_id _ <| IsAlgClosed.splits _
+#align is_alg_closed.splits_domain IsAlgClosed.splits_domain
 
 namespace IsAlgClosed
 
@@ -145,7 +145,7 @@ theorem ofExistsRoot (H : ∀ p : k[X], p.Monic → Irreducible p → ∃ x, p.e
 
 theorem degree_eq_one_of_irreducible [IsAlgClosed k] {p : k[X]} (hp : Irreducible p) :
     p.degree = 1 :=
-  degree_eq_one_of_irreducible_of_splits hp (IsAlgClosed.splitsCodomain _)
+  degree_eq_one_of_irreducible_of_splits hp (IsAlgClosed.splits_codomain _)
 #align is_alg_closed.degree_eq_one_of_irreducible IsAlgClosed.degree_eq_one_of_irreducible
 
 theorem algebra_map_surjective_of_is_integral {k K : Type _} [Field k] [Ring K] [IsDomain K]
@@ -253,7 +253,7 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
         emb :=
           Subalgebra.suprLift (fun i : c => (i : subfield_with_hom K L M hL).carrier)
             (fun i j =>
-              let ⟨k, hik, hjk⟩ := directed_on_iff_directed.1 hc.directed_on i j
+              let ⟨k, hik, hjk⟩ := directedOn_iff_directed.1 hc.directed_on i j
               ⟨k, hik.fst, hjk.fst⟩)
             (fun i => (i : subfield_with_hom K L M hL).emb)
             (by 
@@ -395,7 +395,7 @@ instance (priority := 500) {K : Type _} [Field K] [IsAlgClosed K] : Infinite K :
   have hfsep : separable f := separable_X_pow_sub_C 1 (by simp) one_ne_zero
   apply Nat.not_succ_le_self (Fintype.card K)
   have hroot : n.succ = Fintype.card (f.root_set K) := by
-    erw [card_root_set_eq_nat_degree hfsep (IsAlgClosed.splitsDomain _), nat_degree_X_pow_sub_C]
+    erw [card_root_set_eq_nat_degree hfsep (IsAlgClosed.splits_domain _), nat_degree_X_pow_sub_C]
   rw [hroot]
   exact Fintype.card_le_of_injective coe Subtype.coe_injective
 

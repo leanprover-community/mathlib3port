@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.normed_space.compact_operator
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -310,7 +310,7 @@ theorem IsCompactOperator.cod_restrict {f : M₁ → M₂} (hf : IsCompactOperat
     {V : Submodule R₂ M₂} (hV : ∀ x, f x ∈ V) (h_closed : IsClosed (V : Set M₂)) :
     IsCompactOperator (Set.codRestrict f V hV) :=
   let ⟨K, hK, hKf⟩ := hf
-  ⟨coe ⁻¹' K, (closedEmbeddingSubtypeCoe h_closed).is_compact_preimage hK, hKf⟩
+  ⟨coe ⁻¹' K, (closed_embedding_subtype_coe h_closed).is_compact_preimage hK, hKf⟩
 #align is_compact_operator.cod_restrict IsCompactOperator.cod_restrict
 
 end CodRestrict
@@ -423,18 +423,18 @@ theorem ContinuousLinearMap.mk_of_is_compact_operator_mem_compact_operator {f : 
 
 end Continuous
 
-theorem isClosedSetOfIsCompactOperator {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
+theorem is_closed_set_of_is_compact_operator {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
     [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} [RingHomIsometric σ₁₂] {M₁ M₂ : Type _}
     [SeminormedAddCommGroup M₁] [NormedAddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [NormedSpace 𝕜₂ M₂]
     [CompleteSpace M₂] : IsClosed { f : M₁ →SL[σ₁₂] M₂ | IsCompactOperator f } := by
-  refine' isClosedOfClosureSubset _
+  refine' is_closed_of_closure_subset _
   rintro u hu
   rw [Metric.mem_closure_iff] at hu
   suffices TotallyBounded (u '' Metric.closedBall 0 1) by
     change IsCompactOperator (u : M₁ →ₛₗ[σ₁₂] M₂)
     rw [is_compact_operator_iff_is_compact_closure_image_closed_ball (u : M₁ →ₛₗ[σ₁₂] M₂)
         zero_lt_one]
-    exact is_compact_of_totally_bounded_is_closed this.closure isClosedClosure
+    exact is_compact_of_totally_bounded_is_closed this.closure is_closed_closure
   rw [Metric.totally_bounded_iff]
   intro ε hε
   rcases hu (ε / 2) (by linarith) with ⟨v, hv, huv⟩
@@ -460,14 +460,14 @@ theorem isClosedSetOfIsCompactOperator {𝕜₁ 𝕜₂ : Type _} [NontriviallyN
     _ = dist u v := (dist_eq_norm _ _).symm
     _ < ε / 2 := huv
     
-#align is_closed_set_of_is_compact_operator isClosedSetOfIsCompactOperator
+#align is_closed_set_of_is_compact_operator is_closed_set_of_is_compact_operator
 
 theorem compact_operator_topological_closure {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
     [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} [RingHomIsometric σ₁₂] {M₁ M₂ : Type _}
     [SeminormedAddCommGroup M₁] [NormedAddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [NormedSpace 𝕜₂ M₂]
     [CompleteSpace M₂] :
     (compactOperator σ₁₂ M₁ M₂).topologicalClosure = compactOperator σ₁₂ M₁ M₂ :=
-  SetLike.ext' isClosedSetOfIsCompactOperator.closure_eq
+  SetLike.ext' is_closed_set_of_is_compact_operator.closure_eq
 #align compact_operator_topological_closure compact_operator_topological_closure
 
 theorem is_compact_operator_of_tendsto {ι 𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
@@ -475,6 +475,6 @@ theorem is_compact_operator_of_tendsto {ι 𝕜₁ 𝕜₂ : Type _} [Nontrivial
     [SeminormedAddCommGroup M₁] [NormedAddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [NormedSpace 𝕜₂ M₂]
     [CompleteSpace M₂] {l : Filter ι} [l.ne_bot] {F : ι → M₁ →SL[σ₁₂] M₂} {f : M₁ →SL[σ₁₂] M₂}
     (hf : Tendsto F l (𝓝 f)) (hF : ∀ᶠ i in l, IsCompactOperator (F i)) : IsCompactOperator f :=
-  isClosedSetOfIsCompactOperator.mem_of_tendsto hf hF
+  is_closed_set_of_is_compact_operator.mem_of_tendsto hf hF
 #align is_compact_operator_of_tendsto is_compact_operator_of_tendsto
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.nonsingular_inverse
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,12 +71,12 @@ variable [Fintype n] [DecidableEq n] [CommRing α]
 
 /-- A copy of `inv_of_mul_self` using `⬝` not `*`. -/
 protected theorem inv_of_mul_self (A : Matrix n n α) [Invertible A] : ⅟ A ⬝ A = 1 :=
-  inv_of_mul_self A
+  invOf_mul_self A
 #align matrix.inv_of_mul_self Matrix.inv_of_mul_self
 
 /-- A copy of `mul_inv_of_self` using `⬝` not `*`. -/
 protected theorem mul_inv_of_self (A : Matrix n n α) [Invertible A] : A ⬝ ⅟ A = 1 :=
-  mul_inv_of_self A
+  mul_invOf_self A
 #align matrix.mul_inv_of_self Matrix.mul_inv_of_self
 
 /-- A copy of `inv_of_mul_self_assoc` using `⬝` not `*`. -/
@@ -106,9 +106,9 @@ def invertibleOfDetInvertible [Invertible A.det] :
     Invertible A where 
   invOf := ⅟ A.det • A.adjugate
   mul_inv_of_self := by
-    rw [mul_smul_comm, Matrix.mul_eq_mul, mul_adjugate, smul_smul, inv_of_mul_self, one_smul]
+    rw [mul_smul_comm, Matrix.mul_eq_mul, mul_adjugate, smul_smul, invOf_mul_self, one_smul]
   inv_of_mul_self := by
-    rw [smul_mul_assoc, Matrix.mul_eq_mul, adjugate_mul, smul_smul, inv_of_mul_self, one_smul]
+    rw [smul_mul_assoc, Matrix.mul_eq_mul, adjugate_mul, smul_smul, invOf_mul_self, one_smul]
 #align matrix.invertible_of_det_invertible Matrix.invertibleOfDetInvertible
 
 theorem inv_of_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.adjugate := by
@@ -134,7 +134,7 @@ def detInvertibleOfRightInverse (h : A ⬝ B = 1) :
 
 /-- If `A` has a constructive inverse, produce one for `A.det`. -/
 def detInvertibleOfInvertible [Invertible A] : Invertible A.det :=
-  detInvertibleOfLeftInverse A (⅟ A) (inv_of_mul_self _)
+  detInvertibleOfLeftInverse A (⅟ A) (invOf_mul_self _)
 #align matrix.det_invertible_of_invertible Matrix.detInvertibleOfInvertible
 
 theorem det_inv_of [Invertible A] [Invertible A.det] : (⅟ A).det = ⅟ A.det := by
@@ -213,7 +213,7 @@ theorem is_unit_iff_is_unit_det : IsUnit A ↔ IsUnit A.det := by
 
 
 theorem is_unit_det_of_invertible [Invertible A] : IsUnit A.det :=
-  @is_unit_of_invertible _ _ _ (detInvertibleOfInvertible A)
+  @isUnit_of_invertible _ _ _ (detInvertibleOfInvertible A)
 #align matrix.is_unit_det_of_invertible Matrix.is_unit_det_of_invertible
 
 variable {A B}
@@ -227,11 +227,11 @@ theorem is_unit_of_right_inverse (h : A ⬝ B = 1) : IsUnit A :=
 #align matrix.is_unit_of_right_inverse Matrix.is_unit_of_right_inverse
 
 theorem is_unit_det_of_left_inverse (h : B ⬝ A = 1) : IsUnit A.det :=
-  @is_unit_of_invertible _ _ _ (detInvertibleOfLeftInverse _ _ h)
+  @isUnit_of_invertible _ _ _ (detInvertibleOfLeftInverse _ _ h)
 #align matrix.is_unit_det_of_left_inverse Matrix.is_unit_det_of_left_inverse
 
 theorem is_unit_det_of_right_inverse (h : A ⬝ B = 1) : IsUnit A.det :=
-  @is_unit_of_invertible _ _ _ (detInvertibleOfRightInverse _ _ h)
+  @isUnit_of_invertible _ _ _ (detInvertibleOfRightInverse _ _ h)
 #align matrix.is_unit_det_of_right_inverse Matrix.is_unit_det_of_right_inverse
 
 theorem det_ne_zero_of_left_inverse [Nontrivial α] (h : B ⬝ A = 1) : A.det ≠ 0 :=
@@ -284,7 +284,7 @@ nonsingular inverse. -/
 @[simp, norm_cast]
 theorem coe_units_inv (A : (Matrix n n α)ˣ) : ↑A⁻¹ = (A⁻¹ : Matrix n n α) := by
   letI := A.invertible
-  rw [← inv_of_eq_nonsing_inv, inv_of_units]
+  rw [← inv_of_eq_nonsing_inv, invOf_units]
 #align matrix.coe_units_inv Matrix.coe_units_inv
 
 /-- The nonsingular inverse is the same as the general `ring.inverse`. -/
@@ -325,7 +325,7 @@ instance [Invertible A] : Invertible A⁻¹ := by
 
 @[simp]
 theorem inv_inv_of_invertible [Invertible A] : A⁻¹⁻¹ = A := by
-  simp only [← inv_of_eq_nonsing_inv, inv_of_inv_of]
+  simp only [← inv_of_eq_nonsing_inv, invOf_invOf]
 #align matrix.inv_inv_of_invertible Matrix.inv_inv_of_invertible
 
 @[simp]
@@ -443,7 +443,7 @@ noncomputable def nonsingInvUnit (h : IsUnit A.det) : (Matrix n n α)ˣ :=
 #align matrix.nonsing_inv_unit Matrix.nonsingInvUnit
 
 theorem unit_of_det_invertible_eq_nonsing_inv_unit [Invertible A.det] :
-    unitOfDetInvertible A = nonsingInvUnit A (is_unit_of_invertible _) := by
+    unitOfDetInvertible A = nonsingInvUnit A (isUnit_of_invertible _) := by
   ext
   rfl
 #align
@@ -454,7 +454,7 @@ variable {A} {B}
 /-- If matrix A is left invertible, then its inverse equals its left inverse. -/
 theorem inv_eq_left_inv (h : B ⬝ A = 1) : A⁻¹ = B :=
   letI := invertible_of_left_inverse _ _ h
-  inv_of_eq_nonsing_inv A ▸ inv_of_eq_left_inv h
+  inv_of_eq_nonsing_inv A ▸ invOf_eq_left_inv h
 #align matrix.inv_eq_left_inv Matrix.inv_eq_left_inv
 
 /-- If matrix A is right invertible, then its inverse equals its right inverse. -/
@@ -544,14 +544,14 @@ def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonal v)] :
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp
       rw [mul_assoc, prod_erase_mul _ _ (Finset.mem_univ _), ← det_diagonal]
-      exact mul_inv_of_self _
+      exact mul_invOf_self _
   mul_inv_of_self :=
     funext fun i => by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp
       rw [mul_left_comm, mul_prod_erase _ _ (Finset.mem_univ _), ← det_diagonal]
-      exact mul_inv_of_self _
+      exact mul_invOf_self _
 #align matrix.invertible_of_diagonal_invertible Matrix.invertibleOfDiagonalInvertible
 
 /-- Together `matrix.diagonal_invertible` and `matrix.invertible_of_diagonal_invertible` form an
@@ -661,7 +661,7 @@ theorem det_from_blocks₁₁ (A : Matrix m m α) (B : Matrix m n α) (C : Matri
 theorem det_from_blocks_one₁₁ (B : Matrix m n α) (C : Matrix n m α) (D : Matrix n n α) :
     (Matrix.fromBlocks 1 B C D).det = det (D - C ⬝ B) := by
   haveI : Invertible (1 : Matrix m m α) := invertibleOne
-  rw [det_from_blocks₁₁, inv_of_one, Matrix.mul_one, det_one, one_mul]
+  rw [det_from_blocks₁₁, invOf_one, Matrix.mul_one, det_one, one_mul]
 #align matrix.det_from_blocks_one₁₁ Matrix.det_from_blocks_one₁₁
 
 /-- Determinant of a 2×2 block matrix, expanded around an invertible bottom right element in terms
@@ -679,7 +679,7 @@ theorem det_from_blocks₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matri
 theorem det_from_blocks_one₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α) :
     (Matrix.fromBlocks A B C 1).det = det (A - B ⬝ C) := by
   haveI : Invertible (1 : Matrix n n α) := invertibleOne
-  rw [det_from_blocks₂₂, inv_of_one, Matrix.mul_one, det_one, one_mul]
+  rw [det_from_blocks₂₂, invOf_one, Matrix.mul_one, det_one, one_mul]
 #align matrix.det_from_blocks_one₂₂ Matrix.det_from_blocks_one₂₂
 
 /-- The **Weinstein–Aronszajn identity**. Note the `1` on the LHS is of shape m×m, while the `1` on

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space.gluing
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,11 +115,11 @@ local notation "π₂ " i ", " j ", " k => @pullback.snd _ _ _ _ _ (D.f i j) (D.
 
 -- mathport name: «exprπ₁⁻¹ , , »
 local notation "π₁⁻¹ " i ", " j ", " k =>
-  (PresheafedSpaceCat.IsOpenImmersion.pullback_fst_of_right (D.f i j) (D.f i k)).invApp
+  (PresheafedSpaceCat.IsOpenImmersion.pullbackFstOfRight (D.f i j) (D.f i k)).invApp
 
 -- mathport name: «exprπ₂⁻¹ , , »
 local notation "π₂⁻¹ " i ", " j ", " k =>
-  (PresheafedSpaceCat.IsOpenImmersion.pullback_snd_of_left (D.f i j) (D.f i k)).invApp
+  (PresheafedSpaceCat.IsOpenImmersion.pullbackSndOfLeft (D.f i j) (D.f i k)).invApp
 
 /-- The glue data of topological spaces associated to a family of glue data of PresheafedSpaces. -/
 abbrev toTopGlueData : TopCat.GlueData :=
@@ -150,7 +150,7 @@ theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).carrier) :
   algebraic_geometry.PresheafedSpace.glue_data.pullback_base AlgebraicGeometry.PresheafedSpaceCat.GlueData.pullback_base
 
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/0GiBUh6.png) commute. -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem f_inv_app_f_app (i j k : D.J) (U : Opens (D.V (i, j)).carrier) :
     (D.f_open i j).invApp U ≫ (D.f i k).c.app _ =
       (π₁ i, j, k).c.app (op U) ≫
@@ -209,7 +209,7 @@ theorem snd_inv_app_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k
   algebraic_geometry.PresheafedSpace.glue_data.snd_inv_app_t_app' AlgebraicGeometry.PresheafedSpaceCat.GlueData.snd_inv_app_t_app'
 
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/q6X1GJ9.png) commute. -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem snd_inv_app_t_app (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)).carrier) :
     (π₂⁻¹ i, j, k) U ≫ (D.t k i).c.app _ =
       (D.t' k i j).c.app _ ≫
@@ -482,14 +482,14 @@ instance componentwise_diagram_π_is_iso (i : D.J) (U : Opens (D.U i).carrier) :
 #align
   algebraic_geometry.PresheafedSpace.glue_data.componentwise_diagram_π_is_iso AlgebraicGeometry.PresheafedSpaceCat.GlueData.componentwise_diagram_π_is_iso
 
-instance ι_is_open_immersion (i : D.J) :
+instance ιIsOpenImmersion (i : D.J) :
     IsOpenImmersion (𝖣.ι i) where 
   base_open := D.ι_open_embedding i
   c_iso U := by 
     erw [← colimit_presheaf_obj_iso_componentwise_limit_hom_π]
     infer_instance
 #align
-  algebraic_geometry.PresheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_is_open_immersion
+  algebraic_geometry.PresheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.PresheafedSpaceCat.GlueData.ιIsOpenImmersion
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.
 

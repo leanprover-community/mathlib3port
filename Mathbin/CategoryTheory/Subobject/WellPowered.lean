@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.well_powered
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,9 +72,9 @@ section
 
 variable [WellPowered C]
 
-instance essentially_small_mono_over (X : C) : EssentiallySmall.{v} (MonoOver X) :=
+instance essentiallySmallMonoOver (X : C) : EssentiallySmall.{v} (MonoOver X) :=
   (essentially_small_mono_over_iff_small_subobject X).mpr (WellPowered.subobject_small X)
-#align category_theory.essentially_small_mono_over CategoryTheory.essentially_small_mono_over
+#align category_theory.essentially_small_mono_over CategoryTheory.essentiallySmallMonoOver
 
 end
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.natural_transformation
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ restate_axiom oplax_nat_trans.naturality_id'
 
 restate_axiom oplax_nat_trans.naturality_comp'
 
-attribute [simp, reassoc]
+attribute [simp, reassoc.1]
   oplax_nat_trans.naturality_naturality oplax_nat_trans.naturality_id oplax_nat_trans.naturality_comp
 
 namespace OplaxNatTrans
@@ -96,14 +96,14 @@ section
 
 variable {a b c : B} {a' : C}
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_left_naturality_naturality (f : a' ⟶ G.obj a) {g h : a ⟶ b} (β : g ⟶ h) :
     f ◁ G.map₂ β ▷ θ.app b ≫ f ◁ θ.naturality h = f ◁ θ.naturality g ≫ f ◁ θ.app a ◁ H.map₂ β := by
   simp_rw [← bicategory.whisker_left_comp, naturality_naturality]
 #align
   category_theory.oplax_nat_trans.whisker_left_naturality_naturality CategoryTheory.OplaxNatTrans.whisker_left_naturality_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_right_naturality_naturality {f g : a ⟶ b} (β : f ⟶ g) (h : G.obj b ⟶ a') :
     F.map₂ β ▷ η.app b ▷ h ≫ η.naturality g ▷ h =
       η.naturality f ▷ h ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.map₂ β ▷ h ≫ (α_ _ _ _).inv :=
@@ -111,7 +111,7 @@ theorem whisker_right_naturality_naturality {f g : a ⟶ b} (β : f ⟶ g) (h : 
 #align
   category_theory.oplax_nat_trans.whisker_right_naturality_naturality CategoryTheory.OplaxNatTrans.whisker_right_naturality_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_left_naturality_comp (f : a' ⟶ G.obj a) (g : a ⟶ b) (h : b ⟶ c) :
     f ◁ θ.naturality (g ≫ h) ≫ f ◁ θ.app a ◁ H.map_comp g h =
       f ◁ G.map_comp g h ▷ θ.app c ≫
@@ -122,7 +122,7 @@ theorem whisker_left_naturality_comp (f : a' ⟶ G.obj a) (g : a ⟶ b) (h : b �
 #align
   category_theory.oplax_nat_trans.whisker_left_naturality_comp CategoryTheory.OplaxNatTrans.whisker_left_naturality_comp
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_right_naturality_comp (f : a ⟶ b) (g : b ⟶ c) (h : G.obj c ⟶ a') :
     η.naturality (f ≫ g) ▷ h ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.map_comp f g ▷ h =
       F.map_comp f g ▷ η.app c ▷ h ≫
@@ -138,7 +138,7 @@ theorem whisker_right_naturality_comp (f : a ⟶ b) (g : b ⟶ c) (h : G.obj c �
 #align
   category_theory.oplax_nat_trans.whisker_right_naturality_comp CategoryTheory.OplaxNatTrans.whisker_right_naturality_comp
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_left_naturality_id (f : a' ⟶ G.obj a) :
     f ◁ θ.naturality (𝟙 a) ≫ f ◁ θ.app a ◁ H.map_id a =
       f ◁ G.map_id a ▷ θ.app a ≫ f ◁ (λ_ (θ.app a)).Hom ≫ f ◁ (ρ_ (θ.app a)).inv :=
@@ -146,7 +146,7 @@ theorem whisker_left_naturality_id (f : a' ⟶ G.obj a) :
 #align
   category_theory.oplax_nat_trans.whisker_left_naturality_id CategoryTheory.OplaxNatTrans.whisker_left_naturality_id
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_right_naturality_id (f : G.obj a ⟶ a') :
     η.naturality (𝟙 a) ▷ f ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.map_id a ▷ f =
       F.map_id a ▷ η.app a ▷ f ≫ (λ_ (η.app a)).Hom ▷ f ≫ (ρ_ (η.app a)).inv ▷ f ≫ (α_ _ _ _).Hom :=
@@ -221,7 +221,7 @@ structure Modification (η θ : F ⟶ G) where
 
 restate_axiom modification.naturality'
 
-attribute [simp, reassoc] modification.naturality
+attribute [simp, reassoc.1] modification.naturality
 
 variable {η θ ι : F ⟶ G}
 
@@ -243,14 +243,14 @@ section
 
 variable (Γ : Modification η θ) {a b c : B} {a' : C}
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_left_naturality (f : a' ⟶ F.obj b) (g : b ⟶ c) :
     f ◁ F.map g ◁ Γ.app c ≫ f ◁ θ.naturality g = f ◁ η.naturality g ≫ f ◁ Γ.app b ▷ G.map g := by
   simp_rw [← bicategory.whisker_left_comp, naturality]
 #align
   category_theory.oplax_nat_trans.modification.whisker_left_naturality CategoryTheory.OplaxNatTrans.Modification.whisker_left_naturality
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_right_naturality (f : a ⟶ b) (g : G.obj b ⟶ a') :
     F.map f ◁ Γ.app b ▷ g ≫ (α_ _ _ _).inv ≫ θ.naturality f ▷ g =
       (α_ _ _ _).inv ≫ η.naturality f ▷ g ≫ Γ.app a ▷ G.map f ▷ g :=

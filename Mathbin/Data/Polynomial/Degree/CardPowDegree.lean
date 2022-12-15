@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.card_pow_degree
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ theorem card_pow_degree_is_euclidean : IsEuclidean (cardPowDegree : AbsoluteValu
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n =>
     pow_pos (Int.coe_nat_pos.mpr card_pos) n
   { map_lt_map_iff' := fun p q => by
-      simp only [EuclideanDomain.R, card_pow_degree_apply]
+      simp only [EuclideanDomain.r, card_pow_degree_apply]
       split_ifs with hp hq hq
       · simp only [hp, hq, lt_self_iff_false]
       ·

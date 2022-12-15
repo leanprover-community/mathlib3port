@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.set.lattice
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2441,7 +2441,7 @@ theorem sigma_to_Union_injective (h : ∀ i j, i ≠ j → Disjoint (t i) (t j))
   | ⟨a₁, b₁, h₁⟩, ⟨a₂, b₂, h₂⟩, Eq =>
     have b_eq : b₁ = b₂ := congr_arg Subtype.val Eq
     have a_eq : a₁ = a₂ :=
-      Classical.by_contradiction fun ne =>
+      by_contradiction fun ne =>
         have : b₁ ∈ t a₁ ∩ t a₂ := ⟨h₁, b_eq.symm ▸ h₂⟩
         (h _ _ Ne).le_bot this
     Sigma.eq a_eq <| Subtype.eq <| by subst b_eq <;> subst a_eq

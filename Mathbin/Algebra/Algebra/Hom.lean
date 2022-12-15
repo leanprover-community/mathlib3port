@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.hom
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,11 +171,11 @@ theorem coe_ring_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A
 #align alg_hom.coe_ring_hom_injective AlgHom.coe_ring_hom_injective
 
 theorem coe_monoid_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →* B) :=
-  RingHom.coe_monoid_hom_injective.comp coe_ring_hom_injective
+  RingHom.coe_monoidHom_injective.comp coe_ring_hom_injective
 #align alg_hom.coe_monoid_hom_injective AlgHom.coe_monoid_hom_injective
 
 theorem coe_add_monoid_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+ B) :=
-  RingHom.coe_add_monoid_hom_injective.comp coe_ring_hom_injective
+  RingHom.coe_addMonoidHom_injective.comp coe_ring_hom_injective
 #align alg_hom.coe_add_monoid_hom_injective AlgHom.coe_add_monoid_hom_injective
 
 protected theorem congr_fun {φ₁ φ₂ : A →ₐ[R] B} (H : φ₁ = φ₂) (x : A) : φ₁ x = φ₂ x :=
@@ -532,7 +532,7 @@ namespace MulSemiringAction
 
 variable {M G : Type _} (R A : Type _) [CommSemiring R] [Semiring A] [Algebra R A]
 
-variable [Monoid M] [MulSemiringAction M A] [SmulCommClass M R A]
+variable [Monoid M] [MulSemiringAction M A] [SMulCommClass M R A]
 
 /-- Each element of the monoid defines a algebra homomorphism.
 
@@ -545,7 +545,7 @@ def toAlgHom (m : M) : A →ₐ[R] A :=
     commutes' := smul_algebra_map _ }
 #align mul_semiring_action.to_alg_hom MulSemiringAction.toAlgHom
 
-theorem to_alg_hom_injective [HasFaithfulSmul M A] :
+theorem to_alg_hom_injective [FaithfulSMul M A] :
     Function.Injective (MulSemiringAction.toAlgHom R A : M → A →ₐ[R] A) := fun m₁ m₂ h =>
   eq_of_smul_eq_smul fun r => AlgHom.ext_iff.1 h r
 #align mul_semiring_action.to_alg_hom_injective MulSemiringAction.to_alg_hom_injective

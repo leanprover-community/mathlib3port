@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.simple_func_dense
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,8 +160,8 @@ theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
   rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
   simp only [approx_on, coe_comp]
-  refine' tendsto_nearest_pt (closure_minimal _ isClosedClosure hx)
-  simp only [Nat.range_cases_on, closure_union, range_comp coe]
+  refine' tendsto_nearest_pt (closure_minimal _ is_closed_closure hx)
+  simp only [Nat.range_casesOn, closure_union, range_comp coe]
   exact
     subset.trans (image_closure_subset_closure_image continuous_subtype_coe)
       (subset_union_right _ _)

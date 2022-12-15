@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -540,7 +540,7 @@ open Submonoid
 def eqMlocus (f g : M →* N) :
     Submonoid M where 
   carrier := { x | f x = g x }
-  one_mem' := by rw [Set.mem_set_of_eq, f.map_one, g.map_one]
+  one_mem' := by rw [Set.mem_setOf_eq, f.map_one, g.map_one]
   mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 #align monoid_hom.eq_mlocus MonoidHom.eqMlocus
 
@@ -582,10 +582,10 @@ section IsUnit
 def IsUnit.submonoid (M : Type _) [Monoid M] :
     Submonoid M where 
   carrier := setOf IsUnit
-  one_mem' := by simp only [isUnit_one, Set.mem_set_of_eq]
+  one_mem' := by simp only [isUnit_one, Set.mem_setOf_eq]
   mul_mem' := by 
     intro a b ha hb
-    rw [Set.mem_set_of_eq] at *
+    rw [Set.mem_setOf_eq] at *
     exact IsUnit.mul ha hb
 #align is_unit.submonoid IsUnit.submonoid
 
@@ -593,7 +593,7 @@ def IsUnit.submonoid (M : Type _) [Monoid M] :
 theorem IsUnit.mem_submonoid_iff {M : Type _} [Monoid M] (a : M) :
     a ∈ IsUnit.submonoid M ↔ IsUnit a := by
   change a ∈ setOf IsUnit ↔ IsUnit a
-  rw [Set.mem_set_of_eq]
+  rw [Set.mem_setOf_eq]
 #align is_unit.mem_submonoid_iff IsUnit.mem_submonoid_iff
 
 end IsUnit

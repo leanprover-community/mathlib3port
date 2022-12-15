@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -650,14 +650,14 @@ instance (x : PrimeSpectrum R) : IsIso (stalkToFiberRingHom R x) :=
 instance (x : PrimeSpectrum R) : IsIso (localizationToStalk R x) :=
   IsIso.of_iso (stalkIso R x).symm
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem stalk_to_fiber_ring_hom_localization_to_stalk (x : PrimeSpectrum.top R) :
     stalkToFiberRingHom R x ≫ localizationToStalk R x = 𝟙 _ :=
   (stalkIso R x).hom_inv_id
 #align
   algebraic_geometry.structure_sheaf.stalk_to_fiber_ring_hom_localization_to_stalk AlgebraicGeometry.StructureSheaf.stalk_to_fiber_ring_hom_localization_to_stalk
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem localization_to_stalk_stalk_to_fiber_ring_hom (x : PrimeSpectrum.top R) :
     localizationToStalk R x ≫ stalkToFiberRingHom R x = 𝟙 _ :=
   (stalkIso R x).inv_hom_id
@@ -708,7 +708,7 @@ theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :
   -- We define `I` as the ideal of *all* elements `r` satisfying the above equation.
   let I : Ideal R :=
     { carrier := { r : R | a * d * r = c * b * r }
-      zero_mem' := by simp only [Set.mem_set_of_eq, mul_zero]
+      zero_mem' := by simp only [Set.mem_setOf_eq, mul_zero]
       add_mem' := fun r₁ r₂ hr₁ hr₂ => by 
         dsimp at hr₁ hr₂⊢
         simp only [mul_add, hr₁, hr₂]
@@ -773,7 +773,7 @@ theorem locally_const_basic_open (U : Opens (PrimeSpectrum.top R))
   algebraic_geometry.structure_sheaf.locally_const_basic_open AlgebraicGeometry.StructureSheaf.locally_const_basic_open
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-
 Auxiliary lemma for surjectivity of `to_basic_open`.
 A local representation of a section `s` as fractions `a i / h i` on finitely many basic opens
@@ -1058,7 +1058,7 @@ theorem global_sections_iso_hom (R : CommRingCat) : (globalSectionsIso R).hom = 
 #align
   algebraic_geometry.structure_sheaf.global_sections_iso_hom AlgebraicGeometry.StructureSheaf.global_sections_iso_hom
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem to_stalk_stalk_specializes {R : Type _} [CommRing R] {x y : PrimeSpectrum R} (h : x ⤳ y) :
     toStalk R y ≫ (structureSheaf R).Presheaf.stalkSpecializes h = toStalk R x := by
   dsimp [to_stalk]
@@ -1066,7 +1066,7 @@ theorem to_stalk_stalk_specializes {R : Type _} [CommRing R] {x y : PrimeSpectru
 #align
   algebraic_geometry.structure_sheaf.to_stalk_stalk_specializes AlgebraicGeometry.StructureSheaf.to_stalk_stalk_specializes
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem localization_to_stalk_stalk_specializes {R : Type _} [CommRing R] {x y : PrimeSpectrum R}
     (h : x ⤳ y) :
     StructureSheaf.localizationToStalk R y ≫ (structureSheaf R).Presheaf.stalkSpecializes h =
@@ -1083,7 +1083,7 @@ theorem localization_to_stalk_stalk_specializes {R : Type _} [CommRing R] {x y :
 #align
   algebraic_geometry.structure_sheaf.localization_to_stalk_stalk_specializes AlgebraicGeometry.StructureSheaf.localization_to_stalk_stalk_specializes
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem stalk_specializes_stalk_to_fiber {R : Type _} [CommRing R] {x y : PrimeSpectrum R}
     (h : x ⤳ y) :
     (structureSheaf R).Presheaf.stalkSpecializes h ≫ StructureSheaf.stalkToFiberRingHom R x =
@@ -1261,7 +1261,7 @@ theorem comap_comp (f : R →+* S) (g : S →+* P) (U : Opens (PrimeSpectrum.top
         rfl
 #align algebraic_geometry.structure_sheaf.comap_comp AlgebraicGeometry.StructureSheaf.comap_comp
 
-@[elementwise, reassoc]
+@[elementwise, reassoc.1]
 theorem to_open_comp_comap (f : R →+* S) (U : Opens (PrimeSpectrum.top R)) :
     (toOpen R U ≫ comap f U (Opens.comap (PrimeSpectrum.comap f) U) fun _ => id) =
       CommRingCat.ofHom f ≫ toOpen S _ :=

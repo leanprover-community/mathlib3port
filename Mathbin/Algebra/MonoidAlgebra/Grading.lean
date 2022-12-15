@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.grading
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,16 +141,16 @@ def decomposeAux : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
         DirectSum.of_eq_of_graded_monoid_eq
           (by
             congr 2 <;> try ext <;>
-              simp only [Submodule.mem_to_add_submonoid, to_add_one, AddMonoidHom.map_zero])
+              simp only [Submodule.mem_to_add_submonoid, toAdd_one, AddMonoidHom.map_zero])
       map_mul' := fun i j => by 
         symm
         convert DirectSum.of_mul_of _ _
         apply DirectSum.of_eq_of_graded_monoid_eq
         congr 2
-        · rw [to_add_mul, AddMonoidHom.map_add]
+        · rw [toAdd_mul, AddMonoidHom.map_add]
         · ext
-          simp only [Submodule.mem_to_add_submonoid, AddMonoidHom.map_add, to_add_mul]
-        · exact Eq.trans (by rw [one_mul, to_add_mul]) single_mul_single.symm }
+          simp only [Submodule.mem_to_add_submonoid, AddMonoidHom.map_add, toAdd_mul]
+        · exact Eq.trans (by rw [one_mul, toAdd_mul]) single_mul_single.symm }
 #align add_monoid_algebra.decompose_aux AddMonoidAlgebra.decomposeAux
 
 theorem decompose_aux_single (m : M) (r : R) :

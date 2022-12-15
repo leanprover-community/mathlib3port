@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.essentially_small
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,15 +77,15 @@ theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Cat
     exact essentially_small.mk' (e.trans f)
 #align category_theory.essentially_small_congr CategoryTheory.essentially_small_congr
 
-theorem Discrete.essentially_small_of_small {α : Type u} [Small.{w} α] :
+theorem Discrete.essentiallySmallOfSmall {α : Type u} [Small.{w} α] :
     EssentiallySmall.{w} (Discrete α) :=
   ⟨⟨Discrete (Shrink α), ⟨inferInstance, ⟨Discrete.equivalence (equivShrink _)⟩⟩⟩⟩
 #align
-  category_theory.discrete.essentially_small_of_small CategoryTheory.Discrete.essentially_small_of_small
+  category_theory.discrete.essentially_small_of_small CategoryTheory.Discrete.essentiallySmallOfSmall
 
-theorem essentially_small_self : EssentiallySmall.{max w v u} C :=
+theorem essentiallySmallSelf : EssentiallySmall.{max w v u} C :=
   EssentiallySmall.mk' (AsSmall.equiv : C ≌ AsSmall.{w} C)
-#align category_theory.essentially_small_self CategoryTheory.essentially_small_self
+#align category_theory.essentially_small_self CategoryTheory.essentiallySmallSelf
 
 /-- A category is `w`-locally small if every hom set is `w`-small.
 

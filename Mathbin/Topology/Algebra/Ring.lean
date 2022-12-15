@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.ring
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,9 +133,9 @@ theorem Subsemiring.le_topological_closure (s : Subsemiring α) : s ≤ s.topolo
   subset_closure
 #align subsemiring.le_topological_closure Subsemiring.le_topological_closure
 
-theorem Subsemiring.isClosedTopologicalClosure (s : Subsemiring α) :
-    IsClosed (s.topologicalClosure : Set α) := by convert isClosedClosure
-#align subsemiring.is_closed_topological_closure Subsemiring.isClosedTopologicalClosure
+theorem Subsemiring.is_closed_topological_closure (s : Subsemiring α) :
+    IsClosed (s.topologicalClosure : Set α) := by convert is_closed_closure
+#align subsemiring.is_closed_topological_closure Subsemiring.is_closed_topological_closure
 
 theorem Subsemiring.topological_closure_minimal (s : Subsemiring α) {t : Subsemiring α} (h : s ≤ t)
     (ht : IsClosed (t : Set α)) : s.topologicalClosure ≤ t :=
@@ -301,9 +301,9 @@ theorem Subring.le_topological_closure (s : Subring α) : s ≤ s.topologicalClo
   subset_closure
 #align subring.le_topological_closure Subring.le_topological_closure
 
-theorem Subring.isClosedTopologicalClosure (s : Subring α) :
-    IsClosed (s.topologicalClosure : Set α) := by convert isClosedClosure
-#align subring.is_closed_topological_closure Subring.isClosedTopologicalClosure
+theorem Subring.is_closed_topological_closure (s : Subring α) :
+    IsClosed (s.topologicalClosure : Set α) := by convert is_closed_closure
+#align subring.is_closed_topological_closure Subring.is_closed_topological_closure
 
 theorem Subring.topological_closure_minimal (s : Subring α) {t : Subring α} (h : s ≤ t)
     (ht : IsClosed (t : Set α)) : s.topologicalClosure ≤ t :=

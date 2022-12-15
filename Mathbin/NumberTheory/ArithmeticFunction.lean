@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.arithmetic_function
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1163,16 +1163,16 @@ theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : 
         (forall_congr' fun n => _) <;>
     refine' imp_congr_right fun hn => _
   · dsimp
-    rw [dif_pos hn, ← Units.eq_iff, ← Units.coe_hom_apply, MonoidHom.map_prod, Units.val_mk0,
+    rw [dif_pos hn, ← Units.eq_iff, ← Units.coeHom_apply, MonoidHom.map_prod, Units.val_mk0,
       prod_congr rfl _]
     intro x hx
-    rw [dif_pos (Nat.pos_of_mem_divisors hx), Units.coe_hom_apply, Units.val_mk0]
+    rw [dif_pos (Nat.pos_of_mem_divisors hx), Units.coeHom_apply, Units.val_mk0]
   · dsimp
-    rw [dif_pos hn, ← Units.eq_iff, ← Units.coe_hom_apply, MonoidHom.map_prod, Units.val_mk0,
+    rw [dif_pos hn, ← Units.eq_iff, ← Units.coeHom_apply, MonoidHom.map_prod, Units.val_mk0,
       prod_congr rfl _]
     intro x hx
     rw [dif_pos (Nat.pos_of_mem_divisors (Nat.snd_mem_divisors_of_mem_antidiagonal hx)),
-      Units.coe_hom_apply, Units.coe_zpow, Units.val_mk0]
+      Units.coeHom_apply, Units.val_zpow_eq_zpow_val, Units.val_mk0]
 #align
   nat.arithmetic_function.prod_eq_iff_prod_pow_moebius_eq_of_nonzero Nat.ArithmeticFunction.prod_eq_iff_prod_pow_moebius_eq_of_nonzero
 

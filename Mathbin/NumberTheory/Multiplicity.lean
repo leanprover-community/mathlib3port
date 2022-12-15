@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tian Chen, Mantas Bakšys
 
 ! This file was ported from Lean 3 source module number_theory.multiplicity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -297,8 +297,8 @@ theorem Int.two_pow_two_pow_add_two_pow_two_pow {x y : ℤ} (hx : ¬2 ∣ x) (hx
     have : 2 ∣ x := (mul_dvd_mul_iff_left (by norm_num)).mp this
     contradiction
   suffices ∀ x : ℤ, Odd x → x ^ 2 ^ (i + 1) % 4 = 1 by
-    rw [show (2 ^ (1 + 1) : ℤ) = 4 by norm_num, Int.dvd_iff_mod_eq_zero, Int.add_mod, this _ hx_odd,
-      this _ hy_odd]
+    rw [show (2 ^ (1 + 1) : ℤ) = 4 by norm_num, Int.dvd_iff_emod_eq_zero, Int.add_emod,
+      this _ hx_odd, this _ hy_odd]
     norm_num
   intro x hx
   rw [pow_succ, mul_comm, pow_mul, Int.sq_mod_four_eq_one_of_odd hx.pow]
@@ -348,7 +348,7 @@ theorem Int.two_pow_sub_pow {x y : ℤ} {n : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 
   subst hd
   simp only [← two_mul, pow_mul]
   have hxy4 : 4 ∣ x ^ 2 - y ^ 2 := by
-    rw [Int.dvd_iff_mod_eq_zero, Int.sub_mod, Int.sq_mod_four_eq_one_of_odd _,
+    rw [Int.dvd_iff_emod_eq_zero, Int.sub_emod, Int.sq_mod_four_eq_one_of_odd _,
       Int.sq_mod_four_eq_one_of_odd hy]
     · norm_num
     · simp only [Int.odd_iff_not_even, even_iff_two_dvd, hx, not_false_iff]

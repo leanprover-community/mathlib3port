@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.congruence_subgroups
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,18 +105,18 @@ def gamma0 (N : ℕ) :
   one_mem' := by simp
   mul_mem' := by 
     intro a b ha hb
-    simp only [Set.mem_set_of_eq]
+    simp only [Set.mem_setOf_eq]
     have h := (Matrix.two_mul_expl a.1 b.1).2.2.1
-    simp only [coe_coe, coe_matrix_coe, coe_mul, Int.coe_cast_ring_hom, map_apply,
-      Set.mem_set_of_eq, Subtype.val_eq_coe, mul_eq_mul] at *
+    simp only [coe_coe, coe_matrix_coe, coe_mul, Int.coe_cast_ring_hom, map_apply, Set.mem_setOf_eq,
+      Subtype.val_eq_coe, mul_eq_mul] at *
     rw [h]
     simp [ha, hb]
   inv_mem' := by 
     intro a ha
-    simp only [Set.mem_set_of_eq, Subtype.val_eq_coe]
+    simp only [Set.mem_setOf_eq, Subtype.val_eq_coe]
     rw [SL2_inv_expl a]
     simp only [Subtype.val_eq_coe, cons_val_zero, cons_val_one, head_cons, coe_coe, coe_matrix_coe,
-      coe_mk, Int.coe_cast_ring_hom, map_apply, Int.cast_neg, neg_eq_zero, Set.mem_set_of_eq] at *
+      coe_mk, Int.coe_cast_ring_hom, map_apply, Int.cast_neg, neg_eq_zero, Set.mem_setOf_eq] at *
     exact ha
 #align Gamma0 gamma0
 

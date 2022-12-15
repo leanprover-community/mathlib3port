@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.bases
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,14 +197,14 @@ theorem IsTopologicalBasis.open_eq_sUnion' {B : Set (Set α)} (hB : IsTopologica
 #align
   topological_space.is_topological_basis.open_eq_sUnion' TopologicalSpace.IsTopologicalBasis.open_eq_sUnion'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (S «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (S «expr ⊆ » B) -/
 theorem IsTopologicalBasis.open_eq_sUnion {B : Set (Set α)} (hB : IsTopologicalBasis B) {u : Set α}
     (ou : IsOpen u) : ∃ (S : _)(_ : S ⊆ B), u = ⋃₀S :=
   ⟨{ s ∈ B | s ⊆ u }, fun s h => h.1, hB.open_eq_sUnion' ou⟩
 #align
   topological_space.is_topological_basis.open_eq_sUnion TopologicalSpace.IsTopologicalBasis.open_eq_sUnion
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (S «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (S «expr ⊆ » B) -/
 theorem IsTopologicalBasis.open_iff_eq_sUnion {B : Set (Set α)} (hB : IsTopologicalBasis B)
     {u : Set α} : IsOpen u ↔ ∃ (S : _)(_ : S ⊆ B), u = ⋃₀S :=
   ⟨hB.open_eq_sUnion, fun ⟨S, hSB, hu⟩ => hu.symm ▸ is_open_sUnion fun s hs => hB.IsOpen (hSB hs)⟩
@@ -532,7 +532,7 @@ protected theorem DenseRange.separable_space {α β : Type _} [TopologicalSpace 
   ⟨⟨f '' s, Countable.image s_cnt f, h.dense_image h' s_dense⟩⟩
 #align dense_range.separable_space DenseRange.separable_space
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem Dense.exists_countable_dense_subset {α : Type _} [TopologicalSpace α] {s : Set α}
     [SeparableSpace s] (hs : Dense s) : ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ Dense t :=
   let ⟨t, htc, htd⟩ := exists_countable_dense s
@@ -540,7 +540,7 @@ theorem Dense.exists_countable_dense_subset {α : Type _} [TopologicalSpace α] 
     hs.dense_range_coe.dense_image continuous_subtype_val htd⟩
 #align dense.exists_countable_dense_subset Dense.exists_countable_dense_subset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- Let `s` be a dense set in a topological space `α` with partial order structure. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` contains bottom/top element of `α` when they exist and belong
@@ -815,7 +815,7 @@ theorem countable_cover_nhds [SecondCountableTopology α] {f : α → Set α} (h
   exact fun x => ⟨x, mem_interior_iff_mem_nhds.2 (hf x)⟩
 #align topological_space.countable_cover_nhds TopologicalSpace.countable_cover_nhds
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem countable_cover_nhds_within [SecondCountableTopology α] {f : α → Set α} {s : Set α}
     (hf : ∀ x ∈ s, f x ∈ 𝓝[s] x) : ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s ⊆ ⋃ x ∈ t, f x := by
   have : ∀ x : s, coe ⁻¹' f x ∈ 𝓝 x := fun x => preimage_coe_mem_nhds_subtype.2 (hf x x.2)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.superpolynomial_decay
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -254,7 +254,7 @@ theorem superpolynomial_decay_iff_abs_is_bounded_under (hk : Tendsto k l atTop) 
 
 theorem superpolynomial_decay_iff_zpow_tendsto_zero (hk : Tendsto k l atTop) :
     SuperpolynomialDecay l k f ↔ ∀ z : ℤ, Tendsto (fun a : α => k a ^ z * f a) l (𝓝 0) := by
-  refine' ⟨fun h z => _, fun h n => by simpa only [zpow_coe_nat] using h (n : ℤ)⟩
+  refine' ⟨fun h z => _, fun h n => by simpa only [zpow_ofNat] using h (n : ℤ)⟩
   by_cases hz : 0 ≤ z
   · lift z to ℕ using hz
     simpa using h z

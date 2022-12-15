@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.theta
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,8 +224,8 @@ theorem IsTheta.pow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : �
 theorem IsTheta.zpow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℤ) :
     (fun x => f x ^ n) =Θ[l] fun x => g x ^ n := by
   cases n
-  · simpa only [zpow_of_nat] using h.pow _
-  · simpa only [zpow_neg_succ_of_nat] using (h.pow _).inv
+  · simpa only [zpow_ofNat] using h.pow _
+  · simpa only [zpow_negSucc] using (h.pow _).inv
 #align asymptotics.is_Theta.zpow Asymptotics.IsTheta.zpow
 
 theorem is_Theta_const_const {c₁ : E''} {c₂ : F''} (h₁ : c₁ ≠ 0) (h₂ : c₂ ≠ 0) :

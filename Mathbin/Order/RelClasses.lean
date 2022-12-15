@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.rel_classes
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,23 +157,17 @@ theorem IsLinearOrder.swap (r) [IsLinearOrder α r] : IsLinearOrder α (swap r) 
 #align is_linear_order.swap IsLinearOrder.swap
 -/
 
-#print IsAsymm.is_antisymm /-
 protected theorem IsAsymm.is_antisymm (r) [IsAsymm α r] : IsAntisymm α r :=
   ⟨fun x y h₁ h₂ => (asymm h₁ h₂).elim⟩
 #align is_asymm.is_antisymm IsAsymm.is_antisymm
--/
 
-#print IsAsymm.is_irrefl /-
 protected theorem IsAsymm.is_irrefl [IsAsymm α r] : IsIrrefl α r :=
   ⟨fun a h => asymm h h⟩
 #align is_asymm.is_irrefl IsAsymm.is_irrefl
--/
 
-#print IsTotal.is_trichotomous /-
 protected theorem IsTotal.is_trichotomous (r) [IsTotal α r] : IsTrichotomous α r :=
   ⟨fun a b => or_left_comm.1 (Or.inr <| total_of r a b)⟩
 #align is_total.is_trichotomous IsTotal.is_trichotomous
--/
 
 #print IsTotal.to_is_refl /-
 -- see Note [lower instance priority]
@@ -1120,11 +1114,9 @@ theorem transitive_gt [Preorder α] : Transitive (@GT.gt α _) :=
 #align transitive_gt transitive_gt
 -/
 
-#print OrderDual.is_total_le /-
 instance OrderDual.is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal αᵒᵈ (· ≤ ·) :=
   @IsTotal.swap α _ _
 #align order_dual.is_total_le OrderDual.is_total_le
--/
 
 instance : WellFoundedLt ℕ :=
   ⟨Nat.lt_wfRel⟩

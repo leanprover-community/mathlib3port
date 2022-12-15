@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module field_theory.finite.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ variable [GroupWithZero K] [Fintype K]
 theorem pow_card_sub_one_eq_one (a : K) (ha : a ≠ 0) : a ^ (q - 1) = 1 :=
   calc
     a ^ (Fintype.card K - 1) = (Units.mk0 a ha ^ (Fintype.card K - 1) : Kˣ) := by
-      rw [Units.coe_pow, Units.val_mk0]
+      rw [Units.val_pow_eq_pow_val, Units.val_mk0]
     _ = 1 := by
       classical 
         rw [← Fintype.card_units, pow_card_eq_one]
@@ -223,7 +223,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) :
   rw [← forall_pow_eq_one_iff, MonoidHom.ext_iff]
   apply forall_congr'
   intro x
-  rw [Units.ext_iff, Units.coe_pow, Units.val_one, MonoidHom.one_apply]
+  rw [Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one, MonoidHom.one_apply]
   rfl
 #align finite_field.sum_pow_units FiniteField.sum_pow_units
 
@@ -405,7 +405,7 @@ theorem Nat.Modeq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1
   have := Zmod.pow_totient x'
   apply_fun (coe : Units (Zmod n) → Zmod n)  at this
   simpa only [-Zmod.pow_totient, Nat.succ_eq_add_one, Nat.cast_pow, Units.val_one, Nat.cast_one,
-    coe_unit_of_coprime, Units.coe_pow]
+    coe_unit_of_coprime, Units.val_pow_eq_pow_val]
 #align nat.modeq.pow_totient Nat.Modeq.pow_totient
 
 section

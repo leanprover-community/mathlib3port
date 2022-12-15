@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.reflexive
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,12 +72,12 @@ noncomputable def commonSection (f g : A ⟶ B) [IsReflexivePair f g] : B ⟶ A 
   (IsReflexivePair.common_section f g).some
 #align category_theory.common_section CategoryTheory.commonSection
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem section_comp_left (f g : A ⟶ B) [IsReflexivePair f g] : commonSection f g ≫ f = 𝟙 B :=
   (IsReflexivePair.common_section f g).some_spec.1
 #align category_theory.section_comp_left CategoryTheory.section_comp_left
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem section_comp_right (f g : A ⟶ B) [IsReflexivePair f g] : commonSection f g ≫ g = 𝟙 B :=
   (IsReflexivePair.common_section f g).some_spec.2
 #align category_theory.section_comp_right CategoryTheory.section_comp_right
@@ -87,13 +87,13 @@ noncomputable def commonRetraction (f g : A ⟶ B) [IsCoreflexivePair f g] : B �
   (IsCoreflexivePair.common_retraction f g).some
 #align category_theory.common_retraction CategoryTheory.commonRetraction
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem left_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] :
     f ≫ commonRetraction f g = 𝟙 A :=
   (IsCoreflexivePair.common_retraction f g).some_spec.1
 #align category_theory.left_comp_retraction CategoryTheory.left_comp_retraction
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem right_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] :
     g ≫ commonRetraction f g = 𝟙 A :=
   (IsCoreflexivePair.common_retraction f g).some_spec.2

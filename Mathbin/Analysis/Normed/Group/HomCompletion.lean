@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.normed.group.hom_completion
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ def NormedAddGroupHom.completion (f : NormedAddGroupHom G H) :
       apply completion.induction_on y
       ·
         exact
-          isClosedLe
+          is_closed_le
             (continuous_norm.comp <| f.to_add_monoid_hom.continuous_completion f.continuous)
             (continuous_const.mul continuous_norm)
       · intro x
@@ -186,7 +186,7 @@ theorem NormedAddGroupHom.norm_completion (f : NormedAddGroupHom G H) : ‖f.Com
   apply f.completion.op_norm_eq_of_bounds (norm_nonneg _)
   · intro x
     apply completion.induction_on x
-    · apply isClosedLe
+    · apply is_closed_le
       continuity
     · intro g
       simp [f.le_op_norm g]
@@ -271,7 +271,7 @@ variable {H : Type _} [SeminormedAddCommGroup H] [SeparatedSpace H] [CompleteSpa
 def NormedAddGroupHom.extension (f : NormedAddGroupHom G H) : NormedAddGroupHom (Completion G) H :=
   { f.toAddMonoidHom.extension f.Continuous with
     bound' := by
-      refine' ⟨‖f‖, fun v => completion.induction_on v (isClosedLe _ _) fun a => _⟩
+      refine' ⟨‖f‖, fun v => completion.induction_on v (is_closed_le _ _) fun a => _⟩
       · exact Continuous.comp continuous_norm completion.continuous_extension
       · exact Continuous.mul continuous_const continuous_norm
       · rw [completion.norm_coe, AddMonoidHom.to_fun_eq_coe, AddMonoidHom.extension_coe]

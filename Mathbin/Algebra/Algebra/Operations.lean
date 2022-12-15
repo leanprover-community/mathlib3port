@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.algebra.operations
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -541,7 +541,7 @@ def span.ringHom :
 
 section
 
-variable {α : Type _} [Monoid α] [MulSemiringAction α A] [SmulCommClass α R A]
+variable {α : Type _} [Monoid α] [MulSemiringAction α A] [SMulCommClass α R A]
 
 /-- The action on a submodule corresponding to applying the action to every element.
 

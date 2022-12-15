@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.order.smul
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,12 +60,12 @@ variable {ι 𝕜 R M N : Type _}
 namespace OrderDual
 
 instance [Zero R] [AddZeroClass M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
-  { OrderDual.hasSmul with 
+  { instSMulOrderDual with 
     zero_smul := fun m => OrderDual.rec (zero_smul _) m
     smul_zero := fun r => OrderDual.rec smul_zero r }
 
 instance [Monoid R] [MulAction R M] : MulAction R Mᵒᵈ :=
-  { OrderDual.hasSmul with 
+  { instSMulOrderDual with 
     one_smul := fun m => OrderDual.rec (one_smul _) m
     mul_smul := fun r => OrderDual.rec mul_smul r }
 
@@ -193,7 +193,7 @@ instance Int.ordered_smul [LinearOrderedAddCommGroup M] : OrderedSmul ℤ M :=
 -- TODO: `linear_ordered_field M → ordered_smul ℚ M`
 instance LinearOrderedSemiring.to_ordered_smul {R : Type _} [LinearOrderedSemiring R] :
     OrderedSmul R R :=
-  OrderedSmul.mk'' fun c => strict_mono_mul_left_of_pos
+  OrderedSmul.mk'' fun c => strictMono_mul_left_of_pos
 #align linear_ordered_semiring.to_ordered_smul LinearOrderedSemiring.to_ordered_smul
 
 section LinearOrderedSemifield

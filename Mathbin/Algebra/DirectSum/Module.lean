@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.module
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,8 +47,8 @@ variable {M : ι → Type w} [∀ i, AddCommMonoid (M i)] [∀ i, Module R (M i)
 instance : Module R (⨁ i, M i) :=
   Dfinsupp.module
 
-instance {S : Type _} [Semiring S] [∀ i, Module S (M i)] [∀ i, SmulCommClass R S (M i)] :
-    SmulCommClass R S (⨁ i, M i) :=
+instance {S : Type _} [Semiring S] [∀ i, Module S (M i)] [∀ i, SMulCommClass R S (M i)] :
+    SMulCommClass R S (⨁ i, M i) :=
   Dfinsupp.smul_comm_class
 
 instance {S : Type _} [Semiring S] [HasSmul R S] [∀ i, Module S (M i)]
@@ -376,11 +376,10 @@ noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type
 theorem IsInternal.collected_basis_coe (h : IsInternal A) {α : ι → Type _}
     (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σi, α i => ↑(v a.1 a.2) := by
   funext a
-  simp only [is_internal.collected_basis, to_module, coe_linear_map, AddEquiv.to_fun_eq_coe,
-    Basis.coe_of_repr, Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply,
-    Dfinsupp.mapRange.linear_equiv_apply, Dfinsupp.mapRange.linear_equiv_symm,
-    Dfinsupp.map_range_single, Finsupp.total_single, LinearEquiv.of_bijective_apply,
-    LinearEquiv.symm_symm, LinearEquiv.symm_trans_apply, one_smul,
+  simp only [is_internal.collected_basis, to_module, coe_linear_map, [anonymous], Basis.coe_of_repr,
+    Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply, Dfinsupp.mapRange.linear_equiv_apply,
+    Dfinsupp.mapRange.linear_equiv_symm, Dfinsupp.map_range_single, Finsupp.total_single,
+    LinearEquiv.of_bijective_apply, LinearEquiv.symm_symm, LinearEquiv.symm_trans_apply, one_smul,
     sigma_finsupp_add_equiv_dfinsupp_apply, sigma_finsupp_equiv_dfinsupp_single,
     sigma_finsupp_lequiv_dfinsupp_apply]
   convert Dfinsupp.sum_add_hom_single (fun i => (A i).Subtype.toAddMonoidHom) a.1 (v a.1 a.2)

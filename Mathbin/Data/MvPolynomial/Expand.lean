@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.expand
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) :
 #align mv_polynomial.expand_monomial MvPolynomial.expand_monomial
 
 theorem expand_one_apply (f : MvPolynomial σ R) : expand 1 f = f := by
-  simp only [expand, bind₁_X_left, AlgHom.id_apply, RingHom.to_fun_eq_coe, eval₂_hom_C_left,
+  simp only [expand, bind₁_X_left, AlgHom.id_apply, RingHom.toFun_eq_coe, eval₂_hom_C_left,
     AlgHom.coe_to_ring_hom, pow_one, AlgHom.coe_mk]
 #align mv_polynomial.expand_one_apply MvPolynomial.expand_one_apply
 

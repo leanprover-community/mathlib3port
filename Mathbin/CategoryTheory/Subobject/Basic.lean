@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,19 +220,19 @@ theorem representative_arrow (Y : Subobject X) : (representative.obj Y).arrow = 
   rfl
 #align category_theory.subobject.representative_arrow CategoryTheory.Subobject.representative_arrow
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem underlying_arrow {X : C} {Y Z : Subobject X} (f : Y ⟶ Z) :
     underlying.map f ≫ arrow Z = arrow Y :=
   Over.w (representative.map f)
 #align category_theory.subobject.underlying_arrow CategoryTheory.Subobject.underlying_arrow
 
-@[simp, reassoc, elementwise]
+@[simp, reassoc.1, elementwise]
 theorem underlying_iso_arrow {X Y : C} (f : X ⟶ Y) [Mono f] :
     (underlyingIso f).inv ≫ (Subobject.mk f).arrow = f :=
   Over.w _
 #align category_theory.subobject.underlying_iso_arrow CategoryTheory.Subobject.underlying_iso_arrow
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem underlying_iso_hom_comp_eq_mk {X Y : C} (f : X ⟶ Y) [Mono f] :
     (underlyingIso f).Hom ≫ f = (mk f).arrow :=
   (Iso.eq_inv_comp _).1 (underlying_iso_arrow f).symm
@@ -313,7 +313,7 @@ def ofLe {B : C} (X Y : Subobject B) (h : X ≤ Y) : (X : C) ⟶ (Y : C) :=
   underlying.map <| h.Hom
 #align category_theory.subobject.of_le CategoryTheory.Subobject.ofLe
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem of_le_arrow {B : C} {X Y : Subobject B} (h : X ≤ Y) : ofLe X Y h ≫ Y.arrow = X.arrow :=
   underlying_arrow _
 #align category_theory.subobject.of_le_arrow CategoryTheory.Subobject.of_le_arrow
@@ -364,26 +364,26 @@ theorem of_mk_le_mk_comp {B A₁ A₂ : C} {f : A₁ ⟶ B} {g : A₂ ⟶ B} [Mo
     (h : mk f ≤ mk g) : ofMkLeMk f g h ≫ g = f := by simp [of_mk_le_mk]
 #align category_theory.subobject.of_mk_le_mk_comp CategoryTheory.Subobject.of_mk_le_mk_comp
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem of_le_comp_of_le {B : C} (X Y Z : Subobject B) (h₁ : X ≤ Y) (h₂ : Y ≤ Z) :
     ofLe X Y h₁ ≫ ofLe Y Z h₂ = ofLe X Z (h₁.trans h₂) := by
   simp [of_le, ← functor.map_comp underlying]
 #align category_theory.subobject.of_le_comp_of_le CategoryTheory.Subobject.of_le_comp_of_le
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem of_le_comp_of_le_mk {B A : C} (X Y : Subobject B) (f : A ⟶ B) [Mono f] (h₁ : X ≤ Y)
     (h₂ : Y ≤ mk f) : ofLe X Y h₁ ≫ ofLeMk Y f h₂ = ofLeMk X f (h₁.trans h₂) := by
   simp [of_mk_le, of_le_mk, of_le, ← functor.map_comp_assoc underlying]
 #align category_theory.subobject.of_le_comp_of_le_mk CategoryTheory.Subobject.of_le_comp_of_le_mk
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem of_le_mk_comp_of_mk_le {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (Y : Subobject B)
     (h₁ : X ≤ mk f) (h₂ : mk f ≤ Y) : ofLeMk X f h₁ ≫ ofMkLe f Y h₂ = ofLe X Y (h₁.trans h₂) := by
   simp [of_mk_le, of_le_mk, of_le, ← functor.map_comp underlying]
 #align
   category_theory.subobject.of_le_mk_comp_of_mk_le CategoryTheory.Subobject.of_le_mk_comp_of_mk_le
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem of_le_mk_comp_of_mk_le_mk {B A₁ A₂ : C} (X : Subobject B) (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B)
     [Mono g] (h₁ : X ≤ mk f) (h₂ : mk f ≤ mk g) :
     ofLeMk X f h₁ ≫ ofMkLeMk f g h₂ = ofLeMk X g (h₁.trans h₂) := by
@@ -391,13 +391,13 @@ theorem of_le_mk_comp_of_mk_le_mk {B A₁ A₂ : C} (X : Subobject B) (f : A₁ 
 #align
   category_theory.subobject.of_le_mk_comp_of_mk_le_mk CategoryTheory.Subobject.of_le_mk_comp_of_mk_le_mk
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem of_mk_le_comp_of_le {B A₁ : C} (f : A₁ ⟶ B) [Mono f] (X Y : Subobject B) (h₁ : mk f ≤ X)
     (h₂ : X ≤ Y) : ofMkLe f X h₁ ≫ ofLe X Y h₂ = ofMkLe f Y (h₁.trans h₂) := by
   simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp underlying]
 #align category_theory.subobject.of_mk_le_comp_of_le CategoryTheory.Subobject.of_mk_le_comp_of_le
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem of_mk_le_comp_of_le_mk {B A₁ A₂ : C} (f : A₁ ⟶ B) [Mono f] (X : Subobject B) (g : A₂ ⟶ B)
     [Mono g] (h₁ : mk f ≤ X) (h₂ : X ≤ mk g) :
     ofMkLe f X h₁ ≫ ofLeMk X g h₂ = ofMkLeMk f g (h₁.trans h₂) := by
@@ -405,7 +405,7 @@ theorem of_mk_le_comp_of_le_mk {B A₁ A₂ : C} (f : A₁ ⟶ B) [Mono f] (X : 
 #align
   category_theory.subobject.of_mk_le_comp_of_le_mk CategoryTheory.Subobject.of_mk_le_comp_of_le_mk
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem of_mk_le_mk_comp_of_mk_le {B A₁ A₂ : C} (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B) [Mono g]
     (X : Subobject B) (h₁ : mk f ≤ mk g) (h₂ : mk g ≤ X) :
     ofMkLeMk f g h₁ ≫ ofMkLe g X h₂ = ofMkLe f X (h₁.trans h₂) := by
@@ -413,7 +413,7 @@ theorem of_mk_le_mk_comp_of_mk_le {B A₁ A₂ : C} (f : A₁ ⟶ B) [Mono f] (g
 #align
   category_theory.subobject.of_mk_le_mk_comp_of_mk_le CategoryTheory.Subobject.of_mk_le_mk_comp_of_mk_le
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem of_mk_le_mk_comp_of_mk_le_mk {B A₁ A₂ A₃ : C} (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B) [Mono g]
     (h : A₃ ⟶ B) [Mono h] (h₁ : mk f ≤ mk g) (h₂ : mk g ≤ mk h) :
     ofMkLeMk f g h₁ ≫ ofMkLeMk g h h₂ = ofMkLeMk f h (h₁.trans h₂) := by

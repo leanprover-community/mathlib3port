@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_to_l1
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,12 +151,12 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
   have h_empty : μ ∅ ≠ ∞ := (measure_empty.le.trans_lt Ennreal.coe_lt_top).Ne
   specialize hT ∅ ∅ MeasurableSet.empty MeasurableSet.empty h_empty h_empty (Set.inter_empty ∅)
   rw [Set.union_empty] at hT
-  nth_rw 1 [← add_zero (T ∅)]  at hT
+  nth_rw 1 [← add_zero (T ∅)] at hT
   exact (add_left_cancel hT).symm
 #align
   measure_theory.fin_meas_additive.map_empty_eq_zero MeasureTheory.FinMeasAdditive.map_empty_eq_zero
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i j «expr ∈ » sι) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » sι) -/
 theorem map_Union_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0)
     (h_add : FinMeasAdditive μ T) {ι} (S : ι → Set α) (sι : Finset ι)
     (hS_meas : ∀ i, MeasurableSet (S i)) (hSp : ∀ i ∈ sι, μ (S i) ≠ ∞)
@@ -418,7 +418,7 @@ theorem set_to_simple_func_congr (T : Set α → E →L[ℝ] F)
   refine' fun x y hxy => h_zero _ ((measurable_set_fiber f x).inter (measurable_set_fiber g y)) _
   rw [eventually_eq, ae_iff] at h
   refine' measure_mono_null (fun z => _) h
-  simp_rw [Set.mem_inter_iff, Set.mem_set_of_eq, Set.mem_preimage, Set.mem_singleton_iff]
+  simp_rw [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_singleton_iff]
   intro h
   rwa [h.1, h.2]
 #align
@@ -1304,7 +1304,7 @@ theorem set_to_L1_mono_left' {T T' : Set α → E →L[ℝ] G''} {C C' : ℝ}
   · intro f g hf hg hfg_disj hf_le hg_le
     rw [(set_to_L1 hT).map_add, (set_to_L1 hT').map_add]
     exact add_le_add hf_le hg_le
-  · exact isClosedLe (set_to_L1 hT).Continuous (set_to_L1 hT').Continuous
+  · exact is_closed_le (set_to_L1 hT).Continuous (set_to_L1 hT').Continuous
 #align measure_theory.L1.set_to_L1_mono_left' MeasureTheory.L1Cat.set_to_L1_mono_left'
 
 theorem set_to_L1_mono_left {T T' : Set α → E →L[ℝ] G''} {C C' : ℝ}
@@ -1319,9 +1319,9 @@ theorem set_to_L1_nonneg {T : Set α → G' →L[ℝ] G''} {C : ℝ} (hT : Domin
   suffices : ∀ f : { g : α →₁[μ] G' // 0 ≤ g }, 0 ≤ set_to_L1 hT f
   exact this (⟨f, hf⟩ : { g : α →₁[μ] G' // 0 ≤ g })
   refine' fun g =>
-    @isClosedProperty { g : α →₁ₛ[μ] G' // 0 ≤ g } { g : α →₁[μ] G' // 0 ≤ g } _ _ _
+    @is_closed_property { g : α →₁ₛ[μ] G' // 0 ≤ g } { g : α →₁[μ] G' // 0 ≤ g } _ _ _
       (dense_range_coe_simple_func_nonneg_to_Lp_nonneg 1 μ G' one_ne_top) _ _ g
-  · exact isClosedLe continuous_zero ((set_to_L1 hT).Continuous.comp continuous_induced_dom)
+  · exact is_closed_le continuous_zero ((set_to_L1 hT).Continuous.comp continuous_induced_dom)
   · intro g
     have : (coe_simple_func_nonneg_to_Lp_nonneg 1 μ G' g : α →₁[μ] G') = (g : α →₁ₛ[μ] G') := rfl
     rw [this, set_to_L1_eq_set_to_L1s_clm]
@@ -1786,7 +1786,7 @@ theorem set_to_fun_congr_measure_of_integrable {μ' : Measure α} (c' : ℝ≥0�
     rw [set_to_fun_indicator_const hT hs hμs.ne, set_to_fun_indicator_const hT' hs hμ's]
   · intro f₂ g₂ h_dish hf₂ hg₂ h_eq_f h_eq_g
     rw [set_to_fun_add hT hf₂ hg₂, set_to_fun_add hT' (h_int f₂ hf₂) (h_int g₂ hg₂), h_eq_f, h_eq_g]
-  · refine' isClosedEq (continuous_set_to_fun hT) _
+  · refine' is_closed_eq (continuous_set_to_fun hT) _
     have :
       (fun f : α →₁[μ] E => set_to_fun μ' T hT' f) = fun f : α →₁[μ] E =>
         set_to_fun μ' T hT' ((h_int f (L1.integrable_coe_fn f)).toL1 f) :=

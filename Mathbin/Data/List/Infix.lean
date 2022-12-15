@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.infix
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,11 +63,11 @@ theorem infix_append' (l₁ l₂ l₃ : List α) : l₂ <:+: l₁ ++ (l₂ ++ l�
   rw [← List.append_assoc] <;> apply infix_append
 #align list.infix_append' List.infix_append'
 
-theorem IsPrefix.is_infix : l₁ <+: l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ => ⟨[], t, h⟩
-#align list.is_prefix.is_infix List.IsPrefix.is_infix
+theorem isPrefix.is_infix : l₁ <+: l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ => ⟨[], t, h⟩
+#align list.is_prefix.is_infix List.isPrefix.is_infix
 
-theorem IsSuffix.is_infix : l₁ <:+ l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ => ⟨t, [], by rw [h, append_nil]⟩
-#align list.is_suffix.is_infix List.IsSuffix.is_infix
+theorem isSuffix.is_infix : l₁ <:+ l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ => ⟨t, [], by rw [h, append_nil]⟩
+#align list.is_suffix.is_infix List.isSuffix.is_infix
 
 theorem nil_prefix (l : List α) : [] <+: l :=
   ⟨l, rfl⟩
@@ -78,7 +78,7 @@ theorem nil_suffix (l : List α) : [] <:+ l :=
 #align list.nil_suffix List.nil_suffix
 
 theorem nil_infix (l : List α) : [] <:+: l :=
-  (nil_prefix _).IsInfix
+  (nil_prefix _).isInfix
 #align list.nil_infix List.nil_infix
 
 @[refl]
@@ -93,7 +93,7 @@ theorem suffix_refl (l : List α) : l <:+ l :=
 
 @[refl]
 theorem infix_refl (l : List α) : l <:+: l :=
-  (prefix_refl l).IsInfix
+  (prefix_refl l).isInfix
 #align list.infix_refl List.infix_refl
 
 theorem prefix_rfl : l <+: l :=
@@ -124,44 +124,44 @@ theorem infix_concat : l₁ <:+: l₂ → l₁ <:+: concat l₂ a := fun ⟨L₁
 #align list.infix_concat List.infix_concat
 
 @[trans]
-theorem IsPrefix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <+: l₂ → l₂ <+: l₃ → l₁ <+: l₃
+theorem isPrefix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <+: l₂ → l₂ <+: l₃ → l₁ <+: l₃
   | l, _, _, ⟨r₁, rfl⟩, ⟨r₂, rfl⟩ => ⟨r₁ ++ r₂, (append_assoc _ _ _).symm⟩
-#align list.is_prefix.trans List.IsPrefix.trans
+#align list.is_prefix.trans List.isPrefix.trans
 
 @[trans]
-theorem IsSuffix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+ l₂ → l₂ <:+ l₃ → l₁ <:+ l₃
+theorem isSuffix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+ l₂ → l₂ <:+ l₃ → l₁ <:+ l₃
   | l, _, _, ⟨l₁, rfl⟩, ⟨l₂, rfl⟩ => ⟨l₂ ++ l₁, append_assoc _ _ _⟩
-#align list.is_suffix.trans List.IsSuffix.trans
+#align list.is_suffix.trans List.isSuffix.trans
 
 @[trans]
-theorem IsInfix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+: l₂ → l₂ <:+: l₃ → l₁ <:+: l₃
+theorem isInfix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+: l₂ → l₂ <:+: l₃ → l₁ <:+: l₃
   | l, _, _, ⟨l₁, r₁, rfl⟩, ⟨l₂, r₂, rfl⟩ => ⟨l₂ ++ l₁, r₁ ++ r₂, by simp only [append_assoc]⟩
-#align list.is_infix.trans List.IsInfix.trans
+#align list.is_infix.trans List.isInfix.trans
 
-protected theorem IsInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ => by
+protected theorem isInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ => by
   rw [← h]
   exact (sublist_append_right _ _).trans (sublist_append_left _ _)
-#align list.is_infix.sublist List.IsInfix.sublist
+#align list.is_infix.sublist List.isInfix.sublist
 
-protected theorem IsInfix.subset (hl : l₁ <:+: l₂) : l₁ ⊆ l₂ :=
+protected theorem isInfix.subset (hl : l₁ <:+: l₂) : l₁ ⊆ l₂ :=
   hl.Sublist.Subset
-#align list.is_infix.subset List.IsInfix.subset
+#align list.is_infix.subset List.isInfix.subset
 
-protected theorem IsPrefix.sublist (h : l₁ <+: l₂) : l₁ <+ l₂ :=
-  h.IsInfix.Sublist
-#align list.is_prefix.sublist List.IsPrefix.sublist
+protected theorem isPrefix.sublist (h : l₁ <+: l₂) : l₁ <+ l₂ :=
+  h.isInfix.Sublist
+#align list.is_prefix.sublist List.isPrefix.sublist
 
-protected theorem IsPrefix.subset (hl : l₁ <+: l₂) : l₁ ⊆ l₂ :=
+protected theorem isPrefix.subset (hl : l₁ <+: l₂) : l₁ ⊆ l₂ :=
   hl.Sublist.Subset
-#align list.is_prefix.subset List.IsPrefix.subset
+#align list.is_prefix.subset List.isPrefix.subset
 
-protected theorem IsSuffix.sublist (h : l₁ <:+ l₂) : l₁ <+ l₂ :=
-  h.IsInfix.Sublist
-#align list.is_suffix.sublist List.IsSuffix.sublist
+protected theorem isSuffix.sublist (h : l₁ <:+ l₂) : l₁ <+ l₂ :=
+  h.isInfix.Sublist
+#align list.is_suffix.sublist List.isSuffix.sublist
 
-protected theorem IsSuffix.subset (hl : l₁ <:+ l₂) : l₁ ⊆ l₂ :=
+protected theorem isSuffix.subset (hl : l₁ <:+ l₂) : l₁ ⊆ l₂ :=
   hl.Sublist.Subset
-#align list.is_suffix.subset List.IsSuffix.subset
+#align list.is_suffix.subset List.isSuffix.subset
 
 @[simp]
 theorem reverse_suffix : reverse l₁ <:+ reverse l₂ ↔ l₁ <+: l₂ :=
@@ -190,17 +190,17 @@ alias reverse_suffix ↔ _ is_prefix.reverse
 
 alias reverse_infix ↔ _ is_infix.reverse
 
-theorem IsInfix.length_le (h : l₁ <:+: l₂) : l₁.length ≤ l₂.length :=
+theorem isInfix.length_le (h : l₁ <:+: l₂) : l₁.length ≤ l₂.length :=
   h.Sublist.length_le
-#align list.is_infix.length_le List.IsInfix.length_le
+#align list.is_infix.length_le List.isInfix.length_le
 
-theorem IsPrefix.length_le (h : l₁ <+: l₂) : l₁.length ≤ l₂.length :=
+theorem isPrefix.length_le (h : l₁ <+: l₂) : l₁.length ≤ l₂.length :=
   h.Sublist.length_le
-#align list.is_prefix.length_le List.IsPrefix.length_le
+#align list.is_prefix.length_le List.isPrefix.length_le
 
-theorem IsSuffix.length_le (h : l₁ <:+ l₂) : l₁.length ≤ l₂.length :=
+theorem isSuffix.length_le (h : l₁ <:+ l₂) : l₁.length ≤ l₂.length :=
   h.Sublist.length_le
-#align list.is_suffix.length_le List.IsSuffix.length_le
+#align list.is_suffix.length_le List.isSuffix.length_le
 
 theorem eq_nil_of_infix_nil (h : l <:+: []) : l = [] :=
   eq_nil_of_sublist_nil h.Sublist
@@ -215,12 +215,12 @@ alias infix_nil_iff ↔ eq_nil_of_infix_nil _
 
 @[simp]
 theorem prefix_nil_iff : l <+: [] ↔ l = [] :=
-  ⟨fun h => eq_nil_of_infix_nil h.IsInfix, fun h => h ▸ prefix_rfl⟩
+  ⟨fun h => eq_nil_of_infix_nil h.isInfix, fun h => h ▸ prefix_rfl⟩
 #align list.prefix_nil_iff List.prefix_nil_iff
 
 @[simp]
 theorem suffix_nil_iff : l <:+ [] ↔ l = [] :=
-  ⟨fun h => eq_nil_of_infix_nil h.IsInfix, fun h => h ▸ suffix_rfl⟩
+  ⟨fun h => eq_nil_of_infix_nil h.isInfix, fun h => h ▸ suffix_rfl⟩
 #align list.suffix_nil_iff List.suffix_nil_iff
 
 alias prefix_nil_iff ↔ eq_nil_of_prefix_nil _
@@ -540,7 +540,7 @@ theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+
 
 theorem infix_of_mem_join : ∀ {L : List (List α)}, l ∈ L → l <:+: join L
   | _ :: L, Or.inl rfl => infix_append [] _ _
-  | l' :: L, Or.inr h => IsInfix.trans (infix_of_mem_join h) <| (suffix_append _ _).IsInfix
+  | l' :: L, Or.inr h => isInfix.trans (infix_of_mem_join h) <| (suffix_append _ _).isInfix
 #align list.infix_of_mem_join List.infix_of_mem_join
 
 theorem prefix_append_right_inj (l) : l ++ l₁ <+: l ++ l₂ ↔ l₁ <+: l₂ :=
@@ -702,16 +702,16 @@ theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ :=
     rwa [prefix_cons_inj]
 #align list.cons_prefix_iff List.cons_prefix_iff
 
-theorem IsPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.map f := by
+theorem isPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.map f := by
   induction' l₁ with hd tl hl generalizing l₂
   · simp only [nil_prefix, map_nil]
   · cases' l₂ with hd₂ tl₂
     · simpa only using eq_nil_of_prefix_nil h
     · rw [cons_prefix_iff] at h
       simp only [h, prefix_cons_inj, hl, map]
-#align list.is_prefix.map List.IsPrefix.map
+#align list.is_prefix.map List.isPrefix.map
 
-theorem IsPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) :
+theorem isPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) :
     l₁.filterMap f <+: l₂.filterMap f := by
   induction' l₁ with hd₁ tl₁ hl generalizing l₂
   · simp only [nil_prefix, filter_map_nil]
@@ -721,50 +721,50 @@ theorem IsPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) :
       rw [← @singleton_append _ hd₁ _, ← @singleton_append _ hd₂ _, filter_map_append,
         filter_map_append, h.left, prefix_append_right_inj]
       exact hl h.right
-#align list.is_prefix.filter_map List.IsPrefix.filter_map
+#align list.is_prefix.filter_map List.isPrefix.filter_map
 
-theorem IsPrefix.reduce_option {l₁ l₂ : List (Option α)} (h : l₁ <+: l₂) :
+theorem isPrefix.reduce_option {l₁ l₂ : List (Option α)} (h : l₁ <+: l₂) :
     l₁.reduceOption <+: l₂.reduceOption :=
   h.filterMap id
-#align list.is_prefix.reduce_option List.IsPrefix.reduce_option
+#align list.is_prefix.reduce_option List.isPrefix.reduce_option
 
-theorem IsPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <+: l₂) :
+theorem isPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <+: l₂) :
     l₁.filter p <+: l₂.filter p := by 
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact prefix_append _ _
-#align list.is_prefix.filter List.IsPrefix.filter
+#align list.is_prefix.filter List.isPrefix.filter
 
-theorem IsSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+ l₂) :
+theorem isSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+ l₂) :
     l₁.filter p <:+ l₂.filter p := by 
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact suffix_append _ _
-#align list.is_suffix.filter List.IsSuffix.filter
+#align list.is_suffix.filter List.isSuffix.filter
 
-theorem IsInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+: l₂) :
+theorem isInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+: l₂) :
     l₁.filter p <:+: l₂.filter p := by 
   obtain ⟨xs, ys, rfl⟩ := h
   rw [filter_append, filter_append]
   exact infix_append _ _ _
-#align list.is_infix.filter List.IsInfix.filter
+#align list.is_infix.filter List.isInfix.filter
 
 instance : IsPartialOrder (List α)
       (· <+: ·) where 
   refl := prefix_refl
-  trans _ _ _ := IsPrefix.trans
+  trans _ _ _ := isPrefix.trans
   antisymm _ _ h₁ h₂ := eq_of_prefix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
 
 instance : IsPartialOrder (List α)
       (· <:+ ·) where 
   refl := suffix_refl
-  trans _ _ _ := IsSuffix.trans
+  trans _ _ _ := isSuffix.trans
   antisymm _ _ h₁ h₂ := eq_of_suffix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
 
 instance : IsPartialOrder (List α)
       (· <:+: ·) where 
   refl := infix_refl
-  trans _ _ _ := IsInfix.trans
+  trans _ _ _ := isInfix.trans
   antisymm _ _ h₁ h₂ := eq_of_infix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
 
 end Fix
@@ -955,7 +955,7 @@ theorem suffix_insert (a : α) (l : List α) : l <:+ insert a l := by
 #align list.suffix_insert List.suffix_insert
 
 theorem infix_insert (a : α) (l : List α) : l <:+: insert a l :=
-  (suffix_insert a l).IsInfix
+  (suffix_insert a l).isInfix
 #align list.infix_insert List.infix_insert
 
 theorem sublist_insert (a : α) (l : List α) : l <+ l.insert a :=

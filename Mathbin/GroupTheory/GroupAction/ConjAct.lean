@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.conj_act
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,16 +176,16 @@ instance unitsMulDistribMulAction :
   smul_one := by simp [units_smul_def]
 #align conj_act.units_mul_distrib_mul_action ConjAct.unitsMulDistribMulAction
 
-instance units_smul_comm_class [HasSmul α M] [SmulCommClass α M M] [IsScalarTower α M M] :
-    SmulCommClass α (ConjAct Mˣ)
+instance units_smul_comm_class [HasSmul α M] [SMulCommClass α M M] [IsScalarTower α M M] :
+    SMulCommClass α (ConjAct Mˣ)
       M where smul_comm a um m := by
     rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
 #align conj_act.units_smul_comm_class ConjAct.units_smul_comm_class
 
-instance units_smul_comm_class' [HasSmul α M] [SmulCommClass M α M] [IsScalarTower α M M] :
-    SmulCommClass (ConjAct Mˣ) α M :=
-  haveI : SmulCommClass α M M := SmulCommClass.symm _ _ _
-  SmulCommClass.symm _ _ _
+instance units_smul_comm_class' [HasSmul α M] [SMulCommClass M α M] [IsScalarTower α M M] :
+    SMulCommClass (ConjAct Mˣ) α M :=
+  haveI : SMulCommClass α M M := SMulCommClass.symm _ _ _
+  SMulCommClass.symm _ _ _
 #align conj_act.units_smul_comm_class' ConjAct.units_smul_comm_class'
 
 end Monoid
@@ -226,15 +226,15 @@ instance mulAction₀ : MulAction (ConjAct G₀)
   mul_smul := by simp [smul_def, mul_assoc, mul_inv_rev]
 #align conj_act.mul_action₀ ConjAct.mulAction₀
 
-instance smul_comm_class₀ [HasSmul α G₀] [SmulCommClass α G₀ G₀] [IsScalarTower α G₀ G₀] :
-    SmulCommClass α (ConjAct G₀)
+instance smul_comm_class₀ [HasSmul α G₀] [SMulCommClass α G₀ G₀] [IsScalarTower α G₀ G₀] :
+    SMulCommClass α (ConjAct G₀)
       G₀ where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 #align conj_act.smul_comm_class₀ ConjAct.smul_comm_class₀
 
-instance smul_comm_class₀' [HasSmul α G₀] [SmulCommClass G₀ α G₀] [IsScalarTower α G₀ G₀] :
-    SmulCommClass (ConjAct G₀) α G₀ :=
-  haveI := SmulCommClass.symm G₀ α G₀
-  SmulCommClass.symm _ _ _
+instance smul_comm_class₀' [HasSmul α G₀] [SMulCommClass G₀ α G₀] [IsScalarTower α G₀ G₀] :
+    SMulCommClass (ConjAct G₀) α G₀ :=
+  haveI := SMulCommClass.symm G₀ α G₀
+  SMulCommClass.symm _ _ _
 #align conj_act.smul_comm_class₀' ConjAct.smul_comm_class₀'
 
 end GroupWithZero
@@ -262,15 +262,15 @@ instance : MulDistribMulAction (ConjAct G)
   one_smul := by simp [smul_def]
   mul_smul := by simp [smul_def, mul_assoc]
 
-instance smul_comm_class [HasSmul α G] [SmulCommClass α G G] [IsScalarTower α G G] :
-    SmulCommClass α (ConjAct G)
+instance smul_comm_class [HasSmul α G] [SMulCommClass α G G] [IsScalarTower α G G] :
+    SMulCommClass α (ConjAct G)
       G where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 #align conj_act.smul_comm_class ConjAct.smul_comm_class
 
-instance smul_comm_class' [HasSmul α G] [SmulCommClass G α G] [IsScalarTower α G G] :
-    SmulCommClass (ConjAct G) α G :=
-  haveI := SmulCommClass.symm G α G
-  SmulCommClass.symm _ _ _
+instance smul_comm_class' [HasSmul α G] [SMulCommClass G α G] [IsScalarTower α G G] :
+    SMulCommClass (ConjAct G) α G :=
+  haveI := SMulCommClass.symm G α G
+  SMulCommClass.symm _ _ _
 #align conj_act.smul_comm_class' ConjAct.smul_comm_class'
 
 theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (ofConjAct g) h :=

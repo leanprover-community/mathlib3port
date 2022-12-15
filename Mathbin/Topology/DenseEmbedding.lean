@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.dense_embedding
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -310,7 +310,7 @@ theorem Dense.dense_embedding_coe [TopologicalSpace α] {s : Set α} (hs : Dense
   { embedding_subtype_coe with dense := hs.dense_range_coe }
 #align dense.dense_embedding_coe Dense.dense_embedding_coe
 
-theorem isClosedProperty [TopologicalSpace β] {e : α → β} {p : β → Prop} (he : DenseRange e)
+theorem is_closed_property [TopologicalSpace β] {e : α → β} {p : β → Prop} (he : DenseRange e)
     (hp : IsClosed { x | p x }) (h : ∀ a, p (e a)) : ∀ b, p b :=
   have : univ ⊆ { b | p b } :=
     calc
@@ -319,41 +319,41 @@ theorem isClosedProperty [TopologicalSpace β] {e : α → β} {p : β → Prop}
       _ = _ := hp.closure_eq
       
   fun b => this trivial
-#align is_closed_property isClosedProperty
+#align is_closed_property is_closed_property
 
-theorem isClosedProperty2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
+theorem is_closed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
-  have : ∀ q : β × β, p q.1 q.2 := (isClosedProperty (he.prod_map he) hp) fun _ => h _ _
+  have : ∀ q : β × β, p q.1 q.2 := (is_closed_property (he.prod_map he) hp) fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
-#align is_closed_property2 isClosedProperty2
+#align is_closed_property2 is_closed_property2
 
-theorem isClosedProperty3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop}
+theorem is_closed_property3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop}
     (he : DenseRange e) (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 })
     (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) : ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
   have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 :=
-    (isClosedProperty (he.prod_map <| he.prod_map he) hp) fun _ => h _ _ _
+    (is_closed_property (he.prod_map <| he.prod_map he) hp) fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
-#align is_closed_property3 isClosedProperty3
+#align is_closed_property3 is_closed_property3
 
 @[elab_as_elim]
-theorem DenseRange.inductionOn [TopologicalSpace β] {e : α → β} (he : DenseRange e) {p : β → Prop}
+theorem DenseRange.induction_on [TopologicalSpace β] {e : α → β} (he : DenseRange e) {p : β → Prop}
     (b₀ : β) (hp : IsClosed { b | p b }) (ih : ∀ a : α, p <| e a) : p b₀ :=
-  isClosedProperty he hp ih b₀
-#align dense_range.induction_on DenseRange.inductionOn
+  is_closed_property he hp ih b₀
+#align dense_range.induction_on DenseRange.induction_on
 
 @[elab_as_elim]
-theorem DenseRange.inductionOn₂ [TopologicalSpace β] {e : α → β} {p : β → β → Prop}
+theorem DenseRange.induction_on₂ [TopologicalSpace β] {e : α → β} {p : β → β → Prop}
     (he : DenseRange e) (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂))
     (b₁ b₂ : β) : p b₁ b₂ :=
-  isClosedProperty2 he hp h _ _
-#align dense_range.induction_on₂ DenseRange.inductionOn₂
+  is_closed_property2 he hp h _ _
+#align dense_range.induction_on₂ DenseRange.induction_on₂
 
 @[elab_as_elim]
-theorem DenseRange.inductionOn₃ [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop}
+theorem DenseRange.induction_on₃ [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop}
     (he : DenseRange e) (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 })
     (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) (b₁ b₂ b₃ : β) : p b₁ b₂ b₃ :=
-  isClosedProperty3 he hp h _ _ _
-#align dense_range.induction_on₃ DenseRange.inductionOn₃
+  is_closed_property3 he hp h _ _ _
+#align dense_range.induction_on₃ DenseRange.induction_on₃
 
 section
 
@@ -364,7 +364,7 @@ variable {f : α → β}
 /-- Two continuous functions to a t2-space that agree on the dense range of a function are equal. -/
 theorem DenseRange.equalizer (hfd : DenseRange f) {g h : β → γ} (hg : Continuous g)
     (hh : Continuous h) (H : g ∘ f = h ∘ f) : g = h :=
-  funext fun y => hfd.induction_on y (isClosedEq hg hh) <| congr_fun H
+  funext fun y => hfd.induction_on y (is_closed_eq hg hh) <| congr_fun H
 #align dense_range.equalizer DenseRange.equalizer
 
 end

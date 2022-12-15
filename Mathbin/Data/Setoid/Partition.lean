@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.setoid.partition
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,14 +44,14 @@ namespace Setoid
 
 variable {α : Type _}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- If x ∈ α is in 2 elements of a set of sets partitioning α, those 2 sets are equal. -/
 theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x b b'}
     (hc : b ∈ c) (hb : x ∈ b) (hc' : b' ∈ c) (hb' : x ∈ b') : b = b' :=
   (H x).unique2 hc hb hc' hb'
 #align setoid.eq_of_mem_eqv_class Setoid.eq_of_mem_eqv_class
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- Makes an equivalence relation from a set of sets partitioning α. -/
 def mkClasses (c : Set (Set α)) (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) : Setoid α :=
   ⟨fun x y => ∀ s ∈ c, x ∈ s → y ∈ s,
@@ -115,7 +115,7 @@ theorem empty_not_mem_classes {r : Setoid α} : ∅ ∉ r.classes := fun ⟨y, h
   Set.not_mem_empty y <| hy.symm ▸ r.refl' y
 #align setoid.empty_not_mem_classes Setoid.empty_not_mem_classes
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ∈ » r.classes) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ∈ » r.classes) -/
 /-- Equivalence classes partition the type. -/
 theorem classes_eqv_classes {r : Setoid α} (a) : ∃! (b : _)(_ : b ∈ r.classes), a ∈ b :=
   ExistsUnique.intro₂ { x | r.Rel x a } (r.mem_classes a) (r.refl' _) <| by
@@ -130,7 +130,7 @@ theorem eq_of_mem_classes {r : Setoid α} {x b} (hc : b ∈ r.classes) (hb : x �
   eq_of_mem_eqv_class classes_eqv_classes hc hb hc' hb'
 #align setoid.eq_of_mem_classes Setoid.eq_of_mem_classes
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- The elements of a set of sets partitioning α are the equivalence classes of the
     equivalence relation defined by the set of sets. -/
 theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {s y}
@@ -142,7 +142,7 @@ theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
         (eq_of_mem_eqv_class H hs hy hc' <| hx b' hc' hb').symm ▸ hb'⟩
 #align setoid.eq_eqv_class_of_mem Setoid.eq_eqv_class_of_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- The equivalence classes of the equivalence relation defined by a set of sets
     partitioning α are elements of the set of sets. -/
 theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {y} :
@@ -150,7 +150,7 @@ theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), 
   (H y).elim2 fun b hc hy hb => eq_eqv_class_of_mem H hc hy ▸ hc
 #align setoid.eqv_class_mem Setoid.eqv_class_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ∈ » c) -/
 theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x} :
     { y : α | (mkClasses c H).Rel x y } ∈ c := by
   convert Setoid.eqv_class_mem H
@@ -158,7 +158,7 @@ theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c),
   rw [Setoid.comm']
 #align setoid.eqv_class_mem' Setoid.eqv_class_mem'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- Distinct elements of a set of sets partitioning α are disjoint. -/
 theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) :
     c.PairwiseDisjoint id := fun b₁ h₁ b₂ h₂ h =>
@@ -166,7 +166,7 @@ theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
     (H x).elim2 fun b hc hx hb => h <| eq_of_mem_eqv_class H h₁ hx1 h₂ hx2
 #align setoid.eqv_classes_disjoint Setoid.eqv_classes_disjoint
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- A set of disjoint sets covering α partition α (classical). -/
 theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.sUnion c = @Set.univ α)
     (H : c.PairwiseDisjoint id) (a) : ∃! (b : _)(_ : b ∈ c), a ∈ b :=
@@ -195,7 +195,7 @@ theorem sUnion_classes (r : Setoid α) : ⋃₀r.classes = Set.univ :=
 
 section Partition
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- A collection `c : set (set α)` of sets is a partition of `α` into pairwise
 disjoint sets if `∅ ∉ c` and each element `a : α` belongs to a unique set `b ∈ c`. -/
 def IsPartition (c : Set (Set α)) :=
@@ -340,7 +340,7 @@ noncomputable def IndexedPartition.mk' {ι α : Type _} (s : ι → Set α)
     (ex : ∀ x, ∃ i, x ∈ s i) :
     IndexedPartition
       s where 
-  eq_of_mem x i j hxi hxj := Classical.by_contradiction fun h => (dis _ _ h).le_bot ⟨hxi, hxj⟩
+  eq_of_mem x i j hxi hxj := by_contradiction fun h => (dis _ _ h).le_bot ⟨hxi, hxj⟩
   some i := (Nonempty i).some
   some_mem i := (Nonempty i).some_spec
   index x := (ex x).some

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.segment
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -293,7 +293,7 @@ variable [LinearOrderedRing 𝕜] [AddCommGroup E] [Module 𝕜 E] {x y : E}
 
 theorem midpoint_mem_segment [Invertible (2 : 𝕜)] (x y : E) : midpoint 𝕜 x y ∈ [x -[𝕜] y] := by
   rw [segment_eq_image_line_map]
-  exact ⟨⅟ 2, ⟨inv_of_nonneg.mpr zero_le_two, inv_of_le_one one_le_two⟩, rfl⟩
+  exact ⟨⅟ 2, ⟨inv_of_nonneg.mpr zero_le_two, invOf_le_one one_le_two⟩, rfl⟩
 #align midpoint_mem_segment midpoint_mem_segment
 
 theorem mem_segment_sub_add [Invertible (2 : 𝕜)] (x y : E) : x ∈ [x - y -[𝕜] x + y] := by

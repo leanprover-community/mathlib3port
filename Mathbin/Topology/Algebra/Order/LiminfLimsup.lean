@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.liminf_limsup
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ section OrderClosedTopology
 variable [SemilatticeSup α] [TopologicalSpace α] [OrderTopology α]
 
 theorem is_bounded_le_nhds (a : α) : (𝓝 a).IsBounded (· ≤ ·) :=
-  (is_top_or_exists_gt a).elim (fun h => ⟨a, eventually_of_forall h⟩) fun ⟨b, hb⟩ =>
+  (isTop_or_exists_gt a).elim (fun h => ⟨a, eventually_of_forall h⟩) fun ⟨b, hb⟩ =>
     ⟨b, ge_mem_nhds hb⟩
 #align is_bounded_le_nhds is_bounded_le_nhds
 
@@ -200,8 +200,8 @@ theorem Filter.Tendsto.liminf_eq {f : Filter β} {u : β → α} {a : α} [NeBot
   Liminf_eq_of_le_nhds h
 #align filter.tendsto.liminf_eq Filter.Tendsto.liminf_eq
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
 /-- If the liminf and the limsup of a function coincide, then the limit of the function
 exists and has the same value -/
 theorem tendsto_of_liminf_eq_limsup {f : Filter β} {u : β → α} {a : α} (hinf : liminf u f = a)
@@ -216,8 +216,8 @@ theorem tendsto_of_liminf_eq_limsup {f : Filter β} {u : β → α} {a : α} (hi
   le_nhds_of_Limsup_eq_Liminf h h' hsup hinf
 #align tendsto_of_liminf_eq_limsup tendsto_of_liminf_eq_limsup
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
 /-- If a number `a` is less than or equal to the `liminf` of a function `f` at some filter
 and is greater than or equal to the `limsup` of `f`, then `f` tends to `a` along this filter. -/
 theorem tendsto_of_le_liminf_of_limsup_le {f : Filter β} {u : β → α} {a : α} (hinf : a ≤ liminf u f)
@@ -236,8 +236,8 @@ theorem tendsto_of_le_liminf_of_limsup_le {f : Filter β} {u : β → α} {a : �
       (le_antisymm hsup (le_trans hinf (liminf_le_limsup h h'))) h h'
 #align tendsto_of_le_liminf_of_limsup_le tendsto_of_le_liminf_of_limsup_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
 /-- Assume that, for any `a < b`, a sequence can not be infinitely many times below `a` and
 above `b`. If it is also ultimately bounded above and below, then it has to converge. This even
 works if `a` and `b` are restricted to a dense subset.
@@ -277,8 +277,8 @@ section Monotone
 variable {ι R S : Type _} {F : Filter ι} [NeBot F] [CompleteLinearOrder R] [TopologicalSpace R]
   [OrderTopology R] [CompleteLinearOrder S] [TopologicalSpace S] [OrderTopology S]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /-- An antitone function between complete linear ordered spaces sends a `filter.Limsup`
 to the `filter.liminf` of the image if it is continuous at the `Limsup`. -/
 theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R → S}
@@ -288,7 +288,7 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
     rw [Limsup, f_decr.map_Inf_of_continuous_at' f_cont A]
     apply le_of_forall_lt
     intro c hc
-    simp only [liminf, Liminf, lt_Sup_iff, eventually_map, Set.mem_set_of_eq, exists_prop,
+    simp only [liminf, Liminf, lt_Sup_iff, eventually_map, Set.mem_setOf_eq, exists_prop,
       Set.mem_image, exists_exists_and_eq_and] at hc⊢
     rcases hc with ⟨d, hd, h'd⟩
     refine' ⟨f d, _, h'd⟩
@@ -478,7 +478,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
         Set.indicator_of_mem hj₂]
       exact zero_lt_one
   · rintro hω i
-    rw [Set.mem_set_of_eq, tendsto_at_top_at_top] at hω
+    rw [Set.mem_setOf_eq, tendsto_at_top_at_top] at hω
     by_contra hcon
     push_neg  at hcon
     obtain ⟨j, h⟩ := hω (i + 1)
@@ -508,7 +508,7 @@ theorem limsup_eq_tendsto_sum_indicator_at_top (R : Type _) [StrictOrderedSemiri
   by 
   rw [limsup_eq_tendsto_sum_indicator_nat_at_top s]
   ext ω
-  simp only [Set.mem_set_of_eq]
+  simp only [Set.mem_setOf_eq]
   rw [(_ :
       (fun n => ∑ k in Finset.range n, (s (k + 1)).indicator (1 : α → R) ω) = fun n =>
         ↑(∑ k in Finset.range n, (s (k + 1)).indicator (1 : α → ℕ) ω))]

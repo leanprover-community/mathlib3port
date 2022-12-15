@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.shift
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ variable [AddMonoid A] (F : MonoidalFunctor (Discrete A) (C ⥤ C))
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem eq_to_hom_μ_app {i j i' j' : A} (h₁ : i = i') (h₂ : j = j') (X : C) :
     eqToHom (by rw [h₁, h₂] : (F.obj ⟨i⟩ ⊗ F.obj ⟨j⟩).obj X = (F.obj ⟨i'⟩ ⊗ F.obj ⟨j'⟩).obj X) ≫
         (F.μ ⟨i'⟩ ⟨j'⟩).app X =
@@ -64,7 +64,7 @@ theorem eq_to_hom_μ_app {i j i' j' : A} (h₁ : i = i') (h₂ : j = j') (X : C)
   rw [eq_to_hom_refl, eq_to_hom_refl, category.id_comp, category.comp_id]
 #align category_theory.eq_to_hom_μ_app CategoryTheory.eq_to_hom_μ_app
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem μ_inv_app_eq_to_hom {i j i' j' : A} (h₁ : i = i') (h₂ : j = j') (X : C) :
     inv ((F.μ ⟨i⟩ ⟨j⟩).app X) ≫ eqToHom (by rw [h₁, h₂]) =
       eqToHom (by rw [h₁, h₂]) ≫ inv ((F.μ ⟨i'⟩ ⟨j'⟩).app X) :=
@@ -219,21 +219,21 @@ abbrev shiftAdd (i j : A) : X⟦i + j⟧ ≅ X⟦i⟧⟦j⟧ :=
   (shiftFunctorAdd C i j).app _
 #align category_theory.shift_add CategoryTheory.shiftAdd
 
-@[reassoc]
+@[reassoc.1]
 theorem shift_add_hom_comp_eq_to_hom₁ (i i' j : A) (h : i = i') :
     (shiftAdd X i j).Hom ≫ eqToHom (by rw [h]) = eqToHom (by rw [h]) ≫ (shiftAdd X i' j).Hom := by
   cases h
   rw [eq_to_hom_refl, eq_to_hom_refl, category.id_comp, category.comp_id]
 #align category_theory.shift_add_hom_comp_eq_to_hom₁ CategoryTheory.shift_add_hom_comp_eq_to_hom₁
 
-@[reassoc]
+@[reassoc.1]
 theorem shift_add_hom_comp_eq_to_hom₂ (i j j' : A) (h : j = j') :
     (shiftAdd X i j).Hom ≫ eqToHom (by rw [h]) = eqToHom (by rw [h]) ≫ (shiftAdd X i j').Hom := by
   cases h
   rw [eq_to_hom_refl, eq_to_hom_refl, category.id_comp, category.comp_id]
 #align category_theory.shift_add_hom_comp_eq_to_hom₂ CategoryTheory.shift_add_hom_comp_eq_to_hom₂
 
-@[reassoc]
+@[reassoc.1]
 theorem shift_add_hom_comp_eq_to_hom₁₂ (i j i' j' : A) (h₁ : i = i') (h₂ : j = j') :
     (shiftAdd X i j).Hom ≫ eqToHom (by rw [h₁, h₂]) =
       eqToHom (by rw [h₁, h₂]) ≫ (shiftAdd X i' j').Hom :=
@@ -243,19 +243,19 @@ theorem shift_add_hom_comp_eq_to_hom₁₂ (i j i' j' : A) (h₁ : i = i') (h₂
   rw [eq_to_hom_refl, eq_to_hom_refl, category.id_comp, category.comp_id]
 #align category_theory.shift_add_hom_comp_eq_to_hom₁₂ CategoryTheory.shift_add_hom_comp_eq_to_hom₁₂
 
-@[reassoc]
+@[reassoc.1]
 theorem eq_to_hom_comp_shift_add_inv₁ (i i' j : A) (h : i = i') :
     eqToHom (by rw [h]) ≫ (shiftAdd X i' j).inv = (shiftAdd X i j).inv ≫ eqToHom (by rw [h]) := by
   rw [iso.comp_inv_eq, category.assoc, iso.eq_inv_comp, shift_add_hom_comp_eq_to_hom₁]
 #align category_theory.eq_to_hom_comp_shift_add_inv₁ CategoryTheory.eq_to_hom_comp_shift_add_inv₁
 
-@[reassoc]
+@[reassoc.1]
 theorem eq_to_hom_comp_shift_add_inv₂ (i j j' : A) (h : j = j') :
     eqToHom (by rw [h]) ≫ (shiftAdd X i j').inv = (shiftAdd X i j).inv ≫ eqToHom (by rw [h]) := by
   rw [iso.comp_inv_eq, category.assoc, iso.eq_inv_comp, shift_add_hom_comp_eq_to_hom₂]
 #align category_theory.eq_to_hom_comp_shift_add_inv₂ CategoryTheory.eq_to_hom_comp_shift_add_inv₂
 
-@[reassoc]
+@[reassoc.1]
 theorem eq_to_hom_comp_shift_add_inv₁₂ (i j i' j' : A) (h₁ : i = i') (h₂ : j = j') :
     eqToHom (by rw [h₁, h₂]) ≫ (shiftAdd X i' j').inv =
       (shiftAdd X i j).inv ≫ eqToHom (by rw [h₁, h₂]) :=
@@ -451,7 +451,7 @@ theorem shift_comm' (i j : A) :
     μ_hom_inv_app_assoc]
 #align category_theory.shift_comm' CategoryTheory.shift_comm'
 
-@[reassoc]
+@[reassoc.1]
 theorem shift_comm_hom_comp (i j : A) :
     (shiftComm X i j).Hom ≫ f⟦j⟧'⟦i⟧' = f⟦i⟧'⟦j⟧' ≫ (shiftComm Y i j).Hom := by
   rw [shift_comm', ← shift_comm_symm, iso.symm_hom, iso.inv_hom_id_assoc]

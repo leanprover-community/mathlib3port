@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.arrow
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,13 +108,13 @@ def homMk' {X Y : T} {f : X ⟶ Y} {P Q : T} {g : P ⟶ Q} {u : X ⟶ P} {v : Y 
   w' := w
 #align category_theory.arrow.hom_mk' CategoryTheory.Arrow.homMk'
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem w {f g : Arrow T} (sq : f ⟶ g) : sq.left ≫ g.Hom = f.Hom ≫ sq.right :=
   sq.w
 #align category_theory.arrow.w CategoryTheory.Arrow.w
 
 -- `w_mk_left` is not needed, as it is a consequence of `w` and `mk_hom`.
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem w_mk_right {f : Arrow T} {X Y : T} {g : X ⟶ Y} (sq : f ⟶ mk g) :
     sq.left ≫ g = f.Hom ≫ sq.right :=
   sq.w

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.lemmas
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ attribute [local simp] Int.zero_div
 
 @[simp]
 theorem div2_bit (b n) : div2 (bit b n) = n := by
-  rw [bit_val, div2_val, add_comm, Int.add_mul_div_left, (_ : (_ / 2 : ℤ) = 0), zero_add]
+  rw [bit_val, div2_val, add_comm, Int.add_mul_ediv_left, (_ : (_ / 2 : ℤ) = 0), zero_add]
   cases b
   · simp
   · show of_nat _ = _

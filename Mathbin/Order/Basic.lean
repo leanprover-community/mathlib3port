@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -303,17 +303,23 @@ theorem lt_iff_ne (h : a ≤ b) : a < b ↔ a ≠ b :=
 #align has_le.le.lt_iff_ne LE.le.lt_iff_ne
 -/
 
+#print LE.le.gt_iff_ne /-
 theorem gt_iff_ne (h : a ≤ b) : a < b ↔ b ≠ a :=
   ⟨fun h => h.Ne.symm, h.lt_of_ne'⟩
 #align has_le.le.gt_iff_ne LE.le.gt_iff_ne
+-/
 
+#print LE.le.not_lt_iff_eq /-
 theorem not_lt_iff_eq (h : a ≤ b) : ¬a < b ↔ a = b :=
   h.lt_iff_ne.not_left
 #align has_le.le.not_lt_iff_eq LE.le.not_lt_iff_eq
+-/
 
+#print LE.le.not_gt_iff_eq /-
 theorem not_gt_iff_eq (h : a ≤ b) : ¬a < b ↔ b = a :=
   h.gt_iff_ne.not_left
 #align has_le.le.not_gt_iff_eq LE.le.not_gt_iff_eq
+-/
 
 #print LE.le.le_iff_eq /-
 theorem le_iff_eq (h : a ≤ b) : b ≤ a ↔ b = a :=
@@ -321,9 +327,11 @@ theorem le_iff_eq (h : a ≤ b) : b ≤ a ↔ b = a :=
 #align has_le.le.le_iff_eq LE.le.le_iff_eq
 -/
 
+#print LE.le.ge_iff_eq /-
 theorem ge_iff_eq (h : a ≤ b) : b ≤ a ↔ a = b :=
   ⟨h.antisymm, Eq.ge⟩
 #align has_le.le.ge_iff_eq LE.le.ge_iff_eq
+-/
 
 end PartialOrder
 
@@ -897,15 +905,10 @@ theorem partialOrder.dual_dual (α : Type _) [H : PartialOrder α] : OrderDual.p
   PartialOrder.ext fun _ _ => Iff.rfl
 #align order_dual.partial_order.dual_dual OrderDual.partialOrder.dual_dual
 
-/- warning: order_dual.linear_order.dual_dual -> OrderDual.linearOrder.dual_dual is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [H : LinearOrder.{u1} α], Eq.{succ u1} (LinearOrder.{u1} (OrderDual.{u1} (OrderDual.{u1} α))) (OrderDual.linearOrder.{u1} (OrderDual.{u1} α) (OrderDual.linearOrder.{u1} α H)) H
-but is expected to have type
-  forall (α : Type.{u1}) [H : LinearOrder.{u1} α], Eq.{succ u1} (LinearOrder.{u1} (OrderDual.{u1} (OrderDual.{u1} α))) (OrderDual.instLinearOrderOrderDual.{u1} (OrderDual.{u1} α) (OrderDual.instLinearOrderOrderDual.{u1} α H)) H
-Case conversion may be inaccurate. Consider using '#align order_dual.linear_order.dual_dual OrderDual.linearOrder.dual_dualₓ'. -/
-theorem linearOrder.dual_dual (α : Type _) [H : LinearOrder α] : OrderDual.linearOrder αᵒᵈ = H :=
+theorem instLinearOrderOrderDual.dual_dual (α : Type _) [H : LinearOrder α] :
+    OrderDual.instLinearOrderOrderDual αᵒᵈ = H :=
   LinearOrder.ext fun _ _ => Iff.rfl
-#align order_dual.linear_order.dual_dual OrderDual.linearOrder.dual_dual
+#align order_dual.linear_order.dual_dual OrderDual.instLinearOrderOrderDual.dual_dual
 
 end OrderDual
 
@@ -1040,7 +1043,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (π i)] [_inst_2 : DecidableEq.{succ u1} ι] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i}, Iff (LE.le.{max u1 u2} (forall (i : ι), π i) (instLEForAll.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u2} (π i) (_inst_1 i))) x (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_2 a b) y i a)) (And (LE.le.{u2} (π i) (Preorder.toLE.{u2} (π i) (_inst_1 i)) (x i) a) (forall (j : ι), (Ne.{succ u1} ι j i) -> (LE.le.{u2} (π j) (Preorder.toLE.{u2} (π j) (_inst_1 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align le_update_iff le_update_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem le_update_iff : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 #align le_update_iff le_update_iff
@@ -1051,7 +1054,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (π i)] [_inst_2 : DecidableEq.{succ u1} ι] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i}, Iff (LE.le.{max u1 u2} (forall (a : ι), π a) (instLEForAll.{u1, u2} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u2} (π i) (_inst_1 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_2 a b) x i a) y) (And (LE.le.{u2} (π i) (Preorder.toLE.{u2} (π i) (_inst_1 i)) a (y i)) (forall (j : ι), (Ne.{succ u1} ι j i) -> (LE.le.{u2} (π j) (Preorder.toLE.{u2} (π j) (_inst_1 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align update_le_iff update_le_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_le_iff : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 #align update_le_iff update_le_iff
@@ -1062,7 +1065,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (π i)] [_inst_2 : DecidableEq.{succ u1} ι] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i} {b : π i}, Iff (LE.le.{max u1 u2} (forall (a : ι), π a) (instLEForAll.{u1, u2} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u2} (π i) (_inst_1 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_2 a b) x i a) (Function.update.{succ u1, succ u2} ι (fun (a : ι) => π a) (fun (a : ι) (b : ι) => _inst_2 a b) y i b)) (And (LE.le.{u2} (π i) (Preorder.toLE.{u2} (π i) (_inst_1 i)) a b) (forall (j : ι), (Ne.{succ u1} ι j i) -> (LE.le.{u2} (π j) (Preorder.toLE.{u2} (π j) (_inst_1 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align update_le_update_iff update_le_update_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_le_update_iff :
     Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j := by
   simp (config := { contextual := true }) [update_le_iff]
@@ -1329,9 +1332,11 @@ theorem coe_lt_coe [LT α] {p : α → Prop} {x y : Subtype p} : (x : α) < y �
 instance [Preorder α] (p : α → Prop) : Preorder (Subtype p) :=
   Preorder.lift (coe : Subtype p → α)
 
+#print Subtype.partialOrder /-
 instance partialOrder [PartialOrder α] (p : α → Prop) : PartialOrder (Subtype p) :=
   PartialOrder.lift coe Subtype.coe_injective
 #align subtype.partial_order Subtype.partialOrder
+-/
 
 instance decidableLe [Preorder α] [h : @DecidableRel α (· ≤ ·)] {p : α → Prop} :
     @DecidableRel (Subtype p) (· ≤ ·) := fun a b => h a b

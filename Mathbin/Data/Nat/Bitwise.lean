@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module data.nat.bitwise
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -208,19 +208,19 @@ unsafe def bitwise_assoc_tac : tactic Unit :=
   sorry
 #align nat.bitwise_assoc_tac nat.bitwise_assoc_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 theorem lxor_assoc (n m k : ℕ) : lxor (lxor n m) k = lxor n (lxor m k) := by
   run_tac
     bitwise_assoc_tac
 #align nat.lxor_assoc Nat.lxor_assoc
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 theorem land_assoc (n m k : ℕ) : land (land n m) k = land n (land m k) := by
   run_tac
     bitwise_assoc_tac
 #align nat.land_assoc Nat.land_assoc
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 theorem lor_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
   run_tac
     bitwise_assoc_tac

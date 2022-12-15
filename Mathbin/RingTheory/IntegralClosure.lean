@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.integral_closure
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ theorem is_integral_of_noetherian (H : IsNoetherian R A) (x : A) : IsIntegral R 
     WellFounded.not_lt_min (is_noetherian_iff_well_founded.1 H) (Set.range D) _ ⟨N + 1, rfl⟩
   rw [← HN] at HM
   have HN2 : D (N + 1) ≤ D N :=
-    Classical.by_contradiction fun H =>
+    by_contradiction fun H =>
       HM (lt_of_le_not_le (map_mono (degree_le_mono (WithBot.coe_le_coe.2 (Nat.le_succ N)))) H)
   have HN3 : leval (X ^ (N + 1)) ∈ D N := HN2 (mem_map_of_mem (mem_degree_le.2 (degree_X_pow_le _)))
   rcases HN3 with ⟨p, hdp, hpe⟩

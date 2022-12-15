@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.determinant
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,7 +265,7 @@ theorem det_smul {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroup M] [Mod
   by_cases H : ∃ s : Finset M, Nonempty (Basis s 𝕜 M)
   · have : FiniteDimensional 𝕜 M := by 
       rcases H with ⟨s, ⟨hs⟩⟩
-      exact FiniteDimensional.ofFintypeBasis hs
+      exact FiniteDimensional.of_fintype_basis hs
     simp only [← det_to_matrix (FiniteDimensional.finBasis 𝕜 M), LinearEquiv.map_smul,
       Fintype.card_fin, det_smul]
   ·
@@ -340,16 +340,16 @@ theorem is_unit_det {A : Type _} [CommRing A] [Module A M] (f : M →ₗ[A] M) (
 #align linear_map.is_unit_det LinearMap.is_unit_det
 
 /-- If a linear map has determinant different from `1`, then the space is finite-dimensional. -/
-theorem finiteDimensionalOfDetNeOne {𝕜 : Type _} [Field 𝕜] [Module 𝕜 M] (f : M →ₗ[𝕜] M)
+theorem finite_dimensional_of_det_ne_one {𝕜 : Type _} [Field 𝕜] [Module 𝕜 M] (f : M →ₗ[𝕜] M)
     (hf : f.det ≠ 1) : FiniteDimensional 𝕜 M := by
   by_cases H : ∃ s : Finset M, Nonempty (Basis s 𝕜 M)
   · rcases H with ⟨s, ⟨hs⟩⟩
-    exact FiniteDimensional.ofFintypeBasis hs
+    exact FiniteDimensional.of_fintype_basis hs
   ·
     classical 
       simp [LinearMap.coe_det, H] at hf
       exact hf.elim
-#align linear_map.finite_dimensional_of_det_ne_one LinearMap.finiteDimensionalOfDetNeOne
+#align linear_map.finite_dimensional_of_det_ne_one LinearMap.finite_dimensional_of_det_ne_one
 
 /-- If the determinant of a map vanishes, then the map is not onto. -/
 theorem range_lt_top_of_det_eq_zero {𝕜 : Type _} [Field 𝕜] [Module 𝕜 M] {f : M →ₗ[𝕜] M}

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.algebra
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ restate_axiom algebra.unit'
 
 restate_axiom algebra.assoc'
 
-attribute [reassoc] algebra.unit algebra.assoc
+attribute [reassoc.1] algebra.unit algebra.assoc
 
 namespace Algebra
 
@@ -66,7 +66,7 @@ structure Hom (A B : Algebra T) where
 
 restate_axiom hom.h'
 
-attribute [simp, reassoc] hom.h
+attribute [simp, reassoc.1] hom.h
 
 namespace Hom
 
@@ -344,7 +344,7 @@ restate_axiom coalgebra.counit'
 
 restate_axiom coalgebra.coassoc'
 
-attribute [reassoc] coalgebra.counit coalgebra.coassoc
+attribute [reassoc.1] coalgebra.counit coalgebra.coassoc
 
 namespace Coalgebra
 
@@ -359,7 +359,7 @@ structure Hom (A B : Coalgebra G) where
 
 restate_axiom hom.h'
 
-attribute [simp, reassoc] hom.h
+attribute [simp, reassoc.1] hom.h
 
 namespace Hom
 

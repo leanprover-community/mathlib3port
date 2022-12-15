@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.seminorm
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -491,9 +491,9 @@ section Classical
 
 open Classical
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
 /-- We define the supremum of an arbitrary subset of `seminorm 𝕜 E` as follows:
 * if `s` is `bdd_above` *as a set of functions `E → ℝ`* (that is, if `s` is pointwise bounded
 above), we take the pointwise supremum of all elements of `s`, and we prove that it is indeed a
@@ -519,7 +519,7 @@ noncomputable instance :
         map_zero' := by 
           rw [supr_apply, ← @Real.csupr_const_zero s]
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
           exact map_zero i.1
         add_le' := fun x y => by 
           rcases h with ⟨q, hq⟩
@@ -536,14 +536,14 @@ noncomputable instance :
         neg' := fun x => by 
           simp only [supr_apply]
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
           exact i.1.neg' _
         smul' := fun a x => by 
           simp only [supr_apply]
           rw [← smul_eq_mul,
             Real.smul_supr_of_nonneg (norm_nonneg a) fun i : s => (i : Seminorm 𝕜 E) x]
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
           exact i.1.smul' a x }
     else ⊥
 
@@ -688,12 +688,12 @@ theorem closed_ball_smul (p : Seminorm 𝕜 E) {c : Nnreal} (hc : 0 < c) (r : �
 
 theorem ball_sup (p : Seminorm 𝕜 E) (q : Seminorm 𝕜 E) (e : E) (r : ℝ) :
     ball (p ⊔ q) e r = ball p e r ∩ ball q e r := by
-  simp_rw [ball, ← Set.set_of_and, coe_sup, Pi.sup_apply, sup_lt_iff]
+  simp_rw [ball, ← Set.setOf_and, coe_sup, Pi.sup_apply, sup_lt_iff]
 #align seminorm.ball_sup Seminorm.ball_sup
 
 theorem closed_ball_sup (p : Seminorm 𝕜 E) (q : Seminorm 𝕜 E) (e : E) (r : ℝ) :
     closedBall (p ⊔ q) e r = closedBall p e r ∩ closedBall q e r := by
-  simp_rw [closed_ball, ← Set.set_of_and, coe_sup, Pi.sup_apply, sup_le_iff]
+  simp_rw [closed_ball, ← Set.setOf_and, coe_sup, Pi.sup_apply, sup_le_iff]
 #align seminorm.closed_ball_sup Seminorm.closed_ball_sup
 
 theorem ball_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H : s.Nonempty) (e : E) (r : ℝ) :
@@ -753,13 +753,13 @@ variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 theorem ball_comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (x : E) (r : ℝ) :
     (p.comp f).ball x r = f ⁻¹' p.ball (f x) r := by
   ext
-  simp_rw [ball, mem_preimage, comp_apply, Set.mem_set_of_eq, map_sub]
+  simp_rw [ball, mem_preimage, comp_apply, Set.mem_setOf_eq, map_sub]
 #align seminorm.ball_comp Seminorm.ball_comp
 
 theorem closed_ball_comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (x : E) (r : ℝ) :
     (p.comp f).closedBall x r = f ⁻¹' p.closedBall (f x) r := by
   ext
-  simp_rw [closed_ball, mem_preimage, comp_apply, Set.mem_set_of_eq, map_sub]
+  simp_rw [closed_ball, mem_preimage, comp_apply, Set.mem_setOf_eq, map_sub]
 #align seminorm.closed_ball_comp Seminorm.closed_ball_comp
 
 variable (p : Seminorm 𝕜 E)
@@ -1154,5 +1154,6 @@ theorem balancedBallZero : Balanced 𝕜 (Metric.ball (0 : E) r) := by
 
 end normSeminorm
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Guard against import creep.
+assert_not_exists balanced_core
+

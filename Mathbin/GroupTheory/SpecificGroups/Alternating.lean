@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.alternating
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem mem_alternating_group {f : Perm α} : f ∈ alternatingGroup α ↔ sign
 
 theorem prod_list_swap_mem_alternating_group_iff_even_length {l : List (Perm α)}
     (hl : ∀ g ∈ l, IsSwap g) : l.Prod ∈ alternatingGroup α ↔ Even l.length := by
-  rw [mem_alternating_group, sign_prod_list_swap hl, ← Units.val_eq_one, Units.coe_pow,
+  rw [mem_alternating_group, sign_prod_list_swap hl, ← Units.val_eq_one, Units.val_pow_eq_pow_val,
     Units.coe_neg_one, neg_one_pow_eq_one_iff_even]
   decide
 #align
@@ -291,8 +291,8 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Fin 5)}
   have h := le_of_mul_le_mul_right (le_trans h h56) (by decide)
   rw [mem_alternating_group, sign_of_cycle_type, h2] at ha
   norm_num at ha
-  rw [pow_add, pow_mul, Int.units_pow_two, one_mul, Units.ext_iff, Units.val_one, Units.coe_pow,
-    Units.coe_neg_one, neg_one_pow_eq_one_iff_even _] at ha
+  rw [pow_add, pow_mul, Int.units_pow_two, one_mul, Units.ext_iff, Units.val_one,
+    Units.val_pow_eq_pow_val, Units.coe_neg_one, neg_one_pow_eq_one_iff_even _] at ha
   swap; · decide
   rw [is_conj_iff_cycle_type_eq, h2]
   interval_cases Multiset.card g.cycle_type

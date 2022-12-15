@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.minimal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ theorem is_minimal_iff_closed_smul_invariant [HasContinuousConstSmul M α] :
   · intro h s
     exact eq_empty_or_univ_of_smul_invariant_closed M
   refine' fun H => ⟨fun x => dense_iff_closure_eq.2 <| (H _ _ _).resolve_left _⟩
-  exacts[isClosedClosure, fun c => smul_closure_orbit_subset _ _,
+  exacts[is_closed_closure, fun c => smul_closure_orbit_subset _ _,
     (orbit_nonempty _).closure.ne_empty]
 #align is_minimal_iff_closed_smul_invariant is_minimal_iff_closed_smul_invariant
 

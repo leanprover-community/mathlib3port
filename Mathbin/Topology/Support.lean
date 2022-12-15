@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.support
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,9 +58,9 @@ theorem subset_mul_tsupport (f : X → α) : mulSupport f ⊆ mulTsupport f :=
 #align subset_mul_tsupport subset_mul_tsupport
 
 @[to_additive]
-theorem isClosedMulTsupport (f : X → α) : IsClosed (mulTsupport f) :=
-  isClosedClosure
-#align is_closed_mul_tsupport isClosedMulTsupport
+theorem is_closed_mul_tsupport (f : X → α) : IsClosed (mulTsupport f) :=
+  is_closed_closure
+#align is_closed_mul_tsupport is_closed_mul_tsupport
 
 @[to_additive]
 theorem mul_tsupport_eq_empty_iff {f : X → α} : mulTsupport f = ∅ ↔ f = 1 := by
@@ -138,7 +138,7 @@ theorem has_compact_mul_support_def : HasCompactMulSupport f ↔ IsCompact (clos
   by rfl
 #align has_compact_mul_support_def has_compact_mul_support_def
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
 theorem exists_compact_iff_has_compact_mul_support [T2Space α] :
     (∃ K : Set α, IsCompact K ∧ ∀ (x) (_ : x ∉ K), f x = 1) ↔ HasCompactMulSupport f := by
@@ -146,7 +146,7 @@ theorem exists_compact_iff_has_compact_mul_support [T2Space α] :
     has_compact_mul_support_def, exists_compact_superset_iff]
 #align exists_compact_iff_has_compact_mul_support exists_compact_iff_has_compact_mul_support
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
 theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K)
     (hfK : ∀ (x) (_ : x ∉ K), f x = 1) : HasCompactMulSupport f :=
@@ -163,11 +163,11 @@ theorem has_compact_mul_support_iff_eventually_eq :
     HasCompactMulSupport f ↔ f =ᶠ[coclosedCompact α] 1 :=
   ⟨fun h =>
     mem_coclosed_compact.mpr
-      ⟨mulTsupport f, isClosedMulTsupport _, h, fun x =>
+      ⟨mulTsupport f, is_closed_mul_tsupport _, h, fun x =>
         not_imp_comm.mpr fun hx => subset_mul_tsupport f hx⟩,
     fun h =>
     let ⟨C, hC⟩ := mem_coclosed_compact'.mp h
-    is_compact_of_is_closed_subset hC.2.1 (isClosedMulTsupport _) (closure_minimal hC.2.2 hC.1)⟩
+    is_compact_of_is_closed_subset hC.2.1 (is_closed_mul_tsupport _) (closure_minimal hC.2.2 hC.1)⟩
 #align has_compact_mul_support_iff_eventually_eq has_compact_mul_support_iff_eventually_eq
 
 @[to_additive]
@@ -180,7 +180,7 @@ theorem HasCompactMulSupport.is_compact_range [TopologicalSpace β] (h : HasComp
 @[to_additive]
 theorem HasCompactMulSupport.mono' {f' : α → γ} (hf : HasCompactMulSupport f)
     (hff' : mulSupport f' ⊆ mulTsupport f) : HasCompactMulSupport f' :=
-  is_compact_of_is_closed_subset hf isClosedClosure <| closure_minimal hff' isClosedClosure
+  is_compact_of_is_closed_subset hf is_closed_closure <| closure_minimal hff' is_closed_closure
 #align has_compact_mul_support.mono' HasCompactMulSupport.mono'
 
 @[to_additive]
@@ -205,7 +205,7 @@ theorem has_compact_mul_support_comp_left (hg : ∀ {x}, g x = 1 ↔ x = 1) :
 theorem HasCompactMulSupport.comp_closed_embedding (hf : HasCompactMulSupport f) {g : α' → α}
     (hg : ClosedEmbedding g) : HasCompactMulSupport (f ∘ g) := by
   rw [has_compact_mul_support_def, Function.mul_support_comp_eq_preimage]
-  refine' is_compact_of_is_closed_subset (hg.is_compact_preimage hf) isClosedClosure _
+  refine' is_compact_of_is_closed_subset (hg.is_compact_preimage hf) is_closed_closure _
   rw [hg.to_embedding.closure_eq_preimage_closure_image]
   exact preimage_mono (closure_mono <| image_preimage_subset _ _)
 #align has_compact_mul_support.comp_closed_embedding HasCompactMulSupport.comp_closed_embedding
@@ -308,7 +308,7 @@ theorem exists_finset_nhd_mul_support_subset {f : ι → X → R}
     ·
       exact
         (bInter_finset_mem js).mpr fun j hj =>
-          IsClosed.compl_mem_nhds (isClosedMulTsupport _)
+          IsClosed.compl_mem_nhds (is_closed_mul_tsupport _)
             (Set.not_mem_subset (hso j) (finset.mem_filter.mp hj).2)
     · exact (bInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (finset.mem_filter.mp hi).2
     · have hzn : z ∈ n := by 

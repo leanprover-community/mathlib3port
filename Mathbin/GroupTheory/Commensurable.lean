@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module group_theory.commensurable
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,8 +71,8 @@ def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) :
     K ⧸ H.subgroupOf K ≃ (g • K).1 ⧸ (g • H).subgroupOf (g • K) :=
   Quotient.congr (K.equivSmul g).toEquiv fun a b => by
     rw [← Quotient.eq', ← Quotient.eq', QuotientGroup.eq', QuotientGroup.eq',
-      Subgroup.mem_subgroup_of, Subgroup.mem_subgroup_of, MulEquiv.to_equiv_eq_coe,
-      MulEquiv.coe_to_equiv, ← MulEquiv.map_inv, ← MulEquiv.map_mul, Subgroup.equiv_smul_apply_coe,
+      Subgroup.mem_subgroup_of, Subgroup.mem_subgroup_of, [anonymous], [anonymous], ←
+      MulEquiv.map_inv, ← MulEquiv.map_mul, Subgroup.equiv_smul_apply_coe,
       Subgroup.smul_mem_pointwise_smul_iff]
 #align commensurable.quot_conj_equiv Commensurable.quotConjEquiv
 
@@ -92,11 +92,11 @@ def commensurator' (H : Subgroup G) :
     Subgroup
       (ConjAct G) where 
   carrier := { g : ConjAct G | Commensurable (g • H) H }
-  one_mem' := by rw [Set.mem_set_of_eq, one_smul]
+  one_mem' := by rw [Set.mem_setOf_eq, one_smul]
   mul_mem' a b ha hb := by 
-    rw [Set.mem_set_of_eq, mul_smul]
+    rw [Set.mem_setOf_eq, mul_smul]
     exact trans ((commensurable_conj a).mp hb) ha
-  inv_mem' a ha := by rwa [Set.mem_set_of_eq, comm, ← commensurable_inv]
+  inv_mem' a ha := by rwa [Set.mem_setOf_eq, comm, ← commensurable_inv]
 #align commensurable.commensurator' Commensurable.commensurator'
 
 /-- For `H` a subgroup of `G`, this is the subgroup of all elements `g : G`

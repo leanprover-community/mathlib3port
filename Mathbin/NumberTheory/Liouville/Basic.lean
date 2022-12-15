@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ theorem irrational {x : ℝ} (h : Liouville x) : Irrational x :=
   -- Actually, the absolute value of an integer is a natural number
   lift |a * ↑q - ↑b * p| to ℕ using abs_nonneg (a * ↑q - ↑b * p)
   -- At a1, revert to natural numbers
-  rw [← Int.ofNat_mul, ← Int.coe_nat_pow, ← Int.ofNat_mul, Int.coe_nat_lt] at a1
+  rw [← Int.ofNat_mul, ← Int.coe_nat_pow, ← Int.ofNat_mul, Int.ofNat_lt] at a1
   -- Recall this is by contradiction: we obtained the inequality `b * q ≤ x * q ^ (b + 1)`, so
   -- we are done.
   exact not_le.mpr a1 (Nat.mul_lt_mul_pow_succ (int.coe_nat_pos.mp ap) (int.coe_nat_lt.mp q1)).le

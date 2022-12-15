@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sangwoo Jo (aka Jason), Guy Leroy, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.gcd
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,10 +144,10 @@ theorem exists_mul_mod_eq_gcd {k n : ℕ} (hk : gcd n k < k) : ∃ m, n * m % k 
   have hk' := int.coe_nat_ne_zero.mpr (ne_of_gt (lt_of_le_of_lt (zero_le (gcd n k)) hk))
   have key := congr_arg (fun m => Int.natMod m k) (gcd_eq_gcd_ab n k)
   simp_rw [Int.natMod] at key
-  rw [Int.add_mul_mod_self_left, ← Int.coe_nat_mod, Int.toNat_coe_nat, mod_eq_of_lt hk] at key
+  rw [Int.add_mul_emod_self_left, ← Int.coe_nat_mod, Int.toNat_coe_nat, mod_eq_of_lt hk] at key
   refine' ⟨(n.gcd_a k % k).toNat, Eq.trans (Int.ofNat.inj _) key.symm⟩
-  rw [Int.coe_nat_mod, Int.ofNat_mul, Int.toNat_of_nonneg (Int.mod_nonneg _ hk'),
-    Int.toNat_of_nonneg (Int.mod_nonneg _ hk'), Int.mul_mod, Int.mod_mod, ← Int.mul_mod]
+  rw [Int.coe_nat_mod, Int.ofNat_mul, Int.toNat_of_nonneg (Int.emod_nonneg _ hk'),
+    Int.toNat_of_nonneg (Int.emod_nonneg _ hk'), Int.mul_emod, Int.emod_emod, ← Int.mul_emod]
 #align nat.exists_mul_mod_eq_gcd Nat.exists_mul_mod_eq_gcd
 
 theorem exists_mul_mod_eq_one_of_coprime {k n : ℕ} (hkn : Coprime n k) (hk : 1 < k) :
@@ -201,7 +201,7 @@ theorem nat_abs_div (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natA
     _ = nat_abs (a / b) * (nat_abs b / nat_abs b) := by rw [Nat.div_self h]
     _ = nat_abs (a / b) * nat_abs b / nat_abs b := by rw [Nat.mul_div_assoc _ dvd_rfl]
     _ = nat_abs (a / b * b) / nat_abs b := by rw [nat_abs_mul (a / b) b]
-    _ = nat_abs a / nat_abs b := by rw [Int.div_mul_cancel H]
+    _ = nat_abs a / nat_abs b := by rw [Int.ediv_mul_cancel H]
     
 #align int.nat_abs_div Int.nat_abs_div
 
@@ -227,16 +227,15 @@ protected theorem coe_nat_lcm (m n : ℕ) : Int.lcm ↑m ↑n = Nat.lcm m n :=
 #align int.coe_nat_lcm Int.coe_nat_lcm
 
 theorem gcd_dvd_left (i j : ℤ) : (gcd i j : ℤ) ∣ i :=
-  dvd_nat_abs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_left _ _
+  dvd_natAbs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_left _ _
 #align int.gcd_dvd_left Int.gcd_dvd_left
 
 theorem gcd_dvd_right (i j : ℤ) : (gcd i j : ℤ) ∣ j :=
-  dvd_nat_abs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_right _ _
+  dvd_natAbs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_right _ _
 #align int.gcd_dvd_right Int.gcd_dvd_right
 
 theorem dvd_gcd {i j k : ℤ} (h1 : k ∣ i) (h2 : k ∣ j) : k ∣ gcd i j :=
-  nat_abs_dvd.1 <|
-    coe_nat_dvd.2 <| Nat.dvd_gcd (nat_abs_dvd_iff_dvd.2 h1) (nat_abs_dvd_iff_dvd.2 h2)
+  natAbs_dvd.1 <| coe_nat_dvd.2 <| Nat.dvd_gcd (natAbs_dvd_natAbs.2 h1) (natAbs_dvd_natAbs.2 h2)
 #align int.dvd_gcd Int.dvd_gcd
 
 theorem gcd_mul_lcm (i j : ℤ) : gcd i j * lcm i j = natAbs (i * j) := by
@@ -365,8 +364,8 @@ theorem ne_zero_of_gcd {x y : ℤ} (hc : gcd x y ≠ 0) : x ≠ 0 ∨ y ≠ 0 :=
 
 theorem exists_gcd_one {m n : ℤ} (H : 0 < gcd m n) :
     ∃ m' n' : ℤ, gcd m' n' = 1 ∧ m = m' * gcd m n ∧ n = n' * gcd m n :=
-  ⟨_, _, gcd_div_gcd_div_gcd H, (Int.div_mul_cancel (gcd_dvd_left m n)).symm,
-    (Int.div_mul_cancel (gcd_dvd_right m n)).symm⟩
+  ⟨_, _, gcd_div_gcd_div_gcd H, (Int.ediv_mul_cancel (gcd_dvd_left m n)).symm,
+    (Int.ediv_mul_cancel (gcd_dvd_right m n)).symm⟩
 #align int.exists_gcd_one Int.exists_gcd_one
 
 theorem exists_gcd_one' {m n : ℤ} (H : 0 < gcd m n) :
@@ -427,8 +426,8 @@ theorem gcd_least_linear {a b : ℤ} (ha : a ≠ 0) :
     IsLeast { n : ℕ | 0 < n ∧ ∃ x y : ℤ, ↑n = a * x + b * y } (a.gcd b) := by
   simp_rw [← gcd_dvd_iff]
   constructor
-  · simpa [and_true_iff, dvd_refl, Set.mem_set_of_eq] using gcd_pos_of_non_zero_left b ha
-  · simp only [lowerBounds, and_imp, Set.mem_set_of_eq]
+  · simpa [and_true_iff, dvd_refl, Set.mem_setOf_eq] using gcd_pos_of_non_zero_left b ha
+  · simp only [lowerBounds, and_imp, Set.mem_setOf_eq]
     exact fun n hn_pos hn => Nat.le_of_dvd hn_pos hn
 #align int.gcd_least_linear Int.gcd_least_linear
 
@@ -499,16 +498,16 @@ theorem pow_gcd_eq_one {M : Type _} [Monoid M] (x : M) {m n : ℕ} (hm : x ^ m =
     x ^ m.gcd n = 1 := by 
   cases m; · simp only [hn, Nat.gcd_zero_left]
   lift x to Mˣ using is_unit_of_pow_eq_one hm m.succ_ne_zero
-  simp only [← Units.coe_pow] at *
-  rw [← Units.val_one, ← zpow_coe_nat, ← Units.ext_iff] at *
+  simp only [← Units.val_pow_eq_pow_val] at *
+  rw [← Units.val_one, ← zpow_ofNat, ← Units.ext_iff] at *
   simp only [Nat.gcd_eq_gcd_ab, zpow_add, zpow_mul, hm, hn, one_zpow, one_mul]
 #align pow_gcd_eq_one pow_gcd_eq_one
 
 theorem gcd_nsmul_eq_zero {M : Type _} [AddMonoid M] (x : M) {m n : ℕ} (hm : m • x = 0)
     (hn : n • x = 0) : m.gcd n • x = 0 := by
   apply multiplicative.of_add.injective
-  rw [of_add_nsmul, of_add_zero, pow_gcd_eq_one] <;>
-    rwa [← of_add_nsmul, ← of_add_zero, Equiv.apply_eq_iff_eq]
+  rw [ofAdd_nsmul, ofAdd_zero, pow_gcd_eq_one] <;>
+    rwa [← ofAdd_nsmul, ← ofAdd_zero, Equiv.apply_eq_iff_eq]
 #align gcd_nsmul_eq_zero gcd_nsmul_eq_zero
 
 attribute [to_additive gcd_nsmul_eq_zero] pow_gcd_eq_one

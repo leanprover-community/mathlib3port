@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (ExteriorAlgebra R M) x = 
 #align exterior_algebra.algebra_map_eq_one_iff ExteriorAlgebra.algebra_map_eq_one_iff
 
 theorem is_unit_algebra_map (r : R) : IsUnit (algebraMap R (ExteriorAlgebra R M) r) ↔ IsUnit r :=
-  is_unit_map_of_left_inverse _ (algebra_map_left_inverse M)
+  isUnit_map_of_leftInverse _ (algebra_map_left_inverse M)
 #align exterior_algebra.is_unit_algebra_map ExteriorAlgebra.is_unit_algebra_map
 
 /-- Invertibility in the exterior algebra is the same as invertibility of the base ring. -/

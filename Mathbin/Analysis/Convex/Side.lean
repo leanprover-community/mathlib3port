@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.side
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ variable [AddCommGroup V'] [Module R V'] [AddTorsor V' P']
 
 include V
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 /-- The points `x` and `y` are weakly on the same side of `s`. -/
 def WSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
   ∃ (p₁ p₂ : _)(_ : p₁ ∈ s)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (y -ᵥ p₂)
@@ -56,7 +56,7 @@ def SSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
   s.WSameSide x y ∧ x ∉ s ∧ y ∉ s
 #align affine_subspace.s_same_side AffineSubspace.SSameSide
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 /-- The points `x` and `y` are weakly on opposite sides of `s`. -/
 def WOppSide (s : AffineSubspace R P) (x y : P) : Prop :=
   ∃ (p₁ p₂ : _)(_ : p₁ ∈ s)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (p₂ -ᵥ y)
@@ -774,7 +774,7 @@ theorem s_opp_side_line_map_right {s : AffineSubspace R P} {x y : P} (hx : x ∈
 theorem set_of_w_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
     { y | s.WSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.ici 0) s := by
   ext y
-  simp_rw [Set.mem_set_of, Set.mem_image2, Set.mem_Ici, mem_coe]
+  simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Ici, mem_coe]
   constructor
   · rw [w_same_side_iff_exists_left hp, or_iff_right hx]
     rintro ⟨p₂, hp₂, h | h | ⟨r₁, r₂, hr₁, hr₂, h⟩⟩
@@ -793,7 +793,7 @@ theorem set_of_w_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x 
 theorem set_of_s_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
     { y | s.SSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.ioi 0) s := by
   ext y
-  simp_rw [Set.mem_set_of, Set.mem_image2, Set.mem_Ioi, mem_coe]
+  simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Ioi, mem_coe]
   constructor
   · rw [s_same_side_iff_exists_left hp]
     rintro ⟨-, hy, p₂, hp₂, h | h | ⟨r₁, r₂, hr₁, hr₂, h⟩⟩
@@ -811,7 +811,7 @@ theorem set_of_s_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x 
 theorem set_of_w_opp_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
     { y | s.WOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.iic 0) s := by
   ext y
-  simp_rw [Set.mem_set_of, Set.mem_image2, Set.mem_Iic, mem_coe]
+  simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Iic, mem_coe]
   constructor
   · rw [w_opp_side_iff_exists_left hp, or_iff_right hx]
     rintro ⟨p₂, hp₂, h | h | ⟨r₁, r₂, hr₁, hr₂, h⟩⟩
@@ -830,7 +830,7 @@ theorem set_of_w_opp_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x �
 theorem set_of_s_opp_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
     { y | s.SOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.iio 0) s := by
   ext y
-  simp_rw [Set.mem_set_of, Set.mem_image2, Set.mem_Iio, mem_coe]
+  simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Iio, mem_coe]
   constructor
   · rw [s_opp_side_iff_exists_left hp]
     rintro ⟨-, hy, p₂, hp₂, h | h | ⟨r₁, r₂, hr₁, hr₂, h⟩⟩

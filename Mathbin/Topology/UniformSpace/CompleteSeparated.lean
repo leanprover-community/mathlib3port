@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.uniform_space.complete_separated
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,14 +26,14 @@ open TopologicalSpace Filter
 variable {α : Type _}
 
 --In a separated space, a complete set is closed
-theorem IsComplete.isClosed [UniformSpace α] [SeparatedSpace α] {s : Set α} (h : IsComplete s) :
+theorem IsComplete.is_closed [UniformSpace α] [SeparatedSpace α] {s : Set α} (h : IsComplete s) :
     IsClosed s :=
   is_closed_iff_cluster_pt.2 fun a ha => by 
     let f := 𝓝[s] a
     have : Cauchy f := cauchy_nhds.mono' ha inf_le_left
     rcases h f this inf_le_right with ⟨y, ys, fy⟩
     rwa [(tendsto_nhds_unique' ha inf_le_left fy : a = y)]
-#align is_complete.is_closed IsComplete.isClosed
+#align is_complete.is_closed IsComplete.is_closed
 
 namespace DenseInducing
 

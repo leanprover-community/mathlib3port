@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.projective_resolution
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -203,7 +203,7 @@ def lift {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : Projective
 #align category_theory.ProjectiveResolution.lift CategoryTheory.ProjectiveResolutionCat.lift
 
 /-- The resolution maps intertwine the lift of a morphism and that morphism. -/
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y)
     (Q : ProjectiveResolutionCat Z) : lift f P Q ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f := by
   ext
@@ -297,13 +297,13 @@ def homotopyEquiv {X : C} (P Q : ProjectiveResolutionCat X) :
 #align
   category_theory.ProjectiveResolution.homotopy_equiv CategoryTheory.ProjectiveResolutionCat.homotopyEquiv
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem homotopy_equiv_hom_π {X : C} (P Q : ProjectiveResolutionCat X) :
     (homotopyEquiv P Q).Hom ≫ Q.π = P.π := by simp [HomotopyEquiv]
 #align
   category_theory.ProjectiveResolution.homotopy_equiv_hom_π CategoryTheory.ProjectiveResolutionCat.homotopy_equiv_hom_π
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem homotopy_equiv_inv_π {X : C} (P Q : ProjectiveResolutionCat X) :
     (homotopyEquiv P Q).inv ≫ P.π = Q.π := by simp [HomotopyEquiv]
 #align

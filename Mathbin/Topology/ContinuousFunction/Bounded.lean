@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.bounded
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -533,7 +533,7 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
 subset for the topology of uniform convergence. In this section, we prove this theorem
@@ -632,7 +632,7 @@ theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α 
   /- This version is deduced from the previous one by checking that the closure of A, in
     addition to being closed, still satisfies the properties of compact range and equicontinuity -/
     arzela_ascoli₂
-    s hs (closure A) isClosedClosure
+    s hs (closure A) is_closed_closure
     (fun f x hf =>
       (mem_of_closed' hs.IsClosed).2 fun ε ε0 =>
         let ⟨g, gA, dist_fg⟩ := Metric.mem_closure_iff.1 hf ε ε0

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.prod.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -212,10 +212,22 @@ theorem mk.inj_right {α β : Type _} (b : β) :
   · simpa only [and_true_iff, eq_self_iff_true, mk.inj_iff] using h
 #align prod.mk.inj_right Prod.mk.inj_right
 
+/- warning: prod.mk_inj_left -> Prod.mk_inj_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {a : α} {b₁ : β} {b₂ : β}, Iff (Eq.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.mk.{u1, u2} α β a b₁) (Prod.mk.{u1, u2} α β a b₂)) (Eq.{succ u2} β b₁ b₂)
+but is expected to have type
+  forall {α : Type.{u2}} {β : α} {a : Type.{u1}} {b₁ : a} {b₂ : a}, Iff (Eq.{max (succ u1) (succ u2)} (Prod.{u2, u1} α a) (Prod.mk.{u2, u1} α a β b₁) (Prod.mk.{u2, u1} α a β b₂)) (Eq.{succ u1} a b₁ b₂)
+Case conversion may be inaccurate. Consider using '#align prod.mk_inj_left Prod.mk_inj_leftₓ'. -/
 theorem mk_inj_left : (a, b₁) = (a, b₂) ↔ b₁ = b₂ :=
   (mk.inj_left _).eq_iff
 #align prod.mk_inj_left Prod.mk_inj_left
 
+/- warning: prod.mk_inj_right -> Prod.mk_inj_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {a₁ : α} {a₂ : α} {b : β}, Iff (Eq.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.mk.{u1, u2} α β a₁ b) (Prod.mk.{u1, u2} α β a₂ b)) (Eq.{succ u1} α a₁ a₂)
+but is expected to have type
+  forall {α : Type.{u2}} {β : α} {a₁ : Type.{u1}} {a₂ : a₁} {b : α}, Iff (Eq.{max (succ u1) (succ u2)} (Prod.{u2, u1} α a₁) (Prod.mk.{u2, u1} α a₁ β a₂) (Prod.mk.{u2, u1} α a₁ b a₂)) (Eq.{succ u2} α β b)
+Case conversion may be inaccurate. Consider using '#align prod.mk_inj_right Prod.mk_inj_rightₓ'. -/
 theorem mk_inj_right : (a₁, b) = (a₂, b) ↔ a₁ = a₂ :=
   (mk.inj_right _).eq_iff
 #align prod.mk_inj_right Prod.mk_inj_right
@@ -230,10 +242,16 @@ theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
   rw [← @mk.eta _ _ p, ← @mk.eta _ _ q, mk.inj_iff]
 #align prod.ext_iff Prod.ext_iff
 
+/- warning: prod.ext -> Prod.ext is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : Prod.{u1, u2} α β} {q : Prod.{u1, u2} α β}, (Eq.{succ u1} α (Prod.fst.{u1, u2} α β p) (Prod.fst.{u1, u2} α β q)) -> (Eq.{succ u2} β (Prod.snd.{u1, u2} α β p) (Prod.snd.{u1, u2} α β q)) -> (Eq.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) p q)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {p : Prod.{u2, u1} α β} {q : Prod.{u2, u1} α β}, (Eq.{succ u2} α (Prod.fst.{u2, u1} α β p) (Prod.fst.{u2, u1} α β q)) -> (Eq.{succ u1} β (Prod.snd.{u2, u1} α β p) (Prod.snd.{u2, u1} α β q)) -> (Eq.{max (succ u1) (succ u2)} (Prod.{u2, u1} α β) p q)
+Case conversion may be inaccurate. Consider using '#align prod.ext Prod.extₓ'. -/
 @[ext]
 theorem ext {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
   ext_iff.2 ⟨h₁, h₂⟩
-#align prod.ext Prod.extₓ
+#align prod.ext Prod.ext
 
 /- warning: prod.map_def -> Prod.map_def is a dubious translation:
 lean 3 declaration is
@@ -467,6 +485,12 @@ theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × �
     | (a, b), (c, d), Or.inr ⟨e, h⟩ => by change a = c at e <;> subst e <;> exact lex.right _ h⟩
 #align prod.lex_def Prod.lex_def
 
+/- warning: prod.lex_iff -> Prod.lex_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Iff (Prod.Lex.{u1, u2} α β r s x y) (Or (r (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y)) (And (Eq.{succ u1} α (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y)) (s (Prod.snd.{u1, u2} α β x) (Prod.snd.{u1, u2} α β y))))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Prod.Lex.{u2, u1} α β r s x y) (Or (r (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y)) (And (Eq.{succ u2} α (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y)) (s (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y))))
+Case conversion may be inaccurate. Consider using '#align prod.lex_iff Prod.lex_iffₓ'. -/
 theorem lex_iff : Lex r s x y ↔ r x.1 y.1 ∨ x.1 = y.1 ∧ s x.2 y.2 :=
   lex_def _ _
 #align prod.lex_iff Prod.lex_iff
@@ -506,9 +530,11 @@ instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl
   ⟨Lex.refl_right _ _⟩
 #align prod.is_refl_right Prod.is_refl_right
 
+#print Prod.is_irrefl /-
 instance is_irrefl [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (α × β) (Lex r s) :=
   ⟨by rintro ⟨i, a⟩ (⟨_, _, h⟩ | ⟨_, h⟩) <;> exact irrefl _ h⟩
 #align prod.is_irrefl Prod.is_irrefl
+-/
 
 /- warning: prod.lex.trans -> Prod.Lex.trans is a dubious translation:
 lean 3 declaration is

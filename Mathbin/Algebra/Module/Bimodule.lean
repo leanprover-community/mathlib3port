@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.module.bimodule
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ variable [Algebra R A] [Algebra R B]
 
 variable [IsScalarTower R A M] [IsScalarTower R B M]
 
-variable [SmulCommClass A B M]
+variable [SMulCommClass A B M]
 
 /-- A constructor for a subbimodule which demands closure under the two sets of scalars
 individually, rather than jointly via their tensor product.
@@ -136,7 +136,7 @@ section Ring
 
 variable (R S M : Type _) [Ring R] [Ring S]
 
-variable [AddCommGroup M] [Module R M] [Module S M] [SmulCommClass R S M]
+variable [AddCommGroup M] [Module R M] [Module S M] [SMulCommClass R S M]
 
 /-- A `submodule` over `R ⊗[ℕ] S` is naturally also a `submodule` over the canonically-isomorphic
 ring `R ⊗[ℤ] S`. -/

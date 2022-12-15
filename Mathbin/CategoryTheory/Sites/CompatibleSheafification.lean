@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.compatible_sheafification
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ theorem sheafification_whisker_right_iso_inv_app :
 #align
   category_theory.grothendieck_topology.sheafification_whisker_right_iso_inv_app CategoryTheory.GrothendieckTopology.sheafification_whisker_right_iso_inv_app
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem whisker_right_to_sheafify_sheafify_comp_iso_hom :
     whiskerRight (J.toSheafify _) _ ≫ (J.sheafifyCompIso F P).Hom = J.toSheafify _ := by
   dsimp [sheafify_comp_iso]
@@ -145,7 +145,7 @@ theorem whisker_right_to_sheafify_sheafify_comp_iso_hom :
 #align
   category_theory.grothendieck_topology.whisker_right_to_sheafify_sheafify_comp_iso_hom CategoryTheory.GrothendieckTopology.whisker_right_to_sheafify_sheafify_comp_iso_hom
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem to_sheafify_comp_sheafify_comp_iso_inv :
     J.toSheafify _ ≫ (J.sheafifyCompIso F P).inv = whiskerRight (J.toSheafify _) _ := by
   rw [iso.comp_inv_eq]

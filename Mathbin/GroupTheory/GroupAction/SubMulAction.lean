@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sub_mul_action
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ class SmulMemClass (S : Type _) (R M : outParam <| Type _) [HasSmul R M] [SetLik
 
 /-- `vadd_mem_class S R M` says `S` is a type of subsets `s ≤ M` that are closed under the
 additive action of `R` on `M`. -/
-class VaddMemClass (S : Type _) (R M : outParam <| Type _) [HasVadd R M] [SetLike S M] where
+class VaddMemClass (S : Type _) (R M : outParam <| Type _) [VAdd R M] [SetLike S M] where
   vadd_mem : ∀ {s : S} (r : R) {m : M}, m ∈ s → r +ᵥ m ∈ s
 #align vadd_mem_class VaddMemClass
 

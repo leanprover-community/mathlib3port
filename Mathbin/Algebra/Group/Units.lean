@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johannes Hölzl, Chris Hughes, Jens Wagemaker, Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.group.units
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1122,7 +1122,7 @@ protected theorem mul_right_cancel (h : IsUnit b) : a * b = c * b → a = c :=
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M ((fun (x._@.Mathlib.Algebra.Group.Units._hyg.7026 : M) (x._@.Mathlib.Algebra.Group.Units._hyg.7028 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.Group.Units._hyg.7026 x._@.Mathlib.Algebra.Group.Units._hyg.7028) a))
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M ((fun (x._@.Mathlib.Algebra.Group.Units._hyg.6964 : M) (x._@.Mathlib.Algebra.Group.Units._hyg.6966 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.Group.Units._hyg.6964 x._@.Mathlib.Algebra.Group.Units._hyg.6966) a))
 Case conversion may be inaccurate. Consider using '#align is_unit.mul_right_injective IsUnit.mul_right_injectiveₓ'. -/
 @[to_additive]
 protected theorem mul_right_injective (h : IsUnit a) : Injective ((· * ·) a) := fun _ _ =>

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.equivalence
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,7 @@ universe v₁ v₂ u₁ u₂
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 theorem has_initial_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasInitial C] : HasInitial D :=
-  Adjunction.has_colimits_of_shape_of_equivalence e
+  Adjunction.hasColimitsOfShapeOfEquivalence e
 #align category_theory.has_initial_of_equivalence CategoryTheory.has_initial_of_equivalence
 
 theorem Equivalence.has_initial_iff (e : C ≌ D) : HasInitial C ↔ HasInitial D :=
@@ -36,7 +36,7 @@ theorem Equivalence.has_initial_iff (e : C ≌ D) : HasInitial C ↔ HasInitial 
 #align category_theory.equivalence.has_initial_iff CategoryTheory.Equivalence.has_initial_iff
 
 theorem has_terminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal C] : HasTerminal D :=
-  Adjunction.has_limits_of_shape_of_equivalence e
+  Adjunction.hasLimitsOfShapeOfEquivalence e
 #align category_theory.has_terminal_of_equivalence CategoryTheory.has_terminal_of_equivalence
 
 theorem Equivalence.has_terminal_iff (e : C ≌ D) : HasTerminal C ↔ HasTerminal D :=

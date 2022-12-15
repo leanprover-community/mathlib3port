@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.primitive_element
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -240,7 +240,7 @@ theorem AlgHom.card (F E K : Type _) [Field F] [Field E] [Field K] [IsAlgClosed 
     Fintype.card (E →ₐ[F] K) = finrank F E := by
   convert
     (AlgHom.card_of_power_basis (Field.powerBasisOfFiniteOfSeparable F E)
-          (IsSeparable.separable _ _) (IsAlgClosed.splitsCodomain _)).trans
+          (IsSeparable.separable _ _) (IsAlgClosed.splits_codomain _)).trans
       (PowerBasis.finrank _).symm
   infer_instance
 #align alg_hom.card AlgHom.card

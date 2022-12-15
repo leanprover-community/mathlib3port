@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.split_simplicial_object
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,7 @@ def pull : IndexSet Δ' :=
   mk (factorThruImage (θ.unop ≫ A.e))
 #align simplicial_object.splitting.index_set.pull SimplicialObject.Splitting.IndexSet.pull
 
-@[reassoc]
+@[reassoc.1]
 theorem fac_pull : (A.pull θ).e ≫ image.ι (θ.unop ≫ A.e) = θ.unop ≫ A.e :=
   image.fac _
 #align simplicial_object.splitting.index_set.fac_pull SimplicialObject.Splitting.IndexSet.fac_pull
@@ -271,7 +271,7 @@ def ιSummand {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) : s.n A.1.unop.len 
   Splitting.ιCoprod s.n A ≫ (s.Iso Δ).Hom
 #align simplicial_object.splitting.ι_summand SimplicialObject.Splitting.ιSummand
 
-@[reassoc]
+@[reassoc.1]
 theorem ι_summand_eq {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A = s.ι A.1.unop.len ≫ X.map A.e.op := by
   dsimp only [ι_summand, iso.hom]
@@ -291,19 +291,19 @@ def φ (f : X ⟶ Y) (n : ℕ) : s.n n ⟶ Y _[n] :=
   s.ι n ≫ f.app (op [n])
 #align simplicial_object.splitting.φ SimplicialObject.Splitting.φ
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_summand_comp_app (f : X ⟶ Y) {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A ≫ f.app Δ = s.φ f A.1.unop.len ≫ Y.map A.e.op := by
   simp only [ι_summand_eq_assoc, φ, nat_trans.naturality, assoc]
 #align simplicial_object.splitting.ι_summand_comp_app SimplicialObject.Splitting.ι_summand_comp_app
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
     (h : ∀ A : IndexSet Δ, s.ιSummand A ≫ f = s.ιSummand A ≫ g) : f = g := by
   rw [← cancel_epi (s.iso Δ).Hom]
   ext A
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
   simpa only [ι_summand_eq, iso_hom, colimit.ι_desc_assoc, cofan.mk_ι_app, assoc] using h A
 #align simplicial_object.splitting.hom_ext' SimplicialObject.Splitting.hom_ext'
 
@@ -324,7 +324,7 @@ def desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.
   (s.Iso Δ).inv ≫ Sigma.desc F
 #align simplicial_object.splitting.desc SimplicialObject.Splitting.desc
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.unop.len ⟶ Z)
     (A : IndexSet Δ) : s.ιSummand A ≫ s.desc Δ F = F A := by
   dsimp only [ι_summand, desc]
@@ -342,7 +342,7 @@ def ofIso (e : X ≅ Y) : Splitting Y where
     tidy
 #align simplicial_object.splitting.of_iso SimplicialObject.Splitting.ofIso
 
-@[reassoc]
+@[reassoc.1]
 theorem ι_summand_epi_naturality {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : IndexSet Δ₁) (p : Δ₁ ⟶ Δ₂)
     [Epi p.unop] : s.ιSummand A ≫ X.map p = s.ιSummand (A.epi_comp p) := by
   dsimp [ι_summand]
@@ -402,7 +402,7 @@ theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n :
 
 restate_axiom hom.comm'
 
-attribute [simp, reassoc] hom.comm
+attribute [simp, reassoc.1] hom.comm
 
 end Split
 
@@ -450,7 +450,7 @@ theorem comp_f {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ :
   rfl
 #align simplicial_object.split.comp_f SimplicialObject.Split.comp_f
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_summand_naturality_symm {S₁ S₂ : Split C} (Φ : S₁ ⟶ S₂) {Δ : SimplexCategoryᵒᵖ}
     (A : Splitting.IndexSet Δ) : S₁.s.ιSummand A ≫ Φ.f.app Δ = Φ.f A.1.unop.len ≫ S₂.s.ιSummand A :=
   by rw [S₁.s.ι_summand_eq, S₂.s.ι_summand_eq, assoc, Φ.F.naturality, ← Φ.comm_assoc]

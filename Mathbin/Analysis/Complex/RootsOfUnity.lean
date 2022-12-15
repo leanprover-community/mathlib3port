@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.complex.roots_of_unity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
 complex numbers of the form `e ^ (2 * real.pi * complex.I * (i / n))` for some `i < n`. -/
 theorem mem_roots_of_unity (n : ℕ+) (x : Units ℂ) :
     x ∈ rootsOfUnity n ℂ ↔ ∃ i < (n : ℕ), exp (2 * π * I * (i / n)) = x := by
-  rw [mem_roots_of_unity, Units.ext_iff, Units.coe_pow, Units.val_one]
+  rw [mem_roots_of_unity, Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one]
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast n.ne_zero
   constructor
   · intro h

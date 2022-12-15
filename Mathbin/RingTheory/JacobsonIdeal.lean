@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.jacobson_ideal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ theorem jacobson_top : jacobson (⊤ : Ideal R) = ⊤ :=
 @[simp]
 theorem jacobson_eq_top_iff : jacobson I = ⊤ ↔ I = ⊤ :=
   ⟨fun H =>
-    Classical.by_contradiction fun hi =>
+    by_contradiction fun hi =>
       let ⟨M, hm, him⟩ := exists_le_maximal I hi
       lt_top_iff_ne_top.1
         (lt_of_le_of_lt (show jacobson I ≤ M from Inf_le ⟨him, hm⟩) <|
@@ -102,7 +102,7 @@ instance (priority := 100) jacobson.is_maximal [H : IsMaximal I] : IsMaximal (ja
 
 theorem mem_jacobson_iff {x : R} : x ∈ jacobson I ↔ ∀ y, ∃ z, z * y * x + z - 1 ∈ I :=
   ⟨fun hx y =>
-    Classical.by_cases
+    by_cases
       (fun hxy : I ⊔ span {y * x + 1} = ⊤ =>
         let ⟨p, hpi, q, hq, hpq⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 hxy)
         let ⟨r, hr⟩ := mem_span_singleton'.1 hq
@@ -119,7 +119,7 @@ theorem mem_jacobson_iff {x : R} : x ∈ jacobson I ↔ ∀ y, ∃ z, z * y * x 
             M.sub_mem (le_sup_right.trans hm2 <| subset_span rfl) (M.mul_mem_left _ hxm),
     fun hx =>
     mem_Inf.2 fun M ⟨him, hm⟩ =>
-      Classical.by_contradiction fun hxm =>
+      by_contradiction fun hxm =>
         let ⟨y, i, hi, df⟩ := hm.exists_inv hxm
         let ⟨z, hz⟩ := hx (-y)
         hm.1.1 <|
@@ -172,7 +172,7 @@ theorem eq_jacobson_iff_Inf_maximal' :
           hM.2⟩⟩⟩
 #align ideal.eq_jacobson_iff_Inf_maximal' Ideal.eq_jacobson_iff_Inf_maximal'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » I) -/
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem :
@@ -386,7 +386,7 @@ theorem IsLocal.le_jacobson {I J : Ideal R} (hi : IsLocal I) (hij : I ≤ J) (hj
 
 theorem IsLocal.mem_jacobson_or_exists_inv {I : Ideal R} (hi : IsLocal I) (x : R) :
     x ∈ jacobson I ∨ ∃ y, y * x - 1 ∈ I :=
-  Classical.by_cases
+  by_cases
     (fun h : I ⊔ span {x} = ⊤ =>
       let ⟨p, hpi, q, hq, hpq⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 h)
       let ⟨r, hr⟩ := mem_span_singleton.1 hq

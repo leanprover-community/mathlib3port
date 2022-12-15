@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Devon Tuma
 
 ! This file was ported from Lean 3 source module analysis.special_functions.polynomials
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,7 +171,7 @@ theorem div_tendsto_zero_iff_degree_lt (hQ : Q ≠ 0) :
     rw [tendsto_const_mul_zpow_at_top_nhds_iff hPQ] at this
     cases' this with h h
     · exact absurd h.2 hPQ
-    · rw [sub_lt_iff_lt_add, zero_add, Int.coe_nat_lt] at h
+    · rw [sub_lt_iff_lt_add, zero_add, Int.ofNat_lt] at h
       exact degree_lt_degree h.1
 #align polynomial.div_tendsto_zero_iff_degree_lt Polynomial.div_tendsto_zero_iff_degree_lt
 

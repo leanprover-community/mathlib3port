@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_convergence
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -808,7 +808,7 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
   exact h.comp _ (maps_to_univ _ _) cg
 #align tendsto_locally_uniformly.comp TendstoLocallyUniformly.comp
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (K «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (K «expr ⊆ » s) -/
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers [] [] [] [] [] [])
@@ -1255,7 +1255,7 @@ theorem
         tfae_finish
 #align tendsto_locally_uniformly_on_tfae tendsto_locally_uniformly_on_tfae
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (K «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (K «expr ⊆ » s) -/
 theorem tendsto_locally_uniformly_on_iff_forall_is_compact [LocallyCompactSpace α] (hs : IsOpen s) :
     TendstoLocallyUniformlyOn F f p s ↔
       ∀ (K) (_ : K ⊆ s), IsCompact K → TendstoUniformlyOn F f p K :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.nat
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,9 +50,9 @@ theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℕ → ℝ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
 #align nat.uniform_embedding_coe_real Nat.uniform_embedding_coe_real
 
-theorem closedEmbeddingCoeReal : ClosedEmbedding (coe : ℕ → ℝ) :=
-  closedEmbeddingOfPairwiseLeDist zero_lt_one pairwise_one_le_dist
-#align nat.closed_embedding_coe_real Nat.closedEmbeddingCoeReal
+theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℕ → ℝ) :=
+  closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
+#align nat.closed_embedding_coe_real Nat.closed_embedding_coe_real
 
 instance : MetricSpace ℕ :=
   Nat.uniform_embedding_coe_real.comapMetricSpace _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.generator
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -313,7 +313,7 @@ theorem has_initial_of_is_coseparating [WellPowered C] [HasLimits C] {𝒢 : Set
     `has_limits_of_has_colimits_of_is_separating`. -/
 theorem has_terminal_of_is_separating [WellPowered Cᵒᵖ] [HasColimits C] {𝒢 : Set C} [Small.{v₁} 𝒢]
     (h𝒢 : IsSeparating 𝒢) : HasTerminal C := by
-  haveI : Small.{v₁} 𝒢.op := small_of_injective (Set.opEquivSelf 𝒢).Injective
+  haveI : Small.{v₁} 𝒢.op := small_of_injective (Set.opEquiv_self 𝒢).Injective
   haveI : has_initial Cᵒᵖ := has_initial_of_is_coseparating ((is_coseparating_op_iff _).2 h𝒢)
   exact has_terminal_of_has_initial_op
 #align category_theory.has_terminal_of_is_separating CategoryTheory.has_terminal_of_is_separating

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.monad.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,37 +141,37 @@ initialize_simps_projections category_theory.monad (toFunctor → coe, η' → �
 
 initialize_simps_projections category_theory.comonad (toFunctor → coe, ε' → ε, δ' → δ)
 
-@[reassoc]
+@[reassoc.1]
 theorem Monad.assoc (T : Monad C) (X : C) :
     (T : C ⥤ C).map (T.μ.app X) ≫ T.μ.app _ = T.μ.app _ ≫ T.μ.app _ :=
   T.assoc' X
 #align category_theory.monad.assoc CategoryTheory.Monad.assoc
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Monad.left_unit (T : Monad C) (X : C) :
     T.η.app ((T : C ⥤ C).obj X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
   T.left_unit' X
 #align category_theory.monad.left_unit CategoryTheory.Monad.left_unit
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Monad.right_unit (T : Monad C) (X : C) :
     (T : C ⥤ C).map (T.η.app X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
   T.right_unit' X
 #align category_theory.monad.right_unit CategoryTheory.Monad.right_unit
 
-@[reassoc]
+@[reassoc.1]
 theorem Comonad.coassoc (G : Comonad C) (X : C) :
     G.δ.app _ ≫ (G : C ⥤ C).map (G.δ.app X) = G.δ.app _ ≫ G.δ.app _ :=
   G.coassoc' X
 #align category_theory.comonad.coassoc CategoryTheory.Comonad.coassoc
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Comonad.left_counit (G : Comonad C) (X : C) :
     G.δ.app X ≫ G.ε.app ((G : C ⥤ C).obj X) = 𝟙 ((G : C ⥤ C).obj X) :=
   G.left_counit' X
 #align category_theory.comonad.left_counit CategoryTheory.Comonad.left_counit
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Comonad.right_counit (G : Comonad C) (X : C) :
     G.δ.app X ≫ (G : C ⥤ C).map (G.ε.app X) = 𝟙 ((G : C ⥤ C).obj X) :=
   G.right_counit' X
@@ -195,13 +195,13 @@ restate_axiom monad_hom.app_η'
 
 restate_axiom monad_hom.app_μ'
 
-attribute [simp, reassoc] monad_hom.app_η monad_hom.app_μ
+attribute [simp, reassoc.1] monad_hom.app_η monad_hom.app_μ
 
 restate_axiom comonad_hom.app_ε'
 
 restate_axiom comonad_hom.app_δ'
 
-attribute [simp, reassoc] comonad_hom.app_ε comonad_hom.app_δ
+attribute [simp, reassoc.1] comonad_hom.app_ε comonad_hom.app_δ
 
 instance : Category (Monad C) where 
   Hom := MonadHom

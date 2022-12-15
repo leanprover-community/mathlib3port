@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_paracompact
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ open Set
 
 namespace Emetric
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr ennreal.add_lt_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr ennreal.add_lt_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- See note [lower instance priority]
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
@@ -81,7 +81,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
             ∀ m < n, ∀ (j : ι), x ∉ D m j), ball x (2⁻¹ ^ n) :=
       fun n s => by 
       simp only [D]
-      rw [Nat.strong_rec_on_beta']
+      rw [Nat.strongRecOn'_beta]
     have memD :
       ∀ {n i y},
         y ∈ D n i ↔
@@ -172,7 +172,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
             add_le_add (edist_triangle_left _ _ _) (edist_triangle_left _ _ _)
           _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) := by
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr ennreal.add_lt_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr ennreal.add_lt_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
           _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_comm]
           _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
             Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)

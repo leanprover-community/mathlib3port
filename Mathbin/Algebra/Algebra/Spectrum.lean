@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.spectrum
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,7 +146,7 @@ theorem mem_resolvent_set_iff {r : R} {a : A} : r ∈ resolventSet R a ↔ IsUni
 
 @[simp]
 theorem resolvent_set_of_subsingleton [Subsingleton A] (a : A) : resolventSet R a = Set.univ := by
-  simp_rw [resolventSet, Subsingleton.elim (algebraMap R A _ - a) 1, isUnit_one, Set.set_of_true]
+  simp_rw [resolventSet, Subsingleton.elim (algebraMap R A _ - a) 1, isUnit_one, Set.setOf_true]
 #align spectrum.resolvent_set_of_subsingleton spectrum.resolvent_set_of_subsingleton
 
 @[simp]

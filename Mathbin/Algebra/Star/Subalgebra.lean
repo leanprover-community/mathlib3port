@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.subalgebra
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -737,11 +737,11 @@ def equalizer : StarSubalgebra R
       A where 
   carrier := { a | f a = g a }
   mul_mem' a b (ha : f a = g a) (hb : f b = g b) := by
-    rw [Set.mem_set_of_eq, map_mul f, map_mul g, ha, hb]
+    rw [Set.mem_setOf_eq, map_mul f, map_mul g, ha, hb]
   add_mem' a b (ha : f a = g a) (hb : f b = g b) := by
-    rw [Set.mem_set_of_eq, map_add f, map_add g, ha, hb]
-  algebra_map_mem' r := by simp only [Set.mem_set_of_eq, AlgHomClass.commutes]
-  star_mem' a (ha : f a = g a) := by rw [Set.mem_set_of_eq, map_star f, map_star g, ha]
+    rw [Set.mem_setOf_eq, map_add f, map_add g, ha, hb]
+  algebra_map_mem' r := by simp only [Set.mem_setOf_eq, AlgHomClass.commutes]
+  star_mem' a (ha : f a = g a) := by rw [Set.mem_setOf_eq, map_star f, map_star g, ha]
 #align star_alg_hom.equalizer StarAlgHom.equalizer
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.bilinear
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,7 @@ namespace LinearMap
 section NonUnitalNonAssoc
 
 variable (R A : Type _) [CommSemiring R] [NonUnitalNonAssocSemiring A] [Module R A]
-  [SmulCommClass R A A] [IsScalarTower R A A]
+  [SMulCommClass R A A] [IsScalarTower R A A]
 
 /-- The multiplication in a non-unital non-associative algebra is a bilinear map.
 
@@ -113,7 +113,7 @@ end NonUnitalNonAssoc
 
 section NonUnital
 
-variable (R A : Type _) [CommSemiring R] [NonUnitalSemiring A] [Module R A] [SmulCommClass R A A]
+variable (R A : Type _) [CommSemiring R] [NonUnitalSemiring A] [Module R A] [SMulCommClass R A A]
   [IsScalarTower R A A]
 
 /-- The multiplication in a non-unital algebra is a bilinear map.
@@ -237,20 +237,20 @@ variable {R A : Type _} [CommSemiring R] [Ring A] [Algebra R A]
 theorem mul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
     Function.Injective (mulLeft R x) := by
   letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
-  letI := NoZeroDivisors.to_is_domain A
+  letI := NoZeroDivisors.toIsDomain A
   exact mul_right_injective₀ hx
 #align linear_map.mul_left_injective LinearMap.mul_left_injective
 
 theorem mul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
     Function.Injective (mulRight R x) := by
   letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
-  letI := NoZeroDivisors.to_is_domain A
+  letI := NoZeroDivisors.toIsDomain A
   exact mul_left_injective₀ hx
 #align linear_map.mul_right_injective LinearMap.mul_right_injective
 
 theorem mul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mul R A x) := by
   letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
-  letI := NoZeroDivisors.to_is_domain A
+  letI := NoZeroDivisors.toIsDomain A
   exact mul_right_injective₀ hx
 #align linear_map.mul_injective LinearMap.mul_injective
 

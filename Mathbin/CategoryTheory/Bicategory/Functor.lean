@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.functor
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -219,7 +219,7 @@ restate_axiom map₂_right_unitor'
 
 attribute [simp] map_comp_naturality_left map_comp_naturality_right map₂_id map₂_associator
 
-attribute [reassoc]
+attribute [reassoc.1]
   map_comp_naturality_left map_comp_naturality_right map₂_comp map₂_associator map₂_left_unitor map₂_right_unitor
 
 attribute [simp] map₂_comp map₂_left_unitor map₂_right_unitor
@@ -407,7 +407,7 @@ restate_axiom map₂_left_unitor'
 
 restate_axiom map₂_right_unitor'
 
-attribute [reassoc]
+attribute [reassoc.1]
   map₂_comp map₂_whisker_left map₂_whisker_right map₂_associator map₂_left_unitor map₂_right_unitor
 
 attribute [simp]

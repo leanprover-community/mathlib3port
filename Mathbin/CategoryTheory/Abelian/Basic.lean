@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -279,13 +279,13 @@ namespace CategoryTheory.Abelian
 variable {C : Type u} [Category.{v} C] [Abelian C]
 
 /-- An abelian category has finite biproducts. -/
-instance (priority := 100) has_finite_biproducts : HasFiniteBiproducts C :=
+instance (priority := 100) hasFiniteBiproducts : HasFiniteBiproducts C :=
   limits.has_finite_biproducts.of_has_finite_products
-#align category_theory.abelian.has_finite_biproducts CategoryTheory.Abelian.has_finite_biproducts
+#align category_theory.abelian.has_finite_biproducts CategoryTheory.Abelian.hasFiniteBiproducts
 
-instance (priority := 100) has_binary_biproducts : HasBinaryBiproducts C :=
-  Limits.has_binary_biproducts_of_finite_biproducts _
-#align category_theory.abelian.has_binary_biproducts CategoryTheory.Abelian.has_binary_biproducts
+instance (priority := 100) hasBinaryBiproducts : HasBinaryBiproducts C :=
+  Limits.hasBinaryBiproductsOfFiniteBiproducts _
+#align category_theory.abelian.has_binary_biproducts CategoryTheory.Abelian.hasBinaryBiproducts
 
 instance (priority := 100) has_zero_object : HasZeroObject C :=
   has_zero_object_of_has_initial_object
@@ -469,7 +469,7 @@ def epiDesc [Epi f] {T : C} (g : X ⟶ T) (hg : kernel.ι f ≫ g = 0) : Y ⟶ T
   (epiIsCokernelOfKernel _ (limit.isLimit _)).desc (CokernelCofork.ofπ _ hg)
 #align category_theory.abelian.epi_desc CategoryTheory.Abelian.epiDesc
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem comp_epi_desc [Epi f] {T : C} (g : X ⟶ T) (hg : kernel.ι f ≫ g = 0) :
     f ≫ epiDesc f g hg = g :=
   (epiIsCokernelOfKernel _ (limit.isLimit _)).fac (CokernelCofork.ofπ _ hg) WalkingParallelPair.one
@@ -481,7 +481,7 @@ def monoLift [Mono f] {T : C} (g : T ⟶ Y) (hg : g ≫ cokernel.π f = 0) : T �
   (monoIsKernelOfCokernel _ (colimit.isColimit _)).lift (KernelFork.ofι _ hg)
 #align category_theory.abelian.mono_lift CategoryTheory.Abelian.monoLift
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem mono_lift_comp [Mono f] {T : C} (g : T ⟶ Y) (hg : g ≫ cokernel.π f = 0) :
     monoLift f g hg ≫ f = g :=
   (monoIsKernelOfCokernel _ (colimit.isColimit _)).fac (KernelFork.ofι _ hg)
@@ -514,13 +514,13 @@ instance (priority := 100) has_pushouts : HasPushouts C :=
   has_pushouts_of_has_binary_coproducts_of_has_coequalizers C
 #align category_theory.abelian.has_pushouts CategoryTheory.Abelian.has_pushouts
 
-instance (priority := 100) has_finite_limits : HasFiniteLimits C :=
+instance (priority := 100) hasFiniteLimits : HasFiniteLimits C :=
   limits.has_finite_limits_of_has_equalizers_and_finite_products
-#align category_theory.abelian.has_finite_limits CategoryTheory.Abelian.has_finite_limits
+#align category_theory.abelian.has_finite_limits CategoryTheory.Abelian.hasFiniteLimits
 
-instance (priority := 100) has_finite_colimits : HasFiniteColimits C :=
+instance (priority := 100) hasFiniteColimits : HasFiniteColimits C :=
   limits.has_finite_colimits_of_has_coequalizers_and_finite_coproducts
-#align category_theory.abelian.has_finite_colimits CategoryTheory.Abelian.has_finite_colimits
+#align category_theory.abelian.has_finite_colimits CategoryTheory.Abelian.hasFiniteColimits
 
 end
 

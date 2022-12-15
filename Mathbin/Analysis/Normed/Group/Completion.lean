@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.completion
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) :=
     dist_eq := by 
       intro x y
       apply completion.induction_on₂ x y <;> clear x y
-      · refine' isClosedEq (completion.uniform_continuous_extension₂ _).Continuous _
+      · refine' is_closed_eq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
       · intro x y
         rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm] }

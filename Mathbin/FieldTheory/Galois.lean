@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.galois
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
       ext
       simp
     simpa [p] using
-      Polynomial.splitsCompOfSplits (algebraMap F E) iso.symm.to_alg_hom.to_ring_hom h_splits
+      Polynomial.splits_comp_of_splits (algebraMap F E) iso.symm.to_alg_hom.to_ring_hom h_splits
   rw [← LinearEquiv.finrank_eq iso.to_linear_equiv]
   rw [← intermediate_field.adjoin_simple.card_aut_eq_finrank F E H h_sep h_splits]
   apply Fintype.card_congr
@@ -210,7 +210,7 @@ variable (H : Subgroup (E ≃ₐ[F] E)) (K : IntermediateField F E)
 /-- The intermediate field of fixed points fixed by a monoid action that commutes with the
 `F`-action on `E`. -/
 def FixedPoints.intermediateField (M : Type _) [Monoid M] [MulSemiringAction M E]
-    [SmulCommClass M F E] : IntermediateField F E :=
+    [SMulCommClass M F E] : IntermediateField F E :=
   { FixedPoints.subfield M E with 
     carrier := MulAction.fixedPoints M E
     algebra_map_mem' := fun a g => by rw [Algebra.algebra_map_eq_smul_one, smul_comm, smul_one] }
@@ -446,14 +446,14 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
   · apply Fintype.card_congr
     rfl
   · exact Polynomial.Separable.of_dvd ((Polynomial.separable_map (algebraMap F K)).mpr hp) h2
-  · refine' Polynomial.splitsOfSplitsOfDvd _ (Polynomial.map_ne_zero h1) _ h2
+  · refine' Polynomial.splits_of_splits_of_dvd _ (Polynomial.map_ne_zero h1) _ h2
     rw [Polynomial.splits_map_iff, ← IsScalarTower.algebra_map_eq]
     exact sp.splits
 #align is_galois.of_separable_splitting_field_aux IsGalois.of_separable_splitting_field_aux
 
 theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separable) : IsGalois F E :=
   by 
-  haveI hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finiteDimensional E p
+  haveI hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finite_dimensional E p
   letI := Classical.decEq E
   let s := (p.map (algebraMap F E)).roots.toFinset
   have adjoin_root : IntermediateField.adjoin F ↑s = ⊤ := by
@@ -469,12 +469,12 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
       Fintype.card_congr
         ((algEquivEquivAlgHom F E).toEquiv.trans
           (intermediate_field.top_equiv.symm.arrow_congr AlgEquiv.refl))
-  apply IntermediateField.inductionOnAdjoinFinset s P
+  apply IntermediateField.induction_on_adjoin_finset s P
   · have key :=
       IntermediateField.card_alg_hom_adjoin_integral F
         (show IsIntegral F (0 : E) from is_integral_zero)
     rw [minpoly.zero, Polynomial.nat_degree_X] at key
-    specialize key Polynomial.separable_X (Polynomial.splitsX (algebraMap F E))
+    specialize key Polynomial.separable_X (Polynomial.splits_X (algebraMap F E))
     rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_to_subalgebra] at key
     refine' Eq.trans _ key
     apply Fintype.card_congr

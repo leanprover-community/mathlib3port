@@ -5,7 +5,7 @@ Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hu
   Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.group_instances
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,16 +72,16 @@ instance {M G} [MulOneClass M] [CommGroup G] : CommGroup (M →* G) :=
       simp
     zpow_succ' := fun n f => by 
       ext x
-      simp [zpow_of_nat, pow_succ]
+      simp [zpow_ofNat, pow_succ]
     zpow_neg' := fun n f => by 
       ext x
       simp }
 
-instance [AddCommMonoid M] : AddCommMonoid (AddMonoid.EndCat M) :=
+instance [AddCommMonoid M] : AddCommMonoid (AddMonoid.End M) :=
   AddMonoidHom.addCommMonoid
 
-instance [AddCommMonoid M] : Semiring (AddMonoid.EndCat M) :=
-  { AddMonoid.EndCat.monoid M, AddMonoidHom.addCommMonoid with
+instance [AddCommMonoid M] : Semiring (AddMonoid.End M) :=
+  { AddMonoid.End.monoid M, AddMonoidHom.addCommMonoid with
     zero_mul := fun x => AddMonoidHom.ext fun i => rfl
     mul_zero := fun x => AddMonoidHom.ext fun i => AddMonoidHom.map_zero _
     left_distrib := fun x y z => AddMonoidHom.ext fun i => AddMonoidHom.map_add _ _ _
@@ -92,26 +92,26 @@ instance [AddCommMonoid M] : Semiring (AddMonoid.EndCat M) :=
 
 /-- See also `add_monoid.End.nat_cast_def`. -/
 @[simp]
-theorem AddMonoid.EndCat.nat_cast_apply [AddCommMonoid M] (n : ℕ) (m : M) :
-    (↑n : AddMonoid.EndCat M) m = n • m :=
+theorem AddMonoid.End.nat_cast_apply [AddCommMonoid M] (n : ℕ) (m : M) :
+    (↑n : AddMonoid.End M) m = n • m :=
   rfl
-#align add_monoid.End.nat_cast_apply AddMonoid.EndCat.nat_cast_apply
+#align add_monoid.End.nat_cast_apply AddMonoid.End.nat_cast_apply
 
-instance [AddCommGroup M] : AddCommGroup (AddMonoid.EndCat M) :=
+instance [AddCommGroup M] : AddCommGroup (AddMonoid.End M) :=
   AddMonoidHom.addCommGroup
 
-instance [AddCommGroup M] : Ring (AddMonoid.EndCat M) :=
-  { AddMonoid.EndCat.semiring, AddMonoidHom.addCommGroup with
+instance [AddCommGroup M] : Ring (AddMonoid.End M) :=
+  { AddMonoid.End.semiring, AddMonoidHom.addCommGroup with
     intCast := fun z => z • 1
     int_cast_of_nat := of_nat_zsmul _
     int_cast_neg_succ_of_nat := zsmul_neg_succ_of_nat _ }
 
 /-- See also `add_monoid.End.int_cast_def`. -/
 @[simp]
-theorem AddMonoid.EndCat.int_cast_apply [AddCommGroup M] (z : ℤ) (m : M) :
-    (↑z : AddMonoid.EndCat M) m = z • m :=
+theorem AddMonoid.End.int_cast_apply [AddCommGroup M] (z : ℤ) (m : M) :
+    (↑z : AddMonoid.End M) m = z • m :=
   rfl
-#align add_monoid.End.int_cast_apply AddMonoid.EndCat.int_cast_apply
+#align add_monoid.End.int_cast_apply AddMonoid.End.int_cast_apply
 
 /-!
 ### Morphisms of morphisms
@@ -309,15 +309,15 @@ theorem AddMonoidHom.map_mul_iff (f : R →+ S) :
 
 /-- The left multiplication map: `(a, b) ↦ a * b`. See also `add_monoid_hom.mul_left`. -/
 @[simps]
-def AddMonoid.EndCat.mulLeft : R →+ AddMonoid.EndCat R :=
+def AddMonoid.End.mulLeft : R →+ AddMonoid.End R :=
   AddMonoidHom.mul
-#align add_monoid.End.mul_left AddMonoid.EndCat.mulLeft
+#align add_monoid.End.mul_left AddMonoid.End.mulLeft
 
 /-- The right multiplication map: `(a, b) ↦ b * a`. See also `add_monoid_hom.mul_right`. -/
 @[simps]
-def AddMonoid.EndCat.mulRight : R →+ AddMonoid.EndCat R :=
-  (AddMonoidHom.mul : R →+ AddMonoid.EndCat R).flip
-#align add_monoid.End.mul_right AddMonoid.EndCat.mulRight
+def AddMonoid.End.mulRight : R →+ AddMonoid.End R :=
+  (AddMonoidHom.mul : R →+ AddMonoid.End R).flip
+#align add_monoid.End.mul_right AddMonoid.End.mulRight
 
 end Semiring
 

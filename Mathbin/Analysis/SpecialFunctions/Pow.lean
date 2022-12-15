@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,7 +142,7 @@ theorem cpow_two (x : ℂ) : x ^ (2 : ℂ) = x ^ 2 := by
 theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
   | (n : ℕ) => by simp
   | -[n+1] => by
-    rw [zpow_neg_succ_of_nat] <;>
+    rw [zpow_negSucc] <;>
       simp only [Int.negSucc_coe, Int.cast_neg, Complex.cpow_neg, inv_eq_one_div, Int.cast_ofNat,
         cpow_nat_cast]
 #align complex.cpow_int_cast Complex.cpow_int_cast
@@ -204,7 +204,7 @@ theorem cpow_eq_nhds' {p : ℂ × ℂ} (hp_fst : p.fst ≠ 0) :
   refine' IsOpen.eventually_mem _ hp_fst
   change IsOpen ({ x : ℂ × ℂ | x.1 = 0 }ᶜ)
   rw [is_open_compl_iff]
-  exact isClosedEq continuous_fst continuous_const
+  exact is_closed_eq continuous_fst continuous_const
 #align cpow_eq_nhds' cpow_eq_nhds'
 
 theorem continuous_at_const_cpow {a b : ℂ} (ha : a ≠ 0) : ContinuousAt (cpow a) b := by
@@ -1194,7 +1194,7 @@ theorem tendsto_exp_mul_div_rpow_at_top (s : ℝ) (b : ℝ) (hb : 0 < b) :
     *]
 #align tendsto_exp_mul_div_rpow_at_top tendsto_exp_mul_div_rpow_at_top
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in filter_upwards #[[], ["with", ident x],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], ["with", ident x],
   ["using", expr by simp [] [] [] ["[", expr exp_neg, ",", expr inv_div, ",", expr div_eq_mul_inv _
     (exp _), "]"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- The function `x ^ s * exp (-b * x)` tends to `0` at `+∞`, for any real `s` and `b > 0`. -/
@@ -1202,7 +1202,7 @@ theorem tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 (s : ℝ) (b : ℝ) (hb : 0 <
     Tendsto (fun x : ℝ => x ^ s * exp (-b * x)) atTop (𝓝 0) := by
   refine' (tendsto_exp_mul_div_rpow_at_top s b hb).inv_tendsto_at_top.congr' _
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _\n    (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _\n    (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0
 
 namespace Asymptotics

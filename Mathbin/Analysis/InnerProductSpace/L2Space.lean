@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.l2_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -518,7 +518,7 @@ protected def toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) : Ort
   OrthonormalBasis.mk b.Orthonormal
     (by 
       refine' Eq.ge _
-      have := (span 𝕜 (finset.univ.image b : Set E)).closedOfFiniteDimensional
+      have := (span 𝕜 (finset.univ.image b : Set E)).closed_of_finite_dimensional
       simpa only [Finset.coe_image, Finset.coe_univ, Set.image_univ, HilbertBasis.dense_span] using
         this.submodule_topological_closure_eq.symm)
 #align hilbert_basis.to_orthonormal_basis HilbertBasis.toOrthonormalBasis

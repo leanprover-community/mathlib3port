@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.diff_cont_on_cl
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ theorem IsClosed.diff_cont_on_cl_iff (hs : IsClosed s) :
 #align is_closed.diff_cont_on_cl_iff IsClosed.diff_cont_on_cl_iff
 
 theorem diff_cont_on_cl_univ : DiffContOnCl 𝕜 f univ ↔ Differentiable 𝕜 f :=
-  isClosedUniv.diff_cont_on_cl_iff.trans differentiable_on_univ
+  is_closed_univ.diff_cont_on_cl_iff.trans differentiable_on_univ
 #align diff_cont_on_cl_univ diff_cont_on_cl_univ
 
 theorem diffContOnClConst {c : F} : DiffContOnCl 𝕜 (fun x : E => c) s :=
@@ -120,7 +120,7 @@ theorem constSub (hf : DiffContOnCl 𝕜 f s) (c : F) : DiffContOnCl 𝕜 (fun x
   diffContOnClConst.sub hf
 #align diff_cont_on_cl.const_sub DiffContOnCl.constSub
 
-theorem constSmul {R : Type _} [Semiring R] [Module R F] [SmulCommClass 𝕜 R F]
+theorem constSmul {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F]
     [HasContinuousConstSmul R F] (hf : DiffContOnCl 𝕜 f s) (c : R) : DiffContOnCl 𝕜 (c • f) s :=
   ⟨hf.1.const_smul c, hf.2.const_smul c⟩
 #align diff_cont_on_cl.const_smul DiffContOnCl.constSmul

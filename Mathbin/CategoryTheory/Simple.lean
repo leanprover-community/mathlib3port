@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.simple
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,7 +210,7 @@ theorem Biprod.is_iso_inl_iff_is_zero (X Y : C) : IsIso (biprod.inl : X ⟶ X �
 #align category_theory.biprod.is_iso_inl_iff_is_zero CategoryTheory.Biprod.is_iso_inl_iff_is_zero
 
 /-- Any simple object in a preadditive category is indecomposable. -/
-theorem indecomposable_of_simple (X : C) [Simple X] : Indecomposable X :=
+theorem indecomposableOfSimple (X : C) [Simple X] : Indecomposable X :=
   ⟨Simple.not_is_zero X, fun Y Z i => by
     refine' or_iff_not_imp_left.mpr fun h => _
     rw [is_zero.iff_is_split_mono_eq_zero (biprod.inl : Y ⟶ Y ⊞ Z)] at h
@@ -219,7 +219,7 @@ theorem indecomposable_of_simple (X : C) [Simple X] : Indecomposable X :=
     · rwa [biprod.is_iso_inl_iff_is_zero] at h
     · exact simple.of_iso i.symm
     · infer_instance⟩
-#align category_theory.indecomposable_of_simple CategoryTheory.indecomposable_of_simple
+#align category_theory.indecomposable_of_simple CategoryTheory.indecomposableOfSimple
 
 end Indecomposable
 

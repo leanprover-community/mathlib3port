@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys
 
 ! This file was ported from Lean 3 source module algebra.order.rearrangement
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s)
     set τ : perm ι := σ.trans (swap a (σ a)) with hτ
     have hτs : { x | τ x ≠ x } ⊆ s := by 
       intro x hx
-      simp only [Ne.def, Set.mem_set_of_eq, Equiv.coe_trans, Equiv.swap_comp_apply] at hx
+      simp only [Ne.def, Set.mem_setOf_eq, Equiv.coe_trans, Equiv.swap_comp_apply] at hx
       split_ifs  at hx with h₁ h₂ h₃
       · obtain rfl | hax := eq_or_ne x a
         · contradiction

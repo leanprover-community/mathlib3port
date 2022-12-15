@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.mean_inequalities
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -244,7 +244,7 @@ theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (h
   let p2 := q / p
   let q2 := p2.conjugate_exponent
   have hp2q2 : p2.is_conjugate_exponent q2 :=
-    Real.isConjugateExponentConjugateExponent (by simp [lt_div_iff, hpq, hp0_lt])
+    Real.is_conjugate_exponent_conjugate_exponent (by simp [lt_div_iff, hpq, hp0_lt])
   calc
     (∫⁻ a : α, (f * g) a ^ p ∂μ) ^ (1 / p) = (∫⁻ a : α, f a ^ p * g a ^ p ∂μ) ^ (1 / p) := by
       simp_rw [Pi.mul_apply, Ennreal.mul_rpow_of_nonneg _ _ hp0]
@@ -358,8 +358,8 @@ private theorem lintegral_Lp_add_le_aux {p q : ℝ} (hpq : p.IsConjugateExponent
     ring
   simp_rw [h_one_div_q, sub_eq_add_neg 1 (1 / p), Ennreal.rpow_add _ _ h_add_zero h_add_top,
     rpow_one] at h
-  nth_rw 2 [mul_comm]  at h
-  nth_rw 1 [← one_mul (∫⁻ a : α, (f + g) a ^ p ∂μ)]  at h
+  nth_rw 2 [mul_comm] at h
+  nth_rw 1 [← one_mul (∫⁻ a : α, (f + g) a ^ p ∂μ)] at h
   rwa [← mul_assoc, Ennreal.mul_le_mul_right h_add_zero h_add_top, mul_comm] at h
 #align ennreal.lintegral_Lp_add_le_aux ennreal.lintegral_Lp_add_le_aux
 
@@ -383,7 +383,7 @@ theorem lintegral_Lp_add_le {p : ℝ} {f g : α → ℝ≥0∞} (hf : AeMeasurab
     refine' lt_of_le_of_ne hp1 _
     symm
     exact h1
-  have hpq := Real.isConjugateExponentConjugateExponent hp1_lt
+  have hpq := Real.is_conjugate_exponent_conjugate_exponent hp1_lt
   by_cases h0 : (∫⁻ a, (f + g) a ^ p ∂μ) = 0
   · rw [h0, @Ennreal.zero_rpow_of_pos (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]
     exact zero_le _

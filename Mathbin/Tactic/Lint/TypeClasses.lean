@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module tactic.lint.type_classes
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -284,7 +284,7 @@ unsafe def fails_quickly (max_steps : ℕ) (d : declaration) : tactic (Option St
         l
     reset_instance_cache
     let state ← read
-    let state_msg := "\nState:\n" ++ toString State
+    let state_msg := "\nState:\n" ++ toString StateM
     let tgt ← target >>= instantiate_mvars
     let Sum.inr msg ← retrieve_or_report_error <| tactic.try_for max_steps <| mk_instance tgt |
       return none

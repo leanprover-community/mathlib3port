@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.bochner
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,7 +234,7 @@ theorem weighted_smul_union (s t : Set α) (hs : MeasurableSet s) (ht : Measurab
   weighted_smul_union' s t ht hs_finite ht_finite h_inter
 #align measure_theory.weighted_smul_union MeasureTheory.weighted_smul_union
 
-theorem weighted_smul_smul [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F] (c : 𝕜)
+theorem weighted_smul_smul [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F] (c : 𝕜)
     (s : Set α) (x : F) : weightedSmul μ s (c • x) = c • weightedSmul μ s x := by
   simp_rw [weighted_smul_apply, smul_comm]
 #align measure_theory.weighted_smul_smul MeasureTheory.weighted_smul_smul
@@ -356,535 +356,14 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
 #align
   measure_theory.simple_func.integral_eq_sum_of_subset MeasureTheory.SimpleFunc.integral_eq_sum_of_subset
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      []
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
-      []
-      []
-      []
-      [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `integral_const [])
-      (Command.declSig
-       [(Term.implicitBinder "{" [`m] [":" (Term.app `MeasurableSpace [`α])] "}")
-        (Term.explicitBinder "(" [`μ] [":" (Term.app `Measure [`α])] [] ")")
-        (Term.explicitBinder "(" [`y] [":" `F] [] ")")]
-       (Term.typeSpec
-        ":"
-        («term_=_»
-         (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-         "="
-         (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))))
-      (Command.declValSimple
-       ":="
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.«tactic_<;>_»
-            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-            "<;>"
-            (calcTactic
-             "calc"
-             (calcStep
-              («term_=_»
-               (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-               "="
-               (BigOperators.Algebra.BigOperators.Basic.finset.sum
-                "∑"
-                (Std.ExtendedBinder.extBinders
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
-                " in "
-                («term{_}» "{" [`y] "}")
-                ", "
-                (Algebra.Group.Defs.«term_•_»
-                 (Term.proj
-                  (Term.app
-                   `μ
-                   [(Set.Data.Set.Image.«term_⁻¹'_»
-                     (Term.app `const [`α `y])
-                     " ⁻¹' "
-                     («term{_}» "{" [`z] "}"))])
-                  "."
-                  `toReal)
-                 " • "
-                 `z)))
-              ":="
-              («term_<|_»
-               `integral_eq_sum_of_subset
-               "<|"
-               (Term.app
-                (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
-                [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])])))
-             [(calcStep
-               («term_=_»
-                (Term.hole "_")
-                "="
-                (Algebra.Group.Defs.«term_•_»
-                 (Term.proj (Term.app `μ [`univ]) "." `toReal)
-                 " • "
-                 `y))
-               ":="
-               (Term.byTactic
-                "by"
-                (Tactic.tacticSeq
-                 (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))]))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (calcTactic
-            "calc"
-            (calcStep
-             («term_=_»
-              (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-              "="
-              (BigOperators.Algebra.BigOperators.Basic.finset.sum
-               "∑"
-               (Std.ExtendedBinder.extBinders
-                (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
-               " in "
-               («term{_}» "{" [`y] "}")
-               ", "
-               (Algebra.Group.Defs.«term_•_»
-                (Term.proj
-                 (Term.app
-                  `μ
-                  [(Set.Data.Set.Image.«term_⁻¹'_»
-                    (Term.app `const [`α `y])
-                    " ⁻¹' "
-                    («term{_}» "{" [`z] "}"))])
-                 "."
-                 `toReal)
-                " • "
-                `z)))
-             ":="
-             («term_<|_»
-              `integral_eq_sum_of_subset
-              "<|"
-              (Term.app
-               (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
-               [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])])))
-            [(calcStep
-              («term_=_»
-               (Term.hole "_")
-               "="
-               (Algebra.Group.Defs.«term_•_»
-                (Term.proj (Term.app `μ [`univ]) "." `toReal)
-                " • "
-                `y))
-              ":="
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))]))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (calcTactic
-        "calc"
-        (calcStep
-         («term_=_»
-          (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-          "="
-          (BigOperators.Algebra.BigOperators.Basic.finset.sum
-           "∑"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
-           " in "
-           («term{_}» "{" [`y] "}")
-           ", "
-           (Algebra.Group.Defs.«term_•_»
-            (Term.proj
-             (Term.app
-              `μ
-              [(Set.Data.Set.Image.«term_⁻¹'_»
-                (Term.app `const [`α `y])
-                " ⁻¹' "
-                («term{_}» "{" [`z] "}"))])
-             "."
-             `toReal)
-            " • "
-            `z)))
-         ":="
-         («term_<|_»
-          `integral_eq_sum_of_subset
-          "<|"
-          (Term.app
-           (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
-           [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])])))
-        [(calcStep
-          («term_=_»
-           (Term.hole "_")
-           "="
-           (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))
-          ":="
-          (Term.byTactic
-           "by"
-           (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (calcTactic
-       "calc"
-       (calcStep
-        («term_=_»
-         (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-         "="
-         (BigOperators.Algebra.BigOperators.Basic.finset.sum
-          "∑"
-          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
-          " in "
-          («term{_}» "{" [`y] "}")
-          ", "
-          (Algebra.Group.Defs.«term_•_»
-           (Term.proj
-            (Term.app
-             `μ
-             [(Set.Data.Set.Image.«term_⁻¹'_»
-               (Term.app `const [`α `y])
-               " ⁻¹' "
-               («term{_}» "{" [`z] "}"))])
-            "."
-            `toReal)
-           " • "
-           `z)))
-        ":="
-        («term_<|_»
-         `integral_eq_sum_of_subset
-         "<|"
-         (Term.app
-          (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
-          [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])])))
-       [(calcStep
-         («term_=_»
-          (Term.hole "_")
-          "="
-          (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))
-         ":="
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.simp "simp" [] [] [] [] [])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
-       (Term.hole "_")
-       "="
-       (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `y
-[PrettyPrinter.parenthesize] ...precedences are 73 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
-      (Term.proj (Term.app `μ [`univ]) "." `toReal)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.app `μ [`univ])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `univ
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `μ
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `μ [`univ]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 73, (some 73, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
-      («term_<|_»
-       `integral_eq_sum_of_subset
-       "<|"
-       (Term.app
-        (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
-        [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
-       [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `range_const_subset
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])
-     ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `filter_subset
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])
-     ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-      `integral_eq_sum_of_subset
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
-       (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-       "="
-       (BigOperators.Algebra.BigOperators.Basic.finset.sum
-        "∑"
-        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
-        " in "
-        («term{_}» "{" [`y] "}")
-        ", "
-        (Algebra.Group.Defs.«term_•_»
-         (Term.proj
-          (Term.app
-           `μ
-           [(Set.Data.Set.Image.«term_⁻¹'_»
-             (Term.app `const [`α `y])
-             " ⁻¹' "
-             («term{_}» "{" [`z] "}"))])
-          "."
-          `toReal)
-         " • "
-         `z)))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (BigOperators.Algebra.BigOperators.Basic.finset.sum
-       "∑"
-       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
-       " in "
-       («term{_}» "{" [`y] "}")
-       ", "
-       (Algebra.Group.Defs.«term_•_»
-        (Term.proj
-         (Term.app
-          `μ
-          [(Set.Data.Set.Image.«term_⁻¹'_»
-            (Term.app `const [`α `y])
-            " ⁻¹' "
-            («term{_}» "{" [`z] "}"))])
-         "."
-         `toReal)
-        " • "
-        `z))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Algebra.Group.Defs.«term_•_»
-       (Term.proj
-        (Term.app
-         `μ
-         [(Set.Data.Set.Image.«term_⁻¹'_»
-           (Term.app `const [`α `y])
-           " ⁻¹' "
-           («term{_}» "{" [`z] "}"))])
-        "."
-        `toReal)
-       " • "
-       `z)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `z
-[PrettyPrinter.parenthesize] ...precedences are 73 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
-      (Term.proj
-       (Term.app
-        `μ
-        [(Set.Data.Set.Image.«term_⁻¹'_»
-          (Term.app `const [`α `y])
-          " ⁻¹' "
-          («term{_}» "{" [`z] "}"))])
-       "."
-       `toReal)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.app
-       `μ
-       [(Set.Data.Set.Image.«term_⁻¹'_»
-         (Term.app `const [`α `y])
-         " ⁻¹' "
-         («term{_}» "{" [`z] "}"))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Image.«term_⁻¹'_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Image.«term_⁻¹'_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Set.Data.Set.Image.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term{_}» "{" [`z] "}")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `z
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
-      (Term.app `const [`α `y])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `y
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `const
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 80 >? 1022, (some 1023, term) <=? (some 80, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 81, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Set.Data.Set.Image.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
-     ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `μ
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Term.app
-      `μ
-      [(Term.paren
-        "("
-        (Set.Data.Set.Image.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
-        ")")])
-     ")")
-[PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 73, (some 73, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term{_}» "{" [`y] "}")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `y
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `μ
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      (Term.proj (Term.app `const [`α `y]) "." `integral)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.app `const [`α `y])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `y
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `const
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `const [`α `y]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp ]
-  theorem
-    integral_const
-    { m : MeasurableSpace α } ( μ : Measure α ) ( y : F )
-      : const α y . integral μ = μ univ . toReal • y
-    :=
-      by
-        skip
-          <;>
-          calc
-            const α y . integral μ = ∑ z in { y } , μ const α y ⁻¹' { z } . toReal • z
-              :=
-              integral_eq_sum_of_subset <| filter_subset _ _ . trans range_const_subset _ _
-            _ = μ univ . toReal • y := by simp
+@[simp]
+theorem integral_const {m : MeasurableSpace α} (μ : Measure α) (y : F) :
+    (const α y).integral μ = (μ univ).toReal • y := by
+  classical calc
+      (const α y).integral μ = ∑ z in {y}, (μ (const α y ⁻¹' {z})).toReal • z :=
+        integral_eq_sum_of_subset <| (filter_subset _ _).trans (range_const_subset _ _)
+      _ = (μ univ).toReal • y := by simp
+      
 #align measure_theory.simple_func.integral_const MeasureTheory.SimpleFunc.integral_const
 
 @[simp]
@@ -933,7 +412,7 @@ theorem integral_eq_lintegral' {f : α →ₛ E} {g : E → ℝ≥0∞} (hf : In
 #align
   measure_theory.simple_func.integral_eq_lintegral' MeasureTheory.SimpleFunc.integral_eq_lintegral'
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace ℝ E] [SmulCommClass ℝ 𝕜 E]
+variable [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace ℝ E] [SMulCommClass ℝ 𝕜 E]
 
 theorem integral_congr {f g : α →ₛ E} (hf : Integrable f μ) (h : f =ᵐ[μ] g) :
     f.integral μ = g.integral μ :=
@@ -1058,7 +537,7 @@ Define the Bochner integral on `α →₁ₛ[μ] E` by extension from the simple
 and prove basic properties of this integral. -/
 
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace ℝ E] [SmulCommClass ℝ 𝕜 E] {F' : Type _}
+variable [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace ℝ E] [SMulCommClass ℝ 𝕜 E] {F' : Type _}
   [NormedAddCommGroup F'] [NormedSpace ℝ F']
 
 attribute [local instance] simple_func.normed_space
@@ -1203,7 +682,7 @@ open SimpleFunc
 -- mathport name: simple_func.integral_clm
 local notation "Integral" => @integralClm α E _ _ _ _ _ μ _
 
-variable [NormedSpace ℝ E] [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E]
+variable [NormedSpace ℝ E] [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [SMulCommClass ℝ 𝕜 E]
   [NormedSpace ℝ F] [CompleteSpace E]
 
 section IntegrationInL1
@@ -1304,9 +783,9 @@ theorem integral_eq_norm_pos_part_sub (f : α →₁[μ] ℝ) :
   by
   -- Use `is_closed_property` and `is_closed_eq`
   refine'
-    @isClosedProperty _ _ _ (coe : (α →₁ₛ[μ] ℝ) → α →₁[μ] ℝ)
+    @is_closed_property _ _ _ (coe : (α →₁ₛ[μ] ℝ) → α →₁[μ] ℝ)
       (fun f : α →₁[μ] ℝ => integral f = ‖Lp.pos_part f‖ - ‖Lp.neg_part f‖)
-      (simple_func.dense_range one_ne_top) (isClosedEq _ _) _ f
+      (simple_func.dense_range one_ne_top) (is_closed_eq _ _) _ f
   · exact cont _
   ·
     refine'
@@ -1335,7 +814,7 @@ functions, and 0 otherwise; prove its basic properties.
 
 
 variable [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] [NontriviallyNormedField 𝕜]
-  [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
+  [NormedSpace 𝕜 E] [SMulCommClass ℝ 𝕜 E] [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
 
 section
 
@@ -1874,7 +1353,7 @@ theorem integral_mono_measure {f : α → ℝ} {ν} (hle : μ ≤ ν) (hf : 0 �
 
 theorem norm_integral_le_integral_norm (f : α → E) : ‖∫ a, f a ∂μ‖ ≤ ∫ a, ‖f a‖ ∂μ :=
   have le_ae : ∀ᵐ a ∂μ, 0 ≤ ‖f a‖ := eventually_of_forall fun a => norm_nonneg _
-  Classical.by_cases
+  by_cases
     (fun h : AeStronglyMeasurable f μ =>
       calc
         ‖∫ a, f a ∂μ‖ ≤ Ennreal.toReal (∫⁻ a, Ennreal.ofReal ‖f a‖ ∂μ) :=
@@ -2153,7 +1632,7 @@ theorem mul_meas_ge_le_integral_of_nonneg [IsFiniteMeasure μ] {f : α → ℝ} 
       { x : α | Ennreal.ofReal ε ≤ (fun x => Ennreal.ofReal (f x)) x } :=
     by 
     ext1 x
-    rw [Set.mem_set_of_eq, Set.mem_set_of_eq, ← Ennreal.to_real_of_real (hf_nonneg x)]
+    rw [Set.mem_setOf_eq, Set.mem_setOf_eq, ← Ennreal.to_real_of_real (hf_nonneg x)]
     exact Ennreal.to_real_le_to_real Ennreal.of_real_ne_top Ennreal.of_real_ne_top
   rw [this]
   have h_meas : AeMeasurable (fun x => Ennreal.ofReal (f x)) μ :=

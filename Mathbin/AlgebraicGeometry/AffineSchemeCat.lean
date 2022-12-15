@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.AffineScheme
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,8 +132,8 @@ instance ΓIsEquiv : IsEquivalence Γ.{u} :=
 #align algebraic_geometry.AffineScheme.Γ_is_equiv AlgebraicGeometry.AffineSchemeCat.ΓIsEquiv
 
 instance : HasColimits AffineSchemeCat.{u} :=
-  haveI := Adjunction.has_limits_of_equivalence.{u} Γ.{u}
-  Adjunction.has_colimits_of_equivalence.{u} (op_op_equivalence AffineSchemeCat.{u}).inverse
+  haveI := Adjunction.hasLimitsOfEquivalence.{u} Γ.{u}
+  Adjunction.hasColimitsOfEquivalence.{u} (op_op_equivalence AffineSchemeCat.{u}).inverse
 
 instance : HasLimits AffineSchemeCat.{u} := by
   haveI := adjunction.has_colimits_of_equivalence Γ.{u}
@@ -734,7 +734,7 @@ theorem IsAffineOpen.basic_open_union_eq_self_iff {X : SchemeCat} {U : Opens X.c
   · simp only [Subtype.val_eq_coe, PrimeSpectrum.basic_open_eq_zero_locus_compl]
     rw [← Set.compl_Inter, Set.compl_univ_iff, ← PrimeSpectrum.zero_locus_Union, ←
       PrimeSpectrum.zero_locus_empty_iff_eq_top, PrimeSpectrum.zero_locus_span]
-    simp only [Set.Union_singleton_eq_range, Subtype.range_coe_subtype, Set.set_of_mem_eq]
+    simp only [Set.Union_singleton_eq_range, Subtype.range_coe_subtype, Set.setOf_mem_eq]
 #align
   algebraic_geometry.is_affine_open.basic_open_union_eq_self_iff AlgebraicGeometry.IsAffineOpen.basic_open_union_eq_self_iff
 

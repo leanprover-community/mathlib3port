@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.assert_exists
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ unsafe def assert_not_exists (_ : parse <| tk "assert_not_exists") : lean.parser
   let ff ← succeeds (get_decl decl) |
     fail f! "Declaration {decl} is not allowed to exist in this file."
   let n ← tactic.mk_fresh_name
-  let marker := `assert_not_exists._checked.append n
+  let marker := `assert_not_exists._checked.append (decl.append n)
   add_decl (declaration.defn marker [] q(Name) q(decl) default tt)
   pure ()
 #align assert_not_exists assert_not_exists
@@ -134,7 +134,8 @@ unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.pars
   match i with
     | none => do
       let n ← tactic.mk_fresh_name
-      let marker := `assert_no_instance._checked.append n
+      let e_str ← toString <$> pp e
+      let marker := (`assert_no_instance._checked.mk_string e_str).append n
       let et ← infer_type e
       let tt ← succeeds (get_decl marker) |
         add_decl (declaration.defn marker [] et e default tt)

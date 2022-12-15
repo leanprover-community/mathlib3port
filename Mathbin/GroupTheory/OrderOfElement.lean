@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.order_of_element
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -406,8 +406,8 @@ theorem is_of_fin_order_inv_iff {x : G} : IsOfFinOrder x⁻¹ ↔ IsOfFinOrder x
 @[to_additive add_order_of_dvd_iff_zsmul_eq_zero]
 theorem order_of_dvd_iff_zpow_eq_one : (orderOf x : ℤ) ∣ i ↔ x ^ i = 1 := by
   rcases Int.eq_nat_or_neg i with ⟨i, rfl | rfl⟩
-  · rw [Int.coe_nat_dvd, order_of_dvd_iff_pow_eq_one, zpow_coe_nat]
-  · rw [dvd_neg, Int.coe_nat_dvd, zpow_neg, inv_eq_one, zpow_coe_nat, order_of_dvd_iff_pow_eq_one]
+  · rw [Int.coe_nat_dvd, order_of_dvd_iff_pow_eq_one, zpow_ofNat]
+  · rw [dvd_neg, Int.coe_nat_dvd, zpow_neg, inv_eq_one, zpow_ofNat, order_of_dvd_iff_pow_eq_one]
 #align order_of_dvd_iff_zpow_eq_one order_of_dvd_iff_zpow_eq_one
 
 @[simp, to_additive]
@@ -451,7 +451,7 @@ theorem pow_inj_mod {n m : ℕ} : x ^ n = x ^ m ↔ n % orderOf x = m % orderOf 
 @[simp, to_additive zsmul_smul_order_of]
 theorem zpow_pow_order_of : (x ^ i) ^ orderOf x = 1 := by
   by_cases h : IsOfFinOrder x
-  · rw [← zpow_coe_nat, ← zpow_mul, mul_comm, zpow_mul, zpow_coe_nat, pow_order_of_eq_one, one_zpow]
+  · rw [← zpow_ofNat, ← zpow_mul, mul_comm, zpow_mul, zpow_ofNat, pow_order_of_eq_one, one_zpow]
   · rw [order_of_eq_zero h, pow_zero]
 #align zpow_pow_order_of zpow_pow_order_of
 
@@ -648,7 +648,7 @@ variable [Group G] [AddGroup A]
 theorem exists_zpow_eq_one [Finite G] (x : G) : ∃ (i : ℤ)(H : i ≠ 0), x ^ (i : ℤ) = 1 := by
   rcases exists_pow_eq_one x with ⟨w, hw1, hw2⟩
   refine' ⟨w, int.coe_nat_ne_zero.mpr (ne_of_gt hw1), _⟩
-  rw [zpow_coe_nat]
+  rw [zpow_ofNat]
   exact (is_periodic_pt_mul_iff_pow_eq_one _).mp hw2
 #align exists_zpow_eq_one exists_zpow_eq_one
 
@@ -658,8 +658,8 @@ open Subgroup
 theorem mem_powers_iff_mem_zpowers [Finite G] : y ∈ Submonoid.powers x ↔ y ∈ zpowers x :=
   ⟨fun ⟨n, hn⟩ => ⟨n, by simp_all⟩, fun ⟨i, hi⟩ =>
     ⟨(i % orderOf x).natAbs, by
-      rwa [← zpow_coe_nat,
-        Int.natAbs_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (order_of_pos x))), ←
+      rwa [← zpow_ofNat,
+        Int.natAbs_of_nonneg (Int.emod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (order_of_pos x))), ←
         zpow_eq_mod_order_of]⟩⟩
 #align mem_powers_iff_mem_zpowers mem_powers_iff_mem_zpowers
 
@@ -689,7 +689,7 @@ noncomputable def finEquivZpowers [Finite G] (x : G) :
 
 @[simp, to_additive fin_equiv_zmultiples_apply]
 theorem fin_equiv_zpowers_apply [Finite G] {n : Fin (orderOf x)} :
-    finEquivZpowers x n = ⟨x ^ (n : ℕ), n, zpow_coe_nat x n⟩ :=
+    finEquivZpowers x n = ⟨x ^ (n : ℕ), n, zpow_ofNat x n⟩ :=
   rfl
 #align fin_equiv_zpowers_apply fin_equiv_zpowers_apply
 
@@ -711,7 +711,7 @@ noncomputable def zpowersEquivZpowers [Finite G] (h : orderOf x = orderOf y) :
 
 @[simp, to_additive zmultiples_equiv_zmultiples_apply]
 theorem zpowers_equiv_zpowers_apply [Finite G] (h : orderOf x = orderOf y) (n : ℕ) :
-    zpowersEquivZpowers h ⟨x ^ n, n, zpow_coe_nat x n⟩ = ⟨y ^ n, n, zpow_coe_nat y n⟩ := by
+    zpowersEquivZpowers h ⟨x ^ n, n, zpow_ofNat x n⟩ = ⟨y ^ n, n, zpow_ofNat y n⟩ := by
   rw [zpowersEquivZpowers, Equiv.trans_apply, Equiv.trans_apply, fin_equiv_zpowers_symm_apply, ←
     Equiv.eq_symm_apply, fin_equiv_zpowers_symm_apply]
   simp [h]
@@ -781,7 +781,7 @@ theorem pow_eq_mod_card (n : ℕ) : x ^ n = x ^ (n % Fintype.card G) := by
 
 @[to_additive]
 theorem zpow_eq_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) := by
-  rw [zpow_eq_mod_order_of, ← Int.mod_mod_of_dvd n (Int.coe_nat_dvd.2 order_of_dvd_card_univ), ←
+  rw [zpow_eq_mod_order_of, ← Int.emod_emod_of_dvd n (Int.coe_nat_dvd.2 order_of_dvd_card_univ), ←
     zpow_eq_mod_order_of]
 #align zpow_eq_mod_card zpow_eq_mod_card
 
@@ -793,12 +793,12 @@ noncomputable def powCoprime {G : Type _} [Group G] (h : (Nat.card G).Coprime n)
   invFun g := g ^ (Nat.card G).gcdB n
   left_inv g := by 
     have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
-    rwa [zpow_add, zpow_mul, zpow_mul, zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one,
-      pow_one, pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
+    rwa [zpow_add, zpow_mul, zpow_mul, zpow_ofNat, zpow_ofNat, zpow_ofNat, h.gcd_eq_one, pow_one,
+      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
   right_inv g := by 
     have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
-    rwa [zpow_add, zpow_mul, zpow_mul', zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one,
-      pow_one, pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
+    rwa [zpow_add, zpow_mul, zpow_mul', zpow_ofNat, zpow_ofNat, zpow_ofNat, h.gcd_eq_one, pow_one,
+      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
 #align pow_coprime powCoprime
 
 @[simp, to_additive]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.terminal
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -251,19 +251,19 @@ def isLimitEmptyConeEquiv (c₁ : Cone F₁) (c₂ : Cone F₂) (h : c₁.x ≅ 
   right_inv := by tidy
 #align category_theory.limits.is_limit_empty_cone_equiv CategoryTheory.Limits.isLimitEmptyConeEquiv
 
-theorem has_terminal_change_diagram (h : HasLimit F₁) : HasLimit F₂ :=
+theorem hasTerminalChangeDiagram (h : HasLimit F₁) : HasLimit F₂ :=
   ⟨⟨⟨⟨limit F₁, by tidy⟩, isLimitChangeEmptyCone C (limit.isLimit F₁) _ (eqToIso rfl)⟩⟩⟩
 #align
-  category_theory.limits.has_terminal_change_diagram CategoryTheory.Limits.has_terminal_change_diagram
+  category_theory.limits.has_terminal_change_diagram CategoryTheory.Limits.hasTerminalChangeDiagram
 
-theorem has_terminal_change_universe [h : HasLimitsOfShape (Discrete.{w} PEmpty) C] :
+theorem hasTerminalChangeUniverse [h : HasLimitsOfShape (Discrete.{w} PEmpty) C] :
     HasLimitsOfShape (Discrete.{w'} PEmpty) C :=
   { HasLimit := fun J =>
-      has_terminal_change_diagram C
+      hasTerminalChangeDiagram C
         (let f := h.1
         f (Functor.empty C)) }
 #align
-  category_theory.limits.has_terminal_change_universe CategoryTheory.Limits.has_terminal_change_universe
+  category_theory.limits.has_terminal_change_universe CategoryTheory.Limits.hasTerminalChangeUniverse
 
 /-- Being initial is independent of the empty diagram, its universe, and the cocone over it,
     as long as the cocone points are isomorphic. -/
@@ -290,19 +290,19 @@ def isColimitEmptyCoconeEquiv (c₁ : Cocone F₁) (c₂ : Cocone F₂) (h : c�
 #align
   category_theory.limits.is_colimit_empty_cocone_equiv CategoryTheory.Limits.isColimitEmptyCoconeEquiv
 
-theorem has_initial_change_diagram (h : HasColimit F₁) : HasColimit F₂ :=
+theorem hasInitialChangeDiagram (h : HasColimit F₁) : HasColimit F₂ :=
   ⟨⟨⟨⟨colimit F₁, by tidy⟩, isColimitChangeEmptyCocone C (colimit.isColimit F₁) _ (eqToIso rfl)⟩⟩⟩
 #align
-  category_theory.limits.has_initial_change_diagram CategoryTheory.Limits.has_initial_change_diagram
+  category_theory.limits.has_initial_change_diagram CategoryTheory.Limits.hasInitialChangeDiagram
 
-theorem has_initial_change_universe [h : HasColimitsOfShape (Discrete.{w} PEmpty) C] :
+theorem hasInitialChangeUniverse [h : HasColimitsOfShape (Discrete.{w} PEmpty) C] :
     HasColimitsOfShape (Discrete.{w'} PEmpty) C :=
   { HasColimit := fun J =>
-      has_initial_change_diagram C
+      hasInitialChangeDiagram C
         (let f := h.1
         f (Functor.empty C)) }
 #align
-  category_theory.limits.has_initial_change_universe CategoryTheory.Limits.has_initial_change_universe
+  category_theory.limits.has_initial_change_universe CategoryTheory.Limits.hasInitialChangeUniverse
 
 end Univ
 
@@ -480,7 +480,7 @@ def limitConstTerminal {J : Type _} [Category J] {C : Type _} [Category C] [HasT
         π := { app := fun j => terminal.from _ } }
 #align category_theory.limits.limit_const_terminal CategoryTheory.Limits.limitConstTerminal
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem limit_const_terminal_inv_π {J : Type _} [Category J] {C : Type _} [Category C]
     [HasTerminal C] {j : J} :
     limitConstTerminal.inv ≫ limit.π ((CategoryTheory.Functor.const J).obj (⊤_ C)) j =
@@ -510,7 +510,7 @@ def colimitConstInitial {J : Type _} [Category J] {C : Type _} [Category C] [Has
   inv := initial.to _
 #align category_theory.limits.colimit_const_initial CategoryTheory.Limits.colimitConstInitial
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_colimit_const_initial_hom {J : Type _} [Category J] {C : Type _} [Category C]
     [HasInitial C] {j : J} :
     colimit.ι ((CategoryTheory.Functor.const J).obj (⊥_ C)) j ≫ colimitConstInitial.Hom =

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.ideal_operations
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -348,7 +348,7 @@ theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
     LieSubmodule.sup_coe_to_submodule, f.ker_coe_submodule, ← Submodule.comap_map_eq,
     LieSubmodule.lie_ideal_oper_eq_linear_span, LieSubmodule.lie_ideal_oper_eq_linear_span,
     LinearMap.map_span]
-  congr ; simp only [LieHom.coe_to_linear_map, Set.mem_set_of_eq]; ext y
+  congr ; simp only [LieHom.coe_to_linear_map, Set.mem_setOf_eq]; ext y
   constructor
   · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩, hy⟩
     rw [← hy]

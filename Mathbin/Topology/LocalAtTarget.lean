@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.local_at_target
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,17 +55,18 @@ theorem Set.restrict_preimage_open_embedding (s : Set β) (h : OpenEmbedding f) 
 
 alias Set.restrict_preimage_open_embedding ← OpenEmbedding.restrict_preimage
 
-theorem Set.restrictPreimageClosedEmbedding (s : Set β) (h : ClosedEmbedding f) :
+theorem Set.restrict_preimage_closed_embedding (s : Set β) (h : ClosedEmbedding f) :
     ClosedEmbedding (s.restrictPreimage f) :=
-  ⟨h.1.restrictPreimage s, (s.range_restrict_preimage f).symm ▸ inducing_coe.isClosedPreimage _ h.2⟩
-#align set.restrict_preimage_closed_embedding Set.restrictPreimageClosedEmbedding
+  ⟨h.1.restrictPreimage s,
+    (s.range_restrict_preimage f).symm ▸ inducing_coe.is_closed_preimage _ h.2⟩
+#align set.restrict_preimage_closed_embedding Set.restrict_preimage_closed_embedding
 
-alias Set.restrictPreimageClosedEmbedding ← ClosedEmbedding.restrictPreimage
+alias Set.restrict_preimage_closed_embedding ← ClosedEmbedding.restrict_preimage
 
 theorem Set.restrict_preimage_is_closed_map (s : Set β) (H : IsClosedMap f) :
     IsClosedMap (s.restrictPreimage f) := by
   rintro t ⟨u, hu, e⟩
-  refine' ⟨⟨_, (H _ (IsOpen.isClosedCompl hu)).1, _⟩⟩
+  refine' ⟨⟨_, (H _ (IsOpen.is_closed_compl hu)).1, _⟩⟩
   rw [← (congr_arg HasCompl.compl e).trans (compl_compl t)]
   simp only [Set.preimage_compl, compl_inj_iff]
   ext ⟨x, hx⟩

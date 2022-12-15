@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.group_completion
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,16 +102,16 @@ theorem coe_add (a b : α) : ((a + b : α) : Completion α) = a + b :=
 instance : AddMonoid (Completion α) :=
   { Completion.hasZero, Completion.hasAdd with
     zero_add := fun a =>
-      Completion.inductionOn a
-        (isClosedEq (continuous_map₂ continuous_const continuous_id) continuous_id) fun a =>
+      Completion.induction_on a
+        (is_closed_eq (continuous_map₂ continuous_const continuous_id) continuous_id) fun a =>
         show 0 + (a : Completion α) = a by rw_mod_cast [zero_add]
     add_zero := fun a =>
-      Completion.inductionOn a
-        (isClosedEq (continuous_map₂ continuous_id continuous_const) continuous_id) fun a =>
+      Completion.induction_on a
+        (is_closed_eq (continuous_map₂ continuous_id continuous_const) continuous_id) fun a =>
         show (a : Completion α) + 0 = a by rw_mod_cast [add_zero]
     add_assoc := fun a b c =>
-      Completion.inductionOn₃ a b c
-        (isClosedEq
+      Completion.induction_on₃ a b c
+        (is_closed_eq
           (continuous_map₂ (continuous_map₂ continuous_fst (continuous_fst.comp continuous_snd))
             (continuous_snd.comp continuous_snd))
           (continuous_map₂ continuous_fst
@@ -121,41 +121,41 @@ instance : AddMonoid (Completion α) :=
         show (a : Completion α) + b + c = a + (b + c) by repeat' rw_mod_cast [add_assoc]
     nsmul := (· • ·)
     nsmul_zero' := fun a =>
-      Completion.inductionOn a (isClosedEq continuous_map continuous_const) fun a => by
+      Completion.induction_on a (is_closed_eq continuous_map continuous_const) fun a => by
         rw [← coe_smul, ← coe_zero, zero_smul]
     nsmul_succ' := fun n a =>
-      Completion.inductionOn a
-        (isClosedEq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a => by
+      Completion.induction_on a
+        (is_closed_eq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a => by
         rw_mod_cast [succ_nsmul] }
 
 instance : SubNegMonoid (Completion α) :=
   { Completion.addMonoid, Completion.hasNeg, Completion.hasSub with
     sub_eq_add_neg := fun a b =>
-      Completion.inductionOn₂ a b
-        (isClosedEq (continuous_map₂ continuous_fst continuous_snd)
+      Completion.induction_on₂ a b
+        (is_closed_eq (continuous_map₂ continuous_fst continuous_snd)
           (continuous_map₂ continuous_fst (Completion.continuous_map.comp continuous_snd)))
         fun a b => by exact_mod_cast congr_arg coe (sub_eq_add_neg a b)
     zsmul := (· • ·)
     zsmul_zero' := fun a =>
-      Completion.inductionOn a (isClosedEq continuous_map continuous_const) fun a => by
+      Completion.induction_on a (is_closed_eq continuous_map continuous_const) fun a => by
         rw_mod_cast [zero_smul]
         rfl
     zsmul_succ' := fun n a =>
-      Completion.inductionOn a
-        (isClosedEq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a => by
+      Completion.induction_on a
+        (is_closed_eq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a => by
         rw_mod_cast [show Int.ofNat n.succ • a = a + Int.ofNat n • a from
             SubNegMonoid.zsmul_succ' n a]
     zsmul_neg' := fun n a =>
-      Completion.inductionOn a
-        (isClosedEq continuous_map <| Completion.continuous_map.comp continuous_map) fun a => by
+      Completion.induction_on a
+        (is_closed_eq continuous_map <| Completion.continuous_map.comp continuous_map) fun a => by
         rw [← coe_smul, ← coe_smul, ← coe_neg,
           show -[n+1] • a = -((n.succ : ℤ) • a) from SubNegMonoid.zsmul_neg' n a] }
 
 instance : AddGroup (Completion α) :=
   { Completion.subNegMonoid with
     add_left_neg := fun a =>
-      Completion.inductionOn a
-        (isClosedEq (continuous_map₂ Completion.continuous_map continuous_id) continuous_const)
+      Completion.induction_on a
+        (is_closed_eq (continuous_map₂ Completion.continuous_map continuous_id) continuous_const)
         fun a =>
         show -(a : Completion α) + a = 0 by
           rw_mod_cast [add_left_neg]
@@ -169,8 +169,8 @@ instance {M} [Monoid M] [DistribMulAction M α] [HasUniformContinuousConstSmul M
   { Completion.mulAction M α with 
     smul := (· • ·)
     smul_add := fun r x y =>
-      inductionOn₂ x y
-        (isClosedEq ((continuous_fst.add continuous_snd).const_smul _)
+      induction_on₂ x y
+        (is_closed_eq ((continuous_fst.add continuous_snd).const_smul _)
           ((continuous_fst.const_smul _).add (continuous_snd.const_smul _)))
         fun a b => by simp only [← coe_add, ← coe_smul, smul_add]
     smul_zero := fun r => by rw [← coe_zero, ← coe_smul, smul_zero r] }
@@ -205,8 +205,8 @@ variable [UniformSpace α] [AddCommGroup α] [UniformAddGroup α]
 instance : AddCommGroup (Completion α) :=
   { Completion.addGroup with
     add_comm := fun a b =>
-      Completion.inductionOn₂ a b
-        (isClosedEq (continuous_map₂ continuous_fst continuous_snd)
+      Completion.induction_on₂ a b
+        (is_closed_eq (continuous_map₂ continuous_fst continuous_snd)
           (continuous_map₂ continuous_snd continuous_fst))
         fun x y => by 
         change ↑x + ↑y = ↑y + ↑x
@@ -239,8 +239,8 @@ def AddMonoidHom.extension [CompleteSpace β] [SeparatedSpace β] (f : α →+ �
   { toFun := Completion.extension f
     map_zero' := by rw [← coe_zero, extension_coe hf, f.map_zero]
     map_add' := fun a b =>
-      Completion.inductionOn₂ a b
-        (isClosedEq (continuous_extension.comp continuous_add)
+      Completion.induction_on₂ a b
+        (is_closed_eq (continuous_extension.comp continuous_add)
           ((continuous_extension.comp continuous_fst).add
             (continuous_extension.comp continuous_snd)))
         fun a b => by
@@ -277,7 +277,7 @@ theorem AddMonoidHom.completion_coe (f : α →+ β) (hf : Continuous f) (a : α
 theorem AddMonoidHom.completion_zero : (0 : α →+ β).Completion continuous_const = 0 := by
   ext x
   apply completion.induction_on x
-  · apply isClosedEq ((0 : α →+ β).continuous_completion continuous_const)
+  · apply is_closed_eq ((0 : α →+ β).continuous_completion continuous_const)
     simp [continuous_const]
   · intro a
     simp [(0 : α →+ β).completion_coe continuous_const, coe_zero]
@@ -291,7 +291,7 @@ theorem AddMonoidHom.completion_add {γ : Type _} [AddCommGroup γ] [UniformSpac
   apply completion.induction_on x
   ·
     exact
-      isClosedEq ((f + g).continuous_completion hfg)
+      is_closed_eq ((f + g).continuous_completion hfg)
         ((f.continuous_completion hf).add (g.continuous_completion hg))
   · intro a
     simp [(f + g).completion_coe hfg, coe_add, f.completion_coe hf, g.completion_coe hg]

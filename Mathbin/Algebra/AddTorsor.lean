@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.add_torsor
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ by the `+ᵥ` operation and a corresponding subtraction given by the
 `-ᵥ` operation. In the case of a vector space, it is an affine
 space. -/
 class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam <| AddGroup G] extends AddAction G P,
-  HasVsub G P where
+  VSub G P where
   [Nonempty : Nonempty P]
   vsub_vadd' : ∀ p1 p2 : P, (p1 -ᵥ p2 : G) +ᵥ p2 = p1
   vadd_vsub' : ∀ (g : G) (p : P), g +ᵥ p -ᵥ p = g

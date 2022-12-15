@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_num
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1368,7 +1368,7 @@ unsafe def prove_pow (a : expr) (na : ℚ) :
 end
 
 theorem zpow_pos {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c : α) (hb : b = b')
-    (h : a ^ b' = c) : a ^ b = c := by rw [← h, hb, zpow_coe_nat]
+    (h : a ^ b' = c) : a ^ b = c := by rw [← h, hb, zpow_ofNat]
 #align norm_num.zpow_pos NormNum.zpow_pos
 
 theorem zpow_neg {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c c' : α) (b0 : 0 < b')
@@ -1404,8 +1404,8 @@ unsafe def eval_pow : expr → tactic (expr × expr)
     let n₁ ← e₁.to_rat
     let c ← mk_instance_cache α
     match m with
-      | q(@Monoid.hasPow $(_) $(_)) => Prod.snd <$> prove_pow e₁ n₁ c e₂
-      | q(@DivInvMonoid.hasPow $(_) $(_)) => do
+      | q(@Monoid.Pow $(_) $(_)) => Prod.snd <$> prove_pow e₁ n₁ c e₂
+      | q(@DivInvMonoid.Pow $(_) $(_)) => do
         let zc ← mk_instance_cache q(ℤ)
         let nc ← mk_instance_cache q(ℕ)
         (Prod.snd ∘ Prod.snd ∘ Prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂
@@ -2005,7 +2005,7 @@ theorem nat_div (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b
 
 theorem int_div (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) :
     a / b = q := by
-  rw [← h, ← hm, Int.add_mul_div_right _ _ (ne_of_gt (lt_of_le_of_lt h₁ h₂)),
+  rw [← h, ← hm, Int.add_mul_ediv_right _ _ (ne_of_gt (lt_of_le_of_lt h₁ h₂)),
     Int.div_eq_zero_of_lt h₁ h₂, zero_add]
 #align norm_num.int_div NormNum.int_div
 
@@ -2014,7 +2014,7 @@ theorem nat_mod (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b
 #align norm_num.nat_mod NormNum.nat_mod
 
 theorem int_mod (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) :
-    a % b = r := by rw [← h, ← hm, Int.add_mul_mod_self, Int.mod_eq_of_lt h₁ h₂]
+    a % b = r := by rw [← h, ← hm, Int.add_mul_emod_self, Int.mod_eq_of_lt h₁ h₂]
 #align norm_num.int_mod NormNum.int_mod
 
 theorem int_div_neg (a b c' c : ℤ) (h : a / b = c') (h₂ : -c' = c) : a / -b = c :=
@@ -2069,7 +2069,7 @@ theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (
 #align norm_num.dvd_eq_nat NormNum.dvd_eq_nat
 
 theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
-  (propext <| by rw [← h₁, Int.dvd_iff_mod_eq_zero]).trans h₂
+  (propext <| by rw [← h₁, Int.dvd_iff_emod_eq_zero]).trans h₂
 #align norm_num.dvd_eq_int NormNum.dvd_eq_int
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'

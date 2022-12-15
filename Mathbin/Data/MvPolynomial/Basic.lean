@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,8 +113,8 @@ instance [Monoid R] [CommSemiring S₁] [DistribMulAction R S₁] :
     DistribMulAction R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.distribMulAction
 
-instance [Monoid R] [CommSemiring S₁] [DistribMulAction R S₁] [HasFaithfulSmul R S₁] :
-    HasFaithfulSmul R (MvPolynomial σ S₁) :=
+instance [Monoid R] [CommSemiring S₁] [DistribMulAction R S₁] [FaithfulSMul R S₁] :
+    FaithfulSMul R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.has_faithful_smul
 
 instance [Semiring R] [CommSemiring S₁] [Module R S₁] : Module R (MvPolynomial σ S₁) :=
@@ -125,7 +125,7 @@ instance [Monoid R] [Monoid S₁] [CommSemiring S₂] [HasSmul R S₁] [DistribM
   AddMonoidAlgebra.is_scalar_tower
 
 instance [Monoid R] [Monoid S₁] [CommSemiring S₂] [DistribMulAction R S₂] [DistribMulAction S₁ S₂]
-    [SmulCommClass R S₁ S₂] : SmulCommClass R S₁ (MvPolynomial σ S₂) :=
+    [SMulCommClass R S₁ S₂] : SMulCommClass R S₁ (MvPolynomial σ S₂) :=
   AddMonoidAlgebra.smul_comm_class
 
 instance [Monoid R] [CommSemiring S₁] [DistribMulAction R S₁] [DistribMulAction Rᵐᵒᵖ S₁]
@@ -705,7 +705,7 @@ theorem support_sdiff_support_subset_support_add [DecidableEq σ] (p q : MvPolyn
 
 theorem support_symm_diff_support_subset_support_add [DecidableEq σ] (p q : MvPolynomial σ R) :
     p.support ∆ q.support ⊆ (p + q).support := by
-  rw [symm_diff_def, Finset.sup_eq_union]
+  rw [symmDiff_def, Finset.sup_eq_union]
   apply Finset.union_subset
   · exact support_sdiff_support_subset_support_add p q
   · rw [add_comm]

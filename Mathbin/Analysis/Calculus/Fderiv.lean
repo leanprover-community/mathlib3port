@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1710,7 +1710,7 @@ end CartesianProduct
 
 section ConstSmul
 
-variable {R : Type _} [Semiring R] [Module R F] [SmulCommClass 𝕜 R F] [HasContinuousConstSmul R F]
+variable {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F] [HasContinuousConstSmul R F]
 
 /-! ### Derivative of a function multiplied by a constant -/
 

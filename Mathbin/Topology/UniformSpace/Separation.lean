@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.separation
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -194,18 +194,18 @@ theorem separation_rel_eq_inter_closure : 𝓢 α = ⋂₀ (closure '' (𝓤 α)
   simp [uniformity_has_basis_closure.separation_rel]
 #align separation_rel_eq_inter_closure separation_rel_eq_inter_closure
 
-theorem isClosedSeparationRel : IsClosed (𝓢 α) := by
+theorem is_closed_separation_rel : IsClosed (𝓢 α) := by
   rw [separation_rel_eq_inter_closure]
-  apply isClosedSInter
+  apply is_closed_sInter
   rintro _ ⟨t, t_in, rfl⟩
-  exact isClosedClosure
-#align is_closed_separation_rel isClosedSeparationRel
+  exact is_closed_closure
+#align is_closed_separation_rel is_closed_separation_rel
 
 theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
   classical 
     constructor <;> intro h
     · rw [t2_iff_is_closed_diagonal, ← show 𝓢 α = diagonal α from h.1]
-      exact isClosedSeparationRel
+      exact is_closed_separation_rel
     · rw [separated_def']
       intro x y hxy
       rcases t2_separation hxy with ⟨u, v, uo, vo, hx, hy, h⟩
@@ -223,10 +223,10 @@ instance Subtype.separated_space [SeparatedSpace α] (s : Set α) : SeparatedSpa
   separated_iff_t2.mpr Subtype.t2Space
 #align subtype.separated_space Subtype.separated_space
 
-theorem isClosedOfSpacedOut [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α) {s : Set α}
+theorem is_closed_of_spaced_out [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α) {s : Set α}
     (hs : s.Pairwise fun x y => (x, y) ∉ V₀) : IsClosed s := by
   rcases comp_symm_mem_uniformity_sets V₀_in with ⟨V₁, V₁_in, V₁_symm, h_comp⟩
-  apply isClosedOfClosureSubset
+  apply is_closed_of_closure_subset
   intro x hx
   rw [mem_closure_iff_ball] at hx
   rcases hx V₁_in with ⟨y, hy, hy'⟩
@@ -238,14 +238,14 @@ theorem isClosedOfSpacedOut [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in
     by_contra hzy
     exact hs hz' hy' hzy (h_comp <| mem_comp_of_mem_ball V₁_symm (ball_inter_left x _ _ hz) hy)
   exact ball_inter_right x _ _ hz
-#align is_closed_of_spaced_out isClosedOfSpacedOut
+#align is_closed_of_spaced_out is_closed_of_spaced_out
 
-theorem isClosedRangeOfSpacedOut {ι} [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α)
+theorem is_closed_range_of_spaced_out {ι} [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α)
     {f : ι → α} (hf : Pairwise fun x y => (f x, f y) ∉ V₀) : IsClosed (range f) :=
-  isClosedOfSpacedOut V₀_in <| by 
+  is_closed_of_spaced_out V₀_in <| by
     rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ h
     exact hf (ne_of_apply_ne f h)
-#align is_closed_range_of_spaced_out isClosedRangeOfSpacedOut
+#align is_closed_range_of_spaced_out is_closed_range_of_spaced_out
 
 /-!
 ### Separation quotient

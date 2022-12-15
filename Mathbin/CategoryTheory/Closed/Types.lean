@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.types
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ instance (X : Type v₁) :
         counit := { app := fun Z xf => xf.2 xf.1 } }
 
 instance : HasFiniteProducts (Type v₁) :=
-  has_finite_products_of_has_products.{v₁} _
+  hasFiniteProductsOfHasProducts.{v₁} _
 
 instance :
     CartesianClosed
@@ -56,7 +56,7 @@ instance :
     { isAdj := Adjunction.leftAdjointOfNatIso (Types.binaryProductIsoProd.app X) }
 
 instance {C : Type u₁} [Category.{v₁} C] : HasFiniteProducts (C ⥤ Type u₁) :=
-  has_finite_products_of_has_products.{u₁} _
+  hasFiniteProductsOfHasProducts.{u₁} _
 
 instance {C : Type v₁} [SmallCategory C] :
     CartesianClosed

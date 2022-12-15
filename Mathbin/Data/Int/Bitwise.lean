@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.bitwise
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -178,25 +178,25 @@ private unsafe def bitwise_tac : tactic Unit :=
   sorry
 #align int.bitwise_tac int.bitwise_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
 theorem bitwise_or : bitwise or = lor := by
   run_tac
     bitwise_tac
 #align int.bitwise_or Int.bitwise_or
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
 theorem bitwise_and : bitwise and = land := by
   run_tac
     bitwise_tac
 #align int.bitwise_and Int.bitwise_and
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
 theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
   run_tac
     bitwise_tac
 #align int.bitwise_diff Int.bitwise_diff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
 theorem bitwise_xor : bitwise xor = lxor := by
   run_tac
     bitwise_tac

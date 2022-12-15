@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jesse Reimann, Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.integral.riesz_markov_kakutani
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ monotone: if `K₁ ⊆ K₂` are compact subsets in X, then `λ(K₁) ≤ λ(K�
 theorem riesz_content_aux_mono {K₁ K₂ : Compacts X} (h : K₁ ≤ K₂) :
     rieszContentAux Λ K₁ ≤ rieszContentAux Λ K₂ :=
   cInf_le_cInf (OrderBot.bdd_below _) (riesz_content_aux_image_nonempty Λ K₂)
-    (image_subset Λ (set_of_subset_set_of.mpr fun f f_hyp x x_in_K₁ => f_hyp x (h x_in_K₁)))
+    (image_subset Λ (setOf_subset_setOf.mpr fun f f_hyp x x_in_K₁ => f_hyp x (h x_in_K₁)))
 #align riesz_content_aux_mono riesz_content_aux_mono
 
 end RieszMonotone

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.comma
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,27 +144,27 @@ def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Coco
 #align
   category_theory.comma.cocone_of_preserves_is_colimit CategoryTheory.Comma.coconeOfPreservesIsColimit
 
-instance has_limit (F : J ⥤ Comma L R) [HasLimit (F ⋙ fst L R)] [HasLimit (F ⋙ snd L R)]
+instance hasLimit (F : J ⥤ Comma L R) [HasLimit (F ⋙ fst L R)] [HasLimit (F ⋙ snd L R)]
     [PreservesLimit (F ⋙ snd L R) R] : HasLimit F :=
   HasLimit.mk ⟨_, coneOfPreservesIsLimit _ (limit.isLimit _) (limit.isLimit _)⟩
-#align category_theory.comma.has_limit CategoryTheory.Comma.has_limit
+#align category_theory.comma.has_limit CategoryTheory.Comma.hasLimit
 
-instance has_limits_of_shape [HasLimitsOfShape J A] [HasLimitsOfShape J B]
+instance hasLimitsOfShape [HasLimitsOfShape J A] [HasLimitsOfShape J B]
     [PreservesLimitsOfShape J R] : HasLimitsOfShape J (Comma L R) where
-#align category_theory.comma.has_limits_of_shape CategoryTheory.Comma.has_limits_of_shape
+#align category_theory.comma.has_limits_of_shape CategoryTheory.Comma.hasLimitsOfShape
 
 instance has_limits [HasLimits A] [HasLimits B] [PreservesLimits R] : HasLimits (Comma L R) :=
   ⟨inferInstance⟩
 #align category_theory.comma.has_limits CategoryTheory.Comma.has_limits
 
-instance has_colimit (F : J ⥤ Comma L R) [HasColimit (F ⋙ fst L R)] [HasColimit (F ⋙ snd L R)]
+instance hasColimit (F : J ⥤ Comma L R) [HasColimit (F ⋙ fst L R)] [HasColimit (F ⋙ snd L R)]
     [PreservesColimit (F ⋙ fst L R) L] : HasColimit F :=
   HasColimit.mk ⟨_, coconeOfPreservesIsColimit _ (colimit.isColimit _) (colimit.isColimit _)⟩
-#align category_theory.comma.has_colimit CategoryTheory.Comma.has_colimit
+#align category_theory.comma.has_colimit CategoryTheory.Comma.hasColimit
 
-instance has_colimits_of_shape [HasColimitsOfShape J A] [HasColimitsOfShape J B]
+instance hasColimitsOfShape [HasColimitsOfShape J A] [HasColimitsOfShape J B]
     [PreservesColimitsOfShape J L] : HasColimitsOfShape J (Comma L R) where
-#align category_theory.comma.has_colimits_of_shape CategoryTheory.Comma.has_colimits_of_shape
+#align category_theory.comma.has_colimits_of_shape CategoryTheory.Comma.hasColimitsOfShape
 
 instance has_colimits [HasColimits A] [HasColimits B] [PreservesColimits L] :
     HasColimits (Comma L R) :=
@@ -175,25 +175,25 @@ end Comma
 
 namespace Arrow
 
-instance has_limit (F : J ⥤ Arrow T) [i₁ : HasLimit (F ⋙ left_func)]
+instance hasLimit (F : J ⥤ Arrow T) [i₁ : HasLimit (F ⋙ left_func)]
     [i₂ : HasLimit (F ⋙ right_func)] : HasLimit F :=
-  @Comma.has_limit _ _ _ _ _ i₁ i₂ _
-#align category_theory.arrow.has_limit CategoryTheory.Arrow.has_limit
+  @Comma.hasLimit _ _ _ _ _ i₁ i₂ _
+#align category_theory.arrow.has_limit CategoryTheory.Arrow.hasLimit
 
-instance has_limits_of_shape [HasLimitsOfShape J T] : HasLimitsOfShape J (Arrow T) where
-#align category_theory.arrow.has_limits_of_shape CategoryTheory.Arrow.has_limits_of_shape
+instance hasLimitsOfShape [HasLimitsOfShape J T] : HasLimitsOfShape J (Arrow T) where
+#align category_theory.arrow.has_limits_of_shape CategoryTheory.Arrow.hasLimitsOfShape
 
 instance has_limits [HasLimits T] : HasLimits (Arrow T) :=
   ⟨inferInstance⟩
 #align category_theory.arrow.has_limits CategoryTheory.Arrow.has_limits
 
-instance has_colimit (F : J ⥤ Arrow T) [i₁ : HasColimit (F ⋙ left_func)]
+instance hasColimit (F : J ⥤ Arrow T) [i₁ : HasColimit (F ⋙ left_func)]
     [i₂ : HasColimit (F ⋙ right_func)] : HasColimit F :=
-  @Comma.has_colimit _ _ _ _ _ i₁ i₂ _
-#align category_theory.arrow.has_colimit CategoryTheory.Arrow.has_colimit
+  @Comma.hasColimit _ _ _ _ _ i₁ i₂ _
+#align category_theory.arrow.has_colimit CategoryTheory.Arrow.hasColimit
 
-instance has_colimits_of_shape [HasColimitsOfShape J T] : HasColimitsOfShape J (Arrow T) where
-#align category_theory.arrow.has_colimits_of_shape CategoryTheory.Arrow.has_colimits_of_shape
+instance hasColimitsOfShape [HasColimitsOfShape J T] : HasColimitsOfShape J (Arrow T) where
+#align category_theory.arrow.has_colimits_of_shape CategoryTheory.Arrow.hasColimitsOfShape
 
 instance has_colimits [HasColimits T] : HasColimits (Arrow T) :=
   ⟨inferInstance⟩
@@ -205,15 +205,15 @@ namespace StructuredArrow
 
 variable {X : T} {G : A ⥤ T} (F : J ⥤ StructuredArrow X G)
 
-instance has_limit [i₁ : HasLimit (F ⋙ proj X G)] [i₂ : PreservesLimit (F ⋙ proj X G) G] :
+instance hasLimit [i₁ : HasLimit (F ⋙ proj X G)] [i₂ : PreservesLimit (F ⋙ proj X G) G] :
     HasLimit F :=
-  @Comma.has_limit _ _ _ _ _ _ i₁ i₂
-#align category_theory.structured_arrow.has_limit CategoryTheory.StructuredArrow.has_limit
+  @Comma.hasLimit _ _ _ _ _ _ i₁ i₂
+#align category_theory.structured_arrow.has_limit CategoryTheory.StructuredArrow.hasLimit
 
-instance has_limits_of_shape [HasLimitsOfShape J A] [PreservesLimitsOfShape J G] :
+instance hasLimitsOfShape [HasLimitsOfShape J A] [PreservesLimitsOfShape J G] :
     HasLimitsOfShape J (StructuredArrow X G) where
 #align
-  category_theory.structured_arrow.has_limits_of_shape CategoryTheory.StructuredArrow.has_limits_of_shape
+  category_theory.structured_arrow.has_limits_of_shape CategoryTheory.StructuredArrow.hasLimitsOfShape
 
 instance has_limits [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArrow X G) :=
   ⟨inferInstance⟩
@@ -254,15 +254,15 @@ namespace CostructuredArrow
 
 variable {G : A ⥤ T} {X : T} (F : J ⥤ CostructuredArrow G X)
 
-instance has_colimit [i₁ : HasColimit (F ⋙ proj G X)] [i₂ : PreservesColimit (F ⋙ proj G X) G] :
+instance hasColimit [i₁ : HasColimit (F ⋙ proj G X)] [i₂ : PreservesColimit (F ⋙ proj G X) G] :
     HasColimit F :=
-  @Comma.has_colimit _ _ _ _ _ i₁ _ i₂
-#align category_theory.costructured_arrow.has_colimit CategoryTheory.CostructuredArrow.has_colimit
+  @Comma.hasColimit _ _ _ _ _ i₁ _ i₂
+#align category_theory.costructured_arrow.has_colimit CategoryTheory.CostructuredArrow.hasColimit
 
-instance has_colimits_of_shape [HasColimitsOfShape J A] [PreservesColimitsOfShape J G] :
+instance hasColimitsOfShape [HasColimitsOfShape J A] [PreservesColimitsOfShape J G] :
     HasColimitsOfShape J (CostructuredArrow G X) where
 #align
-  category_theory.costructured_arrow.has_colimits_of_shape CategoryTheory.CostructuredArrow.has_colimits_of_shape
+  category_theory.costructured_arrow.has_colimits_of_shape CategoryTheory.CostructuredArrow.hasColimitsOfShape
 
 instance has_colimits [HasColimits A] [PreservesColimits G] : HasColimits (CostructuredArrow G X) :=
   ⟨inferInstance⟩

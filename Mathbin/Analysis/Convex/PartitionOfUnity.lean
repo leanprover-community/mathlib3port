@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.partition_of_unity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t 
     ∃ g : C(X, E), ∀ x, g x ∈ t x := by
   choose U hU g hgc hgt using H
   obtain ⟨f, hf⟩ :=
-    PartitionOfUnity.exists_is_subordinate isClosedUniv (fun x => interior (U x))
+    PartitionOfUnity.exists_is_subordinate is_closed_univ (fun x => interior (U x))
       (fun x => is_open_interior) fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   refine'
     ⟨⟨fun x => ∑ᶠ i, f i x • g i x,

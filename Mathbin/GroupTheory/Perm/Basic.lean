@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module group_theory.perm.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,11 +50,11 @@ type. -/
 def equivUnitsEnd :
     Perm α ≃*
       Units
-        (Function.EndCat
+        (Function.End
           α) where 
   toFun e := ⟨e, e.symm, e.self_comp_symm, e.symm_comp_self⟩
   invFun u :=
-    ⟨(u : Function.EndCat α), (↑u⁻¹ : Function.EndCat α), congr_fun u.inv_val, congr_fun u.val_inv⟩
+    ⟨(u : Function.End α), (↑u⁻¹ : Function.End α), congr_fun u.inv_val, congr_fun u.val_inv⟩
   left_inv e := ext fun x => rfl
   right_inv u := Units.ext rfl
   map_mul' e₁ e₂ := rfl
@@ -63,7 +63,7 @@ def equivUnitsEnd :
 /-- Lift a monoid homomorphism `f : G →* function.End α` to a monoid homomorphism
 `f : G →* equiv.perm α`. -/
 @[simps]
-def MonoidHom.toHomPerm {G : Type _} [Group G] (f : G →* Function.EndCat α) : G →* Perm α :=
+def MonoidHom.toHomPerm {G : Type _} [Group G] (f : G →* Function.End α) : G →* Perm α :=
   equivUnitsEnd.symm.toMonoidHom.comp f.toHomUnits
 #align monoid_hom.to_hom_perm MonoidHom.toHomPerm
 
@@ -410,7 +410,7 @@ theorem subtype_perm_pow (f : Perm α) (n : ℕ) (hf) :
 private theorem zpow_aux (hf : ∀ x, p x ↔ p (f x)) : ∀ {n : ℤ} (x), p x ↔ p ((f ^ n) x)
   | Int.ofNat n => pow_aux hf
   | Int.negSucc n => by 
-    rw [zpow_neg_succ_of_nat]
+    rw [zpow_negSucc]
     exact inv_aux.1 (pow_aux hf)
 #align equiv.perm.zpow_aux equiv.perm.zpow_aux
 
@@ -419,7 +419,7 @@ theorem subtype_perm_zpow (f : Perm α) (n : ℤ) (hf) :
     (f.subtypePerm hf ^ n : Perm { x // p x }) = (f ^ n).subtypePerm (zpow_aux hf) := by
   induction' n with n ih
   · exact subtype_perm_pow _ _ _
-  · simp only [zpow_neg_succ_of_nat, subtype_perm_pow, subtype_perm_inv]
+  · simp only [zpow_negSucc, subtype_perm_pow, subtype_perm_inv]
 #align equiv.perm.subtype_perm_zpow Equiv.Perm.subtype_perm_zpow
 
 variable [DecidablePred p] {a : α}

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.lipschitz
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -281,15 +281,15 @@ theorem edist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f)
   simpa only [Ennreal.coe_pow] using (hf.iterate n) x (f x)
 #align lipschitz_with.edist_iterate_succ_le_geometric LipschitzWith.edist_iterate_succ_le_geometric
 
-protected theorem mul {f g : Function.EndCat α} {Kf Kg} (hf : LipschitzWith Kf f)
-    (hg : LipschitzWith Kg g) : LipschitzWith (Kf * Kg) (f * g : Function.EndCat α) :=
+protected theorem mul {f g : Function.End α} {Kf Kg} (hf : LipschitzWith Kf f)
+    (hg : LipschitzWith Kg g) : LipschitzWith (Kf * Kg) (f * g : Function.End α) :=
   hf.comp hg
 #align lipschitz_with.mul LipschitzWith.mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of a list of Lipschitz continuous endomorphisms is a Lipschitz continuous
 endomorphism. -/
-protected theorem listProd (f : ι → Function.EndCat α) (K : ι → ℝ≥0)
+protected theorem listProd (f : ι → Function.End α) (K : ι → ℝ≥0)
     (h : ∀ i, LipschitzWith (K i) (f i)) : ∀ l : List ι, LipschitzWith (l.map K).Prod (l.map f).Prod
   | [] => by simpa using LipschitzWith.id
   | i::l => by 
@@ -297,8 +297,8 @@ protected theorem listProd (f : ι → Function.EndCat α) (K : ι → ℝ≥0)
     exact (h i).mul (list_prod l)
 #align lipschitz_with.list_prod LipschitzWith.listProd
 
-protected theorem pow {f : Function.EndCat α} {K} (h : LipschitzWith K f) :
-    ∀ n : ℕ, LipschitzWith (K ^ n) (f ^ n : Function.EndCat α)
+protected theorem pow {f : Function.End α} {K} (h : LipschitzWith K f) :
+    ∀ n : ℕ, LipschitzWith (K ^ n) (f ^ n : Function.End α)
   | 0 => LipschitzWith.id
   | n + 1 => by 
     rw [pow_succ, pow_succ]

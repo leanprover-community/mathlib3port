@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.dfinsupp.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -356,8 +356,8 @@ theorem coe_smul [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction 
 #align dfinsupp.coe_smul Dfinsupp.coe_smul
 
 instance {δ : Type _} [Monoid γ] [Monoid δ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)]
-    [∀ i, DistribMulAction δ (β i)] [∀ i, SmulCommClass γ δ (β i)] :
-    SmulCommClass γ δ
+    [∀ i, DistribMulAction δ (β i)] [∀ i, SMulCommClass γ δ (β i)] :
+    SMulCommClass γ δ
       (Π₀ i,
         β i) where smul_comm r s m := ext fun i => by simp only [smul_apply, smul_comm r s (m i)]
 
@@ -1152,7 +1152,7 @@ instance decidableZero : DecidablePred (Eq (0 : Π₀ i, β i)) := fun f =>
   decidable_of_iff _ <| support_eq_empty.trans eq_comm
 #align dfinsupp.decidable_zero Dfinsupp.decidableZero
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem support_subset_iff {s : Set ι} {f : Π₀ i, β i} :
     ↑f.support ⊆ s ↔ ∀ (i) (_ : i ∉ s), f i = 0 := by
   simp [Set.subset_def] <;> exact forall_congr' fun i => not_imp_comm

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.module.ulift
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,23 +77,23 @@ instance mulAction' [Monoid R] [MulAction R M] :
   one_smul := fun ⟨f⟩ => ext _ _ <| one_smul _ _
 #align ulift.mul_action' ULift.mulAction'
 
-instance smulZeroClass [Zero M] [SmulZeroClass R M] : SmulZeroClass (ULift R) M :=
+instance smulZeroClass [Zero M] [SMulZeroClass R M] : SMulZeroClass (ULift R) M :=
   { ULift.hasSmulLeft with smul_zero := fun _ => smul_zero _ }
 #align ulift.smul_zero_class ULift.smulZeroClass
 
-instance smulZeroClass' [Zero M] [SmulZeroClass R M] :
-    SmulZeroClass R (ULift
+instance smulZeroClass' [Zero M] [SMulZeroClass R M] :
+    SMulZeroClass R (ULift
         M) where smul_zero c := by 
     ext
     simp [smul_zero]
 #align ulift.smul_zero_class' ULift.smulZeroClass'
 
-instance distribSmul [AddZeroClass M] [DistribSmul R M] :
-    DistribSmul (ULift R) M where smul_add _ := smul_add _
+instance distribSmul [AddZeroClass M] [DistribSMul R M] :
+    DistribSMul (ULift R) M where smul_add _ := smul_add _
 #align ulift.distrib_smul ULift.distribSmul
 
-instance distribSmul' [AddZeroClass M] [DistribSmul R M] :
-    DistribSmul R (ULift
+instance distribSmul' [AddZeroClass M] [DistribSMul R M] :
+    DistribSMul R (ULift
         M) where smul_add c f g := by 
     ext
     simp [smul_add]

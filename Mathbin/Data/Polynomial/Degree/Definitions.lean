@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.definitions
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ def degree (p : R[X]) : WithBot ℕ :=
 #align polynomial.degree Polynomial.degree
 
 theorem degree_lt_wf : WellFounded fun p q : R[X] => degree p < degree q :=
-  InvImage.wf degree (WithBot.well_founded_lt Nat.lt_wfRel)
+  InvImage.wf degree (WithBot.wellFounded_lt Nat.lt_wfRel)
 #align polynomial.degree_lt_wf Polynomial.degree_lt_wf
 
 instance : WellFoundedRelation R[X] :=

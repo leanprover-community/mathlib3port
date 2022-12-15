@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -259,7 +259,7 @@ theorem set_integral_neg_eq_set_integral_nonpos [LinearOrder E] [OrderClosedTopo
     (∫ x in { x | f x < 0 }, f x ∂μ) = ∫ x in { x | f x ≤ 0 }, f x ∂μ := by
   have h_union : { x | f x ≤ 0 } = { x | f x < 0 } ∪ { x | f x = 0 } := by
     ext
-    simp_rw [Set.mem_union, Set.mem_set_of_eq]
+    simp_rw [Set.mem_union, Set.mem_setOf_eq]
     exact le_iff_lt_or_eq
   rw [h_union]
   exact
@@ -287,7 +287,7 @@ theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hf : StronglyMeasurable f
       refine' set_integral_congr h_meas.compl fun x hx => _
       dsimp only
       rw [Real.norm_eq_abs, abs_eq_neg_self.mpr _]
-      rw [Set.mem_compl_iff, Set.nmem_set_of_iff] at hx
+      rw [Set.mem_compl_iff, Set.nmem_setOf_iff] at hx
       linarith
     _ = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ := by
       rw [← set_integral_neg_eq_set_integral_nonpos hf hfi]
@@ -597,7 +597,7 @@ section TendstoMono
 variable {μ : Measure α} [NormedAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] {s : ℕ → Set α}
   {f : α → E}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
     (hfi : IntegrableOn f (s 0) μ) :
     Tendsto (fun i => ∫ a in s i, f a ∂μ) atTop (𝓝 (∫ a in ⋂ n, s n, f a ∂μ)) := by
@@ -617,7 +617,7 @@ theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti
     exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
   ·
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align antitone.tendsto_set_integral Antitone.tendsto_set_integral
 
 end TendstoMono
@@ -861,7 +861,7 @@ theorem integral_comp_comm (L : E →L[𝕜] F) {φ : α → E} (φ_int : Integr
   · intro f g H f_int g_int hf hg
     simp [L.map_add, integral_add f_int g_int,
       integral_add (L.integrable_comp f_int) (L.integrable_comp g_int), hf, hg]
-  · exact isClosedEq L.continuous_integral_comp_L1 (L.continuous.comp continuous_integral)
+  · exact is_closed_eq L.continuous_integral_comp_L1 (L.continuous.comp continuous_integral)
   · intro f g hfg f_int hf
     convert hf using 1 <;> clear hf
     · exact integral_congr_ae (hfg.fun_comp L).symm
@@ -1034,7 +1034,7 @@ theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0} (f_meas : Me
       ext1 u
       simp only [Function.comp_apply, with_density_smul_li_apply]
       exact integral_congr_ae (mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp.symm
-    exact isClosedEq C1 C2
+    exact is_closed_eq C1 C2
   · intro u v huv u_int hu
     rw [← integral_congr_ae huv, hu]
     apply integral_congr_ae

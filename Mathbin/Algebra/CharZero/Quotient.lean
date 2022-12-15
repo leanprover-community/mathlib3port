@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.char_zero.quotient
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,9 +34,9 @@ theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0)
   · rintro ⟨k, h⟩
     simp_rw [← h]
     refine' ⟨⟨(k % z).toNat, _⟩, k / z, _⟩
-    · rw [← Int.coe_nat_lt, Int.toNat_of_nonneg (Int.mod_nonneg _ hz)]
-      exact (Int.mod_lt _ hz).trans_eq (Int.abs_eq_nat_abs _)
-    rw [Fin.coe_mk, Int.toNat_of_nonneg (Int.mod_nonneg _ hz), Int.div_add_mod]
+    · rw [← Int.ofNat_lt, Int.toNat_of_nonneg (Int.emod_nonneg _ hz)]
+      exact (Int.emod_lt _ hz).trans_eq (Int.abs_eq_natAbs _)
+    rw [Fin.coe_mk, Int.toNat_of_nonneg (Int.emod_nonneg _ hz), Int.div_add_mod]
   · rintro ⟨k, n, h⟩
     exact ⟨_, h⟩
 #align

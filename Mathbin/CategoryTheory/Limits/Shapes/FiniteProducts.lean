@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.finite_products
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,19 +40,19 @@ class HasFiniteProducts : Prop where
 #align category_theory.limits.has_finite_products CategoryTheory.Limits.HasFiniteProducts
 
 /-- If `C` has finite limits then it has finite products. -/
-instance (priority := 10) has_finite_products_of_has_finite_limits [HasFiniteLimits C] :
+instance (priority := 10) hasFiniteProductsOfHasFiniteLimits [HasFiniteLimits C] :
     HasFiniteProducts C :=
   ⟨fun n => inferInstance⟩
 #align
-  category_theory.limits.has_finite_products_of_has_finite_limits CategoryTheory.Limits.has_finite_products_of_has_finite_limits
+  category_theory.limits.has_finite_products_of_has_finite_limits CategoryTheory.Limits.hasFiniteProductsOfHasFiniteLimits
 
-instance has_limits_of_shape_discrete [HasFiniteProducts C] (ι : Type w) [Finite ι] :
+instance hasLimitsOfShapeDiscrete [HasFiniteProducts C] (ι : Type w) [Finite ι] :
     HasLimitsOfShape (Discrete ι) C := by
   rcases Finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩
   haveI := has_finite_products.out C n
   exact has_limits_of_shape_of_equivalence (discrete.equivalence e.symm)
 #align
-  category_theory.limits.has_limits_of_shape_discrete CategoryTheory.Limits.has_limits_of_shape_discrete
+  category_theory.limits.has_limits_of_shape_discrete CategoryTheory.Limits.hasLimitsOfShapeDiscrete
 
 /-- We can now write this for powers. -/
 noncomputable example [HasFiniteProducts C] (X : C) : C :=
@@ -60,10 +60,10 @@ noncomputable example [HasFiniteProducts C] (X : C) : C :=
 
 /-- If a category has all products then in particular it has finite products.
 -/
-theorem has_finite_products_of_has_products [HasProducts.{w} C] : HasFiniteProducts C :=
-  ⟨fun n => has_limits_of_shape_of_equivalence (Discrete.equivalence Equiv.ulift.{w})⟩
+theorem hasFiniteProductsOfHasProducts [HasProducts.{w} C] : HasFiniteProducts C :=
+  ⟨fun n => hasLimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift.{w})⟩
 #align
-  category_theory.limits.has_finite_products_of_has_products CategoryTheory.Limits.has_finite_products_of_has_products
+  category_theory.limits.has_finite_products_of_has_products CategoryTheory.Limits.hasFiniteProductsOfHasProducts
 
 /- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- A category has finite coproducts if there is a chosen colimit for every diagram
@@ -78,27 +78,27 @@ class HasFiniteCoproducts : Prop where
 
 attribute [class] has_finite_coproducts
 
-instance has_colimits_of_shape_discrete [HasFiniteCoproducts C] (ι : Type w) [Finite ι] :
+instance hasColimitsOfShapeDiscrete [HasFiniteCoproducts C] (ι : Type w) [Finite ι] :
     HasColimitsOfShape (Discrete ι) C := by
   rcases Finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩
   haveI := has_finite_coproducts.out C n
   exact has_colimits_of_shape_of_equivalence (discrete.equivalence e.symm)
 #align
-  category_theory.limits.has_colimits_of_shape_discrete CategoryTheory.Limits.has_colimits_of_shape_discrete
+  category_theory.limits.has_colimits_of_shape_discrete CategoryTheory.Limits.hasColimitsOfShapeDiscrete
 
 /-- If `C` has finite colimits then it has finite coproducts. -/
-instance (priority := 10) has_finite_coproducts_of_has_finite_colimits [HasFiniteColimits C] :
+instance (priority := 10) hasFiniteCoproductsOfHasFiniteColimits [HasFiniteColimits C] :
     HasFiniteCoproducts C :=
   ⟨fun J => by infer_instance⟩
 #align
-  category_theory.limits.has_finite_coproducts_of_has_finite_colimits CategoryTheory.Limits.has_finite_coproducts_of_has_finite_colimits
+  category_theory.limits.has_finite_coproducts_of_has_finite_colimits CategoryTheory.Limits.hasFiniteCoproductsOfHasFiniteColimits
 
 /-- If a category has all coproducts then in particular it has finite coproducts.
 -/
-theorem has_finite_coproducts_of_has_coproducts [HasCoproducts.{w} C] : HasFiniteCoproducts C :=
-  ⟨fun J => has_colimits_of_shape_of_equivalence (Discrete.equivalence Equiv.ulift.{w})⟩
+theorem hasFiniteCoproductsOfHasCoproducts [HasCoproducts.{w} C] : HasFiniteCoproducts C :=
+  ⟨fun J => hasColimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift.{w})⟩
 #align
-  category_theory.limits.has_finite_coproducts_of_has_coproducts CategoryTheory.Limits.has_finite_coproducts_of_has_coproducts
+  category_theory.limits.has_finite_coproducts_of_has_coproducts CategoryTheory.Limits.hasFiniteCoproductsOfHasCoproducts
 
 end CategoryTheory.Limits
 

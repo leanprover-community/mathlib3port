@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
 
 ! This file was ported from Lean 3 source module ring_theory.chain_of_divisors
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ theorem exists_chain_of_prime_pow {p : Associates M} {n : ℕ} (hn : n ≠ 0) (h
     exact
       associates.dvd_not_unit_iff_lt.mp
         ⟨pow_ne_zero n hp.ne_zero, p ^ (m - n : ℕ),
-          not_is_unit_of_not_is_unit_dvd hp.not_unit (dvd_pow dvd_rfl (Nat.sub_pos_of_lt h).ne'),
+          not_isUnit_of_not_isUnit_dvd hp.not_unit (dvd_pow dvd_rfl (Nat.sub_pos_of_lt h).ne'),
           (pow_mul_pow_sub p h.le).symm⟩
   · obtain ⟨i, i_le, hi⟩ := (dvd_prime_pow hp n).1 h
     rw [associated_iff_eq] at hi

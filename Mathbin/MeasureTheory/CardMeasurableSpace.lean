@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module measure_theory.card_measurable_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,12 +56,12 @@ def generateMeasurableRec (s : Set (Set α)) : ω₁ → Set (Set α)
   exact j.2
 #align measurable_space.generate_measurable_rec MeasurableSpace.generateMeasurableRec
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr subset_union_of_subset_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr subset_union_of_subset_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem self_subset_generate_measurable_rec (s : Set (Set α)) (i : ω₁) :
     s ⊆ generateMeasurableRec s i := by
   unfold generate_measurable_rec
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr subset_union_of_subset_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr subset_union_of_subset_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   exact subset_rfl
 #align
   measurable_space.self_subset_generate_measurable_rec MeasurableSpace.self_subset_generate_measurable_rec
@@ -103,7 +103,7 @@ theorem generate_measurable_rec_subset (s : Set (Set α)) {i j : ω₁} (h : i �
 #align
   measurable_space.generate_measurable_rec_subset MeasurableSpace.generate_measurable_rec_subset
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr (mk_union_le _ _).trans, ",", expr add_le_of_le C, ",", expr mk_image_le.trans, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr (mk_union_le _ _).trans, ",", expr add_le_of_le C, ",", expr mk_image_le.trans, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- At each step of the inductive construction, the cardinality bound `≤ (max (#s) 2) ^ ℵ₀` holds.
 -/
 theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
@@ -122,7 +122,7 @@ theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
     exact max_le B le_rfl
   rw [generate_measurable_rec]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr (mk_union_le _ _).trans, \",\", expr add_le_of_le C, \",\", expr mk_image_le.trans, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr (mk_union_le _ _).trans, \",\", expr add_le_of_le C, \",\", expr mk_image_le.trans, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   · exact (le_max_left _ _).trans (self_le_power _ one_lt_aleph_0.le)
   · rw [mk_singleton]
     exact one_lt_aleph_0.le.trans C

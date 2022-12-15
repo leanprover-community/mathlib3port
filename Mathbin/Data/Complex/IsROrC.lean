@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.complex.is_R_or_C
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -893,30 +893,30 @@ theorem conj_mul_eq_norm_sq_left (x : K) : conj x * x = (normSq x : K) := by
 /-! ### Cauchy sequences -/
 
 
-theorem isCauSeqRe (f : CauSeq K abs) : IsCauSeq abs' fun n => re (f n) := fun ε ε0 =>
+theorem is_cau_seq_re (f : CauSeq K abs) : IsCauSeq abs' fun n => re (f n) := fun ε ε0 =>
   (f.cauchy ε0).imp fun i H j ij =>
     lt_of_le_of_lt (by simpa using abs_re_le_abs (f j - f i)) (H _ ij)
-#align is_R_or_C.is_cau_seq_re IsROrC.isCauSeqRe
+#align is_R_or_C.is_cau_seq_re IsROrC.is_cau_seq_re
 
-theorem isCauSeqIm (f : CauSeq K abs) : IsCauSeq abs' fun n => im (f n) := fun ε ε0 =>
+theorem is_cau_seq_im (f : CauSeq K abs) : IsCauSeq abs' fun n => im (f n) := fun ε ε0 =>
   (f.cauchy ε0).imp fun i H j ij =>
     lt_of_le_of_lt (by simpa using abs_im_le_abs (f j - f i)) (H _ ij)
-#align is_R_or_C.is_cau_seq_im IsROrC.isCauSeqIm
+#align is_R_or_C.is_cau_seq_im IsROrC.is_cau_seq_im
 
 /-- The real part of a K Cauchy sequence, as a real Cauchy sequence. -/
 noncomputable def cauSeqRe (f : CauSeq K abs) : CauSeq ℝ abs' :=
-  ⟨_, isCauSeqRe f⟩
+  ⟨_, is_cau_seq_re f⟩
 #align is_R_or_C.cau_seq_re IsROrC.cauSeqRe
 
 /-- The imaginary part of a K Cauchy sequence, as a real Cauchy sequence. -/
 noncomputable def cauSeqIm (f : CauSeq K abs) : CauSeq ℝ abs' :=
-  ⟨_, isCauSeqIm f⟩
+  ⟨_, is_cau_seq_im f⟩
 #align is_R_or_C.cau_seq_im IsROrC.cauSeqIm
 
-theorem isCauSeqAbs {f : ℕ → K} (hf : IsCauSeq abs f) : IsCauSeq abs' (abs ∘ f) := fun ε ε0 =>
+theorem is_cau_seq_abs {f : ℕ → K} (hf : IsCauSeq abs f) : IsCauSeq abs' (abs ∘ f) := fun ε ε0 =>
   let ⟨i, hi⟩ := hf ε ε0
   ⟨i, fun j hj => lt_of_le_of_lt (abs_abs_sub_le_abs_sub _ _) (hi j hj)⟩
-#align is_R_or_C.is_cau_seq_abs IsROrC.isCauSeqAbs
+#align is_R_or_C.is_cau_seq_abs IsROrC.is_cau_seq_abs
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_prod {α : Type _} (s : Finset α) (f : α → ℝ) :
@@ -967,7 +967,7 @@ This instance generates a type-class problem with a metavariable `?m` that shoul
 
 /-- An `is_R_or_C` field is finite-dimensional over `ℝ`, since it is spanned by `{1, I}`. -/
 @[nolint dangerous_instance]
-instance isROrCToReal : FiniteDimensional ℝ K :=
+instance is_R_or_C_to_real : FiniteDimensional ℝ K :=
   ⟨⟨{1, i}, by 
       rw [eq_top_iff]
       intro a _
@@ -976,7 +976,7 @@ instance isROrCToReal : FiniteDimensional ℝ K :=
       · rw [Submodule.mem_span_singleton]
         use im a
       simp [re_add_im a, Algebra.smul_def, algebra_map_eq_of_real]⟩⟩
-#align finite_dimensional.is_R_or_C_to_real FiniteDimensional.isROrCToReal
+#align finite_dimensional.is_R_or_C_to_real FiniteDimensional.is_R_or_C_to_real
 
 variable (K E) [NormedAddCommGroup E] [NormedSpace K E]
 

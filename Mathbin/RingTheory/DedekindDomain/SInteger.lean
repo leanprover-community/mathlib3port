@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.S_integer
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,8 +62,8 @@ variable {R : Type u} [CommRing R] [IsDomain R] [IsDedekindDomain R]
 /-! ## `S`-integers -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (v «expr ∉ » S) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The `R`-subalgebra of `S`-integers of `K`. -/
 @[simps]
 def integer : Subalgebra R K :=
@@ -73,7 +73,7 @@ def integer : Subalgebra R K :=
     algebra_map_mem' := fun x v _ => v.valuation_le_one x }
 #align set.integer Set.integer
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
 theorem integer_eq :
     (S.integer K).toSubring =
       ⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.toSubring :=
@@ -88,8 +88,8 @@ theorem integer_valuation_le_one (x : S.integer K) {v : HeightOneSpectrum R} (hv
 /-! ## `S`-units -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (v «expr ∉ » S) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The subgroup of `S`-units of `Kˣ`. -/
 @[simps]
 def unit : Subgroup Kˣ :=
@@ -99,7 +99,7 @@ def unit : Subgroup Kˣ :=
       simpa only [SetLike.mem_coe, Subgroup.mem_infi, Valuation.mem_unit_group_iff]
 #align set.unit Set.unit
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
 theorem unit_eq :
     S.Unit K = ⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.unitGroup :=
   Subgroup.copy_eq _ _ _

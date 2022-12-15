@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.jacobson
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem is_jacobson_iff_prime_eq : IsJacobson R ↔ ∀ P : Ideal R, IsPrime P �
   refine' fun h I hI => le_antisymm (fun x hx => _) fun x hx => mem_Inf.mpr fun _ hJ => hJ.left hx
   rw [← hI.radical, radical_eq_Inf I, mem_Inf]
   intro P hP
-  rw [Set.mem_set_of_eq] at hP
+  rw [Set.mem_setOf_eq] at hP
   erw [mem_Inf] at hx
   erw [← h P hP.right, mem_Inf]
   exact fun J hJ => hx ⟨le_trans hP.left hJ.left, hJ.right⟩
@@ -146,7 +146,7 @@ theorem is_jacobson_of_is_integral [Algebra R S] (hRS : Algebra.IsIntegral R S)
         ((is_jacobson_iff_prime_eq.1 hR) (comap (algebraMap R S) P) (comap_is_prime _ _)),
       comap_jacobson]
     refine' Inf_le_Inf fun J hJ => _
-    simp only [true_and_iff, Set.mem_image, bot_le, Set.mem_set_of_eq]
+    simp only [true_and_iff, Set.mem_image, bot_le, Set.mem_setOf_eq]
     have : J.is_maximal := by simpa using hJ
     exact
       exists_ideal_over_maximal_of_is_integral (is_integral_quotient_of_is_integral hRS) J
@@ -345,7 +345,7 @@ theorem is_integral_is_localization_polynomial_quotient (P : Ideal R[X]) (pX : R
           φ.is_integral_elem_localization_at_leading_coeff ((Quotient.mk'' P) X)
             (pX.map (Quotient.mk'' P')) _ M ⟨1, pow_one _⟩
       rwa [eval₂_map, hφ', ← hom_eval₂, quotient.eq_zero_iff_mem, eval₂_C_X]
-    · rw [Set.mem_set_of_eq, degree_le_zero_iff] at hy
+    · rw [Set.mem_setOf_eq, degree_le_zero_iff] at hy
       refine'
         hy.symm ▸ ⟨X - C (algebraMap _ _ ((Quotient.mk'' P') (p.coeff 0))), monic_X_sub_C _, _⟩
       simp only [eval₂_sub, eval₂_C, eval₂_X]

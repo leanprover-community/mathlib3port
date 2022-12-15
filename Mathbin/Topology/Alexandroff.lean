@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.alexandroff
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ protected def rec (C : Alexandroff X → Sort _) (h₁ : C ∞) (h₂ : ∀ x : 
 #align alexandroff.rec Alexandroff.rec
 
 theorem is_compl_range_coe_infty : IsCompl (range (coe : X → Alexandroff X)) {∞} :=
-  is_compl_range_some_none X
+  isCompl_range_some_none X
 #align alexandroff.is_compl_range_coe_infty Alexandroff.is_compl_range_coe_infty
 
 @[simp]
@@ -280,10 +280,10 @@ theorem is_open_range_coe : IsOpen (range (coe : X → Alexandroff X)) :=
   open_embedding_coe.open_range
 #align alexandroff.is_open_range_coe Alexandroff.is_open_range_coe
 
-theorem isClosedInfty : IsClosed ({∞} : Set (Alexandroff X)) := by
+theorem is_closed_infty : IsClosed ({∞} : Set (Alexandroff X)) := by
   rw [← compl_range_coe, is_closed_compl_iff]
   exact is_open_range_coe
-#align alexandroff.is_closed_infty Alexandroff.isClosedInfty
+#align alexandroff.is_closed_infty Alexandroff.is_closed_infty
 
 theorem nhds_coe_eq (x : X) : 𝓝 ↑x = map (coe : X → Alexandroff X) (𝓝 x) :=
   (open_embedding_coe.map_nhds_eq x).symm
@@ -410,7 +410,7 @@ theorem inseparable_coe {x y : X} : Inseparable (x : Alexandroff X) y ↔ Insepa
 #align alexandroff.inseparable_coe Alexandroff.inseparable_coe
 
 theorem not_specializes_infty_coe {x : X} : ¬Specializes ∞ (x : Alexandroff X) :=
-  isClosedInfty.not_specializes rfl (coe_ne_infty x)
+  is_closed_infty.not_specializes rfl (coe_ne_infty x)
 #align alexandroff.not_specializes_infty_coe Alexandroff.not_specializes_infty_coe
 
 theorem not_inseparable_infty_coe {x : X} : ¬Inseparable ∞ (x : Alexandroff X) := fun h =>
@@ -464,7 +464,7 @@ instance [T1Space X] :
     induction z using Alexandroff.rec
     · exact is_closed_infty
     · rw [← image_singleton, is_closed_image_coe]
-      exact ⟨isClosedSingleton, is_compact_singleton⟩
+      exact ⟨is_closed_singleton, is_compact_singleton⟩
 
 /-- The one point compactification of a locally compact Hausdorff space is a normal (hence,
 Hausdorff and regular) topological space. -/
@@ -475,7 +475,7 @@ instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) := by
     rcases exists_open_with_compact_closure z with ⟨u, hu, huy', Hu⟩
     exact
       ⟨coe '' u, (coe '' closure u)ᶜ, is_open_image_coe.2 hu,
-        is_open_compl_image_coe.2 ⟨isClosedClosure, Hu⟩, mem_image_of_mem _ huy',
+        is_open_compl_image_coe.2 ⟨is_closed_closure, Hu⟩, mem_image_of_mem _ huy',
         mem_compl infty_not_mem_image_coe, (image_subset _ subset_closure).disjoint_compl_right⟩
   refine' @normalOfCompactT2 _ _ _ ⟨fun x y hxy => _⟩
   induction x using Alexandroff.rec <;> induction y using Alexandroff.rec

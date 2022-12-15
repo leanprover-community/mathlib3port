@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.unitization
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,8 +179,8 @@ instance [HasSmul T R] [HasSmul T A] [HasSmul S R] [HasSmul S A] [HasSmul T S] [
     [IsScalarTower T S A] : IsScalarTower T S (Unitization R A) :=
   Prod.is_scalar_tower
 
-instance [HasSmul T R] [HasSmul T A] [HasSmul S R] [HasSmul S A] [SmulCommClass T S R]
-    [SmulCommClass T S A] : SmulCommClass T S (Unitization R A) :=
+instance [HasSmul T R] [HasSmul T A] [HasSmul S R] [HasSmul S A] [SMulCommClass T S R]
+    [SMulCommClass T S A] : SMulCommClass T S (Unitization R A) :=
   Prod.smul_comm_class
 
 instance [HasSmul S R] [HasSmul S A] [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ A] [IsCentralScalar S R]
@@ -458,7 +458,7 @@ instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] :
           abel }
 
 instance [CommMonoid R] [NonUnitalSemiring A] [DistribMulAction R A] [IsScalarTower R A A]
-    [SmulCommClass R A A] : Monoid (Unitization R A) :=
+    [SMulCommClass R A A] : Monoid (Unitization R A) :=
   { Unitization.mulOneClass with
     mul_assoc := fun x y z =>
       ext (mul_assoc x.1 y.1 z.1) <|
@@ -475,7 +475,7 @@ instance [CommMonoid R] [NonUnitalSemiring A] [DistribMulAction R A] [IsScalarTo
           abel }
 
 instance [CommMonoid R] [NonUnitalCommSemiring A] [DistribMulAction R A] [IsScalarTower R A A]
-    [SmulCommClass R A A] : CommMonoid (Unitization R A) :=
+    [SMulCommClass R A A] : CommMonoid (Unitization R A) :=
   { Unitization.monoid with
     mul_comm := fun x₁ x₂ =>
       ext (mul_comm x₁.1 x₂.1) <|
@@ -483,11 +483,11 @@ instance [CommMonoid R] [NonUnitalCommSemiring A] [DistribMulAction R A] [IsScal
           rw [add_comm (x₁.1 • x₂.2), mul_comm] }
 
 instance [CommSemiring R] [NonUnitalSemiring A] [Module R A] [IsScalarTower R A A]
-    [SmulCommClass R A A] : Semiring (Unitization R A) :=
+    [SMulCommClass R A A] : Semiring (Unitization R A) :=
   { Unitization.monoid, Unitization.nonAssocSemiring with }
 
 instance [CommSemiring R] [NonUnitalCommSemiring A] [Module R A] [IsScalarTower R A A]
-    [SmulCommClass R A A] : CommSemiring (Unitization R A) :=
+    [SMulCommClass R A A] : CommSemiring (Unitization R A) :=
   { Unitization.commMonoid, Unitization.nonAssocSemiring with }
 
 variable (R A)
@@ -548,7 +548,7 @@ instance [CommSemiring R] [StarRing R] [AddCommMonoid A] [StarAddMonoid A] [Modu
     [StarModule R A] : StarModule R (Unitization R A) where star_smul r x := ext (by simp) (by simp)
 
 instance [CommSemiring R] [StarRing R] [NonUnitalSemiring A] [StarRing A] [Module R A]
-    [IsScalarTower R A A] [SmulCommClass R A A] [StarModule R A] : StarRing (Unitization R A) :=
+    [IsScalarTower R A A] [SMulCommClass R A A] [StarModule R A] : StarRing (Unitization R A) :=
   { Unitization.starAddMonoid with
     star_mul := fun x y =>
       ext (by simp [star_mul]) (by simp [star_mul, add_comm (star x.fst • star y.snd)]) }
@@ -561,19 +561,19 @@ end Star
 section Algebra
 
 variable (S R A : Type _) [CommSemiring S] [CommSemiring R] [NonUnitalSemiring A] [Module R A]
-  [IsScalarTower R A A] [SmulCommClass R A A] [Algebra S R] [DistribMulAction S A]
+  [IsScalarTower R A A] [SMulCommClass R A A] [Algebra S R] [DistribMulAction S A]
   [IsScalarTower S R A]
 
 instance algebra : Algebra S (Unitization R A) :=
   { (Unitization.inlRingHom R A).comp (algebraMap S R) with
     commutes' := fun r x => by 
       induction x using Unitization.ind
-      simp only [mul_add, add_mul, RingHom.to_fun_eq_coe, RingHom.coe_comp, Function.comp_apply,
+      simp only [mul_add, add_mul, RingHom.toFun_eq_coe, RingHom.coe_comp, Function.comp_apply,
         inl_ring_hom_apply, inl_mul_inl]
       rw [inl_mul_coe, coe_mul_inl, mul_comm]
     smul_def' := fun s x => by 
       induction x using Unitization.ind
-      simp only [mul_add, smul_add, RingHom.to_fun_eq_coe, RingHom.coe_comp, Function.comp_apply,
+      simp only [mul_add, smul_add, RingHom.toFun_eq_coe, RingHom.coe_comp, Function.comp_apply,
         inl_ring_hom_apply, Algebra.algebra_map_eq_smul_one]
       rw [inl_mul_inl, inl_mul_coe, smul_one_mul, inl_smul, coe_smul, smul_one_smul] }
 #align unitization.algebra Unitization.algebra
@@ -627,7 +627,7 @@ end coe
 section AlgHom
 
 variable {S R A : Type _} [CommSemiring S] [CommSemiring R] [NonUnitalSemiring A] [Module R A]
-  [SmulCommClass R A A] [IsScalarTower R A A] {B : Type _} [Semiring B] [Algebra S B] [Algebra S R]
+  [SMulCommClass R A A] [IsScalarTower R A A] {B : Type _} [Semiring B] [Algebra S B] [Algebra S R]
   [DistribMulAction S A] [IsScalarTower S R A] {C : Type _} [Ring C] [Algebra R C]
 
 theorem alg_hom_ext {φ ψ : Unitization R A →ₐ[S] B} (h : ∀ a : A, φ a = ψ a)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov
 
 ! This file was ported from Lean 3 source module analysis.convex.combination
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -316,8 +316,8 @@ theorem convex_hull_range_eq_exists_affine_combination (v : ι → E) :
     exact affine_combination_mem_convex_hull hw₀ hw₁
 #align convex_hull_range_eq_exists_affine_combination convex_hull_range_eq_exists_affine_combination
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr mul_nonneg, ",", expr hwx₀, ",", expr hwy₀, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr hzx, ",", expr hzy, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_nonneg, ",", expr hwx₀, ",", expr hwy₀, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr hzx, ",", expr hzy, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Convex hull of `s` is equal to the set of all centers of masses of `finset`s `t`, `z '' t ⊆ s`.
 This version allows finsets in any type in any universe. -/
 theorem convex_hull_eq (s : Set E) :
@@ -339,18 +339,18 @@ theorem convex_hull_eq (s : Set E) :
       rw [Finset.mem_disj_sum] at hi
       rcases hi with (⟨j, hj, rfl⟩ | ⟨j, hj, rfl⟩) <;> simp only [Sum.elim_inl, Sum.elim_inr] <;>
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr hwx₀, \",\", expr hwy₀, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr hwx₀, \",\", expr hwy₀, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     · simp [Finset.sum_sum_elim, finset.mul_sum.symm, *]
     · intro i hi
       rw [Finset.mem_disj_sum] at hi
       rcases hi with (⟨j, hj, rfl⟩ | ⟨j, hj, rfl⟩) <;>
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr hzx, \",\", expr hzy, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr hzx, \",\", expr hzy, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   · rintro _ ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩
     exact t.center_mass_mem_convex_hull hw₀ (hw₁.symm ▸ zero_lt_one) hz
 #align convex_hull_eq convex_hull_eq
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr hwx₀, ",", expr hwy₀, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr hwx₀, ",", expr hwy₀, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem Finset.convex_hull_eq (s : Finset E) :
     convexHull R ↑s =
       { x : E |
@@ -369,7 +369,7 @@ theorem Finset.convex_hull_eq (s : Finset E) :
     refine' ⟨_, _, _, rfl⟩
     · rintro i hi
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr hwx₀, \",\", expr hwy₀, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr hwx₀, \",\", expr hwy₀, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     · simp only [Finset.sum_add_distrib, finset.mul_sum.symm, mul_one, *]
   · rintro _ ⟨w, hw₀, hw₁, rfl⟩
     exact
@@ -379,7 +379,7 @@ theorem Finset.convex_hull_eq (s : Finset E) :
 theorem Finset.mem_convex_hull {s : Finset E} {x : E} :
     x ∈ convexHull R (s : Set E) ↔
       ∃ (w : E → R)(hw₀ : ∀ y ∈ s, 0 ≤ w y)(hw₁ : (∑ y in s, w y) = 1), s.centerMass w id = x :=
-  by rw [Finset.convex_hull_eq, Set.mem_set_of_eq]
+  by rw [Finset.convex_hull_eq, Set.mem_setOf_eq]
 #align finset.mem_convex_hull Finset.mem_convex_hull
 
 theorem Set.Finite.convex_hull_eq {s : Set E} (hs : s.Finite) :

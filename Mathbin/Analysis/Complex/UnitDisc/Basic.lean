@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.unit_disc.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,12 +132,12 @@ instance is_scalar_tower_circle : IsScalarTower circle 𝔻 𝔻 :=
   is_scalar_tower_sphere_ball_ball
 #align complex.unit_disc.is_scalar_tower_circle Complex.UnitDisc.is_scalar_tower_circle
 
-instance smul_comm_class_circle : SmulCommClass circle 𝔻 𝔻 :=
+instance smul_comm_class_circle : SMulCommClass circle 𝔻 𝔻 :=
   smul_comm_class_sphere_ball_ball
 #align complex.unit_disc.smul_comm_class_circle Complex.UnitDisc.smul_comm_class_circle
 
-instance smul_comm_class_circle' : SmulCommClass 𝔻 circle 𝔻 :=
-  SmulCommClass.symm _ _ _
+instance smul_comm_class_circle' : SMulCommClass 𝔻 circle 𝔻 :=
+  SMulCommClass.symm _ _ _
 #align complex.unit_disc.smul_comm_class_circle' Complex.UnitDisc.smul_comm_class_circle'
 
 @[simp, norm_cast]
@@ -159,21 +159,21 @@ instance is_scalar_tower_closed_ball : IsScalarTower (closedBall (0 : ℂ) 1) �
   is_scalar_tower_closed_ball_ball_ball
 #align complex.unit_disc.is_scalar_tower_closed_ball Complex.UnitDisc.is_scalar_tower_closed_ball
 
-instance smul_comm_class_closed_ball : SmulCommClass (closedBall (0 : ℂ) 1) 𝔻 𝔻 :=
+instance smul_comm_class_closed_ball : SMulCommClass (closedBall (0 : ℂ) 1) 𝔻 𝔻 :=
   ⟨fun a b c => Subtype.ext <| mul_left_comm _ _ _⟩
 #align complex.unit_disc.smul_comm_class_closed_ball Complex.UnitDisc.smul_comm_class_closed_ball
 
-instance smul_comm_class_closed_ball' : SmulCommClass 𝔻 (closedBall (0 : ℂ) 1) 𝔻 :=
-  SmulCommClass.symm _ _ _
+instance smul_comm_class_closed_ball' : SMulCommClass 𝔻 (closedBall (0 : ℂ) 1) 𝔻 :=
+  SMulCommClass.symm _ _ _
 #align complex.unit_disc.smul_comm_class_closed_ball' Complex.UnitDisc.smul_comm_class_closed_ball'
 
-instance smul_comm_class_circle_closed_ball : SmulCommClass circle (closedBall (0 : ℂ) 1) 𝔻 :=
+instance smul_comm_class_circle_closed_ball : SMulCommClass circle (closedBall (0 : ℂ) 1) 𝔻 :=
   smul_comm_class_sphere_closed_ball_ball
 #align
   complex.unit_disc.smul_comm_class_circle_closed_ball Complex.UnitDisc.smul_comm_class_circle_closed_ball
 
-instance smul_comm_class_closed_ball_circle : SmulCommClass (closedBall (0 : ℂ) 1) circle 𝔻 :=
-  SmulCommClass.symm _ _ _
+instance smul_comm_class_closed_ball_circle : SMulCommClass (closedBall (0 : ℂ) 1) circle 𝔻 :=
+  SMulCommClass.symm _ _ _
 #align
   complex.unit_disc.smul_comm_class_closed_ball_circle Complex.UnitDisc.smul_comm_class_closed_ball_circle
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module logic.equiv.transfer_instance
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -410,7 +410,7 @@ protected theorem nontrivial [Nontrivial β] : Nontrivial α :=
 /-- Transfer `is_domain` across an `equiv` -/
 @[reducible]
 protected theorem is_domain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) : IsDomain α :=
-  Function.Injective.is_domain e.toRingHom e.Injective
+  Function.Injective.isDomain e.toRingHom e.Injective
 #align equiv.is_domain Equiv.is_domain
 
 /-- Transfer `has_rat_cast` across an `equiv` -/

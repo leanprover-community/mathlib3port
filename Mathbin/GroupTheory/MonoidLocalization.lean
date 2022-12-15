@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.monoid_localization
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -408,8 +408,8 @@ theorem smul_mk [HasSmul R M] [IsScalarTower R M M] (c : R) (a b) :
 #align localization.smul_mk Localization.smul_mk
 
 instance [HasSmul R₁ M] [HasSmul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R₂ M M]
-    [SmulCommClass R₁ R₂ M] :
-    SmulCommClass R₁ R₂
+    [SMulCommClass R₁ R₂ M] :
+    SMulCommClass R₁ R₂
       (Localization
         S) where smul_comm s t :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, smul_comm s t r]
@@ -422,7 +422,7 @@ instance [HasSmul R₁ M] [HasSmul R₂ M] [IsScalarTower R₁ M M] [IsScalarTow
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, smul_assoc s t r]
 
 instance smul_comm_class_right {R : Type _} [HasSmul R M] [IsScalarTower R M M] :
-    SmulCommClass R (Localization S)
+    SMulCommClass R (Localization S)
       (Localization
         S) where smul_comm s :=
     Localization.ind <|
@@ -566,7 +566,7 @@ theorem sec_spec' {f : LocalizationMap S N} (z : N) :
 theorem mul_inv_left {f : M →* N} (h : ∀ y : S, IsUnit (f y)) (y : S) (w z) :
     w * ↑(IsUnit.liftRight (f.restrict S) h y)⁻¹ = z ↔ w = f y * z := by
   rw [mul_comm] <;> convert Units.inv_mul_eq_iff_eq_mul _ <;>
-    exact (IsUnit.coe_lift_right (f.restrict S) h _).symm
+    exact (IsUnit.coe_liftRight (f.restrict S) h _).symm
 #align submonoid.localization_map.mul_inv_left Submonoid.LocalizationMap.mul_inv_left
 
 /-- Given a monoid hom `f : M →* N` and submonoid `S ⊆ M` such that `f(S) ⊆ Nˣ`, for all
@@ -601,7 +601,7 @@ theorem inv_inj {f : M →* N} (hf : ∀ y : S, IsUnit (f y)) {y z}
     (h : (IsUnit.liftRight (f.restrict S) hf y)⁻¹ = (IsUnit.liftRight (f.restrict S) hf z)⁻¹) :
     f y = f z := by
   rw [← mul_one (f y), eq_comm, ← mul_inv_left hf y (f z) 1, h] <;> convert Units.inv_mul _ <;>
-    exact (IsUnit.coe_lift_right (f.restrict S) hf _).symm
+    exact (IsUnit.coe_liftRight (f.restrict S) hf _).symm
 #align submonoid.localization_map.inv_inj Submonoid.LocalizationMap.inv_inj
 
 /-- Given a monoid hom `f : M →* N` and submonoid `S ⊆ M` such that `f(S) ⊆ Nˣ`, for all
@@ -774,7 +774,7 @@ theorem mk'_mul_cancel_left (x) (y : S) : f.mk' ((y : M) * x) y = f.toMap x := b
 @[to_additive]
 theorem is_unit_comp (j : N →* P) (y : S) : IsUnit (j.comp f.toMap y) :=
   ⟨Units.map j <| IsUnit.liftRight (f.toMap.restrict S) f.map_units y,
-    show j _ = j _ from congr_arg j <| IsUnit.coe_lift_right (f.toMap.restrict S) f.map_units _⟩
+    show j _ = j _ from congr_arg j <| IsUnit.coe_liftRight (f.toMap.restrict S) f.map_units _⟩
 #align submonoid.localization_map.is_unit_comp Submonoid.LocalizationMap.is_unit_comp
 
 variable {g : M →* P}
@@ -785,7 +785,7 @@ variable {g : M →* P}
       "Given a localization map `f : M →+ N` for a submonoid `S ⊆ M` and a map\nof `add_comm_monoid`s `g : M →+ P` such that `g(S) ⊆ add_units P`, `f x = f y → g x = g y`\nfor all `x y : M`."]
 theorem eq_of_eq (hg : ∀ y : S, IsUnit (g y)) {x y} (h : f.toMap x = f.toMap y) : g x = g y := by
   obtain ⟨c, hc⟩ := f.eq_iff_exists.1 h
-  rw [← mul_one (g x), ← IsUnit.mul_lift_right_inv (g.restrict S) hg c]
+  rw [← mul_one (g x), ← IsUnit.mul_liftRight_inv (g.restrict S) hg c]
   show _ * (g c * _) = _
   rw [← mul_assoc, ← g.map_mul, hc, mul_inv_left hg, g.map_mul, mul_comm]
 #align submonoid.localization_map.eq_of_eq Submonoid.LocalizationMap.eq_of_eq
@@ -865,7 +865,7 @@ theorem lift_mk'_spec (x v) (y : S) : f.lift hg (f.mk' x y) = v ↔ g x = g y * 
 @[to_additive
       "Given a localization map `f : M →+ N` for a submonoid `S ⊆ M`, if\nan `add_comm_monoid` map `g : M →+ P` induces a map `f.lift hg : N →+ P` then for all `z : N`, we\nhave `f.lift hg z + g y = g x`, where `x : M, y ∈ S` are such that `z + f y = f x`."]
 theorem lift_mul_right (z) : f.lift hg z * g (f.sec z).2 = g (f.sec z).1 :=
-  show _ * _ * _ = _ by erw [mul_assoc, IsUnit.lift_right_inv_mul, mul_one]
+  show _ * _ * _ = _ by erw [mul_assoc, IsUnit.liftRight_inv_mul, mul_one]
 #align submonoid.localization_map.lift_mul_right Submonoid.LocalizationMap.lift_mul_right
 
 /-- Given a localization map `f : M →* N` for a submonoid `S ⊆ M`, if a `comm_monoid` map
@@ -954,7 +954,7 @@ theorem lift_surjective_iff :
     obtain ⟨x, hx⟩ := f.surj z
     use x
     rw [← hz, f.eq_mk'_iff_mul_eq.2 hx, lift_mk', mul_assoc, mul_comm _ (g ↑x.2)]
-    erw [IsUnit.mul_lift_right_inv (g.restrict S) hg, mul_one]
+    erw [IsUnit.mul_liftRight_inv (g.restrict S) hg, mul_one]
   · intro H v
     obtain ⟨x, hx⟩ := H v
     use f.mk' x.1 x.2
@@ -1155,7 +1155,7 @@ noncomputable def AwayMap.lift (hg : IsAddUnit (g x)) : B →+ C :=
       rw [← hn]
       dsimp
       rw [g.map_nsmul]
-      exact IsAddUnit.map (nsmulAddMonoidHom n : C →+ C) hg
+      exact IsAddUnit.map (nsmul_add_monoid_hom n : C →+ C) hg
 #align add_submonoid.localization_map.away_map.lift AddSubmonoid.LocalizationMap.AwayMap.lift
 
 @[simp]

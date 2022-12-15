@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
 
 ! This file was ported from Lean 3 source module field_theory.finite.galois_field
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ theorem card (h : n ≠ 0) : Fintype.card (GaloisField p n) = p ^ n := by
   rw [Module.card_fintype b, ← FiniteDimensional.finrank_eq_card_basis b, Zmod.card, finrank p h]
 #align galois_field.card GaloisField.card
 
-theorem splitsZmodXPowSubX : Splits (RingHom.id (Zmod p)) (X ^ p - X) := by
+theorem splits_zmod_X_pow_sub_X : Splits (RingHom.id (Zmod p)) (X ^ p - X) := by
   have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
   have h1 : roots (X ^ p - X : (Zmod p)[X]) = finset.univ.val := by
     convert FiniteField.roots_X_pow_card_sub_X _
@@ -140,7 +140,7 @@ theorem splitsZmodXPowSubX : Splits (RingHom.id (Zmod p)) (X ^ p - X) := by
   cases p
   cases hp
   rw [splits_iff_card_roots, h1, ← Finset.card_def, Finset.card_univ, h2, Zmod.card]
-#align galois_field.splits_zmod_X_pow_sub_X GaloisField.splitsZmodXPowSubX
+#align galois_field.splits_zmod_X_pow_sub_X GaloisField.splits_zmod_X_pow_sub_X
 
 /-- A Galois field with exponent 1 is equivalent to `zmod` -/
 def equivZmodP : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
@@ -153,9 +153,9 @@ def equivZmodP : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
 
 variable {K : Type _} [Field K] [Fintype K] [Algebra (Zmod p) K]
 
-theorem splitsXPowCardSubX : Splits (algebraMap (Zmod p) K) (X ^ Fintype.card K - X) :=
+theorem splits_X_pow_card_sub_X : Splits (algebraMap (Zmod p) K) (X ^ Fintype.card K - X) :=
   (FiniteField.HasSub.Sub.Polynomial.isSplittingField K (Zmod p)).Splits
-#align galois_field.splits_X_pow_card_sub_X GaloisField.splitsXPowCardSubX
+#align galois_field.splits_X_pow_card_sub_X GaloisField.splits_X_pow_card_sub_X
 
 theorem isSplittingFieldOfCardEq (h : Fintype.card K = p ^ n) :
     IsSplittingField (Zmod p) K (X ^ p ^ n - X) :=

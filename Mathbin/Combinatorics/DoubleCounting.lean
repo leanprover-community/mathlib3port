@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.double_counting
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,9 +32,11 @@ and `t`.
 -/
 
 
-open Finset Function
+open Finset Function Relator
 
 open BigOperators
+
+variable {α β : Type _}
 
 /-! ### Bipartite graph -/
 
@@ -43,7 +45,7 @@ namespace Finset
 
 section Bipartite
 
-variable {α β : Type _} (r : α → β → Prop) (s : Finset α) (t : Finset β) (a a' : α) (b b' : β)
+variable (r : α → β → Prop) (s : Finset α) (t : Finset β) (a a' : α) (b b' : β)
   [DecidablePred (r a)] [∀ a, Decidable (r a b)] {m n : ℕ}
 
 /-- Elements of `s` which are "below" `b` according to relation `r`. -/
@@ -63,6 +65,16 @@ theorem bipartite_below_swap : t.bipartiteBelow (swap r) a = t.bipartiteAbove r 
 theorem bipartite_above_swap : s.bipartiteAbove (swap r) b = s.bipartiteBelow r b :=
   rfl
 #align finset.bipartite_above_swap Finset.bipartite_above_swap
+
+@[simp, norm_cast]
+theorem coe_bipartite_below : (s.bipartiteBelow r b : Set α) = { a ∈ s | r a b } :=
+  coe_filter _ _
+#align finset.coe_bipartite_below Finset.coe_bipartite_below
+
+@[simp, norm_cast]
+theorem coe_bipartite_above : (t.bipartiteAbove r a : Set β) = { b ∈ t | r a b } :=
+  coe_filter _ _
+#align finset.coe_bipartite_above Finset.coe_bipartite_above
 
 variable {s t a a' b b'}
 
@@ -109,7 +121,47 @@ theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)]
     (card_mul_le_card_mul' _ fun a ha => (hn a ha).ge) fun b hb => (hm b hb).le
 #align finset.card_mul_eq_card_mul Finset.card_mul_eq_card_mul
 
+theorem card_le_card_of_forall_subsingleton (hs : ∀ a ∈ s, ∃ b, b ∈ t ∧ r a b)
+    (ht : ∀ b ∈ t, ({ a ∈ s | r a b } : Set α).Subsingleton) : s.card ≤ t.card := by
+  classical simpa using
+      card_mul_le_card_mul _
+        (fun a h =>
+          card_pos.2 <|
+            (by 
+              rw [← coe_nonempty, coe_bipartite_above]
+              exact hs _ h : (t.bipartite_above r a).Nonempty))
+        fun b h =>
+        card_le_one.2 <| by 
+          simp_rw [mem_bipartite_below]
+          exact ht _ h
+#align finset.card_le_card_of_forall_subsingleton Finset.card_le_card_of_forall_subsingleton
+
+theorem card_le_card_of_forall_subsingleton' (ht : ∀ b ∈ t, ∃ a, a ∈ s ∧ r a b)
+    (hs : ∀ a ∈ s, ({ b ∈ t | r a b } : Set β).Subsingleton) : t.card ≤ s.card :=
+  card_le_card_of_forall_subsingleton (swap r) ht hs
+#align finset.card_le_card_of_forall_subsingleton' Finset.card_le_card_of_forall_subsingleton'
+
 end Bipartite
 
 end Finset
+
+open Finset
+
+namespace Fintype
+
+variable [Fintype α] [Fintype β] {r : α → β → Prop}
+
+theorem card_le_card_of_left_total_unique (h₁ : LeftTotal r) (h₂ : LeftUnique r) :
+    Fintype.card α ≤ Fintype.card β :=
+  (card_le_card_of_forall_subsingleton r (by simpa using h₁)) fun b _ a₁ ha₁ a₂ ha₂ =>
+    h₂ ha₁.2 ha₂.2
+#align fintype.card_le_card_of_left_total_unique Fintype.card_le_card_of_left_total_unique
+
+theorem card_le_card_of_right_total_unique (h₁ : RightTotal r) (h₂ : RightUnique r) :
+    Fintype.card β ≤ Fintype.card α :=
+  (card_le_card_of_forall_subsingleton' r (by simpa using h₁)) fun b _ a₁ ha₁ a₂ ha₂ =>
+    h₂ ha₁.2 ha₂.2
+#align fintype.card_le_card_of_right_total_unique Fintype.card_le_card_of_right_total_unique
+
+end Fintype
 

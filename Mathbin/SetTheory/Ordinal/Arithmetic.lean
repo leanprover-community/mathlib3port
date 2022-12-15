@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.arithmetic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -571,7 +571,7 @@ theorem sub_lt_of_le {a b c : Ordinal} (h : b ≤ a) : a - b < c ↔ a < b + c :
   lt_iff_lt_of_le_iff_le (le_sub_of_le h)
 #align ordinal.sub_lt_of_le Ordinal.sub_lt_of_le
 
-instance : HasExistsAddOfLe Ordinal :=
+instance : ExistsAddOfLE Ordinal :=
   ⟨fun a b h => ⟨_, (Ordinal.add_sub_cancel_of_le h).symm⟩⟩
 
 @[simp]
@@ -1649,7 +1649,7 @@ theorem lsub_typein (o : Ordinal) : lsub.{u, u} (typein ((· < ·) : o.out.α �
   (lsub_le.{u, u} typein_lt_self).antisymm
     (by 
       by_contra' h
-      nth_rw 1 [← type_lt o]  at h
+      nth_rw 1 [← type_lt o] at h
       simpa [typein_enum] using lt_lsub.{u, u} (typein (· < ·)) (enum (· < ·) _ h))
 #align ordinal.lsub_typein Ordinal.lsub_typein
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.calculus.lhopital
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -236,7 +236,7 @@ theorem lhopital_zero_right_on_Ioo (hdf : DifferentiableOn ℝ f (ioo a b))
   have hdf : ∀ x ∈ Ioo a b, DifferentiableAt ℝ f x := fun x hx =>
     (hdf x hx).DifferentiableAt (Ioo_mem_nhds hx.1 hx.2)
   have hdg : ∀ x ∈ Ioo a b, DifferentiableAt ℝ g x := fun x hx =>
-    Classical.by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
+    by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
   exact
     HasDerivAt.lhopital_zero_right_on_Ioo hab (fun x hx => (hdf x hx).HasDerivAt)
       (fun x hx => (hdg x hx).HasDerivAt) hg' hfa hga hdiv
@@ -262,7 +262,7 @@ theorem lhopital_zero_left_on_Ioo (hdf : DifferentiableOn ℝ f (ioo a b))
   have hdf : ∀ x ∈ Ioo a b, DifferentiableAt ℝ f x := fun x hx =>
     (hdf x hx).DifferentiableAt (Ioo_mem_nhds hx.1 hx.2)
   have hdg : ∀ x ∈ Ioo a b, DifferentiableAt ℝ g x := fun x hx =>
-    Classical.by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
+    by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
   exact
     HasDerivAt.lhopital_zero_left_on_Ioo hab (fun x hx => (hdf x hx).HasDerivAt)
       (fun x hx => (hdg x hx).HasDerivAt) hg' hfb hgb hdiv
@@ -277,7 +277,7 @@ theorem lhopital_zero_at_top_on_Ioi (hdf : DifferentiableOn ℝ f (ioi a))
   have hdf : ∀ x ∈ Ioi a, DifferentiableAt ℝ f x := fun x hx =>
     (hdf x hx).DifferentiableAt (Ioi_mem_nhds hx)
   have hdg : ∀ x ∈ Ioi a, DifferentiableAt ℝ g x := fun x hx =>
-    Classical.by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
+    by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
   exact
     HasDerivAt.lhopital_zero_at_top_on_Ioi (fun x hx => (hdf x hx).HasDerivAt)
       (fun x hx => (hdg x hx).HasDerivAt) hg' hftop hgtop hdiv
@@ -290,7 +290,7 @@ theorem lhopital_zero_at_bot_on_Iio (hdf : DifferentiableOn ℝ f (iio a))
   have hdf : ∀ x ∈ Iio a, DifferentiableAt ℝ f x := fun x hx =>
     (hdf x hx).DifferentiableAt (Iio_mem_nhds hx)
   have hdg : ∀ x ∈ Iio a, DifferentiableAt ℝ g x := fun x hx =>
-    Classical.by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
+    by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
   exact
     HasDerivAt.lhopital_zero_at_bot_on_Iio (fun x hx => (hdf x hx).HasDerivAt)
       (fun x hx => (hdg x hx).HasDerivAt) hg' hfbot hgbot hdiv
@@ -422,7 +422,7 @@ theorem lhopital_zero_nhds_right (hdf : ∀ᶠ x in 𝓝[>] a, DifferentiableAt 
   have hdg : ∀ᶠ x in 𝓝[>] a, DifferentiableAt ℝ g x :=
     hg'.mp
       (eventually_of_forall fun _ hg' =>
-        Classical.by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
+        by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
   have hdf' : ∀ᶠ x in 𝓝[>] a, HasDerivAt f (deriv f x) x :=
     hdf.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
   have hdg' : ∀ᶠ x in 𝓝[>] a, HasDerivAt g (deriv g x) x :=
@@ -439,7 +439,7 @@ theorem lhopital_zero_nhds_left (hdf : ∀ᶠ x in 𝓝[<] a, DifferentiableAt �
   have hdg : ∀ᶠ x in 𝓝[<] a, DifferentiableAt ℝ g x :=
     hg'.mp
       (eventually_of_forall fun _ hg' =>
-        Classical.by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
+        by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
   have hdf' : ∀ᶠ x in 𝓝[<] a, HasDerivAt f (deriv f x) x :=
     hdf.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
   have hdg' : ∀ᶠ x in 𝓝[<] a, HasDerivAt g (deriv g x) x :=
@@ -480,7 +480,7 @@ theorem lhopital_zero_at_top (hdf : ∀ᶠ x : ℝ in at_top, DifferentiableAt �
   have hdg : ∀ᶠ x in at_top, DifferentiableAt ℝ g x :=
     hg'.mp
       (eventually_of_forall fun _ hg' =>
-        Classical.by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
+        by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
   have hdf' : ∀ᶠ x in at_top, HasDerivAt f (deriv f x) x :=
     hdf.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
   have hdg' : ∀ᶠ x in at_top, HasDerivAt g (deriv g x) x :=
@@ -496,7 +496,7 @@ theorem lhopital_zero_at_bot (hdf : ∀ᶠ x : ℝ in at_bot, DifferentiableAt �
   have hdg : ∀ᶠ x in at_bot, DifferentiableAt ℝ g x :=
     hg'.mp
       (eventually_of_forall fun _ hg' =>
-        Classical.by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
+        by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
   have hdf' : ∀ᶠ x in at_bot, HasDerivAt f (deriv f x) x :=
     hdf.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
   have hdg' : ∀ᶠ x in at_bot, HasDerivAt g (deriv g x) x :=

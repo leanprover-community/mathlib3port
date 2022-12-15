@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.filtered
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,19 +44,19 @@ class HasFilteredColimitsOfSize : Prop where
 
 end
 
-instance (priority := 100) has_limits_of_shape_of_has_cofiltered_limits
+instance (priority := 100) hasLimitsOfShapeOfHasCofilteredLimits
     [HasCofilteredLimitsOfSize.{w', w} C] (I : Type w) [Category.{w'} I] [IsCofiltered I] :
     HasLimitsOfShape I C :=
-  HasCofilteredLimitsOfSize.has_limits_of_shape _
+  HasCofilteredLimitsOfSize.hasLimitsOfShape _
 #align
-  category_theory.limits.has_limits_of_shape_of_has_cofiltered_limits CategoryTheory.Limits.has_limits_of_shape_of_has_cofiltered_limits
+  category_theory.limits.has_limits_of_shape_of_has_cofiltered_limits CategoryTheory.Limits.hasLimitsOfShapeOfHasCofilteredLimits
 
-instance (priority := 100) has_colimits_of_shape_of_has_filtered_colimits
+instance (priority := 100) hasColimitsOfShapeOfHasFilteredColimits
     [HasFilteredColimitsOfSize.{w', w} C] (I : Type w) [Category.{w'} I] [IsFiltered I] :
     HasColimitsOfShape I C :=
-  HasFilteredColimitsOfSize.has_colimits_of_shape _
+  HasFilteredColimitsOfSize.hasColimitsOfShape _
 #align
-  category_theory.limits.has_colimits_of_shape_of_has_filtered_colimits CategoryTheory.Limits.has_colimits_of_shape_of_has_filtered_colimits
+  category_theory.limits.has_colimits_of_shape_of_has_filtered_colimits CategoryTheory.Limits.hasColimitsOfShapeOfHasFilteredColimits
 
 end CategoryTheory.Limits
 

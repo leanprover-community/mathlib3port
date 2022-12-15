@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module analysis.normed.order.lattice
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem dual_solid (a b : α) (h : b ⊓ -b ≤ a ⊓ -a) : ‖a‖ ≤ ‖b‖ 
 normed lattice ordered group.
 -/
 instance (priority := 100) : NormedLatticeAddCommGroup αᵒᵈ :=
-  { OrderDual.orderedAddCommGroup, OrderDual.normedAddCommGroup with solid := dual_solid }
+  { instOrderedAddCommGroupOrderDual, OrderDual.normedAddCommGroup with solid := dual_solid }
 
 theorem norm_abs_eq_norm (a : α) : ‖|a|‖ = ‖a‖ :=
   (solid (abs_abs a).le).antisymm (solid (abs_abs a).symm.le)
@@ -199,15 +199,15 @@ theorem continuous_neg' : Continuous (NegPart.neg : α → α) :=
   continuous_pos.comp continuous_neg
 #align continuous_neg' continuous_neg'
 
-theorem isClosedNonneg {E} [NormedLatticeAddCommGroup E] : IsClosed { x : E | 0 ≤ x } := by
+theorem is_closed_nonneg {E} [NormedLatticeAddCommGroup E] : IsClosed { x : E | 0 ≤ x } := by
   suffices { x : E | 0 ≤ x } = NegPart.neg ⁻¹' {(0 : E)} by
     rw [this]
-    exact IsClosed.preimage continuous_neg' isClosedSingleton
+    exact IsClosed.preimage continuous_neg' is_closed_singleton
   ext1 x
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_set_of_eq, neg_eq_zero_iff]
-#align is_closed_nonneg isClosedNonneg
+  simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq, neg_eq_zero_iff]
+#align is_closed_nonneg is_closed_nonneg
 
-theorem isClosedLeOfIsClosedNonneg {G} [OrderedAddCommGroup G] [TopologicalSpace G]
+theorem is_closed_le_of_is_closed_nonneg {G} [OrderedAddCommGroup G] [TopologicalSpace G]
     [HasContinuousSub G] (h : IsClosed { x : G | 0 ≤ x }) :
     IsClosed { p : G × G | p.fst ≤ p.snd } := by
   have : { p : G × G | p.fst ≤ p.snd } = (fun p : G × G => p.snd - p.fst) ⁻¹' { x : G | 0 ≤ x } :=
@@ -216,12 +216,12 @@ theorem isClosedLeOfIsClosedNonneg {G} [OrderedAddCommGroup G] [TopologicalSpace
     simp only [sub_nonneg, Set.preimage_set_of_eq]
   rw [this]
   exact IsClosed.preimage (continuous_snd.sub continuous_fst) h
-#align is_closed_le_of_is_closed_nonneg isClosedLeOfIsClosedNonneg
+#align is_closed_le_of_is_closed_nonneg is_closed_le_of_is_closed_nonneg
 
 -- See note [lower instance priority]
-instance (priority := 100) NormedLatticeAddCommGroup.orderClosedTopology {E}
+instance (priority := 100) NormedLatticeAddCommGroup.order_closed_topology {E}
     [NormedLatticeAddCommGroup E] : OrderClosedTopology E :=
-  ⟨isClosedLeOfIsClosedNonneg isClosedNonneg⟩
+  ⟨is_closed_le_of_is_closed_nonneg is_closed_nonneg⟩
 #align
-  normed_lattice_add_comm_group.order_closed_topology NormedLatticeAddCommGroup.orderClosedTopology
+  normed_lattice_add_comm_group.order_closed_topology NormedLatticeAddCommGroup.order_closed_topology
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.conjugate_exponents
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,10 +138,10 @@ theorem is_conjugate_exponent_iff {p q : ℝ} (h : 1 < p) :
   ⟨fun H => H.conj_eq, fun H => ⟨h, by field_simp [H, ne_of_gt (lt_trans zero_lt_one h)] ⟩⟩
 #align real.is_conjugate_exponent_iff Real.is_conjugate_exponent_iff
 
-theorem isConjugateExponentConjugateExponent {p : ℝ} (h : 1 < p) :
+theorem is_conjugate_exponent_conjugate_exponent {p : ℝ} (h : 1 < p) :
     p.IsConjugateExponent (conjugateExponent p) :=
   (is_conjugate_exponent_iff h).2 rfl
-#align real.is_conjugate_exponent_conjugate_exponent Real.isConjugateExponentConjugateExponent
+#align real.is_conjugate_exponent_conjugate_exponent Real.is_conjugate_exponent_conjugate_exponent
 
 end Real
 

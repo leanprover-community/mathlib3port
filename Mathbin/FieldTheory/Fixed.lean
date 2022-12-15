@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.fixed
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,11 +101,11 @@ instance :
     IsInvariantSubfield M (FixedPoints.subfield M F) where smul_mem g x hx g' := by rw [hx, hx]
 
 instance :
-    SmulCommClass M (FixedPoints.subfield M F)
+    SMulCommClass M (FixedPoints.subfield M F)
       F where smul_comm m f f' := show m • (↑f * f') = f * m • f' by rw [smul_mul', f.prop m]
 
-instance smul_comm_class' : SmulCommClass (FixedPoints.subfield M F) M F :=
-  SmulCommClass.symm _ _ _
+instance smul_comm_class' : SMulCommClass (FixedPoints.subfield M F) M F :=
+  SMulCommClass.symm _ _ _
 #align fixed_points.smul_comm_class' FixedPoints.smul_comm_class'
 
 @[simp]
@@ -297,7 +297,7 @@ instance normal : Normal (FixedPoints.subfield G F) F :=
       cases nonempty_fintype G
       rw [← minpoly_eq_minpoly, minpoly, coe_algebra_map, ← Subfield.toSubring.subtype_eq_subtype,
         Polynomial.map_to_subring _ (Subfield G F).toSubring, prodXSubSmul]
-      exact Polynomial.splitsProd _ fun _ _ => Polynomial.splitsXSubC _⟩
+      exact Polynomial.splits_prod _ fun _ _ => Polynomial.splits_X_sub_C _⟩
 #align fixed_points.normal FixedPoints.normal
 
 instance separable : IsSeparable (FixedPoints.subfield G F) F :=
@@ -353,7 +353,7 @@ theorem finrank_alg_hom (K : Type u) (V : Type v) [Field K] [Field V] [Algebra K
 namespace FixedPoints
 
 theorem finrank_eq_card (G : Type u) (F : Type v) [Group G] [Field F] [Fintype G]
-    [MulSemiringAction G F] [HasFaithfulSmul G F] :
+    [MulSemiringAction G F] [FaithfulSMul G F] :
     finrank (FixedPoints.subfield G F) F = Fintype.card G :=
   le_antisymm (FixedPoints.finrank_le_card G F) <|
     calc
@@ -366,7 +366,7 @@ theorem finrank_eq_card (G : Type u) (F : Type v) [Group G] [Field F] [Fintype G
 
 /-- `mul_semiring_action.to_alg_hom` is bijective. -/
 theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Group G] [Field F] [Finite G]
-    [MulSemiringAction G F] [HasFaithfulSmul G F] :
+    [MulSemiringAction G F] [FaithfulSMul G F] :
     Function.Bijective (MulSemiringAction.toAlgHom _ _ : G → F →ₐ[subfield G F] F) := by
   cases nonempty_fintype G
   rw [Fintype.bijective_iff_injective_and_card]
@@ -380,7 +380,7 @@ theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Group G] [Field F] [Fini
 
 /-- Bijection between G and algebra homomorphisms that fix the fixed points -/
 def toAlgHomEquiv (G : Type u) (F : Type v) [Group G] [Field F] [Fintype G] [MulSemiringAction G F]
-    [HasFaithfulSmul G F] : G ≃ (F →ₐ[FixedPoints.subfield G F] F) :=
+    [FaithfulSMul G F] : G ≃ (F →ₐ[FixedPoints.subfield G F] F) :=
   Equiv.ofBijective _ (to_alg_hom_bijective G F)
 #align fixed_points.to_alg_hom_equiv FixedPoints.toAlgHomEquiv
 

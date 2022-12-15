@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.filtered
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,12 +87,12 @@ theorem has_coproducts_of_finite_and_filtered [HasFiniteCoproducts C]
 #align
   category_theory.limits.has_coproducts_of_finite_and_filtered CategoryTheory.Limits.has_coproducts_of_finite_and_filtered
 
-theorem has_colimits_of_finite_and_filtered [HasFiniteColimits C]
-    [HasFilteredColimitsOfSize.{w, w} C] : HasColimitsOfSize.{w, w} C :=
+theorem hasColimitsOfFiniteAndFiltered [HasFiniteColimits C] [HasFilteredColimitsOfSize.{w, w} C] :
+    HasColimitsOfSize.{w, w} C :=
   have : HasCoproducts.{w} C := has_coproducts_of_finite_and_filtered
   has_colimits_of_has_coequalizers_and_coproducts
 #align
-  category_theory.limits.has_colimits_of_finite_and_filtered CategoryTheory.Limits.has_colimits_of_finite_and_filtered
+  category_theory.limits.has_colimits_of_finite_and_filtered CategoryTheory.Limits.hasColimitsOfFiniteAndFiltered
 
 theorem has_products_of_finite_and_cofiltered [HasFiniteProducts C]
     [HasCofilteredLimitsOfSize.{w, w} C] : HasProducts.{w} C :=
@@ -101,12 +101,12 @@ theorem has_products_of_finite_and_cofiltered [HasFiniteProducts C]
 #align
   category_theory.limits.has_products_of_finite_and_cofiltered CategoryTheory.Limits.has_products_of_finite_and_cofiltered
 
-theorem has_limits_of_finite_and_cofiltered [HasFiniteLimits C]
-    [HasCofilteredLimitsOfSize.{w, w} C] : HasLimitsOfSize.{w, w} C :=
+theorem hasLimitsOfFiniteAndCofiltered [HasFiniteLimits C] [HasCofilteredLimitsOfSize.{w, w} C] :
+    HasLimitsOfSize.{w, w} C :=
   have : HasProducts.{w} C := has_products_of_finite_and_cofiltered
   has_limits_of_has_equalizers_and_products
 #align
-  category_theory.limits.has_limits_of_finite_and_cofiltered CategoryTheory.Limits.has_limits_of_finite_and_cofiltered
+  category_theory.limits.has_limits_of_finite_and_cofiltered CategoryTheory.Limits.hasLimitsOfFiniteAndCofiltered
 
 end CategoryTheory.Limits
 

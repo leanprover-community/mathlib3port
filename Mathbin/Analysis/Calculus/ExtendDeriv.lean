@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.extend_deriv
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -190,7 +190,7 @@ theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a :
 #align
   has_deriv_at_interval_right_endpoint_of_tendsto_deriv hasDerivAtIntervalRightEndpointOfTendstoDeriv
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is also the derivative of `f` at this point. -/
 theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ}
@@ -222,7 +222,7 @@ theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ}
   simpa using B.union A
 #align has_deriv_at_of_has_deriv_at_of_ne hasDerivAtOfHasDerivAtOfNe
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is the derivative of `f` everywhere. -/
 theorem hasDerivAtOfHasDerivAtOfNe' {f g : ℝ → E} {x : ℝ}

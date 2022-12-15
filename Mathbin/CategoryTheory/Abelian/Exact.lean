@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Adam Topaz, Johan Commelin, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.abelian.exact
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -304,7 +304,7 @@ instance (h : Exact f g) : Mono (cokernel.desc f g h.w) :=
 instance (ex : Exact f g) [Epi g] : IsIso (cokernel.desc f g ex.w) :=
   is_iso_of_mono_of_epi (Limits.cokernel.desc f g ex.w)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Cokernel.Desc.inv [Epi g] (ex : Exact f g) :
     g ≫ inv (cokernel.desc _ _ ex.w) = cokernel.π _ := by simp
 #align category_theory.abelian.cokernel.desc.inv CategoryTheory.Abelian.Cokernel.Desc.inv
@@ -312,7 +312,7 @@ theorem Cokernel.Desc.inv [Epi g] (ex : Exact f g) :
 instance (ex : Exact f g) [Mono f] : IsIso (kernel.lift g f ex.w) :=
   is_iso_of_mono_of_epi (Limits.kernel.lift g f ex.w)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem Kernel.Lift.inv [Mono f] (ex : Exact f g) : inv (kernel.lift _ _ ex.w) ≫ f = kernel.ι g :=
   by simp
 #align category_theory.abelian.kernel.lift.inv CategoryTheory.Abelian.Kernel.Lift.inv

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.category.Meas
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ def giry : CategoryTheory.Monad
   right_unit' α := Subtype.eq <| funext fun μ => @Measure.join_map_dirac _ _ _
 #align Meas.Giry MeasCat.giry
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
 def integral : giry.Algebra where 
@@ -119,7 +119,7 @@ def integral : giry.Algebra where
         show (∫⁻ x, x ∂μ.join) = ∫⁻ x, x ∂Measure.map (fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m) μ by
           rw [measure.lintegral_join, lintegral_map] <;>
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr measurable_id, \",\", expr measure.measurable_lintegral, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr measurable_id, \",\", expr measure.measurable_lintegral, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align Meas.Integral MeasCat.integral
 
 end MeasCat

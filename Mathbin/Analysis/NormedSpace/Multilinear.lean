@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.multilinear
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,7 +234,7 @@ theorem norm_image_sub_le_of_bound {C : ℝ} (hC : 0 ≤ C) (H : ∀ m, ‖f m�
     
 #align multilinear_map.norm_image_sub_le_of_bound MultilinearMap.norm_image_sub_le_of_bound
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr mul_le_mul_of_nonneg_left, ",", expr mul_nonneg, ",", expr norm_nonneg, ",", expr nat.cast_nonneg, ",", expr pow_le_pow_of_le_left, "]"],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr mul_le_mul_of_nonneg_left, ",", expr mul_nonneg, ",", expr norm_nonneg, ",", expr nat.cast_nonneg, ",", expr pow_le_pow_of_le_left, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- If a multilinear map satisfies an inequality `‖f m‖ ≤ C * ∏ i, ‖m i‖`, then it is
 continuous. -/
@@ -258,7 +258,7 @@ theorem continuous_of_bound (C : ℝ) (H : ∀ m, ‖f m‖ ≤ C * ∏ i, ‖m 
       f.norm_image_sub_le_of_bound D_pos H m' m
     _ ≤ D * Fintype.card ι * (‖m‖ + 1) ^ (Fintype.card ι - 1) * ‖m' - m‖ := by
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr mul_nonneg, \",\", expr norm_nonneg, \",\", expr nat.cast_nonneg, \",\", expr pow_le_pow_of_le_left, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr mul_nonneg, \",\", expr norm_nonneg, \",\", expr nat.cast_nonneg, \",\", expr pow_le_pow_of_le_left, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     
 #align multilinear_map.continuous_of_bound MultilinearMap.continuous_of_bound
 
@@ -411,7 +411,7 @@ theorem op_norm_zero_iff : ‖f‖ = 0 ↔ f = 0 :=
 
 section
 
-variable {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' G] [SmulCommClass 𝕜 𝕜' G]
+variable {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' G] [SMulCommClass 𝕜 𝕜' G]
 
 theorem op_norm_smul_le (c : 𝕜') : ‖c • f‖ ≤ ‖c‖ * ‖f‖ :=
   (c • f).op_norm_le_bound (mul_nonneg (norm_nonneg _) (op_norm_nonneg _))
@@ -613,7 +613,7 @@ theorem norm_image_sub_le (m₁ m₂ : ∀ i, E i) :
   f.toMultilinearMap.norm_image_sub_le_of_bound (norm_nonneg _) f.le_op_norm _ _
 #align continuous_multilinear_map.norm_image_sub_le ContinuousMultilinearMap.norm_image_sub_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul, ",", expr le_refl, ",", expr le_trans (norm_fst_le q)
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul, ",", expr le_refl, ",", expr le_trans (norm_fst_le q)
    A, ",", expr nat.cast_nonneg, ",", expr mul_nonneg, ",", expr pow_le_pow_of_le_left, ",", expr pow_nonneg, ",", expr norm_snd_le
    «expr - »(q, p), ",", expr norm_nonneg, ",", expr norm_fst_le «expr - »(q, p), ",", expr prod_nonneg, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
@@ -643,7 +643,7 @@ theorem continuous_eval : Continuous fun p : ContinuousMultilinearMap 𝕜 E G �
           ‖q - p‖ * ∏ i, ‖p.2 i‖ :=
       by
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul, \",\", expr le_refl, \",\", expr le_trans (norm_fst_le q)\n   A, \",\", expr nat.cast_nonneg, \",\", expr mul_nonneg, \",\", expr pow_le_pow_of_le_left, \",\", expr pow_nonneg, \",\", expr norm_snd_le\n   «expr - »(q, p), \",\", expr norm_nonneg, \",\", expr norm_fst_le «expr - »(q, p), \",\", expr prod_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul, \",\", expr le_refl, \",\", expr le_trans (norm_fst_le q)\n   A, \",\", expr nat.cast_nonneg, \",\", expr mul_nonneg, \",\", expr pow_le_pow_of_le_left, \",\", expr pow_nonneg, \",\", expr norm_snd_le\n   «expr - »(q, p), \",\", expr norm_nonneg, \",\", expr norm_fst_le «expr - »(q, p), \",\", expr prod_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     _ = ((‖p‖ + 1) * Fintype.card ι * (‖p‖ + 1) ^ (Fintype.card ι - 1) + ∏ i, ‖p.2 i‖) * dist q p :=
       by 
       rw [dist_eq_norm]
@@ -1146,7 +1146,7 @@ end ContinuousMultilinearMap
 
 section Smul
 
-variable {R : Type _} [Semiring R] [Module R G] [SmulCommClass 𝕜 R G] [HasContinuousConstSmul R G]
+variable {R : Type _} [Semiring R] [Module R G] [SMulCommClass 𝕜 R G] [HasContinuousConstSmul R G]
 
 instance : HasContinuousConstSmul R (ContinuousMultilinearMap 𝕜 E G) :=
   ⟨fun c =>

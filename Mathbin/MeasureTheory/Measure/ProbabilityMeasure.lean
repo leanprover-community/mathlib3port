@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.measure.probability_measure
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -417,7 +417,7 @@ theorem average_eq_integral_normalize {E : Type _} [NormedAddCommGroup E] [Norme
     average (μ : Measure Ω) f = ∫ ω, f ω ∂(μ.normalize : Measure Ω) := by
   rw [μ.coe_normalize_eq_of_nonzero nonzero, average]
   congr
-  simp only [RingHom.to_fun_eq_coe, Ennreal.coe_of_nnreal_hom,
+  simp only [RingHom.toFun_eq_coe, Ennreal.coe_of_nnreal_hom,
     Ennreal.coe_inv (μ.mass_nonzero_iff.mpr nonzero), ennreal_mass]
 #align
   measure_theory.finite_measure.average_eq_integral_normalize MeasureTheory.FiniteMeasure.average_eq_integral_normalize

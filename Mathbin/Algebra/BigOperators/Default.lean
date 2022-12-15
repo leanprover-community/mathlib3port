@@ -1,6 +1,6 @@
 /- Import this file to pull in everything about "big operators".
 ! This file was ported from Lean 3 source module algebra.big_operators.default
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -10,6 +10,5 @@ import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
-import Mathbin.Algebra.BigOperators.PartEnat
 
 -- When preparing a contribution to mathlib, it is best to minimize the imports you use.

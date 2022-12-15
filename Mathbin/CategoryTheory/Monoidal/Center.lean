@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.center
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,12 +76,12 @@ structure HalfBraiding (X : C) where
 
 restate_axiom half_braiding.monoidal'
 
-attribute [reassoc, simp] half_braiding.monoidal
+attribute [reassoc.1, simp] half_braiding.monoidal
 
 -- the reassoc lemma is redundant as a simp lemma
 restate_axiom half_braiding.naturality'
 
-attribute [simp, reassoc] half_braiding.naturality
+attribute [simp, reassoc.1] half_braiding.naturality
 
 variable (C)
 
@@ -108,7 +108,7 @@ structure Hom (X Y : Center C) where
 
 restate_axiom hom.comm'
 
-attribute [simp, reassoc] hom.comm
+attribute [simp, reassoc.1] hom.comm
 
 instance : Category (Center C) where 
   Hom := Hom

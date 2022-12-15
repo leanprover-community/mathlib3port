@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.convolution
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -328,7 +328,7 @@ theorem HasCompactSupport.convolutionExistsAt {x₀ : G}
     (hg : Continuous g) : ConvolutionExistsAt f g x₀ L μ :=
   ((((Homeomorph.neg G).trans <| Homeomorph.addRight x₀).is_compact_preimage.mpr h).bdd_above_image
         hg.norm.ContinuousOn).convolutionExistsAt'
-    L isClosedClosure.MeasurableSet subset_closure (hf h) hf.AeStronglyMeasurable
+    L is_closed_closure.MeasurableSet subset_closure (hf h) hf.AeStronglyMeasurable
     hg.AeStronglyMeasurable
 #align has_compact_support.convolution_exists_at HasCompactSupport.convolutionExistsAt
 
@@ -459,12 +459,12 @@ section Group
 
 variable {L} [AddGroup G]
 
-theorem smul_convolution [SmulCommClass ℝ 𝕜 F] {y : 𝕜} : y • f ⋆[L, μ] g = y • (f ⋆[L, μ] g) := by
+theorem smul_convolution [SMulCommClass ℝ 𝕜 F] {y : 𝕜} : y • f ⋆[L, μ] g = y • (f ⋆[L, μ] g) := by
   ext
   simp only [Pi.smul_apply, convolution_def, ← integral_smul, L.map_smul₂]
 #align smul_convolution smul_convolution
 
-theorem convolution_smul [SmulCommClass ℝ 𝕜 F] {y : 𝕜} : f ⋆[L, μ] y • g = y • (f ⋆[L, μ] g) := by
+theorem convolution_smul [SMulCommClass ℝ 𝕜 F] {y : 𝕜} : f ⋆[L, μ] y • g = y • (f ⋆[L, μ] g) := by
   ext
   simp only [Pi.smul_apply, convolution_def, ← integral_smul, (L _).map_smul]
 #align convolution_smul convolution_smul
@@ -550,7 +550,7 @@ variable [TopologicalAddGroup G]
 
 theorem HasCompactSupport.convolution [T2Space G] (hcf : HasCompactSupport f)
     (hcg : HasCompactSupport g) : HasCompactSupport (f ⋆[L, μ] g) :=
-  is_compact_of_is_closed_subset (hcg.IsCompact.add hcf) isClosedClosure <|
+  is_compact_of_is_closed_subset (hcg.IsCompact.add hcf) is_closed_closure <|
     closure_minimal
       ((support_convolution_subset_swap L).trans <| add_subset_add subset_closure subset_closure)
       (hcg.IsCompact.add hcf).IsClosed

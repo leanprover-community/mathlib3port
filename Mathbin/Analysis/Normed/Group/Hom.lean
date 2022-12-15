@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.hom
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -523,8 +523,8 @@ theorem smul_apply (r : R) (f : NormedAddGroupHom V₁ V₂) (v : V₁) : (r •
   rfl
 #align normed_add_group_hom.smul_apply NormedAddGroupHom.smul_apply
 
-instance [SmulCommClass R R' V₂] :
-    SmulCommClass R R'
+instance [SMulCommClass R R' V₂] :
+    SMulCommClass R R'
       (NormedAddGroupHom V₁ V₂) where smul_comm r r' f := ext fun v => smul_comm _ _ _
 
 instance [HasSmul R R'] [IsScalarTower R R' V₂] :
@@ -790,10 +790,10 @@ theorem coe_ker : (f.ker : Set V₁) = (f : V₁ → V₂) ⁻¹' {0} :=
   rfl
 #align normed_add_group_hom.coe_ker NormedAddGroupHom.coe_ker
 
-theorem isClosedKer {V₂ : Type _} [NormedAddCommGroup V₂] (f : NormedAddGroupHom V₁ V₂) :
+theorem is_closed_ker {V₂ : Type _} [NormedAddCommGroup V₂] (f : NormedAddGroupHom V₁ V₂) :
     IsClosed (f.ker : Set V₁) :=
   f.coe_ker ▸ IsClosed.preimage f.Continuous (T1Space.t1 0)
-#align normed_add_group_hom.is_closed_ker NormedAddGroupHom.isClosedKer
+#align normed_add_group_hom.is_closed_ker NormedAddGroupHom.is_closed_ker
 
 end Kernels
 

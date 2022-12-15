@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.subalgebra
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -609,7 +609,7 @@ theorem well_founded_of_noetherian [IsNoetherian R L] :
       ((· > ·) : Submodule R L → Submodule R L → Prop) :=
     { toFun := coe
       map_rel' := fun N N' h => h }
-  RelHomClass.well_founded f (is_noetherian_iff_well_founded.mp inferInstance)
+  RelHomClass.wellFounded f (is_noetherian_iff_well_founded.mp inferInstance)
 #align lie_subalgebra.well_founded_of_noetherian LieSubalgebra.well_founded_of_noetherian
 
 variable {R L K K' f}

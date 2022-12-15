@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module order.jordan_holder
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -310,310 +310,16 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
     rfl
 #align composition_series.to_list_of_list CompositionSeries.to_list_of_list
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment
-        "/--"
-        "Two `composition_series` are equal if they have the same elements. See also `ext_fun`. -/")]
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simple `ext []))] "]")]
-      []
-      []
-      []
-      [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `ext [])
-      (Command.declSig
-       [(Term.implicitBinder "{" [`s₁ `s₂] [":" (Term.app `CompositionSeries [`X])] "}")
-        (Term.explicitBinder
-         "("
-         [`h]
-         [":"
-          (Term.forall
-           "∀"
-           [`x]
-           []
-           ","
-           («term_↔_» («term_∈_» `x "∈" `s₁) "↔" («term_∈_» `x "∈" `s₂)))]
-         []
-         ")")]
-       (Term.typeSpec ":" («term_=_» `s₁ "=" `s₂)))
-      (Command.declValSimple
-       ":="
-       («term_<|_»
-        `to_list_injective
-        "<|"
-        (Term.app
-         `List.eq_of_perm_of_sorted
-         [(Term.byTactic
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(Tactic.«tactic_<;>_»
-               (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-               "<;>"
-               (Tactic.exact
-                "exact"
-                (Term.app
-                 `List.perm_of_nodup_nodup_to_finset_eq
-                 [`s₁.to_list_nodup
-                  `s₂.to_list_nodup
-                  («term_<|_»
-                   `Finset.ext
-                   "<|"
-                   (Term.byTactic
-                    "by"
-                    (Tactic.tacticSeq
-                     (Tactic.tacticSeq1Indented
-                      [(Tactic.simp
-                        "simp"
-                        []
-                        []
-                        []
-                        ["[" [(Tactic.simpStar "*")] "]"]
-                        [])]))))])))])))
-          (Term.proj `s₁ "." `to_list_sorted)
-          (Term.proj `s₂ "." `to_list_sorted)]))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_»
-       `to_list_injective
-       "<|"
-       (Term.app
-        `List.eq_of_perm_of_sorted
-        [(Term.byTactic
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(Tactic.«tactic_<;>_»
-              (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-              "<;>"
-              (Tactic.exact
-               "exact"
-               (Term.app
-                `List.perm_of_nodup_nodup_to_finset_eq
-                [`s₁.to_list_nodup
-                 `s₂.to_list_nodup
-                 («term_<|_»
-                  `Finset.ext
-                  "<|"
-                  (Term.byTactic
-                   "by"
-                   (Tactic.tacticSeq
-                    (Tactic.tacticSeq1Indented
-                     [(Tactic.simp
-                       "simp"
-                       []
-                       []
-                       []
-                       ["[" [(Tactic.simpStar "*")] "]"]
-                       [])]))))])))])))
-         (Term.proj `s₁ "." `to_list_sorted)
-         (Term.proj `s₂ "." `to_list_sorted)]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       `List.eq_of_perm_of_sorted
-       [(Term.byTactic
-         "by"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(Tactic.«tactic_<;>_»
-             (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-             "<;>"
-             (Tactic.exact
-              "exact"
-              (Term.app
-               `List.perm_of_nodup_nodup_to_finset_eq
-               [`s₁.to_list_nodup
-                `s₂.to_list_nodup
-                («term_<|_»
-                 `Finset.ext
-                 "<|"
-                 (Term.byTactic
-                  "by"
-                  (Tactic.tacticSeq
-                   (Tactic.tacticSeq1Indented
-                    [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])))])))
-        (Term.proj `s₁ "." `to_list_sorted)
-        (Term.proj `s₂ "." `to_list_sorted)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `s₂ "." `to_list_sorted)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `s₂
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.proj `s₁ "." `to_list_sorted)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `s₁
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (Tactic.exact
-            "exact"
-            (Term.app
-             `List.perm_of_nodup_nodup_to_finset_eq
-             [`s₁.to_list_nodup
-              `s₂.to_list_nodup
-              («term_<|_»
-               `Finset.ext
-               "<|"
-               (Term.byTactic
-                "by"
-                (Tactic.tacticSeq
-                 (Tactic.tacticSeq1Indented
-                  [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-       "<;>"
-       (Tactic.exact
-        "exact"
-        (Term.app
-         `List.perm_of_nodup_nodup_to_finset_eq
-         [`s₁.to_list_nodup
-          `s₂.to_list_nodup
-          («term_<|_»
-           `Finset.ext
-           "<|"
-           (Term.byTactic
-            "by"
-            (Tactic.tacticSeq
-             (Tactic.tacticSeq1Indented
-              [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact
-       "exact"
-       (Term.app
-        `List.perm_of_nodup_nodup_to_finset_eq
-        [`s₁.to_list_nodup
-         `s₂.to_list_nodup
-         («term_<|_»
-          `Finset.ext
-          "<|"
-          (Term.byTactic
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       `List.perm_of_nodup_nodup_to_finset_eq
-       [`s₁.to_list_nodup
-        `s₂.to_list_nodup
-        («term_<|_»
-         `Finset.ext
-         "<|"
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_»
-       `Finset.ext
-       "<|"
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-      `Finset.ext
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     («term_<|_»
-      `Finset.ext
-      "<|"
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))
-     ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `s₂.to_list_nodup
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `s₁.to_list_nodup
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `List.perm_of_nodup_nodup_to_finset_eq
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Two `composition_series` are equal if they have the same elements. See also `ext_fun`. -/
-    @[ ext ]
-  theorem
-    ext
-    { s₁ s₂ : CompositionSeries X } ( h : ∀ x , x ∈ s₁ ↔ x ∈ s₂ ) : s₁ = s₂
-    :=
-      to_list_injective
-        <|
-        List.eq_of_perm_of_sorted
-          by
-              skip
-                <;>
-                exact
-                  List.perm_of_nodup_nodup_to_finset_eq
-                    s₁.to_list_nodup s₂.to_list_nodup Finset.ext <| by simp [ * ]
-            s₁ . to_list_sorted
-            s₂ . to_list_sorted
+@[ext]
+theorem ext {s₁ s₂ : CompositionSeries X} (h : ∀ x, x ∈ s₁ ↔ x ∈ s₂) : s₁ = s₂ :=
+  to_list_injective <|
+    List.eq_of_perm_of_sorted
+      (by
+        classical exact
+            List.perm_of_nodup_nodup_to_finset_eq s₁.to_list_nodup s₂.to_list_nodup
+              (Finset.ext <| by simp [*]))
+      s₁.to_list_sorted s₂.to_list_sorted
 #align composition_series.ext CompositionSeries.ext
 
 /-- The largest element of a `composition_series` -/
@@ -962,7 +668,7 @@ theorem length_eq {s₁ s₂ : CompositionSeries X} (h : Equivalent s₁ s₂) :
   simpa using Fintype.card_congr h.some
 #align composition_series.equivalent.length_eq CompositionSeries.Equivalent.length_eq
 
-theorem snocSnocSwap {s : CompositionSeries X} {x₁ x₂ y₁ y₂ : X} {hsat₁ : IsMaximal s.top x₁}
+theorem snoc_snoc_swap {s : CompositionSeries X} {x₁ x₂ y₁ y₂ : X} {hsat₁ : IsMaximal s.top x₁}
     {hsat₂ : IsMaximal s.top x₂} {hsaty₁ : IsMaximal (snoc s x₁ hsat₁).top y₁}
     {hsaty₂ : IsMaximal (snoc s x₂ hsat₂).top y₂} (hr₁ : Iso (s.top, x₁) (x₂, y₂))
     (hr₂ : Iso (x₁, y₁) (s.top, x₂)) :
@@ -990,7 +696,7 @@ theorem snocSnocSwap {s : CompositionSeries X} {x₁ x₂ y₁ y₂ : X} {hsat�
           snoc_cast_succ, Fin.succ_cast_succ, snoc_cast_succ, Fin.succ_cast_succ, snoc_cast_succ,
           snoc_cast_succ, snoc_cast_succ]
         exact (s.step i).iso_refl⟩
-#align composition_series.equivalent.snoc_snoc_swap CompositionSeries.Equivalent.snocSnocSwap
+#align composition_series.equivalent.snoc_snoc_swap CompositionSeries.Equivalent.snoc_snoc_swap
 
 end Equivalent
 
@@ -1077,7 +783,7 @@ theorem exists_top_eq_snoc_equivalant (s : CompositionSeries X) (x : X) (hm : Is
 
 /-- The **Jordan-Hölder** theorem, stated for any `jordan_holder_lattice`.
 If two composition series start and finish at the same place, they are equivalent. -/
-theorem jordanHolder (s₁ s₂ : CompositionSeries X) (hb : s₁.bot = s₂.bot) (ht : s₁.top = s₂.top) :
+theorem jordan_holder (s₁ s₂ : CompositionSeries X) (hb : s₁.bot = s₂.bot) (ht : s₁.top = s₂.top) :
     Equivalent s₁ s₂ := by
   induction' hle : s₁.length with n ih generalizing s₁ s₂
   · rw [eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero hb ht hle]
@@ -1092,7 +798,7 @@ theorem jordanHolder (s₁ s₂ : CompositionSeries X) (hb : s₁.bot = s₂.bot
     conv_rhs => rw [eq_snoc_erase_top h0s₂]
     simp only [ht]
     exact equivalent.snoc this (by simp [htt, (is_maximal_erase_top_top h0s₂).iso_refl])
-#align composition_series.jordan_holder CompositionSeries.jordanHolder
+#align composition_series.jordan_holder CompositionSeries.jordan_holder
 
 end CompositionSeries
 

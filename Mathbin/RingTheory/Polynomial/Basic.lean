@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -665,7 +665,7 @@ theorem polynomial_not_is_field : ¬IsField R[X] := by
 /-- The only constant in a maximal ideal over a field is `0`. -/
 theorem eq_zero_of_constant_mem_of_maximal (hR : IsField R) (I : Ideal R[X]) [hI : I.IsMaximal]
     (x : R) (hx : c x ∈ I) : x = 0 := by
-  refine' Classical.by_contradiction fun hx0 => hI.ne_top ((eq_top_iff_one I).2 _)
+  refine' by_contradiction fun hx0 => hI.ne_top ((eq_top_iff_one I).2 _)
   obtain ⟨y, hy⟩ := hR.mul_inv_cancel hx0
   convert I.mul_mem_left (C y) hx
   rw [← C.map_mul, hR.mul_comm y x, hy, RingHom.map_one]
@@ -902,11 +902,11 @@ instance (priority := 100) {R : Type _} [CommRing R] [IsDomain R] [WfDvdMonoid R
       R[X] where well_founded_dvd_not_unit := by
     classical 
       refine'
-        RelHomClass.well_founded
+        RelHomClass.wellFounded
           (⟨fun p : R[X] =>
               ((if p = 0 then ⊤ else ↑p.degree : WithTop (WithBot ℕ)), p.leadingCoeff), _⟩ :
             DvdNotUnit →r Prod.Lex (· < ·) DvdNotUnit)
-          (Prod.lex_wf (WithTop.well_founded_lt <| WithBot.well_founded_lt Nat.lt_wfRel)
+          (Prod.lex_wf (WithTop.wellFounded_lt <| WithBot.wellFounded_lt Nat.lt_wfRel)
             ‹WfDvdMonoid R›.well_founded_dvd_not_unit)
       rintro a b ⟨ane0, ⟨c, ⟨not_unit_c, rfl⟩⟩⟩
       rw [Polynomial.degree_mul, if_neg ane0]
@@ -943,7 +943,7 @@ protected theorem Polynomial.is_noetherian_ring [IsNoetherianRing R] : IsNoether
       let ⟨s, hs⟩ := I.is_fg_degree_le N
       have hm2 : ∀ k, I.leadingCoeffNth k ≤ M := fun k =>
         Or.cases_on (le_or_lt k N) (fun h => HN ▸ I.leading_coeff_nth_mono h) fun h x hx =>
-          Classical.by_contradiction fun hxm =>
+          by_contradiction fun hxm =>
             have : ¬M < I.leadingCoeffNth k := by
               refine' WellFounded.not_lt_min (well_founded_submodule_gt _ _) _ _ _ <;>
                 exact ⟨k, rfl⟩
@@ -1186,7 +1186,7 @@ instance {R : Type u} [CommSemiring R] [NoZeroDivisors R] {σ : Type v} :
 
 /-- The multivariate polynomial ring over an integral domain is an integral domain. -/
 instance {R : Type u} {σ : Type v} [CommRing R] [IsDomain R] : IsDomain (MvPolynomial σ R) := by
-  apply NoZeroDivisors.to_is_domain _
+  apply NoZeroDivisors.toIsDomain _
   exact AddMonoidAlgebra.nontrivial
   exact MvPolynomial.no_zero_divisors
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module category_theory.limits.lattice
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,18 +60,18 @@ def finiteColimitCocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) :
   category_theory.limits.complete_lattice.finite_colimit_cocone CategoryTheory.Limits.CompleteLattice.finiteColimitCocone
 
 -- see Note [lower instance priority]
-instance (priority := 100) has_finite_limits_of_semilattice_inf_order_top [SemilatticeInf α]
-    [OrderTop α] : HasFiniteLimits α :=
+instance (priority := 100) hasFiniteLimitsOfSemilatticeInfOrderTop [SemilatticeInf α] [OrderTop α] :
+    HasFiniteLimits α :=
   ⟨fun J 𝒥₁ 𝒥₂ => { HasLimit := fun F => has_limit.mk (finite_limit_cone F) }⟩
 #align
-  category_theory.limits.complete_lattice.has_finite_limits_of_semilattice_inf_order_top CategoryTheory.Limits.CompleteLattice.has_finite_limits_of_semilattice_inf_order_top
+  category_theory.limits.complete_lattice.has_finite_limits_of_semilattice_inf_order_top CategoryTheory.Limits.CompleteLattice.hasFiniteLimitsOfSemilatticeInfOrderTop
 
 -- see Note [lower instance priority]
-instance (priority := 100) has_finite_colimits_of_semilattice_sup_order_bot [SemilatticeSup α]
+instance (priority := 100) hasFiniteColimitsOfSemilatticeSupOrderBot [SemilatticeSup α]
     [OrderBot α] : HasFiniteColimits α :=
   ⟨fun J 𝒥₁ 𝒥₂ => { HasColimit := fun F => has_colimit.mk (finite_colimit_cocone F) }⟩
 #align
-  category_theory.limits.complete_lattice.has_finite_colimits_of_semilattice_sup_order_bot CategoryTheory.Limits.CompleteLattice.has_finite_colimits_of_semilattice_sup_order_bot
+  category_theory.limits.complete_lattice.has_finite_colimits_of_semilattice_sup_order_bot CategoryTheory.Limits.CompleteLattice.hasFiniteColimitsOfSemilatticeSupOrderBot
 
 /-- The limit of a functor from a finite diagram into a `semilattice_inf` with `order_top` is the
 infimum of the objects in the image.
@@ -124,7 +124,7 @@ theorem finite_coproduct_eq_finset_sup [SemilatticeSup α] [OrderBot α] {ι : T
 -- see Note [lower instance priority]
 instance (priority := 100) [SemilatticeInf α] [OrderTop α] : HasBinaryProducts α := by
   have : ∀ x y : α, has_limit (pair x y) := by
-    letI := has_finite_limits_of_has_finite_limits_of_size.{u} α
+    letI := hasFiniteLimitsOfHasFiniteLimitsOfSize.{u} α
     infer_instance
   apply has_binary_products_of_has_limit_pair
 
@@ -148,7 +148,7 @@ theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : Limits.prod x
 -- see Note [lower instance priority]
 instance (priority := 100) [SemilatticeSup α] [OrderBot α] : HasBinaryCoproducts α := by
   have : ∀ x y : α, has_colimit (pair x y) := by
-    letI := has_finite_colimits_of_has_finite_colimits_of_size.{u} α
+    letI := hasFiniteColimitsOfHasFiniteColimitsOfSize.{u} α
     infer_instance
   apply has_binary_coproducts_of_has_colimit_pair
 

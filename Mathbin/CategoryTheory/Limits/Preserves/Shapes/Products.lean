@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.products
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ namespace CategoryTheory.Limits
 
 variable {J : Type w} (f : J → C)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- The map of a fan is a limit iff the fan consisting of the mapped morphisms is a limit. This
 essentially lets us commute `fan.mk` with `functor.map_cone`.
 -/
@@ -51,7 +51,7 @@ def isLimitMapConeFanMkEquiv {P : C} (g : ∀ j, P ⟶ f j) :
   refine'
     cones.ext (iso.refl _) fun j => by
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
       dsimp
       simp
 #align
@@ -121,7 +121,7 @@ instance : IsIso (piComparison G f) := by
 
 end
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- The map of a cofan is a colimit iff the cofan consisting of the mapped morphisms is a colimit.
 This essentially lets us commute `cofan.mk` with `functor.map_cocone`.
 -/
@@ -134,7 +134,7 @@ def isColimitMapCoconeCofanMkEquiv {P : C} (g : ∀ j, f j ⟶ P) :
   refine'
     cocones.ext (iso.refl _) fun j => by
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
       dsimp
       simp
 #align

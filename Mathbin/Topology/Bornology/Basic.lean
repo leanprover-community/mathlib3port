@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.bornology.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ class Bornology (α : Type _) where
   le_cofinite : cobounded ≤ cofinite
 #align bornology Bornology
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
@@ -79,7 +79,7 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     exact singleton_mem x
 #align bornology.of_bounded Bornology.ofBounded
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
@@ -213,7 +213,7 @@ theorem is_cobounded_of_bounded_iff (B : Set (Set α)) {empty_mem subset_mem uni
 
 theorem is_bounded_of_bounded_iff (B : Set (Set α)) {empty_mem subset_mem union_mem sUnion_univ} :
     @IsBounded _ (ofBounded B empty_mem subset_mem union_mem sUnion_univ) s ↔ s ∈ B := by
-  rw [is_bounded_def, ← Filter.mem_sets, of_bounded_cobounded_sets, Set.mem_set_of_eq, compl_compl]
+  rw [is_bounded_def, ← Filter.mem_sets, of_bounded_cobounded_sets, Set.mem_setOf_eq, compl_compl]
 #align bornology.is_bounded_of_bounded_iff Bornology.is_bounded_of_bounded_iff
 
 variable [Bornology α]

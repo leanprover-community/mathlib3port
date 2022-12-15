@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.int.modeq
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ theorem modeq_of_dvd : n ∣ b - a → a ≡ b [ZMOD n] :=
 #align int.modeq_of_dvd Int.modeq_of_dvd
 
 theorem mod_modeq (a n) : a % n ≡ a [ZMOD n] :=
-  mod_mod _ _
+  emod_emod _ _
 #align int.mod_modeq Int.mod_modeq
 
 namespace Modeq
@@ -248,8 +248,8 @@ theorem mod_coprime {a b : ℕ} (hab : Nat.Coprime a b) : ∃ y : ℤ, a * y ≡
 
 theorem exists_unique_equiv (a : ℤ) {b : ℤ} (hb : 0 < b) :
     ∃ z : ℤ, 0 ≤ z ∧ z < b ∧ z ≡ a [ZMOD b] :=
-  ⟨a % b, mod_nonneg _ (ne_of_gt hb), by
-    have : a % b < |b| := mod_lt _ (ne_of_gt hb)
+  ⟨a % b, emod_nonneg _ (ne_of_gt hb), by
+    have : a % b < |b| := emod_lt _ (ne_of_gt hb)
     rwa [abs_of_pos hb] at this, by simp [modeq]⟩
 #align int.exists_unique_equiv Int.exists_unique_equiv
 

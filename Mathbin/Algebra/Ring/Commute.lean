@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.commute
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,7 +112,7 @@ theorem mul_self_sub_mul_self_eq' [NonUnitalNonAssocRing R] {a b : R} (h : Commu
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : NonUnitalNonAssocRing.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))] {a : R} {b : R}, (Commute.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) a b) -> (Iff (Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))) a a) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))) b b)) (Or (Eq.{succ u1} R a b) (Eq.{succ u1} R a (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddCommGroup.toAddGroup.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R _inst_1)))) b))))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : NonUnitalNonAssocRing.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1) (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))] {a : R} {b : R}, (Commute.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1) a b) -> (Iff (Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1)) a a) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1)) b b)) (Or (Eq.{succ u1} R a b) (Eq.{succ u1} R a (Neg.neg.{u1} R (NegZeroClass.toNeg.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (SubtractionCommMonoid.toSubtractionMonoid.{u1} R (AddCommGroup.toSubtractionCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R _inst_1)))))) b))))
+  forall {R : Type.{u1}} [_inst_1 : NonUnitalNonAssocRing.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1) (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))] {a : R} {b : R}, (Commute.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1) a b) -> (Iff (Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1)) a a) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1)) b b)) (Or (Eq.{succ u1} R a b) (Eq.{succ u1} R a (Neg.neg.{u1} R (NegZeroClass.toNeg.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (SubtractionCommMonoid.toSubtractionMonoid.{u1} R (AddCommGroup.toDivisionAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R _inst_1)))))) b))))
 Case conversion may be inaccurate. Consider using '#align commute.mul_self_eq_mul_self_iff Commute.mul_self_eq_mul_self_iffₓ'. -/
 theorem mul_self_eq_mul_self_iff [NonUnitalNonAssocRing R] [NoZeroDivisors R] {a b : R}
     (h : Commute a b) : a * a = b * b ↔ a = b ∨ a = -b := by
@@ -126,9 +126,9 @@ variable [Mul R] [HasDistribNeg R] {a b : R}
 
 /- warning: commute.neg_right -> Commute.neg_right is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, (Commute.{u1} R _inst_1 a b) -> (Commute.{u1} R _inst_1 a (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) b))
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, (Commute.{u1} R _inst_1 a b) -> (Commute.{u1} R _inst_1 a (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) b))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, (Commute.{u1} R _inst_1 a b) -> (Commute.{u1} R _inst_1 a (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) b))
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, (Commute.{u1} R _inst_1 a b) -> (Commute.{u1} R _inst_1 a (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) b))
 Case conversion may be inaccurate. Consider using '#align commute.neg_right Commute.neg_rightₓ'. -/
 theorem neg_right : Commute a b → Commute a (-b) :=
   SemiconjBy.neg_right
@@ -136,9 +136,9 @@ theorem neg_right : Commute a b → Commute a (-b) :=
 
 /- warning: commute.neg_right_iff -> Commute.neg_right_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, Iff (Commute.{u1} R _inst_1 a (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) b)) (Commute.{u1} R _inst_1 a b)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, Iff (Commute.{u1} R _inst_1 a (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) b)) (Commute.{u1} R _inst_1 a b)
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, Iff (Commute.{u1} R _inst_1 a (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) b)) (Commute.{u1} R _inst_1 a b)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, Iff (Commute.{u1} R _inst_1 a (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) b)) (Commute.{u1} R _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align commute.neg_right_iff Commute.neg_right_iffₓ'. -/
 @[simp]
 theorem neg_right_iff : Commute a (-b) ↔ Commute a b :=
@@ -147,9 +147,9 @@ theorem neg_right_iff : Commute a (-b) ↔ Commute a b :=
 
 /- warning: commute.neg_left -> Commute.neg_left is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, (Commute.{u1} R _inst_1 a b) -> (Commute.{u1} R _inst_1 (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) b)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, (Commute.{u1} R _inst_1 a b) -> (Commute.{u1} R _inst_1 (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) b)
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, (Commute.{u1} R _inst_1 a b) -> (Commute.{u1} R _inst_1 (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) b)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, (Commute.{u1} R _inst_1 a b) -> (Commute.{u1} R _inst_1 (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) b)
 Case conversion may be inaccurate. Consider using '#align commute.neg_left Commute.neg_leftₓ'. -/
 theorem neg_left : Commute a b → Commute (-a) b :=
   SemiconjBy.neg_left
@@ -157,9 +157,9 @@ theorem neg_left : Commute a b → Commute (-a) b :=
 
 /- warning: commute.neg_left_iff -> Commute.neg_left_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, Iff (Commute.{u1} R _inst_1 (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) b) (Commute.{u1} R _inst_1 a b)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, Iff (Commute.{u1} R _inst_1 (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) b) (Commute.{u1} R _inst_1 a b)
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, Iff (Commute.{u1} R _inst_1 (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) b) (Commute.{u1} R _inst_1 a b)
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : HasDistribNeg.{u1} R _inst_1] {a : R} {b : R}, Iff (Commute.{u1} R _inst_1 (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R _inst_1 _inst_2)) a) b) (Commute.{u1} R _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align commute.neg_left_iff Commute.neg_left_iffₓ'. -/
 @[simp]
 theorem neg_left_iff : Commute (-a) b ↔ Commute a b :=
@@ -174,9 +174,9 @@ variable [MulOneClass R] [HasDistribNeg R] {a : R}
 
 /- warning: commute.neg_one_right -> Commute.neg_one_right is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1)] (a : R), Commute.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) a (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1)))))
+  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1)] (a : R), Commute.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) a (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1)))))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1)] (a : R), Commute.{u1} R (MulOneClass.toMul.{u1} R _inst_1) a (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1))))
+  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1)] (a : R), Commute.{u1} R (MulOneClass.toMul.{u1} R _inst_1) a (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align commute.neg_one_right Commute.neg_one_rightₓ'. -/
 @[simp]
 theorem neg_one_right (a : R) : Commute a (-1) :=
@@ -185,9 +185,9 @@ theorem neg_one_right (a : R) : Commute a (-1) :=
 
 /- warning: commute.neg_one_left -> Commute.neg_one_left is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1)] (a : R), Commute.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) (Neg.neg.{u1} R (HasInvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1))))) a
+  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1)] (a : R), Commute.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R _inst_1))))) a
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1)] (a : R), Commute.{u1} R (MulOneClass.toMul.{u1} R _inst_1) (Neg.neg.{u1} R (HasInvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1)))) a
+  forall {R : Type.{u1}} [_inst_1 : MulOneClass.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1)] (a : R), Commute.{u1} R (MulOneClass.toMul.{u1} R _inst_1) (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (MulOneClass.toOne.{u1} R _inst_1)))) a
 Case conversion may be inaccurate. Consider using '#align commute.neg_one_left Commute.neg_one_leftₓ'. -/
 @[simp]
 theorem neg_one_left (a : R) : Commute (-1) a :=

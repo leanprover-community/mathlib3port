@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Group.epi_mono
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,7 +156,7 @@ theorem from_coset_ne_of_nin_range {b : B} (hb : b ∉ f.range) :
   intro r
   simp only [Subtype.mk_eq_mk] at r
   change b *l f.range = f.range at r
-  nth_rw 2 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]  at r
+  nth_rw 2 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm] at r
   rw [left_coset_eq_iff, mul_one] at r
   exact hb (inv_inv b ▸ Subgroup.inv_mem _ r)
 #align
@@ -295,7 +295,7 @@ theorem h_apply_from_coset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : 
   Group.surjective_of_epi_auxs.h_apply_from_coset_nin_range GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset_nin_range
 
 theorem agree : f.range.carrier = { x | h x = g x } := by
-  refine' Set.ext fun b => ⟨_, fun hb : h b = g b => Classical.by_contradiction fun r => _⟩
+  refine' Set.ext fun b => ⟨_, fun hb : h b = g b => by_contradiction fun r => _⟩
   · rintro ⟨a, rfl⟩
     change h (f a) = g (f a)
     ext ⟨⟨_, ⟨y, rfl⟩⟩⟩

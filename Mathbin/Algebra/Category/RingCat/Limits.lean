@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.limits
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,16 +105,16 @@ open HasLimits
 
 /- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
-irreducible_def has_limits_of_size : HasLimitsOfSize.{v} SemiRingCat.{max v u} :=
+irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v} SemiRingCat.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
       { HasLimit := fun F =>
           has_limit.mk
             { Cone := limit_cone F
               IsLimit := limit_cone_is_limit F } } }
-#align SemiRing.has_limits_of_size SemiRingCat.has_limits_of_size
+#align SemiRing.has_limits_of_size SemiRingCat.hasLimitsOfSize
 
 instance has_limits : HasLimits SemiRingCat.{u} :=
-  SemiRingCat.has_limits_of_size.{u, u}
+  SemiRingCat.hasLimitsOfSize.{u, u}
 #align SemiRing.has_limits SemiRingCat.has_limits
 
 /-- An auxiliary declaration to speed up typechecking.
@@ -240,14 +240,14 @@ def limitConeIsLimit (F : J ⥤ CommSemiRingCat.{max v u}) : IsLimit (limitCone 
 
 /- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
-irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommSemiRingCat.{max v u} :=
+irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommSemiRingCat.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
       { HasLimit := fun F =>
           has_limit_of_created F (forget₂ CommSemiRingCat SemiRingCat.{max v u}) } }
-#align CommSemiRing.has_limits_of_size CommSemiRingCat.has_limits_of_size
+#align CommSemiRing.has_limits_of_size CommSemiRingCat.hasLimitsOfSize
 
 instance has_limits : HasLimits CommSemiRingCat.{u} :=
-  CommSemiRingCat.has_limits_of_size.{u, u}
+  CommSemiRingCat.hasLimitsOfSize.{u, u}
 #align CommSemiRing.has_limits CommSemiRingCat.has_limits
 
 /-- The forgetful functor from rings to semirings preserves all limits.
@@ -342,13 +342,13 @@ def limitConeIsLimit (F : J ⥤ RingCat.{max v u}) : IsLimit (limitCone F) :=
 
 /- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
-irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} RingCat.{max v u} :=
+irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} RingCat.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
       { HasLimit := fun F => has_limit_of_created F (forget₂ RingCat SemiRingCat.{max v u}) } }
-#align Ring.has_limits_of_size RingCat.has_limits_of_size
+#align Ring.has_limits_of_size RingCat.hasLimitsOfSize
 
 instance has_limits : HasLimits RingCat.{u} :=
-  RingCat.has_limits_of_size.{u, u}
+  RingCat.hasLimitsOfSize.{u, u}
 #align Ring.has_limits RingCat.has_limits
 
 /-- The forgetful functor from rings to semirings preserves all limits.
@@ -474,13 +474,13 @@ def limitConeIsLimit (F : J ⥤ CommRingCat.{max v u}) : IsLimit (limitCone F) :
 
 /- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
 /-- The category of commutative rings has all limits. -/
-irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommRingCat.{max v u} :=
+irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommRingCat.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
       { HasLimit := fun F => has_limit_of_created F (forget₂ CommRingCat RingCat.{max v u}) } }
-#align CommRing.has_limits_of_size CommRingCat.has_limits_of_size
+#align CommRing.has_limits_of_size CommRingCat.hasLimitsOfSize
 
 instance has_limits : HasLimits CommRingCat.{u} :=
-  CommRingCat.has_limits_of_size.{u, u}
+  CommRingCat.hasLimitsOfSize.{u, u}
 #align CommRing.has_limits CommRingCat.has_limits
 
 /-- The forgetful functor from commutative rings to rings preserves all limits.

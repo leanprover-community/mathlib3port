@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ theorem Directed.convex_Union {ι : Sort _} {s : ι → Set E} (hdir : Directed 
 theorem DirectedOn.convex_sUnion {c : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) c)
     (hc : ∀ ⦃A : Set E⦄, A ∈ c → Convex 𝕜 A) : Convex 𝕜 (⋃₀c) := by
   rw [sUnion_eq_Union]
-  exact (directed_on_iff_directed.1 hdir).convex_Union fun A => hc A.2
+  exact (directedOn_iff_directed.1 hdir).convex_Union fun A => hc A.2
 #align directed_on.convex_sUnion DirectedOn.convex_sUnion
 
 end HasSmul
@@ -629,15 +629,15 @@ def stdSimplex : Set (ι → 𝕜) :=
 theorem std_simplex_eq_inter : stdSimplex 𝕜 ι = (⋂ x, { f | 0 ≤ f x }) ∩ { f | (∑ x, f x) = 1 } :=
   by 
   ext f
-  simp only [stdSimplex, Set.mem_inter_iff, Set.mem_Inter, Set.mem_set_of_eq]
+  simp only [stdSimplex, Set.mem_inter_iff, Set.mem_Inter, Set.mem_setOf_eq]
 #align std_simplex_eq_inter std_simplex_eq_inter
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr hf.1, ",", expr hg.1, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr hf.1, ",", expr hg.1, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem convex_std_simplex : Convex 𝕜 (stdSimplex 𝕜 ι) := by
   refine' fun f hf g hg a b ha hb hab => ⟨fun x => _, _⟩
   ·
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr hf.1, \",\", expr hg.1, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr hf.1, \",\", expr hg.1, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   · erw [Finset.sum_add_distrib, ← Finset.smul_sum, ← Finset.smul_sum, hf.2, hg.2, smul_eq_mul,
       smul_eq_mul, mul_one, mul_one]
     exact hab

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_eq_fun
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -595,7 +595,7 @@ theorem smul_to_germ (c : 𝕜) (f : α →ₘ[μ] γ) : (c • f).toGerm = c �
   comp_to_germ _ _ _
 #align measure_theory.ae_eq_fun.smul_to_germ MeasureTheory.AeEqFun.smul_to_germ
 
-instance [SmulCommClass 𝕜 𝕜' γ] : SmulCommClass 𝕜 𝕜' (α →ₘ[μ] γ) :=
+instance [SMulCommClass 𝕜 𝕜' γ] : SMulCommClass 𝕜 𝕜' (α →ₘ[μ] γ) :=
   ⟨fun a b f => (inductionOn f) fun f hf => by simp_rw [smul_mk, smul_comm]⟩
 
 instance [HasSmul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' γ] : IsScalarTower 𝕜 𝕜' (α →ₘ[μ] γ) :=
@@ -908,5 +908,6 @@ def toAeEqFunLinearMap : C(α, γ) →ₗ[𝕜] α →ₘ[μ] γ :=
 
 end ContinuousMap
 
-/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Guard against import creep
+assert_not_exists inner_product_space
+

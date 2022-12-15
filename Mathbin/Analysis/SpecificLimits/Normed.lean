@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Sébastien Gouëzel, Yury G. Kudryashov, Dylan MacKenzie, Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.normed
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜
     Tendsto (fun x : 𝕜 => ‖x ^ m‖) (𝓝[≠] 0) atTop := by
   rcases neg_surjective m with ⟨m, rfl⟩
   rw [neg_lt_zero] at hm; lift m to ℕ using hm.le; rw [Int.coe_nat_pos] at hm
-  simp only [norm_pow, zpow_neg, zpow_coe_nat, ← inv_pow]
+  simp only [norm_pow, zpow_neg, zpow_ofNat, ← inv_pow]
   exact (tendsto_pow_at_top hm.ne').comp NormedField.tendsto_norm_inverse_nhds_within_0_at_top
 #align
   normed_field.tendsto_norm_zpow_nhds_within_0_at_top NormedField.tendsto_norm_zpow_nhds_within_0_at_top
@@ -499,11 +499,11 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
                 (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.hole "_")))]
                "⟩"))
              []
-             (Std.Tactic.simpa
+             (Std.Tactic.Simpa.simpa
               "simpa"
               []
               []
-              (Std.Tactic.simpaArgsRest
+              (Std.Tactic.Simpa.simpaArgsRest
                []
                []
                ["only"]
@@ -635,11 +635,16 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
                        [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `n))]
                        [])
                       []
-                      (Std.Tactic.simpa
+                      (Std.Tactic.Simpa.simpa
                        "simpa"
                        []
                        []
-                       (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `H [`n])]))])))]])
+                       (Std.Tactic.Simpa.simpaArgsRest
+                        []
+                        []
+                        []
+                        []
+                        ["using" (Term.app `H [`n])]))])))]])
                []
                (Tactic.simp
                 "simp"
@@ -807,11 +812,11 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
                 (Term.app `is_O.of_bound [(num "1") (Term.hole "_")])]
                "⟩"))
              []
-             (Std.Tactic.simpa
+             (Std.Tactic.Simpa.simpa
               "simpa"
               []
               []
-              (Std.Tactic.simpaArgsRest
+              (Std.Tactic.Simpa.simpaArgsRest
                []
                []
                ["only"]
@@ -1061,11 +1066,11 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
                (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.hole "_")))]
               "⟩"))
             []
-            (Std.Tactic.simpa
+            (Std.Tactic.Simpa.simpa
              "simpa"
              []
              []
-             (Std.Tactic.simpaArgsRest
+             (Std.Tactic.Simpa.simpaArgsRest
               []
               []
               ["only"]
@@ -1189,11 +1194,16 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
                       [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `n))]
                       [])
                      []
-                     (Std.Tactic.simpa
+                     (Std.Tactic.Simpa.simpa
                       "simpa"
                       []
                       []
-                      (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `H [`n])]))])))]])
+                      (Std.Tactic.Simpa.simpaArgsRest
+                       []
+                       []
+                       []
+                       []
+                       ["using" (Term.app `H [`n])]))])))]])
               []
               (Tactic.simp
                "simp"
@@ -1361,11 +1371,11 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
                (Term.app `is_O.of_bound [(num "1") (Term.hole "_")])]
               "⟩"))
             []
-            (Std.Tactic.simpa
+            (Std.Tactic.Simpa.simpa
              "simpa"
              []
              []
-             (Std.Tactic.simpaArgsRest
+             (Std.Tactic.Simpa.simpaArgsRest
               []
               []
               ["only"]
@@ -1438,11 +1448,11 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
            (Term.app `is_O.of_bound [(num "1") (Term.hole "_")])]
           "⟩"))
         []
-        (Std.Tactic.simpa
+        (Std.Tactic.Simpa.simpa
          "simpa"
          []
          []
-         (Std.Tactic.simpaArgsRest
+         (Std.Tactic.Simpa.simpaArgsRest
           []
           []
           ["only"]
@@ -1458,11 +1468,11 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
             "]")]
           []))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Std.Tactic.simpa
+      (Std.Tactic.Simpa.simpa
        "simpa"
        []
        []
-       (Std.Tactic.simpaArgsRest
+       (Std.Tactic.Simpa.simpaArgsRest
         []
         []
         ["only"]

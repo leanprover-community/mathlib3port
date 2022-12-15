@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.circle.rotation_number.translation_number
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -328,7 +328,7 @@ theorem translate_inv_apply (x y : ℝ) : (translate <| Multiplicative.ofAdd x)�
 @[simp]
 theorem translate_zpow (x : ℝ) (n : ℤ) :
     translate (Multiplicative.ofAdd x) ^ n = translate (Multiplicative.ofAdd <| ↑n * x) := by
-  simp only [← zsmul_eq_mul, of_add_zsmul, MonoidHom.map_zpow]
+  simp only [← zsmul_eq_mul, ofAdd_zsmul, MonoidHom.map_zpow]
 #align circle_deg1_lift.translate_zpow CircleDeg1Lift.translate_zpow
 
 @[simp]
@@ -340,7 +340,7 @@ theorem translate_pow (x : ℝ) (n : ℕ) :
 @[simp]
 theorem translate_iterate (x : ℝ) (n : ℕ) :
     translate (Multiplicative.ofAdd x)^[n] = translate (Multiplicative.ofAdd <| ↑n * x) := by
-  rw [← units_coe, ← coe_pow, ← Units.coe_pow, translate_pow, units_coe]
+  rw [← units_coe, ← coe_pow, ← Units.val_pow_eq_pow_val, translate_pow, units_coe]
 #align circle_deg1_lift.translate_iterate CircleDeg1Lift.translate_iterate
 
 /-!
@@ -1052,8 +1052,8 @@ theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [G
     refine' fun x => ⟨x + 2, _⟩
     rintro _ ⟨g, rfl⟩
     have : τ (f₂ g⁻¹) = -τ (f₂ g) := by
-      rw [← MonoidHom.coe_to_hom_units, MonoidHom.map_inv, translation_number_units_inv,
-        MonoidHom.coe_to_hom_units]
+      rw [← MonoidHom.coe_toHomUnits, MonoidHom.map_inv, translation_number_units_inv,
+        MonoidHom.coe_toHomUnits]
     calc
       f₂ g⁻¹ (f₁ g x) ≤ f₂ g⁻¹ (x + τ (f₁ g) + 1) :=
         mono _ (map_lt_add_translation_number_add_one _ _).le

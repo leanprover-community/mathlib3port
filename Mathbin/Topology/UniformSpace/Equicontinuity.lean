@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.equicontinuity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ protected abbrev Set.UniformEquicontinuous (H : Set <| β → α) : Prop :=
   UniformEquicontinuous (coe : H → β → α)
 #align set.uniform_equicontinuous Set.UniformEquicontinuous
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » V) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » V) -/
 /-- Reformulation of equicontinuity at `x₀` comparing two variables near `x₀` instead of comparing
 only one with `x₀`. -/
 theorem equicontinuous_at_iff_pair {F : ι → X → α} {x₀ : X} :
@@ -344,13 +344,13 @@ theorem UniformInducing.equicontinuous_at_iff {F : ι → X → α} {x₀ : X} {
   rfl
 #align uniform_inducing.equicontinuous_at_iff UniformInducing.equicontinuous_at_iff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
 /-- Given `u : α → β` a uniform inducing map, a family `𝓕 : ι → X → α` is equicontinuous iff the
 family `𝓕'`, obtained by precomposing each function of `𝓕` by `u`, is equicontinuous. -/
 theorem UniformInducing.equicontinuous_iff {F : ι → X → α} {u : α → β} (hu : UniformInducing u) :
     Equicontinuous F ↔ Equicontinuous ((· ∘ ·) u ∘ F) := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
   rw [hu.equicontinuous_at_iff]
 #align uniform_inducing.equicontinuous_iff UniformInducing.equicontinuous_iff
 

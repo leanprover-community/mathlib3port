@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.noetherian_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,11 +66,11 @@ variable {α}
 
 instance NoetherianSpace.set [h : NoetherianSpace α] (s : Set α) : NoetherianSpace s := by
   rw [noetherian_space_iff]
-  apply WellFounded.well_founded_iff_has_max'.2
+  apply WellFounded.wellFounded_iff_has_max'.2
   intro p hp
   obtain ⟨⟨_, u, hu, rfl⟩, hu'⟩ := hp
   obtain ⟨U, hU, hU'⟩ :=
-    WellFounded.well_founded_iff_has_max'.1 h.1 (opens.comap ⟨_, continuous_subtype_coe⟩ ⁻¹' p)
+    WellFounded.wellFounded_iff_has_max'.1 h.1 (opens.comap ⟨_, continuous_subtype_coe⟩ ⁻¹' p)
       ⟨⟨u, hu⟩, hu'⟩
   refine' ⟨opens.comap ⟨_, continuous_subtype_coe⟩ U, hU, _⟩
   rintro ⟨_, x, hx, rfl⟩ hx' hx''
@@ -141,7 +141,7 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
               (Term.app
                (Term.proj (Term.app `noetherian_space_iff [(Term.hole "_")]) "." `trans)
                [(Term.app
-                 `Surjective.well_founded_iff
+                 `Surjective.wellFounded_iff
                  [(Term.proj `opens.compl_bijective "." (fieldIdx "2")) (Term.hole "_")])]))
              []
              (Tactic.exact
@@ -207,7 +207,7 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
              (Term.app
               (Term.proj (Term.app `noetherian_space_iff [(Term.hole "_")]) "." `trans)
               [(Term.app
-                `Surjective.well_founded_iff
+                `Surjective.wellFounded_iff
                 [(Term.proj `opens.compl_bijective "." (fieldIdx "2")) (Term.hole "_")])]))
             []
             (Tactic.exact
@@ -328,7 +328,7 @@ theorem
       tfae_have 1 ↔ 2
         ·
           refine'
-              noetherian_space_iff _ . trans Surjective.well_founded_iff opens.compl_bijective . 2 _
+              noetherian_space_iff _ . trans Surjective.wellFounded_iff opens.compl_bijective . 2 _
             exact fun s t => OrderIso.compl Set α . lt_iff_lt . symm
         tfae_have 1 ↔ 4
         · exact noetherian_space_iff_opens α
@@ -376,7 +376,7 @@ theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continu
     fun ⟨a, b, h⟩ => ⟨b, Subtype.ext h⟩
 #align topological_space.noetherian_space.range TopologicalSpace.NoetherianSpace.range
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t :=
   by 
   rw [(noetherian_space_tfae s).out 0 2]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan, Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.number_field.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ number field, ring of integers
 dimensional over ℚ. -/
 class NumberField (K : Type _) [Field K] : Prop where
   [to_char_zero : CharZero K]
-  [toFiniteDimensional : FiniteDimensional ℚ K]
+  [to_finite_dimensional : FiniteDimensional ℚ K]
 #align number_field NumberField
 
 open Function
@@ -59,7 +59,7 @@ variable (K L : Type _) [Field K] [Field L] [nf : NumberField K]
 include nf
 
 -- See note [lower instance priority]
-attribute [instance] NumberField.to_char_zero NumberField.toFiniteDimensional
+attribute [instance] NumberField.to_char_zero NumberField.to_finite_dimensional
 
 protected theorem is_algebraic : Algebra.IsAlgebraic ℚ K :=
   Algebra.is_algebraic_of_finite _ _
@@ -165,7 +165,7 @@ open NumberField
 instance numberField : NumberField
       ℚ where 
   to_char_zero := inferInstance
-  toFiniteDimensional :=-- The vector space structure of `ℚ` over itself can arise in multiple ways:
+  to_finite_dimensional :=-- The vector space structure of `ℚ` over itself can arise in multiple ways:
   -- all fields are vector spaces over themselves (used in `rat.finite_dimensional`)
   -- all char 0 fields have a canonical embedding of `ℚ` (used in `number_field`).
   -- Show that these coincide:
@@ -194,7 +194,7 @@ instance {f : ℚ[X]} [hf : Fact (Irreducible f)] :
       (AdjoinRoot
         f) where 
   to_char_zero := char_zero_of_injective_algebra_map (algebraMap ℚ _).Injective
-  toFiniteDimensional := by convert (AdjoinRoot.powerBasis hf.out.ne_zero).FiniteDimensional
+  to_finite_dimensional := by convert (AdjoinRoot.powerBasis hf.out.ne_zero).FiniteDimensional
 
 end
 

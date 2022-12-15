@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.defs
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -255,7 +255,7 @@ theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 := by
     bind₁_C_right]
   rw [sub_mul, one_mul]
   rw [Finset.sum_eq_single 0]
-  · simp only [inv_of_eq_inv, one_mul, inv_pow, tsub_zero, RingHom.map_one, pow_zero]
+  · simp only [invOf_eq_inv, one_mul, inv_pow, tsub_zero, RingHom.map_one, pow_zero]
     simp only [one_pow, one_mul, X_in_terms_of_W_zero, sub_self, bind₁_X_right]
   · intro i hin hi0
     rw [Finset.mem_range] at hin

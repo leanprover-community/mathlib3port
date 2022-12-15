@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebra.homology.short_exact.preadditive
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -215,15 +215,15 @@ section HasZeroMorphisms
 
 variable [HasZeroMorphisms 𝒜] [HasBinaryBiproducts 𝒜]
 
-attribute [simp, reassoc] comp_iso_eq_inl iso_comp_snd_eq
+attribute [simp, reassoc.1] comp_iso_eq_inl iso_comp_snd_eq
 
 variable (h : Splitting f g)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem inl_comp_iso_eq : biprod.inl ≫ h.Iso.inv = f := by rw [iso.comp_inv_eq, h.comp_iso_eq_inl]
 #align category_theory.splitting.inl_comp_iso_eq CategoryTheory.Splitting.inl_comp_iso_eq
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem iso_comp_eq_snd : h.Iso.inv ≫ g = biprod.snd := by rw [iso.inv_comp_eq, h.iso_comp_snd_eq]
 #align category_theory.splitting.iso_comp_eq_snd CategoryTheory.Splitting.iso_comp_eq_snd
 
@@ -239,19 +239,19 @@ def retraction : B ⟶ A :=
   h.Iso.Hom ≫ biprod.fst
 #align category_theory.splitting.retraction CategoryTheory.Splitting.retraction
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem section_π : h.section ≫ g = 𝟙 C := by
   delta splitting.section
   simp
 #align category_theory.splitting.section_π CategoryTheory.Splitting.section_π
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_retraction : f ≫ h.retraction = 𝟙 A := by
   delta retraction
   simp
 #align category_theory.splitting.ι_retraction CategoryTheory.Splitting.ι_retraction
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem section_retraction : h.section ≫ h.retraction = 0 := by
   delta splitting.section retraction
   simp
@@ -267,12 +267,12 @@ protected def splitEpi : SplitEpi g :=
   ⟨h.section, by simp⟩
 #align category_theory.splitting.split_epi CategoryTheory.Splitting.splitEpi
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem inr_iso_inv : biprod.inr ≫ h.Iso.inv = h.section :=
   rfl
 #align category_theory.splitting.inr_iso_inv CategoryTheory.Splitting.inr_iso_inv
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem iso_hom_fst : h.Iso.Hom ≫ biprod.fst = h.retraction :=
   rfl
 #align category_theory.splitting.iso_hom_fst CategoryTheory.Splitting.iso_hom_fst
@@ -323,13 +323,13 @@ theorem split_add : h.retraction ≫ f + g ≫ h.section = 𝟙 _ := by
     splitting.comp_iso_eq_inl, splitting.iso_comp_eq_snd_assoc]
 #align category_theory.splitting.split_add CategoryTheory.Splitting.split_add
 
-@[reassoc]
+@[reassoc.1]
 theorem retraction_ι_eq_id_sub : h.retraction ≫ f = 𝟙 _ - g ≫ h.section :=
   eq_sub_iff_add_eq.mpr h.split_add
 #align
   category_theory.splitting.retraction_ι_eq_id_sub CategoryTheory.Splitting.retraction_ι_eq_id_sub
 
-@[reassoc]
+@[reassoc.1]
 theorem π_section_eq_id_sub : g ≫ h.section = 𝟙 _ - h.retraction ≫ f :=
   eq_sub_iff_add_eq.mpr ((add_comm _ _).trans h.split_add)
 #align category_theory.splitting.π_section_eq_id_sub CategoryTheory.Splitting.π_section_eq_id_sub
@@ -351,7 +351,7 @@ theorem split : Split f g := by
   rw [← h.inl_comp_iso_eq, category.assoc, h.iso_comp_eq_snd, biprod.inl_snd]
 #align category_theory.splitting.split CategoryTheory.Splitting.split
 
-@[reassoc]
+@[reassoc.1]
 theorem comp_eq_zero : f ≫ g = 0 :=
   h.split.1.some_spec.some_spec.2.2.1
 #align category_theory.splitting.comp_eq_zero CategoryTheory.Splitting.comp_eq_zero

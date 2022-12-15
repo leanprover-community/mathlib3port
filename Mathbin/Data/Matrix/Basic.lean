@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,7 +239,7 @@ instance [Nonempty m] [Nonempty n] [Nontrivial α] : Nontrivial (Matrix m n α) 
 instance [HasSmul R α] : HasSmul R (Matrix m n α) :=
   Pi.instSMul
 
-instance [HasSmul R α] [HasSmul S α] [SmulCommClass R S α] : SmulCommClass R S (Matrix m n α) :=
+instance [HasSmul R α] [HasSmul S α] [SMulCommClass R S α] : SMulCommClass R S (Matrix m n α) :=
   Pi.smul_comm_class
 
 instance [HasSmul R S] [HasSmul R α] [HasSmul S α] [IsScalarTower R S α] :
@@ -702,7 +702,7 @@ section NonUnitalNonAssocSemiringDecidable
 
 variable [DecidableEq m] [NonUnitalNonAssocSemiring α] (u v w : m → α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem diagonal_dot_product (i : m) : diagonal v i ⬝ᵥ w = v i * w i := by
   have : ∀ (j) (_ : j ≠ i), diagonal v i j * w j = 0 := fun j hij => by
@@ -710,7 +710,7 @@ theorem diagonal_dot_product (i : m) : diagonal v i ⬝ᵥ w = v i * w i := by
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 #align matrix.diagonal_dot_product Matrix.diagonal_dot_product
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem dot_product_diagonal (i : m) : v ⬝ᵥ diagonal w i = v i * w i := by
   have : ∀ (j) (_ : j ≠ i), v j * diagonal w i j = 0 := fun j hij => by
@@ -718,7 +718,7 @@ theorem dot_product_diagonal (i : m) : v ⬝ᵥ diagonal w i = v i * w i := by
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 #align matrix.dot_product_diagonal Matrix.dot_product_diagonal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem dot_product_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonal w j i) = v i * w i := by
   have : ∀ (j) (_ : j ≠ i), v j * diagonal w j i = 0 := fun j hij => by
@@ -726,7 +726,7 @@ theorem dot_product_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonal w j i) = v i
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 #align matrix.dot_product_diagonal' Matrix.dot_product_diagonal'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem single_dot_product (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i := by
   have : ∀ (j) (_ : j ≠ i), Pi.single i x j * v j = 0 := fun j hij => by
@@ -734,7 +734,7 @@ theorem single_dot_product (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i :
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 #align matrix.single_dot_product Matrix.single_dot_product
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem dot_product_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x := by
   have : ∀ (j) (_ : j ≠ i), v j * Pi.single i x j = 0 := fun j hij => by
@@ -776,7 +776,7 @@ theorem smul_dot_product [IsScalarTower R α α] (x : R) (v w : m → α) : x �
 #align matrix.smul_dot_product Matrix.smul_dot_product
 
 @[simp]
-theorem dot_product_smul [SmulCommClass R α α] (x : R) (v w : m → α) : v ⬝ᵥ x • w = x • (v ⬝ᵥ w) :=
+theorem dot_product_smul [SMulCommClass R α α] (x : R) (v w : m → α) : v ⬝ᵥ x • w = x • (v ⬝ᵥ w) :=
   by simp [dot_product, Finset.smul_sum, mul_smul_comm]
 #align matrix.dot_product_smul Matrix.dot_product_smul
 
@@ -864,7 +864,7 @@ theorem smul_mul [Fintype n] [Monoid R] [DistribMulAction R α] [IsScalarTower R
 #align matrix.smul_mul Matrix.smul_mul
 
 @[simp]
-theorem mul_smul [Fintype n] [Monoid R] [DistribMulAction R α] [SmulCommClass R α α]
+theorem mul_smul [Fintype n] [Monoid R] [DistribMulAction R α] [SMulCommClass R α α]
     (M : Matrix m n α) (a : R) (N : Matrix n l α) : M ⬝ (a • N) = a • M ⬝ N := by
   ext
   apply dot_product_smul
@@ -982,7 +982,7 @@ instance Semiring.is_scalar_tower [Fintype n] [Monoid R] [DistribMulAction R α]
 
 /-- This instance enables use with `mul_smul_comm`. -/
 instance Semiring.smul_comm_class [Fintype n] [Monoid R] [DistribMulAction R α]
-    [SmulCommClass R α α] : SmulCommClass R (Matrix n n α) (Matrix n n α) :=
+    [SMulCommClass R α α] : SMulCommClass R (Matrix n n α) (Matrix n n α) :=
   ⟨fun r m n => (Matrix.mul_smul m r n).symm⟩
 #align matrix.semiring.smul_comm_class Matrix.Semiring.smul_comm_class
 
@@ -1661,7 +1661,7 @@ theorem vec_mul_smul [Fintype n] [Monoid R] [NonUnitalNonAssocSemiring S] [Distr
 #align matrix.vec_mul_smul Matrix.vec_mul_smul
 
 theorem mul_vec_smul [Fintype n] [Monoid R] [NonUnitalNonAssocSemiring S] [DistribMulAction R S]
-    [SmulCommClass R S S] (M : Matrix m n S) (b : R) (v : n → S) :
+    [SMulCommClass R S S] (M : Matrix m n S) (b : R) (v : n → S) :
     M.mulVec (b • v) = b • M.mulVec v := by 
   ext i
   simp only [mul_vec, dot_product, Finset.smul_sum, Pi.smul_apply, mul_smul_comm]

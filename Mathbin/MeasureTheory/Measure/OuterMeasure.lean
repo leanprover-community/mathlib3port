@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.outer_measure
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪
   relSupAdd m m.Empty (· ≤ ·) m.Union_nat s₁ s₂
 #align measure_theory.outer_measure.union MeasureTheory.OuterMeasure.union
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α)
@@ -316,7 +316,7 @@ theorem smul_apply (c : R) (m : OuterMeasure α) (s : Set α) : (c • m) s = c 
   rfl
 #align measure_theory.outer_measure.smul_apply MeasureTheory.OuterMeasure.smul_apply
 
-instance [SmulCommClass R R' ℝ≥0∞] : SmulCommClass R R' (OuterMeasure α) :=
+instance [SMulCommClass R R' ℝ≥0∞] : SMulCommClass R R' (OuterMeasure α) :=
   ⟨fun _ _ _ => ext fun _ => smul_comm _ _ _⟩
 
 instance [HasSmul R R'] [IsScalarTower R R' ℝ≥0∞] : IsScalarTower R R' (OuterMeasure α) :=
@@ -730,7 +730,7 @@ theorem of_function_eq_Sup : OuterMeasure.ofFunction m m_empty = sup { μ | ∀ 
   (@is_greatest_of_function α m m_empty).IsLub.Sup_eq.symm
 #align measure_theory.outer_measure.of_function_eq_Sup MeasureTheory.OuterMeasure.of_function_eq_Sup
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 

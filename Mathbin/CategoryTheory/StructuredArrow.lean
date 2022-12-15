@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.structured_arrow
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem mk_hom_eq_self (f : S ⟶ T.obj Y) : (mk f).Hom = f :=
   rfl
 #align category_theory.structured_arrow.mk_hom_eq_self CategoryTheory.StructuredArrow.mk_hom_eq_self
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem w {A B : StructuredArrow S T} (f : A ⟶ B) : A.Hom ≫ T.map f.right = B.Hom := by
   have := f.w <;> tidy
 #align category_theory.structured_arrow.w CategoryTheory.StructuredArrow.w
@@ -288,7 +288,7 @@ theorem mk_hom_eq_self (f : S.obj Y ⟶ T) : (mk f).Hom = f :=
 #align
   category_theory.costructured_arrow.mk_hom_eq_self CategoryTheory.CostructuredArrow.mk_hom_eq_self
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem w {A B : CostructuredArrow S T} (f : A ⟶ B) : S.map f.left ≫ B.Hom = A.Hom := by tidy
 #align category_theory.costructured_arrow.w CategoryTheory.CostructuredArrow.w
 

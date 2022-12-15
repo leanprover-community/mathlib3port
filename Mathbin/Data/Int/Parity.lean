@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.int.parity
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 #align int.odd_iff_not_even Int.odd_iff_not_even
 
 theorem is_compl_even_odd : IsCompl { n : ℤ | Even n } { n | Odd n } := by
-  simp [← Set.compl_set_of, is_compl_compl]
+  simp [← Set.compl_setOf, is_compl_compl]
 #align int.is_compl_even_odd Int.is_compl_even_odd
 
 theorem even_or_odd (n : ℤ) : Even n ∨ Odd n :=
@@ -109,7 +109,7 @@ theorem not_even_one : ¬Even (1 : ℤ) := by rw [even_iff] <;> norm_num
 @[parity_simps]
 theorem even_add : Even (m + n) ↔ (Even m ↔ Even n) := by
   cases' mod_two_eq_zero_or_one m with h₁ h₁ <;> cases' mod_two_eq_zero_or_one n with h₂ h₂ <;>
-      simp [even_iff, h₁, h₂, Int.add_mod] <;>
+      simp [even_iff, h₁, h₂, Int.add_emod] <;>
     norm_num
 #align int.even_add Int.even_add
 
@@ -141,7 +141,7 @@ theorem even_add_one : Even (n + 1) ↔ ¬Even n := by simp [even_add]
 @[parity_simps]
 theorem even_mul : Even (m * n) ↔ Even m ∨ Even n := by
   cases' mod_two_eq_zero_or_one m with h₁ h₁ <;> cases' mod_two_eq_zero_or_one n with h₂ h₂ <;>
-      simp [even_iff, h₁, h₂, Int.mul_mod] <;>
+      simp [even_iff, h₁, h₂, Int.mul_emod] <;>
     norm_num
 #align int.even_mul Int.even_mul
 
@@ -237,34 +237,34 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
 #align int.four_dvd_add_or_sub_of_odd Int.four_dvd_add_or_sub_of_odd
 
 theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n := fun h =>
-  Int.mul_div_cancel' (even_iff_two_dvd.mp h)
+  Int.mul_ediv_cancel' (even_iff_two_dvd.mp h)
 #align int.two_mul_div_two_of_even Int.two_mul_div_two_of_even
 
 theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
   fun
     --int.div_mul_cancel
     h =>
-  Int.div_mul_cancel (even_iff_two_dvd.mp h)
+  Int.ediv_mul_cancel (even_iff_two_dvd.mp h)
 #align int.div_two_mul_two_of_even Int.div_two_mul_two_of_even
 
 theorem two_mul_div_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n := by
   rintro ⟨c, rfl⟩
   rw [mul_comm]
   convert Int.div_add_mod' _ _
-  simpa [Int.add_mod]
+  simpa [Int.add_emod]
 #align int.two_mul_div_two_add_one_of_odd Int.two_mul_div_two_add_one_of_odd
 
 theorem div_two_mul_two_add_one_of_odd : Odd n → n / 2 * 2 + 1 = n := by
   rintro ⟨c, rfl⟩
   convert Int.div_add_mod' _ _
-  simpa [Int.add_mod]
+  simpa [Int.add_emod]
 #align int.div_two_mul_two_add_one_of_odd Int.div_two_mul_two_add_one_of_odd
 
 theorem add_one_div_two_mul_two_of_odd : Odd n → 1 + n / 2 * 2 = n := by
   rintro ⟨c, rfl⟩
   rw [add_comm]
   convert Int.div_add_mod' _ _
-  simpa [Int.add_mod]
+  simpa [Int.add_emod]
 #align int.add_one_div_two_mul_two_of_odd Int.add_one_div_two_mul_two_of_odd
 
 theorem two_mul_div_two_of_odd (h : Odd n) : 2 * (n / 2) = n - 1 :=

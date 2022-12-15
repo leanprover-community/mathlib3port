@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.discriminant
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,7 +177,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
           eq_of_prime_pow_eq (prime_iff.1 hp.out) (prime_iff.1 Nat.prime_two) (succ_pos _) hk
         rwa [show 2 = ((2 : ℕ+) : ℕ) by simp, PNat.coe_inj] at hk
       rw [hp, ← PNat.coe_inj, PNat.pow_coe, PNat.coe_bit0, PNat.one_coe] at hk
-      nth_rw 2 [← pow_one 2]  at hk
+      nth_rw 2 [← pow_one 2] at hk
       replace hk := Nat.pow_right_injective rfl.le hk
       rw [add_left_eq_self] at hk
       simp only [hp, hk, pow_one, PNat.coe_bit0, PNat.one_coe] at hζ

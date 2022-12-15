@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Firsching, Fabian Kruse, Nikolas Kuhn
 
 ! This file was ported from Lean 3 source module analysis.special_functions.stirling
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ theorem log_stirling_seq_formula (n : ℕ) :
     positivity
 #align stirling.log_stirling_seq_formula Stirling.log_stirling_seq_formula
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr succ_ne_zero, ",", expr factorial_ne_zero, ",", expr exp_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr succ_ne_zero, ",", expr factorial_ne_zero, ",", expr exp_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- TODO: Make `positivity` handle `≠ 0` goals
 /-- The sequence `log (stirling_seq (m + 1)) - log (stirling_seq (m + 2))` has the series expansion
    `∑ 1 / (2 * (k + 1) + 1) * (1 / 2 * (m + 1) + 1)^(2 * (k + 1))`
@@ -108,7 +108,7 @@ theorem log_stirling_seq_diff_has_sum (m : ℕ) :
     simp (disch := 
       norm_cast
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr succ_ne_zero, \",\", expr factorial_ne_zero, \",\", expr exp_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error") only [log_stirling_seq_formula,
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr succ_ne_zero, \",\", expr factorial_ne_zero, \",\", expr exp_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error") only [log_stirling_seq_formula,
       log_div, log_mul, log_exp, factorial_succ, cast_mul, cast_succ, cast_zero, range_one,
       sum_singleton, h]
     ring

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.witt_polynomial
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -288,7 +288,7 @@ end PPrime
 theorem X_in_terms_of_W_aux [Invertible (p : R)] (n : ℕ) :
     xInTermsOfW p R n * c (p ^ n : R) =
       x n - ∑ i in range n, c (p ^ i : R) * xInTermsOfW p R i ^ p ^ (n - i) :=
-  by rw [X_in_terms_of_W_eq, mul_assoc, ← C_mul, ← mul_pow, inv_of_mul_self, one_pow, C_1, mul_one]
+  by rw [X_in_terms_of_W_eq, mul_assoc, ← C_mul, ← mul_pow, invOf_mul_self, one_pow, C_1, mul_one]
 #align X_in_terms_of_W_aux X_in_terms_of_W_aux
 
 @[simp]
@@ -314,7 +314,7 @@ theorem bind₁_witt_polynomial_X_in_terms_of_W [Invertible (p : R)] (n : ℕ) :
   rw [sum_congr rfl, this]
   ·
     -- this is really slow for some reason
-    rw [mul_right_comm, ← C_mul, ← mul_pow, mul_inv_of_self, one_pow, C_1, one_mul]
+    rw [mul_right_comm, ← C_mul, ← mul_pow, mul_invOf_self, one_pow, C_1, one_mul]
   · intro i h
     rw [mem_range] at h
     simp only [AlgHom.map_mul, AlgHom.map_pow, alg_hom_C, H i h]

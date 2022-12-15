@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.nat.squarefree
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ theorem Squarefree.factorization_le_one {n : ℕ} (p : ℕ) (hn : Squarefree n) 
   rw [multiplicity.squarefree_iff_multiplicity_le_one] at hn
   by_cases hp : p.prime
   · have := hn p
-    simp only [multiplicity_eq_factorization hp hn', Nat.is_unit_iff, hp.ne_one, or_false_iff] at
+    simp only [multiplicity_eq_factorization hp hn', Nat.isUnit_iff, hp.ne_one, or_false_iff] at
       this
     exact_mod_cast this
   · rw [factorization_eq_zero_of_non_prime _ hp]
@@ -96,7 +96,7 @@ theorem squarefree_pow_iff {n k : ℕ} (hn : n ≠ 1) (hk : k ≠ 0) :
   · simpa [zero_pow hk.bot_lt] using h
   refine' ⟨h.squarefree_of_dvd (dvd_pow_self _ hk), by_contradiction fun h₁ => _⟩
   have : 2 ≤ k := k.two_le_iff.mpr ⟨hk, h₁⟩
-  apply hn (Nat.is_unit_iff.1 (h _ _))
+  apply hn (Nat.isUnit_iff.1 (h _ _))
   rw [← sq]
   exact pow_dvd_pow _ this
 #align nat.squarefree_pow_iff Nat.squarefree_pow_iff
@@ -343,7 +343,7 @@ theorem sq_mul_squarefree_of_pos {n : ℕ} (hn : 0 < n) :
   rw [hsb] at hsa hn hlts
   refine' ⟨a, b, hlta, (pow_pos_iff zero_lt_two).mp hlts, hsa.symm, _⟩
   rintro x ⟨y, hy⟩
-  rw [Nat.is_unit_iff]
+  rw [Nat.isUnit_iff]
   by_contra hx
   refine' lt_le_antisymm _ (Finset.le_max' S ((b * x) ^ 2) _)
   · simp_rw [S, hsa, Finset.sep_def, Finset.mem_filter, Finset.mem_range]
@@ -479,7 +479,7 @@ theorem squarefree_helper_4 (n k k' : ℕ) (e : bit1 k * bit1 k = k') (hd : bit1
 theorem not_squarefree_mul (a aa b n : ℕ) (ha : a * a = aa) (hb : aa * b = n) (h₁ : 1 < a) :
     ¬Squarefree n := by 
   rw [← hb, ← ha]
-  exact fun H => ne_of_gt h₁ (Nat.is_unit_iff.1 <| H _ ⟨_, rfl⟩)
+  exact fun H => ne_of_gt h₁ (Nat.isUnit_iff.1 <| H _ ⟨_, rfl⟩)
 #align tactic.norm_num.not_squarefree_mul Tactic.NormNum.not_squarefree_mul
 
 /-- Given `e` a natural numeral and `a : nat` with `a^2 ∣ n`, return `⊢ ¬ squarefree e`. -/

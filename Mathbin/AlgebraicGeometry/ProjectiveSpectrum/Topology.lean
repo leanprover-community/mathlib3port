@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.projective_spectrum.topology
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ theorem coe_vanishing_ideal (t : Set (ProjectiveSpectrum 𝒜)) :
 
 theorem mem_vanishing_ideal (t : Set (ProjectiveSpectrum 𝒜)) (f : A) :
     f ∈ vanishingIdeal t ↔ ∀ x : ProjectiveSpectrum 𝒜, x ∈ t → f ∈ x.asHomogeneousIdeal := by
-  rw [← SetLike.mem_coe, coe_vanishing_ideal, Set.mem_set_of_eq]
+  rw [← SetLike.mem_coe, coe_vanishing_ideal, Set.mem_setOf_eq]
 #align projective_spectrum.mem_vanishing_ideal ProjectiveSpectrum.mem_vanishing_ideal
 
 @[simp]
@@ -366,10 +366,10 @@ theorem is_closed_iff_zero_locus (Z : Set (ProjectiveSpectrum 𝒜)) :
     IsClosed Z ↔ ∃ s, Z = zeroLocus 𝒜 s := by rw [← is_open_compl_iff, is_open_iff, compl_compl]
 #align projective_spectrum.is_closed_iff_zero_locus ProjectiveSpectrum.is_closed_iff_zero_locus
 
-theorem isClosedZeroLocus (s : Set A) : IsClosed (zeroLocus 𝒜 s) := by
+theorem is_closed_zero_locus (s : Set A) : IsClosed (zeroLocus 𝒜 s) := by
   rw [is_closed_iff_zero_locus]
   exact ⟨s, rfl⟩
-#align projective_spectrum.is_closed_zero_locus ProjectiveSpectrum.isClosedZeroLocus
+#align projective_spectrum.is_closed_zero_locus ProjectiveSpectrum.is_closed_zero_locus
 
 theorem zero_locus_vanishing_ideal_eq_closure (t : Set (ProjectiveSpectrum 𝒜)) :
     zeroLocus 𝒜 (vanishingIdeal t : Set A) = closure t := by

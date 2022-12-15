@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.abel_ruffini
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,8 +153,9 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F)
   rw [mul_assoc, mul_assoc, mul_right_inj' hb', mul_comm]
 #align gal_X_pow_sub_C_is_solvable_aux gal_X_pow_sub_C_is_solvable_aux
 
-theorem splitsXPowSubOneOfXPowSubC {F : Type _} [Field F] {E : Type _} [Field E] (i : F →+* E)
-    (n : ℕ) {a : F} (ha : a ≠ 0) (h : (X ^ n - c a).Splits i) : (X ^ n - 1).Splits i := by
+theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} [Field E]
+    (i : F →+* E) (n : ℕ) {a : F} (ha : a ≠ 0) (h : (X ^ n - c a).Splits i) :
+    (X ^ n - 1).Splits i := by
   have ha' : i a ≠ 0 := mt ((injective_iff_map_eq_zero i).mp i.injective a) ha
   by_cases hn : n = 0
   · rw [hn, pow_zero, sub_self]
@@ -190,14 +191,14 @@ theorem splitsXPowSubOneOfXPowSubC {F : Type _} [Field F] {E : Type _} [Field E]
   rw [key1, hs, multiset_prod_comp, Multiset.map_map, key2, Multiset.prod_map_mul,
     Multiset.map_const, Multiset.prod_repeat, hs', ← C_pow, hb, ← mul_assoc, C_mul_C, one_mul]
   all_goals exact field.to_nontrivial F
-#align splits_X_pow_sub_one_of_X_pow_sub_C splitsXPowSubOneOfXPowSubC
+#align splits_X_pow_sub_one_of_X_pow_sub_C splits_X_pow_sub_one_of_X_pow_sub_C
 
 theorem gal_X_pow_sub_C_is_solvable (n : ℕ) (x : F) : IsSolvable (X ^ n - c x).Gal := by
   by_cases hx : x = 0
   · rw [hx, C_0, sub_zero]
     exact gal_X_pow_is_solvable n
   apply gal_is_solvable_tower (X ^ n - 1) (X ^ n - C x)
-  · exact splitsXPowSubOneOfXPowSubC _ n hx (splitting_field.splits _)
+  · exact splits_X_pow_sub_one_of_X_pow_sub_C _ n hx (splitting_field.splits _)
   · exact gal_X_pow_sub_one_is_solvable n
   · rw [Polynomial.map_sub, Polynomial.map_pow, map_X, map_C]
     apply gal_X_pow_sub_C_is_solvable_aux

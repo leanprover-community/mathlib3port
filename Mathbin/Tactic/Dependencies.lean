@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.dependencies
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ unsafe def local_def_value_has_local_in (h : expr) (hs : List expr) : tactic Boo
 directly depends on a hypothesis whose unique name appears in `ns`.
 -/
 unsafe def hyp_directly_depends_on_local_name_set (h : expr) (ns : name_set) : tactic Bool :=
-  List.mbor [type_has_local_in_name_set h ns, local_def_value_has_local_in_name_set h ns]
+  List.orM [type_has_local_in_name_set h ns, local_def_value_has_local_in_name_set h ns]
 #align tactic.hyp_directly_depends_on_local_name_set tactic.hyp_directly_depends_on_local_name_set
 
 /-- `hyp_directly_depends_on_local_set h hs` is true iff the hypothesis `h` directly
@@ -148,7 +148,7 @@ hypothesis `h` directly depends on a hypothesis whose unique name appears in
 -/
 unsafe def hyp_directly_depends_on_local_name_set_inclusive (h : expr) (ns : name_set) :
     tactic Bool :=
-  List.mbor [pure <| ns.contains h.local_uniq_name, hyp_directly_depends_on_local_name_set h ns]
+  List.orM [pure <| ns.contains h.local_uniq_name, hyp_directly_depends_on_local_name_set h ns]
 #align
   tactic.hyp_directly_depends_on_local_name_set_inclusive tactic.hyp_directly_depends_on_local_name_set_inclusive
 
@@ -336,7 +336,7 @@ If you need to check the dependencies of multiple hypotheses, use
 `tactic.hyps_depend_on_local_name_set_inclusive`.
 -/
 unsafe def hyp_depends_on_local_name_set_inclusive (h : expr) (ns : name_set) : tactic Bool :=
-  List.mbor [pure <| ns.contains h.local_uniq_name, hyp_depends_on_local_name_set h ns]
+  List.orM [pure <| ns.contains h.local_uniq_name, hyp_depends_on_local_name_set h ns]
 #align tactic.hyp_depends_on_local_name_set_inclusive tactic.hyp_depends_on_local_name_set_inclusive
 
 /-- `hyp_depends_on_local_set_inclusive h hs` is true iff the hypothesis `h`
@@ -563,7 +563,7 @@ private unsafe def reverse_dependencies_of_hyp_name_set_aux (hs : name_set) :
   | H :: Hs, revdeps, ns => do
     let H_uname := H.local_uniq_name
     let H_is_revdep ←
-      List.mband [pure <| ¬hs.contains H_uname, hyp_directly_depends_on_local_name_set H ns]
+      List.andM [pure <| ¬hs.contains H_uname, hyp_directly_depends_on_local_name_set H ns]
     if H_is_revdep then reverse_dependencies_of_hyp_name_set_aux Hs (H :: revdeps) (ns H_uname)
       else reverse_dependencies_of_hyp_name_set_aux Hs revdeps ns
 #align
@@ -602,7 +602,7 @@ private unsafe def reverse_dependencies_of_hyp_name_set_inclusive_aux :
   | H :: Hs, revdeps, ns => do
     let H_uname := H.local_uniq_name
     let H_is_revdep ←
-      List.mbor [pure <| ns.contains H.local_uniq_name, hyp_directly_depends_on_local_name_set H ns]
+      List.orM [pure <| ns.contains H.local_uniq_name, hyp_directly_depends_on_local_name_set H ns]
     if H_is_revdep then
         reverse_dependencies_of_hyp_name_set_inclusive_aux Hs (H :: revdeps) (ns H_uname)
       else reverse_dependencies_of_hyp_name_set_inclusive_aux Hs revdeps ns

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.symmetrized
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -273,9 +273,9 @@ instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a
     Invertible (sym a) where 
   invOf := sym (⅟ a)
   inv_of_mul_self := by
-    rw [sym_mul_sym, mul_inv_of_self, inv_of_mul_self, ← bit0, inv_of_mul_self, sym_one]
+    rw [sym_mul_sym, mul_invOf_self, invOf_mul_self, ← bit0, invOf_mul_self, sym_one]
   mul_inv_of_self := by
-    rw [sym_mul_sym, mul_inv_of_self, inv_of_mul_self, ← bit0, inv_of_mul_self, sym_one]
+    rw [sym_mul_sym, mul_invOf_self, invOf_mul_self, ← bit0, invOf_mul_self, sym_one]
 
 @[simp]
 theorem inv_of_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] :
@@ -293,9 +293,9 @@ instance [Semiring α] [Invertible (2 : α)] : NonAssocSemiring αˢʸᵐ :=
     mul_zero := fun _ => by
       rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zero, mul_zero, sym_zero]
     mul_one := fun _ => by
-      rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, inv_of_mul_self_assoc, sym_unsym]
+      rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, invOf_mul_self_assoc, sym_unsym]
     one_mul := fun _ => by
-      rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, inv_of_mul_self_assoc, sym_unsym]
+      rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, invOf_mul_self_assoc, sym_unsym]
     left_distrib := fun a b c =>
       match a, b, c with
       | Sym a, Sym b, Sym c => by
@@ -315,12 +315,11 @@ instance [Ring α] [Invertible (2 : α)] : NonAssocRing αˢʸᵐ :=
 
 
 theorem unsym_mul_self [Semiring α] [Invertible (2 : α)] (a : αˢʸᵐ) :
-    unsym (a * a) = unsym a * unsym a := by
-  rw [mul_def, unsym_sym, ← two_mul, inv_of_mul_self_assoc]
+    unsym (a * a) = unsym a * unsym a := by rw [mul_def, unsym_sym, ← two_mul, invOf_mul_self_assoc]
 #align sym_alg.unsym_mul_self SymAlg.unsym_mul_self
 
 theorem sym_mul_self [Semiring α] [Invertible (2 : α)] (a : α) : sym (a * a) = sym a * sym a := by
-  rw [sym_mul_sym, ← two_mul, inv_of_mul_self_assoc]
+  rw [sym_mul_sym, ← two_mul, invOf_mul_self_assoc]
 #align sym_alg.sym_mul_self SymAlg.sym_mul_self
 
 theorem mul_comm [Mul α] [AddCommSemigroup α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) :

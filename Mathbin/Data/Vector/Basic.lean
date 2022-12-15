@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.vector.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -714,20 +714,20 @@ instance :
   id_map := by intros <;> cases x <;> simp! [(· <$> ·)]
   comp_map := by intros <;> cases x <;> simp! [(· <$> ·)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
 unsafe instance reflect [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] {n : ℕ} :
     has_reflect (Vector α n) := fun v =>
   @Vector.inductionOn α (fun n => reflected _) n v
     ((by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.nil.{u}).subst
       q(α))
     fun n x xs ih =>
     (by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.cons.{u}).subst₄
       q(α) q(n) q(x) ih
 #align vector.reflect vector.reflect

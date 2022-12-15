@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1155,7 +1155,7 @@ theorem mem_irrefl (x : SetCat) : x ∉ x :=
 #align Set.mem_irrefl SetCat.mem_irrefl
 
 theorem regularity (x : SetCat.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅ :=
-  Classical.by_contradiction fun ne =>
+  by_contradiction fun ne =>
     h <|
       (eq_empty x).2 fun y =>
         (induction_on y) fun z (IH : ∀ w : SetCat.{u}, w ∈ z → w ∉ x) =>
@@ -1564,7 +1564,7 @@ include h
 theorem choice_mem_aux (y : SetCat.{u}) (yx : y ∈ x) :
     (Classical.epsilon fun z : SetCat.{u} => z ∈ y) ∈ y :=
   (@Classical.epsilon_spec _ fun z : SetCat.{u} => z ∈ y) <|
-    Classical.by_contradiction fun n => h <| by rwa [← (eq_empty y).2 fun z zx => n ⟨z, zx⟩]
+    by_contradiction fun n => h <| by rwa [← (eq_empty y).2 fun z zx => n ⟨z, zx⟩]
 #align Set.choice_mem_aux SetCat.choice_mem_aux
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

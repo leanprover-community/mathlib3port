@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Winston Yin
 
 ! This file was ported from Lean 3 source module analysis.ODE.picard_lindelof
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -268,9 +268,9 @@ instance [CompleteSpace E] : CompleteSpace v.FunSpace := by
     (complete_space_iff_is_complete_range uniform_inducing_to_continuous_map).2
       (IsClosed.is_complete _)
   rw [range_to_continuous_map, set_of_and]
-  refine' (isClosedEq (ContinuousMap.continuous_eval_const _) continuous_const).inter _
+  refine' (is_closed_eq (ContinuousMap.continuous_eval_const _) continuous_const).inter _
   have : IsClosed { f : Icc v.t_min v.t_max → E | LipschitzWith v.C f } :=
-    isClosedSetOfLipschitzWith v.C
+    is_closed_set_of_lipschitz_with v.C
   exact this.preimage ContinuousMap.continuous_coe
 
 theorem intervalIntegrableVComp (t₁ t₂ : ℝ) : IntervalIntegrable f.vComp volume t₁ t₂ :=

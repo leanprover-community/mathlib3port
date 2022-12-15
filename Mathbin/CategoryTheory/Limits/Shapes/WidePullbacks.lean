@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.wide_pullbacks
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -306,7 +306,7 @@ noncomputable abbrev base : widePullback _ _ arrows ⟶ B :=
   limit.π (WidePullbackShape.wideCospan _ _ _) Option.none
 #align category_theory.limits.wide_pullback.base CategoryTheory.Limits.widePullback.base
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem π_arrow (j : J) : π arrows j ≫ arrows _ = base arrows := by
   apply limit.w (wide_pullback_shape.wide_cospan _ _ _) (wide_pullback_shape.hom.term j)
 #align category_theory.limits.wide_pullback.π_arrow CategoryTheory.Limits.widePullback.π_arrow
@@ -323,13 +323,13 @@ variable (arrows)
 
 variable {X : C} (f : X ⟶ B) (fs : ∀ j : J, X ⟶ objs j) (w : ∀ j, fs j ≫ arrows j = f)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem lift_π (j : J) : lift f fs w ≫ π arrows j = fs _ := by
   simp
   rfl
 #align category_theory.limits.wide_pullback.lift_π CategoryTheory.Limits.widePullback.lift_π
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem lift_base : lift f fs w ≫ base arrows = f := by
   simp
   rfl
@@ -383,7 +383,7 @@ noncomputable abbrev head : B ⟶ widePushout B objs arrows :=
   colimit.ι (WidePushoutShape.wideSpan _ _ _) Option.none
 #align category_theory.limits.wide_pushout.head CategoryTheory.Limits.widePushout.head
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem arrow_ι (j : J) : arrows j ≫ ι arrows j = head arrows := by
   apply colimit.w (wide_pushout_shape.wide_span _ _ _) (wide_pushout_shape.hom.init j)
 #align category_theory.limits.wide_pushout.arrow_ι CategoryTheory.Limits.widePushout.arrow_ι
@@ -400,13 +400,13 @@ variable (arrows)
 
 variable {X : C} (f : B ⟶ X) (fs : ∀ j : J, objs j ⟶ X) (w : ∀ j, arrows j ≫ fs j = f)
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem ι_desc (j : J) : ι arrows j ≫ desc f fs w = fs _ := by
   simp
   rfl
 #align category_theory.limits.wide_pushout.ι_desc CategoryTheory.Limits.widePushout.ι_desc
 
-@[simp, reassoc]
+@[simp, reassoc.1]
 theorem head_desc : head arrows ≫ desc f fs w = f := by
   simp
   rfl
@@ -553,8 +553,7 @@ def widePullbackShapeOpEquiv :
 /-- If a category has wide pullbacks on a higher universe level it also has wide pullbacks
 on a lower universe level. -/
 theorem has_wide_pullbacks_shrink [HasWidePullbacks.{max w w'} C] : HasWidePullbacks.{w} C :=
-  fun J =>
-  has_limits_of_shape_of_equivalence (WidePullbackShape.equivalenceOfEquiv _ Equiv.ulift.{w'})
+  fun J => hasLimitsOfShapeOfEquivalence (WidePullbackShape.equivalenceOfEquiv _ Equiv.ulift.{w'})
 #align
   category_theory.limits.has_wide_pullbacks_shrink CategoryTheory.Limits.has_wide_pullbacks_shrink
 

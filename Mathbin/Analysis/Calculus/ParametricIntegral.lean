@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.calculus.parametric_integral
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,8 +115,8 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     by 
     apply mem_of_superset (ball_mem_nhds _ ε_pos)
     intro x x_in
-    rw [Set.mem_set_of_eq, ← norm_smul_of_nonneg (nneg _), integral_smul, integral_sub,
-      integral_sub, ← ContinuousLinearMap.integral_apply hF'_int]
+    rw [Set.mem_setOf_eq, ← norm_smul_of_nonneg (nneg _), integral_smul, integral_sub, integral_sub,
+      ← ContinuousLinearMap.integral_apply hF'_int]
     exacts[hF_int' x x_in, hF_int, (hF_int' x x_in).sub hF_int,
       hF'_int.apply_continuous_linear_map _]
   rw [has_fderiv_at_iff_tendsto, tendsto_congr' this, ← tendsto_zero_iff_norm_tendsto_zero, ←

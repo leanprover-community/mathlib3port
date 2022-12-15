@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.weak_dual
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,10 +183,10 @@ theorem to_normed_dual_eq_iff (x' y' : WeakDual 𝕜 E) :
   WeakDual.toNormedDual.Injective.eq_iff
 #align weak_dual.to_normed_dual_eq_iff WeakDual.to_normed_dual_eq_iff
 
-theorem isClosedClosedBall (x' : Dual 𝕜 E) (r : ℝ) :
+theorem is_closed_closed_ball (x' : Dual 𝕜 E) (r : ℝ) :
     IsClosed (to_normed_dual ⁻¹' closedBall x' r) :=
   is_closed_induced_iff'.2 (ContinuousLinearMap.is_weak_closed_closed_ball x' r)
-#align weak_dual.is_closed_closed_ball WeakDual.isClosedClosedBall
+#align weak_dual.is_closed_closed_ball WeakDual.is_closed_closed_ball
 
 /-!
 ### Polar sets in the weak dual space
@@ -207,57 +207,58 @@ theorem polar_def (s : Set E) : polar 𝕜 s = { f : WeakDual 𝕜 E | ∀ x ∈
 
 /-- The polar `polar 𝕜 s` of a set `s : E` is a closed subset when the weak star topology
 is used. -/
-theorem isClosedPolar (s : Set E) : IsClosed (polar 𝕜 s) := by
+theorem is_closed_polar (s : Set E) : IsClosed (polar 𝕜 s) := by
   simp only [polar_def, set_of_forall]
-  exact isClosedBInter fun x hx => is_closed_Iic.preimage (WeakBilin.eval_continuous _ _).norm
-#align weak_dual.is_closed_polar WeakDual.isClosedPolar
+  exact is_closed_bInter fun x hx => is_closed_Iic.preimage (WeakBilin.eval_continuous _ _).norm
+#align weak_dual.is_closed_polar WeakDual.is_closed_polar
 
 variable {𝕜}
 
 /-- While the coercion `coe_fn : weak_dual 𝕜 E → (E → 𝕜)` is not a closed map, it sends *bounded*
 closed sets to closed sets. -/
-theorem isClosedImageCoeOfBoundedOfClosed {s : Set (WeakDual 𝕜 E)}
+theorem is_closed_image_coe_of_bounded_of_closed {s : Set (WeakDual 𝕜 E)}
     (hb : Bounded (dual.to_weak_dual ⁻¹' s)) (hc : IsClosed s) :
     IsClosed ((coeFn : WeakDual 𝕜 E → E → 𝕜) '' s) :=
-  ContinuousLinearMap.isClosedImageCoeOfBoundedOfWeakClosed hb (is_closed_induced_iff'.1 hc)
-#align weak_dual.is_closed_image_coe_of_bounded_of_closed WeakDual.isClosedImageCoeOfBoundedOfClosed
+  ContinuousLinearMap.is_closed_image_coe_of_bounded_of_weak_closed hb (is_closed_induced_iff'.1 hc)
+#align
+  weak_dual.is_closed_image_coe_of_bounded_of_closed WeakDual.is_closed_image_coe_of_bounded_of_closed
 
 theorem is_compact_of_bounded_of_closed [ProperSpace 𝕜] {s : Set (WeakDual 𝕜 E)}
     (hb : Bounded (dual.to_weak_dual ⁻¹' s)) (hc : IsClosed s) : IsCompact s :=
   (Embedding.is_compact_iff_is_compact_image FunLike.coe_injective.embedding_induced).mpr <|
     ContinuousLinearMap.is_compact_image_coe_of_bounded_of_closed_image hb <|
-      isClosedImageCoeOfBoundedOfClosed hb hc
+      is_closed_image_coe_of_bounded_of_closed hb hc
 #align weak_dual.is_compact_of_bounded_of_closed WeakDual.is_compact_of_bounded_of_closed
 
 variable (𝕜)
 
 /-- The image under `coe_fn : weak_dual 𝕜 E → (E → 𝕜)` of a polar `weak_dual.polar 𝕜 s` of a
 neighborhood `s` of the origin is a closed set. -/
-theorem isClosedImagePolarOfMemNhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
+theorem is_closed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
     IsClosed ((coeFn : WeakDual 𝕜 E → E → 𝕜) '' polar 𝕜 s) :=
-  isClosedImageCoeOfBoundedOfClosed (boundedPolarOfMemNhdsZero 𝕜 s_nhd) (isClosedPolar _ _)
-#align weak_dual.is_closed_image_polar_of_mem_nhds WeakDual.isClosedImagePolarOfMemNhds
+  is_closed_image_coe_of_bounded_of_closed (boundedPolarOfMemNhdsZero 𝕜 s_nhd) (is_closed_polar _ _)
+#align weak_dual.is_closed_image_polar_of_mem_nhds WeakDual.is_closed_image_polar_of_mem_nhds
 
 /-- The image under `coe_fn : normed_space.dual 𝕜 E → (E → 𝕜)` of a polar `polar 𝕜 s` of a
 neighborhood `s` of the origin is a closed set. -/
-theorem NormedSpace.Dual.isClosedImagePolarOfMemNhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
+theorem NormedSpace.Dual.is_closed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
     IsClosed ((coeFn : Dual 𝕜 E → E → 𝕜) '' NormedSpace.polar 𝕜 s) :=
-  isClosedImagePolarOfMemNhds 𝕜 s_nhd
+  is_closed_image_polar_of_mem_nhds 𝕜 s_nhd
 #align
-  normed_space.dual.is_closed_image_polar_of_mem_nhds NormedSpace.Dual.isClosedImagePolarOfMemNhds
+  normed_space.dual.is_closed_image_polar_of_mem_nhds NormedSpace.Dual.is_closed_image_polar_of_mem_nhds
 
 /-- The **Banach-Alaoglu theorem**: the polar set of a neighborhood `s` of the origin in a
 normed space `E` is a compact subset of `weak_dual 𝕜 E`. -/
 theorem is_compact_polar [ProperSpace 𝕜] {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
     IsCompact (polar 𝕜 s) :=
-  is_compact_of_bounded_of_closed (boundedPolarOfMemNhdsZero 𝕜 s_nhd) (isClosedPolar _ _)
+  is_compact_of_bounded_of_closed (boundedPolarOfMemNhdsZero 𝕜 s_nhd) (is_closed_polar _ _)
 #align weak_dual.is_compact_polar WeakDual.is_compact_polar
 
 /-- The **Banach-Alaoglu theorem**: closed balls of the dual of a normed space `E` are compact in
 the weak-star topology. -/
 theorem is_compact_closed_ball [ProperSpace 𝕜] (x' : Dual 𝕜 E) (r : ℝ) :
     IsCompact (to_normed_dual ⁻¹' closedBall x' r) :=
-  is_compact_of_bounded_of_closed boundedClosedBall (isClosedClosedBall x' r)
+  is_compact_of_bounded_of_closed boundedClosedBall (is_closed_closed_ball x' r)
 #align weak_dual.is_compact_closed_ball WeakDual.is_compact_closed_ball
 
 end WeakDual

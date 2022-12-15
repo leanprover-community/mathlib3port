@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.hom.centroid
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,11 +131,11 @@ theorem coe_to_add_monoid_hom_injective : Injective (coe : CentroidHom α → α
 #align centroid_hom.coe_to_add_monoid_hom_injective CentroidHom.coe_to_add_monoid_hom_injective
 
 /-- Turn a centroid homomorphism into an additive monoid endomorphism. -/
-def toEnd (f : CentroidHom α) : AddMonoid.EndCat α :=
+def toEnd (f : CentroidHom α) : AddMonoid.End α :=
   (f : α →+ α)
 #align centroid_hom.to_End CentroidHom.toEnd
 
-theorem to_End_injective : Injective (CentroidHom.toEnd : CentroidHom α → AddMonoid.EndCat α) :=
+theorem to_End_injective : Injective (CentroidHom.toEnd : CentroidHom α → AddMonoid.End α) :=
   coe_to_add_monoid_hom_injective
 #align centroid_hom.to_End_injective CentroidHom.to_End_injective
 
@@ -264,7 +264,7 @@ instance hasNsmul : HasSmul ℕ (CentroidHom α) :=
 
 instance hasNpowNat : Pow (CentroidHom α) ℕ :=
   ⟨fun f n =>
-    { (f.toEnd ^ n : AddMonoid.EndCat α) with
+    { (f.toEnd ^ n : AddMonoid.End α) with
       map_mul_left' := fun a b => by 
         induction' n with n ih
         · simp

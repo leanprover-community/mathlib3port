@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ theorem eq_one_iff_eq_one_of_mul_eq_one {a b : M} (h : a * b = 1) : a = 1 ↔ b 
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M], Eq.{succ u1} (M -> M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M _inst_1)) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M _inst_1))))) (id.{succ u1} M)
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M], Eq.{succ u1} (M -> M) ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.419 : M) (x._@.Mathlib.Algebra.Group.Basic._hyg.421 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M _inst_1)) x._@.Mathlib.Algebra.Group.Basic._hyg.419 x._@.Mathlib.Algebra.Group.Basic._hyg.421) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M _inst_1)))) (id.{succ u1} M)
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M], Eq.{succ u1} (M -> M) ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.373 : M) (x._@.Mathlib.Algebra.Group.Basic._hyg.375 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M _inst_1)) x._@.Mathlib.Algebra.Group.Basic._hyg.373 x._@.Mathlib.Algebra.Group.Basic._hyg.375) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M _inst_1)))) (id.{succ u1} M)
 Case conversion may be inaccurate. Consider using '#align one_mul_eq_id one_mul_eq_idₓ'. -/
 @[to_additive]
 theorem one_mul_eq_id : (· * ·) (1 : M) = id :=
@@ -214,14 +214,32 @@ section AddCommSemigroup
 
 variable {M : Type u} [AddCommSemigroup M]
 
+/- warning: bit0_add -> bit0_add is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} M] (a : M) (b : M), Eq.{succ u1} M (bit0.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) a b)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) (bit0.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) a) (bit0.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) b))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} M] (a : M) (b : M), Eq.{succ u1} M (bit0.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) a b)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) (bit0.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) a) (bit0.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) b))
+Case conversion may be inaccurate. Consider using '#align bit0_add bit0_addₓ'. -/
 theorem bit0_add (a b : M) : bit0 (a + b) = bit0 a + bit0 b :=
   add_add_add_comm _ _ _ _
 #align bit0_add bit0_add
 
+/- warning: bit1_add -> bit1_add is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} M] [_inst_2 : One.{u1} M] (a : M) (b : M), Eq.{succ u1} M (bit1.{u1} M _inst_2 (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) a b)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) (bit0.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) a) (bit1.{u1} M _inst_2 (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) b))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} M] [_inst_2 : One.{u1} M] (a : M) (b : M), Eq.{succ u1} M (bit1.{u1} M _inst_2 (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) a b)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) (bit0.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) a) (bit1.{u1} M _inst_2 (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) b))
+Case conversion may be inaccurate. Consider using '#align bit1_add bit1_addₓ'. -/
 theorem bit1_add [One M] (a b : M) : bit1 (a + b) = bit0 a + bit1 b :=
   (congr_arg (· + (1 : M)) <| bit0_add a b : _).trans (add_assoc _ _ _)
 #align bit1_add bit1_add
 
+/- warning: bit1_add' -> bit1_add' is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} M] [_inst_2 : One.{u1} M] (a : M) (b : M), Eq.{succ u1} M (bit1.{u1} M _inst_2 (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) a b)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) (bit1.{u1} M _inst_2 (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) a) (bit0.{u1} M (AddSemigroup.toHasAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) b))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} M] [_inst_2 : One.{u1} M] (a : M) (b : M), Eq.{succ u1} M (bit1.{u1} M _inst_2 (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) a b)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1))) (bit1.{u1} M _inst_2 (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) a) (bit0.{u1} M (AddSemigroup.toAdd.{u1} M (AddCommSemigroup.toAddSemigroup.{u1} M _inst_1)) b))
+Case conversion may be inaccurate. Consider using '#align bit1_add' bit1_add'ₓ'. -/
 theorem bit1_add' [One M] (a b : M) : bit1 (a + b) = bit1 a + bit0 b := by
   rw [add_comm, bit1_add, add_comm]
 #align bit1_add' bit1_add'
@@ -234,11 +252,23 @@ section AddMonoid
 
 variable {M : Type u} [AddMonoid M] {a b c : M}
 
+/- warning: bit0_zero -> bit0_zero is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M], Eq.{succ u1} M (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (bit0.{u1} M (AddZeroClass.toHasAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)) (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)))))) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)))))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M], Eq.{succ u1} M (bit0.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M _inst_1)))) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M _inst_1)))
+Case conversion may be inaccurate. Consider using '#align bit0_zero bit0_zeroₓ'. -/
 @[simp]
 theorem bit0_zero : bit0 (0 : M) = 0 :=
   add_zero _
 #align bit0_zero bit0_zero
 
+/- warning: bit1_zero -> bit1_zero is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M] [_inst_2 : One.{u1} M], Eq.{succ u1} M (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (bit1.{u1} M _inst_2 (AddZeroClass.toHasAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)) (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)))))) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M _inst_2)))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M] [_inst_2 : One.{u1} M], Eq.{succ u1} M (bit1.{u1} M _inst_2 (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M _inst_1)))) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_2))
+Case conversion may be inaccurate. Consider using '#align bit1_zero bit1_zeroₓ'. -/
 @[simp]
 theorem bit1_zero [One M] : bit1 (0 : M) = 1 := by rw [bit1, bit0_zero, zero_add]
 #align bit1_zero bit1_zero
@@ -324,15 +354,15 @@ theorem self_eq_mul_left : b = a * b ↔ a = 1 :=
 
 end RightCancelMonoid
 
-section HasInvolutiveInv
+section InvolutiveInv
 
-variable [HasInvolutiveInv G] {a b : G}
+variable [InvolutiveInv G] {a b : G}
 
 /- warning: inv_involutive -> inv_involutive is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G], Function.Involutive.{succ u1} G (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G], Function.Involutive.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G], Function.Involutive.{succ u1} G (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G], Function.Involutive.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1))
 Case conversion may be inaccurate. Consider using '#align inv_involutive inv_involutiveₓ'. -/
 @[simp, to_additive]
 theorem inv_involutive : Function.Involutive (Inv.inv : G → G) :=
@@ -341,9 +371,9 @@ theorem inv_involutive : Function.Involutive (Inv.inv : G → G) :=
 
 /- warning: inv_surjective -> inv_surjective is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G], Function.Surjective.{succ u1, succ u1} G G (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G], Function.Surjective.{succ u1, succ u1} G G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G], Function.Surjective.{succ u1, succ u1} G G (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G], Function.Surjective.{succ u1, succ u1} G G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1))
 Case conversion may be inaccurate. Consider using '#align inv_surjective inv_surjectiveₓ'. -/
 @[simp, to_additive]
 theorem inv_surjective : Function.Surjective (Inv.inv : G → G) :=
@@ -352,9 +382,9 @@ theorem inv_surjective : Function.Surjective (Inv.inv : G → G) :=
 
 /- warning: inv_injective -> inv_injective is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G], Function.Injective.{succ u1, succ u1} G G (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G], Function.Injective.{succ u1, succ u1} G G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G], Function.Injective.{succ u1, succ u1} G G (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G], Function.Injective.{succ u1, succ u1} G G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1))
 Case conversion may be inaccurate. Consider using '#align inv_injective inv_injectiveₓ'. -/
 @[to_additive]
 theorem inv_injective : Function.Injective (Inv.inv : G → G) :=
@@ -363,9 +393,9 @@ theorem inv_injective : Function.Injective (Inv.inv : G → G) :=
 
 /- warning: inv_inj -> inv_inj is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) a) (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) b)) (Eq.{succ u1} G a b)
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a) (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) b)) (Eq.{succ u1} G a b)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) a) (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) b)) (Eq.{succ u1} G a b)
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a) (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) b)) (Eq.{succ u1} G a b)
 Case conversion may be inaccurate. Consider using '#align inv_inj inv_injₓ'. -/
 @[simp, to_additive]
 theorem inv_inj {a b : G} : a⁻¹ = b⁻¹ ↔ a = b :=
@@ -374,9 +404,9 @@ theorem inv_inj {a b : G} : a⁻¹ = b⁻¹ ↔ a = b :=
 
 /- warning: eq_inv_of_eq_inv -> eq_inv_of_eq_inv is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) b)) -> (Eq.{succ u1} G b (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) a))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) b)) -> (Eq.{succ u1} G b (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) b)) -> (Eq.{succ u1} G b (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) a))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) b)) -> (Eq.{succ u1} G b (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a))
 Case conversion may be inaccurate. Consider using '#align eq_inv_of_eq_inv eq_inv_of_eq_invₓ'. -/
 @[to_additive]
 theorem eq_inv_of_eq_inv (h : a = b⁻¹) : b = a⁻¹ := by simp [h]
@@ -384,9 +414,9 @@ theorem eq_inv_of_eq_inv (h : a = b⁻¹) : b = a⁻¹ := by simp [h]
 
 /- warning: eq_inv_iff_eq_inv -> eq_inv_iff_eq_inv is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G a (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) b)) (Eq.{succ u1} G b (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) a))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G a (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) b)) (Eq.{succ u1} G b (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G a (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) b)) (Eq.{succ u1} G b (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) a))
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G a (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) b)) (Eq.{succ u1} G b (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a))
 Case conversion may be inaccurate. Consider using '#align eq_inv_iff_eq_inv eq_inv_iff_eq_invₓ'. -/
 @[to_additive]
 theorem eq_inv_iff_eq_inv : a = b⁻¹ ↔ b = a⁻¹ :=
@@ -395,9 +425,9 @@ theorem eq_inv_iff_eq_inv : a = b⁻¹ ↔ b = a⁻¹ :=
 
 /- warning: inv_eq_iff_inv_eq -> inv_eq_iff_inv_eq is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) a) b) (Eq.{succ u1} G (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) b) a)
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a) b) (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) b) a)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : HasInvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) a) b) (Eq.{succ u1} G (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) b) a)
+  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a) b) (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) b) a)
 Case conversion may be inaccurate. Consider using '#align inv_eq_iff_inv_eq inv_eq_iff_inv_eqₓ'. -/
 @[to_additive]
 theorem inv_eq_iff_inv_eq : a⁻¹ = b ↔ b⁻¹ = a :=
@@ -408,9 +438,9 @@ variable (G)
 
 /- warning: inv_comp_inv -> inv_comp_inv is a dubious translation:
 lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : HasInvolutiveInv.{u1} G], Eq.{succ u1} (G -> G) (Function.comp.{succ u1, succ u1, succ u1} G G G (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1)) (Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1))) (id.{succ u1} G)
+  forall (G : Type.{u1}) [_inst_1 : InvolutiveInv.{u1} G], Eq.{succ u1} (G -> G) (Function.comp.{succ u1, succ u1, succ u1} G G G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1)) (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1))) (id.{succ u1} G)
 but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : HasInvolutiveInv.{u1} G], Eq.{succ u1} (G -> G) (Function.comp.{succ u1, succ u1, succ u1} G G G (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1)) (Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1))) (id.{succ u1} G)
+  forall (G : Type.{u1}) [_inst_1 : InvolutiveInv.{u1} G], Eq.{succ u1} (G -> G) (Function.comp.{succ u1, succ u1, succ u1} G G G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1)) (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1))) (id.{succ u1} G)
 Case conversion may be inaccurate. Consider using '#align inv_comp_inv inv_comp_invₓ'. -/
 @[simp, to_additive]
 theorem inv_comp_inv : Inv.inv ∘ Inv.inv = @id G :=
@@ -419,9 +449,9 @@ theorem inv_comp_inv : Inv.inv ∘ Inv.inv = @id G :=
 
 /- warning: left_inverse_inv -> leftInverse_inv is a dubious translation:
 lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : HasInvolutiveInv.{u1} G], Function.LeftInverse.{succ u1, succ u1} G G (fun (a : G) => Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) a) (fun (a : G) => Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) a)
+  forall (G : Type.{u1}) [_inst_1 : InvolutiveInv.{u1} G], Function.LeftInverse.{succ u1, succ u1} G G (fun (a : G) => Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a) (fun (a : G) => Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a)
 but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : HasInvolutiveInv.{u1} G], Function.LeftInverse.{succ u1, succ u1} G G (fun (a : G) => Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) a) (fun (a : G) => Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) a)
+  forall (G : Type.{u1}) [_inst_1 : InvolutiveInv.{u1} G], Function.LeftInverse.{succ u1, succ u1} G G (fun (a : G) => Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a) (fun (a : G) => Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align left_inverse_inv leftInverse_invₓ'. -/
 @[to_additive]
 theorem leftInverse_inv : LeftInverse (fun a : G => a⁻¹) fun a => a⁻¹ :=
@@ -430,16 +460,16 @@ theorem leftInverse_inv : LeftInverse (fun a : G => a⁻¹) fun a => a⁻¹ :=
 
 /- warning: right_inverse_inv -> rightInverse_inv is a dubious translation:
 lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : HasInvolutiveInv.{u1} G], Function.LeftInverse.{succ u1, succ u1} G G (fun (a : G) => Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) a) (fun (a : G) => Inv.inv.{u1} G (HasInvolutiveInv.toHasInv.{u1} G _inst_1) a)
+  forall (G : Type.{u1}) [_inst_1 : InvolutiveInv.{u1} G], Function.LeftInverse.{succ u1, succ u1} G G (fun (a : G) => Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a) (fun (a : G) => Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a)
 but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : HasInvolutiveInv.{u1} G], Function.LeftInverse.{succ u1, succ u1} G G (fun (a : G) => Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) a) (fun (a : G) => Inv.inv.{u1} G (HasInvolutiveInv.toInv.{u1} G _inst_1) a)
+  forall (G : Type.{u1}) [_inst_1 : InvolutiveInv.{u1} G], Function.LeftInverse.{succ u1, succ u1} G G (fun (a : G) => Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a) (fun (a : G) => Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align right_inverse_inv rightInverse_invₓ'. -/
 @[to_additive]
 theorem rightInverse_inv : LeftInverse (fun a : G => a⁻¹) fun a => a⁻¹ :=
   inv_inv
 #align right_inverse_inv rightInverse_inv
 
-end HasInvolutiveInv
+end InvolutiveInv
 
 section DivInvMonoid
 
@@ -1025,7 +1055,7 @@ theorem div_eq_inv_self : a / b = b⁻¹ ↔ a = 1 := by rw [div_eq_mul_inv, mul
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.3228 : G) (x._@.Mathlib.Algebra.Group.Basic._hyg.3230 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Group.Basic._hyg.3228 x._@.Mathlib.Algebra.Group.Basic._hyg.3230) a)
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.3425 : G) (x._@.Mathlib.Algebra.Group.Basic._hyg.3427 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Group.Basic._hyg.3425 x._@.Mathlib.Algebra.Group.Basic._hyg.3427) a)
 Case conversion may be inaccurate. Consider using '#align mul_left_surjective mul_left_surjectiveₓ'. -/
 @[to_additive]
 theorem mul_left_surjective (a : G) : Function.Surjective ((· * ·) a) := fun x =>
@@ -1494,7 +1524,7 @@ theorem leftInverse_inv_mul_mul_right (c : G) :
 
 /- warning: exists_npow_eq_one_of_zpow_eq_one -> exists_npow_eq_one_of_zpow_eq_one is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {n : Int}, (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (forall {x : G}, (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.hasPow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))) -> (Exists.{1} Nat (fun (n : Nat) => And (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.hasPow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))))))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {n : Int}, (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (forall {x : G}, (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))) -> (Exists.{1} Nat (fun (n : Nat) => And (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))))))
 but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {n : Int}, (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (forall {x : G}, (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))) -> (Exists.{1} Nat (fun (n : Nat) => And (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))))))
 Case conversion may be inaccurate. Consider using '#align exists_npow_eq_one_of_zpow_eq_one exists_npow_eq_one_of_zpow_eq_oneₓ'. -/
@@ -1502,11 +1532,11 @@ Case conversion may be inaccurate. Consider using '#align exists_npow_eq_one_of_
 theorem exists_npow_eq_one_of_zpow_eq_one {n : ℤ} (hn : n ≠ 0) {x : G} (h : x ^ n = 1) :
     ∃ n : ℕ, 0 < n ∧ x ^ n = 1 := by 
   cases' n with n n
-  · rw [zpow_of_nat] at h
+  · rw [zpow_ofNat] at h
     refine' ⟨n, Nat.pos_of_ne_zero fun n0 => hn _, h⟩
     rw [n0]
     rfl
-  · rw [zpow_neg_succ_of_nat, inv_eq_one] at h
+  · rw [zpow_negSucc, inv_eq_one] at h
     refine' ⟨n + 1, n.succ_pos, h⟩
 #align exists_npow_eq_one_of_zpow_eq_one exists_npow_eq_one_of_zpow_eq_one
 

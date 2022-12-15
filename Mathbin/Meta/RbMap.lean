@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module meta.rb_map
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -271,7 +271,7 @@ to_rb_map ['a', 'b', 'c'] = rb_map.of_list [(0, 'a'), (1, 'b'), (2, 'c')]
 ```
 -/
 unsafe def to_rb_map {α : Type} : List α → native.rb_map ℕ α :=
-  foldlWithIndex (fun i mapp a => mapp.insert i a) native.mk_rb_map
+  foldlIdx (fun i mapp a => mapp.insert i a) native.mk_rb_map
 #align list.to_rb_map list.to_rb_map
 
 end List

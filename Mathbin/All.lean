@@ -29,7 +29,6 @@ import Mathbin.Algebra.BigOperators.NatAntidiagonal
 import Mathbin.Algebra.BigOperators.NormNum
 import Mathbin.Algebra.BigOperators.Option
 import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Algebra.BigOperators.PartEnat
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.BigOperators.RingEquiv
@@ -2052,6 +2051,7 @@ import Mathbin.MeasureTheory.Covering.Besicovitch
 import Mathbin.MeasureTheory.Covering.BesicovitchVectorSpace
 import Mathbin.MeasureTheory.Covering.DensityTheorem
 import Mathbin.MeasureTheory.Covering.Differentiation
+import Mathbin.MeasureTheory.Covering.LiminfLimsup
 import Mathbin.MeasureTheory.Covering.OneDim
 import Mathbin.MeasureTheory.Covering.Vitali
 import Mathbin.MeasureTheory.Covering.VitaliFamily
@@ -2429,6 +2429,7 @@ import Mathbin.RingTheory.DedekindDomain.SInteger
 import Mathbin.RingTheory.DedekindDomain.AdicValuation
 import Mathbin.RingTheory.DedekindDomain.Basic
 import Mathbin.RingTheory.DedekindDomain.Dvr
+import Mathbin.RingTheory.DedekindDomain.Factorization
 import Mathbin.RingTheory.DedekindDomain.Ideal
 import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 import Mathbin.RingTheory.DedekindDomain.SelmerGroup

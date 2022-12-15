@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.dense_subsite
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ structure Presieve.CoverByImageStructure (G : C ⥤ D) {V U : D} (f : V ⟶ U) w
 
 restate_axiom presieve.cover_by_image_structure.fac'
 
-attribute [simp, reassoc] presieve.cover_by_image_structure.fac
+attribute [simp, reassoc.1] presieve.cover_by_image_structure.fac
 
 /-- For a functor `G : C ⥤ D`, and an object `U : D`, `presieve.cover_by_image G U` is the presieve
 of `U` consisting of those arrows that factor through images of `G`.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.convergence_in_measure
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ theorem tendstoInMeasureOfTendstoAeOfStronglyMeasurable [IsFiniteMeasure μ]
   suffices : { x : α | ε ≤ dist (f n x) (g x) } ⊆ t; exact (measure_mono this).trans ht
   rw [← Set.compl_subset_compl]
   intro x hx
-  rw [Set.mem_compl_iff, Set.nmem_set_of_iff, dist_comm, not_le]
+  rw [Set.mem_compl_iff, Set.nmem_setOf_iff, dist_comm, not_le]
   exact hN n hn x hx
 #align
   measure_theory.tendsto_in_measure_of_tendsto_ae_of_strongly_measurable MeasureTheory.tendstoInMeasureOfTendstoAeOfStronglyMeasurable
@@ -228,7 +228,7 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
     refine' fun x hx => metric.tendsto_at_top.mpr fun ε hε => _
     rw [hs, limsup_eq_infi_supr_of_nat] at hx
     simp only [Set.supr_eq_Union, Set.infi_eq_Inter, Set.compl_Inter, Set.compl_Union,
-      Set.mem_Union, Set.mem_Inter, Set.mem_compl_iff, Set.mem_set_of_eq, not_le] at hx
+      Set.mem_Union, Set.mem_Inter, Set.mem_compl_iff, Set.mem_setOf_eq, not_le] at hx
     obtain ⟨N, hNx⟩ := hx
     obtain ⟨k, hk_lt_ε⟩ := h_lt_ε_real ε hε
     refine' ⟨max N (k - 1), fun n hn_ge => lt_of_le_of_lt _ hk_lt_ε⟩
@@ -247,7 +247,7 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
   rw [ae_iff]
   refine'
     ⟨exists_seq_tendsto_ae.seq_tendsto_ae_seq_strict_mono hfg, measure_mono_null (fun x => _) hμs⟩
-  rw [Set.mem_set_of_eq, ← @not_not (x ∈ s), not_imp_not]
+  rw [Set.mem_setOf_eq, ← @not_not (x ∈ s), not_imp_not]
   exact h_tendsto x
 #align
   measure_theory.tendsto_in_measure.exists_seq_tendsto_ae MeasureTheory.TendstoInMeasure.exists_seq_tendsto_ae
@@ -357,7 +357,7 @@ theorem tendstoInMeasureOfTendstoSnormTop {E} [NormedAddCommGroup E] {f : ι →
   refine' ((le_of_eq _).trans (ae_lt_of_ess_sup_lt this).le).trans hε.le
   congr with x
   simp only [Ennreal.of_real_le_iff_le_to_real ennreal.coe_lt_top.ne, Ennreal.coe_to_real, not_lt,
-    coe_nnnorm, Set.mem_set_of_eq, Set.mem_compl_iff]
+    coe_nnnorm, Set.mem_setOf_eq, Set.mem_compl_iff]
   rw [← dist_eq_norm (f n x) (g x)]
   rfl
 #align

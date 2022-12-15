@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.push_neg
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -292,7 +292,7 @@ add_tactic_doc
     tags := ["logic"] }
 
 theorem imp_of_not_imp_not (P Q : Prop) : (¬Q → ¬P) → P → Q := fun h hP =>
-  Classical.by_contradiction fun h' => h h' hP
+  by_contradiction fun h' => h h' hP
 #align imp_of_not_imp_not imp_of_not_imp_not
 
 /-- Matches either an identifier "h" or a pair of identifiers "h with k" -/
@@ -341,7 +341,7 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
                   <|>
                   fail "contrapose only applies to nondependent arrows between props"
             apply cp
-            when push <| try ( tactic.interactive.push_neg ( loc.ns [ none ] ) )
+            when Push <| try ( tactic.interactive.push_neg ( loc.ns [ none ] ) )
 #align tactic.interactive.contrapose tactic.interactive.contrapose
 
 add_tactic_doc

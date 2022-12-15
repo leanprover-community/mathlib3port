@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -887,10 +887,10 @@ theorem IsPrime.radical_le_iff (hJ : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
   hJ.IsRadical.radical_le_iff
 #align ideal.is_prime.radical_le_iff Ideal.IsPrime.radical_le_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » m) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » m) -/
 theorem radical_eq_Inf (I : Ideal R) : radical I = inf { J : Ideal R | I ≤ J ∧ IsPrime J } :=
   (le_antisymm (le_Inf fun J hJ => hJ.2.radical_le_iff.2 hJ.1)) fun r hr =>
-    Classical.by_contradiction fun hri =>
+    by_contradiction fun hri =>
       let ⟨m, (hrm : r ∉ radical m), him, hm⟩ :=
         zorn_nonempty_partial_order₀ { K : Ideal R | r ∉ radical K }
           (fun c hc hcc y hyc =>
@@ -900,14 +900,14 @@ theorem radical_eq_Inf (I : Ideal R) : radical I = inf { J : Ideal R | I ≤ J �
               fun z => le_Sup⟩)
           I hri
       have : ∀ (x) (_ : x ∉ m), r ∈ radical (m ⊔ span {x}) := fun x hxm =>
-        Classical.by_contradiction fun hrmx =>
+        by_contradiction fun hrmx =>
           hxm <|
             hm (m ⊔ span {x}) hrmx le_sup_left ▸
               (le_sup_right : _ ≤ m ⊔ span {x}) (subset_span <| Set.mem_singleton _)
       have : IsPrime m :=
         ⟨by rintro rfl <;> rw [radical_top] at hrm <;> exact hrm trivial, fun x y hxym =>
           or_iff_not_imp_left.2 fun hxm =>
-            Classical.by_contradiction fun hym =>
+            by_contradiction fun hym =>
               let ⟨n, hrn⟩ := this _ hxm
               let ⟨p, hpm, q, hq, hpqrn⟩ := Submodule.mem_sup.1 hrn
               let ⟨c, hcxq⟩ := mem_span_singleton'.1 hq
@@ -1022,7 +1022,7 @@ theorem subset_union {R : Type u} [Ring R] {I J K : Ideal R} :
   ⟨fun h =>
     or_iff_not_imp_left.2 fun hij s hsi =>
       let ⟨r, hri, hrj⟩ := Set.not_subset.1 hij
-      Classical.by_contradiction fun hsk =>
+      by_contradiction fun hsk =>
         Or.cases_on (h <| I.add_mem hri hsi)
           (fun hj => hrj <| add_sub_cancel r s ▸ J.sub_mem hj ((h hsi).resolve_right hsk)) fun hk =>
           hsk <| add_sub_cancel' r s ▸ K.sub_mem hk ((h hri).resolve_left hrj),
@@ -1208,7 +1208,7 @@ theorem le_of_dvd {I J : Ideal R} : I ∣ J → J ≤ I
 #align ideal.le_of_dvd Ideal.le_of_dvd
 
 theorem is_unit_iff {I : Ideal R} : IsUnit I ↔ I = ⊤ :=
-  is_unit_iff_dvd_one.trans
+  isUnit_iff_dvd_one.trans
     ((@one_eq_top R _).symm ▸
       ⟨fun h => eq_top_iff.mpr (Ideal.le_of_dvd h), fun h => ⟨⊤, by rw [mul_top, h]⟩⟩)
 #align ideal.is_unit_iff Ideal.is_unit_iff
@@ -1929,7 +1929,7 @@ theorem basis_span_singleton_apply (b : Basis ι R S) {x : S} (hx : x ≠ 0) (i 
 #align ideal.basis_span_singleton_apply Ideal.basis_span_singleton_apply
 
 @[simp]
-theorem constr_basis_span_singleton {N : Type _} [Semiring N] [Module N S] [SmulCommClass R N S]
+theorem constr_basis_span_singleton {N : Type _} [Semiring N] [Module N S] [SMulCommClass R N S]
     (b : Basis ι R S) {x : S} (hx : x ≠ 0) :
     b.constr N (coe ∘ basisSpanSingleton b hx) = Algebra.lmul R S x :=
   b.ext fun i => by
@@ -2385,7 +2385,7 @@ def Quotient.liftₐ (I : Ideal A) (f : A →ₐ[R₁] B) (hI : ∀ a : A, a ∈
     commutes' := fun r => by
       have : algebraMap R₁ (A ⧸ I) r = algebraMap A (A ⧸ I) (algebraMap R₁ A r) := by
         simp_rw [Algebra.algebra_map_eq_smul_one, smul_assoc, one_smul]
-      rw [this, Ideal.Quotient.algebra_map_eq, RingHom.to_fun_eq_coe, Ideal.Quotient.lift_mk,
+      rw [this, Ideal.Quotient.algebra_map_eq, RingHom.toFun_eq_coe, Ideal.Quotient.lift_mk,
         AlgHom.coe_to_ring_hom, Algebra.algebra_map_eq_smul_one, Algebra.algebra_map_eq_smul_one,
         map_smul, map_one] }
 #align ideal.quotient.liftₐ Ideal.Quotient.liftₐ

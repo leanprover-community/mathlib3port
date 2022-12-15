@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.opposite
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ instance {M N} [HasSmul M N] [HasSmul M α] [HasSmul N α] [IsScalarTower M N α
   ⟨fun x y z => unop_injective <| smul_assoc _ _ _⟩
 
 @[to_additive]
-instance {M N} [HasSmul M α] [HasSmul N α] [SmulCommClass M N α] : SmulCommClass M N αᵐᵒᵖ :=
+instance {M N} [HasSmul M α] [HasSmul N α] [SMulCommClass M N α] : SMulCommClass M N αᵐᵒᵖ :=
   ⟨fun x y z => unop_injective <| smul_comm _ _ _⟩
 
 @[to_additive]
@@ -113,12 +113,12 @@ instance MulAction.OppositeRegular.is_pretransitive {G : Type _} [Group G] :
 
 @[to_additive]
 instance Semigroup.opposite_smul_comm_class [Semigroup α] :
-    SmulCommClass αᵐᵒᵖ α α where smul_comm x y z := mul_assoc _ _ _
+    SMulCommClass αᵐᵒᵖ α α where smul_comm x y z := mul_assoc _ _ _
 #align semigroup.opposite_smul_comm_class Semigroup.opposite_smul_comm_class
 
 @[to_additive]
-instance Semigroup.opposite_smul_comm_class' [Semigroup α] : SmulCommClass α αᵐᵒᵖ α :=
-  SmulCommClass.symm _ _ _
+instance Semigroup.opposite_smul_comm_class' [Semigroup α] : SMulCommClass α αᵐᵒᵖ α :=
+  SMulCommClass.symm _ _ _
 #align semigroup.opposite_smul_comm_class' Semigroup.opposite_smul_comm_class'
 
 instance CommSemigroup.is_central_scalar [CommSemigroup α] : IsCentralScalar α α :=
@@ -135,18 +135,18 @@ instance Monoid.toOppositeMulAction [Monoid α] :
 #align monoid.to_opposite_mul_action Monoid.toOppositeMulAction
 
 @[to_additive]
-instance IsScalarTower.opposite_mid {M N} [Mul N] [HasSmul M N] [SmulCommClass M N N] :
+instance IsScalarTower.opposite_mid {M N} [Mul N] [HasSmul M N] [SMulCommClass M N N] :
     IsScalarTower M Nᵐᵒᵖ N :=
   ⟨fun x y z => mul_smul_comm _ _ _⟩
 #align is_scalar_tower.opposite_mid IsScalarTower.opposite_mid
 
 @[to_additive]
-instance SmulCommClass.opposite_mid {M N} [Mul N] [HasSmul M N] [IsScalarTower M N N] :
-    SmulCommClass M Nᵐᵒᵖ N :=
+instance SMulCommClass.opposite_mid {M N} [Mul N] [HasSmul M N] [IsScalarTower M N N] :
+    SMulCommClass M Nᵐᵒᵖ N :=
   ⟨fun x y z => by 
     induction y using MulOpposite.rec
     simp [smul_mul_assoc]⟩
-#align smul_comm_class.opposite_mid SmulCommClass.opposite_mid
+#align smul_comm_class.opposite_mid SMulCommClass.opposite_mid
 
 -- The above instance does not create an unwanted diamond, the two paths to
 -- `mul_action αᵐᵒᵖ αᵐᵒᵖ` are defeq.
@@ -156,14 +156,14 @@ example [Monoid α] : Monoid.toMulAction αᵐᵒᵖ = MulOpposite.mulAction α 
 /-- `monoid.to_opposite_mul_action` is faithful on cancellative monoids. -/
 @[to_additive "`add_monoid.to_opposite_add_action` is faithful on cancellative monoids."]
 instance LeftCancelMonoid.to_has_faithful_opposite_scalar [LeftCancelMonoid α] :
-    HasFaithfulSmul αᵐᵒᵖ α :=
+    FaithfulSMul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancel (h 1)⟩
 #align
   left_cancel_monoid.to_has_faithful_opposite_scalar LeftCancelMonoid.to_has_faithful_opposite_scalar
 
 /-- `monoid.to_opposite_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
 instance CancelMonoidWithZero.to_has_faithful_opposite_scalar [CancelMonoidWithZero α]
-    [Nontrivial α] : HasFaithfulSmul αᵐᵒᵖ α :=
+    [Nontrivial α] : FaithfulSMul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancel₀ one_ne_zero (h 1)⟩
 #align
   cancel_monoid_with_zero.to_has_faithful_opposite_scalar CancelMonoidWithZero.to_has_faithful_opposite_scalar

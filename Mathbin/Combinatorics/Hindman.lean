@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.hindman
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,26 +88,26 @@ namespace Hindman
 
 /-- `FS a` is the set of finite sums in `a`, i.e. `m ∈ FS a` if `m` is the sum of a nonempty
 subsequence of `a`. We give a direct inductive definition instead of talking about subsequences. -/
-inductive fS {M} [AddSemigroup M] : Stream M → Set M
-  | head (a : Stream M) : FS a a.head
-  | tail (a : Stream M) (m : M) (h : FS a.tail m) : FS a m
-  | cons (a : Stream M) (m : M) (h : FS a.tail m) : FS a (a.head + m)
+inductive fS {M} [AddSemigroup M] : Stream' M → Set M
+  | head (a : Stream' M) : FS a a.head
+  | tail (a : Stream' M) (m : M) (h : FS a.tail m) : FS a m
+  | cons (a : Stream' M) (m : M) (h : FS a.tail m) : FS a (a.head + m)
 #align hindman.FS Hindman.fS
 
 /-- `FP a` is the set of finite products in `a`, i.e. `m ∈ FP a` if `m` is the product of a nonempty
 subsequence of `a`. We give a direct inductive definition instead of talking about subsequences. -/
 @[to_additive FS]
-inductive fP {M} [Semigroup M] : Stream M → Set M
-  | head (a : Stream M) : FP a a.head
-  | tail (a : Stream M) (m : M) (h : FP a.tail m) : FP a m
-  | cons (a : Stream M) (m : M) (h : FP a.tail m) : FP a (a.head * m)
+inductive fP {M} [Semigroup M] : Stream' M → Set M
+  | head (a : Stream' M) : FP a a.head
+  | tail (a : Stream' M) (m : M) (h : FP a.tail m) : FP a m
+  | cons (a : Stream' M) (m : M) (h : FP a.tail m) : FP a (a.head * m)
 #align hindman.FP Hindman.fP
 
 /-- If `m` and `m'` are finite products in `M`, then so is `m * m'`, provided that `m'` is obtained
 from a subsequence of `M` starting sufficiently late. -/
 @[to_additive
       "If `m` and `m'` are finite sums in `M`, then so is `m + m'`, provided that `m'`\nis obtained from a subsequence of `M` starting sufficiently late."]
-theorem fP.mul {M} [Semigroup M] {a : Stream M} {m : M} (hm : m ∈ fP a) :
+theorem fP.mul {M} [Semigroup M] {a : Stream' M} {m : M} (hm : m ∈ fP a) :
     ∃ n, ∀ m' ∈ fP (a.drop n), m * m' ∈ fP a := by
   induction' hm with a a m hm ih a m hm ih
   · exact ⟨1, fun m hm => FP.cons a m hm⟩
@@ -123,7 +123,7 @@ theorem fP.mul {M} [Semigroup M] {a : Stream M} {m : M} (hm : m ∈ fP a) :
 #align hindman.FP.mul Hindman.fP.mul
 
 @[to_additive exists_idempotent_ultrafilter_le_FS]
-theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream M) :
+theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
     ∃ U : Ultrafilter M, U * U = U ∧ ∀ᶠ m in U, m ∈ fP a := by
   let S : Set (Ultrafilter M) := ⋂ n, { U | ∀ᶠ m in U, m ∈ FP (a.drop n) }
   obtain ⟨U, hU, U_idem⟩ := exists_idempotent_in_compact_subsemigroup _ S _ _ _
@@ -133,25 +133,25 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream M) :
   · apply IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed
     · intro n U hU
       apply eventually.mono hU
-      rw [add_comm, ← Stream.drop_drop, ← Stream.tail_eq_drop]
+      rw [add_comm, ← Stream'.drop_drop, ← Stream'.tail_eq_drop]
       exact FP.tail _
     · intro n
       exact ⟨pure _, mem_pure.mpr <| FP.head _⟩
-    · exact (ultrafilterIsClosedBasic _).IsCompact
+    · exact (ultrafilter_is_closed_basic _).IsCompact
     · intro n
-      apply ultrafilterIsClosedBasic
-  · exact IsClosed.is_compact (isClosedInter fun i => ultrafilterIsClosedBasic _)
+      apply ultrafilter_is_closed_basic
+  · exact IsClosed.is_compact (is_closed_Inter fun i => ultrafilter_is_closed_basic _)
   · intro U hU V hV
     rw [Set.mem_Inter] at *
     intro n
-    rw [Set.mem_set_of_eq, Ultrafilter.eventually_mul]
+    rw [Set.mem_setOf_eq, Ultrafilter.eventually_mul]
     apply eventually.mono (hU n)
     intro m hm
     obtain ⟨n', hn⟩ := FP.mul hm
     apply eventually.mono (hV (n' + n))
     intro m' hm'
     apply hn
-    simpa only [Stream.drop_drop] using hm'
+    simpa only [Stream'.drop_drop] using hm'
 #align hindman.exists_idempotent_ultrafilter_le_FP Hindman.exists_idempotent_ultrafilter_le_FP
 
 @[to_additive exists_FS_of_large]
@@ -173,31 +173,31 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
   let succ : { s // s ∈ U } → { s // s ∈ U } := fun p =>
     ⟨p.val ∩ { m | elem p * m ∈ p.val },
       inter_mem p.2 <| show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
-  use Stream.corec elem succ (Subtype.mk s₀ sU)
-  suffices ∀ (a : Stream M), ∀ m ∈ FP a, ∀ p, a = Stream.corec elem succ p → m ∈ p.val by
+  use Stream'.corec elem succ (Subtype.mk s₀ sU)
+  suffices ∀ (a : Stream' M), ∀ m ∈ FP a, ∀ p, a = Stream'.corec elem succ p → m ∈ p.val by
     intro m hm
     exact this _ m hm ⟨s₀, sU⟩ rfl
   clear sU s₀
   intro a m h
   induction' h with b b n h ih b n h ih
   · rintro p rfl
-    rw [Stream.corec_eq, Stream.head_cons]
+    rw [Stream'.corec_eq, Stream'.head_cons]
     exact Set.inter_subset_left _ _ (Set.Nonempty.some_mem _)
   · rintro p rfl
     refine' Set.inter_subset_left _ _ (ih (succ p) _)
-    rw [Stream.corec_eq, Stream.tail_cons]
+    rw [Stream'.corec_eq, Stream'.tail_cons]
   · rintro p rfl
     have := Set.inter_subset_right _ _ (ih (succ p) _)
     · simpa only using this
-    rw [Stream.corec_eq, Stream.tail_cons]
+    rw [Stream'.corec_eq, Stream'.tail_cons]
 #align hindman.exists_FP_of_large Hindman.exists_FP_of_large
 
 /-- The strong form of **Hindman's theorem**: in any finite cover of an FP-set, one the parts
 contains an FP-set. -/
 @[to_additive FS_partition_regular
       "The strong form of **Hindman's theorem**: in any finite cover of\nan FS-set, one the parts contains an FS-set."]
-theorem FP_partition_regular {M} [Semigroup M] (a : Stream M) (s : Set (Set M)) (sfin : s.Finite)
-    (scov : fP a ⊆ ⋃₀s) : ∃ c ∈ s, ∃ b : Stream M, fP b ⊆ c :=
+theorem FP_partition_regular {M} [Semigroup M] (a : Stream' M) (s : Set (Set M)) (sfin : s.Finite)
+    (scov : fP a ⊆ ⋃₀s) : ∃ c ∈ s, ∃ b : Stream' M, fP b ⊆ c :=
   let ⟨U, idem, aU⟩ := exists_idempotent_ultrafilter_le_FP a
   let ⟨c, cs, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset aU scov)
   ⟨c, cs, exists_FP_of_large U idem c hc⟩
@@ -208,7 +208,7 @@ parts contains an FP-set. -/
 @[to_additive exists_FS_of_finite_cover
       "The weak form of **Hindman's theorem**: in any finite cover\nof a nonempty additive semigroup, one of the parts contains an FS-set."]
 theorem exists_FP_of_finite_cover {M} [Semigroup M] [Nonempty M] (s : Set (Set M)) (sfin : s.Finite)
-    (scov : ⊤ ⊆ ⋃₀s) : ∃ c ∈ s, ∃ a : Stream M, fP a ⊆ c :=
+    (scov : ⊤ ⊆ ⋃₀s) : ∃ c ∈ s, ∃ a : Stream' M, fP a ⊆ c :=
   let ⟨U, hU⟩ :=
     exists_idempotent_of_compact_t2_of_continuous_mul_left (@Ultrafilter.continuous_mul_left M _)
   let ⟨c, c_s, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset univ_mem scov)
@@ -216,14 +216,14 @@ theorem exists_FP_of_finite_cover {M} [Semigroup M] [Nonempty M] (s : Set (Set M
 #align hindman.exists_FP_of_finite_cover Hindman.exists_FP_of_finite_cover
 
 @[to_additive FS_iter_tail_sub_FS]
-theorem FP_drop_subset_FP {M} [Semigroup M] (a : Stream M) (n : ℕ) : fP (a.drop n) ⊆ fP a := by
+theorem FP_drop_subset_FP {M} [Semigroup M] (a : Stream' M) (n : ℕ) : fP (a.drop n) ⊆ fP a := by
   induction' n with n ih; · rfl
-  rw [Nat.succ_eq_one_add, ← Stream.drop_drop]
+  rw [Nat.succ_eq_one_add, ← Stream'.drop_drop]
   exact trans (FP.tail _) ih
 #align hindman.FP_drop_subset_FP Hindman.FP_drop_subset_FP
 
 @[to_additive]
-theorem fP.singleton {M} [Semigroup M] (a : Stream M) (i : ℕ) : a.nth i ∈ fP a := by
+theorem fP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.nth i ∈ fP a := by
   induction' i with i ih generalizing a
   · apply FP.head
   · apply FP.tail
@@ -231,34 +231,34 @@ theorem fP.singleton {M} [Semigroup M] (a : Stream M) (i : ℕ) : a.nth i ∈ fP
 #align hindman.FP.singleton Hindman.fP.singleton
 
 @[to_additive]
-theorem fP.mul_two {M} [Semigroup M] (a : Stream M) (i j : ℕ) (ij : i < j) :
+theorem fP.mul_two {M} [Semigroup M] (a : Stream' M) (i j : ℕ) (ij : i < j) :
     a.nth i * a.nth j ∈ fP a := by 
   refine' FP_drop_subset_FP _ i _
-  rw [← Stream.head_drop]
+  rw [← Stream'.head_drop]
   apply FP.cons
   rcases le_iff_exists_add.mp (Nat.succ_le_of_lt ij) with ⟨d, hd⟩
   have := FP.singleton (a.drop i).tail d
-  rw [Stream.tail_eq_drop, Stream.nth_drop, Stream.nth_drop] at this
+  rw [Stream'.tail_eq_drop, Stream'.nth_drop, Stream'.nth_drop] at this
   convert this
   rw [hd, add_comm, Nat.succ_add, Nat.add_succ]
 #align hindman.FP.mul_two Hindman.fP.mul_two
 
 @[to_additive]
-theorem fP.finset_prod {M} [CommMonoid M] (a : Stream M) (s : Finset ℕ) (hs : s.Nonempty) :
+theorem fP.finset_prod {M} [CommMonoid M] (a : Stream' M) (s : Finset ℕ) (hs : s.Nonempty) :
     (s.Prod fun i => a.nth i) ∈ fP a := by
   refine' FP_drop_subset_FP _ (s.min' hs) _
   induction' s using Finset.strongInduction with s ih
-  rw [← Finset.mul_prod_erase _ _ (s.min'_mem hs), ← Stream.head_drop]
+  rw [← Finset.mul_prod_erase _ _ (s.min'_mem hs), ← Stream'.head_drop]
   cases' (s.erase (s.min' hs)).eq_empty_or_nonempty with h h
   · rw [h, Finset.prod_empty, mul_one]
     exact FP.head _
   · apply FP.cons
-    rw [Stream.tail_eq_drop, Stream.drop_drop, add_comm]
+    rw [Stream'.tail_eq_drop, Stream'.drop_drop, add_comm]
     refine' Set.mem_of_subset_of_mem _ (ih _ (Finset.erase_ssubset <| s.min'_mem hs) h)
     have : s.min' hs + 1 ≤ (s.erase (s.min' hs)).min' h :=
       Nat.succ_le_of_lt (Finset.min'_lt_of_mem_erase_min' _ _ <| Finset.min'_mem _ _)
     cases' le_iff_exists_add.mp this with d hd
-    rw [hd, add_comm, ← Stream.drop_drop]
+    rw [hd, add_comm, ← Stream'.drop_drop]
     apply FP_drop_subset_FP
 #align hindman.FP.finset_prod Hindman.fP.finset_prod
 

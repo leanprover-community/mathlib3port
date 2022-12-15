@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.monad
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ theorem support_bind : (p.bind f).support = { b | ∃ a ∈ p.support, b ∈ (f 
 
 theorem mem_support_bind_iff (b : β) :
     b ∈ (p.bind f).support ↔ ∃ a ∈ p.support, b ∈ (f a).support := by
-  simp only [support_bind, Set.mem_set_of_eq]
+  simp only [support_bind, Set.mem_setOf_eq]
 #align pmf.mem_support_bind_iff Pmf.mem_support_bind_iff
 
 @[simp]
@@ -219,7 +219,7 @@ theorem support_bind_on_support :
 
 theorem mem_support_bind_on_support_iff (b : β) :
     b ∈ (p.bindOnSupport f).support ↔ ∃ (a : α)(h : a ∈ p.support), b ∈ (f a h).support := by
-  rw [support_bind_on_support, Set.mem_set_of_eq]
+  rw [support_bind_on_support, Set.mem_setOf_eq]
 #align pmf.mem_support_bind_on_support_iff Pmf.mem_support_bind_on_support_iff
 
 /-- `bind_on_support` reduces to `bind` if `f` doesn't depend on the additional hypothesis -/

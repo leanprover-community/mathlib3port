@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Reid Barton
 
 ! This file was ported from Lean 3 source module topology.shrinking_lemma
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ variable {ι X : Type _} [TopologicalSpace X] [NormalSpace X]
 
 namespace ShrinkingLemma
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∉ » carrier) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » carrier) -/
 -- the trivial refinement needs `u` to be a covering
 /-- Auxiliary definition for the proof of `shrinking_lemma`. A partial refinement of a covering
 `⋃ i, u i` of a set `s` is a map `v : ι → set X` and a set `carrier : set ι` such that
@@ -159,7 +159,7 @@ theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : IsChain (· �
 #align
   shrinking_lemma.partial_refinement.find_apply_of_mem ShrinkingLemma.PartialRefinement.find_apply_of_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c) -/
 /-- Least upper bound of a nonempty chain of partial refinements. -/
 def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀ x ∈ s, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) : PartialRefinement u s := by
@@ -189,9 +189,9 @@ theorem le_chain_Sup {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·)
   ⟨fun i hi => mem_bUnion hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
 #align shrinking_lemma.partial_refinement.le_chain_Sup ShrinkingLemma.PartialRefinement.le_chain_Sup
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- If `s` is a closed set, `v` is a partial refinement, and `i` is an index such that
 `i ∉ v.carrier`, then there exists a partial refinement that is strictly greater than `v`. -/
 theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i ∉ v.carrier) :
@@ -202,7 +202,7 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
     rcases mem_Union.1 (v.subset_Union hxs) with ⟨j, hj⟩
     exact (em (j = i)).elim (fun h => h ▸ hj) fun h => (H j h hj).elim
   have C : IsClosed (s ∩ ⋂ (j) (_ : j ≠ i), v jᶜ) :=
-    IsClosed.inter hs (isClosedBInter fun _ _ => is_closed_compl_iff.2 <| v.is_open _)
+    IsClosed.inter hs (is_closed_bInter fun _ _ => is_closed_compl_iff.2 <| v.is_open _)
   rcases normal_exists_closure_subset C (v.is_open i) I with ⟨vi, ovi, hvi, cvi⟩
   refine' ⟨⟨update v i vi, insert i v.carrier, _, _, _, _⟩, _, _⟩
   · intro j
@@ -266,7 +266,7 @@ theorem exists_subset_Union_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen 
     ∃ v : ι → Set X, s ⊆ union v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, hsv, hvo, hv⟩ := exists_subset_Union_closure_subset hs uo uf us
   ⟨fun i => closure (v i), Subset.trans hsv (Union_mono fun i => subset_closure), fun i =>
-    isClosedClosure, hv⟩
+    is_closed_closure, hv⟩
 #align exists_subset_Union_closed_subset exists_subset_Union_closed_subset
 
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
@@ -275,7 +275,7 @@ original open set. -/
 theorem exists_Union_eq_closure_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
     (uU : (⋃ i, u i) = univ) :
     ∃ v : ι → Set X, union v = univ ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i :=
-  let ⟨v, vU, hv⟩ := exists_subset_Union_closure_subset isClosedUniv uo (fun x _ => uf x) uU.ge
+  let ⟨v, vU, hv⟩ := exists_subset_Union_closure_subset is_closed_univ uo (fun x _ => uf x) uU.ge
   ⟨v, univ_subset_iff.1 vU, hv⟩
 #align exists_Union_eq_closure_subset exists_Union_eq_closure_subset
 
@@ -285,7 +285,7 @@ original open set. See also `exists_Union_eq_closure_subset` for a stronger stat
 theorem exists_Union_eq_closed_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
     (uU : (⋃ i, u i) = univ) :
     ∃ v : ι → Set X, union v = univ ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
-  let ⟨v, vU, hv⟩ := exists_subset_Union_closed_subset isClosedUniv uo (fun x _ => uf x) uU.ge
+  let ⟨v, vU, hv⟩ := exists_subset_Union_closed_subset is_closed_univ uo (fun x _ => uf x) uU.ge
   ⟨v, univ_subset_iff.1 vU, hv⟩
 #align exists_Union_eq_closed_subset exists_Union_eq_closed_subset
 

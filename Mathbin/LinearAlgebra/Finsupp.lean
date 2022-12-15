@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.finsupp
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,7 +198,7 @@ def supported (s : Set α) : Submodule R (α →₀ M) := by
   · intro p q hp hq
     refine' subset.trans (subset.trans (Finset.coe_subset.2 support_add) _) (union_subset hp hq)
     rw [Finset.coe_union]
-  · simp only [subset_def, Finset.mem_coe, Set.mem_set_of_eq, mem_support_iff, zero_apply]
+  · simp only [subset_def, Finset.mem_coe, Set.mem_setOf_eq, mem_support_iff, zero_apply]
     intro h ha
     exact (ha rfl).elim
   · intro a p hp
@@ -211,7 +211,7 @@ theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔
   Iff.rfl
 #align finsupp.mem_supported Finsupp.mem_supported
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem mem_supported' {s : Set α} (p : α →₀ M) :
     p ∈ supported M R s ↔ ∀ (x) (_ : x ∉ s), p x = 0 := by
   haveI := Classical.decPred fun x : α => x ∈ s <;>
@@ -348,7 +348,7 @@ def supportedEquivFinsupp (s : Set α) : supported M R s ≃ₗ[R] s →₀ M :=
 
 section Lsum
 
-variable (S) [Module S N] [SmulCommClass R S N]
+variable (S) [Module S N] [SMulCommClass R S N]
 
 /-- Lift a family of linear maps `M →ₗ[R] N` indexed by `x : α` to a linear map from `α →₀ M` to
 `N` using `finsupp.sum`. This is an upgraded version of `finsupp.lift_add_hom`.
@@ -476,7 +476,7 @@ theorem lmap_domain_supported [Nonempty α] (f : α → α') (s : Set α) :
     exact Function.inv_fun_on_eq (by simpa using hl hc)
 #align finsupp.lmap_domain_supported Finsupp.lmap_domain_supported
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 theorem lmap_domain_disjoint_ker (f : α → α') {s : Set α}
     (H : ∀ (a b) (_ : a ∈ s) (_ : b ∈ s), f a = f b → a = b) :
     Disjoint (supported M R s) (lmapDomain M R f).ker := by
@@ -639,7 +639,7 @@ theorem total_equiv_map_domain (f : α ≃ α') (l : α →₀ R) :
 
 /-- A version of `finsupp.range_total` which is useful for going in the other direction -/
 theorem span_eq_range_total (s : Set M) : span R s = (Finsupp.total s M R coe).range := by
-  rw [range_total, Subtype.range_coe_subtype, Set.set_of_mem_eq]
+  rw [range_total, Subtype.range_coe_subtype, Set.setOf_mem_eq]
 #align finsupp.span_eq_range_total Finsupp.span_eq_range_total
 
 theorem mem_span_iff_total (s : Set M) (x : M) :
@@ -903,7 +903,7 @@ def sumFinsuppLequivProdFinsupp {α β : Type _} : (Sum α β →₀ M) ≃ₗ[R
     map_smul' := by 
       intros
       ext <;>
-        simp only [AddEquiv.to_fun_eq_coe, Prod.smul_fst, Prod.smul_snd, smul_apply,
+        simp only [[anonymous], Prod.smul_fst, Prod.smul_snd, smul_apply,
           snd_sum_finsupp_add_equiv_prod_finsupp, fst_sum_finsupp_add_equiv_prod_finsupp,
           RingHom.id_apply] }
 #align finsupp.sum_finsupp_lequiv_prod_finsupp Finsupp.sumFinsuppLequivProdFinsupp
@@ -1003,7 +1003,7 @@ section Fintype
 
 variable {α M : Type _} (R : Type _) [Fintype α] [Semiring R] [AddCommMonoid M] [Module R M]
 
-variable (S : Type _) [Semiring S] [Module S M] [SmulCommClass R S M]
+variable (S : Type _) [Semiring S] [Module S M] [SMulCommClass R S M]
 
 variable (v : α → M)
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.translations
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,7 +218,7 @@ theorem of_terminated_at_iff_int_fract_pair_seq1_terminated_at :
   rw [terminated_at_iff_s_none, of]
   rcases int_fract_pair.seq1 v with ⟨head, ⟨st⟩⟩
   cases st_n_eq : st n <;>
-    simp [of, st_n_eq, Seq.map, Seq.nth, Stream.map, Seq.TerminatedAt, Stream.nth]
+    simp [of, st_n_eq, Seq.map, Seq.nth, Stream'.map, Seq.TerminatedAt, Stream'.nth]
 #align
   generalized_continued_fraction.of_terminated_at_iff_int_fract_pair_seq1_terminated_at GeneralizedContinuedFraction.of_terminated_at_iff_int_fract_pair_seq1_terminated_at
 

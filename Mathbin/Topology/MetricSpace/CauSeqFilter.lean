@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.cau_seq_filter
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ instance NormedField.is_absolute_value :
 
 open Metric
 
-theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f := by
+theorem CauchySeq.is_cau_seq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f := by
   cases' cauchy_iff.1 hf with hf1 hf2
   intro ε hε
   rcases hf2 { x | dist x.1 x.2 < ε } (dist_mem_uniformity hε) with ⟨t, ⟨ht, htsub⟩⟩
@@ -73,7 +73,7 @@ theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f
   rw [← dist_eq_norm]
   apply @htsub (f j, f N)
   apply Set.mk_mem_prod <;> solve_by_elim [le_refl]
-#align cauchy_seq.is_cau_seq CauchySeq.isCauSeq
+#align cauchy_seq.is_cau_seq CauchySeq.is_cau_seq
 
 theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f := by
   refine' cauchy_iff.2 ⟨by infer_instance, fun s hs => _⟩

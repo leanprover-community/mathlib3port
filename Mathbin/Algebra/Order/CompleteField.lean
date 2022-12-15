@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.complete_field
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ class ConditionallyCompleteLinearOrderedField (α : Type _) extends
 
 -- see Note [lower instance priority]
 /-- Any conditionally complete linearly ordered field is archimedean. -/
-instance (priority := 100) ConditionallyCompleteLinearOrderedField.to_archimedean
+instance (priority := 100) ConditionallyCompleteLinearOrderedField.toArchimedean
     [ConditionallyCompleteLinearOrderedField α] : Archimedean α :=
   archimedean_iff_nat_lt.2
     (by 
@@ -79,7 +79,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrderedField.to_archimedea
             le_sub_iff_add_le.2 <| le_cSup ⟨x, forall_range_iff.2 h⟩ ⟨n + 1, Nat.cast_succ n⟩)
       linarith)
 #align
-  conditionally_complete_linear_ordered_field.to_archimedean ConditionallyCompleteLinearOrderedField.to_archimedean
+  conditionally_complete_linear_ordered_field.to_archimedean ConditionallyCompleteLinearOrderedField.toArchimedean
 
 /-- The reals are a conditionally complete linearly ordered field. -/
 instance : ConditionallyCompleteLinearOrderedField ℝ :=

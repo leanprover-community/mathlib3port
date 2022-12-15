@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.cover
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -376,6 +376,14 @@ theorem covby_iff_wcovby_and_ne : a ⋖ b ↔ a ⩿ b ∧ a ≠ b :=
 theorem wcovby_iff_covby_or_eq : a ⩿ b ↔ a ⋖ b ∨ a = b := by
   rw [le_antisymm_iff, wcovby_iff_covby_or_le_and_le]
 #align wcovby_iff_covby_or_eq wcovby_iff_covby_or_eq
+
+theorem wcovby_iff_eq_or_covby : a ⩿ b ↔ a = b ∨ a ⋖ b :=
+  wcovby_iff_covby_or_eq.trans or_comm
+#align wcovby_iff_eq_or_covby wcovby_iff_eq_or_covby
+
+alias wcovby_iff_covby_or_eq ↔ Wcovby.covby_or_eq _
+
+alias wcovby_iff_eq_or_covby ↔ Wcovby.eq_or_covby _
 
 theorem Covby.eq_or_eq (h : a ⋖ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b :=
   h.Wcovby.eq_or_eq h2 h3

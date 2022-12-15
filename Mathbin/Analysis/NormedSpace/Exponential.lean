@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.exponential
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ theorem exp_eq_tsum : exp 𝕂 = fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂)
   funext exp_series_sum_eq
 #align exp_eq_tsum exp_eq_tsum
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ())) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ())) -/
 @[simp]
 theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 := by
   suffices (fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n) 0 = ∑' n : ℕ, if n = 0 then 1 else 0 by
@@ -296,7 +296,7 @@ noncomputable def invertibleExpOfMemBall [CharZero 𝕂] {x : 𝔸}
 
 theorem is_unit_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
     (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : IsUnit (exp 𝕂 x) :=
-  @is_unit_of_invertible _ _ _ (invertibleExpOfMemBall hx)
+  @isUnit_of_invertible _ _ _ (invertibleExpOfMemBall hx)
 #align is_unit_exp_of_mem_ball is_unit_exp_of_mem_ball
 
 theorem inv_of_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
@@ -355,7 +355,7 @@ variable {𝕂}
 theorem exp_neg_of_mem_ball [CharZero 𝕂] [CompleteSpace 𝔸] {x : 𝔸}
     (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : exp 𝕂 (-x) = (exp 𝕂 x)⁻¹ :=
   letI := invertibleExpOfMemBall hx
-  inv_of_eq_inv (exp 𝕂 x)
+  invOf_eq_inv (exp 𝕂 x)
 #align exp_neg_of_mem_ball exp_neg_of_mem_ball
 
 end AnyFieldDivisionAlgebra
@@ -595,8 +595,8 @@ theorem exp_neg (x : 𝔸) : exp 𝕂 (-x) = (exp 𝕂 x)⁻¹ :=
 
 theorem exp_zsmul (z : ℤ) (x : 𝔸) : exp 𝕂 (z • x) = exp 𝕂 x ^ z := by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [zpow_coe_nat, coe_nat_zsmul, exp_nsmul]
-  · rw [zpow_neg, zpow_coe_nat, neg_smul, exp_neg, coe_nat_zsmul, exp_nsmul]
+  · rw [zpow_ofNat, coe_nat_zsmul, exp_nsmul]
+  · rw [zpow_neg, zpow_ofNat, neg_smul, exp_neg, coe_nat_zsmul, exp_nsmul]
 #align exp_zsmul exp_zsmul
 
 theorem exp_conj (y : 𝔸) (x : 𝔸) (hy : y ≠ 0) : exp 𝕂 (y * x * y⁻¹) = y * exp 𝕂 x * y⁻¹ :=

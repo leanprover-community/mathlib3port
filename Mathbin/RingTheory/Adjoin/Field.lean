@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.field
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
     letI := (f : Algebra.adjoin F (↑s : Set K) →+* L).toAlgebra
     haveI : FiniteDimensional F (Algebra.adjoin F (↑s : Set K)) :=
       ((Submodule.fg_iff_finite_dimensional _).1
-          (fg_adjoin_of_finite s.finite_to_set H3)).ofSubalgebraToSubmodule
+          (fg_adjoin_of_finite s.finite_to_set H3)).of_subalgebra_to_submodule
     letI := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
     have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := is_integral_of_is_scalar_tower H1
     have H6 :
@@ -82,7 +82,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
         (algebraMap (Algebra.adjoin F (↑s : Set K)) L) :=
       by
       refine'
-        Polynomial.splitsOfSplitsOfDvd _
+        Polynomial.splits_of_splits_of_dvd _
           (Polynomial.map_ne_zero <| minpoly.ne_zero H1 : Polynomial.map (algebraMap _ _) _ ≠ 0)
           ((Polynomial.splits_map_iff _ _).2 _) (minpoly.dvd _ _ _)
       · rw [← IsScalarTower.algebra_map_eq]

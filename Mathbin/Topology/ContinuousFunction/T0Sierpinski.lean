@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Sadofschi Costa
 
 ! This file was ported from Lean 3 source module topology.continuous_function.t0_sierpinski
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
   · intro u h
     rw [← generate_from_Union_is_open]
     apply is_open_generate_from_of_mem
-    simp only [Set.mem_Union, Set.mem_set_of_eq, is_open_induced_iff']
+    simp only [Set.mem_Union, Set.mem_setOf_eq, is_open_induced_iff']
     exact ⟨⟨u, h⟩, {True}, is_open_singleton_true, by simp [Set.preimage]⟩
 #align
   topological_space.eq_induced_by_maps_to_sierpinski TopologicalSpace.eq_induced_by_maps_to_sierpinski

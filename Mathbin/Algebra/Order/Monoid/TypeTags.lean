@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.type_tags
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,10 +93,10 @@ instance [LinearOrderedAddCommMonoid α] : LinearOrderedCommMonoid (Multiplicati
 instance [LinearOrderedCommMonoid α] : LinearOrderedAddCommMonoid (Additive α) :=
   { Additive.linearOrder, Additive.orderedAddCommMonoid with }
 
-instance [Add α] [LE α] [HasExistsAddOfLe α] : HasExistsMulOfLe (Multiplicative α) :=
+instance [Add α] [LE α] [ExistsAddOfLE α] : ExistsMulOfLE (Multiplicative α) :=
   ⟨@exists_add_of_le α _ _ _⟩
 
-instance [Mul α] [LE α] [HasExistsMulOfLe α] : HasExistsAddOfLe (Additive α) :=
+instance [Mul α] [LE α] [ExistsMulOfLE α] : ExistsAddOfLE (Additive α) :=
   ⟨@exists_mul_of_le α _ _ _⟩
 
 instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedMonoid (Multiplicative α) :=
@@ -118,25 +118,33 @@ namespace Additive
 
 variable [Preorder α]
 
+#print Additive.ofMul_le /-
 @[simp]
-theorem of_mul_le {a b : α} : ofMul a ≤ ofMul b ↔ a ≤ b :=
+theorem ofMul_le {a b : α} : ofMul a ≤ ofMul b ↔ a ≤ b :=
   Iff.rfl
-#align additive.of_mul_le Additive.of_mul_le
+#align additive.of_mul_le Additive.ofMul_le
+-/
 
+#print Additive.ofMul_lt /-
 @[simp]
-theorem of_mul_lt {a b : α} : ofMul a < ofMul b ↔ a < b :=
+theorem ofMul_lt {a b : α} : ofMul a < ofMul b ↔ a < b :=
   Iff.rfl
-#align additive.of_mul_lt Additive.of_mul_lt
+#align additive.of_mul_lt Additive.ofMul_lt
+-/
 
+#print Additive.toMul_le /-
 @[simp]
-theorem to_mul_le {a b : Additive α} : toMul a ≤ toMul b ↔ a ≤ b :=
+theorem toMul_le {a b : Additive α} : toMul a ≤ toMul b ↔ a ≤ b :=
   Iff.rfl
-#align additive.to_mul_le Additive.to_mul_le
+#align additive.to_mul_le Additive.toMul_le
+-/
 
+#print Additive.toMul_lt /-
 @[simp]
-theorem to_mul_lt {a b : Additive α} : toMul a < toMul b ↔ a < b :=
+theorem toMul_lt {a b : Additive α} : toMul a < toMul b ↔ a < b :=
   Iff.rfl
-#align additive.to_mul_lt Additive.to_mul_lt
+#align additive.to_mul_lt Additive.toMul_lt
+-/
 
 end Additive
 
@@ -144,25 +152,33 @@ namespace Multiplicative
 
 variable [Preorder α]
 
+#print Multiplicative.ofAdd_le /-
 @[simp]
-theorem of_add_le {a b : α} : ofAdd a ≤ ofAdd b ↔ a ≤ b :=
+theorem ofAdd_le {a b : α} : ofAdd a ≤ ofAdd b ↔ a ≤ b :=
   Iff.rfl
-#align multiplicative.of_add_le Multiplicative.of_add_le
+#align multiplicative.of_add_le Multiplicative.ofAdd_le
+-/
 
+#print Multiplicative.ofAdd_lt /-
 @[simp]
-theorem of_add_lt {a b : α} : ofAdd a < ofAdd b ↔ a < b :=
+theorem ofAdd_lt {a b : α} : ofAdd a < ofAdd b ↔ a < b :=
   Iff.rfl
-#align multiplicative.of_add_lt Multiplicative.of_add_lt
+#align multiplicative.of_add_lt Multiplicative.ofAdd_lt
+-/
 
+#print Multiplicative.toAdd_le /-
 @[simp]
-theorem to_add_le {a b : Multiplicative α} : toAdd a ≤ toAdd b ↔ a ≤ b :=
+theorem toAdd_le {a b : Multiplicative α} : toAdd a ≤ toAdd b ↔ a ≤ b :=
   Iff.rfl
-#align multiplicative.to_add_le Multiplicative.to_add_le
+#align multiplicative.to_add_le Multiplicative.toAdd_le
+-/
 
+#print Multiplicative.toAdd_lt /-
 @[simp]
-theorem to_add_lt {a b : Multiplicative α} : toAdd a < toAdd b ↔ a < b :=
+theorem toAdd_lt {a b : Multiplicative α} : toAdd a < toAdd b ↔ a < b :=
   Iff.rfl
-#align multiplicative.to_add_lt Multiplicative.to_add_lt
+#align multiplicative.to_add_lt Multiplicative.toAdd_lt
+-/
 
 end Multiplicative
 

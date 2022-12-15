@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -279,8 +279,8 @@ theorem mul_left_index_le {K : Set G} (hK : IsCompact K) {V : Set G} (hV : (inte
     refine' subset.trans (image_subset _ h1s) _
     rintro _ ⟨g₁, ⟨_, ⟨g₂, rfl⟩, ⟨_, ⟨hg₂, rfl⟩, hg₁⟩⟩, rfl⟩
     simp only [mem_preimage] at hg₁
-    simp only [exists_prop, mem_Union, Finset.mem_map, Equiv.coe_mul_right,
-      exists_exists_and_eq_and, mem_preimage, Equiv.toEmbedding_apply]
+    simp only [exists_prop, mem_Union, Finset.mem_map, Equiv.coe_mulRight, exists_exists_and_eq_and,
+      mem_preimage, Equiv.toEmbedding_apply]
     refine' ⟨_, hg₂, _⟩
     simp only [mul_assoc, hg₁, inv_mul_cancel_left]
 #align measure_theory.measure.haar.mul_left_index_le MeasureTheory.Measure.Haar.mul_left_index_le
@@ -376,7 +376,7 @@ theorem nonempty_Inter_cl_prehaar (K₀ : PositiveCompacts G) :
     apply is_compact_univ_pi
     intro K
     apply is_compact_Icc
-  refine' this.inter_Inter_nonempty (cl_prehaar K₀) (fun s => isClosedClosure) fun t => _
+  refine' this.inter_Inter_nonempty (cl_prehaar K₀) (fun s => is_closed_closure) fun t => _
   let V₀ := ⋂ V ∈ t, (V : open_nhds_of 1).1
   have h1V₀ : IsOpen V₀ := by 
     apply is_open_bInter
@@ -449,7 +449,7 @@ theorem chaar_empty (K₀ : PositiveCompacts G) : chaar K₀ ⊥ = 0 := by
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
     apply prehaar_empty
   · apply continuous_iff_is_closed.mp this
-    exact isClosedSingleton
+    exact is_closed_singleton
 #align measure_theory.measure.haar.chaar_empty MeasureTheory.Measure.Haar.chaar_empty
 
 @[to_additive add_chaar_self]
@@ -464,7 +464,7 @@ theorem chaar_self (K₀ : PositiveCompacts G) : chaar K₀ K₀.toCompacts = 1 
     rw [h2U.interior_eq]
     exact ⟨1, h3U⟩
   · apply continuous_iff_is_closed.mp this
-    exact isClosedSingleton
+    exact is_closed_singleton
 #align measure_theory.measure.haar.chaar_self MeasureTheory.Measure.Haar.chaar_self
 
 @[to_additive add_chaar_mono]
@@ -481,7 +481,7 @@ theorem chaar_mono {K₀ : PositiveCompacts G} {K₁ K₂ : Compacts G} (h : (K�
     rw [h2U.interior_eq]
     exact ⟨1, h3U⟩
   · apply continuous_iff_is_closed.mp this
-    exact isClosedIci
+    exact is_closed_Ici
 #align measure_theory.measure.haar.chaar_mono MeasureTheory.Measure.Haar.chaar_mono
 
 @[to_additive add_chaar_sup_le]
@@ -500,7 +500,7 @@ theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) :
     rw [h2U.interior_eq]
     exact ⟨1, h3U⟩
   · apply continuous_iff_is_closed.mp this
-    exact isClosedIci
+    exact is_closed_Ici
 #align measure_theory.measure.haar.chaar_sup_le MeasureTheory.Measure.Haar.chaar_sup_le
 
 @[to_additive add_chaar_sup_eq]
@@ -537,7 +537,7 @@ theorem chaar_sup_eq [T2Space G] {K₀ : PositiveCompacts G} {K₁ K₂ : Compac
       · refine' subset.trans (mul_subset_mul subset.rfl _) h2L₂
         exact subset.trans (inv_subset.mpr h1U) (inter_subset_right _ _)
   · apply continuous_iff_is_closed.mp this
-    exact isClosedSingleton
+    exact is_closed_singleton
 #align measure_theory.measure.haar.chaar_sup_eq MeasureTheory.Measure.Haar.chaar_sup_eq
 
 @[to_additive is_left_invariant_add_chaar]
@@ -554,7 +554,7 @@ theorem is_left_invariant_chaar {K₀ : PositiveCompacts G} (g : G) (K : Compact
     rw [h2U.interior_eq]
     exact ⟨1, h3U⟩
   · apply continuous_iff_is_closed.mp this
-    exact isClosedSingleton
+    exact is_closed_singleton
 #align
   measure_theory.measure.haar.is_left_invariant_chaar MeasureTheory.Measure.Haar.is_left_invariant_chaar
 

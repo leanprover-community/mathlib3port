@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.add_torsor
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ open AffineMap
 
 theorem AffineSubspace.is_closed_direction_iff (s : AffineSubspace 𝕜 Q) :
     IsClosed (s.direction : Set W) ↔ IsClosed (s : Set Q) := by
-  rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩); · simp [isClosedSingleton]
+  rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩); · simp [is_closed_singleton]
   rw [← (Isometric.vaddConst x).toHomeomorph.symm.is_closed_image,
     AffineSubspace.coe_direction_eq_vsub_set_right hx]
   rfl
@@ -109,7 +109,7 @@ variable [Invertible (2 : 𝕜)]
 
 @[simp]
 theorem dist_left_midpoint (p₁ p₂ : P) : dist p₁ (midpoint 𝕜 p₁ p₂) = ‖(2 : 𝕜)‖⁻¹ * dist p₁ p₂ := by
-  rw [midpoint, dist_comm, dist_line_map_left, inv_of_eq_inv, ← norm_inv]
+  rw [midpoint, dist_comm, dist_line_map_left, invOf_eq_inv, ← norm_inv]
 #align dist_left_midpoint dist_left_midpoint
 
 @[simp]
@@ -131,7 +131,7 @@ theorem dist_midpoint_midpoint_le' (p₁ p₂ p₃ p₄ : P) :
     dist (midpoint 𝕜 p₁ p₂) (midpoint 𝕜 p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / ‖(2 : 𝕜)‖ := by
   rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, midpoint_vsub_midpoint] <;>
     try infer_instance
-  rw [midpoint_eq_smul_add, norm_smul, inv_of_eq_inv, norm_inv, ← div_eq_inv_mul]
+  rw [midpoint_eq_smul_add, norm_smul, invOf_eq_inv, norm_inv, ← div_eq_inv_mul]
   exact div_le_div_of_le_of_nonneg (norm_add_le _ _) (norm_nonneg _)
 #align dist_midpoint_midpoint_le' dist_midpoint_midpoint_le'
 
@@ -185,7 +185,7 @@ theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
 
 include V W
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr continuous.vadd, ",", expr continuous.vsub, ",", expr continuous_const, ",", expr hfc.comp, ",", expr continuous_id, "]"],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr continuous.vadd, ",", expr continuous.vsub, ",", expr continuous_const, ",", expr hfc.comp, ",", expr continuous_id, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- A continuous map between two normed affine spaces is an affine map provided that
 it sends midpoints to midpoints. -/
@@ -198,7 +198,7 @@ def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = m
             (by simp) fun x y => by simp [h]).toRealLinearMap <|
         by
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr continuous.vadd, \",\", expr continuous.vsub, \",\", expr continuous_const, \",\", expr hfc.comp, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"))
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr continuous.vadd, \",\", expr continuous.vsub, \",\", expr continuous_const, \",\", expr hfc.comp, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"))
     (Classical.arbitrary P) fun p => by simp
 #align affine_map.of_map_midpoint AffineMap.ofMapMidpoint
 

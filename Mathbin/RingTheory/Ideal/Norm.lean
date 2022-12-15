@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.norm
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -414,10 +414,10 @@ theorem irreducible_of_irreducible_abs_norm {I : Ideal S} (hI : Irreducible I.ab
     Irreducible I :=
   irreducible_iff.mpr
     ⟨fun h =>
-      hI.not_unit (by simpa only [Ideal.is_unit_iff, Nat.is_unit_iff, abs_norm_eq_one_iff] using h),
+      hI.not_unit (by simpa only [Ideal.is_unit_iff, Nat.isUnit_iff, abs_norm_eq_one_iff] using h),
       by
       rintro a b rfl <;>
-        simpa only [Ideal.is_unit_iff, Nat.is_unit_iff, abs_norm_eq_one_iff] using
+        simpa only [Ideal.is_unit_iff, Nat.isUnit_iff, abs_norm_eq_one_iff] using
           hI.is_unit_or_is_unit (_root_.map_mul abs_norm a b)⟩
 #align ideal.irreducible_of_irreducible_abs_norm Ideal.irreducible_of_irreducible_abs_norm
 

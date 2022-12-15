@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.units
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,7 @@ theorem is_unit_sq {a : ℤ} (ha : IsUnit a) : a ^ 2 = 1 := by rw [sq, is_unit_m
 
 @[simp]
 theorem units_sq (u : ℤˣ) : u ^ 2 = 1 := by
-  rw [Units.ext_iff, Units.coe_pow, Units.val_one, is_unit_sq u.is_unit]
+  rw [Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one, is_unit_sq u.is_unit]
 #align int.units_sq Int.units_sq
 
 alias units_sq ← units_pow_two

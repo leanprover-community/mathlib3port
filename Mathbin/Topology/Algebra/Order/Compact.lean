@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.compact
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -280,7 +280,7 @@ away from compact sets, then it has a global minimum. -/
 theorem Continuous.exists_forall_le' {f : β → α} (hf : Continuous f) (x₀ : β)
     (h : ∀ᶠ x in cocompact β, f x₀ ≤ f x) : ∃ x : β, ∀ y : β, f x ≤ f y :=
   let ⟨x, _, hx⟩ :=
-    hf.ContinuousOn.exists_forall_le' isClosedUniv (mem_univ x₀)
+    hf.ContinuousOn.exists_forall_le' is_closed_univ (mem_univ x₀)
       (by rwa [principal_univ, inf_top_eq])
   ⟨x, fun y => hx y (mem_univ y)⟩
 #align continuous.exists_forall_le' Continuous.exists_forall_le'

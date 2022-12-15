@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.ringed_space
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,7 @@ def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) :
     refine' ⟨_, V.2, hxV⟩
     intro y hy
     use (⟨y, i.le hy⟩ : U)
-    rw [Set.mem_set_of_eq]
+    rw [Set.mem_setOf_eq]
     constructor
     · convert RingHom.is_unit_map (X.presheaf.germ ⟨y, hy⟩) hf
       exact (X.presheaf.germ_res_apply i ⟨y, hy⟩ f).symm

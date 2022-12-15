@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.basic
-! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,16 +127,16 @@ def coeAddHom : AddHom ℕ+ ℕ where
 #align pnat.coe_add_hom PNat.coeAddHom
 
 instance : CovariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
-  Positive.covariant_class_add_le
+  Positive.covariantClass_add_le
 
 instance : CovariantClass ℕ+ ℕ+ (· + ·) (· < ·) :=
-  Positive.covariant_class_add_lt
+  Positive.covariantClass_add_lt
 
 instance : ContravariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
-  Positive.contravariant_class_add_le
+  Positive.contravariantClass_add_le
 
 instance : ContravariantClass ℕ+ ℕ+ (· + ·) (· < ·) :=
-  Positive.contravariant_class_add_lt
+  Positive.contravariantClass_add_lt
 
 /-- An equivalence between `ℕ+` and `ℕ` given by `pnat.nat_pred` and `nat.succ_pnat`. -/
 @[simps (config := { fullyApplied := false })]
