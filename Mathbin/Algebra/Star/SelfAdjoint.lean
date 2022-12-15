@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.self_adjoint
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
+! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,6 +69,11 @@ theorem star_eq [HasStar R] {x : R} (hx : IsSelfAdjoint x) : star x = x :=
 theorem is_self_adjoint_iff [HasStar R] {x : R} : IsSelfAdjoint x ↔ star x = x :=
   Iff.rfl
 #align is_self_adjoint_iff is_self_adjoint_iff
+
+@[simp]
+theorem star_iff [HasInvolutiveStar R] {x : R} : IsSelfAdjoint (star x) ↔ IsSelfAdjoint x := by
+  simpa only [IsSelfAdjoint, star_star] using eq_comm
+#align is_self_adjoint.star_iff IsSelfAdjoint.star_iff
 
 @[simp]
 theorem star_mul_self [Semigroup R] [StarSemigroup R] (x : R) : IsSelfAdjoint (star x * x) := by

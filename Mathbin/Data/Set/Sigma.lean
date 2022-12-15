@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.set.sigma
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
+! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,10 @@ import Mathbin.Data.Set.Image
 
 /-!
 # Sets in sigma types
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/982
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `set.sigma`, the indexed sum of sets.
 -/

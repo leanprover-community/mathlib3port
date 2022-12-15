@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.right_angle
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
+! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -512,29 +512,29 @@ theorem tan_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂
 
 /-- The cosine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 adjacent side. -/
-theorem cos_angle_mul_norm_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2) :
+theorem cos_angle_mul_dist_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2) :
     Real.cos (∠ p₂ p₃ p₁) * dist p₁ p₃ = dist p₃ p₂ := by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
   rw [angle, dist_eq_norm_vsub' V p₃ p₂, dist_eq_norm_vsub V p₁ p₃, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, cos_angle_add_mul_norm_of_inner_eq_zero h]
 #align
-  euclidean_geometry.cos_angle_mul_norm_of_angle_eq_pi_div_two EuclideanGeometry.cos_angle_mul_norm_of_angle_eq_pi_div_two
+  euclidean_geometry.cos_angle_mul_dist_of_angle_eq_pi_div_two EuclideanGeometry.cos_angle_mul_dist_of_angle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 opposite side. -/
-theorem sin_angle_mul_norm_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2) :
+theorem sin_angle_mul_dist_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2) :
     Real.sin (∠ p₂ p₃ p₁) * dist p₁ p₃ = dist p₁ p₂ := by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
   rw [angle, dist_eq_norm_vsub V p₁ p₂, dist_eq_norm_vsub V p₁ p₃, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, sin_angle_add_mul_norm_of_inner_eq_zero h]
 #align
-  euclidean_geometry.sin_angle_mul_norm_of_angle_eq_pi_div_two EuclideanGeometry.sin_angle_mul_norm_of_angle_eq_pi_div_two
+  euclidean_geometry.sin_angle_mul_dist_of_angle_eq_pi_div_two EuclideanGeometry.sin_angle_mul_dist_of_angle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle multiplied by the adjacent side equals
 the opposite side. -/
-theorem tan_angle_mul_norm_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2)
+theorem tan_angle_mul_dist_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2)
     (h0 : p₁ = p₂ ∨ p₃ ≠ p₂) : Real.tan (∠ p₂ p₃ p₁) * dist p₃ p₂ = dist p₁ p₂ := by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
@@ -542,11 +542,11 @@ theorem tan_angle_mul_norm_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ 
   rw [angle, dist_eq_norm_vsub V p₁ p₂, dist_eq_norm_vsub' V p₃ p₂, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, tan_angle_add_mul_norm_of_inner_eq_zero h h0]
 #align
-  euclidean_geometry.tan_angle_mul_norm_of_angle_eq_pi_div_two EuclideanGeometry.tan_angle_mul_norm_of_angle_eq_pi_div_two
+  euclidean_geometry.tan_angle_mul_dist_of_angle_eq_pi_div_two EuclideanGeometry.tan_angle_mul_dist_of_angle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the cosine of the adjacent angle equals the
 hypotenuse. -/
-theorem norm_div_cos_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2)
+theorem dist_div_cos_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2)
     (h0 : p₁ = p₂ ∨ p₃ ≠ p₂) : dist p₃ p₂ / Real.cos (∠ p₂ p₃ p₁) = dist p₁ p₃ := by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
@@ -554,11 +554,11 @@ theorem norm_div_cos_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ 
   rw [angle, dist_eq_norm_vsub' V p₃ p₂, dist_eq_norm_vsub V p₁ p₃, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, norm_div_cos_angle_add_of_inner_eq_zero h h0]
 #align
-  euclidean_geometry.norm_div_cos_angle_of_angle_eq_pi_div_two EuclideanGeometry.norm_div_cos_angle_of_angle_eq_pi_div_two
+  euclidean_geometry.dist_div_cos_angle_of_angle_eq_pi_div_two EuclideanGeometry.dist_div_cos_angle_of_angle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the sine of the opposite angle equals the
 hypotenuse. -/
-theorem norm_div_sin_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2)
+theorem dist_div_sin_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2)
     (h0 : p₁ ≠ p₂ ∨ p₃ = p₂) : dist p₁ p₂ / Real.sin (∠ p₂ p₃ p₁) = dist p₁ p₃ := by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
@@ -566,11 +566,11 @@ theorem norm_div_sin_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ 
   rw [angle, dist_eq_norm_vsub V p₁ p₂, dist_eq_norm_vsub V p₁ p₃, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, norm_div_sin_angle_add_of_inner_eq_zero h h0]
 #align
-  euclidean_geometry.norm_div_sin_angle_of_angle_eq_pi_div_two EuclideanGeometry.norm_div_sin_angle_of_angle_eq_pi_div_two
+  euclidean_geometry.dist_div_sin_angle_of_angle_eq_pi_div_two EuclideanGeometry.dist_div_sin_angle_of_angle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the tangent of the opposite angle equals the
 adjacent side. -/
-theorem norm_div_tan_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2)
+theorem dist_div_tan_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2)
     (h0 : p₁ ≠ p₂ ∨ p₃ = p₂) : dist p₁ p₂ / Real.tan (∠ p₂ p₃ p₁) = dist p₃ p₂ := by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
@@ -578,7 +578,7 @@ theorem norm_div_tan_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ 
   rw [angle, dist_eq_norm_vsub V p₁ p₂, dist_eq_norm_vsub' V p₃ p₂, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, norm_div_tan_angle_add_of_inner_eq_zero h h0]
 #align
-  euclidean_geometry.norm_div_tan_angle_of_angle_eq_pi_div_two EuclideanGeometry.norm_div_tan_angle_of_angle_eq_pi_div_two
+  euclidean_geometry.dist_div_tan_angle_of_angle_eq_pi_div_two EuclideanGeometry.dist_div_tan_angle_of_angle_eq_pi_div_two
 
 end EuclideanGeometry
 

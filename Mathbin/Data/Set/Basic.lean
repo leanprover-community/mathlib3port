@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.basic
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
+! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,10 @@ import Mathbin.Logic.Function.Iterate
 
 /-!
 # Basic properties of sets
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/892
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Sets in Lean are homogeneous; all their elements have the same type. Sets whose elements
 have type `X` are thus defined as `set X := X → Prop`. Note that this function need not

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.set_like.basic
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
+! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,10 @@ import Mathbin.Tactic.Monotonicity.Basic
 
 /-!
 # Typeclass for types with a set-like extensionality property
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/993
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The `has_mem` typeclass is used to let terms of a type have elements.
 Many instances of `has_mem` have a set-like extensionality property:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.star.basic
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
+! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -342,6 +342,27 @@ theorem star_ring_end_self_apply [CommSemiring R] [StarRing R] (x : R) :
     starRingEnd R (starRingEnd R x) = x :=
   star_star x
 #align star_ring_end_self_apply star_ring_end_self_apply
+
+instance RingHom.hasInvolutiveStar {S : Type u} [NonAssocSemiring S] [CommSemiring R] [StarRing R] :
+    HasInvolutiveStar
+      (S →+*
+        R) where 
+  toHasStar := { star := fun f => RingHom.comp (starRingEnd R) f }
+  star_involutive := by 
+    intro
+    ext
+    simp only [RingHom.coe_comp, Function.comp_apply, star_ring_end_self_apply]
+#align ring_hom.has_involutive_star RingHom.hasInvolutiveStar
+
+theorem RingHom.star_def {S : Type u} [NonAssocSemiring S] [CommSemiring R] [StarRing R]
+    (f : S →+* R) : HasStar.star f = RingHom.comp (starRingEnd R) f :=
+  rfl
+#align ring_hom.star_def RingHom.star_def
+
+theorem RingHom.star_apply {S : Type u} [NonAssocSemiring S] [CommSemiring R] [StarRing R]
+    (f : S →+* R) (s : S) : star f s = star (f s) :=
+  rfl
+#align ring_hom.star_apply RingHom.star_apply
 
 -- A more convenient name for complex conjugation
 alias star_ring_end_self_apply ← Complex.conj_conj

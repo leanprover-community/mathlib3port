@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.well_founded
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
+! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,10 @@ import Mathbin.Data.Set.Image
 
 /-!
 # Well-founded relations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/970
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A relation is well-founded if it can be used for induction: for each `x`, `(∀ y, r y x → P y) → P x`
 implies `P x`. Well-founded relations can be used for induction and recursion, including

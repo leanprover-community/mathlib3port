@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.ring
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
+! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,10 @@ import Mathbin.Data.Nat.Order.Basic
 
 /-!
 # Power operations on monoids with zero, semirings, and rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/979
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides additional lemmas about the natural power operator on rings and semirings.
 Further lemmas about ordered semirings and rings can be found in `algebra.group_power.lemmas`.

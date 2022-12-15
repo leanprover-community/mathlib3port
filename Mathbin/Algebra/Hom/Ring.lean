@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.hom.ring
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
+! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,10 @@ import Mathbin.Data.Set.Image
 
 /-!
 # Homomorphisms of semirings and rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/958
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines bundled homomorphisms of (non-unital) semirings and rings. As with monoid and
 groups, we use the same structure `ring_hom a β`, a.k.a. `α →+* β`, for both types of homomorphisms.
