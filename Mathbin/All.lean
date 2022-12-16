@@ -2343,9 +2343,9 @@ import Mathbin.Order.Minimal
 import Mathbin.Order.ModularLattice
 import Mathbin.Order.Monotone.Basic
 import Mathbin.Order.Monotone.Extension
+import Mathbin.Order.Monotone.Monovary
 import Mathbin.Order.Monotone.Odd
 import Mathbin.Order.Monotone.Union
-import Mathbin.Order.Monovary
 import Mathbin.Order.OmegaCompletePartialOrder
 import Mathbin.Order.OrdContinuous
 import Mathbin.Order.OrderIsoNat
