@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.density_theorem
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,8 +35,6 @@ noncomputable section
 open Set Filter Metric MeasureTheory TopologicalSpace
 
 open Nnreal TopologicalSpace
-
-attribute [local instance] Emetric.second_countable_of_sigma_compact
 
 namespace IsDoublingMeasure
 
@@ -150,7 +148,7 @@ end
 
 section Applications
 
-variable [SigmaCompactSpace α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {E : Type _}
+variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {E : Type _}
   [NormedAddCommGroup E]
 
 /-- A version of *Lebesgue's density theorem* for a sequence of closed balls whose centers are

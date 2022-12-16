@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,6 +97,14 @@ protected theorem sup_le_iff {a : α} : s.sup f ≤ a ↔ ∀ b ∈ s, f b ≤ a
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
 #align finset.sup_le_iff Finset.sup_le_iff
 
+alias Finset.sup_le_iff ↔ _ sup_le
+
+attribute [protected] sup_le
+
+theorem le_sup {b : β} (hb : b ∈ s) : f b ≤ s.sup f :=
+  Finset.sup_le_iff.1 le_rfl _ hb
+#align finset.le_sup Finset.le_sup
+
 @[simp]
 theorem sup_bUnion [DecidableEq β] (s : Finset γ) (t : γ → Finset β) :
     (s.bUnion t).sup f = s.sup fun x => (t x).sup f :=
@@ -119,23 +127,15 @@ theorem sup_ite (p : β → Prop) [DecidablePred p] :
   fold_ite _
 #align finset.sup_ite Finset.sup_ite
 
-theorem sup_le {a : α} : (∀ b ∈ s, f b ≤ a) → s.sup f ≤ a :=
-  Finset.sup_le_iff.2
-#align finset.sup_le Finset.sup_le
-
-theorem le_sup {b : β} (hb : b ∈ s) : f b ≤ s.sup f :=
-  Finset.sup_le_iff.1 le_rfl _ hb
-#align finset.le_sup Finset.le_sup
-
 theorem sup_mono_fun {g : β → α} (h : ∀ b ∈ s, f b ≤ g b) : s.sup f ≤ s.sup g :=
-  sup_le fun b hb => le_trans (h b hb) (le_sup hb)
+  Finset.sup_le fun b hb => le_trans (h b hb) (le_sup hb)
 #align finset.sup_mono_fun Finset.sup_mono_fun
 
 theorem sup_mono (h : s₁ ⊆ s₂) : s₁.sup f ≤ s₂.sup f :=
-  sup_le fun b hb => le_sup (h hb)
+  Finset.sup_le fun b hb => le_sup <| h hb
 #align finset.sup_mono Finset.sup_mono
 
-theorem sup_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
+protected theorem sup_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
     (s.sup fun b => t.sup (f b)) = t.sup fun c => s.sup fun b => f b c := by
   refine' eq_of_forall_ge_iff fun a => _
   simp_rw [Finset.sup_le_iff]
@@ -151,17 +151,16 @@ theorem sup_attach (s : Finset β) (f : β → α) : (s.attach.sup fun x => f x)
 /-- See also `finset.product_bUnion`. -/
 theorem sup_product_left (s : Finset β) (t : Finset γ) (f : β × γ → α) :
     (s ×ˢ t).sup f = s.sup fun i => t.sup fun i' => f ⟨i, i'⟩ := by
-  refine' le_antisymm _ (sup_le fun i hi => sup_le fun i' hi' => le_sup <| mem_product.2 ⟨hi, hi'⟩)
-  refine' sup_le _
-  rintro ⟨i, i'⟩ hi
-  rw [mem_product] at hi
-  refine' le_trans _ (le_sup hi.1)
-  convert le_sup hi.2
+  simp only [le_antisymm_iff, Finset.sup_le_iff, mem_product, and_imp, Prod.forall]
+  exact
+    ⟨fun b c hb hc => (le_sup hb).trans' <| le_sup hc, fun b hb c hc =>
+      le_sup <| mem_product.2 ⟨hb, hc⟩⟩
 #align finset.sup_product_left Finset.sup_product_left
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem sup_product_right (s : Finset β) (t : Finset γ) (f : β × γ → α) :
-    (s ×ˢ t).sup f = t.sup fun i' => s.sup fun i => f ⟨i, i'⟩ := by rw [sup_product_left, sup_comm]
+    (s ×ˢ t).sup f = t.sup fun i' => s.sup fun i => f ⟨i, i'⟩ := by
+  rw [sup_product_left, Finset.sup_comm]
 #align finset.sup_product_right Finset.sup_product_right
 
 @[simp]
@@ -358,33 +357,33 @@ theorem inf_top (s : Finset β) : (s.inf fun _ => ⊤) = (⊤ : α) :=
   @sup_bot αᵒᵈ _ _ _ _
 #align finset.inf_top Finset.inf_top
 
-theorem le_inf_iff {a : α} : a ≤ s.inf f ↔ ∀ b ∈ s, a ≤ f b :=
+protected theorem le_inf_iff {a : α} : a ≤ s.inf f ↔ ∀ b ∈ s, a ≤ f b :=
   @Finset.sup_le_iff αᵒᵈ _ _ _ _ _ _
 #align finset.le_inf_iff Finset.le_inf_iff
 
+alias Finset.le_inf_iff ↔ _ le_inf
+
+attribute [protected] le_inf
+
 theorem inf_le {b : β} (hb : b ∈ s) : s.inf f ≤ f b :=
-  le_inf_iff.1 le_rfl _ hb
+  Finset.le_inf_iff.1 le_rfl _ hb
 #align finset.inf_le Finset.inf_le
 
-theorem le_inf {a : α} : (∀ b ∈ s, a ≤ f b) → a ≤ s.inf f :=
-  le_inf_iff.2
-#align finset.le_inf Finset.le_inf
-
 theorem inf_mono_fun {g : β → α} (h : ∀ b ∈ s, f b ≤ g b) : s.inf f ≤ s.inf g :=
-  le_inf fun b hb => le_trans (inf_le hb) (h b hb)
+  Finset.le_inf fun b hb => le_trans (inf_le hb) (h b hb)
 #align finset.inf_mono_fun Finset.inf_mono_fun
 
 theorem inf_mono (h : s₁ ⊆ s₂) : s₂.inf f ≤ s₁.inf f :=
-  le_inf fun b hb => inf_le (h hb)
+  Finset.le_inf fun b hb => inf_le <| h hb
 #align finset.inf_mono Finset.inf_mono
 
 theorem inf_attach (s : Finset β) (f : β → α) : (s.attach.inf fun x => f x) = s.inf f :=
   @sup_attach αᵒᵈ _ _ _ _ _
 #align finset.inf_attach Finset.inf_attach
 
-theorem inf_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
+protected theorem inf_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
     (s.inf fun b => t.inf (f b)) = t.inf fun c => s.inf fun b => f b c :=
-  @sup_comm αᵒᵈ _ _ _ _ _ _ _
+  @Finset.sup_comm αᵒᵈ _ _ _ _ _ _ _
 #align finset.inf_comm Finset.inf_comm
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -670,7 +669,7 @@ theorem sup'_singleton {b : β} {h : ({b} : Finset β).Nonempty} : ({b} : Finset
 
 theorem sup'_le {a : α} (hs : ∀ b ∈ s, f b ≤ a) : s.sup' H f ≤ a := by
   rw [← WithBot.coe_le_coe, coe_sup']
-  exact sup_le fun b h => WithBot.coe_le_coe.2 <| hs b h
+  exact Finset.sup_le fun b h => WithBot.coe_le_coe.2 <| hs b h
 #align finset.sup'_le Finset.sup'_le
 
 theorem le_sup' {b : β} (h : b ∈ s) : f b ≤ s.sup' ⟨b, h⟩ f := by
@@ -847,7 +846,7 @@ section Sup
 variable [SemilatticeSup α] [OrderBot α]
 
 theorem sup'_eq_sup {s : Finset β} (H : s.Nonempty) (f : β → α) : s.sup' H f = s.sup f :=
-  le_antisymm (sup'_le H f fun b => le_sup) (sup_le fun b => le_sup' f)
+  le_antisymm (sup'_le H f fun b => le_sup) (Finset.sup_le fun b => le_sup' f)
 #align finset.sup'_eq_sup Finset.sup'_eq_sup
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b «expr ∈ » s) -/
@@ -1105,9 +1104,9 @@ theorem max_mono {s t : Finset α} (st : s ⊆ t) : s.max ≤ t.max :=
   sup_mono st
 #align finset.max_mono Finset.max_mono
 
-theorem max_le {M : WithBot α} {s : Finset α} (st : ∀ a : α, a ∈ s → (a : WithBot α) ≤ M) :
+protected theorem max_le {M : WithBot α} {s : Finset α} (st : ∀ a ∈ s, (a : WithBot α) ≤ M) :
     s.max ≤ M :=
-  sup_le st
+  Finset.sup_le st
 #align finset.max_le Finset.max_le
 
 /-- Let `s` be a finset in a linear order. Then `s.min` is the minimum of `s` if `s` is not empty,
@@ -1178,8 +1177,8 @@ theorem min_mono {s t : Finset α} (st : s ⊆ t) : t.min ≤ s.min :=
   inf_mono st
 #align finset.min_mono Finset.min_mono
 
-theorem le_min {m : WithTop α} {s : Finset α} (st : ∀ a : α, a ∈ s → m ≤ a) : m ≤ s.min :=
-  le_inf st
+protected theorem le_min {m : WithTop α} {s : Finset α} (st : ∀ a : α, a ∈ s → m ≤ a) : m ≤ s.min :=
+  Finset.le_inf st
 #align finset.le_min Finset.le_min
 
 /-- Given a nonempty finset `s` in a linear order `α`, then `s.min' h` is its minimum, as an

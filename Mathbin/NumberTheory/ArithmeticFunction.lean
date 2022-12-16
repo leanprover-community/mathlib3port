@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.arithmetic_function
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -421,87 +421,32 @@ theorem zeta_apply_ne {x : ℕ} (h : x ≠ 0) : ζ x = 1 :=
 #align nat.arithmetic_function.zeta_apply_ne Nat.ArithmeticFunction.zeta_apply_ne
 
 @[simp]
-theorem coe_zeta_mul_apply [Semiring R] {f : ArithmeticFunction R} {x : ℕ} :
-    (↑ζ * f) x = ∑ i in divisors x, f i := by
-  rw [mul_apply]
-  trans ∑ i in divisors_antidiagonal x, f i.snd
-  · apply sum_congr rfl
-    intro i hi
-    rcases mem_divisors_antidiagonal.1 hi with ⟨rfl, h⟩
-    rw [nat_coe_apply, zeta_apply_ne (left_ne_zero_of_mul h), cast_one, one_mul]
-  · apply sum_bij fun i h => Prod.snd i
-    · rintro ⟨a, b⟩ h
-      simp [snd_mem_divisors_of_mem_antidiagonal h]
-    · rintro ⟨a, b⟩ h
-      rfl
-    · rintro ⟨a1, b1⟩ ⟨a2, b2⟩ h1 h2 h
-      dsimp at h
-      rw [h] at *
-      rw [mem_divisors_antidiagonal] at *
-      ext
-      swap
-      · rfl
-      simp only [Prod.fst, Prod.snd] at *
-      apply Nat.eq_of_mul_eq_mul_right _ (Eq.trans h1.1 h2.1.symm)
-      rcases h1 with ⟨rfl, h⟩
-      apply Nat.pos_of_ne_zero (right_ne_zero_of_mul h)
-    · intro a ha
-      rcases mem_divisors.1 ha with ⟨⟨b, rfl⟩, ne0⟩
-      use (b, a)
-      simp [ne0, mul_comm]
-#align nat.arithmetic_function.coe_zeta_mul_apply Nat.ArithmeticFunction.coe_zeta_mul_apply
-
-theorem coe_zeta_smul_apply {M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
+theorem coe_zeta_smul_apply {M} [Semiring R] [AddCommMonoid M] [Module R M]
     {f : ArithmeticFunction M} {x : ℕ} :
     ((↑ζ : ArithmeticFunction R) • f) x = ∑ i in divisors x, f i := by
   rw [smul_apply]
   trans ∑ i in divisors_antidiagonal x, f i.snd
-  · apply sum_congr rfl
-    intro i hi
+  · refine' sum_congr rfl fun i hi => _
     rcases mem_divisors_antidiagonal.1 hi with ⟨rfl, h⟩
     rw [nat_coe_apply, zeta_apply_ne (left_ne_zero_of_mul h), cast_one, one_smul]
-  · apply sum_bij fun i h => Prod.snd i
-    · rintro ⟨a, b⟩ h
-      simp [snd_mem_divisors_of_mem_antidiagonal h]
-    · rintro ⟨a, b⟩ h
-      rfl
-    · rintro ⟨a1, b1⟩ ⟨a2, b2⟩ h1 h2 h
-      dsimp at h
-      rw [h] at *
-      rw [mem_divisors_antidiagonal] at *
-      ext
-      swap
-      · rfl
-      simp only [Prod.fst, Prod.snd] at *
-      apply Nat.eq_of_mul_eq_mul_right _ (Eq.trans h1.1 h2.1.symm)
-      rcases h1 with ⟨rfl, h⟩
-      apply Nat.pos_of_ne_zero (right_ne_zero_of_mul h)
-    · intro a ha
-      rcases mem_divisors.1 ha with ⟨⟨b, rfl⟩, ne0⟩
-      use (b, a)
-      simp [ne0, mul_comm]
+  · rw [← map_div_left_divisors, sum_map, Function.Embedding.coeFn_mk]
 #align nat.arithmetic_function.coe_zeta_smul_apply Nat.ArithmeticFunction.coe_zeta_smul_apply
+
+@[simp]
+theorem coe_zeta_mul_apply [Semiring R] {f : ArithmeticFunction R} {x : ℕ} :
+    (↑ζ * f) x = ∑ i in divisors x, f i :=
+  coe_zeta_smul_apply
+#align nat.arithmetic_function.coe_zeta_mul_apply Nat.ArithmeticFunction.coe_zeta_mul_apply
 
 @[simp]
 theorem coe_mul_zeta_apply [Semiring R] {f : ArithmeticFunction R} {x : ℕ} :
     (f * ζ) x = ∑ i in divisors x, f i := by
-  apply MulOpposite.op_injective
-  rw [op_sum]
-  convert
-    @coe_zeta_mul_apply Rᵐᵒᵖ _
-      { toFun := MulOpposite.op ∘ f
-        map_zero' := by simp }
-      x
-  rw [mul_apply, mul_apply, op_sum]
-  conv_lhs => rw [← map_swap_divisors_antidiagonal]
-  rw [sum_map]
-  apply sum_congr rfl
-  intro y hy
-  by_cases h1 : y.fst = 0
-  · simp [Function.comp_apply, h1]
-  ·
-    simp only [h1, mul_one, one_mul, Prod.fst_swap, Function.Embedding.coeFn_mk, Prod.snd_swap,
-      if_false, zeta_apply, ZeroHom.coe_mk, nat_coe_apply, cast_one]
+  rw [mul_apply]
+  trans ∑ i in divisors_antidiagonal x, f i.1
+  · refine' sum_congr rfl fun i hi => _
+    rcases mem_divisors_antidiagonal.1 hi with ⟨rfl, h⟩
+    rw [nat_coe_apply, zeta_apply_ne (right_ne_zero_of_mul h), cast_one, mul_one]
+  · rw [← map_div_right_divisors, sum_map, Function.Embedding.coeFn_mk]
 #align nat.arithmetic_function.coe_mul_zeta_apply Nat.ArithmeticFunction.coe_mul_zeta_apply
 
 theorem zeta_mul_apply {f : ArithmeticFunction ℕ} {x : ℕ} : (ζ * f) x = ∑ i in divisors x, f i := by

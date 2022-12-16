@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.differentiation
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,8 +18,8 @@ import Mathbin.MeasureTheory.Decomposition.Lebesgue
 /-!
 # Differentiation of measures
 
-On a metric space with a measure `μ`, consider a Vitali family (i.e., for each `x` one has a family
-of sets shrinking to `x`, with a good behavior with respect to covering theorems).
+On a second countable metric space with a measure `μ`, consider a Vitali family (i.e., for each `x`
+one has a family of sets shrinking to `x`, with a good behavior with respect to covering theorems).
 Consider also another measure `ρ`. Then, for almost every `x`, the ratio `ρ a / μ a` converges when
 `a` shrinks to `x` along the Vitali family, towards the Radon-Nikodym derivative of `ρ` with
 respect to `μ`. This is the main theorem on differentiation of measures.
@@ -61,6 +61,19 @@ almost everywhere measurable, again based on the disjoint subcovering argument
 (see `vitali_family.exists_measurable_supersets_lim_ratio`), and then proceed as sketched above
 but replacing `v.lim_ratio ρ` by a measurable version called `v.lim_ratio_meas ρ`.
 
+## Counterexample
+
+The standing assumption in this file is that spaces are second countable. Without this assumption,
+measures may be zero locally but nonzero globally, which is not compatible with differentiation
+theory (which deduces global information from local one). Here is an example displaying this
+behavior.
+
+Define a measure `μ` by `μ s = 0` if `s` is covered by countably many balls of radius `1`,
+and `μ s = ∞` otherwise. This is indeed a countably additive measure, which is moreover
+locally finite and doubling at small scales. It vanishes on every ball of radius `1`, so all the
+quantities in differentiation theory (defined as ratios of measures as the radius tends to zero)
+make no sense. However, the measure is not globally zero if the space is big enough.
+
 ## References
 
 * [Herbert Federer, Geometric Measure Theory, Chapter 2.9][Federer1996]
@@ -70,8 +83,6 @@ but replacing `v.lim_ratio ρ` by a measurable version called `v.lim_ratio_meas 
 open MeasureTheory Metric Set Filter TopologicalSpace MeasureTheory.Measure
 
 open Filter Ennreal MeasureTheory Nnreal TopologicalSpace
-
-attribute [local instance] Emetric.second_countable_of_sigma_compact
 
 variable {α : Type _} [MetricSpace α] {m0 : MeasurableSpace α} {μ : Measure α} (v : VitaliFamily μ)
   {E : Type _} [NormedAddCommGroup E]
@@ -123,7 +134,7 @@ theorem eventually_measure_lt_top [IsLocallyFiniteMeasure μ] (x : α) :
 
 /-- If two measures `ρ` and `ν` have, at every point of a set `s`, arbitrarily small sets in a
 Vitali family satisfying `ρ a ≤ ν a`, then `ρ s ≤ ν s` if `ρ ≪ μ`.-/
-theorem measure_le_of_frequently_le [SigmaCompactSpace α] [BorelSpace α] {ρ : Measure α}
+theorem measure_le_of_frequently_le [SecondCountableTopology α] [BorelSpace α] {ρ : Measure α}
     (ν : Measure α) [IsLocallyFiniteMeasure ν] (hρ : ρ ≪ μ) (s : Set α)
     (hs : ∀ x ∈ s, ∃ᶠ a in v.filterAt x, ρ a ≤ ν a) : ρ s ≤ ν s :=
   by
@@ -154,7 +165,7 @@ theorem measure_le_of_frequently_le [SigmaCompactSpace α] [BorelSpace α] {ρ :
 
 section
 
-variable [SigmaCompactSpace α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {ρ : Measure α}
+variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {ρ : Measure α}
   [IsLocallyFiniteMeasure ρ]
 
 /-- If a measure `ρ` is singular with respect to `μ`, then for `μ` almost every `x`, the ratio
@@ -857,7 +868,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
     A minor technical inconvenience is that constants are not integrable, so to apply previous lemmas
     we need to replace `c` with the restriction of `c` to a finite measure set `A n` in the
     above sketch. -/
-  let A := MeasureTheory.Measure.finiteSpanningSetsInOpen μ
+  let A := MeasureTheory.Measure.finiteSpanningSetsInOpen' μ
   rcases h'f.is_separable_range with ⟨t, t_count, ht⟩
   have main :
     ∀ᵐ x ∂μ,

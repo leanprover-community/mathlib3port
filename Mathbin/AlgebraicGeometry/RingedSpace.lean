@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.ringed_space
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -192,7 +192,7 @@ theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
     X.basicOpen (f * g) = X.basicOpen f ⊓ X.basicOpen g := by
   ext1
   dsimp [RingedSpace.basic_open]
-  rw [Set.image_inter Subtype.coe_injective]
+  rw [← Set.image_inter Subtype.coe_injective]
   congr
   ext
   simp_rw [map_mul]

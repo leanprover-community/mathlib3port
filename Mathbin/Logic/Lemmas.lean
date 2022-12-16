@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module logic.lemmas
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Tactic.Congr
 import Mathbin.Tactic.Protected
+import Mathbin.Tactic.Rcases
 import Mathbin.Tactic.SplitIfs
 import Mathbin.Logic.Basic
 
@@ -94,4 +96,15 @@ theorem ite_ite_distrib_right : ite p (ite q a b) c = ite q (ite p a c) (ite p b
   dite_dite_distrib_right
 #align ite_ite_distrib_right ite_ite_distrib_right
 -/
+
+theorem PropCat.forall {f : Prop → Prop} : (∀ p, f p) ↔ f True ∧ f False :=
+  ⟨fun h => ⟨h _, h _⟩, by 
+    rintro ⟨h₁, h₀⟩ p
+    by_cases hp : p <;> simp only [hp] <;> assumption⟩
+#align Prop.forall PropCat.forall
+
+theorem PropCat.exists {f : Prop → Prop} : (∃ p, f p) ↔ f True ∨ f False :=
+  ⟨fun ⟨p, h⟩ => by refine' (em p).imp _ _ <;> intro H <;> convert h <;> simp [H], by
+    rintro (h | h) <;> exact ⟨_, h⟩⟩
+#align Prop.exists PropCat.exists
 

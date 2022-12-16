@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.liminf_limsup
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,11 +27,11 @@ carrying a doubling measure.
 -/
 
 
-open Set Filter Metric MeasureTheory
+open Set Filter Metric MeasureTheory TopologicalSpace
 
 open Nnreal Ennreal TopologicalSpace
 
-variable {α : Type _} [MetricSpace α] [SigmaCompactSpace α] [MeasurableSpace α] [BorelSpace α]
+variable {α : Type _} [MetricSpace α] [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α]
 
 variable (μ : Measure α) [IsLocallyFiniteMeasure μ] [IsDoublingMeasure μ]
 

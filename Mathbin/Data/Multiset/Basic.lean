@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.basic
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -871,6 +871,10 @@ theorem strong_downward_induction_on_eq {p : Multiset α → Sort _} (s : Multis
 theorem well_founded_lt : WellFounded ((· < ·) : Multiset α → Multiset α → Prop) :=
   Subrelation.wf (fun _ _ => Multiset.card_lt_of_lt) (measure_wf Multiset.card)
 #align multiset.well_founded_lt Multiset.well_founded_lt
+
+instance is_well_founded_lt : WellFoundedLt (Multiset α) :=
+  ⟨well_founded_lt⟩
+#align multiset.is_well_founded_lt Multiset.is_well_founded_lt
 
 /-! ### `multiset.repeat` -/
 

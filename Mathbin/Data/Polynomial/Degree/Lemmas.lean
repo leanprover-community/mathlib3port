@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.lemmas
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ theorem nat_degree_comp_le : natDegree (p.comp q) ≤ natDegree p * natDegree q 
         _ = _ := congr_arg degree comp_eq_sum_left
         _ ≤ _ := degree_sum_le _ _
         _ ≤ _ :=
-          sup_le fun n hn =>
+          Finset.sup_le fun n hn =>
             calc
               degree (c (coeff p n) * q ^ n) ≤ degree (c (coeff p n)) + degree (q ^ n) :=
                 degree_mul_le _ _

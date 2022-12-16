@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris Van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.regular
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,12 +70,10 @@ is automatically satisfied by any finite measure on a metric space.
 
 * `set.measure_eq_infi_is_open` asserts that, when `μ` is outer regular, the measure of a
   set is the infimum of the measure of open sets containing it.
-* `set.exists_is_open_lt_of_lt'` asserts that, when `μ` is outer regular, for every set `s`
+* `set.exists_is_open_lt_of_lt` asserts that, when `μ` is outer regular, for every set `s`
   and `r > μ s` there exists an open superset `U ⊇ s` of measure less than `r`.
 * push forward of an outer regular measure is outer regular, and scalar multiplication of a regular
   measure by a finite number is outer regular.
-* `measure_theory.measure.outer_regular.of_sigma_compact_space_of_is_locally_finite_measure`:
-  a locally finite measure on a `σ`-compact metric (or even pseudo emetric) space is outer regular.
 
 ### Weakly regular measures
 
@@ -91,9 +89,9 @@ is automatically satisfied by any finite measure on a metric space.
 * `measure_theory.measure.weakly_regular.of_pseudo_emetric_space_of_is_finite_measure` is an
   instance registering that a finite measure on a metric space is weakly regular (in fact, a pseudo
   emetric space is enough);
-* `measure_theory.measure.weakly_regular.of_pseudo_emetric_sigma_compact_space_of_locally_finite`
-  is an instance registering that a locally finite measure on a `σ`-compact metric space (or even
-  a pseudo emetric space) is weakly regular.
+* `measure_theory.measure.weakly_regular.of_pseudo_emetric_second_countable_of_locally_finite`
+  is an instance registering that a locally finite measure on a second countable metric space (or
+  even a pseudo emetric space) is weakly regular.
 
 ### Regular measures
 
@@ -688,20 +686,22 @@ instance (priority := 100) ofPseudoEmetricSpaceOfIsFiniteMeasure {X : Type _} [P
   measure_theory.measure.weakly_regular.of_pseudo_emetric_space_of_is_finite_measure MeasureTheory.Measure.WeaklyRegular.ofPseudoEmetricSpaceOfIsFiniteMeasure
 
 -- see Note [lower instance priority]
-/-- Any locally finite measure on a `σ`-compact metric space (or even a pseudo emetric space) is
-weakly regular. -/
-instance (priority := 100) ofPseudoEmetricSigmaCompactSpaceOfLocallyFinite {X : Type _}
-    [PseudoEmetricSpace X] [SigmaCompactSpace X] [MeasurableSpace X] [BorelSpace X] (μ : Measure X)
-    [IsLocallyFiniteMeasure μ] : WeaklyRegular μ :=
+/-- Any locally finite measure on a second countable metric space (or even a pseudo emetric space)
+is weakly regular. -/
+instance (priority := 100) ofPseudoEmetricSecondCountableOfLocallyFinite {X : Type _}
+    [PseudoEmetricSpace X] [TopologicalSpace.SecondCountableTopology X] [MeasurableSpace X]
+    [BorelSpace X] (μ : Measure X) [IsLocallyFiniteMeasure μ] : WeaklyRegular μ :=
   haveI : outer_regular μ := by
-    refine' (μ.finite_spanning_sets_in_open.mono' fun U hU => _).OuterRegular
+    refine' (μ.finite_spanning_sets_in_open'.mono' fun U hU => _).OuterRegular
     have : Fact (μ U < ∞) := ⟨hU.2⟩
     exact ⟨hU.1, inferInstance⟩
   ⟨inner_regular.of_pseudo_emetric_space μ⟩
 #align
-  measure_theory.measure.weakly_regular.of_pseudo_emetric_sigma_compact_space_of_locally_finite MeasureTheory.Measure.WeaklyRegular.ofPseudoEmetricSigmaCompactSpaceOfLocallyFinite
+  measure_theory.measure.weakly_regular.of_pseudo_emetric_second_countable_of_locally_finite MeasureTheory.Measure.WeaklyRegular.ofPseudoEmetricSecondCountableOfLocallyFinite
 
 end WeaklyRegular
+
+attribute [local instance] Emetric.second_countable_of_sigma_compact
 
 -- see Note [lower instance priority]
 /-- Any locally finite measure on a `σ`-compact (e)metric space is regular. -/

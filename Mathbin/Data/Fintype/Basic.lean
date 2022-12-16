@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.basic
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -648,18 +648,21 @@ theorem to_finset_disjoint_iff {s t : Set α} [Fintype s] [Fintype t] :
     Disjoint s.toFinset t.toFinset ↔ Disjoint s t := by simp only [← disjoint_coe, coe_to_finset]
 #align set.to_finset_disjoint_iff Set.to_finset_disjoint_iff
 
+@[simp]
 theorem to_finset_inter {α : Type _} [DecidableEq α] (s t : Set α) [Fintype (s ∩ t : Set α)]
     [Fintype s] [Fintype t] : (s ∩ t).toFinset = s.toFinset ∩ t.toFinset := by
   ext
   simp
 #align set.to_finset_inter Set.to_finset_inter
 
+@[simp]
 theorem to_finset_union {α : Type _} [DecidableEq α] (s t : Set α) [Fintype (s ∪ t : Set α)]
     [Fintype s] [Fintype t] : (s ∪ t).toFinset = s.toFinset ∪ t.toFinset := by
   ext
   simp
 #align set.to_finset_union Set.to_finset_union
 
+@[simp]
 theorem to_finset_diff {α : Type _} [DecidableEq α] (s t : Set α) [Fintype s] [Fintype t]
     [Fintype (s \ t : Set α)] : (s \ t).toFinset = s.toFinset \ t.toFinset := by
   ext
@@ -672,6 +675,7 @@ theorem to_finset_ne_eq_erase {α : Type _} [DecidableEq α] [Fintype α] (a : �
   simp
 #align set.to_finset_ne_eq_erase Set.to_finset_ne_eq_erase
 
+@[simp]
 theorem to_finset_compl [DecidableEq α] [Fintype α] (s : Set α) [Fintype s] [Fintype ↥(sᶜ)] :
     sᶜ.toFinset = s.toFinsetᶜ := by 
   ext

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.n_ary
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -219,12 +219,12 @@ theorem image2_union_right : image2 f s (t ∪ t') = image2 f s t ∪ image2 f s
 
 theorem image2_inter_left (hf : Injective2 f) :
     image2 f (s ∩ s') t = image2 f s t ∩ image2 f s' t := by
-  simp_rw [← image_uncurry_prod, inter_prod, ← image_inter hf.uncurry]
+  simp_rw [← image_uncurry_prod, inter_prod, image_inter hf.uncurry]
 #align set.image2_inter_left Set.image2_inter_left
 
 theorem image2_inter_right (hf : Injective2 f) :
     image2 f s (t ∩ t') = image2 f s t ∩ image2 f s t' := by
-  simp_rw [← image_uncurry_prod, prod_inter, ← image_inter hf.uncurry]
+  simp_rw [← image_uncurry_prod, prod_inter, image_inter hf.uncurry]
 #align set.image2_inter_right Set.image2_inter_right
 
 /- warning: set.image2_empty_left -> Set.image2_empty_left is a dubious translation:

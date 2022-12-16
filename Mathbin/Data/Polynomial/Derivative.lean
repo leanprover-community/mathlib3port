@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.derivative
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -355,7 +355,7 @@ theorem degree_derivative_eq [NoZeroSmulDivisors ℕ R] (p : R[X]) (hp : 0 < nat
     simp [hp]
   apply le_antisymm
   · rw [derivative_apply]
-    apply le_trans (degree_sum_le _ _) (sup_le fun n hn => _)
+    apply le_trans (degree_sum_le _ _) (Finset.sup_le fun n hn => _)
     apply le_trans (degree_C_mul_X_pow_le _ _) (WithBot.coe_le_coe.2 (tsub_le_tsub_right _ _))
     apply le_nat_degree_of_mem_supp _ hn
   · refine' le_sup _

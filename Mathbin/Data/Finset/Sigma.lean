@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module data.finset.sigma
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,11 +101,10 @@ variable (s t) (f : (Σi, α i) → β)
 
 theorem sup_sigma [SemilatticeSup β] [OrderBot β] :
     (s.Sigma t).sup f = s.sup fun i => (t i).sup fun b => f ⟨i, b⟩ := by
-  refine' (sup_le _).antisymm (sup_le fun i hi => sup_le fun b hb => le_sup <| mem_sigma.2 ⟨hi, hb⟩)
-  rintro ⟨i, b⟩ hb
-  rw [mem_sigma] at hb
-  refine' le_trans _ (le_sup hb.1)
-  convert le_sup hb.2
+  simp only [le_antisymm_iff, Finset.sup_le_iff, mem_sigma, and_imp, Sigma.forall]
+  exact
+    ⟨fun i a hi ha => (le_sup hi).trans' <| le_sup ha, fun i hi a ha =>
+      le_sup <| mem_sigma.2 ⟨hi, ha⟩⟩
 #align finset.sup_sigma Finset.sup_sigma
 
 theorem inf_sigma [SemilatticeInf β] [OrderTop β] :

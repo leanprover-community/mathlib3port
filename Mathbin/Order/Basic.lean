@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.basic
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -741,6 +741,27 @@ theorem le_implies_le_of_le_of_le {a b c d : α} [Preorder α] (hca : c ≤ a) (
     a ≤ b → c ≤ d := fun hab => (hca.trans hab).trans hbd
 #align le_implies_le_of_le_of_le le_implies_le_of_le_of_le
 -/
+
+section PartialOrder
+
+variable [PartialOrder α]
+
+/-- To prove commutativity of a binary operation `○`, we only to check `a ○ b ≤ b ○ a` for all `a`,
+`b`. -/
+theorem commutative_of_le {f : β → β → α} (comm : ∀ a b, f a b ≤ f b a) : ∀ a b, f a b = f b a :=
+  fun a b => (comm _ _).antisymm <| comm _ _
+#align commutative_of_le commutative_of_le
+
+/-- To prove associativity of a commutative binary operation `○`, we only to check
+`(a ○ b) ○ c ≤ a ○ (b ○ c)` for all `a`, `b`, `c`. -/
+theorem associative_of_commutative_of_le {f : α → α → α} (comm : Commutative f)
+    (assoc : ∀ a b c, f (f a b) c ≤ f a (f b c)) : Associative f := fun a b c =>
+  le_antisymm (assoc _ _ _) <| by 
+    rw [comm, comm b, comm _ c, comm a]
+    exact assoc _ _ _
+#align associative_of_commutative_of_le associative_of_commutative_of_le
+
+end PartialOrder
 
 #print Preorder.toLE_injective /-
 @[ext]

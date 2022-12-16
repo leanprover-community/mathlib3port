@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 
 ! This file was ported from Lean 3 source module order.upper_lower
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1013,7 +1013,7 @@ theorem coe_map : (map f s : Set β) = f '' s :=
 
 @[simp]
 protected theorem map_sup : map f (s ⊔ t) = map f s ⊔ map f t :=
-  ext <| (image_inter f.Injective).symm
+  ext <| image_inter f.Injective
 #align upper_set.map_sup UpperSet.map_sup
 
 @[simp]
@@ -1113,7 +1113,7 @@ protected theorem map_sup : map f (s ⊔ t) = map f s ⊔ map f t :=
 
 @[simp]
 protected theorem map_inf : map f (s ⊓ t) = map f s ⊓ map f t :=
-  ext <| (image_inter f.Injective).symm
+  ext <| image_inter f.Injective
 #align lower_set.map_inf LowerSet.map_inf
 
 @[simp]

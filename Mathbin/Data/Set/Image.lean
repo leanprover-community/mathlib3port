@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.image
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -523,26 +523,24 @@ theorem image_inter_subset (f : α → β) (s t : Set α) : f '' (s ∩ t) ⊆ f
 
 /- warning: set.image_inter_on -> Set.image_inter_on is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (Eq.{succ u2} β (f x) (f y)) -> (Eq.{succ u1} α x y))) -> (Eq.{succ u2} (Set.{u2} β) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β f t)) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (Eq.{succ u2} β (f x) (f y)) -> (Eq.{succ u1} α x y))) -> (Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β f t)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α} {t : Set.{u2} α}, (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x t) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s) -> (Eq.{succ u1} β (f x) (f y)) -> (Eq.{succ u2} α x y))) -> (Eq.{succ u1} (Set.{u1} β) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (Set.image.{u2, u1} α β f s) (Set.image.{u2, u1} α β f t)) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s t)))
 Case conversion may be inaccurate. Consider using '#align set.image_inter_on Set.image_inter_onₓ'. -/
 theorem image_inter_on {f : α → β} {s t : Set α} (h : ∀ x ∈ t, ∀ y ∈ s, f x = f y → x = y) :
-    f '' s ∩ f '' t = f '' (s ∩ t) :=
-  Subset.antisymm
-    (fun b ⟨⟨a₁, ha₁, h₁⟩, ⟨a₂, ha₂, h₂⟩⟩ =>
-      have : a₂ = a₁ := h _ ha₂ _ ha₁ (by simp [*])
-      ⟨a₁, ⟨ha₁, this ▸ ha₂⟩, h₁⟩)
-    (image_inter_subset _ _ _)
+    f '' (s ∩ t) = f '' s ∩ f '' t :=
+  (image_inter_subset _ _ _).antisymm fun b ⟨⟨a₁, ha₁, h₁⟩, ⟨a₂, ha₂, h₂⟩⟩ =>
+    have : a₂ = a₁ := h _ ha₂ _ ha₁ (by simp [*])
+    ⟨a₁, ⟨ha₁, this ▸ ha₂⟩, h₁⟩
 #align set.image_inter_on Set.image_inter_on
 
 /- warning: set.image_inter -> Set.image_inter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (Function.Injective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} (Set.{u2} β) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β f t)) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (Function.Injective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β f t)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α} {t : Set.{u2} α}, (Function.Injective.{succ u2, succ u1} α β f) -> (Eq.{succ u1} (Set.{u1} β) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (Set.image.{u2, u1} α β f s) (Set.image.{u2, u1} α β f t)) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s t)))
 Case conversion may be inaccurate. Consider using '#align set.image_inter Set.image_interₓ'. -/
-theorem image_inter {f : α → β} {s t : Set α} (H : Injective f) : f '' s ∩ f '' t = f '' (s ∩ t) :=
+theorem image_inter {f : α → β} {s t : Set α} (H : Injective f) : f '' (s ∩ t) = f '' s ∩ f '' t :=
   image_inter_on fun x _ y _ h => H h
 #align set.image_inter Set.image_inter
 
@@ -687,7 +685,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α}, (Function.Injective.{succ u2, succ u1} α β f) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) (Set.image.{u2, u1} α β f (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) (Set.image.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align set.image_compl_subset Set.image_compl_subsetₓ'. -/
 theorem image_compl_subset {f : α → β} {s : Set α} (H : Injective f) : f '' sᶜ ⊆ (f '' s)ᶜ :=
-  Disjoint.subset_compl_left <| by simp [disjoint_iff_inf_le, image_inter H]
+  Disjoint.subset_compl_left <| by simp [disjoint_iff_inf_le, ← image_inter H]
 #align set.image_compl_subset Set.image_compl_subset
 
 /- warning: set.subset_image_compl -> Set.subset_image_compl is a dubious translation:

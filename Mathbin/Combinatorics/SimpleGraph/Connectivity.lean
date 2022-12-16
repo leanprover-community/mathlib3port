@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.connectivity
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2076,24 +2076,27 @@ section BridgeEdges
 are no longer reachable from one another. -/
 def IsBridge (G : SimpleGraph V) (e : Sym2 V) : Prop :=
   e ∈ G.edgeSet ∧
-    Sym2.lift ⟨fun v w => ¬(G.deleteEdges {e}).Reachable v w, by simp [reachable_comm]⟩ e
+    Sym2.lift ⟨fun v w => ¬(G \ fromEdgeSet {e}).Reachable v w, by simp [reachable_comm]⟩ e
 #align simple_graph.is_bridge SimpleGraph.IsBridge
 
 theorem is_bridge_iff {u v : V} :
-    G.IsBridge ⟦(u, v)⟧ ↔ G.Adj u v ∧ ¬(G.deleteEdges {⟦(u, v)⟧}).Reachable u v :=
+    G.IsBridge ⟦(u, v)⟧ ↔ G.Adj u v ∧ ¬(G \ fromEdgeSet {⟦(u, v)⟧}).Reachable u v :=
   Iff.rfl
 #align simple_graph.is_bridge_iff SimpleGraph.is_bridge_iff
 
 theorem reachable_delete_edges_iff_exists_walk {v w : V} :
-    (G.deleteEdges {⟦(v, w)⟧}).Reachable v w ↔ ∃ p : G.Walk v w, ¬⟦(v, w)⟧ ∈ p.edges := by
+    (G \ fromEdgeSet {⟦(v, w)⟧}).Reachable v w ↔ ∃ p : G.Walk v w, ¬⟦(v, w)⟧ ∈ p.edges := by
   constructor
   · rintro ⟨p⟩
-    use p.map (hom.map_spanning_subgraphs (G.delete_edges_le _))
+    use p.map (hom.map_spanning_subgraphs (by simp))
     simp_rw [walk.edges_map, List.mem_map, hom.map_spanning_subgraphs_apply, Sym2.map_id', id.def]
     rintro ⟨e, h, rfl⟩
     simpa using p.edges_subset_edge_set h
   · rintro ⟨p, h⟩
-    exact ⟨p.to_delete_edge _ h⟩
+    refine' ⟨p.transfer _ fun e ep => _⟩
+    simp only [edge_set_sdiff, edge_set_from_edge_set, edge_set_sdiff_sdiff_is_diag, Set.mem_diff,
+      Set.mem_singleton_iff]
+    exact ⟨p.edges_subset_edge_set ep, fun h' => h (h' ▸ ep)⟩
 #align
   simple_graph.reachable_delete_edges_iff_exists_walk SimpleGraph.reachable_delete_edges_iff_exists_walk
 
@@ -2133,7 +2136,7 @@ theorem ReachableDeleteEdgesIffExistsCycle.aux [DecidableEq V] {u v w : V}
   simple_graph.reachable_delete_edges_iff_exists_cycle.aux SimpleGraph.ReachableDeleteEdgesIffExistsCycle.aux
 
 theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
-    G.Adj v w ∧ (G.deleteEdges {⟦(v, w)⟧}).Reachable v w ↔
+    G.Adj v w ∧ (G \ fromEdgeSet {⟦(v, w)⟧}).Reachable v w ↔
       ∃ (u : V)(p : G.Walk u u), p.IsCycle ∧ ⟦(v, w)⟧ ∈ p.edges :=
   by
   classical 

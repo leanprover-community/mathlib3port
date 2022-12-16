@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1230,7 +1230,7 @@ theorem tendsto_filter_at (μ : Measure α) [SigmaFinite μ] (x : α) :
   · exact closed_ball_subset_closed_ball hr.2
 #align besicovitch.tendsto_filter_at Besicovitch.tendsto_filter_at
 
-variable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] [SigmaCompactSpace β]
+variable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] [SecondCountableTopology β]
   [HasBesicovitchCovering β]
 
 /-- In a space with the Besicovitch covering property, the ratio of the measure of balls converges
@@ -1240,7 +1240,6 @@ theorem ae_tendsto_rn_deriv (ρ μ : Measure β) [IsLocallyFiniteMeasure μ]
     ∀ᵐ x ∂μ,
       Tendsto (fun r => ρ (closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 (ρ.rnDeriv μ x)) :=
   by 
-  haveI : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
   filter_upwards [VitaliFamily.ae_tendsto_rn_deriv (Besicovitch.vitaliFamily μ) ρ] with x hx
   exact hx.comp (tendsto_filter_at μ x)
 #align besicovitch.ae_tendsto_rn_deriv Besicovitch.ae_tendsto_rn_deriv
@@ -1255,8 +1254,7 @@ theorem ae_tendsto_measure_inter_div_of_measurable_set (μ : Measure β) [IsLoca
     ∀ᵐ x ∂μ,
       Tendsto (fun r => μ (s ∩ closedBall x r) / μ (closedBall x r)) (𝓝[>] 0)
         (𝓝 (s.indicator 1 x)) :=
-  by 
-  haveI : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
+  by
   filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div_of_measurable_set
       (Besicovitch.vitaliFamily μ) hs]
   intro x hx
@@ -1273,8 +1271,7 @@ See also `is_doubling_measure.ae_tendsto_measure_inter_div`. -/
 theorem ae_tendsto_measure_inter_div (μ : Measure β) [IsLocallyFiniteMeasure μ] (s : Set β) :
     ∀ᵐ x ∂μ.restrict s,
       Tendsto (fun r => μ (s ∩ closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 1) :=
-  by 
-  haveI : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
+  by
   filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div
       (Besicovitch.vitaliFamily μ)] with x hx using hx.comp (tendsto_filter_at μ x)
 #align besicovitch.ae_tendsto_measure_inter_div Besicovitch.ae_tendsto_measure_inter_div

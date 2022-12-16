@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.basic
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2553,7 +2553,7 @@ theorem map_inf {f g : Filter α} {m : α → β} (h : Injective m) :
   refine' map_inf_le.antisymm _
   rintro t ⟨s₁, hs₁, s₂, hs₂, ht : m ⁻¹' t = s₁ ∩ s₂⟩
   refine' mem_inf_of_inter (image_mem_map hs₁) (image_mem_map hs₂) _
-  rw [image_inter h, image_subset_iff, ht]
+  rw [← image_inter h, image_subset_iff, ht]
 #align filter.map_inf Filter.map_inf
 
 theorem map_inf' {f g : Filter α} {m : α → β} {t : Set α} (htf : t ∈ f) (htg : t ∈ g)

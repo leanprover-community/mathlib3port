@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.opposites
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -485,7 +485,7 @@ theorem op_div [Div α] (a b : α) : op (a / b) = op a / op b :=
 
 #print AddOpposite.unop_div /-
 @[simp]
-theorem unop_div [Div α] (a b : α) : unop (a / b) = unop a / unop b :=
+theorem unop_div [Div α] (a b : αᵃᵒᵖ) : unop (a / b) = unop a / unop b :=
   rfl
 #align add_opposite.unop_div AddOpposite.unop_div
 -/

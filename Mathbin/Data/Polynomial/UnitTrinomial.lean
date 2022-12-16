@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module data.polynomial.unit_trinomial
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,8 +70,8 @@ theorem trinomial_nat_degree (hkm : k < m) (hmn : m < n) (hw : w ≠ 0) :
     (trinomial k m n u v w).natDegree = n := by
   refine'
     nat_degree_eq_of_degree_eq_some
-      (le_antisymm (sup_le fun i h => _)
-        (le_degree_of_ne_zero (by rwa [trinomial_leading_coeff' hkm hmn])))
+      ((Finset.sup_le fun i h => _).antisymm <|
+        le_degree_of_ne_zero <| by rwa [trinomial_leading_coeff' hkm hmn])
   replace h := support_trinomial' k m n u v w h
   rw [mem_insert, mem_insert, mem_singleton] at h
   rcases h with (rfl | rfl | rfl)
@@ -84,8 +84,8 @@ theorem trinomial_nat_trailing_degree (hkm : k < m) (hmn : m < n) (hu : u ≠ 0)
     (trinomial k m n u v w).natTrailingDegree = k := by
   refine'
     nat_trailing_degree_eq_of_trailing_degree_eq_some
-      (le_antisymm (le_inf fun i h => _)
-          (le_trailing_degree_of_ne_zero (by rwa [trinomial_trailing_coeff' hkm hmn]))).symm
+      ((Finset.le_inf fun i h => _).antisymm <|
+          le_trailing_degree_of_ne_zero <| by rwa [trinomial_trailing_coeff' hkm hmn]).symm
   replace h := support_trinomial' k m n u v w h
   rw [mem_insert, mem_insert, mem_singleton] at h
   rcases h with (rfl | rfl | rfl)

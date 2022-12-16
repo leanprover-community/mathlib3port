@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.trailing_degree
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -350,7 +350,7 @@ theorem nat_trailing_degree_mul_X_pow {p : R[X]} (hp : p ≠ 0) (n : ℕ) :
 #align polynomial.nat_trailing_degree_mul_X_pow Polynomial.nat_trailing_degree_mul_X_pow
 
 theorem le_trailing_degree_mul : p.trailingDegree + q.trailingDegree ≤ (p * q).trailingDegree := by
-  refine' le_min fun n hn => _
+  refine' Finset.le_min fun n hn => _
   rw [mem_support_iff, coeff_mul] at hn
   obtain ⟨⟨i, j⟩, hij, hpq⟩ := exists_ne_zero_of_sum_ne_zero hn
   refine'

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.basic
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -433,6 +433,14 @@ theorem ssubset_of_subset_of_ssubset {s₁ s₂ s₃ : Finset α} (hs₁s₂ : s
 theorem exists_of_ssubset {s₁ s₂ : Finset α} (h : s₁ ⊂ s₂) : ∃ x ∈ s₂, x ∉ s₁ :=
   Set.exists_of_ssubset h
 #align finset.exists_of_ssubset Finset.exists_of_ssubset
+
+instance is_well_founded_ssubset : IsWellFounded (Finset α) (· ⊂ ·) :=
+  (Subrelation.is_well_founded (InvImage _ _)) fun _ _ => val_lt_iff.2
+#align finset.is_well_founded_ssubset Finset.is_well_founded_ssubset
+
+instance is_well_founded_lt : WellFoundedLt (Finset α) :=
+  Finset.is_well_founded_ssubset
+#align finset.is_well_founded_lt Finset.is_well_founded_lt
 
 end Subset
 
@@ -2956,7 +2964,7 @@ theorem coe_not_mem_range_equiv_symm (k : ℕ) :
 
 namespace Multiset
 
-variable [DecidableEq α]
+variable [DecidableEq α] {s t : Multiset α}
 
 /-- `to_finset s` removes duplicates from the multiset `s` to produce a finset. -/
 def toFinset (s : Multiset α) : Finset α :=
@@ -3027,9 +3035,15 @@ theorem to_finset_eq_empty {m : Multiset α} : m.toFinset = ∅ ↔ m = 0 :=
 #align multiset.to_finset_eq_empty Multiset.to_finset_eq_empty
 
 @[simp]
-theorem to_finset_subset (s t : Multiset α) : s.toFinset ⊆ t.toFinset ↔ s ⊆ t := by
+theorem to_finset_subset : s.toFinset ⊆ t.toFinset ↔ s ⊆ t := by
   simp only [Finset.subset_iff, Multiset.subset_iff, Multiset.mem_to_finset]
 #align multiset.to_finset_subset Multiset.to_finset_subset
+
+@[simp]
+theorem to_finset_ssubset : s.toFinset ⊂ t.toFinset ↔ s ⊂ t := by
+  simp_rw [Finset.ssubset_def, to_finset_subset]
+  rfl
+#align multiset.to_finset_ssubset Multiset.to_finset_ssubset
 
 @[simp]
 theorem to_finset_dedup (m : Multiset α) : m.dedup.toFinset = m.toFinset := by
@@ -3040,6 +3054,10 @@ theorem to_finset_dedup (m : Multiset α) : m.dedup.toFinset = m.toFinset := by
 theorem to_finset_bind_dedup [DecidableEq β] (m : Multiset α) (f : α → Multiset β) :
     (m.dedup.bind f).toFinset = (m.bind f).toFinset := by simp_rw [to_finset, dedup_bind_dedup]
 #align multiset.to_finset_bind_dedup Multiset.to_finset_bind_dedup
+
+instance is_well_founded_ssubset : IsWellFounded (Multiset β) (· ⊂ ·) :=
+  (Subrelation.is_well_founded (InvImage _ _)) fun _ _ => by classical exact to_finset_ssubset.2
+#align multiset.is_well_founded_ssubset Multiset.is_well_founded_ssubset
 
 end Multiset
 

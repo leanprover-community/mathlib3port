@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1239,8 +1239,7 @@ functions. -/
 def comapₗ [MeasurableSpace α] (f : α → β) : Measure β →ₗ[ℝ≥0∞] Measure α :=
   if hf : Injective f ∧ ∀ s, MeasurableSet s → MeasurableSet (f '' s) then
     (liftLinear (OuterMeasure.comap f)) fun μ s hs t => by
-      simp only [coe_to_outer_measure, outer_measure.comap_apply, ← image_inter hf.1,
-        image_diff hf.1]
+      simp only [coe_to_outer_measure, outer_measure.comap_apply, image_inter hf.1, image_diff hf.1]
       apply le_to_outer_measure_caratheodory
       exact hf.2 s hs
   else 0
@@ -1258,8 +1257,7 @@ then for each measurable set `s` we have `comap f μ s = μ (f '' s)`. -/
 def comap [MeasurableSpace α] (f : α → β) (μ : Measure β) : Measure α :=
   if hf : Injective f ∧ ∀ s, MeasurableSet s → NullMeasurableSet (f '' s) μ then
     (OuterMeasure.comap f μ.toOuterMeasure).toMeasure fun s hs t => by
-      simp only [coe_to_outer_measure, outer_measure.comap_apply, ← image_inter hf.1,
-        image_diff hf.1]
+      simp only [coe_to_outer_measure, outer_measure.comap_apply, image_inter hf.1, image_diff hf.1]
       exact (measure_inter_add_diff₀ _ (hf.2 s hs)).symm
   else 0
 #align measure_theory.measure.comap MeasureTheory.Measure.comap
@@ -3876,6 +3874,17 @@ instance isLocallyFiniteMeasureSmulNnreal [TopologicalSpace α] (μ : Measure α
 #align
   measure_theory.is_locally_finite_measure_smul_nnreal MeasureTheory.isLocallyFiniteMeasureSmulNnreal
 
+protected theorem Measure.is_topological_basis_is_open_lt_top [TopologicalSpace α] (μ : Measure α)
+    [IsLocallyFiniteMeasure μ] : TopologicalSpace.IsTopologicalBasis { s | IsOpen s ∧ μ s < ∞ } :=
+  by 
+  refine' TopologicalSpace.is_topological_basis_of_open_of_nhds (fun s hs => hs.1) _
+  intro x s xs hs
+  rcases μ.exists_is_open_measure_lt_top x with ⟨v, xv, hv, μv⟩
+  refine' ⟨v ∩ s, ⟨hv.inter hs, lt_of_le_of_lt _ μv⟩, ⟨xv, xs⟩, inter_subset_right _ _⟩
+  exact measure_mono (inter_subset_left _ _)
+#align
+  measure_theory.measure.is_topological_basis_is_open_lt_top MeasureTheory.Measure.is_topological_basis_is_open_lt_top
+
 /-- A measure `μ` is finite on compacts if any compact set `K` satisfies `μ K < ∞`. -/
 @[protect_proj]
 class IsFiniteMeasureOnCompacts [TopologicalSpace α] (μ : Measure α) : Prop where
@@ -4521,6 +4530,52 @@ def MeasureTheory.Measure.finiteSpanningSetsInOpen [TopologicalSpace α] [SigmaC
       (Union_compact_covering α)
 #align
   measure_theory.measure.finite_spanning_sets_in_open MeasureTheory.Measure.finiteSpanningSetsInOpen
+
+open TopologicalSpace
+
+/-- A locally finite measure on a second countable topological space admits a finite spanning
+sequence of open sets. -/
+irreducible_def MeasureTheory.Measure.finiteSpanningSetsInOpen' [TopologicalSpace α]
+  [SecondCountableTopology α] {m : MeasurableSpace α} (μ : Measure α) [IsLocallyFiniteMeasure μ] :
+  μ.FiniteSpanningSetsIn { K | IsOpen K } := by
+  suffices H : Nonempty (μ.finite_spanning_sets_in { K | IsOpen K })
+  exact H.some
+  cases isEmpty_or_nonempty α
+  ·
+    exact
+      ⟨{  Set := fun n => ∅
+          set_mem := fun n => by simp
+          Finite := fun n => by simp
+          spanning := by simp }⟩
+  inhabit α
+  let S : Set (Set α) := { s | IsOpen s ∧ μ s < ∞ }
+  obtain ⟨T, T_count, TS, hT⟩ : ∃ T : Set (Set α), T.Countable ∧ T ⊆ S ∧ ⋃₀T = ⋃₀S :=
+    is_open_sUnion_countable S fun s hs => hs.1
+  rw [μ.is_topological_basis_is_open_lt_top.sUnion_eq] at hT
+  have T_ne : T.nonempty := by 
+    by_contra h'T
+    simp only [not_nonempty_iff_eq_empty.1 h'T, sUnion_empty] at hT
+    simpa only [← hT] using mem_univ (default : α)
+  obtain ⟨f, hf⟩ : ∃ f : ℕ → Set α, T = range f
+  exact T_count.exists_eq_range T_ne
+  have fS : ∀ n, f n ∈ S := by 
+    intro n
+    apply TS
+    rw [hf]
+    exact mem_range_self n
+  refine'
+    ⟨{  Set := f
+        set_mem := fun n => (fS n).1
+        Finite := fun n => (fS n).2
+        spanning := _ }⟩
+  apply eq_univ_of_forall fun x => _
+  obtain ⟨t, tT, xt⟩ : ∃ t : Set α, t ∈ range f ∧ x ∈ t := by
+    have : x ∈ ⋃₀T := by simp only [hT]
+    simpa only [mem_sUnion, exists_prop, ← hf]
+  obtain ⟨n, rfl⟩ : ∃ n : ℕ, f n = t := by simpa only using tT
+  exact mem_Union_of_mem _ xt
+#align
+  measure_theory.measure.finite_spanning_sets_in_open' MeasureTheory.Measure.finiteSpanningSetsInOpen'
 
 section MeasureIxx
 

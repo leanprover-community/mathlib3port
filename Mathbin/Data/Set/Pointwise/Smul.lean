@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.smul
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -786,7 +786,7 @@ theorem subset_set_smul_iff : A ⊆ a • B ↔ a⁻¹ • A ⊆ B :=
 
 @[to_additive]
 theorem smul_set_inter : a • (s ∩ t) = a • s ∩ a • t :=
-  (image_inter <| MulAction.injective a).symm
+  image_inter <| MulAction.injective a
 #align set.smul_set_inter Set.smul_set_inter
 
 @[to_additive]

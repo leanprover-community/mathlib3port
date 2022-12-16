@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.quasi_separated
-! leanprover-community/mathlib commit a59dad53320b73ef180174aae867addd707ef00e
+! leanprover-community/mathlib commit d012cd09a9b256d870751284dd6a29882b0be105
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem OpenEmbedding.is_quasi_separated_iff (h : OpenEmbedding f) {s : Set α} 
     IsQuasiSeparated s ↔ IsQuasiSeparated (f '' s) := by
   refine' ⟨fun hs => hs.image_of_embedding h.to_embedding, _⟩
   intro H U V hU hU' hU'' hV hV' hV''
-  rw [h.to_embedding.is_compact_iff_is_compact_image, ← Set.image_inter h.inj]
+  rw [h.to_embedding.is_compact_iff_is_compact_image, Set.image_inter h.inj]
   exact
     H (f '' U) (f '' V) (Set.image_subset _ hU) (h.is_open_map _ hU') (hU''.image h.continuous)
       (Set.image_subset _ hV) (h.is_open_map _ hV') (hV''.image h.continuous)
