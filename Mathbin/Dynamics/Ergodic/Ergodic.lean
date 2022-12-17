@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.ergodic
-! leanprover-community/mathlib commit b3f25363ae62cb169e72cd6b8b1ac97bacf21ca7
+! leanprover-community/mathlib commit 11bb0c9152e5d14278fb0ac5e0be6d50e2c8fa05
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,6 +35,8 @@ preserving condition is relaxed to quasi measure preserving.
 
 
 open Set Function Filter MeasureTheory MeasureTheory.Measure
+
+open Ennreal
 
 variable {α : Type _} {m : MeasurableSpace α} (f : α → α) {s : Set α}
 
@@ -120,15 +122,6 @@ theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ'
 
 end MeasureTheory.MeasurePreserving
 
-namespace Ergodic
-
-/-- An ergodic map is quasi ergodic. -/
-theorem quasiErgodic (hf : Ergodic f μ) : QuasiErgodic f μ :=
-  { hf.toPreErgodic, hf.toMeasurePreserving.QuasiMeasurePreserving with }
-#align ergodic.quasi_ergodic Ergodic.quasiErgodic
-
-end Ergodic
-
 namespace QuasiErgodic
 
 /-- For a quasi ergodic map, sets that are almost invariant (rather than strictly invariant) are
@@ -140,4 +133,59 @@ theorem ae_empty_or_univ' (hf : QuasiErgodic f μ) (hs : MeasurableSet s) (hs' :
 #align quasi_ergodic.ae_empty_or_univ' QuasiErgodic.ae_empty_or_univ'
 
 end QuasiErgodic
+
+namespace Ergodic
+
+/-- An ergodic map is quasi ergodic. -/
+theorem quasiErgodic (hf : Ergodic f μ) : QuasiErgodic f μ :=
+  { hf.toPreErgodic, hf.toMeasurePreserving.QuasiMeasurePreserving with }
+#align ergodic.quasi_ergodic Ergodic.quasiErgodic
+
+/-- See also `ergodic.ae_empty_or_univ_of_preimage_ae_le`. -/
+theorem ae_empty_or_univ_of_preimage_ae_le' (hf : Ergodic f μ) (hs : MeasurableSet s)
+    (hs' : f ⁻¹' s ≤ᵐ[μ] s) (h_fin : μ s ≠ ∞) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ := by
+  refine' hf.quasi_ergodic.ae_empty_or_univ' hs _
+  refine' ae_eq_of_ae_subset_of_measure_ge hs' (hf.measure_preimage hs).symm.le _ h_fin
+  exact measurableSetPreimage hf.measurable hs
+#align ergodic.ae_empty_or_univ_of_preimage_ae_le' Ergodic.ae_empty_or_univ_of_preimage_ae_le'
+
+/-- See also `ergodic.ae_empty_or_univ_of_ae_le_preimage`. -/
+theorem ae_empty_or_univ_of_ae_le_preimage' (hf : Ergodic f μ) (hs : MeasurableSet s)
+    (hs' : s ≤ᵐ[μ] f ⁻¹' s) (h_fin : μ s ≠ ∞) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ := by
+  replace h_fin : μ (f ⁻¹' s) ≠ ∞; · rwa [hf.measure_preimage hs]
+  refine' hf.quasi_ergodic.ae_empty_or_univ' hs _
+  exact (ae_eq_of_ae_subset_of_measure_ge hs' (hf.measure_preimage hs).le hs h_fin).symm
+#align ergodic.ae_empty_or_univ_of_ae_le_preimage' Ergodic.ae_empty_or_univ_of_ae_le_preimage'
+
+/-- See also `ergodic.ae_empty_or_univ_of_image_ae_le`. -/
+theorem ae_empty_or_univ_of_image_ae_le' (hf : Ergodic f μ) (hs : MeasurableSet s)
+    (hs' : f '' s ≤ᵐ[μ] s) (h_fin : μ s ≠ ∞) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ := by
+  replace hs' : s ≤ᵐ[μ] f ⁻¹' s :=
+    (HasSubset.Subset.eventually_le (subset_preimage_image f s)).trans
+      (hf.quasi_measure_preserving.preimage_mono_ae hs')
+  exact ae_empty_or_univ_of_ae_le_preimage' hf hs hs' h_fin
+#align ergodic.ae_empty_or_univ_of_image_ae_le' Ergodic.ae_empty_or_univ_of_image_ae_le'
+
+section IsFiniteMeasure
+
+variable [IsFiniteMeasure μ]
+
+theorem ae_empty_or_univ_of_preimage_ae_le (hf : Ergodic f μ) (hs : MeasurableSet s)
+    (hs' : f ⁻¹' s ≤ᵐ[μ] s) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ :=
+  ae_empty_or_univ_of_preimage_ae_le' hf hs hs' <| measure_ne_top μ s
+#align ergodic.ae_empty_or_univ_of_preimage_ae_le Ergodic.ae_empty_or_univ_of_preimage_ae_le
+
+theorem ae_empty_or_univ_of_ae_le_preimage (hf : Ergodic f μ) (hs : MeasurableSet s)
+    (hs' : s ≤ᵐ[μ] f ⁻¹' s) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ :=
+  ae_empty_or_univ_of_ae_le_preimage' hf hs hs' <| measure_ne_top μ s
+#align ergodic.ae_empty_or_univ_of_ae_le_preimage Ergodic.ae_empty_or_univ_of_ae_le_preimage
+
+theorem ae_empty_or_univ_of_image_ae_le (hf : Ergodic f μ) (hs : MeasurableSet s)
+    (hs' : f '' s ≤ᵐ[μ] s) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ :=
+  ae_empty_or_univ_of_image_ae_le' hf hs hs' <| measure_ne_top μ s
+#align ergodic.ae_empty_or_univ_of_image_ae_le Ergodic.ae_empty_or_univ_of_image_ae_le
+
+end IsFiniteMeasure
+
+end Ergodic
 

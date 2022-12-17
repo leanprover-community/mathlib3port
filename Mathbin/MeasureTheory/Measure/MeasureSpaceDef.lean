@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space_def
-! leanprover-community/mathlib commit b3f25363ae62cb169e72cd6b8b1ac97bacf21ca7
+! leanprover-community/mathlib commit 11bb0c9152e5d14278fb0ac5e0be6d50e2c8fa05
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -472,7 +472,11 @@ theorem ae_le_set_inter {s' t' : Set α} (h : s ≤ᵐ[μ] t) (h' : s' ≤ᵐ[μ
   h.inter h'
 #align measure_theory.ae_le_set_inter MeasureTheory.ae_le_set_inter
 
-@[simp]
+theorem ae_le_set_union {s' t' : Set α} (h : s ≤ᵐ[μ] t) (h' : s' ≤ᵐ[μ] t') :
+    (s ∪ s' : Set α) ≤ᵐ[μ] (t ∪ t' : Set α) :=
+  h.union h'
+#align measure_theory.ae_le_set_union MeasureTheory.ae_le_set_union
+
 theorem union_ae_eq_right : (s ∪ t : Set α) =ᵐ[μ] t ↔ μ (s \ t) = 0 := by
   simp [eventually_le_antisymm_iff, ae_le_set, union_diff_right,
     diff_eq_empty.2 (Set.subset_union_right _ _)]

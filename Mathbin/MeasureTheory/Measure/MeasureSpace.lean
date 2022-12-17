@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit b3f25363ae62cb169e72cd6b8b1ac97bacf21ca7
+! leanprover-community/mathlib commit 11bb0c9152e5d14278fb0ac5e0be6d50e2c8fa05
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -297,12 +297,34 @@ theorem measure_compl (h₁ : MeasurableSet s) (h_fin : μ s ≠ ∞) : μ (sᶜ
   exact measure_diff (subset_univ s) h₁ h_fin
 #align measure_theory.measure_compl MeasureTheory.measure_compl
 
+@[simp]
+theorem union_ae_eq_left_iff_ae_subset : (s ∪ t : Set α) =ᵐ[μ] s ↔ t ≤ᵐ[μ] s := by
+  rw [ae_le_set]
+  refine'
+    ⟨fun h => by simpa only [union_diff_left] using (ae_eq_set.mp h).1, fun h =>
+      eventually_le_antisymm_iff.mpr
+        ⟨by rwa [ae_le_set, union_diff_left],
+          HasSubset.Subset.eventually_le <| subset_union_left s t⟩⟩
+#align measure_theory.union_ae_eq_left_iff_ae_subset MeasureTheory.union_ae_eq_left_iff_ae_subset
+
+@[simp]
+theorem union_ae_eq_right_iff_ae_subset : (s ∪ t : Set α) =ᵐ[μ] t ↔ s ≤ᵐ[μ] t := by
+  rw [union_comm, union_ae_eq_left_iff_ae_subset]
+#align measure_theory.union_ae_eq_right_iff_ae_subset MeasureTheory.union_ae_eq_right_iff_ae_subset
+
+theorem ae_eq_of_ae_subset_of_measure_ge (h₁ : s ≤ᵐ[μ] t) (h₂ : μ t ≤ μ s) (hsm : MeasurableSet s)
+    (ht : μ t ≠ ∞) : s =ᵐ[μ] t := by
+  refine' eventually_le_antisymm_iff.mpr ⟨h₁, ae_le_set.mpr _⟩
+  replace h₂ : μ t = μ s; exact h₂.antisymm (measure_mono_ae h₁)
+  replace ht : μ s ≠ ∞; exact h₂ ▸ ht
+  rw [measure_diff' t hsm ht, measure_congr (union_ae_eq_left_iff_ae_subset.mpr h₁), h₂, tsub_self]
+#align
+  measure_theory.ae_eq_of_ae_subset_of_measure_ge MeasureTheory.ae_eq_of_ae_subset_of_measure_ge
+
 /-- If `s ⊆ t`, `μ t ≤ μ s`, `μ t ≠ ∞`, and `s` is measurable, then `s =ᵐ[μ] t`. -/
 theorem ae_eq_of_subset_of_measure_ge (h₁ : s ⊆ t) (h₂ : μ t ≤ μ s) (hsm : MeasurableSet s)
     (ht : μ t ≠ ∞) : s =ᵐ[μ] t :=
-  have A : μ t = μ s := h₂.antisymm (measure_mono h₁)
-  have B : μ s ≠ ∞ := A ▸ ht
-  h₁.EventuallyLe.antisymm <| ae_le_set.2 <| by rw [measure_diff h₁ hsm B, A, tsub_self]
+  ae_eq_of_ae_subset_of_measure_ge (HasSubset.Subset.eventually_le h₁) h₂ hsm ht
 #align measure_theory.ae_eq_of_subset_of_measure_ge MeasureTheory.ae_eq_of_subset_of_measure_ge
 
 theorem measure_Union_congr_of_subset [Countable β] {s : β → Set α} {t : β → Set α}
@@ -3604,6 +3626,16 @@ theorem countable_meas_pos_of_disjoint_Union {ι : Type _} [MeasurableSpace α] 
 #align
   measure_theory.measure.countable_meas_pos_of_disjoint_Union MeasureTheory.Measure.countable_meas_pos_of_disjoint_Union
 
+theorem countable_meas_level_set_pos {α β : Type _} [MeasurableSpace α] {μ : Measure α}
+    [SigmaFinite μ] [MeasurableSpace β] [MeasurableSingletonClass β] {g : α → β}
+    (g_mble : Measurable g) : Set.Countable { t : β | 0 < μ { a : α | g a = t } } :=
+  haveI level_sets_disjoint : Pairwise (Disjoint on fun t : β => { a : α | g a = t }) :=
+    fun s t hst => Disjoint.preimage g (disjoint_singleton.mpr hst)
+  measure.countable_meas_pos_of_disjoint_Union
+    (fun b => g_mble (‹MeasurableSingletonClass β›.measurableSetSingleton b)) level_sets_disjoint
+#align
+  measure_theory.measure.countable_meas_level_set_pos MeasureTheory.Measure.countable_meas_level_set_pos
+
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t' «expr ⊇ » t) -/
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
 satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
@@ -4304,6 +4336,11 @@ theorem map_ae (f : α ≃ᵐ β) (μ : Measure α) : Filter.map f μ.ae = (map 
   ext s
   simp_rw [mem_map, mem_ae_iff, ← preimage_compl, f.map_apply]
 #align measurable_equiv.map_ae MeasurableEquiv.map_ae
+
+theorem quasiMeasurePreservingSymm (μ : Measure α) (e : α ≃ᵐ β) :
+    QuasiMeasurePreserving e.symm (map e μ) μ :=
+  ⟨e.symm.Measurable, by rw [measure.map_map, e.symm_comp_self, measure.map_id] <;> measurability⟩
+#align measurable_equiv.quasi_measure_preserving_symm MeasurableEquiv.quasiMeasurePreservingSymm
 
 end MeasurableEquiv
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.measure_preserving
-! leanprover-community/mathlib commit b3f25363ae62cb169e72cd6b8b1ac97bacf21ca7
+! leanprover-community/mathlib commit 11bb0c9152e5d14278fb0ac5e0be6d50e2c8fa05
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -180,6 +180,15 @@ theorem exists_mem_image_mem [IsFiniteMeasure μ] (hf : MeasurePreserving f μ �
   measure_theory.measure_preserving.exists_mem_image_mem MeasureTheory.MeasurePreserving.exists_mem_image_mem
 
 end MeasurePreserving
+
+namespace MeasurableEquiv
+
+theorem measurePreservingSymm (μ : Measure α) (e : α ≃ᵐ β) : MeasurePreserving e.symm (map e μ) μ :=
+  (e.Measurable.MeasurePreserving μ).symm _
+#align
+  measure_theory.measurable_equiv.measure_preserving_symm MeasureTheory.MeasurableEquiv.measurePreservingSymm
+
+end MeasurableEquiv
 
 end MeasureTheory
 
