@@ -1116,6 +1116,7 @@ import Mathbin.Combinatorics.Quiver.ConnectedComponent
 import Mathbin.Combinatorics.Quiver.Path
 import Mathbin.Combinatorics.Quiver.Push
 import Mathbin.Combinatorics.Quiver.Subquiver
+import Mathbin.Combinatorics.Quiver.Symmetric
 import Mathbin.Combinatorics.SetFamily.Compression.Down
 import Mathbin.Combinatorics.SetFamily.Compression.Uv
 import Mathbin.Combinatorics.SetFamily.HarrisKleitman

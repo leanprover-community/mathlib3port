@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.free_groupoid
-! leanprover-community/mathlib commit 11bb0c9152e5d14278fb0ac5e0be6d50e2c8fa05
+! leanprover-community/mathlib commit 706d88f2b8fdfeb0b22796433d7a6c1a010af9f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,7 @@ import Mathbin.CategoryTheory.Groupoid
 import Mathbin.Tactic.NthRewrite.Default
 import Mathbin.CategoryTheory.PathCategory
 import Mathbin.CategoryTheory.Quotient
+import Mathbin.Combinatorics.Quiver.Symmetric
 
 /-!
 # Free groupoid on a quiver
@@ -53,16 +54,6 @@ namespace Free
 universe u v u' v' u'' v''
 
 variable {V : Type u} [Quiver.{v + 1} V]
-
-/-- Shorthand for the "forward" arrow corresponding to `f` in `symmetrify V` -/
-abbrev Quiver.Hom.toPos {X Y : V} (f : X ⟶ Y) : (Quiver.symmetrifyQuiver V).Hom X Y :=
-  Sum.inl f
-#align category_theory.groupoid.free.quiver.hom.to_pos CategoryTheory.Groupoid.Free.Quiver.Hom.toPos
-
-/-- Shorthand for the "backward" arrow corresponding to `f` in `symmetrify V` -/
-abbrev Quiver.Hom.toNeg {X Y : V} (f : X ⟶ Y) : (Quiver.symmetrifyQuiver V).Hom Y X :=
-  Sum.inr f
-#align category_theory.groupoid.free.quiver.hom.to_neg CategoryTheory.Groupoid.Free.Quiver.Hom.toNeg
 
 /-- Shorthand for the "forward" arrow corresponding to `f` in `paths $ symmetrify V` -/
 abbrev Quiver.Hom.toPosPath {X Y : V} (f : X ⟶ Y) :
@@ -201,10 +192,11 @@ theorem lift_unique (φ : V ⥤q V') (Φ : FreeGroupoid V ⥤ V') (hΦ : (of V �
     Φ = lift φ := by 
   apply quotient.lift_unique
   apply paths.lift_unique
-  apply Quiver.Symmetrify.lift_unique
+  fapply @Quiver.Symmetrify.lift_unique _ _ _ _ _ _ _ _ _
   · rw [← functor.to_prefunctor_comp]
     exact hΦ
-  · rintro X Y f
+  · constructor
+    rintro X Y f
     simp only [← functor.to_prefunctor_comp, Prefunctor.comp_map, paths.of_map, inv_eq_inv]
     change
       Φ.map (inv ((quotient.functor red_step).toPrefunctor.map f.to_path)) =

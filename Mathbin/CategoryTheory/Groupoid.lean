@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison, David Wärn
 
 ! This file was ported from Lean 3 source module category_theory.groupoid
-! leanprover-community/mathlib commit 11bb0c9152e5d14278fb0ac5e0be6d50e2c8fa05
+! leanprover-community/mathlib commit 706d88f2b8fdfeb0b22796433d7a6c1a010af9f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,6 +98,12 @@ instance (priority := 100) groupoidHasInvolutiveReverse :
 theorem Groupoid.reverse_eq_inv (f : X ⟶ Y) : Quiver.reverse f = Groupoid.inv f :=
   rfl
 #align category_theory.groupoid.reverse_eq_inv CategoryTheory.Groupoid.reverse_eq_inv
+
+instance functorMapReverse {D : Type _} [Groupoid D] (F : C ⥤ D) :
+    F.toPrefunctor.MapReverse where map_reverse' X Y f := by
+    simp only [Quiver.reverse, Quiver.HasReverse.reverse', groupoid.inv_eq_inv,
+      functor.to_prefunctor_map, functor.map_inv]
+#align category_theory.functor_map_reverse CategoryTheory.functorMapReverse
 
 variable (X Y)
 
