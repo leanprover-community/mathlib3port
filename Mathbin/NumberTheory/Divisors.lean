@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.divisors
-! leanprover-community/mathlib commit 706d88f2b8fdfeb0b22796433d7a6c1a010af9f2
+! leanprover-community/mathlib commit dcf2250875895376a142faeeac5eabff32c48655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -212,10 +212,10 @@ theorem divisors_antidiagonal_one : divisorsAntidiagonal 1 = {(1, 1)} := by
   simp [Nat.mul_eq_one_iff, Prod.ext_iff]
 #align nat.divisors_antidiagonal_one Nat.divisors_antidiagonal_one
 
-theorem swap_mem_divisors_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisorsAntidiagonal n) :
-    x.swap ∈ divisorsAntidiagonal n := by
-  rw [mem_divisors_antidiagonal, mul_comm] at h
-  simp [h.1, h.2]
+@[simp]
+theorem swap_mem_divisors_antidiagonal {x : ℕ × ℕ} :
+    x.swap ∈ divisorsAntidiagonal n ↔ x ∈ divisorsAntidiagonal n := by
+  rw [mem_divisors_antidiagonal, mem_divisors_antidiagonal, mul_comm, Prod.swap]
 #align nat.swap_mem_divisors_antidiagonal Nat.swap_mem_divisors_antidiagonal
 
 theorem fst_mem_divisors_of_mem_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisorsAntidiagonal n) :
@@ -232,19 +232,11 @@ theorem snd_mem_divisors_of_mem_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisor
 
 @[simp]
 theorem map_swap_divisors_antidiagonal :
-    (divisorsAntidiagonal n).map ⟨Prod.swap, Prod.swap_rightInverse.Injective⟩ =
-      divisorsAntidiagonal n :=
-  by 
+    (divisorsAntidiagonal n).map (Equiv.prodComm _ _).toEmbedding = divisorsAntidiagonal n := by
+  rw [← coe_inj, coe_map, Equiv.coe_toEmbedding, Equiv.coe_prodComm,
+    Set.image_swap_eq_preimage_swap]
   ext
-  simp only [exists_prop, mem_divisors_antidiagonal, Finset.mem_map, Function.Embedding.coeFn_mk,
-    Ne.def, Prod.swap_prod_mk, Prod.exists]
-  constructor
-  · rintro ⟨x, y, ⟨⟨rfl, h⟩, rfl⟩⟩
-    simp [mul_comm, h]
-  · rintro ⟨rfl, h⟩
-    use a.snd, a.fst
-    rw [mul_comm]
-    simp [h]
+  exact swap_mem_divisors_antidiagonal
 #align nat.map_swap_divisors_antidiagonal Nat.map_swap_divisors_antidiagonal
 
 @[simp]
@@ -263,27 +255,22 @@ theorem map_div_right_divisors :
     n.divisors.map ⟨fun d => (d, n / d), fun p₁ p₂ => congr_arg Prod.fst⟩ =
       n.divisorsAntidiagonal :=
   by 
-  obtain rfl | hn := Decidable.eq_or_ne n 0
-  · simp
   ext ⟨d, nd⟩
-  simp only [and_true_iff, Finset.mem_map, exists_eq_left, Ne.def, hn, not_false_iff,
-    mem_divisors_antidiagonal, Function.Embedding.coeFn_mk, mem_divisors]
+  simp only [mem_map, mem_divisors_antidiagonal, Function.Embedding.coeFn_mk, mem_divisors,
+    Prod.ext_iff, exists_prop, and_left_comm, exists_eq_left]
   constructor
-  · rintro ⟨a, ⟨k, rfl⟩, h⟩
-    obtain ⟨rfl, rfl⟩ := Prod.mk.inj_iff.1 h
-    have := (mul_ne_zero_iff.1 hn).1
-    rw [Nat.mul_div_cancel_left _ (zero_lt_iff.mpr this)]
-  · rintro rfl
-    refine' ⟨d, dvd_mul_right _ _, _⟩
-    have := (mul_ne_zero_iff.1 hn).1
-    rw [Nat.mul_div_cancel_left _ (zero_lt_iff.mpr this)]
+  · rintro ⟨⟨⟨k, rfl⟩, hn⟩, rfl⟩
+    rw [Nat.mul_div_cancel_left _ (left_ne_zero_of_mul hn).bot_lt]
+    exact ⟨rfl, hn⟩
+  · rintro ⟨rfl, hn⟩
+    exact ⟨⟨dvd_mul_right _ _, hn⟩, Nat.mul_div_cancel_left _ (left_ne_zero_of_mul hn).bot_lt⟩
 #align nat.map_div_right_divisors Nat.map_div_right_divisors
 
 theorem map_div_left_divisors :
     n.divisors.map ⟨fun d => (n / d, d), fun p₁ p₂ => congr_arg Prod.snd⟩ =
       n.divisorsAntidiagonal :=
   by 
-  apply Finset.map_injective ⟨Prod.swap, prod.swap_right_inverse.injective⟩
+  apply Finset.map_injective (Equiv.prodComm _ _).toEmbedding
   rw [map_swap_divisors_antidiagonal, ← map_div_right_divisors, Finset.map_map]
   rfl
 #align nat.map_div_left_divisors Nat.map_div_left_divisors

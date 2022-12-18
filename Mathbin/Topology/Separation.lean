@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit 706d88f2b8fdfeb0b22796433d7a6c1a010af9f2
+! leanprover-community/mathlib commit dcf2250875895376a142faeeac5eabff32c48655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1455,16 +1455,23 @@ theorem tendsto_const_nhds_iff [T1Space α] {l : Filter β} [NeBot l] {c d : α}
     Tendsto (fun x => c) l (𝓝 d) ↔ c = d := by simp_rw [tendsto, Filter.map_const, pure_le_nhds_iff]
 #align tendsto_const_nhds_iff tendsto_const_nhds_iff
 
-/-- If the punctured neighborhoods of a point form a nontrivial filter, then any neighborhood is
-infinite. -/
-theorem infinite_of_mem_nhds {α} [TopologicalSpace α] [T1Space α] (x : α) [hx : NeBot (𝓝[≠] x)]
-    {s : Set α} (hs : s ∈ 𝓝 x) : Set.Infinite s := by
-  intro hsf
+/-- A point with a finite neighborhood has to be isolated. -/
+theorem is_open_singleton_of_finite_mem_nhds {α : Type _} [TopologicalSpace α] [T1Space α] (x : α)
+    {s : Set α} (hs : s ∈ 𝓝 x) (hsf : s.Finite) : IsOpen ({x} : Set α) := by
   have A : {x} ⊆ s := by simp only [singleton_subset_iff, mem_of_mem_nhds hs]
   have B : IsClosed (s \ {x}) := (hsf.subset (diff_subset _ _)).IsClosed
   have C : (s \ {x})ᶜ ∈ 𝓝 x := B.is_open_compl.mem_nhds fun h => h.2 rfl
   have D : {x} ∈ 𝓝 x := by simpa only [← diff_eq, diff_diff_cancel_left A] using inter_mem hs C
-  rwa [← mem_interior_iff_mem_nhds, interior_singleton] at D
+  rwa [← mem_interior_iff_mem_nhds, ← singleton_subset_iff, subset_interior_iff_is_open] at D
+#align is_open_singleton_of_finite_mem_nhds is_open_singleton_of_finite_mem_nhds
+
+/-- If the punctured neighborhoods of a point form a nontrivial filter, then any neighborhood is
+infinite. -/
+theorem infinite_of_mem_nhds {α} [TopologicalSpace α] [T1Space α] (x : α) [hx : NeBot (𝓝[≠] x)]
+    {s : Set α} (hs : s ∈ 𝓝 x) : Set.Infinite s := by
+  refine' fun hsf => hx.1 _
+  rw [← is_open_singleton_iff_punctured_nhds]
+  exact is_open_singleton_of_finite_mem_nhds x hs hsf
 #align infinite_of_mem_nhds infinite_of_mem_nhds
 
 theorem discreteOfT1OfFinite {X : Type _} [TopologicalSpace X] [T1Space X] [Finite X] :

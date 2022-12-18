@@ -6,7 +6,7 @@ Authors: Mario Carneiro
 Coinductive formalization of unbounded computations.
 
 ! This file was ported from Lean 3 source module data.seq.computation
-! leanprover-community/mathlib commit 706d88f2b8fdfeb0b22796433d7a6c1a010af9f2
+! leanprover-community/mathlib commit dcf2250875895376a142faeeac5eabff32c48655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit 706d88f2b8fdfeb0b22796433d7a6c1a010af9f2
+! leanprover-community/mathlib commit dcf2250875895376a142faeeac5eabff32c48655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1262,6 +1262,12 @@ theorem is_open_singleton_iff_nhds_eq_pure (a : α) : IsOpen ({a} : Set α) ↔ 
   · intro h
     simp [is_open_iff_nhds, h]
 #align is_open_singleton_iff_nhds_eq_pure is_open_singleton_iff_nhds_eq_pure
+
+theorem is_open_singleton_iff_punctured_nhds {α : Type _} [TopologicalSpace α] (a : α) :
+    IsOpen ({a} : Set α) ↔ 𝓝[≠] a = ⊥ := by
+  rw [is_open_singleton_iff_nhds_eq_pure, nhdsWithin, ← mem_iff_inf_principal_compl, ← le_pure_iff,
+    nhds_ne_bot.le_pure_iff]
+#align is_open_singleton_iff_punctured_nhds is_open_singleton_iff_punctured_nhds
 
 theorem mem_closure_iff_frequently {s : Set α} {a : α} : a ∈ closure s ↔ ∃ᶠ x in 𝓝 a, x ∈ s := by
   rw [Filter.Frequently, Filter.Eventually, ← mem_interior_iff_mem_nhds,

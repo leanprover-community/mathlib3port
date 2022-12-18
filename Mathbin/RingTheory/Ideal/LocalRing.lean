@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.local_ring
-! leanprover-community/mathlib commit 706d88f2b8fdfeb0b22796433d7a6c1a010af9f2
+! leanprover-community/mathlib commit dcf2250875895376a142faeeac5eabff32c48655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -689,6 +689,16 @@ theorem map_comp (f : T →+* R) (g : R →+* S) [IsLocalRingHom f] [IsLocalRing
       (LocalRing.ResidueField.map g).comp (LocalRing.ResidueField.map f) :=
   Ideal.Quotient.ring_hom_ext <| RingHom.ext fun x => rfl
 #align local_ring.residue_field.map_comp LocalRing.ResidueField.map_comp
+
+theorem map_comp_residue (f : R →+* S) [IsLocalRingHom f] :
+    (ResidueField.map f).comp (residue R) = (residue S).comp f :=
+  rfl
+#align local_ring.residue_field.map_comp_residue LocalRing.ResidueField.map_comp_residue
+
+theorem map_residue (f : R →+* S) [IsLocalRingHom f] (r : R) :
+    ResidueField.map f (residue R r) = residue S (f r) :=
+  rfl
+#align local_ring.residue_field.map_residue LocalRing.ResidueField.map_residue
 
 theorem map_id_apply (x : ResidueField R) : map (RingHom.id R) x = x :=
   FunLike.congr_fun map_id x
