@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.basic
-! leanprover-community/mathlib commit dcf2250875895376a142faeeac5eabff32c48655
+! leanprover-community/mathlib commit c5c7e2760814660967bc27f0de95d190a22297f3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -722,6 +722,10 @@ theorem C_inj : c a = c b ↔ a = b :=
 theorem C_eq_zero : c a = 0 ↔ a = 0 :=
   C_injective.eq_iff' (map_zero c)
 #align polynomial.C_eq_zero Polynomial.C_eq_zero
+
+theorem C_ne_zero : c a ≠ 0 ↔ a ≠ 0 :=
+  C_eq_zero.Not
+#align polynomial.C_ne_zero Polynomial.C_ne_zero
 
 theorem subsingleton_iff_subsingleton : Subsingleton R[X] ↔ Subsingleton R :=
   ⟨@Injective.subsingleton _ _ _ C_injective, by 
