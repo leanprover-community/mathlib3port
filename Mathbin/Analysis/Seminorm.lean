@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.seminorm
-! leanprover-community/mathlib commit d4f69d96f3532729da8ebb763f4bc26fcf640f06
+! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Real.Pointwise
 import Mathbin.Analysis.Convex.Function
 import Mathbin.Analysis.LocallyConvex.Basic
+import Mathbin.Analysis.Normed.Group.AddTorsor
 
 /-!
 # Seminorms
@@ -739,6 +740,22 @@ theorem closed_ball_add_closed_ball_subset (p : Seminorm 𝕜 E) (r₁ r₂ : �
   rw [mem_closed_ball, add_sub_add_comm]
   exact (map_add_le_add p _ _).trans (add_le_add hy₁ hy₂)
 #align seminorm.closed_ball_add_closed_ball_subset Seminorm.closed_ball_add_closed_ball_subset
+
+theorem sub_mem_ball (p : Seminorm 𝕜 E) (x₁ x₂ y : E) (r : ℝ) :
+    x₁ - x₂ ∈ p.ball y r ↔ x₁ ∈ p.ball (x₂ + y) r := by simp_rw [mem_ball, sub_sub]
+#align seminorm.sub_mem_ball Seminorm.sub_mem_ball
+
+/-- The image of a ball under addition with a singleton is another ball. -/
+theorem vadd_ball (p : Seminorm 𝕜 E) : x +ᵥ p.ball y r = p.ball (x +ᵥ y) r :=
+  letI := AddGroupSeminorm.toSeminormedAddCommGroup p.to_add_group_seminorm
+  vadd_ball x y r
+#align seminorm.vadd_ball Seminorm.vadd_ball
+
+/-- The image of a closed ball under addition with a singleton is another closed ball. -/
+theorem vadd_closed_ball (p : Seminorm 𝕜 E) : x +ᵥ p.closedBall y r = p.closedBall (x +ᵥ y) r :=
+  letI := AddGroupSeminorm.toSeminormedAddCommGroup p.to_add_group_seminorm
+  vadd_closed_ball x y r
+#align seminorm.vadd_closed_ball Seminorm.vadd_closed_ball
 
 end HasSmul
 

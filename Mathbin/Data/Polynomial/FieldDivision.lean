@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.field_division
-! leanprover-community/mathlib commit d4f69d96f3532729da8ebb763f4bc26fcf640f06
+! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,12 +45,12 @@ theorem derivative_root_multiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hp
   have hn : n + 1 = _ := tsub_add_cancel_of_le ((root_multiplicity_pos hp).mpr hpt)
   rw [← hn]
   set q := p /ₘ (X - C t) ^ (n + 1) with hq
-  convert_to root_multiplicity t ((X - C t) ^ n * (derivative q * (X - C t) + q * ↑(n + 1))) = n
+  convert_to root_multiplicity t ((X - C t) ^ n * (derivative q * (X - C t) + q * C ↑(n + 1))) = n
   · congr
     rw [mul_add, mul_left_comm <| (X - C t) ^ n, ← pow_succ']
     congr 1
     rw [mul_left_comm <| (X - C t) ^ n, mul_comm <| (X - C t) ^ n]
-  have h : (derivative q * (X - C t) + q * ↑(n + 1)).eval t ≠ 0 := by
+  have h : (derivative q * (X - C t) + q * C ↑(n + 1)).eval t ≠ 0 := by
     suffices eval t q * ↑(n + 1) ≠ 0 by simpa
     refine' mul_ne_zero _ (nat.cast_ne_zero.mpr n.succ_ne_zero)
     convert eval_div_by_monic_pow_root_multiplicity_ne_zero t hp

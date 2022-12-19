@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.discriminant
-! leanprover-community/mathlib commit d4f69d96f3532729da8ebb763f4bc26fcf640f06
+! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,9 +111,9 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
             (Nat.succ_le_iff.2 (mul_pos (tsub_pos_iff_lt.2 hp.out.one_lt) (pow_pos hp.out.pos _)))
             (Even.mul_right (Nat.even_sub_one_of_prime_ne_two hp.out hptwo) _) odd_one)
   · have H := congr_arg derivative (cyclotomic_prime_pow_mul_X_pow_sub_one K p k)
-    rw [derivative_mul, derivative_sub, derivative_one, sub_zero, derivative_pow, derivative_X,
-      mul_one, derivative_sub, derivative_one, sub_zero, derivative_pow, derivative_X, mul_one, ←
-      PNat.pow_coe, hζ.minpoly_eq_cyclotomic_of_irreducible hirr] at H
+    rw [derivative_mul, derivative_sub, derivative_one, sub_zero, derivative_X_pow, C_eq_nat_cast,
+      derivative_sub, derivative_one, sub_zero, derivative_X_pow, C_eq_nat_cast, ← PNat.pow_coe,
+      hζ.minpoly_eq_cyclotomic_of_irreducible hirr] at H
     replace H := congr_arg (fun P => aeval ζ P) H
     simp only [aeval_add, aeval_mul, minpoly.aeval, zero_mul, add_zero, aeval_nat_cast,
       _root_.map_sub, aeval_one, aeval_X_pow] at H

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.with_seminorms
-! leanprover-community/mathlib commit d4f69d96f3532729da8ebb763f4bc26fcf640f06
+! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,11 +291,90 @@ variable [TopologicalSpace E]
 
 variable {p : SeminormFamily 𝕜 E ι}
 
+theorem WithSeminorms.topological_add_group (hp : WithSeminorms p) : TopologicalAddGroup E := by
+  rw [hp.with_seminorms_eq]
+  exact AddGroupFilterBasis.is_topological_add_group _
+#align with_seminorms.topological_add_group WithSeminorms.topological_add_group
+
 theorem WithSeminorms.has_basis (hp : WithSeminorms p) :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ p.basis_sets) id := by
   rw [congr_fun (congr_arg (@nhds E) hp.1) 0]
   exact AddGroupFilterBasis.nhds_zero_has_basis _
 #align with_seminorms.has_basis WithSeminorms.has_basis
+
+theorem WithSeminorms.has_basis_zero_ball (hp : WithSeminorms p) :
+    (𝓝 (0 : E)).HasBasis (fun sr : Finset ι × ℝ => 0 < sr.2) fun sr => (sr.1.sup p).ball 0 sr.2 :=
+  by 
+  refine' ⟨fun V => _⟩
+  simp only [hp.has_basis.mem_iff, SeminormFamily.basis_sets_iff, Prod.exists]
+  constructor
+  · rintro ⟨-, ⟨s, r, hr, rfl⟩, hV⟩
+    exact ⟨s, r, hr, hV⟩
+  · rintro ⟨s, r, hr, hV⟩
+    exact ⟨_, ⟨s, r, hr, rfl⟩, hV⟩
+#align with_seminorms.has_basis_zero_ball WithSeminorms.has_basis_zero_ball
+
+theorem WithSeminorms.has_basis_ball (hp : WithSeminorms p) {x : E} :
+    (𝓝 (x : E)).HasBasis (fun sr : Finset ι × ℝ => 0 < sr.2) fun sr => (sr.1.sup p).ball x sr.2 :=
+  by 
+  haveI : TopologicalAddGroup E := hp.topological_add_group
+  rw [← map_add_left_nhds_zero]
+  convert hp.has_basis_zero_ball.map ((· + ·) x)
+  ext sr : 1
+  have : (sr.fst.sup p).ball (x +ᵥ 0) sr.snd = x +ᵥ (sr.fst.sup p).ball 0 sr.snd :=
+    Eq.symm (Seminorm.vadd_ball (sr.fst.sup p))
+  rwa [vadd_eq_add, add_zero] at this
+#align with_seminorms.has_basis_ball WithSeminorms.has_basis_ball
+
+/-- The `x`-neighbourhoods of a space whose topology is induced by a family of seminorms
+are exactly the sets which contain seminorm balls around `x`.-/
+theorem WithSeminorms.mem_nhds_iff (hp : WithSeminorms p) (x : E) (U : Set E) :
+    U ∈ nhds x ↔ ∃ s : Finset ι, ∃ r > 0, (s.sup p).ball x r ⊆ U := by
+  rw [hp.has_basis_ball.mem_iff, Prod.exists]
+#align with_seminorms.mem_nhds_iff WithSeminorms.mem_nhds_iff
+
+/-- The open sets of a space whose topology is induced by a family of seminorms
+are exactly the sets which contain seminorm balls around all of their points.-/
+theorem WithSeminorms.is_open_iff_mem_balls (hp : WithSeminorms p) (U : Set E) :
+    IsOpen U ↔ ∀ x ∈ U, ∃ s : Finset ι, ∃ r > 0, (s.sup p).ball x r ⊆ U := by
+  simp_rw [← WithSeminorms.mem_nhds_iff hp _ U, is_open_iff_mem_nhds]
+#align with_seminorms.is_open_iff_mem_balls WithSeminorms.is_open_iff_mem_balls
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- Note that through the following lemmas, one also immediately has that separating families
+of seminorms induce T₂ and T₃ topologies by `topological_add_group.t2_space`
+and `topological_add_group.t3_space` -/
+/-- A separating family of seminorms induces a T₁ topology. -/
+theorem WithSeminorms.t1_of_separating (hp : WithSeminorms p)
+    (h : ∀ (x) (_ : x ≠ 0), ∃ i, p i x ≠ 0) : T1Space E := by
+  haveI := hp.topological_add_group
+  refine' TopologicalAddGroup.t1_space _ _
+  rw [← is_open_compl_iff, hp.is_open_iff_mem_balls]
+  rintro x (hx : x ≠ 0)
+  cases' h x hx with i pi_nonzero
+  refine' ⟨{i}, p i x, by positivity, subset_compl_singleton_iff.mpr _⟩
+  rw [Finset.sup_singleton, mem_ball, zero_sub, map_neg_eq_map, not_lt]
+#align with_seminorms.t1_of_separating WithSeminorms.t1_of_separating
+
+/-- A family of seminorms inducing a T₁ topology is separating. -/
+theorem WithSeminorms.separating_of_t1 [T1Space E] (hp : WithSeminorms p) (x : E) (hx : x ≠ 0) :
+    ∃ i, p i x ≠ 0 := by 
+  have := ((t1_space_tfae E).out 0 9).mp inferInstance
+  by_contra' h
+  refine' hx (this _)
+  rw [hp.has_basis_zero_ball.specializes_iff]
+  rintro ⟨s, r⟩ (hr : 0 < r)
+  simp only [ball_finset_sup_eq_Inter _ _ _ hr, mem_Inter₂, mem_ball_zero, h, hr, forall_true_iff]
+#align with_seminorms.separating_of_t1 WithSeminorms.separating_of_t1
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/-- A family of seminorms is separating iff it induces a T₁ topology. -/
+theorem WithSeminorms.separating_iff_t1 (hp : WithSeminorms p) :
+    (∀ (x) (_ : x ≠ 0), ∃ i, p i x ≠ 0) ↔ T1Space E := by
+  refine' ⟨WithSeminorms.t1_of_separating hp, _⟩
+  intro
+  exact WithSeminorms.separating_of_t1 hp
+#align with_seminorms.separating_iff_t1 WithSeminorms.separating_iff_t1
 
 end Topology
 

@@ -6,7 +6,7 @@ Authors: Kevin Buzzard, Patrick Massot
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 
 ! This file was ported from Lean 3 source module group_theory.quotient_group
-! leanprover-community/mathlib commit d4f69d96f3532729da8ebb763f4bc26fcf640f06
+! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
