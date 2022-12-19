@@ -6,7 +6,7 @@ Authors: Johannes Hölzl
 Without loss of generality tactic.
 
 ! This file was ported from Lean 3 source module tactic.wlog
-! leanprover-community/mathlib commit c5c7e2760814660967bc27f0de95d190a22297f3
+! leanprover-community/mathlib commit d4f69d96f3532729da8ebb763f4bc26fcf640f06
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

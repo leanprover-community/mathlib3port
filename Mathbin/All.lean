@@ -2952,6 +2952,7 @@ import Mathbin.Topology.Order.Priestley
 import Mathbin.Topology.Paracompact
 import Mathbin.Topology.PartitionOfUnity
 import Mathbin.Topology.PathConnected
+import Mathbin.Topology.Perfect
 import Mathbin.Topology.QuasiSeparated
 import Mathbin.Topology.Semicontinuous
 import Mathbin.Topology.Separation

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit c5c7e2760814660967bc27f0de95d190a22297f3
+! leanprover-community/mathlib commit d4f69d96f3532729da8ebb763f4bc26fcf640f06
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -988,6 +988,14 @@ theorem eventually_eventually_nhds {p : α → Prop} {a : α} :
 #align eventually_eventually_nhds eventually_eventually_nhds
 
 @[simp]
+theorem frequently_frequently_nhds {p : α → Prop} {a : α} :
+    (∃ᶠ y in 𝓝 a, ∃ᶠ x in 𝓝 y, p x) ↔ ∃ᶠ x in 𝓝 a, p x := by
+  rw [← not_iff_not]
+  simp_rw [not_frequently]
+  exact eventually_eventually_nhds
+#align frequently_frequently_nhds frequently_frequently_nhds
+
+@[simp]
 theorem eventually_mem_nhds {s : Set α} {a : α} : (∀ᶠ x in 𝓝 a, s ∈ 𝓝 x) ↔ s ∈ 𝓝 a :=
   eventually_eventually_nhds
 #align eventually_mem_nhds eventually_mem_nhds
@@ -1196,6 +1204,39 @@ theorem map_cluster_pt_of_comp {ι δ : Type _} {F : Filter ι} {φ : δ → ι}
   have : map (u ∘ φ) p ≤ 𝓝 x ⊓ map u F := le_inf H this
   exact ne_bot_of_le this
 #align map_cluster_pt_of_comp map_cluster_pt_of_comp
+
+/-- A point `x` is an accumulation point of a filter `F` if `𝓝[≠] x ⊓ F ≠ ⊥`.-/
+def AccPt (x : α) (F : Filter α) : Prop :=
+  NeBot (𝓝[≠] x ⊓ F)
+#align acc_pt AccPt
+
+theorem acc_iff_cluster (x : α) (F : Filter α) : AccPt x F ↔ ClusterPt x (𝓟 ({x}ᶜ) ⊓ F) := by
+  rw [AccPt, nhdsWithin, ClusterPt, inf_assoc]
+#align acc_iff_cluster acc_iff_cluster
+
+/-- `x` is an accumulation point of a set `C` iff it is a cluster point of `C ∖ {x}`.-/
+theorem acc_principal_iff_cluster (x : α) (C : Set α) : AccPt x (𝓟 C) ↔ ClusterPt x (𝓟 (C \ {x})) :=
+  by rw [acc_iff_cluster, inf_principal, inter_comm] <;> rfl
+#align acc_principal_iff_cluster acc_principal_iff_cluster
+
+/-- `x` is an accumulation point of a set `C` iff every neighborhood
+of `x` contains a point of `C` other than `x`. -/
+theorem acc_pt_iff_nhds (x : α) (C : Set α) : AccPt x (𝓟 C) ↔ ∀ U ∈ 𝓝 x, ∃ y ∈ U ∩ C, y ≠ x := by
+  simp [acc_principal_iff_cluster, cluster_pt_principal_iff, Set.Nonempty, exists_prop, and_assoc',
+    and_comm' ¬_ = x]
+#align acc_pt_iff_nhds acc_pt_iff_nhds
+
+/-- `x` is an accumulation point of a set `C` iff
+there are points near `x` in `C` and different from `x`.-/
+theorem acc_pt_iff_frequently (x : α) (C : Set α) : AccPt x (𝓟 C) ↔ ∃ᶠ y in 𝓝 x, y ≠ x ∧ y ∈ C := by
+  simp [acc_principal_iff_cluster, cluster_pt_principal_iff_frequently, and_comm']
+#align acc_pt_iff_frequently acc_pt_iff_frequently
+
+/-- If `x` is an accumulation point of `F` and `F ≤ G`, then
+`x` is an accumulation point of `D. -/
+theorem AccPt.mono {x : α} {F G : Filter α} (h : AccPt x F) (hFG : F ≤ G) : AccPt x G :=
+  ⟨ne_bot_of_le_ne_bot h.Ne (inf_le_inf_left _ hFG)⟩
+#align acc_pt.mono AccPt.mono
 
 /-!
 ### Interior, closure and frontier in terms of neighborhoods

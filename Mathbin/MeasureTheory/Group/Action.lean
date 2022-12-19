@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.action
-! leanprover-community/mathlib commit c5c7e2760814660967bc27f0de95d190a22297f3
+! leanprover-community/mathlib commit d4f69d96f3532729da8ebb763f4bc26fcf640f06
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -625,6 +625,9 @@ theorem NullMeasurableSet.smul {s} (hs : NullMeasurableSet s μ) (c : G) :
   simpa only [← preimage_smul_inv] using
     hs.preimage (measure_preserving_smul _ _).QuasiMeasurePreserving
 #align measure_theory.null_measurable_set.smul MeasureTheory.NullMeasurableSet.smul
+
+theorem measure_smul_null {s} (h : μ s = 0) (c : G) : μ (c • s) = 0 := by rwa [measure_smul]
+#align measure_theory.measure_smul_null MeasureTheory.measure_smul_null
 
 section IsMinimal
 

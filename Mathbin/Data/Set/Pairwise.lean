@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.pairwise
-! leanprover-community/mathlib commit c5c7e2760814660967bc27f0de95d190a22297f3
+! leanprover-community/mathlib commit d4f69d96f3532729da8ebb763f4bc26fcf640f06
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,20 +157,41 @@ theorem pairwise_insert : (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀ b ∈
     forall_eq]
 #align set.pairwise_insert Set.pairwise_insert
 
+theorem pairwise_insert_of_not_mem (ha : a ∉ s) :
+    (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀ b ∈ s, r a b ∧ r b a :=
+  pairwise_insert.trans <|
+    and_congr_right' <| forall₂_congr fun b hb => by simp [(ne_of_mem_of_not_mem hb ha).symm]
+#align set.pairwise_insert_of_not_mem Set.pairwise_insert_of_not_mem
+
 theorem Pairwise.insert (hs : s.Pairwise r) (h : ∀ b ∈ s, a ≠ b → r a b ∧ r b a) :
     (insert a s).Pairwise r :=
   pairwise_insert.2 ⟨hs, h⟩
 #align set.pairwise.insert Set.Pairwise.insert
+
+theorem Pairwise.insert_of_not_mem (ha : a ∉ s) (hs : s.Pairwise r) (h : ∀ b ∈ s, r a b ∧ r b a) :
+    (insert a s).Pairwise r :=
+  (pairwise_insert_of_not_mem ha).2 ⟨hs, h⟩
+#align set.pairwise.insert_of_not_mem Set.Pairwise.insert_of_not_mem
 
 theorem pairwise_insert_of_symmetric (hr : Symmetric r) :
     (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀ b ∈ s, a ≠ b → r a b := by
   simp only [pairwise_insert, hr.iff a, and_self_iff]
 #align set.pairwise_insert_of_symmetric Set.pairwise_insert_of_symmetric
 
+theorem pairwise_insert_of_symmetric_of_not_mem (hr : Symmetric r) (ha : a ∉ s) :
+    (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀ b ∈ s, r a b := by
+  simp only [pairwise_insert_of_not_mem ha, hr.iff a, and_self_iff]
+#align set.pairwise_insert_of_symmetric_of_not_mem Set.pairwise_insert_of_symmetric_of_not_mem
+
 theorem Pairwise.insert_of_symmetric (hs : s.Pairwise r) (hr : Symmetric r)
     (h : ∀ b ∈ s, a ≠ b → r a b) : (insert a s).Pairwise r :=
   (pairwise_insert_of_symmetric hr).2 ⟨hs, h⟩
 #align set.pairwise.insert_of_symmetric Set.Pairwise.insert_of_symmetric
+
+theorem Pairwise.insert_of_symmetric_of_not_mem (hs : s.Pairwise r) (hr : Symmetric r) (ha : a ∉ s)
+    (h : ∀ b ∈ s, r a b) : (insert a s).Pairwise r :=
+  (pairwise_insert_of_symmetric_of_not_mem hr ha).2 ⟨hs, h⟩
+#align set.pairwise.insert_of_symmetric_of_not_mem Set.Pairwise.insert_of_symmetric_of_not_mem
 
 theorem pairwise_pair : Set.Pairwise {a, b} r ↔ a ≠ b → r a b ∧ r b a := by simp [pairwise_insert]
 #align set.pairwise_pair Set.pairwise_pair
@@ -268,10 +289,20 @@ theorem pairwise_disjoint_insert {i : ι} :
   Set.pairwise_insert_of_symmetric <| symmetric_disjoint.comap f
 #align set.pairwise_disjoint_insert Set.pairwise_disjoint_insert
 
+theorem pairwise_disjoint_insert_of_not_mem {i : ι} (hi : i ∉ s) :
+    (insert i s).PairwiseDisjoint f ↔ s.PairwiseDisjoint f ∧ ∀ j ∈ s, Disjoint (f i) (f j) :=
+  pairwise_insert_of_symmetric_of_not_mem (symmetric_disjoint.comap f) hi
+#align set.pairwise_disjoint_insert_of_not_mem Set.pairwise_disjoint_insert_of_not_mem
+
 theorem PairwiseDisjoint.insert (hs : s.PairwiseDisjoint f) {i : ι}
     (h : ∀ j ∈ s, i ≠ j → Disjoint (f i) (f j)) : (insert i s).PairwiseDisjoint f :=
   Set.pairwise_disjoint_insert.2 ⟨hs, h⟩
 #align set.pairwise_disjoint.insert Set.PairwiseDisjoint.insert
+
+theorem PairwiseDisjoint.insert_of_not_mem (hs : s.PairwiseDisjoint f) {i : ι} (hi : i ∉ s)
+    (h : ∀ j ∈ s, Disjoint (f i) (f j)) : (insert i s).PairwiseDisjoint f :=
+  (Set.pairwise_disjoint_insert_of_not_mem hi).2 ⟨hs, h⟩
+#align set.pairwise_disjoint.insert_of_not_mem Set.PairwiseDisjoint.insert_of_not_mem
 
 theorem PairwiseDisjoint.image_of_le (hs : s.PairwiseDisjoint f) {g : ι → ι} (hg : f ∘ g ≤ f) :
     (g '' s).PairwiseDisjoint f := by
