@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_filter_basis
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,11 +46,11 @@ protected theorem uniform_add_group : @UniformAddGroup G B.UniformSpace _ :=
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔
-      F.ne_bot ∧ ∀ U ∈ B, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), y - x ∈ U :=
+      F.ne_bot ∧ ∀ U ∈ B, ∃ M ∈ F, ∀ (x) (_ : x ∈ M) (y) (_ : y ∈ M), y - x ∈ U :=
   by 
   letI := B.uniform_space
   haveI := B.uniform_add_group
-  suffices F ×ᶠ F ≤ 𝓤 G ↔ ∀ U ∈ B, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), y - x ∈ U by
+  suffices F ×ᶠ F ≤ 𝓤 G ↔ ∀ U ∈ B, ∃ M ∈ F, ∀ (x) (_ : x ∈ M) (y) (_ : y ∈ M), y - x ∈ U by
     constructor <;> rintro ⟨h', h⟩ <;> refine' ⟨h', _⟩ <;> [rwa [← this], rwa [this]]
   rw [uniformity_eq_comap_nhds_zero G, ← map_le_iff_le_comap]
   change tendsto _ _ _ ↔ _

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.measure.portmanteau
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.ProbabilityMeasure
+import Mathbin.MeasureTheory.Measure.Lebesgue
 
 /-!
 # Characterizations of weak convergence of finite measures and probability measures
@@ -462,6 +463,48 @@ theorem ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto {Ω ι : 
   measure_theory.probability_measure.tendsto_measure_of_null_frontier_of_tendsto MeasureTheory.ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto
 
 end ConvergenceImpliesLimsupClosedLe
+
+--section
+section LimitBorelImpliesLimsupClosedLe
+
+/-! ### Portmanteau implication: limit condition for Borel sets implies limsup for closed sets
+
+TODO: The proof of the implication is not yet here. Add it.
+-/
+
+
+variable {Ω : Type _} [PseudoEmetricSpace Ω] [MeasurableSpace Ω] [OpensMeasurableSpace Ω]
+
+theorem exists_null_frontier_thickening (μ : Measure Ω) [SigmaFinite μ] (s : Set Ω) {a b : ℝ}
+    (hab : a < b) : ∃ r ∈ ioo a b, μ (frontier (Metric.thickening r s)) = 0 := by
+  have mbles : ∀ r : ℝ, MeasurableSet (frontier (Metric.thickening r s)) := fun r =>
+    is_closed_frontier.MeasurableSet
+  have disjs := Metric.frontier_thickening_disjoint s
+  have key := @measure.countable_meas_pos_of_disjoint_Union Ω _ _ μ _ _ mbles disjs
+  have aux := @measure_diff_null ℝ _ volume (Ioo a b) _ (Set.Countable.measure_zero key volume)
+  have len_pos : 0 < Ennreal.ofReal (b - a) := by simp only [hab, Ennreal.of_real_pos, sub_pos]
+  rw [← Real.volume_Ioo, ← aux] at len_pos
+  rcases nonempty_of_measure_ne_zero len_pos.ne.symm with ⟨r, ⟨r_in_Ioo, hr⟩⟩
+  refine' ⟨r, r_in_Ioo, _⟩
+  simpa only [mem_set_of_eq, not_lt, le_zero_iff] using hr
+#align measure_theory.exists_null_frontier_thickening MeasureTheory.exists_null_frontier_thickening
+
+theorem exists_null_frontiers_thickening (μ : Measure Ω) [SigmaFinite μ] (s : Set Ω) :
+    ∃ rs : ℕ → ℝ,
+      Tendsto rs atTop (𝓝 0) ∧ ∀ n, 0 < rs n ∧ μ (frontier (Metric.thickening (rs n) s)) = 0 :=
+  by 
+  rcases exists_seq_strict_anti_tendsto (0 : ℝ) with ⟨Rs, ⟨rubbish, ⟨Rs_pos, Rs_lim⟩⟩⟩
+  have obs := fun n : ℕ => exists_null_frontier_thickening μ s (Rs_pos n)
+  refine' ⟨fun n : ℕ => (obs n).some, ⟨_, _⟩⟩
+  ·
+    exact
+      tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds Rs_lim
+        (fun n => (obs n).some_spec.some.1.le) fun n => (obs n).some_spec.some.2.le
+  · exact fun n => ⟨(obs n).some_spec.some.1, (obs n).some_spec.some_spec⟩
+#align
+  measure_theory.exists_null_frontiers_thickening MeasureTheory.exists_null_frontiers_thickening
+
+end LimitBorelImpliesLimsupClosedLe
 
 --section
 end MeasureTheory

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.equicontinuity
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,7 +136,7 @@ protected abbrev Set.UniformEquicontinuous (H : Set <| β → α) : Prop :=
 only one with `x₀`. -/
 theorem equicontinuous_at_iff_pair {F : ι → X → α} {x₀ : X} :
     EquicontinuousAt F x₀ ↔
-      ∀ U ∈ 𝓤 α, ∃ V ∈ 𝓝 x₀, ∀ (x y) (_ : x ∈ V) (_ : y ∈ V) (i), (F i x, F i y) ∈ U :=
+      ∀ U ∈ 𝓤 α, ∃ V ∈ 𝓝 x₀, ∀ (x) (_ : x ∈ V) (y) (_ : y ∈ V) (i), (F i x, F i y) ∈ U :=
   by 
   constructor <;> intro H U hU
   · rcases comp_symm_mem_uniformity_sets hU with ⟨V, hV, hVsymm, hVU⟩

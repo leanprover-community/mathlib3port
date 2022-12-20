@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.ODE.gronwall
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ people call this Grönwall's inequality too.
 This version assumes all inequalities to be true in some time-dependent set `s t`,
 and assumes that the solutions never leave this set. -/
 theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
-    (hv : ∀ t, ∀ (x y) (_ : x ∈ s t) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y)
+    (hv : ∀ t, ∀ (x) (_ : x ∈ s t) (y) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y)
     {f g f' g' : ℝ → E} {a b : ℝ} {εf εg δ : ℝ} (hf : ContinuousOn f (icc a b))
     (hf' : ∀ t ∈ ico a b, HasDerivWithinAt f (f' t) (ici t) t)
     (f_bound : ∀ t ∈ ico a b, dist (f' t) (v t (f t)) ≤ εf) (hfs : ∀ t ∈ ico a b, f t ∈ s t)
@@ -203,7 +203,7 @@ people call this Grönwall's inequality too.
 This version assumes all inequalities to be true in some time-dependent set `s t`,
 and assumes that the solutions never leave this set. -/
 theorem dist_le_of_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
-    (hv : ∀ t, ∀ (x y) (_ : x ∈ s t) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y)
+    (hv : ∀ t, ∀ (x) (_ : x ∈ s t) (y) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y)
     {f g : ℝ → E} {a b : ℝ} {δ : ℝ} (hf : ContinuousOn f (icc a b))
     (hf' : ∀ t ∈ ico a b, HasDerivWithinAt f (v t (f t)) (ici t) t) (hfs : ∀ t ∈ ico a b, f t ∈ s t)
     (hg : ContinuousOn g (icc a b)) (hg' : ∀ t ∈ ico a b, HasDerivWithinAt g (v t (g t)) (ici t) t)
@@ -241,7 +241,7 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : �
 a given initial value provided that RHS is Lipschitz continuous in `x` within `s`,
 and we consider only solutions included in `s`. -/
 theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
-    (hv : ∀ t, ∀ (x y) (_ : x ∈ s t) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y)
+    (hv : ∀ t, ∀ (x) (_ : x ∈ s t) (y) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y)
     {f g : ℝ → E} {a b : ℝ} (hf : ContinuousOn f (icc a b))
     (hf' : ∀ t ∈ ico a b, HasDerivWithinAt f (v t (f t)) (ici t) t) (hfs : ∀ t ∈ ico a b, f t ∈ s t)
     (hg : ContinuousOn g (icc a b)) (hg' : ∀ t ∈ ico a b, HasDerivWithinAt g (v t (g t)) (ici t) t)

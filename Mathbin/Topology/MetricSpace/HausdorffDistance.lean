@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_distance
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1009,6 +1009,24 @@ theorem mem_thickening_iff_exists_edist_lt {δ : ℝ} (E : Set α) (x : α) :
   inf_edist_lt_iff
 #align metric.mem_thickening_iff_exists_edist_lt Metric.mem_thickening_iff_exists_edist_lt
 
+/-- The frontier of the (open) thickening of a set is contained in an `inf_edist` level set. -/
+theorem frontier_thickening_subset (E : Set α) {δ : ℝ} :
+    frontier (thickening δ E) ⊆ { x : α | infEdist x E = Ennreal.ofReal δ } :=
+  frontier_lt_subset_eq continuous_inf_edist continuous_const
+#align metric.frontier_thickening_subset Metric.frontier_thickening_subset
+
+theorem frontier_thickening_disjoint (A : Set α) :
+    Pairwise (Disjoint on fun r : ℝ => frontier (thickening r A)) := by
+  refine' (pairwise_disjoint_on _).2 fun r₁ r₂ hr => _
+  cases' le_total r₁ 0 with h₁ h₁
+  · simp [thickening_of_nonpos h₁]
+  refine'
+    ((disjoint_singleton.2 fun h => hr.ne _).Preimage _).mono (frontier_thickening_subset _)
+      (frontier_thickening_subset _)
+  apply_fun Ennreal.toReal  at h
+  rwa [Ennreal.to_real_of_real h₁, Ennreal.to_real_of_real (h₁.trans hr.le)] at h
+#align metric.frontier_thickening_disjoint Metric.frontier_thickening_disjoint
+
 variable {X : Type u} [PseudoMetricSpace X]
 
 /-- A point in a metric space belongs to the (open) `δ`-thickening of a subset `E` if and only if
@@ -1051,24 +1069,6 @@ theorem Bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (thi
     _ ≤ R + δ := add_le_add (hR zE) hz.le
     
 #align metric.bounded.thickening Metric.Bounded.thickening
-
-/-- The frontier of the (open) thickening of a set is contained in an `inf_edist` level set. -/
-theorem frontier_thickening_subset (E : Set α) {δ : ℝ} :
-    frontier (thickening δ E) ⊆ { x : α | infEdist x E = Ennreal.ofReal δ } :=
-  frontier_lt_subset_eq continuous_inf_edist continuous_const
-#align metric.frontier_thickening_subset Metric.frontier_thickening_subset
-
-theorem frontier_thickening_disjoint (A : Set X) :
-    Pairwise (Disjoint on fun r : ℝ => frontier (thickening r A)) := by
-  refine' (pairwise_disjoint_on _).2 fun r₁ r₂ hr => _
-  cases' le_total r₁ 0 with h₁ h₁
-  · simp [thickening_of_nonpos h₁]
-  refine'
-    ((disjoint_singleton.2 fun h => hr.ne _).Preimage _).mono (frontier_thickening_subset _)
-      (frontier_thickening_subset _)
-  apply_fun Ennreal.toReal  at h
-  rwa [Ennreal.to_real_of_real h₁, Ennreal.to_real_of_real (h₁.trans hr.le)] at h
-#align metric.frontier_thickening_disjoint Metric.frontier_thickening_disjoint
 
 end Thickening
 

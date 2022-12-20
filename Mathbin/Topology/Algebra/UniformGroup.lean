@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_group
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -776,7 +776,7 @@ include W'_nhd
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x x' «expr ∈ » U₂) -/
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
-    ∃ U₂ ∈ comap e (𝓝 x₀), ∀ (x x') (_ : x ∈ U₂) (_ : x' ∈ U₂), Φ (x' - x, y₁) ∈ W' := by
+    ∃ U₂ ∈ comap e (𝓝 x₀), ∀ (x) (_ : x ∈ U₂) (x') (_ : x' ∈ U₂), Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
   let ee := fun u : β × β => (e u.1, e u.2)
   have lim1 : tendsto (fun a : β × β => (a.2 - a.1, y₁)) (comap e Nx ×ᶠ comap e Nx) (𝓝 (0, y₁)) :=
@@ -800,8 +800,8 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
       ∃ V ∈ comap f (𝓝 y₀),
-        ∀ (x x') (_ : x ∈ U) (_ : x' ∈ U),
-          ∀ (y y') (_ : y ∈ V) (_ : y' ∈ V), Φ (x', y') - Φ (x, y) ∈ W' :=
+        ∀ (x) (_ : x ∈ U) (x') (_ : x' ∈ U),
+          ∀ (y) (_ : y ∈ V) (y') (_ : y' ∈ V), Φ (x', y') - Φ (x, y) ∈ W' :=
   by 
   let Nx := 𝓝 x₀
   let Ny := 𝓝 y₀
@@ -825,8 +825,8 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
   have :
     ∃ U₁ ∈ comap e (𝓝 x₀),
       ∃ V₁ ∈ comap f (𝓝 y₀),
-        ∀ (x x') (_ : x ∈ U₁) (_ : x' ∈ U₁),
-          ∀ (y y') (_ : y ∈ V₁) (_ : y' ∈ V₁), Φ (x' - x, y' - y) ∈ W :=
+        ∀ (x) (_ : x ∈ U₁) (x') (_ : x' ∈ U₁),
+          ∀ (y) (_ : y ∈ V₁) (y') (_ : y' ∈ V₁), Φ (x' - x, y' - y) ∈ W :=
     by 
     have := tendsto_prod_iff.1 lim_φ_sub_sub W W_nhd
     repeat' rw [nhds_prod_eq, ← prod_comap_comap_eq] at this

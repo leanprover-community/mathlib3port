@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -924,14 +924,14 @@ theorem uniform_continuous_iff [PseudoMetricSpace β] {f : α → β} :
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniform_continuous_on_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
-      ∀ ε > 0, ∃ δ > 0, ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), dist x y < δ → dist (f x) (f y) < ε :=
+      ∀ ε > 0, ∃ δ > 0, ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniformity_basis_dist.uniform_continuous_on_iff Metric.uniformity_basis_dist
 #align metric.uniform_continuous_on_iff Metric.uniform_continuous_on_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniform_continuous_on_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
-      ∀ ε > 0, ∃ δ > 0, ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
+      ∀ ε > 0, ∃ δ > 0, ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
   Metric.uniformity_basis_dist_le.uniform_continuous_on_iff Metric.uniformity_basis_dist_le
 #align metric.uniform_continuous_on_iff_le Metric.uniform_continuous_on_iff_le
 
@@ -1054,7 +1054,7 @@ theorem tendsto_uniformly_iff {ι : Type _} {F : ι → β → α} {f : β → �
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 protected theorem cauchy_iff {f : Filter α} :
-    Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), dist x y < ε :=
+    Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), dist x y < ε :=
   uniformity_basis_dist.cauchy_iff
 #align metric.cauchy_iff Metric.cauchy_iff
 
@@ -1639,7 +1639,7 @@ variable [Nonempty β] [SemilatticeSup β]
 the distance between its elements is arbitrarily small -/
 @[nolint ge_or_gt]
 theorem Metric.cauchy_seq_iff {u : β → α} :
-    CauchySeq u ↔ ∀ ε > 0, ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), dist (u m) (u n) < ε :=
+    CauchySeq u ↔ ∀ ε > 0, ∃ N, ∀ (m) (_ : m ≥ N) (n) (_ : n ≥ N), dist (u m) (u n) < ε :=
   uniformity_basis_dist.cauchy_seq_iff
 #align metric.cauchy_seq_iff Metric.cauchy_seq_iff
 
@@ -2416,7 +2416,7 @@ instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace �
     intro f hf
     /- We want to show that the Cauchy filter `f` is converging. It suffices to find a closed
       ball (therefore compact by properness) where it is nontrivial. -/
-    obtain ⟨t, t_fset, ht⟩ : ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), dist x y < 1 :=
+    obtain ⟨t, t_fset, ht⟩ : ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), dist x y < 1 :=
       (Metric.cauchy_iff.1 hf).2 1 zero_lt_one
     rcases hf.1.nonempty_of_mem t_fset with ⟨x, xt⟩
     have : closed_ball x 1 ∈ f := mem_of_superset t_fset fun y yt => (ht y yt x xt).le
@@ -2512,7 +2512,7 @@ namespace Metric
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
 def Bounded (s : Set α) : Prop :=
-  ∃ C, ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), dist x y ≤ C
+  ∃ C, ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), dist x y ≤ C
 #align metric.bounded Metric.Bounded
 
 section Bounded

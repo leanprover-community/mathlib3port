@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.divergence_theorem
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,7 +201,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     have :
       ∀ᶠ δ in 𝓝[>] (0 : ℝ),
         δ ∈ Ioc (0 : ℝ) (1 / 2) ∧
-          (∀ (y₁ y₂) (_ : y₁ ∈ closed_ball x δ ∩ I.Icc) (_ : y₂ ∈ closed_ball x δ ∩ I.Icc),
+          (∀ (y₁) (_ : y₁ ∈ closed_ball x δ ∩ I.Icc) (y₂) (_ : y₂ ∈ closed_ball x δ ∩ I.Icc),
               ‖f y₁ - f y₂‖ ≤ ε / 2) ∧
             (2 * δ) ^ (n + 1) * ‖f' x (Pi.single i 1)‖ ≤ ε / 2 :=
       by 

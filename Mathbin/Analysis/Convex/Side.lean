@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.side
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ include V
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 /-- The points `x` and `y` are weakly on the same side of `s`. -/
 def WSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
-  ∃ (p₁ p₂ : _)(_ : p₁ ∈ s)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (y -ᵥ p₂)
+  ∃ (p₁ : _)(_ : p₁ ∈ s)(p₂ : _)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (y -ᵥ p₂)
 #align affine_subspace.w_same_side AffineSubspace.WSameSide
 
 /-- The points `x` and `y` are strictly on the same side of `s`. -/
@@ -59,7 +59,7 @@ def SSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 /-- The points `x` and `y` are weakly on opposite sides of `s`. -/
 def WOppSide (s : AffineSubspace R P) (x y : P) : Prop :=
-  ∃ (p₁ p₂ : _)(_ : p₁ ∈ s)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (p₂ -ᵥ y)
+  ∃ (p₁ : _)(_ : p₁ ∈ s)(p₂ : _)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (p₂ -ᵥ y)
 #align affine_subspace.w_opp_side AffineSubspace.WOppSide
 
 /-- The points `x` and `y` are strictly on opposite sides of `s`. -/

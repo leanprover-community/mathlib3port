@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.metric_space.equicontinuity
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem equicontinuous_at_iff {ι : Type _} [PseudoMetricSpace β] {F : ι → �
 protected theorem equicontinuous_at_iff_pair {ι : Type _} [TopologicalSpace β] {F : ι → β → α}
     {x₀ : β} :
     EquicontinuousAt F x₀ ↔
-      ∀ ε > 0, ∃ U ∈ 𝓝 x₀, ∀ (x x') (_ : x ∈ U) (_ : x' ∈ U), ∀ i, dist (F i x) (F i x') < ε :=
+      ∀ ε > 0, ∃ U ∈ 𝓝 x₀, ∀ (x) (_ : x ∈ U) (x') (_ : x' ∈ U), ∀ i, dist (F i x) (F i x') < ε :=
   by 
   rw [equicontinuous_at_iff_pair]
   constructor <;> intro H

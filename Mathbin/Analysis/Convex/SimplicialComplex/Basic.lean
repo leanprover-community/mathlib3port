@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.simplicial_complex.basic
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ def ofErase (faces : Set (Finset E))
     (indep : ∀ s ∈ faces, AffineIndependent 𝕜 (coe : (s : Set E) → E))
     (down_closed : ∀ s ∈ faces, ∀ (t) (_ : t ⊆ s), t ∈ faces)
     (inter_subset_convex_hull :
-      ∀ (s t) (_ : s ∈ faces) (_ : t ∈ faces),
+      ∀ (s) (_ : s ∈ faces) (t) (_ : t ∈ faces),
         convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t ⊆ convexHull 𝕜 (s ∩ t : Set E)) :
     SimplicialComplex 𝕜 E where 
   faces := faces \ {∅}

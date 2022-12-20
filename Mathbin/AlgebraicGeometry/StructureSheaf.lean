@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -788,7 +788,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
           (structureSheaf R).1.map (iDh i).op s) :
     ∃ (a' h' : ι → R)(iDh' : ∀ i : ι, basicOpen (h' i) ⟶ U),
       (U.1 ⊆ ⋃ i ∈ t, (basicOpen (h' i)).1) ∧
-        (∀ (i j) (_ : i ∈ t) (_ : j ∈ t), a' i * h' j = h' i * a' j) ∧
+        (∀ (i) (_ : i ∈ t) (j) (_ : j ∈ t), a' i * h' j = h' i * a' j) ∧
           ∀ i ∈ t,
             (structureSheaf R).1.map (iDh' i).op s =
               const R (a' i) (h' i) (basicOpen (h' i)) fun y hy => hy :=

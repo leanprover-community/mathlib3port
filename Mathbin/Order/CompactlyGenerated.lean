@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module order.compactly_generated
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ variable (α)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def IsSupClosedCompact : Prop :=
-  ∀ (s : Set α) (h : s.Nonempty), (∀ (a b) (_ : a ∈ s) (_ : b ∈ s), a ⊔ b ∈ s) → sup s ∈ s
+  ∀ (s : Set α) (h : s.Nonempty), (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ⊔ b ∈ s) → sup s ∈ s
 #align complete_lattice.is_sup_closed_compact CompleteLattice.IsSupClosedCompact
 
 /-- A compactness property for a complete lattice is that any subset has a finite subset with the

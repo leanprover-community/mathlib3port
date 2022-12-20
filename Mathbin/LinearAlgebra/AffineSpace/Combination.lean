@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.combination
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -992,7 +992,7 @@ stated in terms of a set equal to the image to provide control of
 definitional equality for the index type used for the centroid of the
 image. -/
 theorem centroid_eq_centroid_image_of_inj_on {p : ι → P}
-    (hi : ∀ (i j) (_ : i ∈ s) (_ : j ∈ s), p i = p j → i = j) {ps : Set P} [Fintype ps]
+    (hi : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), p i = p j → i = j) {ps : Set P} [Fintype ps]
     (hps : ps = p '' ↑s) : s.centroid k p = (univ : Finset ps).centroid k fun x => x := by
   let f : p '' ↑s → ι := fun x => x.property.some
   have hf : ∀ x, f x ∈ s ∧ p (f x) = x := fun x => x.property.some_spec
@@ -1025,8 +1025,8 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P}
 `finset`s and with the same points in the image of those `finset`s
 have the same centroid. -/
 theorem centroid_eq_of_inj_on_of_image_eq {p : ι → P}
-    (hi : ∀ (i j) (_ : i ∈ s) (_ : j ∈ s), p i = p j → i = j) {p₂ : ι₂ → P}
-    (hi₂ : ∀ (i j) (_ : i ∈ s₂) (_ : j ∈ s₂), p₂ i = p₂ j → i = j) (he : p '' ↑s = p₂ '' ↑s₂) :
+    (hi : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), p i = p j → i = j) {p₂ : ι₂ → P}
+    (hi₂ : ∀ (i) (_ : i ∈ s₂) (j) (_ : j ∈ s₂), p₂ i = p₂ j → i = j) (he : p '' ↑s = p₂ '' ↑s₂) :
     s.centroid k p = s₂.centroid k p₂ := by
   classical rw [s.centroid_eq_centroid_image_of_inj_on k hi rfl,
       s₂.centroid_eq_centroid_image_of_inj_on k hi₂ he]

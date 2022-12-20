@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Martin Zinkevich, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.pi_system
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ open Classical MeasureTheory
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do
   that here. -/
 def IsPiSystem {α} (C : Set (Set α)) : Prop :=
-  ∀ (s t) (_ : s ∈ C) (_ : t ∈ C), (s ∩ t : Set α).Nonempty → s ∩ t ∈ C
+  ∀ (s) (_ : s ∈ C) (t) (_ : t ∈ C), (s ∩ t : Set α).Nonempty → s ∩ t ∈ C
 #align is_pi_system IsPiSystem
 
 namespace MeasurableSpace

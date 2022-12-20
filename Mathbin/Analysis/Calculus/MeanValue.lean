@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.mean_value
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -836,7 +836,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `C < f'`, 
 theorem Convex.mul_sub_lt_image_sub_of_lt_deriv {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
     (hf : ContinuousOn f D) (hf' : DifferentiableOn ℝ f (interior D)) {C}
     (hf'_gt : ∀ x ∈ interior D, C < deriv f x) :
-    ∀ (x y) (_ : x ∈ D) (_ : y ∈ D), x < y → C * (y - x) < f y - f x := by
+    ∀ (x) (_ : x ∈ D) (y) (_ : y ∈ D), x < y → C * (y - x) < f y - f x := by
   intro x hx y hy hxy
   have hxyD : Icc x y ⊆ D := hD.ord_connected.out hx hy
   have hxyD' : Ioo x y ⊆ interior D :=
@@ -865,7 +865,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `C ≤ f'`
 theorem Convex.mul_sub_le_image_sub_of_le_deriv {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
     (hf : ContinuousOn f D) (hf' : DifferentiableOn ℝ f (interior D)) {C}
     (hf'_ge : ∀ x ∈ interior D, C ≤ deriv f x) :
-    ∀ (x y) (_ : x ∈ D) (_ : y ∈ D), x ≤ y → C * (y - x) ≤ f y - f x := by
+    ∀ (x) (_ : x ∈ D) (y) (_ : y ∈ D), x ≤ y → C * (y - x) ≤ f y - f x := by
   intro x hx y hy hxy
   cases' eq_or_lt_of_le hxy with hxy' hxy'
   · rw [hxy', sub_self, sub_self, mul_zero]
@@ -896,7 +896,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `f' < C`, 
 theorem Convex.image_sub_lt_mul_sub_of_deriv_lt {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
     (hf : ContinuousOn f D) (hf' : DifferentiableOn ℝ f (interior D)) {C}
     (lt_hf' : ∀ x ∈ interior D, deriv f x < C) :
-    ∀ (x y) (_ : x ∈ D) (_ : y ∈ D), x < y → f y - f x < C * (y - x) := by
+    ∀ (x) (_ : x ∈ D) (y) (_ : y ∈ D), x < y → f y - f x < C * (y - x) := by
   intro x hx y hy hxy
   have hf'_gt : ∀ x ∈ interior D, -C < deriv (fun y => -f y) x := by
     intro x hx
@@ -922,7 +922,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `f' ≤ C`
 theorem Convex.image_sub_le_mul_sub_of_deriv_le {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
     (hf : ContinuousOn f D) (hf' : DifferentiableOn ℝ f (interior D)) {C}
     (le_hf' : ∀ x ∈ interior D, deriv f x ≤ C) :
-    ∀ (x y) (_ : x ∈ D) (_ : y ∈ D), x ≤ y → f y - f x ≤ C * (y - x) := by
+    ∀ (x) (_ : x ∈ D) (y) (_ : y ∈ D), x ≤ y → f y - f x ≤ C * (y - x) := by
   intro x hx y hy hxy
   have hf'_ge : ∀ x ∈ interior D, -C ≤ deriv (fun y => -f y) x := by
     intro x hx

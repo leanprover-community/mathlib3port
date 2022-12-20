@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv_measurable
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ this is an open set.-/
 def a (f : E → F) (L : E →L[𝕜] F) (r ε : ℝ) : Set E :=
   { x |
     ∃ r' ∈ ioc (r / 2) r,
-      ∀ (y z) (_ : y ∈ ball x r') (_ : z ∈ ball x r'), ‖f z - f y - L (z - y)‖ ≤ ε * r }
+      ∀ (y) (_ : y ∈ ball x r') (z) (_ : z ∈ ball x r'), ‖f z - f y - L (z - y)‖ ≤ ε * r }
 #align fderiv_measurable_aux.A FderivMeasurableAux.a
 
 /-- The set `B f K r s ε` is the set of points `x` around which there exists a continuous linear map
@@ -496,7 +496,8 @@ make sure that this is open on the right. -/
 def a (f : ℝ → F) (L : F) (r ε : ℝ) : Set ℝ :=
   { x |
     ∃ r' ∈ ioc (r / 2) r,
-      ∀ (y z) (_ : y ∈ icc x (x + r')) (_ : z ∈ icc x (x + r')), ‖f z - f y - (z - y) • L‖ ≤ ε * r }
+      ∀ (y) (_ : y ∈ icc x (x + r')) (z) (_ : z ∈ icc x (x + r')),
+        ‖f z - f y - (z - y) • L‖ ≤ ε * r }
 #align right_deriv_measurable_aux.A RightDerivMeasurableAux.a
 
 /-- The set `B f K r s ε` is the set of points `x` around which there exists a vector

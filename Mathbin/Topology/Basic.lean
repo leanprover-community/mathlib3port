@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ attribute [class] TopologicalSpace
 and showing that they satisfy the appropriate conditions. -/
 def TopologicalSpace.ofClosed {α : Type u} (T : Set (Set α)) (empty_mem : ∅ ∈ T)
     (sInter_mem : ∀ (A) (_ : A ⊆ T), ⋂₀ A ∈ T)
-    (union_mem : ∀ (A B) (_ : A ∈ T) (_ : B ∈ T), A ∪ B ∈ T) :
+    (union_mem : ∀ (A) (_ : A ∈ T) (B) (_ : B ∈ T), A ∪ B ∈ T) :
     TopologicalSpace α where 
   IsOpen X := Xᶜ ∈ T
   is_open_univ := by simp [empty_mem]

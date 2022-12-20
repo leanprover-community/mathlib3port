@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.connected
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,8 @@ theorem is_preconnected_of_forall {s : Set α} (x : α)
 /-- If any two points of a set are contained in a preconnected subset,
 then the original set is preconnected as well. -/
 theorem is_preconnected_of_forall_pair {s : Set α}
-    (H : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), ∃ (t : _)(_ : t ⊆ s), x ∈ t ∧ y ∈ t ∧ IsPreconnected t) :
+    (H :
+      ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), ∃ (t : _)(_ : t ⊆ s), x ∈ t ∧ y ∈ t ∧ IsPreconnected t) :
     IsPreconnected s := by
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, hx⟩)
   exacts[is_preconnected_empty, (is_preconnected_of_forall x) fun y => H x hx y]
@@ -179,12 +180,12 @@ whether two sets intersect is preconnected. -/
 theorem IsPreconnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι → Set α}
     (H : ∀ i ∈ t, IsPreconnected (s i))
     (K :
-      ∀ (i j) (_ : i ∈ t) (_ : j ∈ t),
+      ∀ (i) (_ : i ∈ t) (j) (_ : j ∈ t),
         ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t) i j) :
     IsPreconnected (⋃ n ∈ t, s n) := by
   let R := fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t
   have P :
-    ∀ (i j) (_ : i ∈ t) (_ : j ∈ t),
+    ∀ (i) (_ : i ∈ t) (j) (_ : j ∈ t),
       refl_trans_gen R i j → ∃ (p : _)(_ : p ⊆ t), i ∈ p ∧ j ∈ p ∧ IsPreconnected (⋃ j ∈ p, s j) :=
     by 
     intro i hi j hj h
@@ -215,7 +216,7 @@ whether two sets intersect is preconnected. -/
 theorem IsConnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι → Set α}
     (ht : t.Nonempty) (H : ∀ i ∈ t, IsConnected (s i))
     (K :
-      ∀ (i j) (_ : i ∈ t) (_ : j ∈ t),
+      ∀ (i) (_ : i ∈ t) (j) (_ : j ∈ t),
         ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t) i j) :
     IsConnected (⋃ n ∈ t, s n) :=
   ⟨nonempty_bUnion.2 <| ⟨ht.some, ht.some_mem, (H _ ht.some_mem).Nonempty⟩,

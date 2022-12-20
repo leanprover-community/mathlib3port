@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.basic
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -808,7 +808,7 @@ ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded abov
 theorem HasFpowerSeriesOnBall.image_sub_sub_deriv_le (hf : HasFpowerSeriesOnBall f p x r)
     (hr : r' < r) :
     ∃ C,
-      ∀ (y z) (_ : y ∈ Emetric.ball x r') (_ : z ∈ Emetric.ball x r'),
+      ∀ (y) (_ : y ∈ Emetric.ball x r') (z) (_ : z ∈ Emetric.ball x r'),
         ‖f y - f z - p 1 fun _ => y - z‖ ≤ C * max ‖y - x‖ ‖z - x‖ * ‖y - z‖ :=
   by
   simpa only [is_O_principal, mul_assoc, norm_mul, norm_norm, Prod.forall, Emetric.mem_ball,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.countable_dense_linear_order
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,8 @@ variable (α β : Type _) [LinearOrder α] [LinearOrder β]
     of pairs which should be identified. -/
 def PartialIso : Type _ :=
   { f : Finset (α × β) //
-    ∀ (p q) (_ : p ∈ f) (_ : q ∈ f), cmp (Prod.fst p) (Prod.fst q) = cmp (Prod.snd p) (Prod.snd q) }
+    ∀ (p) (_ : p ∈ f) (q) (_ : q ∈ f),
+      cmp (Prod.fst p) (Prod.fst q) = cmp (Prod.snd p) (Prod.snd q) }
 #align order.partial_iso Order.PartialIso
 
 namespace PartialIso

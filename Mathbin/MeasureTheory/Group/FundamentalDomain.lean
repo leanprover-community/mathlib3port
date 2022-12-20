@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.fundamental_domain
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -451,7 +451,8 @@ points `x y` such that `g • x = y` for some `g ≠ 1`. -/
 @[to_additive
       "If the additive action of a countable group `G` admits an invariant measure `μ` with\na fundamental domain `s`, then every null-measurable set `t` of measure strictly greater than `μ s`\ncontains two points `x y` such that `g +ᵥ x = y` for some `g ≠ 0`."]
 theorem exists_ne_one_smul_eq (hs : IsFundamentalDomain G s μ) (htm : NullMeasurableSet t μ)
-    (ht : μ s < μ t) : ∃ (x y : _)(_ : x ∈ t)(_ : y ∈ t)(g : _)(_ : g ≠ (1 : G)), g • x = y := by
+    (ht : μ s < μ t) : ∃ (x : _)(_ : x ∈ t)(y : _)(_ : y ∈ t)(g : _)(_ : g ≠ (1 : G)), g • x = y :=
+  by 
   contrapose! ht
   refine' hs.measure_le_of_pairwise_disjoint htm (Pairwise.ae_disjoint fun g₁ g₂ hne => _)
   dsimp [Function.onFun]
