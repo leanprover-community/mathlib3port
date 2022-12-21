@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.operations
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -317,7 +317,7 @@ theorem map_sup (S T : Submonoid M) (f : F) : (S ⊔ T).map f = S.map f ⊔ T.ma
 #align submonoid.map_sup Submonoid.map_sup
 
 @[to_additive]
-theorem map_supr {ι : Sort _} (f : F) (s : ι → Submonoid M) : (supr s).map f = ⨆ i, (s i).map f :=
+theorem map_supr {ι : Sort _} (f : F) (s : ι → Submonoid M) : (supᵢ s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supr
 #align submonoid.map_supr Submonoid.map_supr
 
@@ -392,7 +392,7 @@ theorem comap_sup_map_of_injective (S T : Submonoid M) : (S.map f ⊔ T.map f).c
 #align submonoid.comap_sup_map_of_injective Submonoid.comap_sup_map_of_injective
 
 @[to_additive]
-theorem comap_supr_map_of_injective (S : ι → Submonoid M) : (⨆ i, (S i).map f).comap f = supr S :=
+theorem comap_supr_map_of_injective (S : ι → Submonoid M) : (⨆ i, (S i).map f).comap f = supᵢ S :=
   (gciMapComap hf).u_supr_l _
 #align submonoid.comap_supr_map_of_injective Submonoid.comap_supr_map_of_injective
 
@@ -453,7 +453,7 @@ theorem map_sup_comap_of_surjective (S T : Submonoid N) : (S.comap f ⊔ T.comap
 #align submonoid.map_sup_comap_of_surjective Submonoid.map_sup_comap_of_surjective
 
 @[to_additive]
-theorem map_supr_comap_of_surjective (S : ι → Submonoid N) : (⨆ i, (S i).comap f).map f = supr S :=
+theorem map_supr_comap_of_surjective (S : ι → Submonoid N) : (⨆ i, (S i).comap f).map f = supᵢ S :=
   (giMapComap hf).l_supr_u _
 #align submonoid.map_supr_comap_of_surjective Submonoid.map_supr_comap_of_surjective
 

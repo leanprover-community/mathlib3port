@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.tangent_cone
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -363,7 +363,7 @@ theorem UniqueDiffWithinAt.univPi (ι : Type _) [Finite ι] (E : ι → Type _)
     simp only [unique_diff_within_at_iff, closure_pi_set] at h⊢
     refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
     norm_cast
-    simp only [← Submodule.supr_map_single, supr_le_iff, LinearMap.map_span, Submodule.span_le, ←
+    simp only [← Submodule.supr_map_single, supᵢ_le_iff, LinearMap.map_span, Submodule.span_le, ←
       maps_to']
     exact fun i =>
       (maps_to_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
@@ -424,57 +424,57 @@ theorem uniqueDiffOnConvex {s : Set G} (conv : Convex ℝ s) (hs : (interior s).
     UniqueDiffOn ℝ s := fun x xs => uniqueDiffWithinAtConvex conv hs (subset_closure xs)
 #align unique_diff_on_convex uniqueDiffOnConvex
 
-theorem uniqueDiffOnIci (a : ℝ) : UniqueDiffOn ℝ (ici a) :=
+theorem uniqueDiffOnIci (a : ℝ) : UniqueDiffOn ℝ (Ici a) :=
   uniqueDiffOnConvex (convex_Ici a) <| by simp only [interior_Ici, nonempty_Ioi]
 #align unique_diff_on_Ici uniqueDiffOnIci
 
-theorem uniqueDiffOnIic (a : ℝ) : UniqueDiffOn ℝ (iic a) :=
+theorem uniqueDiffOnIic (a : ℝ) : UniqueDiffOn ℝ (Iic a) :=
   uniqueDiffOnConvex (convex_Iic a) <| by simp only [interior_Iic, nonempty_Iio]
 #align unique_diff_on_Iic uniqueDiffOnIic
 
-theorem uniqueDiffOnIoi (a : ℝ) : UniqueDiffOn ℝ (ioi a) :=
+theorem uniqueDiffOnIoi (a : ℝ) : UniqueDiffOn ℝ (Ioi a) :=
   is_open_Ioi.UniqueDiffOn
 #align unique_diff_on_Ioi uniqueDiffOnIoi
 
-theorem uniqueDiffOnIio (a : ℝ) : UniqueDiffOn ℝ (iio a) :=
+theorem uniqueDiffOnIio (a : ℝ) : UniqueDiffOn ℝ (Iio a) :=
   is_open_Iio.UniqueDiffOn
 #align unique_diff_on_Iio uniqueDiffOnIio
 
-theorem uniqueDiffOnIcc {a b : ℝ} (hab : a < b) : UniqueDiffOn ℝ (icc a b) :=
+theorem uniqueDiffOnIcc {a b : ℝ} (hab : a < b) : UniqueDiffOn ℝ (Icc a b) :=
   uniqueDiffOnConvex (convex_Icc a b) <| by simp only [interior_Icc, nonempty_Ioo, hab]
 #align unique_diff_on_Icc uniqueDiffOnIcc
 
-theorem uniqueDiffOnIco (a b : ℝ) : UniqueDiffOn ℝ (ico a b) :=
+theorem uniqueDiffOnIco (a b : ℝ) : UniqueDiffOn ℝ (Ico a b) :=
   if hab : a < b then
     uniqueDiffOnConvex (convex_Ico a b) <| by simp only [interior_Ico, nonempty_Ioo, hab]
   else by simp only [Ico_eq_empty hab, uniqueDiffOnEmpty]
 #align unique_diff_on_Ico uniqueDiffOnIco
 
-theorem uniqueDiffOnIoc (a b : ℝ) : UniqueDiffOn ℝ (ioc a b) :=
+theorem uniqueDiffOnIoc (a b : ℝ) : UniqueDiffOn ℝ (Ioc a b) :=
   if hab : a < b then
     uniqueDiffOnConvex (convex_Ioc a b) <| by simp only [interior_Ioc, nonempty_Ioo, hab]
   else by simp only [Ioc_eq_empty hab, uniqueDiffOnEmpty]
 #align unique_diff_on_Ioc uniqueDiffOnIoc
 
-theorem uniqueDiffOnIoo (a b : ℝ) : UniqueDiffOn ℝ (ioo a b) :=
+theorem uniqueDiffOnIoo (a b : ℝ) : UniqueDiffOn ℝ (Ioo a b) :=
   is_open_Ioo.UniqueDiffOn
 #align unique_diff_on_Ioo uniqueDiffOnIoo
 
 /-- The real interval `[0, 1]` is a set of unique differentiability. -/
-theorem uniqueDiffOnIccZeroOne : UniqueDiffOn ℝ (icc (0 : ℝ) 1) :=
+theorem uniqueDiffOnIccZeroOne : UniqueDiffOn ℝ (Icc (0 : ℝ) 1) :=
   uniqueDiffOnIcc zero_lt_one
 #align unique_diff_on_Icc_zero_one uniqueDiffOnIccZeroOne
 
-theorem uniqueDiffWithinAtIoo {a b t : ℝ} (ht : t ∈ Set.ioo a b) :
-    UniqueDiffWithinAt ℝ (Set.ioo a b) t :=
+theorem uniqueDiffWithinAtIoo {a b t : ℝ} (ht : t ∈ Set.Ioo a b) :
+    UniqueDiffWithinAt ℝ (Set.Ioo a b) t :=
   IsOpen.uniqueDiffWithinAt is_open_Ioo ht
 #align unique_diff_within_at_Ioo uniqueDiffWithinAtIoo
 
-theorem uniqueDiffWithinAtIoi (a : ℝ) : UniqueDiffWithinAt ℝ (ioi a) a :=
+theorem uniqueDiffWithinAtIoi (a : ℝ) : UniqueDiffWithinAt ℝ (Ioi a) a :=
   uniqueDiffWithinAtConvex (convex_Ioi a) (by simp) (by simp)
 #align unique_diff_within_at_Ioi uniqueDiffWithinAtIoi
 
-theorem uniqueDiffWithinAtIio (a : ℝ) : UniqueDiffWithinAt ℝ (iio a) a :=
+theorem uniqueDiffWithinAtIio (a : ℝ) : UniqueDiffWithinAt ℝ (Iio a) a :=
   uniqueDiffWithinAtConvex (convex_Iio a) (by simp) (by simp)
 #align unique_diff_within_at_Iio uniqueDiffWithinAtIio
 

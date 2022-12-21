@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.sqrt
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ namespace Real
 /-- An auxiliary sequence of rational numbers that converges to `real.sqrt (mk f)`.
 Currently this sequence is not used in `mathlib`.  -/
 def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
-  | 0 => Rat.mkNat (f 0).num.toNat.sqrt (f 0).denom.sqrt
+  | 0 => mkRat (f 0).num.toNat.sqrt (f 0).denom.sqrt
   | n + 1 =>
     let s := sqrt_aux n
     max 0 <| (s + f (n + 1) / s) / 2
@@ -142,7 +142,7 @@ def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
 
 theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | 0 => by
-    rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;>
+    rw [sqrt_aux, Rat.mkRat_eq, Rat.divInt_eq_div] <;> apply div_nonneg <;>
       exact Int.cast_nonneg.2 (Int.ofNat_nonneg _)
   | n + 1 => le_max_left _ _
 #align real.sqrt_aux_nonneg Real.sqrt_aux_nonneg

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.congruence_subgroups
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ theorem Gamma_one_top : gamma 1 = ⊤ := by
 
 theorem Gamma_zero_bot : gamma 0 = ⊥ := by 
   ext
-  simp only [Gamma_mem, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply, Int.cast_id,
+  simp only [Gamma_mem, coe_coe, coe_matrix_coe, Int.coe_castRingHom, map_apply, Int.cast_id,
     Subgroup.mem_bot]
   constructor
   · intro h
@@ -107,7 +107,7 @@ def gamma0 (N : ℕ) :
     intro a b ha hb
     simp only [Set.mem_setOf_eq]
     have h := (Matrix.two_mul_expl a.1 b.1).2.2.1
-    simp only [coe_coe, coe_matrix_coe, coe_mul, Int.coe_cast_ring_hom, map_apply, Set.mem_setOf_eq,
+    simp only [coe_coe, coe_matrix_coe, coe_mul, Int.coe_castRingHom, map_apply, Set.mem_setOf_eq,
       Subtype.val_eq_coe, mul_eq_mul] at *
     rw [h]
     simp [ha, hb]
@@ -116,7 +116,7 @@ def gamma0 (N : ℕ) :
     simp only [Set.mem_setOf_eq, Subtype.val_eq_coe]
     rw [SL2_inv_expl a]
     simp only [Subtype.val_eq_coe, cons_val_zero, cons_val_one, head_cons, coe_coe, coe_matrix_coe,
-      coe_mk, Int.coe_cast_ring_hom, map_apply, Int.cast_neg, neg_eq_zero, Set.mem_setOf_eq] at *
+      coe_mk, Int.coe_castRingHom, map_apply, Int.cast_neg, neg_eq_zero, Set.mem_setOf_eq] at *
     exact ha
 #align Gamma0 gamma0
 
@@ -137,12 +137,12 @@ def gamma0Map (N : ℕ) :
   map_mul' := by 
     intro A B
     have := (two_mul_expl A.1.1 B.1.1).2.2.2
-    simp only [coe_coe, Subgroup.coe_mul, coe_matrix_coe, coe_mul, Int.coe_cast_ring_hom, map_apply,
+    simp only [coe_coe, Subgroup.coe_mul, coe_matrix_coe, coe_mul, Int.coe_castRingHom, map_apply,
       Subtype.val_eq_coe, mul_eq_mul] at *
     rw [this]
     have ha := A.property
     simp only [Int.cast_add, Int.cast_mul, add_left_eq_self, Subtype.val_eq_coe, Gamma0_mem,
-      coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply] at *
+      coe_coe, coe_matrix_coe, Int.coe_castRingHom, map_apply] at *
     rw [ha]
     simp
 #align Gamma_0_map gamma0Map
@@ -168,14 +168,14 @@ theorem Gamma1_to_Gamma0_mem (N : ℕ) (A : gamma0 N) :
     rw [Gamma0_mem] at hA
     have adet := Gamma0_det N A
     rw [Matrix.det_fin_two] at adet
-    simp only [gamma0Map, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply, Gamma1_mem',
+    simp only [gamma0Map, coe_coe, coe_matrix_coe, Int.coe_castRingHom, map_apply, Gamma1_mem',
       MonoidHom.coe_mk, Subtype.val_eq_coe, Int.cast_sub, Int.cast_mul] at *
     rw [hA, ha] at adet
     simp only [mul_one, mul_zero, sub_zero] at adet
     simp only [adet, hA, ha, eq_self_iff_true, and_self_iff]
   · intro ha
     simp only [Gamma1_mem', gamma0Map, MonoidHom.coe_mk, coe_coe, coe_matrix_coe,
-      Int.coe_cast_ring_hom, map_apply]
+      Int.coe_castRingHom, map_apply]
     exact ha.2.1
 #align Gamma1_to_Gamma0_mem Gamma1_to_Gamma0_mem
 
@@ -203,7 +203,7 @@ theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
     have hA : A ∈ gamma0 N := by simp [ha.right.right, Gamma0_mem, Subtype.val_eq_coe]
     have HA : (⟨A, hA⟩ : gamma0 N) ∈ gamma1' N := by
       simp only [Gamma1_to_Gamma0_mem, Subgroup.coe_mk, coe_coe, coe_matrix_coe,
-        Int.coe_cast_ring_hom, map_apply]
+        Int.coe_castRingHom, map_apply]
       exact ha
     refine' ⟨(⟨(⟨A, hA⟩ : gamma0 N), HA⟩ : (gamma1' N : Subgroup (gamma0 N))), _⟩
     simp
@@ -211,7 +211,7 @@ theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
 
 theorem Gamma1_in_Gamma0 (N : ℕ) : gamma1 N ≤ gamma0 N := by
   intro x HA
-  simp only [Gamma0_mem, Gamma1_mem, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply] at *
+  simp only [Gamma0_mem, Gamma1_mem, coe_coe, coe_matrix_coe, Int.coe_castRingHom, map_apply] at *
   exact HA.2.2
 #align Gamma1_in_Gamma0 Gamma1_in_Gamma0
 

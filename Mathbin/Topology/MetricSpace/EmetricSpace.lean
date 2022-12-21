@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_space
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem uniformity_dist_of_mem_uniformity [LinearOrder β] {U : Filter (α × α
     (D : α → α → β) (H : ∀ s, s ∈ U ↔ ∃ ε > z, ∀ {a b : α}, D a b < ε → (a, b) ∈ s) :
     U = ⨅ ε > z, 𝓟 { p : α × α | D p.1 p.2 < ε } :=
   le_antisymm
-    (le_infi fun ε => le_infi fun ε0 => le_principal_iff.2 <| (H _).2 ⟨ε, ε0, fun a b => id⟩)
+    (le_infᵢ fun ε => le_infᵢ fun ε0 => le_principal_iff.2 <| (H _).2 ⟨ε, ε0, fun a b => id⟩)
     fun r ur =>
     let ⟨ε, ε0, h⟩ := (H _).1 ur
     mem_infi_of_mem ε <| mem_infi_of_mem ε0 <| mem_principal.2 fun ⟨a, b⟩ => h
@@ -67,12 +67,12 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
   UniformSpace.ofCore
     { uniformity := ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε }
       refl :=
-        le_infi fun ε =>
-          le_infi <| by
+        le_infᵢ fun ε =>
+          le_infᵢ <| by
             simp (config := { contextual := true }) [Set.subset_def, idRel, edist_self, (· > ·)]
       comp :=
-        le_infi fun ε =>
-          le_infi fun h =>
+        le_infᵢ fun ε =>
+          le_infᵢ fun h =>
             have : (2 : ℝ≥0∞) = (2 : ℕ) := by simp
             have A : 0 < ε / 2 :=
               Ennreal.div_pos_iff.2 ⟨ne_of_gt h, by convert Ennreal.nat_ne_top 2⟩
@@ -242,14 +242,14 @@ theorem uniformity_basis_edist_le :
 #align uniformity_basis_edist_le uniformity_basis_edist_le
 
 theorem uniformity_basis_edist' (ε' : ℝ≥0∞) (hε' : 0 < ε') :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ ioo 0 ε') fun ε => { p : α × α | edist p.1 p.2 < ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ Ioo 0 ε') fun ε => { p : α × α | edist p.1 p.2 < ε } :=
   Emetric.mk_uniformity_basis (fun _ => And.left) fun ε ε₀ =>
     let ⟨δ, hδ⟩ := exists_between hε'
     ⟨min ε δ, ⟨lt_min ε₀ hδ.1, lt_of_le_of_lt (min_le_right _ _) hδ.2⟩, min_le_left _ _⟩
 #align uniformity_basis_edist' uniformity_basis_edist'
 
 theorem uniformity_basis_edist_le' (ε' : ℝ≥0∞) (hε' : 0 < ε') :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ ioo 0 ε') fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ Ioo 0 ε') fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
   Emetric.mk_uniformity_basis_le (fun _ => And.left) fun ε ε₀ =>
     let ⟨δ, hδ⟩ := exists_between hε'
     ⟨min ε δ, ⟨lt_min ε₀ hδ.1, lt_of_le_of_lt (min_le_right _ _) hδ.2⟩, min_le_left _ _⟩
@@ -504,8 +504,8 @@ instance Prod.pseudoEmetricSpaceMax [PseudoEmetricSpace β] :
   uniformity_edist := by 
     refine' uniformity_prod.trans _
     simp only [PseudoEmetricSpace.uniformity_edist, comap_infi]
-    rw [← infi_inf_eq]; congr ; funext
-    rw [← infi_inf_eq]; congr ; funext
+    rw [← infᵢ_inf_eq]; congr ; funext
+    rw [← infᵢ_inf_eq]; congr ; funext
     simp [inf_principal, ext_iff, max_lt_iff]
   toUniformSpace := Prod.uniformSpace
 #align prod.pseudo_emetric_space_max Prod.pseudoEmetricSpaceMax
@@ -540,8 +540,8 @@ instance pseudoEmetricSpacePi [∀ b, PseudoEmetricSpace (π b)] :
   uniformity_edist := by
     simp only [PiCat.uniformity, PseudoEmetricSpace.uniformity_edist, comap_infi, gt_iff_lt,
       preimage_set_of_eq, comap_principal]
-    rw [infi_comm]; congr ; funext ε
-    rw [infi_comm]; congr ; funext εpos
+    rw [infᵢ_comm]; congr ; funext ε
+    rw [infᵢ_comm]; congr ; funext εpos
     change 0 < ε at εpos
     simp [Set.ext_iff, εpos]
 #align pseudo_emetric_space_pi pseudoEmetricSpacePi
@@ -930,7 +930,7 @@ noncomputable def diam (s : Set α) :=
 #align emetric.diam Emetric.diam
 
 theorem diam_le_iff {d : ℝ≥0∞} : diam s ≤ d ↔ ∀ x ∈ s, ∀ y ∈ s, edist x y ≤ d := by
-  simp only [diam, supr_le_iff]
+  simp only [diam, supᵢ_le_iff]
 #align emetric.diam_le_iff Emetric.diam_le_iff
 
 theorem diam_image_le_iff {d : ℝ≥0∞} {f : β → α} {s : Set β} :
@@ -976,16 +976,16 @@ theorem diam_Union_mem_option {ι : Type _} (o : Option ι) (s : ι → Set α) 
 
 theorem diam_insert : diam (insert x s) = max (⨆ y ∈ s, edist x y) (diam s) :=
   eq_of_forall_ge_iff fun d => by
-    simp only [diam_le_iff, ball_insert_iff, edist_self, edist_comm x, max_le_iff, supr_le_iff,
+    simp only [diam_le_iff, ball_insert_iff, edist_self, edist_comm x, max_le_iff, supᵢ_le_iff,
       zero_le, true_and_iff, forall_and, and_self_iff, ← and_assoc']
 #align emetric.diam_insert Emetric.diam_insert
 
 theorem diam_pair : diam ({x, y} : Set α) = edist x y := by
-  simp only [supr_singleton, diam_insert, diam_singleton, Ennreal.max_zero_right]
+  simp only [supᵢ_singleton, diam_insert, diam_singleton, Ennreal.max_zero_right]
 #align emetric.diam_pair Emetric.diam_pair
 
 theorem diam_triple : diam ({x, y, z} : Set α) = max (max (edist x y) (edist x z)) (edist y z) := by
-  simp only [diam_insert, supr_insert, supr_singleton, diam_singleton, Ennreal.max_zero_right,
+  simp only [diam_insert, supᵢ_insert, supᵢ_singleton, diam_singleton, Ennreal.max_zero_right,
     Ennreal.sup_eq_max]
 #align emetric.diam_triple Emetric.diam_triple
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module ring_theory.coprime.ideal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,8 +41,8 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
   · simp only [Finset.sum_singleton, Finset.coe_singleton, Set.pairwise_singleton, iff_true_iff]
     refine' fun a => ⟨fun i => if h : i = a then ⟨1, _⟩ else 0, _⟩
     · rw [h]
-      simp only [Finset.mem_singleton, Ne.def, infi_infi_eq_left, eq_self_iff_true, not_true,
-        infi_false]
+      simp only [Finset.mem_singleton, Ne.def, infᵢ_infᵢ_eq_left, eq_self_iff_true, not_true,
+        infᵢ_false]
     · simp only [dif_pos, dif_ctx_congr, Submodule.coe_mk, eq_self_iff_true]
   intro a t hat h ih
   rw [Finset.coe_cons,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.quasi_separated
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ instance (priority := 100) NoetherianSpace.to_quasi_separated_space [NoetherianS
 
 theorem IsQuasiSeparated.of_quasi_separated_space (s : Set α) [QuasiSeparatedSpace α] :
     IsQuasiSeparated s :=
-  is_quasi_separated_univ.ofSubset (Set.subset_univ _)
+  is_quasi_separated_univ.of_subset (Set.subset_univ _)
 #align is_quasi_separated.of_quasi_separated_space IsQuasiSeparated.of_quasi_separated_space
 
 theorem QuasiSeparatedSpace.of_open_embedding (h : OpenEmbedding f) [QuasiSeparatedSpace β] :

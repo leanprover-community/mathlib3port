@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys
 
 ! This file was ported from Lean 3 source module algebra.order.rearrangement
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,7 @@ together. Stated by permuting the entries of `g`. -/
 theorem AntivaryOn.sum_smul_eq_sum_smul_comp_perm_iff (hfg : AntivaryOn f g s)
     (hσ : { x | σ x ≠ x } ⊆ s) :
     ((∑ i in s, f i • g (σ i)) = ∑ i in s, f i • g i) ↔ AntivaryOn f (g ∘ σ) s :=
-  (hfg.dual_right.sum_smul_comp_perm_eq_sum_smul_iff hσ).trans monovary_on_to_dual_right
+  (hfg.dual_right.sum_smul_comp_perm_eq_sum_smul_iff hσ).trans monovaryOn_toDual_right
 #align antivary_on.sum_smul_eq_sum_smul_comp_perm_iff AntivaryOn.sum_smul_eq_sum_smul_comp_perm_iff
 
 /-- **Strict inequality case of the Rearrangement Inequality**: Pointwise scalar multiplication of
@@ -226,7 +226,7 @@ together. Stated by permuting the entries of `f`. -/
 theorem AntivaryOn.sum_smul_eq_sum_comp_perm_smul_iff (hfg : AntivaryOn f g s)
     (hσ : { x | σ x ≠ x } ⊆ s) :
     ((∑ i in s, f (σ i) • g i) = ∑ i in s, f i • g i) ↔ AntivaryOn (f ∘ σ) g s :=
-  (hfg.dual_right.sum_comp_perm_smul_eq_sum_smul_iff hσ).trans monovary_on_to_dual_right
+  (hfg.dual_right.sum_comp_perm_smul_eq_sum_smul_iff hσ).trans monovaryOn_toDual_right
 #align antivary_on.sum_smul_eq_sum_comp_perm_smul_iff AntivaryOn.sum_smul_eq_sum_comp_perm_smul_iff
 
 /-- **Strict inequality case of the Rearrangement Inequality**: Pointwise scalar multiplication of

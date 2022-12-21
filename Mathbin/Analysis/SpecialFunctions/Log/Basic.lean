@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem log_exp (x : ℝ) : log (exp x) = x :=
   exp_injective <| exp_log (exp_pos x)
 #align real.log_exp Real.log_exp
 
-theorem surj_on_log : SurjOn log (ioi 0) univ := fun x _ => ⟨exp x, exp_pos x, log_exp x⟩
+theorem surj_on_log : SurjOn log (Ioi 0) univ := fun x _ => ⟨exp x, exp_pos x, log_exp x⟩
 #align real.surj_on_log Real.surj_on_log
 
 theorem log_surjective : Surjective log := fun x => ⟨exp x, log_exp x⟩
@@ -122,7 +122,7 @@ theorem cosh_log {x : ℝ} (hx : 0 < x) : cosh (log x) = (x + x⁻¹) / 2 := by
   rw [cosh_eq, exp_neg, exp_log hx]
 #align real.cosh_log Real.cosh_log
 
-theorem surj_on_log' : SurjOn log (iio 0) univ := fun x _ =>
+theorem surj_on_log' : SurjOn log (Iio 0) univ := fun x _ =>
   ⟨-exp x, neg_lt_zero.2 <| exp_pos x, by rw [log_neg_eq_log, log_exp]⟩
 #align real.surj_on_log' Real.surj_on_log'
 
@@ -205,17 +205,17 @@ theorem log_nonpos (hx : 0 ≤ x) (h'x : x ≤ 1) : log x ≤ 0 :=
   (log_nonpos_iff' hx).2 h'x
 #align real.log_nonpos Real.log_nonpos
 
-theorem strict_mono_on_log : StrictMonoOn log (Set.ioi 0) := fun x hx y hy hxy => log_lt_log hx hxy
+theorem strict_mono_on_log : StrictMonoOn log (Set.Ioi 0) := fun x hx y hy hxy => log_lt_log hx hxy
 #align real.strict_mono_on_log Real.strict_mono_on_log
 
-theorem strict_anti_on_log : StrictAntiOn log (Set.iio 0) := by
+theorem strict_anti_on_log : StrictAntiOn log (Set.Iio 0) := by
   rintro x (hx : x < 0) y (hy : y < 0) hxy
   rw [← log_abs y, ← log_abs x]
   refine' log_lt_log (abs_pos.2 hy.ne) _
   rwa [abs_of_neg hy, abs_of_neg hx, neg_lt_neg_iff]
 #align real.strict_anti_on_log Real.strict_anti_on_log
 
-theorem log_inj_on_pos : Set.InjOn log (Set.ioi 0) :=
+theorem log_inj_on_pos : Set.InjOn log (Set.Ioi 0) :=
   strict_mono_on_log.InjOn
 #align real.log_inj_on_pos Real.log_inj_on_pos
 

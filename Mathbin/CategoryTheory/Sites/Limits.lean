@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.limits
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,12 +141,12 @@ then the limit presheaf is again a sheaf.
 
 This is used to show that the forgetful functor from sheaves to presheaves creates limits.
 -/
-theorem isSheafOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D))
+theorem is_sheaf_of_is_limit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D))
     (hE : IsLimit E) : Presheaf.IsSheaf J E.x := by
   rw [presheaf.is_sheaf_iff_multifork]
   intro X S
   exact ⟨is_limit_multifork_of_is_limit _ _ hE _ _⟩
-#align category_theory.Sheaf.is_sheaf_of_is_limit CategoryTheory.SheafCat.isSheafOfIsLimit
+#align category_theory.Sheaf.is_sheaf_of_is_limit CategoryTheory.SheafCat.is_sheaf_of_is_limit
 
 instance (F : K ⥤ SheafCat J D) : CreatesLimit F (sheafToPresheaf J D) :=
   creates_limit_of_reflects_iso fun E hE =>
@@ -213,7 +213,7 @@ In `is_colimit_sheafify_cocone`, we show that this is a colimit cocone when `E` 
 def sheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J D)) :
     Cocone
       F where 
-  x := ⟨J.sheafify E.x, GrothendieckTopology.Plus.isSheafPlusPlus _ _⟩
+  x := ⟨J.sheafify E.x, GrothendieckTopology.Plus.is_sheaf_plus_plus _ _⟩
   ι :=
     { app := fun k => ⟨E.ι.app k ≫ J.toSheafify E.x⟩
       naturality' := fun i j f => by 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.homogeneous_ideal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,7 +165,7 @@ theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ 
     obtain ⟨i, hi⟩ := hx₁
     have mem₁ : (DirectSum.decompose 𝒜 r k : A) * x ∈ 𝒜 (k + i) :=
       graded_monoid.mul_mem (SetLike.coe_mem _) hi
-    erw [GradedRing.proj_apply, DirectSum.decompose_of_mem 𝒜 mem₁, coe_of_apply, SetLike.coe_mk]
+    erw [GradedRing.proj_apply, DirectSum.decompose_of_mem 𝒜 mem₁, coe_of_apply, [anonymous]]
     split_ifs
     · exact I.mul_mem_left _ hx₂
     · exact I.zero_mem
@@ -315,15 +315,15 @@ theorem infi₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal 
   is_homogeneous.infi fun i => is_homogeneous.infi <| h i
 #align ideal.is_homogeneous.infi₂ Ideal.IsHomogeneous.infi₂
 
-theorem Sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (sup ℐ).IsHomogeneous 𝒜 :=
+theorem Sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (supₛ ℐ).IsHomogeneous 𝒜 :=
   by 
-  rw [Sup_eq_supr]
+  rw [supₛ_eq_supᵢ]
   exact supr₂ h
 #align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.Sup
 
-theorem Inf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (inf ℐ).IsHomogeneous 𝒜 :=
+theorem Inf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (infₛ ℐ).IsHomogeneous 𝒜 :=
   by 
-  rw [Inf_eq_infi]
+  rw [infₛ_eq_infᵢ]
   exact infi₂ h
 #align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.Inf
 
@@ -348,10 +348,10 @@ instance : HasSup (HomogeneousIdeal 𝒜) :=
 instance : HasInf (HomogeneousIdeal 𝒜) :=
   ⟨fun I J => ⟨_, I.IsHomogeneous.inf J.IsHomogeneous⟩⟩
 
-instance : HasSup (HomogeneousIdeal 𝒜) :=
+instance : SupSet (HomogeneousIdeal 𝒜) :=
   ⟨fun S => ⟨⨆ s ∈ S, toIdeal s, Ideal.IsHomogeneous.supr₂ fun s _ => s.IsHomogeneous⟩⟩
 
-instance : HasInf (HomogeneousIdeal 𝒜) :=
+instance : InfSet (HomogeneousIdeal 𝒜) :=
   ⟨fun S => ⟨⨅ s ∈ S, toIdeal s, Ideal.IsHomogeneous.infi₂ fun s _ => s.IsHomogeneous⟩⟩
 
 @[simp]
@@ -395,23 +395,23 @@ theorem to_ideal_inf (I J : HomogeneousIdeal 𝒜) : (I ⊓ J).toIdeal = I.toIde
 #align homogeneous_ideal.to_ideal_inf HomogeneousIdeal.to_ideal_inf
 
 @[simp]
-theorem to_ideal_Sup (ℐ : Set (HomogeneousIdeal 𝒜)) : (sup ℐ).toIdeal = ⨆ s ∈ ℐ, toIdeal s :=
+theorem to_ideal_Sup (ℐ : Set (HomogeneousIdeal 𝒜)) : (supₛ ℐ).toIdeal = ⨆ s ∈ ℐ, toIdeal s :=
   rfl
 #align homogeneous_ideal.to_ideal_Sup HomogeneousIdeal.to_ideal_Sup
 
 @[simp]
-theorem to_ideal_Inf (ℐ : Set (HomogeneousIdeal 𝒜)) : (inf ℐ).toIdeal = ⨅ s ∈ ℐ, toIdeal s :=
+theorem to_ideal_Inf (ℐ : Set (HomogeneousIdeal 𝒜)) : (infₛ ℐ).toIdeal = ⨅ s ∈ ℐ, toIdeal s :=
   rfl
 #align homogeneous_ideal.to_ideal_Inf HomogeneousIdeal.to_ideal_Inf
 
 @[simp]
 theorem to_ideal_supr {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) :
-    (⨆ i, s i).toIdeal = ⨆ i, (s i).toIdeal := by rw [supr, to_ideal_Sup, supr_range]
+    (⨆ i, s i).toIdeal = ⨆ i, (s i).toIdeal := by rw [supᵢ, to_ideal_Sup, supᵢ_range]
 #align homogeneous_ideal.to_ideal_supr HomogeneousIdeal.to_ideal_supr
 
 @[simp]
 theorem to_ideal_infi {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) :
-    (⨅ i, s i).toIdeal = ⨅ i, (s i).toIdeal := by rw [infi, to_ideal_Inf, infi_range]
+    (⨅ i, s i).toIdeal = ⨅ i, (s i).toIdeal := by rw [infi, to_ideal_Inf, infᵢ_range]
 #align homogeneous_ideal.to_ideal_infi HomogeneousIdeal.to_ideal_infi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -530,14 +530,14 @@ def Ideal.homogeneousCore.gi :
 #align ideal.homogeneous_core.gi Ideal.homogeneousCore.gi
 
 theorem Ideal.homogeneous_core_eq_Sup :
-    I.homogeneousCore 𝒜 = sup { J : HomogeneousIdeal 𝒜 | J.toIdeal ≤ I } :=
-  Eq.symm <| IsLub.Sup_eq <| (Ideal.homogeneousCore.gc 𝒜).is_greatest_u.IsLub
+    I.homogeneousCore 𝒜 = supₛ { J : HomogeneousIdeal 𝒜 | J.toIdeal ≤ I } :=
+  Eq.symm <| IsLUB.Sup_eq <| (Ideal.homogeneousCore.gc 𝒜).is_greatest_u.IsLub
 #align ideal.homogeneous_core_eq_Sup Ideal.homogeneous_core_eq_Sup
 
 theorem Ideal.homogeneous_core'_eq_Sup :
-    I.homogeneousCore' 𝒜 = sup { J : Ideal A | J.IsHomogeneous 𝒜 ∧ J ≤ I } := by
-  refine' (IsLub.Sup_eq _).symm
-  apply IsGreatest.is_lub
+    I.homogeneousCore' 𝒜 = supₛ { J : Ideal A | J.IsHomogeneous 𝒜 ∧ J ≤ I } := by
+  refine' (IsLUB.Sup_eq _).symm
+  apply IsGreatest.isLUB
   have coe_mono : Monotone (to_ideal : HomogeneousIdeal 𝒜 → Ideal A) := fun x y => id
   convert coe_mono.map_is_greatest (Ideal.homogeneousCore.gc 𝒜).is_greatest_u using 1
   ext
@@ -662,8 +662,8 @@ def Ideal.homogeneousHull.gi :
 #align ideal.homogeneous_hull.gi Ideal.homogeneousHull.gi
 
 theorem Ideal.homogeneous_hull_eq_Inf (I : Ideal A) :
-    Ideal.homogeneousHull 𝒜 I = inf { J : HomogeneousIdeal 𝒜 | I ≤ J.toIdeal } :=
-  Eq.symm <| IsGlb.Inf_eq <| (Ideal.homogeneousHull.gc 𝒜).is_least_l.IsGlb
+    Ideal.homogeneousHull 𝒜 I = infₛ { J : HomogeneousIdeal 𝒜 | I ≤ J.toIdeal } :=
+  Eq.symm <| IsGLB.Inf_eq <| (Ideal.homogeneousHull.gc 𝒜).is_least_l.IsGlb
 #align ideal.homogeneous_hull_eq_Inf Ideal.homogeneous_hull_eq_Inf
 
 end GaloisConnection

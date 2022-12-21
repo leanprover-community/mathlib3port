@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
 
 ! This file was ported from Lean 3 source module category_theory.sites.sieves
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -336,13 +336,13 @@ instance sieveInhabited : Inhabited (Sieve X) :=
 
 @[simp]
 theorem Inf_apply {Ss : Set (Sieve X)} {Y} (f : Y ⟶ X) :
-    inf Ss f ↔ ∀ (S : Sieve X) (H : S ∈ Ss), S f :=
+    infₛ Ss f ↔ ∀ (S : Sieve X) (H : S ∈ Ss), S f :=
   Iff.rfl
 #align category_theory.sieve.Inf_apply CategoryTheory.Sieve.Inf_apply
 
 @[simp]
 theorem Sup_apply {Ss : Set (Sieve X)} {Y} (f : Y ⟶ X) :
-    sup Ss f ↔ ∃ (S : Sieve X)(H : S ∈ Ss), S f :=
+    supₛ Ss f ↔ ∃ (S : Sieve X)(H : S ∈ Ss), S f :=
   Iff.rfl
 #align category_theory.sieve.Sup_apply CategoryTheory.Sieve.Sup_apply
 

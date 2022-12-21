@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module order.filter.bases
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,8 +104,8 @@ instance {α : Type _} : Membership (Set α) (FilterBasis α) :=
 
 -- For illustration purposes, the filter basis defining (at_top : filter ℕ)
 instance : Inhabited (FilterBasis ℕ) :=
-  ⟨{  sets := range ici
-      Nonempty := ⟨ici 0, mem_range_self 0⟩
+  ⟨{  sets := range Ici
+      Nonempty := ⟨Ici 0, mem_range_self 0⟩
       inter_sets := by 
         rintro _ _ ⟨n, rfl⟩ ⟨m, rfl⟩
         refine' ⟨Ici (max n m), mem_range_self _, _⟩
@@ -746,7 +746,7 @@ theorem HasBasis.eq_binfi (h : l.HasBasis p s) : l = ⨅ (i) (_ : p i), 𝓟 (s 
 #align filter.has_basis.eq_binfi Filter.HasBasis.eq_binfi
 
 theorem HasBasis.eq_infi (h : l.HasBasis (fun _ => True) s) : l = ⨅ i, 𝓟 (s i) := by
-  simpa only [infi_true] using h.eq_binfi
+  simpa only [infᵢ_true] using h.eq_binfi
 #align filter.has_basis.eq_infi Filter.HasBasis.eq_infi
 
 theorem has_basis_infi_principal {s : ι → Set α} (h : Directed (· ≥ ·) s) [Nonempty ι] :
@@ -811,10 +811,10 @@ theorem HasBasis.forall_mem_mem (h : HasBasis l p s) {x : α} :
 
 protected theorem HasBasis.binfi_mem [CompleteLattice β] {f : Set α → β} (h : HasBasis l p s)
     (hf : Monotone f) : (⨅ t ∈ l, f t) = ⨅ (i) (hi : p i), f (s i) :=
-  le_antisymm (le_infi₂ fun i hi => infi₂_le (s i) (h.mem_of_mem hi)) <|
-    le_infi₂ fun t ht =>
+  le_antisymm (le_infᵢ₂ fun i hi => infᵢ₂_le (s i) (h.mem_of_mem hi)) <|
+    le_infᵢ₂ fun t ht =>
       let ⟨i, hpi, hi⟩ := h.mem_iff.1 ht
-      infi₂_le_of_le i hpi (hf hi)
+      infᵢ₂_le_of_le i hpi (hf hi)
 #align filter.has_basis.binfi_mem Filter.HasBasis.binfi_mem
 
 protected theorem HasBasis.bInter_mem {f : Set α → Set β} (h : HasBasis l p s) (hf : Monotone f) :
@@ -1006,7 +1006,7 @@ structure CountableFilterBasis (α : Type _) extends FilterBasis α where
 
 -- For illustration purposes, the countable filter basis defining (at_top : filter ℕ)
 instance Nat.inhabitedCountableFilterBasis : Inhabited (CountableFilterBasis ℕ) :=
-  ⟨{ (default : FilterBasis ℕ) with Countable := countable_range fun n => ici n }⟩
+  ⟨{ (default : FilterBasis ℕ) with Countable := countable_range fun n => Ici n }⟩
 #align filter.nat.inhabited_countable_filter_basis Filter.Nat.inhabitedCountableFilterBasis
 
 theorem HasCountableBasis.is_countably_generated {f : Filter α} {p : ι → Prop} {s : ι → Set α}
@@ -1019,13 +1019,13 @@ theorem antitone_seq_of_seq (s : ℕ → Set α) :
     ∃ t : ℕ → Set α, Antitone t ∧ (⨅ i, 𝓟 <| s i) = ⨅ i, 𝓟 (t i) := by
   use fun n => ⋂ m ≤ n, s m; constructor
   · exact fun i j hij => bInter_mono (Iic_subset_Iic.2 hij) fun n hn => subset.refl _
-  apply le_antisymm <;> rw [le_infi_iff] <;> intro i
+  apply le_antisymm <;> rw [le_infᵢ_iff] <;> intro i
   · rw [le_principal_iff]
     refine' (bInter_mem (finite_le_nat _)).2 fun j hji => _
     rw [← le_principal_iff]
-    apply infi_le_of_le j _
+    apply infᵢ_le_of_le j _
     exact le_rfl
-  · apply infi_le_of_le i _
+  · apply infᵢ_le_of_le i _
     rw [principal_mono]
     intro a
     simp
@@ -1037,13 +1037,13 @@ theorem antitone_seq_of_seq (s : ℕ → Set α) :
 theorem countable_binfi_eq_infi_seq [CompleteLattice α] {B : Set ι} (Bcbl : B.Countable)
     (Bne : B.Nonempty) (f : ι → α) : ∃ x : ℕ → ι, (⨅ t ∈ B, f t) = ⨅ i, f (x i) :=
   let ⟨g, hg⟩ := Bcbl.exists_eq_range Bne
-  ⟨g, hg.symm ▸ infi_range⟩
+  ⟨g, hg.symm ▸ infᵢ_range⟩
 #align filter.countable_binfi_eq_infi_seq Filter.countable_binfi_eq_infi_seq
 
 theorem countable_binfi_eq_infi_seq' [CompleteLattice α] {B : Set ι} (Bcbl : B.Countable)
     (f : ι → α) {i₀ : ι} (h : f i₀ = ⊤) : ∃ x : ℕ → ι, (⨅ t ∈ B, f t) = ⨅ i, f (x i) := by
   cases' B.eq_empty_or_nonempty with hB Bnonempty
-  · rw [hB, infi_emptyset]
+  · rw [hB, infᵢ_emptyset]
     use fun n => i₀
     simp [h]
   · exact countable_binfi_eq_infi_seq Bcbl Bnonempty f
@@ -1083,7 +1083,7 @@ theorem HasBasis.exists_antitone_subbasis {f : Filter α} [h : f.IsCountablyGene
     rcases h with ⟨s, hsc, rfl⟩
     rw [generate_eq_binfi]
     exact countable_binfi_principal_eq_seq_infi hsc
-  have : ∀ i, x' i ∈ f := fun i => hx'.symm ▸ (infi_le (fun i => 𝓟 (x' i)) i) (mem_principal_self _)
+  have : ∀ i, x' i ∈ f := fun i => hx'.symm ▸ (infᵢ_le (fun i => 𝓟 (x' i)) i) (mem_principal_self _)
   let x : ℕ → { i : ι' // p i } := fun n =>
     Nat.recOn n (hs.index _ <| this 0) fun n xn =>
       hs.index _ <| inter_mem (this <| n + 1) (hs.mem_of_mem xn.2)
@@ -1098,9 +1098,9 @@ theorem HasBasis.exists_antitone_subbasis {f : Filter α} [h : f.IsCountablyGene
     ⟨has_basis_infi_principal (directed_of_sup x_mono), x_mono⟩
   convert this
   exact
-    le_antisymm (le_infi fun i => le_principal_iff.2 <| by cases i <;> apply hs.set_index_mem)
+    le_antisymm (le_infᵢ fun i => le_principal_iff.2 <| by cases i <;> apply hs.set_index_mem)
       (hx'.symm ▸
-        le_infi fun i => le_principal_iff.2 <| this.to_has_basis.mem_iff.2 ⟨i, trivial, x_subset i⟩)
+        le_infᵢ fun i => le_principal_iff.2 <| this.to_has_basis.mem_iff.2 ⟨i, trivial, x_subset i⟩)
 #align filter.has_basis.exists_antitone_subbasis Filter.HasBasis.exists_antitone_subbasis
 
 /-- A countably generated filter admits a basis formed by an antitone sequence of sets. -/
@@ -1161,7 +1161,7 @@ end IsCountablyGenerated
 theorem is_countably_generated_seq [Countable β] (x : β → Set α) :
     IsCountablyGenerated (⨅ i, 𝓟 <| x i) := by
   use range x, countable_range x
-  rw [generate_eq_binfi, infi_range]
+  rw [generate_eq_binfi, infᵢ_range]
 #align filter.is_countably_generated_seq Filter.is_countably_generated_seq
 
 theorem is_countably_generated_of_seq {f : Filter α} (h : ∃ x : ℕ → Set α, f = ⨅ i, 𝓟 <| x i) :
@@ -1188,7 +1188,7 @@ theorem is_countably_generated_iff_exists_antitone_basis {f : Filter α} :
 
 @[instance]
 theorem is_countably_generated_principal (s : Set α) : IsCountablyGenerated (𝓟 s) :=
-  is_countably_generated_of_seq ⟨fun _ => s, infi_const.symm⟩
+  is_countably_generated_of_seq ⟨fun _ => s, infᵢ_const.symm⟩
 #align filter.is_countably_generated_principal Filter.is_countably_generated_principal
 
 @[instance]

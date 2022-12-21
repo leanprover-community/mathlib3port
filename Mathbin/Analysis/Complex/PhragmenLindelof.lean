@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.phragmen_lindelof
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,11 +135,11 @@ Then `‖f z‖` is bounded by the same constant on the closed strip
 `{z : ℂ | a ≤ im z ≤ b}`. Moreover, it suffices to verify the second assumption
 only for sufficiently large values of `|re z|`.
 -/
-theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' ioo a b))
+theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     (hB :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' ioo a b)] fun z =>
+          f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z =>
             expR (B * expR (c * |z.re|)))
     (hle_a : ∀ z : ℂ, im z = a → ‖f z‖ ≤ C) (hle_b : ∀ z, im z = b → ‖f z‖ ≤ C) (hza : a ≤ im z)
     (hzb : im z ≤ b) : ‖f z‖ ≤ C :=
@@ -276,14 +276,14 @@ Let `f : ℂ → E` be a function such that
 
 Then `f` is equal to zero on the closed strip `{z : ℂ | a ≤ im z ≤ b}`.
 -/
-theorem eq_zero_on_horizontal_strip (hd : DiffContOnCl ℂ f (im ⁻¹' ioo a b))
+theorem eq_zero_on_horizontal_strip (hd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     (hB :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' ioo a b)] fun z =>
+          f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z =>
             expR (B * expR (c * |z.re|)))
     (ha : ∀ z : ℂ, z.im = a → f z = 0) (hb : ∀ z : ℂ, z.im = b → f z = 0) :
-    EqOn f 0 (im ⁻¹' icc a b) := fun z hz =>
+    EqOn f 0 (im ⁻¹' Icc a b) := fun z hz =>
   norm_le_zero_iff.1 <|
     horizontal_strip hd hB (fun z hz => (ha z hz).symm ▸ norm_zero.le)
       (fun z hz => (hb z hz).symm ▸ norm_zero.le) hz.1 hz.2
@@ -299,20 +299,20 @@ Let `f g : ℂ → E` be functions such that
 
 Then `f` is equal to `g` on the closed strip `{z : ℂ | a ≤ im z ≤ b}`.
 -/
-theorem eq_on_horizontal_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (im ⁻¹' ioo a b))
+theorem eq_on_horizontal_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     (hBf :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' ioo a b)] fun z =>
+          f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z =>
             expR (B * expR (c * |z.re|)))
-    (hdg : DiffContOnCl ℂ g (im ⁻¹' ioo a b))
+    (hdg : DiffContOnCl ℂ g (im ⁻¹' Ioo a b))
     (hBg :
       ∃ c < π / (b - a),
         ∃ B,
-          g =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' ioo a b)] fun z =>
+          g =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z =>
             expR (B * expR (c * |z.re|)))
     (ha : ∀ z : ℂ, z.im = a → f z = g z) (hb : ∀ z : ℂ, z.im = b → f z = g z) :
-    EqOn f g (im ⁻¹' icc a b) := fun z hz =>
+    EqOn f g (im ⁻¹' Icc a b) := fun z hz =>
   sub_eq_zero.1
     (eq_zero_on_horizontal_strip (hdf.sub hdg) (is_O_sub_exp_exp hBf hBg)
       (fun w hw => sub_eq_zero.2 (ha w hw)) (fun w hw => sub_eq_zero.2 (hb w hw)) hz)
@@ -334,11 +334,11 @@ Then `‖f z‖` is bounded by the same constant on the closed strip
 `{z : ℂ | a ≤ re z ≤ b}`. Moreover, it suffices to verify the second assumption
 only for sufficiently large values of `|im z|`.
 -/
-theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' ioo a b))
+theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
     (hB :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' ioo a b)] fun z =>
+          f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z =>
             expR (B * expR (c * |z.im|)))
     (hle_a : ∀ z : ℂ, re z = a → ‖f z‖ ≤ C) (hle_b : ∀ z, re z = b → ‖f z‖ ≤ C) (hza : a ≤ re z)
     (hzb : re z ≤ b) : ‖f z‖ ≤ C := by
@@ -369,14 +369,14 @@ Let `f : ℂ → E` be a function such that
 
 Then `f` is equal to zero on the closed strip `{z : ℂ | a ≤ re z ≤ b}`.
 -/
-theorem eq_zero_on_vertical_strip (hd : DiffContOnCl ℂ f (re ⁻¹' ioo a b))
+theorem eq_zero_on_vertical_strip (hd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
     (hB :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' ioo a b)] fun z =>
+          f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z =>
             expR (B * expR (c * |z.im|)))
     (ha : ∀ z : ℂ, re z = a → f z = 0) (hb : ∀ z : ℂ, re z = b → f z = 0) :
-    EqOn f 0 (re ⁻¹' icc a b) := fun z hz =>
+    EqOn f 0 (re ⁻¹' Icc a b) := fun z hz =>
   norm_le_zero_iff.1 <|
     vertical_strip hd hB (fun z hz => (ha z hz).symm ▸ norm_zero.le)
       (fun z hz => (hb z hz).symm ▸ norm_zero.le) hz.1 hz.2
@@ -392,20 +392,20 @@ Let `f g : ℂ → E` be functions such that
 
 Then `f` is equal to `g` on the closed strip `{z : ℂ | a ≤ re z ≤ b}`.
 -/
-theorem eq_on_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹' ioo a b))
+theorem eq_on_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
     (hBf :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' ioo a b)] fun z =>
+          f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z =>
             expR (B * expR (c * |z.im|)))
-    (hdg : DiffContOnCl ℂ g (re ⁻¹' ioo a b))
+    (hdg : DiffContOnCl ℂ g (re ⁻¹' Ioo a b))
     (hBg :
       ∃ c < π / (b - a),
         ∃ B,
-          g =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' ioo a b)] fun z =>
+          g =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z =>
             expR (B * expR (c * |z.im|)))
     (ha : ∀ z : ℂ, re z = a → f z = g z) (hb : ∀ z : ℂ, re z = b → f z = g z) :
-    EqOn f g (re ⁻¹' icc a b) := fun z hz =>
+    EqOn f g (re ⁻¹' Icc a b) := fun z hz =>
   sub_eq_zero.1
     (eq_zero_on_vertical_strip (hdf.sub hdg) (is_O_sub_exp_exp hBf hBg)
       (fun w hw => sub_eq_zero.2 (ha w hw)) (fun w hw => sub_eq_zero.2 (hb w hw)) hz)
@@ -424,10 +424,10 @@ theorem eq_on_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹
 * `‖f z‖` is bounded from above by a constant `C` on the boundary of the first quadrant.
 
 Then `‖f z‖` is bounded from above by the same constant on the closed first quadrant. -/
-theorem quadrant_I (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ ioi 0))
+theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hB :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (ioi 0 ×ℂ ioi 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → ‖f x‖ ≤ C) (him : ∀ x : ℝ, 0 ≤ x → ‖f (x * I)‖ ≤ C) (hz_re : 0 ≤ z.re)
     (hz_im : 0 ≤ z.im) : ‖f z‖ ≤ C :=
   by
@@ -500,10 +500,10 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ ioi 0))
 * `f` is equal to zero on the boundary of the first quadrant.
 
 Then `f` is equal to zero on the closed first quadrant. -/
-theorem eq_zero_on_quadrant_I (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ ioi 0))
+theorem eq_zero_on_quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hB :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (ioi 0 ×ℂ ioi 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = 0) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = 0) :
     EqOn f 0 { z | 0 ≤ z.re ∧ 0 ≤ z.im } := fun z hz =>
   norm_le_zero_iff.1 <|
@@ -519,14 +519,14 @@ theorem eq_zero_on_quadrant_I (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ ioi 0))
 * `f` is equal to `g` on the boundary of the first quadrant.
 
 Then `f` is equal to `g` on the closed first quadrant. -/
-theorem eq_on_quadrant_I (hdf : DiffContOnCl ℂ f (ioi 0 ×ℂ ioi 0))
+theorem eq_on_quadrant_I (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hBf :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (ioi 0 ×ℂ ioi 0)] fun z => expR (B * abs z ^ c))
-    (hdg : DiffContOnCl ℂ g (ioi 0 ×ℂ ioi 0))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
+    (hdg : DiffContOnCl ℂ g (Ioi 0 ×ℂ Ioi 0))
     (hBg :
       ∃ c < (2 : ℝ),
-        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (ioi 0 ×ℂ ioi 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = g x) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = g (x * I)) :
     EqOn f g { z | 0 ≤ z.re ∧ 0 ≤ z.im } := fun z hz =>
   sub_eq_zero.1 <|
@@ -542,10 +542,10 @@ theorem eq_on_quadrant_I (hdf : DiffContOnCl ℂ f (ioi 0 ×ℂ ioi 0))
 * `‖f z‖` is bounded from above by a constant `C` on the boundary of the second quadrant.
 
 Then `‖f z‖` is bounded from above by the same constant on the closed second quadrant. -/
-theorem quadrant_II (hd : DiffContOnCl ℂ f (iio 0 ×ℂ ioi 0))
+theorem quadrant_II (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
     (hB :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (iio 0 ×ℂ ioi 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → ‖f x‖ ≤ C) (him : ∀ x : ℝ, 0 ≤ x → ‖f (x * I)‖ ≤ C) (hz_re : z.re ≤ 0)
     (hz_im : 0 ≤ z.im) : ‖f z‖ ≤ C := by
   obtain ⟨z, rfl⟩ : ∃ z', z' * I = z
@@ -573,10 +573,10 @@ theorem quadrant_II (hd : DiffContOnCl ℂ f (iio 0 ×ℂ ioi 0))
 * `f` is equal to zero on the boundary of the second quadrant.
 
 Then `f` is equal to zero on the closed second quadrant. -/
-theorem eq_zero_on_quadrant_II (hd : DiffContOnCl ℂ f (iio 0 ×ℂ ioi 0))
+theorem eq_zero_on_quadrant_II (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
     (hB :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (iio 0 ×ℂ ioi 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = 0) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = 0) :
     EqOn f 0 { z | z.re ≤ 0 ∧ 0 ≤ z.im } := fun z hz =>
   norm_le_zero_iff.1 <|
@@ -592,14 +592,14 @@ theorem eq_zero_on_quadrant_II (hd : DiffContOnCl ℂ f (iio 0 ×ℂ ioi 0))
 * `f` is equal to `g` on the boundary of the second quadrant.
 
 Then `f` is equal to `g` on the closed second quadrant. -/
-theorem eq_on_quadrant_II (hdf : DiffContOnCl ℂ f (iio 0 ×ℂ ioi 0))
+theorem eq_on_quadrant_II (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
     (hBf :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (iio 0 ×ℂ ioi 0)] fun z => expR (B * abs z ^ c))
-    (hdg : DiffContOnCl ℂ g (iio 0 ×ℂ ioi 0))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
+    (hdg : DiffContOnCl ℂ g (Iio 0 ×ℂ Ioi 0))
     (hBg :
       ∃ c < (2 : ℝ),
-        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (iio 0 ×ℂ ioi 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = g x) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = g (x * I)) :
     EqOn f g { z | z.re ≤ 0 ∧ 0 ≤ z.im } := fun z hz =>
   sub_eq_zero.1 <|
@@ -615,10 +615,10 @@ theorem eq_on_quadrant_II (hdf : DiffContOnCl ℂ f (iio 0 ×ℂ ioi 0))
 * `‖f z‖` is bounded from above by a constant `C` on the boundary of the third quadrant.
 
 Then `‖f z‖` is bounded from above by the same constant on the closed third quadrant. -/
-theorem quadrant_III (hd : DiffContOnCl ℂ f (iio 0 ×ℂ iio 0))
+theorem quadrant_III (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
     (hB :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (iio 0 ×ℂ iio 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → ‖f x‖ ≤ C) (him : ∀ x : ℝ, x ≤ 0 → ‖f (x * I)‖ ≤ C) (hz_re : z.re ≤ 0)
     (hz_im : z.im ≤ 0) : ‖f z‖ ≤ C := by
   obtain ⟨z, rfl⟩ : ∃ z', -z' = z
@@ -648,10 +648,10 @@ theorem quadrant_III (hd : DiffContOnCl ℂ f (iio 0 ×ℂ iio 0))
 * `f` is equal to zero on the boundary of the third quadrant.
 
 Then `f` is equal to zero on the closed third quadrant. -/
-theorem eq_zero_on_quadrant_III (hd : DiffContOnCl ℂ f (iio 0 ×ℂ iio 0))
+theorem eq_zero_on_quadrant_III (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
     (hB :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (iio 0 ×ℂ iio 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = 0) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = 0) :
     EqOn f 0 { z | z.re ≤ 0 ∧ z.im ≤ 0 } := fun z hz =>
   norm_le_zero_iff.1 <|
@@ -667,14 +667,14 @@ theorem eq_zero_on_quadrant_III (hd : DiffContOnCl ℂ f (iio 0 ×ℂ iio 0))
 * `f` is equal to `g` on the boundary of the third quadrant.
 
 Then `f` is equal to `g` on the closed third quadrant. -/
-theorem eq_on_quadrant_III (hdf : DiffContOnCl ℂ f (iio 0 ×ℂ iio 0))
+theorem eq_on_quadrant_III (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
     (hBf :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (iio 0 ×ℂ iio 0)] fun z => expR (B * abs z ^ c))
-    (hdg : DiffContOnCl ℂ g (iio 0 ×ℂ iio 0))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
+    (hdg : DiffContOnCl ℂ g (Iio 0 ×ℂ Iio 0))
     (hBg :
       ∃ c < (2 : ℝ),
-        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (iio 0 ×ℂ iio 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = g x) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = g (x * I)) :
     EqOn f g { z | z.re ≤ 0 ∧ z.im ≤ 0 } := fun z hz =>
   sub_eq_zero.1 <|
@@ -690,10 +690,10 @@ theorem eq_on_quadrant_III (hdf : DiffContOnCl ℂ f (iio 0 ×ℂ iio 0))
 * `‖f z‖` is bounded from above by a constant `C` on the boundary of the fourth quadrant.
 
 Then `‖f z‖` is bounded from above by the same constant on the closed fourth quadrant. -/
-theorem quadrant_IV (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ iio 0))
+theorem quadrant_IV (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
     (hB :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (ioi 0 ×ℂ iio 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → ‖f x‖ ≤ C) (him : ∀ x : ℝ, x ≤ 0 → ‖f (x * I)‖ ≤ C) (hz_re : 0 ≤ z.re)
     (hz_im : z.im ≤ 0) : ‖f z‖ ≤ C := by
   obtain ⟨z, rfl⟩ : ∃ z', -z' = z
@@ -723,10 +723,10 @@ theorem quadrant_IV (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ iio 0))
 * `f` is equal to zero on the boundary of the fourth quadrant.
 
 Then `f` is equal to zero on the closed fourth quadrant. -/
-theorem eq_zero_on_quadrant_IV (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ iio 0))
+theorem eq_zero_on_quadrant_IV (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
     (hB :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (ioi 0 ×ℂ iio 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = 0) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = 0) :
     EqOn f 0 { z | 0 ≤ z.re ∧ z.im ≤ 0 } := fun z hz =>
   norm_le_zero_iff.1 <|
@@ -742,14 +742,14 @@ theorem eq_zero_on_quadrant_IV (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ iio 0))
 * `f` is equal to `g` on the boundary of the fourth quadrant.
 
 Then `f` is equal to `g` on the closed fourth quadrant. -/
-theorem eq_on_quadrant_IV (hdf : DiffContOnCl ℂ f (ioi 0 ×ℂ iio 0))
+theorem eq_on_quadrant_IV (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
     (hBf :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (ioi 0 ×ℂ iio 0)] fun z => expR (B * abs z ^ c))
-    (hdg : DiffContOnCl ℂ g (ioi 0 ×ℂ iio 0))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
+    (hdg : DiffContOnCl ℂ g (Ioi 0 ×ℂ Iio 0))
     (hBg :
       ∃ c < (2 : ℝ),
-        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (ioi 0 ×ℂ iio 0)] fun z => expR (B * abs z ^ c))
+        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = g x) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = g (x * I)) :
     EqOn f g { z | 0 ≤ z.re ∧ z.im ≤ 0 } := fun z hz =>
   sub_eq_zero.1 <|

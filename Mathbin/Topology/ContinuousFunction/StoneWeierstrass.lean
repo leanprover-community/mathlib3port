@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.stone_weierstrass
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ open Polynomial
 thereby explicitly attaching bounds.
 -/
 def attachBound (f : C(X, ℝ)) :
-    C(X, Set.icc (-‖f‖) ‖f‖) where toFun x := ⟨f x, ⟨neg_norm_le_apply f x, apply_le_norm f x⟩⟩
+    C(X, Set.Icc (-‖f‖) ‖f‖) where toFun x := ⟨f x, ⟨neg_norm_le_apply f x, apply_le_norm f x⟩⟩
 #align continuous_map.attach_bound ContinuousMap.attachBound
 
 @[simp]
@@ -67,7 +67,7 @@ theorem attach_bound_apply_coe (f : C(X, ℝ)) (x : X) : ((attachBound f) x : �
 #align continuous_map.attach_bound_apply_coe ContinuousMap.attach_bound_apply_coe
 
 theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : ℝ[X]) :
-    (g.toContinuousMapOn (Set.icc (-‖f‖) ‖f‖)).comp (f : C(X, ℝ)).attachBound =
+    (g.toContinuousMapOn (Set.Icc (-‖f‖) ‖f‖)).comp (f : C(X, ℝ)).attachBound =
       Polynomial.aeval f g :=
   by 
   ext
@@ -85,17 +85,17 @@ and then postcompose with a polynomial function on that interval.
 This is in fact the same situation as above, and so also gives a function in `A`.
 -/
 theorem polynomial_comp_attach_bound_mem (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : ℝ[X]) :
-    (g.toContinuousMapOn (Set.icc (-‖f‖) ‖f‖)).comp (f : C(X, ℝ)).attachBound ∈ A := by
+    (g.toContinuousMapOn (Set.Icc (-‖f‖) ‖f‖)).comp (f : C(X, ℝ)).attachBound ∈ A := by
   rw [polynomial_comp_attach_bound]
   apply SetLike.coe_mem
 #align
   continuous_map.polynomial_comp_attach_bound_mem ContinuousMap.polynomial_comp_attach_bound_mem
 
 theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A)
-    (p : C(Set.icc (-‖f‖) ‖f‖, ℝ)) : p.comp (attachBound f) ∈ A.topologicalClosure :=
+    (p : C(Set.Icc (-‖f‖) ‖f‖, ℝ)) : p.comp (attachBound f) ∈ A.topologicalClosure :=
   by
   -- `p` itself is in the closure of polynomials, by the Weierstrass theorem,
-  have mem_closure : p ∈ (polynomialFunctions (Set.icc (-‖f‖) ‖f‖)).topologicalClosure :=
+  have mem_closure : p ∈ (polynomialFunctions (Set.Icc (-‖f‖) ‖f‖)).topologicalClosure :=
     continuous_map_mem_polynomial_functions_closure _ _ p
   -- and so there are polynomials arbitrarily close.
   have frequently_mem_polynomials := mem_closure_iff_frequently.mp mem_closure
@@ -118,7 +118,7 @@ theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) :
     (f : C(X, ℝ)).abs ∈ A.topologicalClosure := by
   let M := ‖f‖
   let f' := attach_bound (f : C(X, ℝ))
-  let abs : C(Set.icc (-‖f‖) ‖f‖, ℝ) := { toFun := fun x : Set.icc (-‖f‖) ‖f‖ => |(x : ℝ)| }
+  let abs : C(Set.Icc (-‖f‖) ‖f‖, ℝ) := { toFun := fun x : Set.Icc (-‖f‖) ‖f‖ => |(x : ℝ)| }
   change abs.comp f' ∈ A.topological_closure
   apply comp_attach_bound_mem_closure
 #align continuous_map.abs_mem_subalgebra_closure ContinuousMap.abs_mem_subalgebra_closure

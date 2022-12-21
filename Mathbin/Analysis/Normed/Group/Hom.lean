@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.hom
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -208,14 +208,14 @@ theorem SurjectiveOnWith.surj_on {f : NormedAddGroupHom V₁ V₂} {K : AddSubgr
 
 /-- The operator norm of a seminormed group homomorphism is the inf of all its bounds. -/
 def opNorm (f : NormedAddGroupHom V₁ V₂) :=
-  inf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
+  infₛ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
 #align normed_add_group_hom.op_norm NormedAddGroupHom.opNorm
 
 instance hasOpNorm : HasNorm (NormedAddGroupHom V₁ V₂) :=
   ⟨opNorm⟩
 #align normed_add_group_hom.has_op_norm NormedAddGroupHom.hasOpNorm
 
-theorem norm_def : ‖f‖ = inf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
+theorem norm_def : ‖f‖ = infₛ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
   rfl
 #align normed_add_group_hom.norm_def NormedAddGroupHom.norm_def
 

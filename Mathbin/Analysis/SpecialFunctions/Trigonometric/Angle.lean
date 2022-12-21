@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.angle
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -504,7 +504,7 @@ theorem to_real_coe_eq_self_iff {θ : ℝ} : (θ : Angle).toReal = θ ↔ -π < 
   ring_nf
 #align real.angle.to_real_coe_eq_self_iff Real.Angle.to_real_coe_eq_self_iff
 
-theorem to_real_coe_eq_self_iff_mem_Ioc {θ : ℝ} : (θ : Angle).toReal = θ ↔ θ ∈ Set.ioc (-π) π := by
+theorem to_real_coe_eq_self_iff_mem_Ioc {θ : ℝ} : (θ : Angle).toReal = θ ↔ θ ∈ Set.Ioc (-π) π := by
   rw [to_real_coe_eq_self_iff, ← Set.mem_Ioc]
 #align real.angle.to_real_coe_eq_self_iff_mem_Ioc Real.Angle.to_real_coe_eq_self_iff_mem_Ioc
 
@@ -542,7 +542,7 @@ theorem abs_to_real_le_pi (θ : Angle) : |θ.toReal| ≤ π :=
   abs_le.2 ⟨(neg_pi_lt_to_real _).le, to_real_le_pi _⟩
 #align real.angle.abs_to_real_le_pi Real.Angle.abs_to_real_le_pi
 
-theorem to_real_mem_Ioc (θ : Angle) : θ.toReal ∈ Set.ioc (-π) π :=
+theorem to_real_mem_Ioc (θ : Angle) : θ.toReal ∈ Set.Ioc (-π) π :=
   ⟨neg_pi_lt_to_real _, to_real_le_pi _⟩
 #align real.angle.to_real_mem_Ioc Real.Angle.to_real_mem_Ioc
 
@@ -632,7 +632,7 @@ theorem abs_to_real_eq_pi_div_two_iff {θ : Angle} :
 #align real.angle.abs_to_real_eq_pi_div_two_iff Real.Angle.abs_to_real_eq_pi_div_two_iff
 
 theorem nsmul_to_real_eq_mul {n : ℕ} (h : n ≠ 0) {θ : Angle} :
-    (n • θ).toReal = n * θ.toReal ↔ θ.toReal ∈ Set.ioc (-π / n) (π / n) := by
+    (n • θ).toReal = n * θ.toReal ↔ θ.toReal ∈ Set.Ioc (-π / n) (π / n) := by
   nth_rw 1 [← coe_to_real θ]
   have h' : 0 < (n : ℝ) := by exact_mod_cast Nat.pos_of_ne_zero h
   rw [← coe_nsmul, nsmul_eq_mul, to_real_coe_eq_self_iff, Set.mem_Ioc, div_lt_iff' h',
@@ -640,17 +640,17 @@ theorem nsmul_to_real_eq_mul {n : ℕ} (h : n ≠ 0) {θ : Angle} :
 #align real.angle.nsmul_to_real_eq_mul Real.Angle.nsmul_to_real_eq_mul
 
 theorem two_nsmul_to_real_eq_two_mul {θ : Angle} :
-    ((2 : ℕ) • θ).toReal = 2 * θ.toReal ↔ θ.toReal ∈ Set.ioc (-π / 2) (π / 2) := by
+    ((2 : ℕ) • θ).toReal = 2 * θ.toReal ↔ θ.toReal ∈ Set.Ioc (-π / 2) (π / 2) := by
   exact_mod_cast nsmul_to_real_eq_mul two_ne_zero
 #align real.angle.two_nsmul_to_real_eq_two_mul Real.Angle.two_nsmul_to_real_eq_two_mul
 
 theorem two_zsmul_to_real_eq_two_mul {θ : Angle} :
-    ((2 : ℤ) • θ).toReal = 2 * θ.toReal ↔ θ.toReal ∈ Set.ioc (-π / 2) (π / 2) := by
+    ((2 : ℤ) • θ).toReal = 2 * θ.toReal ↔ θ.toReal ∈ Set.Ioc (-π / 2) (π / 2) := by
   rw [two_zsmul, ← two_nsmul, two_nsmul_to_real_eq_two_mul]
 #align real.angle.two_zsmul_to_real_eq_two_mul Real.Angle.two_zsmul_to_real_eq_two_mul
 
 theorem to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff {θ : ℝ} {k : ℤ} :
-    (θ : Angle).toReal = θ - 2 * k * π ↔ θ ∈ Set.ioc ((2 * k - 1 : ℝ) * π) ((2 * k + 1) * π) := by
+    (θ : Angle).toReal = θ - 2 * k * π ↔ θ ∈ Set.Ioc ((2 * k - 1 : ℝ) * π) ((2 * k + 1) * π) := by
   rw [← sub_zero (θ : angle), ← zsmul_zero k, ← coe_two_pi, ← coe_zsmul, ← coe_sub, zsmul_eq_mul, ←
     mul_assoc, mul_comm (k : ℝ), to_real_coe_eq_self_iff, Set.mem_Ioc]
   exact ⟨fun h => ⟨by linarith, by linarith⟩, fun h => ⟨by linarith, by linarith⟩⟩
@@ -658,12 +658,12 @@ theorem to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff {θ : ℝ} {k : ℤ} :
   real.angle.to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff Real.Angle.to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff
 
 theorem to_real_coe_eq_self_sub_two_pi_iff {θ : ℝ} :
-    (θ : Angle).toReal = θ - 2 * π ↔ θ ∈ Set.ioc π (3 * π) := by
+    (θ : Angle).toReal = θ - 2 * π ↔ θ ∈ Set.Ioc π (3 * π) := by
   convert @to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ 1 <;> norm_num
 #align real.angle.to_real_coe_eq_self_sub_two_pi_iff Real.Angle.to_real_coe_eq_self_sub_two_pi_iff
 
 theorem to_real_coe_eq_self_add_two_pi_iff {θ : ℝ} :
-    (θ : Angle).toReal = θ + 2 * π ↔ θ ∈ Set.ioc (-3 * π) (-π) := by
+    (θ : Angle).toReal = θ + 2 * π ↔ θ ∈ Set.Ioc (-3 * π) (-π) := by
   convert @to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ (-1) <;> norm_num
 #align real.angle.to_real_coe_eq_self_add_two_pi_iff Real.Angle.to_real_coe_eq_self_add_two_pi_iff
 
@@ -1025,7 +1025,7 @@ theorem continuous_at_sign {θ : Angle} (h0 : θ ≠ 0) (hpi : θ ≠ π) : Cont
 
 theorem ContinuousOn.angle_sign_comp {α : Type _} [TopologicalSpace α] {f : α → Angle} {s : Set α}
     (hf : ContinuousOn f s) (hs : ∀ z ∈ s, f z ≠ 0 ∧ f z ≠ π) : ContinuousOn (sign ∘ f) s := by
-  refine' (ContinuousAt.continuous_on fun θ hθ => _).comp hf (Set.maps_to_image f s)
+  refine' (ContinuousAt.continuous_on fun θ hθ => _).comp hf (Set.mapsTo_image f s)
   obtain ⟨z, hz, rfl⟩ := hθ
   exact continuous_at_sign (hs _ hz).1 (hs _ hz).2
 #align continuous_on.angle_sign_comp ContinuousOn.angle_sign_comp

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.finsupp
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,7 +149,7 @@ theorem ker_lsingle (a : α) : (lsingle a : M →ₗ[R] α →₀ M).ker = ⊥ :
 
 theorem lsingle_range_le_ker_lapply (s t : Set α) (h : Disjoint s t) :
     (⨆ a ∈ s, (lsingle a : M →ₗ[R] α →₀ M).range) ≤ ⨅ a ∈ t, ker (lapply a : (α →₀ M) →ₗ[R] M) := by
-  refine' supr_le fun a₁ => supr_le fun h₁ => range_le_iff_comap.2 _
+  refine' supᵢ_le fun a₁ => supᵢ_le fun h₁ => range_le_iff_comap.2 _
   simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
   intro b hb a₂ h₂
   have : a₁ ≠ a₂ := fun eq => h.le_bot ⟨h₁, Eq.symm ▸ h₂⟩
@@ -176,13 +176,13 @@ theorem disjoint_lsingle_lsingle (s t : Set α) (hs : Disjoint s t) :
         (lsingle_range_le_ker_lapply _ _ <| disjoint_compl_right))
       _
   rw [disjoint_iff_inf_le]
-  refine' le_trans (le_infi fun i => _) infi_ker_lapply_le_bot
+  refine' le_trans (le_infᵢ fun i => _) infi_ker_lapply_le_bot
   classical 
     by_cases his : i ∈ s
     · by_cases hit : i ∈ t
       · exact (hs.le_bot ⟨his, hit⟩).elim
-      exact inf_le_of_right_le (infi_le_of_le i <| infi_le _ hit)
-    exact inf_le_of_left_le (infi_le_of_le i <| infi_le _ his)
+      exact inf_le_of_right_le (infᵢ_le_of_le i <| infᵢ_le _ hit)
+    exact inf_le_of_left_le (infᵢ_le_of_le i <| infᵢ_le _ his)
 #align finsupp.disjoint_lsingle_lsingle Finsupp.disjoint_lsingle_lsingle
 
 theorem span_single_image (s : Set M) (a : α) :
@@ -291,7 +291,7 @@ theorem supported_univ : supported M R (Set.univ : Set α) = ⊤ :=
 
 theorem supported_Union {δ : Type _} (s : δ → Set α) :
     supported M R (⋃ i, s i) = ⨆ i, supported M R (s i) := by
-  refine' le_antisymm _ (supr_le fun i => supported_mono <| Set.subset_Union _ _)
+  refine' le_antisymm _ (supᵢ_le fun i => supported_mono <| Set.subset_Union _ _)
   haveI := Classical.decPred fun x => x ∈ ⋃ i, s i
   suffices
     ((Submodule.subtype _).comp (restrict_dom M R (⋃ i, s i))).range ≤ ⨆ i, supported M R (s i) by
@@ -303,11 +303,11 @@ theorem supported_Union {δ : Type _} (s : δ → Set α) :
   refine' fun x a l hl a0 => add_mem _
   by_cases ∃ i, x ∈ s i <;> simp [h]
   · cases' h with i hi
-    exact le_supr (fun i => supported M R (s i)) i (single_mem_supported R _ hi)
+    exact le_supᵢ (fun i => supported M R (s i)) i (single_mem_supported R _ hi)
 #align finsupp.supported_Union Finsupp.supported_Union
 
 theorem supported_union (s t : Set α) : supported M R (s ∪ t) = supported M R s ⊔ supported M R t :=
-  by erw [Set.union_eq_Union, supported_Union, supr_bool_eq] <;> rfl
+  by erw [Set.union_eq_Union, supported_Union, supᵢ_bool_eq] <;> rfl
 #align finsupp.supported_union Finsupp.supported_union
 
 theorem supported_Inter {ι : Type _} (s : ι → Set α) :
@@ -316,7 +316,7 @@ theorem supported_Inter {ι : Type _} (s : ι → Set α) :
 #align finsupp.supported_Inter Finsupp.supported_Inter
 
 theorem supported_inter (s t : Set α) : supported M R (s ∩ t) = supported M R s ⊓ supported M R t :=
-  by rw [Set.inter_eq_Inter, supported_Inter, infi_bool_eq] <;> rfl
+  by rw [Set.inter_eq_Inter, supported_Inter, infᵢ_bool_eq] <;> rfl
 #align finsupp.supported_inter Finsupp.supported_inter
 
 theorem disjoint_supported_supported {s t : Set α} (h : Disjoint s t) :
@@ -470,10 +470,10 @@ theorem lmap_domain_supported [Nonempty α] (f : α → α') (s : Set α) :
   intro l hl
   refine' ⟨(lmap_domain M R (Function.invFunOn f s) : (α' →₀ M) →ₗ[R] α →₀ M) l, fun x hx => _, _⟩
   · rcases Finset.mem_image.1 (map_domain_support hx) with ⟨c, hc, rfl⟩
-    exact Function.inv_fun_on_mem (by simpa using hl hc)
+    exact Function.invFunOn_mem (by simpa using hl hc)
   · rw [← LinearMap.comp_apply, ← lmap_domain_comp]
     refine' (map_domain_congr fun c hc => _).trans map_domain_id
-    exact Function.inv_fun_on_eq (by simpa using hl hc)
+    exact Function.invFunOn_eq (by simpa using hl hc)
 #align finsupp.lmap_domain_supported Finsupp.lmap_domain_supported
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b «expr ∈ » s) -/
@@ -1135,7 +1135,7 @@ theorem Submodule.exists_finset_of_mem_supr {ι : Sort _} (p : ι → Submodule 
     (hm : m ∈ ⨆ i, p i) : ∃ s : Finset ι, m ∈ ⨆ i ∈ s, p i := by
   have :=
     CompleteLattice.IsCompactElement.exists_finset_of_le_supr (Submodule R M)
-      (Submodule.singletonSpanIsCompactElement m) p
+      (Submodule.singleton_span_is_compact_element m) p
   simp only [Submodule.span_singleton_le_iff_mem] at this
   exact this hm
 #align submodule.exists_finset_of_mem_supr Submodule.exists_finset_of_mem_supr
@@ -1144,7 +1144,7 @@ theorem Submodule.exists_finset_of_mem_supr {ι : Sort _} (p : ι → Submodule 
 theorem Submodule.mem_supr_iff_exists_finset {ι : Sort _} {p : ι → Submodule R M} {m : M} :
     (m ∈ ⨆ i, p i) ↔ ∃ s : Finset ι, m ∈ ⨆ i ∈ s, p i :=
   ⟨Submodule.exists_finset_of_mem_supr p, fun ⟨_, hs⟩ =>
-    supr_mono (fun i => (supr_const_le : _ ≤ p i)) hs⟩
+    supᵢ_mono (fun i => (supᵢ_const_le : _ ≤ p i)) hs⟩
 #align submodule.mem_supr_iff_exists_finset Submodule.mem_supr_iff_exists_finset
 
 theorem mem_span_finset {s : Finset M} {x : M} :

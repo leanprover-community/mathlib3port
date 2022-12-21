@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -728,16 +728,16 @@ instance : ConditionallyCompleteLinearOrderBot Cardinal :=
   IsWellOrder.conditionallyCompleteLinearOrderBot _
 
 @[simp]
-theorem Inf_empty : inf (∅ : Set Cardinal.{u}) = 0 :=
+theorem Inf_empty : infₛ (∅ : Set Cardinal.{u}) = 0 :=
   dif_neg not_nonempty_empty
 #align cardinal.Inf_empty Cardinal.Inf_empty
 
 /-- Note that the successor of `c` is not the same as `c + 1` except in the case of finite `c`. -/
 instance : SuccOrder Cardinal :=
-  SuccOrder.ofSuccLeIff (fun c => inf { c' | c < c' }) fun a b =>
+  SuccOrder.ofSuccLeIff (fun c => infₛ { c' | c < c' }) fun a b =>
     ⟨lt_of_lt_of_le <| Inf_mem <| exists_gt a, cInf_le'⟩
 
-theorem succ_def (c : Cardinal) : succ c = inf { c' | c < c' } :=
+theorem succ_def (c : Cardinal) : succ c = infₛ { c' | c < c' } :=
   rfl
 #align cardinal.succ_def Cardinal.succ_def
 
@@ -847,18 +847,18 @@ theorem bdd_above_range {ι : Type u} (f : ι → Cardinal.{max u v}) : BddAbove
     exact le_sum f i⟩
 #align cardinal.bdd_above_range Cardinal.bdd_above_range
 
-instance (a : Cardinal.{u}) : Small.{u} (Set.iic a) := by
+instance (a : Cardinal.{u}) : Small.{u} (Set.Iic a) := by
   rw [← mk_out a]
   apply @small_of_surjective (Set a.out) (Iic (#a.out)) _ fun x => ⟨#x, mk_set_le x⟩
   rintro ⟨x, hx⟩
   simpa using le_mk_iff_exists_set.1 hx
 
-instance (a : Cardinal.{u}) : Small.{u} (Set.iio a) :=
+instance (a : Cardinal.{u}) : Small.{u} (Set.Iio a) :=
   small_subset Iio_subset_Iic_self
 
 /-- A set of cardinals is bounded above iff it's small, i.e. it corresponds to an usual ZFC set. -/
 theorem bdd_above_iff_small {s : Set Cardinal.{u}} : BddAbove s ↔ Small.{u} s :=
-  ⟨fun ⟨a, ha⟩ => @small_subset _ (iic a) s (fun x h => ha h) _, by
+  ⟨fun ⟨a, ha⟩ => @small_subset _ (Iic a) s (fun x h => ha h) _, by
     rintro ⟨ι, ⟨e⟩⟩
     suffices (range fun x : ι => (e.symm x).1) = s by
       rw [← this]
@@ -887,17 +887,17 @@ theorem bdd_above_range_comp {ι : Type u} {f : ι → Cardinal.{v}} (hf : BddAb
   exact bdd_above_image g hf
 #align cardinal.bdd_above_range_comp Cardinal.bdd_above_range_comp
 
-theorem supr_le_sum {ι} (f : ι → Cardinal) : supr f ≤ sum f :=
+theorem supr_le_sum {ι} (f : ι → Cardinal) : supᵢ f ≤ sum f :=
   csupr_le' <| le_sum _
 #align cardinal.supr_le_sum Cardinal.supr_le_sum
 
-theorem sum_le_supr_lift {ι : Type u} (f : ι → Cardinal.{max u v}) : sum f ≤ (#ι).lift * supr f :=
+theorem sum_le_supr_lift {ι : Type u} (f : ι → Cardinal.{max u v}) : sum f ≤ (#ι).lift * supᵢ f :=
   by 
-  rw [← (supr f).lift_id, ← lift_umax, lift_umax.{max u v, u}, ← sum_const]
+  rw [← (supᵢ f).lift_id, ← lift_umax, lift_umax.{max u v, u}, ← sum_const]
   exact sum_le_sum _ _ (le_csupr <| bdd_above_range.{u, v} f)
 #align cardinal.sum_le_supr_lift Cardinal.sum_le_supr_lift
 
-theorem sum_le_supr {ι : Type u} (f : ι → Cardinal.{u}) : sum f ≤ (#ι) * supr f := by
+theorem sum_le_supr {ι : Type u} (f : ι → Cardinal.{u}) : sum f ≤ (#ι) * supᵢ f := by
   rw [← lift_id (#ι)]
   exact sum_le_supr_lift f
 #align cardinal.sum_le_supr Cardinal.sum_le_supr
@@ -910,7 +910,7 @@ theorem sum_nat_eq_add_sum_succ (f : ℕ → Cardinal.{u}) :
 
 /-- A variant of `csupr_of_empty` but with `0` on the RHS for convenience -/
 @[simp]
-protected theorem supr_of_empty {ι} (f : ι → Cardinal) [IsEmpty ι] : supr f = 0 :=
+protected theorem supr_of_empty {ι} (f : ι → Cardinal) [IsEmpty ι] : supᵢ f = 0 :=
   csupr_of_empty f
 #align cardinal.supr_of_empty Cardinal.supr_of_empty
 
@@ -993,7 +993,7 @@ theorem prod_eq_of_fintype {α : Type u} [Fintype α] (f : α → Cardinal.{v}) 
 #align cardinal.prod_eq_of_fintype Cardinal.prod_eq_of_fintype
 
 @[simp]
-theorem lift_Inf (s : Set Cardinal) : lift (inf s) = inf (lift '' s) := by
+theorem lift_Inf (s : Set Cardinal) : lift (infₛ s) = infₛ (lift '' s) := by
   rcases eq_empty_or_nonempty s with (rfl | hs)
   · simp
   · exact lift_monotone.map_Inf hs
@@ -1060,7 +1060,8 @@ theorem lift_max {a b : Cardinal} : lift (max a b) = max (lift a) (lift b) :=
 #align cardinal.lift_max Cardinal.lift_max
 
 /-- The lift of a supremum is the supremum of the lifts. -/
-theorem lift_Sup {s : Set Cardinal} (hs : BddAbove s) : lift.{u} (sup s) = sup (lift.{u} '' s) := by
+theorem lift_Sup {s : Set Cardinal} (hs : BddAbove s) : lift.{u} (supₛ s) = supₛ (lift.{u} '' s) :=
+  by 
   apply ((le_cSup_iff' (bdd_above_image _ hs)).2 fun c hc => _).antisymm (cSup_le' _)
   · by_contra h
     obtain ⟨d, rfl⟩ := Cardinal.lift_down (not_le.1 h).le
@@ -1073,20 +1074,20 @@ theorem lift_Sup {s : Set Cardinal} (hs : BddAbove s) : lift.{u} (sup s) = sup (
 
 /-- The lift of a supremum is the supremum of the lifts. -/
 theorem lift_supr {ι : Type v} {f : ι → Cardinal.{w}} (hf : BddAbove (range f)) :
-    lift.{u} (supr f) = ⨆ i, lift.{u} (f i) := by rw [supr, supr, lift_Sup hf, ← range_comp]
+    lift.{u} (supᵢ f) = ⨆ i, lift.{u} (f i) := by rw [supᵢ, supᵢ, lift_Sup hf, ← range_comp]
 #align cardinal.lift_supr Cardinal.lift_supr
 
 /-- To prove that the lift of a supremum is bounded by some cardinal `t`,
 it suffices to show that the lift of each cardinal is bounded by `t`. -/
 theorem lift_supr_le {ι : Type v} {f : ι → Cardinal.{w}} {t : Cardinal} (hf : BddAbove (range f))
-    (w : ∀ i, lift.{u} (f i) ≤ t) : lift.{u} (supr f) ≤ t := by
+    (w : ∀ i, lift.{u} (f i) ≤ t) : lift.{u} (supᵢ f) ≤ t := by
   rw [lift_supr hf]
   exact csupr_le' w
 #align cardinal.lift_supr_le Cardinal.lift_supr_le
 
 @[simp]
 theorem lift_supr_le_iff {ι : Type v} {f : ι → Cardinal.{w}} (hf : BddAbove (range f))
-    {t : Cardinal} : lift.{u} (supr f) ≤ t ↔ ∀ i, lift.{u} (f i) ≤ t := by
+    {t : Cardinal} : lift.{u} (supᵢ f) ≤ t ↔ ∀ i, lift.{u} (f i) ≤ t := by
   rw [lift_supr hf]
   exact csupr_le_iff' (bdd_above_range_comp hf _)
 #align cardinal.lift_supr_le_iff Cardinal.lift_supr_le_iff
@@ -1099,7 +1100,7 @@ if bounded by the lift of some cardinal from the larger supremum.
 -/
 theorem lift_supr_le_lift_supr {ι : Type v} {ι' : Type v'} {f : ι → Cardinal.{w}}
     {f' : ι' → Cardinal.{w'}} (hf : BddAbove (range f)) (hf' : BddAbove (range f')) {g : ι → ι'}
-    (h : ∀ i, lift.{w'} (f i) ≤ lift.{w} (f' (g i))) : lift.{w'} (supr f) ≤ lift.{w} (supr f') := by
+    (h : ∀ i, lift.{w'} (f i) ≤ lift.{w} (f' (g i))) : lift.{w'} (supᵢ f) ≤ lift.{w} (supᵢ f') := by
   rw [lift_supr hf, lift_supr hf']
   exact csupr_mono' (bdd_above_range_comp hf' _) fun i => ⟨_, h i⟩
 #align cardinal.lift_supr_le_lift_supr Cardinal.lift_supr_le_lift_supr
@@ -1108,7 +1109,7 @@ theorem lift_supr_le_lift_supr {ι : Type v} {ι' : Type v'} {f : ι → Cardina
 This is sometimes necessary to avoid universe unification issues. -/
 theorem lift_supr_le_lift_supr' {ι : Type v} {ι' : Type v'} {f : ι → Cardinal.{v}}
     {f' : ι' → Cardinal.{v'}} (hf : BddAbove (range f)) (hf' : BddAbove (range f')) (g : ι → ι')
-    (h : ∀ i, lift.{v'} (f i) ≤ lift.{v} (f' (g i))) : lift.{v'} (supr f) ≤ lift.{v} (supr f') :=
+    (h : ∀ i, lift.{v'} (f i) ≤ lift.{v} (f' (g i))) : lift.{v'} (supᵢ f) ≤ lift.{v} (supᵢ f') :=
   lift_supr_le_lift_supr hf hf' h
 #align cardinal.lift_supr_le_lift_supr' Cardinal.lift_supr_le_lift_supr'
 
@@ -1281,7 +1282,7 @@ theorem aleph_0_le {c : Cardinal} : ℵ₀ ≤ c ↔ ∀ n : ℕ, ↑n ≤ c :=
 #align cardinal.aleph_0_le Cardinal.aleph_0_le
 
 @[simp]
-theorem range_nat_cast : range (coe : ℕ → Cardinal) = iio ℵ₀ :=
+theorem range_nat_cast : range (coe : ℕ → Cardinal) = Iio ℵ₀ :=
   ext fun x => by simp only [mem_Iio, mem_range, eq_comm, lt_aleph_0]
 #align cardinal.range_nat_cast Cardinal.range_nat_cast
 
@@ -2076,7 +2077,7 @@ theorem three_le {α : Type _} (h : 3 ≤ (#α)) (x : α) (y : α) : ∃ z : α,
 
 /-- The function `a ^< b`, defined as the supremum of `a ^ c` for `c < b`. -/
 def powerlt (a b : Cardinal.{u}) : Cardinal.{u} :=
-  ⨆ c : iio b, a^c
+  ⨆ c : Iio b, a^c
 #align cardinal.powerlt Cardinal.powerlt
 
 -- mathport name: «expr ^< »
@@ -2085,14 +2086,14 @@ infixl:80 " ^< " => powerlt
 theorem le_powerlt {b c : Cardinal.{u}} (a) (h : c < b) : (a^c) ≤ a ^< b := by
   apply @le_csupr _ _ _ (fun y : Iio b => a^y) _ ⟨c, h⟩
   rw [← image_eq_range]
-  exact bdd_above_image.{u, u} _ bdd_above_Iio
+  exact bdd_above_image.{u, u} _ bddAbove_Iio
 #align cardinal.le_powerlt Cardinal.le_powerlt
 
 theorem powerlt_le {a b c : Cardinal.{u}} : a ^< b ≤ c ↔ ∀ x < b, (a^x) ≤ c := by
   rw [powerlt, csupr_le_iff']
   · simp
   · rw [← image_eq_range]
-    exact bdd_above_image.{u, u} _ bdd_above_Iio
+    exact bdd_above_image.{u, u} _ bddAbove_Iio
 #align cardinal.powerlt_le Cardinal.powerlt_le
 
 theorem powerlt_le_powerlt_left {a b c : Cardinal} (h : b ≤ c) : a ^< b ≤ a ^< c :=

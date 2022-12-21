@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.uniform_space.completion
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -341,7 +341,7 @@ instance complete_space_separation [h : CompleteSpace α] :
     CompleteSpace (Quotient (separationSetoid α)) :=
   ⟨fun f => fun hf : Cauchy f =>
     have : Cauchy (f.comap fun x => ⟦x⟧) :=
-      hf.comap' comap_quotient_le_uniformity <| hf.left.comapOfSurj (surjective_quotient_mk _)
+      hf.comap' comap_quotient_le_uniformity <| hf.left.comap_of_surj (surjective_quotient_mk _)
     let ⟨x, (hx : (f fun x => ⟦x⟧) ≤ 𝓝 x)⟩ := CompleteSpace.complete this
     ⟨⟦x⟧,
       (comap_le_comap_iff <| by simp).1

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.definability
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,7 +158,7 @@ theorem Definable.preimage_comp (f : α → β) {s : Set (α → M)} (h : A.Defi
   obtain ⟨φ, rfl⟩ := h
   refine' ⟨φ.relabel f, _⟩
   ext
-  simp only [Set.preimage_set_of_eq, mem_set_of_eq, formula.realize_relabel]
+  simp only [Set.preimage_setOf_eq, mem_set_of_eq, formula.realize_relabel]
 #align set.definable.preimage_comp Set.Definable.preimage_comp
 
 theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f : α ≃ β) :

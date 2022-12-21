@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.module.pi
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α
 
 instance smulWithZero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)]
     [∀ i, SmulWithZero (g i) (f i)] : SmulWithZero (∀ i, g i) (∀ i, f i) :=
-  { Pi.hasSmul' with 
+  { Pi.smul' with 
     smul_zero := fun _ => funext fun _ => smul_zero _
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero' Pi.smulWithZero'

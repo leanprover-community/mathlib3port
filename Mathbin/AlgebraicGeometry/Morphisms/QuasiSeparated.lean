@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.quasi_separated
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,7 +221,7 @@ theorem QuasiSeparated.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
         ∀ U : Opens Y.carrier, QuasiSeparated (f ∣_ U),
         ∀ {U : SchemeCat} (g : U ⟶ Y) [IsOpenImmersion g],
           QuasiSeparated (pullback.snd : pullback f g ⟶ _),
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supr U = ⊤), ∀ i, QuasiSeparated (f ∣_ U i)] :=
+        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤), ∀ i, QuasiSeparated (f ∣_ U i)] :=
   QuasiSeparated.is_local_at_target.open_cover_tfae f
 #align
   algebraic_geometry.quasi_separated.open_cover_tfae AlgebraicGeometry.QuasiSeparated.open_cover_tfae
@@ -461,7 +461,7 @@ theorem exists_eq_pow_mul_of_is_compact_of_is_quasi_separated (X : SchemeCat) (U
           (S ⊓ U.1).2⟩
     haveI := hs'.to_subtype
     cases nonempty_fintype s
-    replace hs : S ⊓ U.1 = supr fun i : s => (i : opens X.carrier) := by
+    replace hs : S ⊓ U.1 = supᵢ fun i : s => (i : opens X.carrier) := by
       ext1
       simpa using hs
     have hs₁ : ∀ i : s, i.1.1 ≤ S := by 
@@ -470,14 +470,14 @@ theorem exists_eq_pow_mul_of_is_compact_of_is_quasi_separated (X : SchemeCat) (U
       refine' le_trans _ inf_le_left
       use U.1
       erw [hs]
-      exact le_supr _ _
+      exact le_supᵢ _ _
     have hs₂ : ∀ i : s, i.1.1 ≤ U.1 := by 
       intro i
       change (i : opens X.carrier) ≤ U
       refine' le_trans _ inf_le_right
       use S
       erw [hs]
-      exact le_supr _ _
+      exact le_supᵢ _ _
     -- On each affine open in the intersection, we have `f ^ (n + n₂) * y₁ = f ^ (n + n₁) * y₂`
     -- for some `n` since `f ^ n₂ * y₁ = f ^ (n₁ + n₂) * x = f ^ n₁ * y₂` on `X_f`.
     have :
@@ -504,7 +504,7 @@ theorem exists_eq_pow_mul_of_is_compact_of_is_quasi_separated (X : SchemeCat) (U
       fapply X.sheaf.eq_of_locally_eq' fun i : s => i.1.1
       · refine' fun i => hom_of_le _
         erw [hs]
-        exact le_supr _ _
+        exact le_supᵢ _ _
       · exact le_of_eq hs
       · intro i
         replace hn :=

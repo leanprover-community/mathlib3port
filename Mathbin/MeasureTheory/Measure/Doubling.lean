@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.measure.doubling
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,7 @@ theorem one_le_scaling_constant_of (K : ℝ) : 1 ≤ scalingConstantOf μ K :=
 theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
     ∃ R : ℝ,
       0 < R ∧
-        ∀ (x t r) (ht : t ∈ ioc 0 K) (hr : r ≤ R),
+        ∀ (x t r) (ht : t ∈ Ioc 0 K) (hr : r ≤ R),
           μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   by 
   have h := Classical.choose_spec (exists_eventually_forall_measure_closed_ball_le_mul μ K)
@@ -162,7 +162,7 @@ theorem scaling_scale_of_pos (K : ℝ) : 0 < scalingScaleOf μ K :=
   (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.1
 #align is_doubling_measure.scaling_scale_of_pos IsDoublingMeasure.scaling_scale_of_pos
 
-theorem measure_mul_le_scaling_constant_of_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ ioc 0 K)
+theorem measure_mul_le_scaling_constant_of_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ Ioc 0 K)
     (hr : r ≤ scalingScaleOf μ K) :
     μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.2 x t r ht hr

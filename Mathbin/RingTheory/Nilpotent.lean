@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module ring_theory.nilpotent
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -207,7 +207,7 @@ theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
 #align mem_nilradical mem_nilradical
 
 theorem nilradical_eq_Inf (R : Type _) [CommSemiring R] :
-    nilradical R = inf { J : Ideal R | J.IsPrime } :=
+    nilradical R = infₛ { J : Ideal R | J.IsPrime } :=
   (Ideal.radical_eq_Inf ⊥).trans <| by simp_rw [and_iff_right bot_le]
 #align nilradical_eq_Inf nilradical_eq_Inf
 
@@ -217,7 +217,7 @@ theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.IsPrime �
 #align nilpotent_iff_mem_prime nilpotent_iff_mem_prime
 
 theorem nilradical_le_prime (J : Ideal R) [H : J.IsPrime] : nilradical R ≤ J :=
-  (nilradical_eq_Inf R).symm ▸ Inf_le H
+  (nilradical_eq_Inf R).symm ▸ infₛ_le H
 #align nilradical_le_prime nilradical_le_prime
 
 @[simp]

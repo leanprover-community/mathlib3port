@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 
 ! This file was ported from Lean 3 source module ring_theory.ore_localization.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -258,7 +258,7 @@ protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
       exact S.mul_mem hr (SetLike.coe_mem s_flat)
     have : (⟨↑s₁ * r, hr⟩ : S) * s_flat = ⟨s₁ * s₂' * s_star * p_flat, hsssp⟩ := by
       ext
-      simp only [SetLike.coe_mk, Submonoid.coe_mul]
+      simp only [[anonymous], Submonoid.coe_mul]
       rw [mul_assoc, h₃, ← mul_assoc, ← mul_assoc]
     rw [this]
     clear this
@@ -412,7 +412,7 @@ def universalMulHom :
   toFun x :=
     (x.liftExpand fun r s => f r * ((fS s)⁻¹ : Units T)) fun r t s ht => by
       have : (fS ⟨s * t, ht⟩ : T) = fS s * f t := by
-        simp only [← hf, SetLike.coe_mk, MonoidHom.map_mul]
+        simp only [← hf, [anonymous], MonoidHom.map_mul]
       conv_rhs =>
         rw [MonoidHom.map_mul, ← mul_one (f r), ← Units.val_one, ← mul_left_inv (fS s)]
         rw [Units.val_mul, ← mul_assoc, mul_assoc _ ↑(fS s), ← this, mul_assoc]
@@ -925,7 +925,7 @@ protected def inv : R[R⁰⁻¹] → R[R⁰⁻¹] :=
         · exfalso
           apply nonZeroDivisors.coe_ne_zero ⟨_, hst⟩
           simp [ht, mul_zero]
-        · simp only [hr, ht, SetLike.coe_mk, dif_neg, not_false_iff, or_self_iff, mul_eq_zero]
+        · simp only [hr, ht, [anonymous], dif_neg, not_false_iff, or_self_iff, mul_eq_zero]
           apply OreLocalization.expand)
 #align ore_localization.inv OreLocalization.inv
 

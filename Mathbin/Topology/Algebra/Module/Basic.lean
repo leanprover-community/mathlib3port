@@ -5,7 +5,7 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.module.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ This lemma is not an instance because Lean would need to find `[has_continuous_s
 unknown `?m_1`. We register this as an instance for `R = ℝ` in `real.punctured_nhds_module_ne_bot`.
 One can also use `haveI := module.punctured_nhds_ne_bot R M` in a proof.
 -/
-theorem Module.puncturedNhdsNeBot [Nontrivial M] [NeBot (𝓝[≠] (0 : R))] [NoZeroSmulDivisors R M]
+theorem Module.punctured_nhds_ne_bot [Nontrivial M] [NeBot (𝓝[≠] (0 : R))] [NoZeroSmulDivisors R M]
     (x : M) : NeBot (𝓝[≠] x) := by
   rcases exists_ne (0 : M) with ⟨y, hy⟩
   suffices : tendsto (fun c : R => x + c • y) (𝓝[≠] 0) (𝓝[≠] x); exact this.ne_bot
@@ -140,7 +140,7 @@ theorem Module.puncturedNhdsNeBot [Nontrivial M] [NeBot (𝓝[≠] (0 : R))] [No
     rw [zero_smul, add_zero]
   · intro c hc
     simpa [hy] using hc
-#align module.punctured_nhds_ne_bot Module.puncturedNhdsNeBot
+#align module.punctured_nhds_ne_bot Module.punctured_nhds_ne_bot
 
 end
 

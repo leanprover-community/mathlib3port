@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.submodule
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -439,9 +439,9 @@ instance : HasInf (LieSubmodule R L M) :=
       lie_mem := fun x m h => mem_inter (N.lie_mem h.1) (N'.lie_mem h.2) }⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
-instance : HasInf (LieSubmodule R L M) :=
+instance : InfSet (LieSubmodule R L M) :=
   ⟨fun S =>
-    { inf
+    { infₛ
         "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
       lie_mem := fun x m h => by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq,
@@ -457,24 +457,24 @@ theorem inf_coe : (↑(N ⊓ N') : Set M) = N ∩ N' :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubmodule R L M)) :
-    (↑(inf S) : Submodule R M) =
-      inf
+    (↑(infₛ S) : Submodule R M) =
+      infₛ
         "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
   rfl
 #align lie_submodule.Inf_coe_to_submodule LieSubmodule.Inf_coe_to_submodule
 
 @[simp]
-theorem Inf_coe (S : Set (LieSubmodule R L M)) : (↑(inf S) : Set M) = ⋂ s ∈ S, (s : Set M) := by
+theorem Inf_coe (S : Set (LieSubmodule R L M)) : (↑(infₛ S) : Set M) = ⋂ s ∈ S, (s : Set M) := by
   rw [← LieSubmodule.coe_to_submodule, Inf_coe_to_submodule, Submodule.Inf_coe]
   ext m
   simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp]
 #align lie_submodule.Inf_coe LieSubmodule.Inf_coe
 
-theorem Inf_glb (S : Set (LieSubmodule R L M)) : IsGlb S (inf S) := by
+theorem Inf_glb (S : Set (LieSubmodule R L M)) : IsGLB S (infₛ S) := by
   have h : ∀ N N' : LieSubmodule R L M, (N : Set M) ≤ N' ↔ N ≤ N' := by
     intros
     rfl
-  apply IsGlb.of_image h
+  apply IsGLB.of_image h
   simp only [Inf_coe]
   exact is_glb_binfi
 #align lie_submodule.Inf_glb LieSubmodule.Inf_glb
@@ -520,7 +520,7 @@ theorem sup_coe_to_submodule :
     simp only [Submodule.mem_sup]
     rintro x m ⟨y, hy, z, hz, rfl⟩
     refine' ⟨⁅x, y⁆, N.lie_mem hy, ⁅x, z⁆, N'.lie_mem hz, (lie_add _ _ _).symm⟩
-  refine' le_antisymm (Inf_le ⟨{ (N ⊔ N' : Submodule R M) with lie_mem := aux }, _⟩) _
+  refine' le_antisymm (infₛ_le ⟨{ (N ⊔ N' : Submodule R M) with lie_mem := aux }, _⟩) _
   ·
     simp only [exists_prop, and_true_iff, mem_set_of_eq, eq_self_iff_true, coe_to_submodule_mk, ←
       coe_submodule_le_coe_submodule, and_self_iff, le_sup_left, le_sup_right]
@@ -653,7 +653,7 @@ variable (R L) (s : Set M)
 
 /-- The `lie_span` of a set `s ⊆ M` is the smallest Lie submodule of `M` that contains `s`. -/
 def lieSpan : LieSubmodule R L M :=
-  inf { N | s ⊆ N }
+  infₛ { N | s ⊆ N }
 #align lie_submodule.lie_span LieSubmodule.lieSpan
 
 variable {R L s}

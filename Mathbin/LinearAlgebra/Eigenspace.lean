@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.eigenspace
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -237,7 +237,7 @@ noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f
 
 /-- The eigenspaces of a linear operator form an independent family of subspaces of `V`.  That is,
 any eigenspace has trivial intersection with the span of all the other eigenspaces. -/
-theorem eigenspacesIndependent (f : EndCat K V) : CompleteLattice.Independent f.eigenspace := by
+theorem eigenspaces_independent (f : EndCat K V) : CompleteLattice.Independent f.eigenspace := by
   classical
     -- Define an operation from `Π₀ μ : K, f.eigenspace μ`, the vector space of of finitely-supported
     -- choices of an eigenvector from each eigenspace, to `V`, by sending a collection to its sum.
@@ -344,7 +344,7 @@ theorem eigenspacesIndependent (f : EndCat K V) : CompleteLattice.Independent f.
         by_cases h_cases : μ = μ₀
         · rwa [h_cases, SetLike.coe_eq_coe, Dfinsupp.coe_zero, Pi.zero_apply]
         exact congr_arg (coe : _ → V) (h_lμ_eq_0 μ h_cases)
-#align module.End.eigenspaces_independent Module.EndCat.eigenspacesIndependent
+#align module.End.eigenspaces_independent Module.EndCat.eigenspaces_independent
 
 /-- Eigenvectors corresponding to distinct eigenvalues of a linear operator are linearly
     independent. (Lemma 5.10 of [axler2015])
@@ -354,7 +354,7 @@ theorem eigenspacesIndependent (f : EndCat K V) : CompleteLattice.Independent f.
 theorem eigenvectors_linear_independent (f : EndCat K V) (μs : Set K) (xs : μs → V)
     (h_eigenvec : ∀ μ : μs, f.HasEigenvector μ (xs μ)) : LinearIndependent K xs :=
   CompleteLattice.Independent.linear_independent _
-    (f.eigenspacesIndependent.comp Subtype.coe_injective) (fun μ => (h_eigenvec μ).1) fun μ =>
+    (f.eigenspaces_independent.comp Subtype.coe_injective) (fun μ => (h_eigenvec μ).1) fun μ =>
     (h_eigenvec μ).2
 #align module.End.eigenvectors_linear_independent Module.EndCat.eigenvectors_linear_independent
 
@@ -416,7 +416,7 @@ def maximalGeneralizedEigenspace (f : EndCat R M) (μ : R) : Submodule R M :=
 
 theorem generalized_eigenspace_le_maximal (f : EndCat R M) (μ : R) (k : ℕ) :
     f.generalizedEigenspace μ k ≤ f.maximalGeneralizedEigenspace μ :=
-  le_supr _ _
+  le_supᵢ _ _
 #align module.End.generalized_eigenspace_le_maximal Module.EndCat.generalized_eigenspace_le_maximal
 
 @[simp]
@@ -645,11 +645,11 @@ theorem supr_generalized_eigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K 
     -- It follows that `ER` is contained in the span of all generalized eigenvectors.
     have hER : ER ≤ ⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k := by
       rw [← ih_ER']
-      exact supr₂_mono hff'
+      exact supᵢ₂_mono hff'
     -- `ES` is contained in this span by definition.
     have hES : ES ≤ ⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k :=
-      le_trans (le_supr (fun k => f.generalized_eigenspace μ₀ k) (finrank K V))
-        (le_supr (fun μ : K => ⨆ k : ℕ, f.generalized_eigenspace μ k) μ₀)
+      le_trans (le_supᵢ (fun k => f.generalized_eigenspace μ₀ k) (finrank K V))
+        (le_supᵢ (fun μ : K => ⨆ k : ℕ, f.generalized_eigenspace μ k) μ₀)
     -- Moreover, we know that `ER` and `ES` are disjoint.
     have h_disjoint : Disjoint ER ES := generalized_eigenvec_disjoint_range_ker f μ₀
     -- Since the dimensions of `ER` and `ES` add up to the dimension of `V`, it follows that the

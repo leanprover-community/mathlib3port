@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finite_type
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,10 +53,10 @@ variable {R M N}
 section Algebra
 
 -- see Note [lower instance priority]
-instance (priority := 100) finiteType {R : Type _} (A : Type _) [CommSemiring R] [Semiring A]
+instance (priority := 100) finite_type {R : Type _} (A : Type _) [CommSemiring R] [Semiring A]
     [Algebra R A] [hRA : Finite R A] : Algebra.FiniteType R A :=
   ⟨Subalgebra.fg_of_submodule_fg hRA.1⟩
-#align module.finite.finite_type Module.Finite.finiteType
+#align module.finite.finite_type Module.Finite.finite_type
 
 end Algebra
 
@@ -86,15 +86,15 @@ protected theorem polynomial : FiniteType R R[X] :=
 
 open Classical
 
-protected theorem mvPolynomial (ι : Type _) [Finite ι] : FiniteType R (MvPolynomial ι R) := by
+protected theorem mv_polynomial (ι : Type _) [Finite ι] : FiniteType R (MvPolynomial ι R) := by
   cases nonempty_fintype ι <;>
     exact
       ⟨⟨finset.univ.image MvPolynomial.x, by
           rw [Finset.coe_image, Finset.coe_univ, Set.image_univ]
           exact MvPolynomial.adjoin_range_X⟩⟩
-#align algebra.finite_type.mv_polynomial Algebra.FiniteType.mvPolynomial
+#align algebra.finite_type.mv_polynomial Algebra.FiniteType.mv_polynomial
 
-theorem ofRestrictScalarsFiniteType [Algebra A B] [IsScalarTower R A B] [hB : FiniteType R B] :
+theorem of_restrict_scalars_finite_type [Algebra A B] [IsScalarTower R A B] [hB : FiniteType R B] :
     FiniteType A B := by 
   obtain ⟨S, hS⟩ := hB.out
   refine' ⟨⟨S, eq_top_iff.2 fun b => _⟩⟩
@@ -104,15 +104,15 @@ theorem ofRestrictScalarsFiniteType [Algebra A B] [IsScalarTower R A B] [hB : Fi
     exact Algebra.subset_adjoin
   exact le (eq_top_iff.1 hS b)
 #align
-  algebra.finite_type.of_restrict_scalars_finite_type Algebra.FiniteType.ofRestrictScalarsFiniteType
+  algebra.finite_type.of_restrict_scalars_finite_type Algebra.FiniteType.of_restrict_scalars_finite_type
 
 variable {R A B}
 
-theorem ofSurjective (hRA : FiniteType R A) (f : A →ₐ[R] B) (hf : Surjective f) : FiniteType R B :=
+theorem of_surjective (hRA : FiniteType R A) (f : A →ₐ[R] B) (hf : Surjective f) : FiniteType R B :=
   ⟨by 
     convert hRA.1.map f
     simpa only [map_top f, @eq_comm _ ⊤, eq_top_iff, AlgHom.mem_range] using hf⟩
-#align algebra.finite_type.of_surjective Algebra.FiniteType.ofSurjective
+#align algebra.finite_type.of_surjective Algebra.FiniteType.of_surjective
 
 theorem equiv (hRA : FiniteType R A) (e : A ≃ₐ[R] B) : FiniteType R B :=
   hRA.ofSurjective e e.Surjective
@@ -212,7 +212,7 @@ namespace Finite
 variable {A}
 
 theorem finite_type {f : A →+* B} (hf : f.Finite) : FiniteType f :=
-  @Module.Finite.finiteType _ _ _ _ f.toAlgebra hf
+  @Module.Finite.finite_type _ _ _ _ f.toAlgebra hf
 #align ring_hom.finite.finite_type RingHom.Finite.finite_type
 
 end Finite
@@ -229,7 +229,7 @@ variable {A}
 
 theorem comp_surjective {f : A →+* B} {g : B →+* C} (hf : f.FiniteType) (hg : Surjective g) :
     (g.comp f).FiniteType :=
-  @Algebra.FiniteType.ofSurjective A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra hf
+  @Algebra.FiniteType.of_surjective A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra hf
     { g with 
       toFun := g
       commutes' := fun a => rfl }
@@ -253,7 +253,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.FiniteType) (hf : f.FiniteT
 #align ring_hom.finite_type.comp RingHom.FiniteType.comp
 
 theorem of_finite {f : A →+* B} (hf : f.Finite) : f.FiniteType :=
-  @Module.Finite.finiteType _ _ _ _ f.toAlgebra hf
+  @Module.Finite.finite_type _ _ _ _ f.toAlgebra hf
 #align ring_hom.finite_type.of_finite RingHom.FiniteType.of_finite
 
 alias of_finite ← _root_.ring_hom.finite.to_finite_type
@@ -265,7 +265,7 @@ theorem of_comp_finite_type {f : A →+* B} {g : B →+* C} (h : (g.comp f).Fini
   letI := (g.comp f).toAlgebra
   letI : IsScalarTower A B C := RestrictScalars.is_scalar_tower A B C
   letI : Algebra.FiniteType A C := h
-  exact Algebra.FiniteType.ofRestrictScalarsFiniteType A B C
+  exact Algebra.FiniteType.of_restrict_scalars_finite_type A B C
 #align ring_hom.finite_type.of_comp_finite_type RingHom.FiniteType.of_comp_finite_type
 
 end FiniteType
@@ -455,14 +455,14 @@ variable (R M)
 
 /-- If an additive monoid `M` is finitely generated then `add_monoid_algebra R M` is of finite
 type. -/
-instance finiteTypeOfFg [CommRing R] [h : AddMonoid.Fg M] : FiniteType R (AddMonoidAlgebra R M) :=
-  by 
+instance finite_type_of_fg [CommRing R] [h : AddMonoid.Fg M] :
+    FiniteType R (AddMonoidAlgebra R M) := by
   obtain ⟨S, hS⟩ := h.out
   exact
     (finite_type.mv_polynomial R (S : Set M)).ofSurjective
       (MvPolynomial.aeval fun s : (S : Set M) => of' R M ↑s)
       (mv_polynomial_aeval_of_surjective_of_closure hS)
-#align add_monoid_algebra.finite_type_of_fg AddMonoidAlgebra.finiteTypeOfFg
+#align add_monoid_algebra.finite_type_of_fg AddMonoidAlgebra.finite_type_of_fg
 
 variable {R M}
 
@@ -470,7 +470,7 @@ variable {R M}
 finite type. -/
 theorem finite_type_iff_fg [CommRing R] [Nontrivial R] :
     FiniteType R (AddMonoidAlgebra R M) ↔ AddMonoid.Fg M := by
-  refine' ⟨fun h => _, fun h => @AddMonoidAlgebra.finiteTypeOfFg _ _ _ _ h⟩
+  refine' ⟨fun h => _, fun h => @AddMonoidAlgebra.finite_type_of_fg _ _ _ _ h⟩
   obtain ⟨S, hS⟩ := @exists_finset_adjoin_eq_top R M _ _ h
   refine' AddMonoid.fg_def.2 ⟨S, (eq_top_iff' _).2 fun m => _⟩
   have hm : of' R M m ∈ (adjoin R (of' R M '' ↑S)).toSubmodule := by
@@ -605,9 +605,9 @@ theorem mv_polynomial_aeval_of_surjective_of_closure [CommSemiring R] {S : Set M
   monoid_algebra.mv_polynomial_aeval_of_surjective_of_closure MonoidAlgebra.mv_polynomial_aeval_of_surjective_of_closure
 
 /-- If a monoid `M` is finitely generated then `monoid_algebra R M` is of finite type. -/
-instance finiteTypeOfFg [CommRing R] [Monoid.Fg M] : FiniteType R (MonoidAlgebra R M) :=
-  (AddMonoidAlgebra.finiteTypeOfFg R (Additive M)).Equiv (toAdditiveAlgEquiv R M).symm
-#align monoid_algebra.finite_type_of_fg MonoidAlgebra.finiteTypeOfFg
+instance finite_type_of_fg [CommRing R] [Monoid.Fg M] : FiniteType R (MonoidAlgebra R M) :=
+  (AddMonoidAlgebra.finite_type_of_fg R (Additive M)).Equiv (toAdditiveAlgEquiv R M).symm
+#align monoid_algebra.finite_type_of_fg MonoidAlgebra.finite_type_of_fg
 
 /-- A monoid `M` is finitely generated if and only if `monoid_algebra R M` is of finite type. -/
 theorem finite_type_iff_fg [CommRing R] [Nontrivial R] :
@@ -615,7 +615,7 @@ theorem finite_type_iff_fg [CommRing R] [Nontrivial R] :
   ⟨fun h =>
     Monoid.fg_iff_add_fg.2 <|
       AddMonoidAlgebra.finite_type_iff_fg.1 <| h.Equiv <| toAdditiveAlgEquiv R M,
-    fun h => @MonoidAlgebra.finiteTypeOfFg _ _ _ _ h⟩
+    fun h => @MonoidAlgebra.finite_type_of_fg _ _ _ _ h⟩
 #align monoid_algebra.finite_type_iff_fg MonoidAlgebra.finite_type_iff_fg
 
 /-- If `monoid_algebra R M` is of finite type then `M` is finitely generated. -/

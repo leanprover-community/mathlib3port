@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module combinatorics.pigeonhole
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -483,7 +483,7 @@ open Set
 that are equal mod `k`. -/
 theorem exists_lt_modeq_of_infinite {s : Set ℕ} (hs : s.Infinite) {k : ℕ} (hk : 0 < k) :
     ∃ m ∈ s, ∃ n ∈ s, m < n ∧ m ≡ n [MOD k] :=
-  (hs.exists_lt_map_eq_of_maps_to fun n _ => show n % k ∈ iio k from Nat.mod_lt n hk) <|
+  (hs.exists_lt_map_eq_of_maps_to fun n _ => show n % k ∈ Iio k from Nat.mod_lt n hk) <|
     finite_lt_nat k
 #align nat.exists_lt_modeq_of_infinite Nat.exists_lt_modeq_of_infinite
 

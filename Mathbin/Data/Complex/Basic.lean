@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.complex.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -542,7 +542,7 @@ theorem norm_sq_nonneg (z : ℂ) : 0 ≤ normSq z :=
 #align complex.norm_sq_nonneg Complex.norm_sq_nonneg
 
 @[simp]
-theorem range_norm_sq : range normSq = ici 0 :=
+theorem range_norm_sq : range normSq = Ici 0 :=
   (Subset.antisymm (range_subset_iff.2 norm_sq_nonneg)) fun x hx =>
     ⟨Real.sqrt x, by rw [norm_sq_of_real, Real.mul_self_sqrt hx]⟩
 #align complex.range_norm_sq Complex.range_norm_sq
@@ -895,7 +895,7 @@ theorem abs_two : abs 2 = 2 :=
 #align complex.abs_two Complex.abs_two
 
 @[simp]
-theorem range_abs : range abs = ici 0 :=
+theorem range_abs : range abs = Ici 0 :=
   (Subset.antisymm (range_subset_iff.2 abs.Nonneg)) fun x hx => ⟨x, abs_of_nonneg hx⟩
 #align complex.range_abs Complex.range_abs
 

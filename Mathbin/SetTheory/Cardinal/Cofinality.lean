@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.cofinality
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ namespace Order
 /-- Cofinality of a reflexive order `≼`. This is the smallest cardinality
   of a subset `S : set α` such that `∀ a, ∃ b ∈ S, a ≼ b`. -/
 def cof (r : α → α → Prop) : Cardinal :=
-  inf { c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c }
+  infₛ { c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c }
 #align order.cof Order.cof
 
 /-- The set in the definition of `order.cof` is nonempty. -/
@@ -227,7 +227,7 @@ theorem cof_lsub_def_nonempty (o) :
 #align ordinal.cof_lsub_def_nonempty Ordinal.cof_lsub_def_nonempty
 
 theorem cof_eq_Inf_lsub (o : Ordinal.{u}) :
-    cof o = inf { a : Cardinal | ∃ (ι : Type u)(f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = a } :=
+    cof o = infₛ { a : Cardinal | ∃ (ι : Type u)(f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = a } :=
   by 
   refine' le_antisymm (le_cInf (cof_lsub_def_nonempty o) _) (cInf_le' _)
   · rintro a ⟨ι, f, hf, rfl⟩
@@ -361,7 +361,7 @@ theorem sup_lt_ord {ι} {f : ι → Ordinal} {c : Ordinal} (hι : (#ι) < c.cof)
 #align ordinal.sup_lt_ord Ordinal.sup_lt_ord
 
 theorem supr_lt_lift {ι} {f : ι → Cardinal} {c : Cardinal} (hι : Cardinal.lift (#ι) < c.ord.cof)
-    (hf : ∀ i, f i < c) : supr f < c := by
+    (hf : ∀ i, f i < c) : supᵢ f < c := by
   rw [← ord_lt_ord, supr_ord (Cardinal.bdd_above_range _)]
   refine' sup_lt_ord_lift hι fun i => _
   rw [ord_lt_ord]
@@ -369,7 +369,7 @@ theorem supr_lt_lift {ι} {f : ι → Cardinal} {c : Cardinal} (hι : Cardinal.l
 #align ordinal.supr_lt_lift Ordinal.supr_lt_lift
 
 theorem supr_lt {ι} {f : ι → Cardinal} {c : Cardinal} (hι : (#ι) < c.ord.cof) :
-    (∀ i, f i < c) → supr f < c :=
+    (∀ i, f i < c) → supᵢ f < c :=
   supr_lt_lift (by rwa [(#ι).lift_id])
 #align ordinal.supr_lt Ordinal.supr_lt
 
@@ -1110,12 +1110,12 @@ theorem bsup_lt_ord_of_is_regular {o : Ordinal} {f : ∀ a < o, Ordinal} {c} (hc
 #align cardinal.bsup_lt_ord_of_is_regular Cardinal.bsup_lt_ord_of_is_regular
 
 theorem supr_lt_lift_of_is_regular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c)
-    (hι : Cardinal.lift (#ι) < c) : (∀ i, f i < c) → supr f < c :=
+    (hι : Cardinal.lift (#ι) < c) : (∀ i, f i < c) → supᵢ f < c :=
   supr_lt_lift (by rwa [hc.cof_eq])
 #align cardinal.supr_lt_lift_of_is_regular Cardinal.supr_lt_lift_of_is_regular
 
 theorem supr_lt_of_is_regular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c) (hι : (#ι) < c) :
-    (∀ i, f i < c) → supr f < c :=
+    (∀ i, f i < c) → supᵢ f < c :=
   supr_lt (by rwa [hc.cof_eq])
 #align cardinal.supr_lt_of_is_regular Cardinal.supr_lt_of_is_regular
 

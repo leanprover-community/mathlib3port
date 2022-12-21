@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.category.pairwise
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,9 +137,9 @@ section
 variable [CompleteLattice α]
 
 /-- Auxiliary definition for `cocone`. -/
-def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supr U
-  | single i => homOfLe (le_supr U i)
-  | pair i j => homOfLe inf_le_left ≫ homOfLe (le_supr U i)
+def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supᵢ U
+  | single i => homOfLe (le_supᵢ U i)
+  | pair i j => homOfLe inf_le_left ≫ homOfLe (le_supᵢ U i)
 #align category_theory.pairwise.cocone_ι_app CategoryTheory.Pairwise.coconeιApp
 
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
@@ -147,7 +147,7 @@ def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supr U
 -/
 @[simps]
 def cocone : Cocone (diagram U) where 
-  x := supr U
+  x := supᵢ U
   ι := { app := coconeιApp U }
 #align category_theory.pairwise.cocone CategoryTheory.Pairwise.cocone
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.nonneg.ring
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ namespace Nonneg
 The `set.Ici` data fields are definitionally equal, but that requires unfolding semireducible
 definitions, so type-class inference won't see this. -/
 instance orderBot [Preorder α] {a : α} : OrderBot { x : α // a ≤ x } :=
-  { Set.ici.orderBot with }
+  { Set.Ici.orderBot with }
 #align nonneg.order_bot Nonneg.orderBot
 
 theorem bot_eq [Preorder α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le_rfl⟩ :=
@@ -59,31 +59,31 @@ theorem bot_eq [Preorder α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le
 #align nonneg.bot_eq Nonneg.bot_eq
 
 instance no_max_order [PartialOrder α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
-  Set.ici.no_max_order
+  Set.Ici.no_max_order
 #align nonneg.no_max_order Nonneg.no_max_order
 
 instance semilatticeSup [SemilatticeSup α] {a : α} : SemilatticeSup { x : α // a ≤ x } :=
-  Set.ici.semilatticeSup
+  Set.Ici.semilatticeSup
 #align nonneg.semilattice_sup Nonneg.semilatticeSup
 
 instance semilatticeInf [SemilatticeInf α] {a : α} : SemilatticeInf { x : α // a ≤ x } :=
-  Set.ici.semilatticeInf
+  Set.Ici.semilatticeInf
 #align nonneg.semilattice_inf Nonneg.semilatticeInf
 
 instance distribLattice [DistribLattice α] {a : α} : DistribLattice { x : α // a ≤ x } :=
-  Set.ici.distribLattice
+  Set.Ici.distribLattice
 #align nonneg.distrib_lattice Nonneg.distribLattice
 
 instance densely_ordered [Preorder α] [DenselyOrdered α] {a : α} :
     DenselyOrdered { x : α // a ≤ x } :=
-  show DenselyOrdered (ici a) from Set.densely_ordered
+  show DenselyOrdered (Ici a) from Set.densely_ordered
 #align nonneg.densely_ordered Nonneg.densely_ordered
 
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order`. -/
 @[reducible]
 protected noncomputable def conditionallyCompleteLinearOrder [ConditionallyCompleteLinearOrder α]
     {a : α} : ConditionallyCompleteLinearOrder { x : α // a ≤ x } :=
-  { @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.ici a) _ ⟨⟨a, le_rfl⟩⟩ _ with }
+  { @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩ _ with }
 #align nonneg.conditionally_complete_linear_order Nonneg.conditionallyCompleteLinearOrder
 
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order_bot`.
@@ -93,10 +93,10 @@ The `set.Ici` data fields are definitionally equal, but that requires unfolding 
 definitions, so type-class inference won't see this. -/
 @[reducible]
 protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCompleteLinearOrder α]
-    {a : α} (h : sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
+    {a : α} (h : supₛ ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
-      (Function.funext_iff.1 (@subset_Sup_def α (Set.ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
+      (Function.funext_iff.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
         Subtype.eq <| by 
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module number_theory.modular
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,8 +238,8 @@ theorem tendsto_lc_row0 {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
   -- the following are proved by `simp`, but it is replaced by `simp only` to avoid timeouts.
   ·
     simp only [mB, mul_vec, dot_product, Fin.sum_univ_two, _root_.coe_coe, coe_matrix_coe,
-      Int.coe_cast_ring_hom, lc_row0_apply, Function.comp_apply, cons_val_zero,
-      lc_row0_extend_apply, LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv,
+      Int.coe_castRingHom, lc_row0_apply, Function.comp_apply, cons_val_zero, lc_row0_extend_apply,
+      LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv,
       general_linear_group.to_linear_apply, coe_plane_conformal_matrix, neg_neg, mul_vec_lin_apply,
       cons_val_one, head_cons, of_apply]
   · convert congr_arg (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
@@ -266,8 +266,8 @@ theorem smul_eq_lc_row0_add {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) (hg
   field_simp [nonZ1, nonZ2, denom_ne_zero, -UpperHalfPlane.denom, -denom_apply]
   rw [(by simp : (p 1 : ℂ) * z - p 0 = (p 1 * z - p 0) * ↑(det (↑g : Matrix (Fin 2) (Fin 2) ℤ)))]
   rw [← hg, det_fin_two]
-  simp only [Int.coe_cast_ring_hom, coe_matrix_coe, Int.cast_mul, of_real_int_cast, map_apply,
-    denom, Int.cast_sub, _root_.coe_coe, coe_GL_pos_coe_GL_coe_matrix]
+  simp only [Int.coe_castRingHom, coe_matrix_coe, Int.cast_mul, of_real_int_cast, map_apply, denom,
+    Int.cast_sub, _root_.coe_coe, coe_GL_pos_coe_GL_coe_matrix]
   ring
 #align modular_group.smul_eq_lc_row0_add ModularGroup.smul_eq_lc_row0_add
 
@@ -302,7 +302,7 @@ attribute [local simp] coe_smul re_smul
 theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im := by
   classical 
     let s : Set (Fin 2 → ℤ) := { cd | IsCoprime (cd 0) (cd 1) }
-    have hs : s.nonempty := ⟨![1, 1], is_coprime_one_left⟩
+    have hs : s.nonempty := ⟨![1, 1], isCoprime_one_left⟩
     obtain ⟨p, hp_coprime, hp⟩ :=
       Filter.Tendsto.exists_within_forall_le hs (tendsto_norm_sq_coprime_pair z)
     obtain ⟨g, -, hg⟩ := bottom_row_surj hp_coprime

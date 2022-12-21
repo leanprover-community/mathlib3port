@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.congruence
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -385,7 +385,7 @@ theorem le_def {c d : Con M} : c ≤ d ↔ ∀ {x y}, c x y → d x y :=
 /-- The infimum of a set of congruence relations on a given type with a multiplication. -/
 @[to_additive
       "The infimum of a set of additive congruence relations on a given type with\nan addition."]
-instance : HasInf (Con M) :=
+instance : InfSet (Con M) :=
   ⟨fun S =>
     ⟨⟨fun x y => ∀ c : Con M, c ∈ S → c x y,
         ⟨fun x c hc => c.refl x, fun _ _ h c hc => c.symm <| h c hc, fun _ _ _ h1 h2 c hc =>
@@ -396,7 +396,7 @@ instance : HasInf (Con M) :=
     under the map to the underlying equivalence relation. -/
 @[to_additive
       "The infimum of a set of additive congruence relations is the same as the infimum of\nthe set's image under the map to the underlying equivalence relation."]
-theorem Inf_to_setoid (S : Set (Con M)) : (inf S).toSetoid = inf (to_setoid '' S) :=
+theorem Inf_to_setoid (S : Set (Con M)) : (infₛ S).toSetoid = infₛ (to_setoid '' S) :=
   Setoid.ext' fun x y =>
     ⟨fun h r ⟨c, hS, hr⟩ => by rw [← hr] <;> exact h c hS, fun h c hS => h c.toSetoid ⟨c, hS, rfl⟩⟩
 #align con.Inf_to_setoid Con.Inf_to_setoid
@@ -405,9 +405,10 @@ theorem Inf_to_setoid (S : Set (Con M)) : (inf S).toSetoid = inf (to_setoid '' S
     under the map to the underlying binary relation. -/
 @[to_additive
       "The infimum of a set of additive congruence relations is the same as the infimum\nof the set's image under the map to the underlying binary relation."]
-theorem Inf_def (S : Set (Con M)) : ⇑(inf S) = inf (@Set.image (Con M) (M → M → Prop) coeFn S) := by
+theorem Inf_def (S : Set (Con M)) : ⇑(infₛ S) = infₛ (@Set.image (Con M) (M → M → Prop) coeFn S) :=
+  by 
   ext
-  simp only [Inf_image, infi_apply, infi_Prop_eq]
+  simp only [infₛ_image, infᵢ_apply, infᵢ_Prop_eq]
   rfl
 #align con.Inf_def Con.Inf_def
 
@@ -455,13 +456,13 @@ theorem inf_iff_and {c d : Con M} {x y} : (c ⊓ d) x y ↔ c x y ∧ d x y :=
     the infimum of the set of congruence relations containing `r`. -/
 @[to_additive add_con_gen_eq
       "The inductively defined smallest additive congruence relation\ncontaining a binary relation `r` equals the infimum of the set of additive congruence relations\ncontaining `r`."]
-theorem con_gen_eq (r : M → M → Prop) : conGen r = inf { s : Con M | ∀ x y, r x y → s x y } :=
+theorem con_gen_eq (r : M → M → Prop) : conGen r = infₛ { s : Con M | ∀ x y, r x y → s x y } :=
   le_antisymm
     (fun x y H =>
       (ConGen.Rel.rec_on H (fun _ _ h _ hs => hs _ _ h) (Con.refl _) (fun _ _ _ => Con.symm _)
           fun _ _ _ _ _ => Con.trans _)
         fun w x y z _ _ h1 h2 c hc => c.mul (h1 c hc) <| h2 c hc)
-    (Inf_le fun _ _ => ConGen.Rel.of _ _)
+    (infₛ_le fun _ _ => ConGen.Rel.of _ _)
 #align con.con_gen_eq Con.con_gen_eq
 
 /-- The smallest congruence relation containing a binary relation `r` is contained in any
@@ -469,7 +470,7 @@ theorem con_gen_eq (r : M → M → Prop) : conGen r = inf { s : Con M | ∀ x y
 @[to_additive add_con_gen_le
       "The smallest additive congruence relation containing a binary\nrelation `r` is contained in any additive congruence relation containing `r`."]
 theorem con_gen_le {r : M → M → Prop} {c : Con M} (h : ∀ x y, r x y → @Setoid.r _ c.toSetoid x y) :
-    conGen r ≤ c := by rw [con_gen_eq] <;> exact Inf_le h
+    conGen r ≤ c := by rw [con_gen_eq] <;> exact infₛ_le h
 #align con.con_gen_le Con.con_gen_le
 
 /-- Given binary relations `r, s` with `r` contained in `s`, the smallest congruence relation
@@ -485,7 +486,7 @@ theorem con_gen_mono {r s : M → M → Prop} (h : ∀ x y, r x y → s x y) : c
   to_additive add_con_gen_of_add_con
       "Additive congruence relations equal the smallest\nadditive congruence relation in which they are contained."]
 theorem con_gen_of_con (c : Con M) : conGen c = c :=
-  le_antisymm (by rw [con_gen_eq] <;> exact Inf_le fun _ _ => id) ConGen.Rel.of
+  le_antisymm (by rw [con_gen_eq] <;> exact infₛ_le fun _ _ => id) ConGen.Rel.of
 #align con.con_gen_of_con Con.con_gen_of_con
 
 /-- The map sending a binary relation to the smallest congruence relation in which it is
@@ -519,7 +520,7 @@ theorem sup_def {c d : Con M} : c ⊔ d = conGen (c.R ⊔ d.R) := by rw [sup_eq_
     `c`'. -/
 @[to_additive Sup_eq_add_con_gen
       "The supremum of a set of additive congruence relations `S` equals\nthe smallest additive congruence relation containing the binary relation 'there exists `c ∈ S`\nsuch that `x` is related to `y` by `c`'."]
-theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con M, c ∈ S ∧ c x y :=
+theorem Sup_eq_con_gen (S : Set (Con M)) : supₛ S = conGen fun x y => ∃ c : Con M, c ∈ S ∧ c x y :=
   by 
   rw [con_gen_eq]
   apply congr_arg Inf
@@ -532,10 +533,10 @@ theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con
 @[to_additive
       "The supremum of a set of additive congruence relations is the same as the smallest\nadditive congruence relation containing the supremum of the set's image under the map to the\nunderlying binary relation."]
 theorem Sup_def {S : Set (Con M)} :
-    sup S = conGen (sup (@Set.image (Con M) (M → M → Prop) coeFn S)) := by
-  rw [Sup_eq_con_gen, Sup_image]
+    supₛ S = conGen (supₛ (@Set.image (Con M) (M → M → Prop) coeFn S)) := by
+  rw [Sup_eq_con_gen, supₛ_image]
   congr with (x y)
-  simp only [Sup_image, supr_apply, supr_Prop_eq, exists_prop, rel_eq_coe]
+  simp only [supₛ_image, supᵢ_apply, supᵢ_Prop_eq, exists_prop, rel_eq_coe]
 #align con.Sup_def Con.Sup_def
 
 variable (M)

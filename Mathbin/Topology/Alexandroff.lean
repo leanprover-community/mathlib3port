@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.alexandroff
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -304,9 +304,10 @@ theorem comap_coe_nhds (x : X) : comap (coe : X → Alexandroff X) (𝓝 x) = �
 
 /-- If `x` is not an isolated point of `X`, then `x : alexandroff X` is not an isolated point
 of `alexandroff X`. -/
-instance nhdsWithinComplCoeNeBot (x : X) [h : NeBot (𝓝[≠] x)] : NeBot (𝓝[≠] (x : Alexandroff X)) :=
-  by simpa [nhds_within_coe, preimage, coe_eq_coe] using h.map coe
-#align alexandroff.nhds_within_compl_coe_ne_bot Alexandroff.nhdsWithinComplCoeNeBot
+instance nhds_within_compl_coe_ne_bot (x : X) [h : NeBot (𝓝[≠] x)] :
+    NeBot (𝓝[≠] (x : Alexandroff X)) := by
+  simpa [nhds_within_coe, preimage, coe_eq_coe] using h.map coe
+#align alexandroff.nhds_within_compl_coe_ne_bot Alexandroff.nhds_within_compl_coe_ne_bot
 
 theorem nhds_within_compl_infty_eq : 𝓝[≠] (∞ : Alexandroff X) = map coe (coclosedCompact X) := by
   refine' (nhds_within_basis_open ∞ _).ext (has_basis_coclosed_compact.map _) _ _
@@ -319,16 +320,16 @@ theorem nhds_within_compl_infty_eq : 𝓝[≠] (∞ : Alexandroff X) = map coe (
 #align alexandroff.nhds_within_compl_infty_eq Alexandroff.nhds_within_compl_infty_eq
 
 /-- If `X` is a non-compact space, then `∞` is not an isolated point of `alexandroff X`. -/
-instance nhdsWithinComplInftyNeBot [NoncompactSpace X] : NeBot (𝓝[≠] (∞ : Alexandroff X)) := by
+instance nhds_within_compl_infty_ne_bot [NoncompactSpace X] : NeBot (𝓝[≠] (∞ : Alexandroff X)) := by
   rw [nhds_within_compl_infty_eq]
   infer_instance
-#align alexandroff.nhds_within_compl_infty_ne_bot Alexandroff.nhdsWithinComplInftyNeBot
+#align alexandroff.nhds_within_compl_infty_ne_bot Alexandroff.nhds_within_compl_infty_ne_bot
 
-instance (priority := 900) nhdsWithinComplNeBot [∀ x : X, NeBot (𝓝[≠] x)] [NoncompactSpace X]
+instance (priority := 900) nhds_within_compl_ne_bot [∀ x : X, NeBot (𝓝[≠] x)] [NoncompactSpace X]
     (x : Alexandroff X) : NeBot (𝓝[≠] x) :=
-  Alexandroff.rec _ Alexandroff.nhdsWithinComplInftyNeBot
-    (fun y => Alexandroff.nhdsWithinComplCoeNeBot y) x
-#align alexandroff.nhds_within_compl_ne_bot Alexandroff.nhdsWithinComplNeBot
+  Alexandroff.rec _ Alexandroff.nhds_within_compl_infty_ne_bot
+    (fun y => Alexandroff.nhds_within_compl_coe_ne_bot y) x
+#align alexandroff.nhds_within_compl_ne_bot Alexandroff.nhds_within_compl_ne_bot
 
 theorem nhds_infty_eq : 𝓝 (∞ : Alexandroff X) = map coe (coclosedCompact X) ⊔ pure ∞ := by
   rw [← nhds_within_compl_infty_eq, nhds_within_compl_singleton_sup_pure]

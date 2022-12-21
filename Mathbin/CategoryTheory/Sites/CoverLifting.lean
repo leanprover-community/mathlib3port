@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.cover_lifting
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,17 +80,17 @@ structure CoverLifting (G : C ⥤ D) : Prop where
 #align category_theory.cover_lifting CategoryTheory.CoverLifting
 
 /-- The identity functor on a site is cover-lifting. -/
-theorem idCoverLifting : CoverLifting J J (𝟭 _) :=
+theorem id_cover_lifting : CoverLifting J J (𝟭 _) :=
   ⟨fun _ _ h => by simpa using h⟩
-#align category_theory.id_cover_lifting CategoryTheory.idCoverLifting
+#align category_theory.id_cover_lifting CategoryTheory.id_cover_lifting
 
 variable {J K}
 
 /-- The composition of two cover-lifting functors are cover-lifting -/
-theorem compCoverLifting {F : C ⥤ D} (hu : CoverLifting J K F) {G : D ⥤ E}
+theorem comp_cover_lifting {F : C ⥤ D} (hu : CoverLifting J K F) {G : D ⥤ E}
     (hv : CoverLifting K L G) : CoverLifting J L (F ⋙ G) :=
   ⟨fun _ S h => hu.cover_lift (hv.cover_lift h)⟩
-#align category_theory.comp_cover_lifting CategoryTheory.compCoverLifting
+#align category_theory.comp_cover_lifting CategoryTheory.comp_cover_lifting
 
 end CoverLifting
 
@@ -289,7 +289,7 @@ end RanIsSheafOfCoverLifting
 This result is basically https://stacks.math.columbia.edu/tag/00XK,
 but without the condition that `C` or `D` has pullbacks.
 -/
-theorem ranIsSheafOfCoverLifting {G : C ⥤ D} (hG : CoverLifting J K G) (ℱ : SheafCat J A) :
+theorem Ran_is_sheaf_of_cover_lifting {G : C ⥤ D} (hG : CoverLifting J K G) (ℱ : SheafCat J A) :
     Presheaf.IsSheaf K ((ran G.op).obj ℱ.val) := by
   intro X U S hS x hx
   constructor; swap
@@ -297,7 +297,7 @@ theorem ranIsSheafOfCoverLifting {G : C ⥤ D} (hG : CoverLifting J K G) (ℱ : 
   constructor
   · apply Ran_is_sheaf_of_cover_lifting.glued_section_is_amalgamation
   · apply Ran_is_sheaf_of_cover_lifting.glued_section_is_unique
-#align category_theory.Ran_is_sheaf_of_cover_lifting CategoryTheory.ranIsSheafOfCoverLifting
+#align category_theory.Ran_is_sheaf_of_cover_lifting CategoryTheory.Ran_is_sheaf_of_cover_lifting
 
 variable (A)
 
@@ -306,7 +306,7 @@ def Sites.copullback {G : C ⥤ D} (hG : CoverLifting J K G) :
     SheafCat J A ⥤
       SheafCat K
         A where 
-  obj ℱ := ⟨(ran G.op).obj ℱ.val, ranIsSheafOfCoverLifting hG ℱ⟩
+  obj ℱ := ⟨(ran G.op).obj ℱ.val, Ran_is_sheaf_of_cover_lifting hG ℱ⟩
   map _ _ f := ⟨(ran G.op).map f.val⟩
   map_id' ℱ := SheafCat.Hom.ext _ _ <| (ran G.op).map_id ℱ.val
   map_comp' _ _ _ f g := SheafCat.Hom.ext _ _ <| (ran G.op).map_comp f.val g.val

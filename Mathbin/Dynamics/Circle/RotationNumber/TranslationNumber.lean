@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.circle.rotation_number.translation_number
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -976,7 +976,7 @@ theorem translation_number_of_map_pow_eq_add_int {x : ℝ} {n : ℕ} {m : ℤ} (
 
 /-- If a predicate depends only on `f x - x` and holds for all `0 ≤ x ≤ 1`,
 then it holds for all `x`. -/
-theorem forall_map_sub_of_Icc (P : ℝ → Prop) (h : ∀ x ∈ icc (0 : ℝ) 1, P (f x - x)) (x : ℝ) :
+theorem forall_map_sub_of_Icc (P : ℝ → Prop) (h : ∀ x ∈ Icc (0 : ℝ) 1, P (f x - x)) (x : ℝ) :
     P (f x - x) :=
   f.map_fract_sub_fract_eq x ▸ h _ ⟨fract_nonneg _, le_of_lt (fract_lt_one _)⟩
 #align circle_deg1_lift.forall_map_sub_of_Icc CircleDeg1Lift.forall_map_sub_of_Icc

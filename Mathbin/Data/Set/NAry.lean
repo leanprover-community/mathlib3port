@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.n_ary
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,6 +156,12 @@ theorem image2_subset_iff {u : Set γ} : image2 f s t ⊆ u ↔ ∀ x ∈ s, ∀
 
 variable (f)
 
+/- warning: set.image_prod -> Set.image_prod is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β -> γ) {s : Set.{u1} α} {t : Set.{u2} β}, Eq.{succ u3} (Set.{u3} γ) (Set.image.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (fun (x : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β x) (Prod.snd.{u1, u2} α β x)) (Set.prod.{u1, u2} α β s t)) (Set.image2.{u1, u2, u3} α β γ f s t)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} (f : α -> β -> γ) {s : Set.{u2} α} {t : Set.{u1} β}, Eq.{succ u3} (Set.{u3} γ) (Set.image.{max u2 u1, u3} (Prod.{u2, u1} α β) γ (fun (x : Prod.{u2, u1} α β) => f (Prod.fst.{u2, u1} α β x) (Prod.snd.{u2, u1} α β x)) (Set.prod.{u2, u1} α β s t)) (Set.image2.{u2, u1, u3} α β γ f s t)
+Case conversion may be inaccurate. Consider using '#align set.image_prod Set.image_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem image_prod : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = image2 f s t :=
@@ -167,18 +173,36 @@ theorem image_prod : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = image2 f s t 
       exact ⟨(_, _), ⟨‹_›, ‹_›⟩, rfl⟩⟩
 #align set.image_prod Set.image_prod
 
+/- warning: set.image_uncurry_prod -> Set.image_uncurry_prod is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β -> γ) (s : Set.{u1} α) (t : Set.{u2} β), Eq.{succ u3} (Set.{u3} γ) (Set.image.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Function.uncurry.{u1, u2, u3} α β γ f) (Set.prod.{u1, u2} α β s t)) (Set.image2.{u1, u2, u3} α β γ f s t)
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : α -> β -> γ) (s : Set.{u3} α) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} γ) (Set.image.{max u2 u3, u1} (Prod.{u3, u2} α β) γ (Function.uncurry.{u3, u2, u1} α β γ f) (Set.prod.{u3, u2} α β s t)) (Set.image2.{u3, u2, u1} α β γ f s t)
+Case conversion may be inaccurate. Consider using '#align set.image_uncurry_prod Set.image_uncurry_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem image_uncurry_prod (s : Set α) (t : Set β) : uncurry f '' s ×ˢ t = image2 f s t :=
   image_prod _
 #align set.image_uncurry_prod Set.image_uncurry_prod
 
+/- warning: set.image2_mk_eq_prod -> Set.image2_mk_eq_prod is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β}, Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (Set.image2.{u1, u2, max u1 u2} α β (Prod.{u1, u2} α β) (Prod.mk.{u1, u2} α β) s t) (Set.prod.{u1, u2} α β s t)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β}, Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (Prod.{u2, u1} α β)) (Set.image2.{u2, u1, max u1 u2} α β (Prod.{u2, u1} α β) (Prod.mk.{u2, u1} α β) s t) (Set.prod.{u2, u1} α β s t)
+Case conversion may be inaccurate. Consider using '#align set.image2_mk_eq_prod Set.image2_mk_eq_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem image2_mk_eq_prod : image2 Prod.mk s t = s ×ˢ t :=
   ext <| by simp
 #align set.image2_mk_eq_prod Set.image2_mk_eq_prod
 
+/- warning: set.image2_curry -> Set.image2_curry is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : (Prod.{u1, u2} α β) -> γ) (s : Set.{u1} α) (t : Set.{u2} β), Eq.{succ u3} (Set.{u3} γ) (Set.image2.{u1, u2, u3} α β γ (fun (a : α) (b : β) => f (Prod.mk.{u1, u2} α β a b)) s t) (Set.image.{max u1 u2, u3} (Prod.{u1, u2} α β) γ f (Set.prod.{u1, u2} α β s t))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : (Prod.{u3, u2} α β) -> γ) (s : Set.{u3} α) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} γ) (Set.image2.{u3, u2, u1} α β γ (fun (a : α) (b : β) => f (Prod.mk.{u3, u2} α β a b)) s t) (Set.image.{max u3 u2, u1} (Prod.{u3, u2} α β) γ f (Set.prod.{u3, u2} α β s t))
+Case conversion may be inaccurate. Consider using '#align set.image2_curry Set.image2_curryₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem image2_curry (f : α × β → γ) (s : Set α) (t : Set β) :
@@ -217,11 +241,23 @@ theorem image2_union_right : image2 f s (t ∪ t') = image2 f s t ∪ image2 f s
       simp [mem_union, *]
 #align set.image2_union_right Set.image2_union_right
 
+/- warning: set.image2_inter_left -> Set.image2_inter_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {s' : Set.{u1} α} {t : Set.{u2} β}, (Function.Injective2.{succ u1, succ u2, succ u3} α β γ f) -> (Eq.{succ u3} (Set.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s s') t) (Inter.inter.{u3} (Set.{u3} γ) (Set.hasInter.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f s t) (Set.image2.{u1, u2, u3} α β γ f s' t)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {s : Set.{u3} α} {s' : Set.{u3} α} {t : Set.{u2} β}, (Function.Injective2.{succ u3, succ u2, succ u1} α β γ f) -> (Eq.{succ u1} (Set.{u1} γ) (Set.image2.{u3, u2, u1} α β γ f (Inter.inter.{u3} (Set.{u3} α) (Set.instInterSet_1.{u3} α) s s') t) (Inter.inter.{u1} (Set.{u1} γ) (Set.instInterSet_1.{u1} γ) (Set.image2.{u3, u2, u1} α β γ f s t) (Set.image2.{u3, u2, u1} α β γ f s' t)))
+Case conversion may be inaccurate. Consider using '#align set.image2_inter_left Set.image2_inter_leftₓ'. -/
 theorem image2_inter_left (hf : Injective2 f) :
     image2 f (s ∩ s') t = image2 f s t ∩ image2 f s' t := by
   simp_rw [← image_uncurry_prod, inter_prod, image_inter hf.uncurry]
 #align set.image2_inter_left Set.image2_inter_left
 
+/- warning: set.image2_inter_right -> Set.image2_inter_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {t : Set.{u2} β} {t' : Set.{u2} β}, (Function.Injective2.{succ u1, succ u2, succ u3} α β γ f) -> (Eq.{succ u3} (Set.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f s (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t t')) (Inter.inter.{u3} (Set.{u3} γ) (Set.hasInter.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f s t) (Set.image2.{u1, u2, u3} α β γ f s t')))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {s : Set.{u3} α} {t : Set.{u2} β} {t' : Set.{u2} β}, (Function.Injective2.{succ u3, succ u2, succ u1} α β γ f) -> (Eq.{succ u1} (Set.{u1} γ) (Set.image2.{u3, u2, u1} α β γ f s (Inter.inter.{u2} (Set.{u2} β) (Set.instInterSet_1.{u2} β) t t')) (Inter.inter.{u1} (Set.{u1} γ) (Set.instInterSet_1.{u1} γ) (Set.image2.{u3, u2, u1} α β γ f s t) (Set.image2.{u3, u2, u1} α β γ f s t')))
+Case conversion may be inaccurate. Consider using '#align set.image2_inter_right Set.image2_inter_rightₓ'. -/
 theorem image2_inter_right (hf : Injective2 f) :
     image2 f s (t ∩ t') = image2 f s t ∩ image2 f s t' := by
   simp_rw [← image_uncurry_prod, prod_inter, image_inter hf.uncurry]

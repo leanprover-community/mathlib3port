@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -459,22 +459,22 @@ theorem set_integral_trim {α} {m m0 : MeasurableSpace α} {μ : Measure α} (hm
 #align measure_theory.set_integral_trim MeasureTheory.set_integral_trim
 
 theorem integral_Icc_eq_integral_Ioc' [PartialOrder α] {f : α → E} {a b : α} (ha : μ {a} = 0) :
-    (∫ t in icc a b, f t ∂μ) = ∫ t in ioc a b, f t ∂μ :=
+    (∫ t in Icc a b, f t ∂μ) = ∫ t in Ioc a b, f t ∂μ :=
   set_integral_congr_set_ae (Ioc_ae_eq_Icc' ha).symm
 #align measure_theory.integral_Icc_eq_integral_Ioc' MeasureTheory.integral_Icc_eq_integral_Ioc'
 
 theorem integral_Ioc_eq_integral_Ioo' [PartialOrder α] {f : α → E} {a b : α} (hb : μ {b} = 0) :
-    (∫ t in ioc a b, f t ∂μ) = ∫ t in ioo a b, f t ∂μ :=
+    (∫ t in Ioc a b, f t ∂μ) = ∫ t in Ioo a b, f t ∂μ :=
   set_integral_congr_set_ae (Ioo_ae_eq_Ioc' hb).symm
 #align measure_theory.integral_Ioc_eq_integral_Ioo' MeasureTheory.integral_Ioc_eq_integral_Ioo'
 
 theorem integral_Icc_eq_integral_Ioc [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
-    (∫ t in icc a b, f t ∂μ) = ∫ t in ioc a b, f t ∂μ :=
+    (∫ t in Icc a b, f t ∂μ) = ∫ t in Ioc a b, f t ∂μ :=
   integral_Icc_eq_integral_Ioc' <| measure_singleton a
 #align measure_theory.integral_Icc_eq_integral_Ioc MeasureTheory.integral_Icc_eq_integral_Ioc
 
 theorem integral_Ioc_eq_integral_Ioo [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
-    (∫ t in ioc a b, f t ∂μ) = ∫ t in ioo a b, f t ∂μ :=
+    (∫ t in Ioc a b, f t ∂μ) = ∫ t in Ioo a b, f t ∂μ :=
   integral_Ioc_eq_integral_Ioo' <| measure_singleton b
 #align measure_theory.integral_Ioc_eq_integral_Ioo MeasureTheory.integral_Ioc_eq_integral_Ioo
 

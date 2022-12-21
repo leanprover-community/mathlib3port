@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.modeq
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -360,7 +360,7 @@ theorem chinese_remainder'_lt_lcm (h : a ≡ b [MOD gcd n m]) (hn : n ≠ 0) (hm
   dsimp only [chinese_remainder']
   rw [dif_neg hn, dif_neg hm, Subtype.coe_mk, xgcd_val, ← Int.toNat_coe_nat (lcm n m)]
   have lcm_pos := int.coe_nat_pos.mpr (Nat.pos_of_ne_zero (lcm_ne_zero hn hm))
-  exact (Int.to_nat_lt_to_nat lcm_pos).mpr (Int.emod_lt_of_pos _ lcm_pos)
+  exact (Int.toNat_lt_toNat lcm_pos).mpr (Int.emod_lt_of_pos _ lcm_pos)
 #align nat.chinese_remainder'_lt_lcm Nat.chinese_remainder'_lt_lcm
 
 theorem chinese_remainder_lt_mul (co : Coprime n m) (a b : ℕ) (hn : n ≠ 0) (hm : m ≠ 0) :

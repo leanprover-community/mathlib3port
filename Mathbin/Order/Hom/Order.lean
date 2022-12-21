@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Anne Baanen
 
 ! This file was ported from Lean 3 source module order.hom.order
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,55 +75,55 @@ instance [Preorder β] [OrderTop β] :
   le_top a x := le_top
 
 instance [CompleteLattice β] :
-    HasInf
+    InfSet
       (α →o
-        β) where inf s := ⟨fun x => ⨅ f ∈ s, (f : _) x, fun x y h => infi₂_mono fun f _ => f.mono h⟩
+        β) where inf s := ⟨fun x => ⨅ f ∈ s, (f : _) x, fun x y h => infᵢ₂_mono fun f _ => f.mono h⟩
 
 @[simp]
-theorem Inf_apply [CompleteLattice β] (s : Set (α →o β)) (x : α) : inf s x = ⨅ f ∈ s, (f : _) x :=
+theorem Inf_apply [CompleteLattice β] (s : Set (α →o β)) (x : α) : infₛ s x = ⨅ f ∈ s, (f : _) x :=
   rfl
 #align order_hom.Inf_apply OrderHom.Inf_apply
 
 theorem infi_apply {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) (x : α) :
     (⨅ i, f i) x = ⨅ i, f i x :=
-  (Inf_apply _ _).trans infi_range
+  (Inf_apply _ _).trans infᵢ_range
 #align order_hom.infi_apply OrderHom.infi_apply
 
 @[simp, norm_cast]
 theorem coe_infi {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) :
     ((⨅ i, f i : α →o β) : α → β) = ⨅ i, f i :=
-  funext fun x => (infi_apply f x).trans (@infi_apply _ _ _ _ (fun i => f i) _).symm
+  funext fun x => (infi_apply f x).trans (@infᵢ_apply _ _ _ _ (fun i => f i) _).symm
 #align order_hom.coe_infi OrderHom.coe_infi
 
 instance [CompleteLattice β] :
-    HasSup
+    SupSet
       (α →o
-        β) where sup s := ⟨fun x => ⨆ f ∈ s, (f : _) x, fun x y h => supr₂_mono fun f _ => f.mono h⟩
+        β) where sup s := ⟨fun x => ⨆ f ∈ s, (f : _) x, fun x y h => supᵢ₂_mono fun f _ => f.mono h⟩
 
 @[simp]
-theorem Sup_apply [CompleteLattice β] (s : Set (α →o β)) (x : α) : sup s x = ⨆ f ∈ s, (f : _) x :=
+theorem Sup_apply [CompleteLattice β] (s : Set (α →o β)) (x : α) : supₛ s x = ⨆ f ∈ s, (f : _) x :=
   rfl
 #align order_hom.Sup_apply OrderHom.Sup_apply
 
 theorem supr_apply {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) (x : α) :
     (⨆ i, f i) x = ⨆ i, f i x :=
-  (Sup_apply _ _).trans supr_range
+  (Sup_apply _ _).trans supᵢ_range
 #align order_hom.supr_apply OrderHom.supr_apply
 
 @[simp, norm_cast]
 theorem coe_supr {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) :
     ((⨆ i, f i : α →o β) : α → β) = ⨆ i, f i :=
-  funext fun x => (supr_apply f x).trans (@supr_apply _ _ _ _ (fun i => f i) _).symm
+  funext fun x => (supr_apply f x).trans (@supᵢ_apply _ _ _ _ (fun i => f i) _).symm
 #align order_hom.coe_supr OrderHom.coe_supr
 
 instance [CompleteLattice β] : CompleteLattice (α →o β) :=
   { (_ : Lattice (α →o β)), OrderHom.orderTop, OrderHom.orderBot with
-    sup := sup
-    le_Sup := fun s f hf x => le_supr_of_le f (le_supr _ hf)
-    Sup_le := fun s f hf x => supr₂_le fun g hg => hf g hg x
-    inf := inf
-    le_Inf := fun s f hf x => le_infi₂ fun g hg => hf g hg x
-    Inf_le := fun s f hf x => infi_le_of_le f (infi_le _ hf) }
+    sup := supₛ
+    le_Sup := fun s f hf x => le_supᵢ_of_le f (le_supᵢ _ hf)
+    Sup_le := fun s f hf x => supᵢ₂_le fun g hg => hf g hg x
+    inf := infₛ
+    le_Inf := fun s f hf x => le_infᵢ₂ fun g hg => hf g hg x
+    Inf_le := fun s f hf x => infᵢ_le_of_le f (infᵢ_le _ hf) }
 
 theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α) :
     (∀ n₁ n₂ a₁ a₂, (f^[n₁ + n₂]) (a₁ ⊔ a₂) ≤ (f^[n₁]) a₁ ⊔ (f^[n₂]) a₂) ↔

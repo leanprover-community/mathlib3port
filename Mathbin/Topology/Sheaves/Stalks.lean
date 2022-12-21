@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.stalks
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -538,7 +538,7 @@ theorem app_surjective_of_injective_of_locally_surjective {F G : Sheaf C X} (f :
   -- preimage under `f` on `V`.
   choose V mV iVU sf heq using hsurj t
   -- These neighborhoods clearly cover all of `U`.
-  have V_cover : U ≤ supr V := by 
+  have V_cover : U ≤ supᵢ V := by 
     intro x hxU
     rw [opens.mem_coe, opens.mem_supr]
     exact ⟨⟨x, hxU⟩, mV ⟨x, hxU⟩⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.multilinear
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -310,7 +310,7 @@ open Real
 
 /-- The operator norm of a continuous multilinear map is the inf of all its bounds. -/
 def opNorm :=
-  inf { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ }
+  infₛ { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ }
 #align continuous_multilinear_map.op_norm ContinuousMultilinearMap.opNorm
 
 instance hasOpNorm : HasNorm (ContinuousMultilinearMap 𝕜 E G) :=
@@ -323,7 +323,7 @@ instance hasOpNorm' : HasNorm (ContinuousMultilinearMap 𝕜 (fun i : ι => G) G
   ContinuousMultilinearMap.hasOpNorm
 #align continuous_multilinear_map.has_op_norm' ContinuousMultilinearMap.hasOpNorm'
 
-theorem norm_def : ‖f‖ = inf { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ } :=
+theorem norm_def : ‖f‖ = infₛ { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ } :=
   rfl
 #align continuous_multilinear_map.norm_def ContinuousMultilinearMap.norm_def
 

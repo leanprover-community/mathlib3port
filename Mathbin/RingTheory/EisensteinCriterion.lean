@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.eisenstein_criterion
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrim
   WithBot.coe_le_coe.1
     (calc
       ↑n = degree (q.map (mk P)) := by
-        rw [hq, degree_mul, hc0, zero_add, degree_pow, degree_X, nsmul_one, Nat.cast_with_bot]
+        rw [hq, degree_mul, hc0, zero_add, degree_pow, degree_X, nsmul_one, Nat.cast_withBot]
       _ ≤ degree q := degree_map_le _ _
       _ ≤ natDegree q := degree_le_nat_degree
       )

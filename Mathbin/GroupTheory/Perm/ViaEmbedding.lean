@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module group_theory.perm.via_embedding
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem via_embedding_hom_apply : viaEmbeddingHom ι e = viaEmbedding e ι :=
 #align equiv.perm.via_embedding_hom_apply Equiv.Perm.via_embedding_hom_apply
 
 theorem via_embedding_hom_injective : Function.Injective (viaEmbeddingHom ι) :=
-  extend_domain_hom_injective (ofInjective ι.1 ι.2)
+  extendDomainHom_injective (ofInjective ι.1 ι.2)
 #align equiv.perm.via_embedding_hom_injective Equiv.Perm.via_embedding_hom_injective
 
 end Perm

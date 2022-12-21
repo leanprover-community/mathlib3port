@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.arg
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem range_exp_mul_I : (range fun x : ℝ => exp (x * I)) = Metric.sphere 0 1
   simp only [mem_sphere_zero_iff_norm, norm_eq_abs, abs_eq_one_iff, mem_range]
 #align complex.range_exp_mul_I Complex.range_exp_mul_I
 
-theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ ∈ ioc (-π) π) :
+theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) :
     arg (r * (cos θ + sin θ * I)) = θ := by
   simp only [arg, map_mul, abs_cos_add_sin_mul_I, abs_of_nonneg hr.le, mul_one]
   simp only [of_real_mul_re, of_real_mul_im, neg_im, ← of_real_cos, ← of_real_sin, ←
@@ -116,7 +116,7 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
         linarith, exact hsin, exact hcos.not_le]
 #align complex.arg_mul_cos_add_sin_mul_I Complex.arg_mul_cos_add_sin_mul_I
 
-theorem arg_cos_add_sin_mul_I {θ : ℝ} (hθ : θ ∈ ioc (-π) π) : arg (cos θ + sin θ * I) = θ := by
+theorem arg_cos_add_sin_mul_I {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) : arg (cos θ + sin θ * I) = θ := by
   rw [← one_mul (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I zero_lt_one hθ]
 #align complex.arg_cos_add_sin_mul_I Complex.arg_cos_add_sin_mul_I
 
@@ -132,7 +132,7 @@ theorem ext_abs_arg_iff {x y : ℂ} : x = y ↔ abs x = abs y ∧ arg x = arg y 
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, and_imp.2 ext_abs_arg⟩
 #align complex.ext_abs_arg_iff Complex.ext_abs_arg_iff
 
-theorem arg_mem_Ioc (z : ℂ) : arg z ∈ ioc (-π) π := by
+theorem arg_mem_Ioc (z : ℂ) : arg z ∈ Ioc (-π) π := by
   have hπ : 0 < π := Real.pi_pos
   rcases eq_or_ne z 0 with (rfl | hz); simp [hπ, hπ.le]
   rcases exists_unique_add_zsmul_mem_Ioc Real.two_pi_pos (arg z) (-π) with ⟨N, hN, -⟩
@@ -143,7 +143,7 @@ theorem arg_mem_Ioc (z : ℂ) : arg z ∈ ioc (-π) π := by
 #align complex.arg_mem_Ioc Complex.arg_mem_Ioc
 
 @[simp]
-theorem range_arg : range arg = ioc (-π) π :=
+theorem range_arg : range arg = Ioc (-π) π :=
   (range_subset_iff.2 arg_mem_Ioc).antisymm fun x hx => ⟨_, arg_cos_add_sin_mul_I hx⟩
 #align complex.range_arg Complex.range_arg
 

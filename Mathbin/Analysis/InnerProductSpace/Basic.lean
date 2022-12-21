@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -962,7 +962,7 @@ theorem orthonormal_subtype_range {v : ι → E} (hv : Function.Injective v) :
     Orthonormal 𝕜 (coe : Set.range v → E) ↔ Orthonormal 𝕜 v := by
   let f : ι ≃ Set.range v := Equiv.ofInjective v hv
   refine' ⟨fun h => h.comp f f.injective, fun h => _⟩
-  rw [← Equiv.self_comp_of_injective_symm hv]
+  rw [← Equiv.self_comp_ofInjective_symm hv]
   exact h.comp f.symm f.symm.injective
 #align orthonormal_subtype_range orthonormal_subtype_range
 
@@ -2309,7 +2309,7 @@ theorem OrthogonalFamily.independent {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
     CompleteLattice.Independent V := by
   classical 
-    apply CompleteLattice.independentOfDfinsuppLsumInjective
+    apply CompleteLattice.independent_of_dfinsupp_lsum_injective
     rw [← @LinearMap.ker_eq_bot _ _ _ _ _ _ (DirectSum.addCommGroup fun i => V i),
       Submodule.eq_bot_iff]
     intro v hv
@@ -2563,7 +2563,7 @@ theorem Submodule.orthogonal_disjoint : Disjoint K Kᗮ := by
 inner product with each of the elements of `K`. -/
 theorem orthogonal_eq_inter : Kᗮ = ⨅ v : K, LinearMap.ker (innerSL (v : E) : E →L[𝕜] 𝕜) := by
   apply le_antisymm
-  · rw [le_infi_iff]
+  · rw [le_infᵢ_iff]
     rintro ⟨v, hv⟩ w hw
     simpa using hw _ hv
   · intro v hv w hw
@@ -2624,12 +2624,12 @@ theorem Submodule.inf_orthogonal (K₁ K₂ : Submodule 𝕜 E) : K₁ᗮ ⊓ K�
 /-- The inf of an indexed family of orthogonal subspaces equals the
 subspace orthogonal to the sup. -/
 theorem Submodule.infi_orthogonal {ι : Type _} (K : ι → Submodule 𝕜 E) :
-    (⨅ i, (K i)ᗮ) = (supr K)ᗮ :=
+    (⨅ i, (K i)ᗮ) = (supᵢ K)ᗮ :=
   (Submodule.orthogonal_gc 𝕜 E).l_supr.symm
 #align submodule.infi_orthogonal Submodule.infi_orthogonal
 
 /-- The inf of a set of orthogonal subspaces equals the subspace orthogonal to the sup. -/
-theorem Submodule.Inf_orthogonal (s : Set <| Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (sup s)ᗮ :=
+theorem Submodule.Inf_orthogonal (s : Set <| Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (supₛ s)ᗮ :=
   (Submodule.orthogonal_gc 𝕜 E).l_Sup.symm
 #align submodule.Inf_orthogonal Submodule.Inf_orthogonal
 

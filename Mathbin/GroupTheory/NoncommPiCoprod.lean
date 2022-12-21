@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.noncomm_pi_coprod
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ def noncommPiCoprodEquiv :
   toFun ϕ := noncommPiCoprod ϕ.1 ϕ.2
   invFun f :=
     ⟨fun i => f.comp (MonoidHom.single N i), fun i j hij x y =>
-      Commute.map (Pi.mul_single_commute hij x y) f⟩
+      Commute.map (Pi.mulSingle_commute hij x y) f⟩
   left_inv ϕ := by 
     ext
     simp
@@ -141,7 +141,7 @@ theorem noncomm_pi_coprod_mrange : (noncommPiCoprod ϕ hcomm).mrange = ⨆ i : �
       apply Submonoid.mem_Sup_of_mem
       · use i
       simp
-    · refine' supr_le _
+    · refine' supᵢ_le _
       rintro i x ⟨y, rfl⟩
       refine' ⟨Pi.mulSingle i y, noncomm_pi_coprod_mul_single _ _ _⟩
 #align monoid_hom.noncomm_pi_coprod_mrange MonoidHom.noncomm_pi_coprod_mrange
@@ -182,7 +182,7 @@ theorem noncomm_pi_coprod_range : (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι,
       apply Subgroup.mem_Sup_of_mem
       · use i
       simp
-    · refine' supr_le _
+    · refine' supᵢ_le _
       rintro i x ⟨y, rfl⟩
       refine' ⟨Pi.mulSingle i y, noncomm_pi_coprod_mul_single _ _ _⟩
 #align monoid_hom.noncomm_pi_coprod_range MonoidHom.noncomm_pi_coprod_range
@@ -210,7 +210,7 @@ variable (hcomm)
 omit hfin
 
 @[to_additive]
-theorem independentRangeOfCoprimeOrder [Finite ι] [∀ i, Fintype (H i)]
+theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.Coprime (Fintype.card (H i)) (Fintype.card (H j))) :
     CompleteLattice.Independent fun i => (ϕ i).range := by
   cases nonempty_fintype ι
@@ -219,7 +219,7 @@ theorem independentRangeOfCoprimeOrder [Finite ι] [∀ i, Fintype (H i)]
     rw [disjoint_iff_inf_le]
     rintro f ⟨hxi, hxp⟩
     dsimp at hxi hxp
-    rw [supr_subtype', ← noncomm_pi_coprod_range] at hxp
+    rw [supᵢ_subtype', ← noncomm_pi_coprod_range] at hxp
     rotate_left
     · intro _ _ hj
       apply hcomm
@@ -240,7 +240,7 @@ theorem independentRangeOfCoprimeOrder [Finite ι] [∀ i, Fintype (H i)]
     intro j _
     apply hcoprime
     exact j.2
-#align monoid_hom.independent_range_of_coprime_order MonoidHom.independentRangeOfCoprimeOrder
+#align monoid_hom.independent_range_of_coprime_order MonoidHom.independent_range_of_coprime_order
 
 end MonoidHom
 
@@ -311,13 +311,13 @@ variable (hcomm)
 omit hfin
 
 @[to_additive]
-theorem independentOfCoprimeOrder [Finite ι] [∀ i, Fintype (H i)]
+theorem independent_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.Coprime (Fintype.card (H i)) (Fintype.card (H j))) :
     CompleteLattice.Independent H := by
   simpa using
-    MonoidHom.independentRangeOfCoprimeOrder (fun i => (H i).Subtype)
+    MonoidHom.independent_range_of_coprime_order (fun i => (H i).Subtype)
       (commute_subtype_of_commute hcomm) hcoprime
-#align subgroup.independent_of_coprime_order Subgroup.independentOfCoprimeOrder
+#align subgroup.independent_of_coprime_order Subgroup.independent_of_coprime_order
 
 end CommutingSubgroups
 

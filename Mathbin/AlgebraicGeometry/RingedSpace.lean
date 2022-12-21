@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.ringed_space
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
   by
   -- We pick a cover of `U` by open sets `V x`, such that `f` is a unit on each `V x`.
   choose V iVU m h_unit using fun x : U => X.is_unit_res_of_is_unit_germ U f x (h x)
-  have hcover : U ≤ supr V := by 
+  have hcover : U ≤ supᵢ V := by 
     intro x hxU
     rw [opens.mem_coe, opens.mem_supr]
     exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
@@ -119,7 +119,7 @@ def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) :
     use (⟨y, i.le hy⟩ : U)
     rw [Set.mem_setOf_eq]
     constructor
-    · convert RingHom.is_unit_map (X.presheaf.germ ⟨y, hy⟩) hf
+    · convert RingHom.isUnit_map (X.presheaf.germ ⟨y, hy⟩) hf
       exact (X.presheaf.germ_res_apply i ⟨y, hy⟩ f).symm
     · rfl
 #align algebraic_geometry.RingedSpace.basic_open AlgebraicGeometry.RingedSpaceCat.basicOpen
@@ -205,7 +205,7 @@ theorem basic_open_of_is_unit {U : Opens X} {f : X.Presheaf.obj (op U)} (hf : Is
   · exact X.basic_open_le f
   intro x hx
   erw [X.mem_basic_open f (⟨x, hx⟩ : U)]
-  exact RingHom.is_unit_map _ hf
+  exact RingHom.isUnit_map _ hf
 #align
   algebraic_geometry.RingedSpace.basic_open_of_is_unit AlgebraicGeometry.RingedSpaceCat.basic_open_of_is_unit
 

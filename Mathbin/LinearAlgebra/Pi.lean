@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.pi
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -305,7 +305,7 @@ theorem infi_comap_proj : (⨅ i, comap (proj i : (∀ i, φ i) →ₗ[R] φ i) 
 theorem supr_map_single [DecidableEq ι] [Finite ι] :
     (⨆ i, map (LinearMap.single i : φ i →ₗ[R] ∀ i, φ i) (p i)) = pi Set.univ p := by
   cases nonempty_fintype ι
-  refine' (supr_le fun i => _).antisymm _
+  refine' (supᵢ_le fun i => _).antisymm _
   · rintro _ ⟨x, hx : x ∈ p i, rfl⟩ j -
     rcases em (j = i) with (rfl | hj) <;> simp [*]
   · intro x hx

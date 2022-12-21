@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.local_at_target
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,7 @@ open TopologicalSpace Filter
 
 variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {f : α → β}
 
-variable {s : Set β} {ι : Type _} {U : ι → Opens β} (hU : supr U = ⊤)
+variable {s : Set β} {ι : Type _} {U : ι → Opens β} (hU : supᵢ U = ⊤)
 
 theorem Set.restrict_preimage_inducing (s : Set β) (h : Inducing f) :
     Inducing (s.restrictPreimage f) := by
@@ -124,7 +124,7 @@ theorem inducing_iff_inducing_of_supr_eq_top (h : Continuous f) :
   · intro H x
     obtain ⟨i, hi⟩ :=
       opens.mem_supr.mp
-        (show f x ∈ supr U by 
+        (show f x ∈ supᵢ U by 
           rw [hU]
           triv)
     erw [← OpenEmbedding.map_nhds_eq (h.1 _ (U i).2).open_embedding_subtype_coe ⟨x, hi⟩]
@@ -150,7 +150,7 @@ theorem open_embedding_iff_open_embedding_of_supr_eq_top (h : Continuous f) :
   rw [forall_and]
   apply and_congr
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
-  · simp_rw [Set.range_restrict_preimage]
+  · simp_rw [Set.range_restrictPreimage]
     apply is_open_iff_coe_preimage_of_supr_eq_top hU
 #align
   open_embedding_iff_open_embedding_of_supr_eq_top open_embedding_iff_open_embedding_of_supr_eq_top
@@ -161,7 +161,7 @@ theorem closed_embedding_iff_closed_embedding_of_supr_eq_top (h : Continuous f) 
   rw [forall_and]
   apply and_congr
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
-  · simp_rw [Set.range_restrict_preimage]
+  · simp_rw [Set.range_restrictPreimage]
     apply is_closed_iff_coe_preimage_of_supr_eq_top hU
 #align
   closed_embedding_iff_closed_embedding_of_supr_eq_top closed_embedding_iff_closed_embedding_of_supr_eq_top

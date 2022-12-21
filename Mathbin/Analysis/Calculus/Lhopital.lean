@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.calculus.lhopital
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,8 +52,8 @@ namespace HasDerivAt
 
 include hab
 
-theorem lhopital_zero_right_on_Ioo (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x) x)
-    (hgg' : ∀ x ∈ ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ ioo a b, g' x ≠ 0)
+theorem lhopital_zero_right_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
+    (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0)
     (hfa : Tendsto f (𝓝[>] a) (𝓝 0)) (hga : Tendsto g (𝓝[>] a) (𝓝 0))
     (hdiv : Tendsto (fun x => f' x / g' x) (𝓝[>] a) l) : Tendsto (fun x => f x / g x) (𝓝[>] a) l :=
   by
@@ -100,9 +100,9 @@ theorem lhopital_zero_right_on_Ioo (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x
     linarith [this]
 #align has_deriv_at.lhopital_zero_right_on_Ioo HasDerivAt.lhopital_zero_right_on_Ioo
 
-theorem lhopital_zero_right_on_Ico (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x) x)
-    (hgg' : ∀ x ∈ ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (ico a b))
-    (hcg : ContinuousOn g (ico a b)) (hg' : ∀ x ∈ ioo a b, g' x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
+theorem lhopital_zero_right_on_Ico (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
+    (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ico a b))
+    (hcg : ContinuousOn g (Ico a b)) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
     (hdiv : Tendsto (fun x => f' x / g' x) (𝓝[>] a) l) : Tendsto (fun x => f x / g x) (𝓝[>] a) l :=
   by 
   refine' lhopital_zero_right_on_Ioo hab hff' hgg' hg' _ _ hdiv
@@ -112,8 +112,8 @@ theorem lhopital_zero_right_on_Ico (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x
     exact ((hcg a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).Tendsto
 #align has_deriv_at.lhopital_zero_right_on_Ico HasDerivAt.lhopital_zero_right_on_Ico
 
-theorem lhopital_zero_left_on_Ioo (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x) x)
-    (hgg' : ∀ x ∈ ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ ioo a b, g' x ≠ 0)
+theorem lhopital_zero_left_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
+    (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0)
     (hfb : Tendsto f (𝓝[<] b) (𝓝 0)) (hgb : Tendsto g (𝓝[<] b) (𝓝 0))
     (hdiv : Tendsto (fun x => f' x / g' x) (𝓝[<] b) l) : Tendsto (fun x => f x / g x) (𝓝[<] b) l :=
   by
@@ -143,9 +143,9 @@ theorem lhopital_zero_left_on_Ioo (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x)
   simpa only [neg_neg]
 #align has_deriv_at.lhopital_zero_left_on_Ioo HasDerivAt.lhopital_zero_left_on_Ioo
 
-theorem lhopital_zero_left_on_Ioc (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x) x)
-    (hgg' : ∀ x ∈ ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (ioc a b))
-    (hcg : ContinuousOn g (ioc a b)) (hg' : ∀ x ∈ ioo a b, g' x ≠ 0) (hfb : f b = 0) (hgb : g b = 0)
+theorem lhopital_zero_left_on_Ioc (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
+    (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ioc a b))
+    (hcg : ContinuousOn g (Ioc a b)) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0) (hfb : f b = 0) (hgb : g b = 0)
     (hdiv : Tendsto (fun x => f' x / g' x) (𝓝[<] b) l) : Tendsto (fun x => f x / g x) (𝓝[<] b) l :=
   by 
   refine' lhopital_zero_left_on_Ioo hab hff' hgg' hg' _ _ hdiv
@@ -157,8 +157,8 @@ theorem lhopital_zero_left_on_Ioc (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x)
 
 omit hab
 
-theorem lhopital_zero_at_top_on_Ioi (hff' : ∀ x ∈ ioi a, HasDerivAt f (f' x) x)
-    (hgg' : ∀ x ∈ ioi a, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ ioi a, g' x ≠ 0)
+theorem lhopital_zero_at_top_on_Ioi (hff' : ∀ x ∈ Ioi a, HasDerivAt f (f' x) x)
+    (hgg' : ∀ x ∈ Ioi a, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Ioi a, g' x ≠ 0)
     (hftop : Tendsto f atTop (𝓝 0)) (hgtop : Tendsto g atTop (𝓝 0))
     (hdiv : Tendsto (fun x => f' x / g' x) atTop l) : Tendsto (fun x => f x / g x) atTop l := by
   obtain ⟨a', haa', ha'⟩ : ∃ a', a < a' ∧ 0 < a' :=
@@ -191,8 +191,8 @@ theorem lhopital_zero_at_top_on_Ioi (hff' : ∀ x ∈ ioi a, HasDerivAt f (f' x)
   simpa only [inv_inv]
 #align has_deriv_at.lhopital_zero_at_top_on_Ioi HasDerivAt.lhopital_zero_at_top_on_Ioi
 
-theorem lhopital_zero_at_bot_on_Iio (hff' : ∀ x ∈ iio a, HasDerivAt f (f' x) x)
-    (hgg' : ∀ x ∈ iio a, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ iio a, g' x ≠ 0)
+theorem lhopital_zero_at_bot_on_Iio (hff' : ∀ x ∈ Iio a, HasDerivAt f (f' x) x)
+    (hgg' : ∀ x ∈ Iio a, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Iio a, g' x ≠ 0)
     (hfbot : Tendsto f atBot (𝓝 0)) (hgbot : Tendsto g atBot (𝓝 0))
     (hdiv : Tendsto (fun x => f' x / g' x) atBot l) : Tendsto (fun x => f x / g x) atBot l :=
   by
@@ -228,8 +228,8 @@ namespace deriv
 
 include hab
 
-theorem lhopital_zero_right_on_Ioo (hdf : DifferentiableOn ℝ f (ioo a b))
-    (hg' : ∀ x ∈ ioo a b, deriv g x ≠ 0) (hfa : Tendsto f (𝓝[>] a) (𝓝 0))
+theorem lhopital_zero_right_on_Ioo (hdf : DifferentiableOn ℝ f (Ioo a b))
+    (hg' : ∀ x ∈ Ioo a b, deriv g x ≠ 0) (hfa : Tendsto f (𝓝[>] a) (𝓝 0))
     (hga : Tendsto g (𝓝[>] a) (𝓝 0))
     (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝[>] a) l) :
     Tendsto (fun x => f x / g x) (𝓝[>] a) l := by
@@ -242,9 +242,9 @@ theorem lhopital_zero_right_on_Ioo (hdf : DifferentiableOn ℝ f (ioo a b))
       (fun x hx => (hdg x hx).HasDerivAt) hg' hfa hga hdiv
 #align deriv.lhopital_zero_right_on_Ioo deriv.lhopital_zero_right_on_Ioo
 
-theorem lhopital_zero_right_on_Ico (hdf : DifferentiableOn ℝ f (ioo a b))
-    (hcf : ContinuousOn f (ico a b)) (hcg : ContinuousOn g (ico a b))
-    (hg' : ∀ x ∈ ioo a b, (deriv g) x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
+theorem lhopital_zero_right_on_Ico (hdf : DifferentiableOn ℝ f (Ioo a b))
+    (hcf : ContinuousOn f (Ico a b)) (hcg : ContinuousOn g (Ico a b))
+    (hg' : ∀ x ∈ Ioo a b, (deriv g) x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
     (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝[>] a) l) :
     Tendsto (fun x => f x / g x) (𝓝[>] a) l := by
   refine' lhopital_zero_right_on_Ioo hab hdf hg' _ _ hdiv
@@ -254,8 +254,8 @@ theorem lhopital_zero_right_on_Ico (hdf : DifferentiableOn ℝ f (ioo a b))
     exact ((hcg a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).Tendsto
 #align deriv.lhopital_zero_right_on_Ico deriv.lhopital_zero_right_on_Ico
 
-theorem lhopital_zero_left_on_Ioo (hdf : DifferentiableOn ℝ f (ioo a b))
-    (hg' : ∀ x ∈ ioo a b, (deriv g) x ≠ 0) (hfb : Tendsto f (𝓝[<] b) (𝓝 0))
+theorem lhopital_zero_left_on_Ioo (hdf : DifferentiableOn ℝ f (Ioo a b))
+    (hg' : ∀ x ∈ Ioo a b, (deriv g) x ≠ 0) (hfb : Tendsto f (𝓝[<] b) (𝓝 0))
     (hgb : Tendsto g (𝓝[<] b) (𝓝 0))
     (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝[<] b) l) :
     Tendsto (fun x => f x / g x) (𝓝[<] b) l := by
@@ -270,8 +270,8 @@ theorem lhopital_zero_left_on_Ioo (hdf : DifferentiableOn ℝ f (ioo a b))
 
 omit hab
 
-theorem lhopital_zero_at_top_on_Ioi (hdf : DifferentiableOn ℝ f (ioi a))
-    (hg' : ∀ x ∈ ioi a, (deriv g) x ≠ 0) (hftop : Tendsto f atTop (𝓝 0))
+theorem lhopital_zero_at_top_on_Ioi (hdf : DifferentiableOn ℝ f (Ioi a))
+    (hg' : ∀ x ∈ Ioi a, (deriv g) x ≠ 0) (hftop : Tendsto f atTop (𝓝 0))
     (hgtop : Tendsto g atTop (𝓝 0)) (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) atTop l) :
     Tendsto (fun x => f x / g x) atTop l := by
   have hdf : ∀ x ∈ Ioi a, DifferentiableAt ℝ f x := fun x hx =>
@@ -283,8 +283,8 @@ theorem lhopital_zero_at_top_on_Ioi (hdf : DifferentiableOn ℝ f (ioi a))
       (fun x hx => (hdg x hx).HasDerivAt) hg' hftop hgtop hdiv
 #align deriv.lhopital_zero_at_top_on_Ioi deriv.lhopital_zero_at_top_on_Ioi
 
-theorem lhopital_zero_at_bot_on_Iio (hdf : DifferentiableOn ℝ f (iio a))
-    (hg' : ∀ x ∈ iio a, (deriv g) x ≠ 0) (hfbot : Tendsto f atBot (𝓝 0))
+theorem lhopital_zero_at_bot_on_Iio (hdf : DifferentiableOn ℝ f (Iio a))
+    (hg' : ∀ x ∈ Iio a, (deriv g) x ≠ 0) (hfbot : Tendsto f atBot (𝓝 0))
     (hgbot : Tendsto g atBot (𝓝 0)) (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) atBot l) :
     Tendsto (fun x => f x / g x) atBot l := by
   have hdf : ∀ x ∈ Iio a, DifferentiableAt ℝ f x := fun x hx =>

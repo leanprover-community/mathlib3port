@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.order.floor
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,12 +60,12 @@ theorem tendsto_ceil_at_bot : Tendsto (ceil : α → ℤ) atBot atBot :=
 variable [TopologicalSpace α]
 
 theorem continuous_on_floor (n : ℤ) :
-    ContinuousOn (fun x => floor x : α → α) (ico n (n + 1) : Set α) :=
+    ContinuousOn (fun x => floor x : α → α) (Ico n (n + 1) : Set α) :=
   (continuous_on_congr <| floor_eq_on_Ico' n).mpr continuous_on_const
 #align continuous_on_floor continuous_on_floor
 
 theorem continuous_on_ceil (n : ℤ) :
-    ContinuousOn (fun x => ceil x : α → α) (ioc (n - 1) n : Set α) :=
+    ContinuousOn (fun x => ceil x : α → α) (Ioc (n - 1) n : Set α) :=
   (continuous_on_congr <| ceil_eq_on_Ioc' n).mpr continuous_on_const
 #align continuous_on_ceil continuous_on_ceil
 
@@ -142,7 +142,7 @@ theorem tendsto_ceil_right' [OrderClosedTopology α] (n : ℤ) :
 #align tendsto_ceil_right' tendsto_ceil_right'
 
 theorem continuous_on_fract [TopologicalAddGroup α] (n : ℤ) :
-    ContinuousOn (fract : α → α) (ico n (n + 1) : Set α) :=
+    ContinuousOn (fract : α → α) (Ico n (n + 1) : Set α) :=
   continuous_on_id.sub (continuous_on_floor n)
 #align continuous_on_fract continuous_on_fract
 
@@ -174,7 +174,7 @@ theorem tendsto_fract_right [OrderClosedTopology α] [TopologicalAddGroup α] (n
 #align tendsto_fract_right tendsto_fract_right
 
 -- mathport name: exprI
-local notation "I" => (icc 0 1 : Set α)
+local notation "I" => (Icc 0 1 : Set α)
 
 variable [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β] [TopologicalSpace γ]
 
@@ -227,7 +227,7 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem ContinuousOn.comp_fract {s : β → α} {f : β → α → γ}
-    (h : ContinuousOn (uncurry f) <| univ ×ˢ icc 0 1) (hs : Continuous s)
+    (h : ContinuousOn (uncurry f) <| univ ×ˢ Icc 0 1) (hs : Continuous s)
     (hf : ∀ s, f s 0 = f s 1) : Continuous fun x : β => f x <| Int.fract (s x) :=
   (h.comp_fract' hf).comp (continuous_id.prod_mk hs)
 #align continuous_on.comp_fract ContinuousOn.comp_fract

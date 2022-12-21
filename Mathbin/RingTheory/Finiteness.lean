@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finiteness
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,7 +179,7 @@ theorem fg_bsupr {ι : Type _} (s : Finset ι) (N : ι → Submodule R M) (h : �
     (⨆ i ∈ s, N i).Fg := by simpa only [Finset.sup_eq_supr] using fg_finset_sup s N h
 #align submodule.fg_bsupr Submodule.fg_bsupr
 
-theorem fg_supr {ι : Type _} [Finite ι] (N : ι → Submodule R M) (h : ∀ i, (N i).Fg) : (supr N).Fg :=
+theorem fg_supr {ι : Type _} [Finite ι] (N : ι → Submodule R M) (h : ∀ i, (N i).Fg) : (supᵢ N).Fg :=
   by 
   cases nonempty_fintype ι
   simpa using fg_bsupr Finset.univ N fun i hi => h i
@@ -349,7 +349,7 @@ theorem fg_restrict_scalars {R S M : Type _} [CommSemiring R] [Semiring S] [Alge
 #align submodule.fg_restrict_scalars Submodule.fg_restrict_scalars
 
 theorem Fg.stablizes_of_supr_eq {M' : Submodule R M} (hM' : M'.Fg) (N : ℕ →o Submodule R M)
-    (H : supr N = M') : ∃ n, M' = N n := by
+    (H : supᵢ N = M') : ∃ n, M' = N n := by
   obtain ⟨S, hS⟩ := hM'
   have : ∀ s : S, ∃ n, (s : M) ∈ N n := fun s =>
     (Submodule.mem_supr_of_chain N s).mp
@@ -364,7 +364,7 @@ theorem Fg.stablizes_of_supr_eq {M' : Submodule R M} (hM' : M'.Fg) (N : ℕ →o
     intro s hs
     exact N.2 (Finset.le_sup <| S.mem_attach ⟨s, hs⟩) (hf _)
   · rw [← H]
-    exact le_supr _ _
+    exact le_supᵢ _ _
 #align submodule.fg.stablizes_of_supr_eq Submodule.Fg.stablizes_of_supr_eq
 
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
@@ -377,19 +377,19 @@ theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactE
     constructor
     · rintro ⟨t, rfl⟩
       rw [span_eq_supr_of_singleton_spans, ← supr_rw, ← Finset.sup_eq_supr t sp]
-      apply CompleteLattice.finsetSupCompactOfCompact
+      apply CompleteLattice.finset_sup_compact_of_compact
       exact fun n _ => singleton_span_is_compact_element n
     · intro h
       -- s is the Sup of the spans of its elements.
       have sSup : s = Sup (sp '' ↑s) := by
-        rw [Sup_eq_supr, supr_image, ← span_eq_supr_of_singleton_spans, eq_comm, span_eq]
+        rw [supₛ_eq_supᵢ, supᵢ_image, ← span_eq_supr_of_singleton_spans, eq_comm, span_eq]
       -- by h, s is then below (and equal to) the sup of the spans of finitely many elements.
       obtain ⟨u, ⟨huspan, husup⟩⟩ := h (sp '' ↑s) (le_of_eq sSup)
       have ssup : s = u.sup id := by 
         suffices : u.sup id ≤ s
         exact le_antisymm husup this
         rw [sSup, Finset.sup_id_eq_Sup]
-        exact Sup_le_Sup huspan
+        exact supₛ_le_supₛ huspan
       obtain ⟨t, ⟨hts, rfl⟩⟩ := finset.subset_image_iff.mp huspan
       rw [Finset.sup_finset_image, Function.comp.left_id, Finset.sup_eq_supr, supr_rw, ←
         span_eq_supr_of_singleton_spans, eq_comm] at ssup

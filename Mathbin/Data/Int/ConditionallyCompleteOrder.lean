@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.int.conditionally_complete_order
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,43 +58,43 @@ instance : ConditionallyCompleteLinearOrder ℤ :=
 namespace Int
 
 theorem cSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z ∈ s, z ≤ b)
-    (Hinh : ∃ z : ℤ, z ∈ s) : sup s = greatestOfBdd b Hb Hinh := by
+    (Hinh : ∃ z : ℤ, z ∈ s) : supₛ s = greatestOfBdd b Hb Hinh := by
   convert dif_pos _ using 1
   · convert coe_greatest_of_bdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddAbove s)) _
   · exact ⟨Hinh, b, Hb⟩
 #align int.cSup_eq_greatest_of_bdd Int.cSup_eq_greatest_of_bdd
 
 @[simp]
-theorem cSup_empty : sup (∅ : Set ℤ) = 0 :=
+theorem cSup_empty : supₛ (∅ : Set ℤ) = 0 :=
   dif_neg (by simp)
 #align int.cSup_empty Int.cSup_empty
 
-theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : sup s = 0 :=
+theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : supₛ s = 0 :=
   dif_neg (by simp [h])
 #align int.cSup_of_not_bdd_above Int.cSup_of_not_bdd_above
 
 theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z ∈ s, b ≤ z)
-    (Hinh : ∃ z : ℤ, z ∈ s) : inf s = leastOfBdd b Hb Hinh := by
+    (Hinh : ∃ z : ℤ, z ∈ s) : infₛ s = leastOfBdd b Hb Hinh := by
   convert dif_pos _ using 1
   · convert coe_least_of_bdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddBelow s)) _
   · exact ⟨Hinh, b, Hb⟩
 #align int.cInf_eq_least_of_bdd Int.cInf_eq_least_of_bdd
 
 @[simp]
-theorem cInf_empty : inf (∅ : Set ℤ) = 0 :=
+theorem cInf_empty : infₛ (∅ : Set ℤ) = 0 :=
   dif_neg (by simp)
 #align int.cInf_empty Int.cInf_empty
 
-theorem cInf_of_not_bdd_below {s : Set ℤ} (h : ¬BddBelow s) : inf s = 0 :=
+theorem cInf_of_not_bdd_below {s : Set ℤ} (h : ¬BddBelow s) : infₛ s = 0 :=
   dif_neg (by simp [h])
 #align int.cInf_of_not_bdd_below Int.cInf_of_not_bdd_below
 
-theorem cSup_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddAbove s) : sup s ∈ s := by
+theorem cSup_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddAbove s) : supₛ s ∈ s := by
   convert (greatest_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cSup_mem Int.cSup_mem
 
-theorem cInf_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddBelow s) : inf s ∈ s := by
+theorem cInf_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddBelow s) : infₛ s ∈ s := by
   convert (least_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cInf_mem Int.cInf_mem

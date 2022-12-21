@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.series
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -252,7 +252,7 @@ theorem contDiffTsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k :
       exact h'f _ _ _ hm
   · intro m hm
     have h'm : ((m + 1 : ℕ) : ℕ∞) ≤ N := by
-      simpa only [Enat.coe_add, Nat.cast_with_bot, Enat.coe_one] using Enat.add_one_le_of_lt hm
+      simpa only [Enat.coe_add, Nat.cast_withBot, Enat.coe_one] using Enat.add_one_le_of_lt hm
     rw [iterated_fderiv_tsum hf hv h'f hm.le]
     have A :
       ∀ n x, HasFderivAt (iteratedFderiv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFderiv 𝕜 m (f n)) x) x :=

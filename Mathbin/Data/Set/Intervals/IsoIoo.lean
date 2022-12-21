@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.iso_Ioo
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,7 @@ open Set
 /-- In a linear ordered field, the whole field is order isomorphic to the open interval `(-1, 1)`.
 We consider the actual implementation to be a "black box", so it is irreducible.
 -/
-irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃o ioo (-1 : k) 1 := by
+irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃o Ioo (-1 : k) 1 := by
   refine' StrictMono.orderIsoOfRightInverse _ _ (fun x => x / (1 - |x|)) _
   · refine' cod_restrict (fun x => x / (1 + |x|)) _ fun x => abs_lt.1 _
     have H : 0 < 1 + |x| := (abs_nonneg x).trans_lt (lt_one_add _)

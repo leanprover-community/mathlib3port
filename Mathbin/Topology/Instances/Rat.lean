@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.rat
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ theorem continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
 instance : TopologicalRing ℚ :=
   { Rat.topological_add_group with continuous_mul := Rat.continuous_mul }
 
-theorem totally_bounded_Icc (a b : ℚ) : TotallyBounded (icc a b) := by
+theorem totally_bounded_Icc (a b : ℚ) : TotallyBounded (Icc a b) := by
   simpa only [preimage_cast_Icc] using
     totally_bounded_preimage Rat.uniform_embedding_coe_real (totally_bounded_Icc a b)
 #align rat.totally_bounded_Icc Rat.totally_bounded_Icc

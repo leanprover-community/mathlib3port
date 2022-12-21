@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.pointwise
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ theorem coe_mul_self_eq (s : Submonoid M) : (s : Set M) * s = s := by
 
 @[to_additive]
 theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S ⊔ closure T :=
-  Inf_le fun x ⟨s, t, hs, ht, hx⟩ =>
+  infₛ_le fun x ⟨s, t, hs, ht, hx⟩ =>
     hx ▸
       (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
         (SetLike.le_def.mp le_sup_right <| subset_closure ht)
@@ -544,12 +544,12 @@ instance : Mul (AddSubmonoid R) :=
   ⟨fun M N => ⨆ s : M, N.map <| AddMonoidHom.mul s.1⟩
 
 theorem mul_mem_mul {M N : AddSubmonoid R} {m n : R} (hm : m ∈ M) (hn : n ∈ N) : m * n ∈ M * N :=
-  (le_supr _ ⟨m, hm⟩ : _ ≤ M * N) ⟨n, hn, rfl⟩
+  (le_supᵢ _ ⟨m, hm⟩ : _ ≤ M * N) ⟨n, hn, rfl⟩
 #align add_submonoid.mul_mem_mul AddSubmonoid.mul_mem_mul
 
 theorem mul_le {M N P : AddSubmonoid R} : M * N ≤ P ↔ ∀ m ∈ M, ∀ n ∈ N, m * n ∈ P :=
   ⟨fun H m hm n hn => H <| mul_mem_mul hm hn, fun H =>
-    supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
+    supᵢ_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 #align add_submonoid.mul_le AddSubmonoid.mul_le
 
 @[elab_as_elim]

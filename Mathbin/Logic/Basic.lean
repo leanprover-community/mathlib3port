@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module logic.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1790,7 +1790,7 @@ theorem eq_equivalence : Equivalence (@Eq α) :=
 lean 3 declaration is
   forall {α : Sort.{u1}} {a : α} {a' : α} {β : Sort.{u2}} (y : β) (h : Eq.{u1} α a a'), Eq.{u2} ((fun (a : α) => β) a') (Eq.ndrec.{u2, u1} α a (fun (a : α) => β) y a' h) y
 but is expected to have type
-  forall {α : Sort.{u2}} {a : α} {a' : α} {β : Sort.{u1}} (y : β) (h : Eq.{u2} α a a'), Eq.{u1} β (Eq.rec.{u1, u2} α a (fun (a_1 : α) (x._@.Std.Logic._hyg.12248 : Eq.{u2} α a a_1) => β) y a' h) y
+  forall {α : Sort.{u2}} {a : α} {a' : α} {β : Sort.{u1}} (y : β) (h : Eq.{u2} α a a'), Eq.{u1} β (Eq.rec.{u1, u2} α a (fun (a_1 : α) (x._@.Std.Logic._hyg.12208 : Eq.{u2} α a a_1) => β) y a' h) y
 Case conversion may be inaccurate. Consider using '#align eq_rec_constant eq_rec_constantₓ'. -/
 /-- Transport through trivial families is the identity. -/
 @[simp]

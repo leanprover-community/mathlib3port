@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.rayleigh
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
 theorem supr_rayleigh_eq_supr_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨆ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨆ x : sphere (0 : E) r, rayleigh_quotient x :=
   show (⨆ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
-    simp only [← @Sup_image' _ _ _ _ rayleigh_quotient,
+    simp only [← @supₛ_image' _ _ _ _ rayleigh_quotient,
       T.image_rayleigh_eq_image_rayleigh_sphere hr]
 #align
   continuous_linear_map.supr_rayleigh_eq_supr_rayleigh_sphere ContinuousLinearMap.supr_rayleigh_eq_supr_rayleigh_sphere
@@ -96,7 +96,7 @@ theorem supr_rayleigh_eq_supr_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
 theorem infi_rayleigh_eq_infi_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨅ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨅ x : sphere (0 : E) r, rayleigh_quotient x :=
   show (⨅ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
-    simp only [← @Inf_image' _ _ _ _ rayleigh_quotient,
+    simp only [← @infₛ_image' _ _ _ _ rayleigh_quotient,
       T.image_rayleigh_eq_image_rayleigh_sphere hr]
 #align
   continuous_linear_map.infi_rayleigh_eq_infi_rayleigh_sphere ContinuousLinearMap.infi_rayleigh_eq_infi_rayleigh_sphere

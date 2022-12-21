@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,9 +131,9 @@ theorem algebra_map_eq' [CommSemiring S] [Algebra S R] :
 
 variable {S}
 
-theorem finiteType : Algebra.FiniteType R (AdjoinRoot f) :=
+theorem finite_type : Algebra.FiniteType R (AdjoinRoot f) :=
   (Algebra.FiniteType.polynomial R).ofSurjective _ (Ideal.Quotient.mkₐ_surjective R _)
-#align adjoin_root.finite_type AdjoinRoot.finiteType
+#align adjoin_root.finite_type AdjoinRoot.finite_type
 
 theorem finite_presentation : Algebra.FinitePresentation R (AdjoinRoot f) :=
   (Algebra.FinitePresentation.polynomial R).Quotient (Submodule.fg_span_singleton f)
@@ -554,7 +554,7 @@ theorem Minpoly.toAdjoin.injective (hx : IsIntegral R x) :
   · simpa [hPzero] using hP.symm
   have hPcont : P.content ≠ 0 := fun h => hPzero (content_eq_zero_iff.1 h)
   rw [← hP, minpoly.to_adjoin_apply', lift_hom_mk, ← Subalgebra.coe_eq_zero, aeval_subalgebra_coe,
-    SetLike.coe_mk, P.eq_C_content_mul_prim_part, aeval_mul, aeval_C] at hP₁
+    [anonymous], P.eq_C_content_mul_prim_part, aeval_mul, aeval_C] at hP₁
   replace hP₁ :=
     eq_zero_of_ne_zero_of_mul_left_eq_zero
       ((map_ne_zero_iff _ (NoZeroSmulDivisors.algebra_map_injective R S)).2 hPcont) hP₁

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.maps
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ theorem Inducing.nhds_eq_comap {f : α → β} (hf : Inducing f) : ∀ a : α, �
 
 theorem Inducing.nhds_set_eq_comap {f : α → β} (hf : Inducing f) (s : Set α) :
     𝓝ˢ s = comap f (𝓝ˢ (f '' s)) := by
-  simp only [nhdsSet, Sup_image, comap_supr, hf.nhds_eq_comap, supr_image]
+  simp only [nhdsSet, supₛ_image, comap_supr, hf.nhds_eq_comap, supᵢ_image]
 #align inducing.nhds_set_eq_comap Inducing.nhds_set_eq_comap
 
 theorem Inducing.map_nhds_eq {f : α → β} (hf : Inducing f) (a : α) : (𝓝 a).map f = 𝓝[range f] f a :=
@@ -341,13 +341,13 @@ theorem range_mem_nhds (hf : IsOpenMap f) (x : α) : range f ∈ 𝓝 (f x) :=
 
 theorem maps_to_interior (hf : IsOpenMap f) {s : Set α} {t : Set β} (h : MapsTo f s t) :
     MapsTo f (interior s) (interior t) :=
-  maps_to'.2 <|
+  mapsTo'.2 <|
     interior_maximal (h.mono interior_subset Subset.rfl).image_subset (hf _ is_open_interior)
 #align is_open_map.maps_to_interior IsOpenMap.maps_to_interior
 
 theorem image_interior_subset (hf : IsOpenMap f) (s : Set α) :
     f '' interior s ⊆ interior (f '' s) :=
-  (hf.maps_to_interior (maps_to_image f s)).image_subset
+  (hf.maps_to_interior (mapsTo_image f s)).image_subset
 #align is_open_map.image_interior_subset IsOpenMap.image_interior_subset
 
 theorem nhds_le (hf : IsOpenMap f) (a : α) : 𝓝 (f a) ≤ (𝓝 a).map f :=
@@ -383,7 +383,7 @@ theorem to_quotient_map {f : α → β} (open_map : IsOpenMap f) (cont : Continu
 
 theorem interior_preimage_subset_preimage_interior (hf : IsOpenMap f) {s : Set β} :
     interior (f ⁻¹' s) ⊆ f ⁻¹' interior s :=
-  hf.maps_to_interior (maps_to_preimage _ _)
+  hf.maps_to_interior (mapsTo_preimage _ _)
 #align
   is_open_map.interior_preimage_subset_preimage_interior IsOpenMap.interior_preimage_subset_preimage_interior
 

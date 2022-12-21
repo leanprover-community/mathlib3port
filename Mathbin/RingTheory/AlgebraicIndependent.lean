@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.algebraic_independent
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -159,7 +159,7 @@ theorem map {f : A →ₐ[R] A'} (hf_inj : Set.InjOn f (adjoin R (range x))) :
 #align algebraic_independent.map AlgebraicIndependent.map
 
 theorem map' {f : A →ₐ[R] A'} (hf_inj : Injective f) : AlgebraicIndependent R (f ∘ x) :=
-  hx.map (inj_on_of_injective hf_inj _)
+  hx.map (injOn_of_injective hf_inj _)
 #align algebraic_independent.map' AlgebraicIndependent.map'
 
 omit hx
@@ -176,7 +176,7 @@ open AlgebraicIndependent
 
 theorem AlgHom.algebraic_independent_iff (f : A →ₐ[R] A') (hf : Injective f) :
     AlgebraicIndependent R (f ∘ x) ↔ AlgebraicIndependent R x :=
-  ⟨fun h => h.of_comp f, fun h => h.map (inj_on_of_injective hf _)⟩
+  ⟨fun h => h.of_comp f, fun h => h.map (injOn_of_injective hf _)⟩
 #align alg_hom.algebraic_independent_iff AlgHom.algebraic_independent_iff
 
 @[nontriviality]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -805,6 +805,12 @@ theorem div_mul_eq_div_div_swap : a / (b * c) = a / c / b := by
 
 end DivisionMonoid
 
+/- warning: bit0_neg -> bit0_neg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SubtractionMonoid.{u1} α] (a : α), Eq.{succ u1} α (bit0.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (SubtractionMonoid.toSubNegMonoid.{u1} α _inst_1)))) (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (SubtractionMonoid.toSubNegMonoid.{u1} α _inst_1)) a)) (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (SubtractionMonoid.toSubNegMonoid.{u1} α _inst_1)) (bit0.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (SubtractionMonoid.toSubNegMonoid.{u1} α _inst_1)))) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SubtractionMonoid.{u1} α] (a : α), Eq.{succ u1} α (bit0.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (SubtractionMonoid.toSubNegMonoid.{u1} α _inst_1)))) (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α _inst_1))) a)) (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α _inst_1))) (bit0.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (SubtractionMonoid.toSubNegMonoid.{u1} α _inst_1)))) a))
+Case conversion may be inaccurate. Consider using '#align bit0_neg bit0_negₓ'. -/
 theorem bit0_neg [SubtractionMonoid α] (a : α) : bit0 (-a) = -bit0 a :=
   (neg_add_rev _ _).symm
 #align bit0_neg bit0_neg
@@ -1055,7 +1061,7 @@ theorem div_eq_inv_self : a / b = b⁻¹ ↔ a = 1 := by rw [div_eq_mul_inv, mul
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.3425 : G) (x._@.Mathlib.Algebra.Group.Basic._hyg.3427 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Group.Basic._hyg.3425 x._@.Mathlib.Algebra.Group.Basic._hyg.3427) a)
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.3457 : G) (x._@.Mathlib.Algebra.Group.Basic._hyg.3459 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Group.Basic._hyg.3457 x._@.Mathlib.Algebra.Group.Basic._hyg.3459) a)
 Case conversion may be inaccurate. Consider using '#align mul_left_surjective mul_left_surjectiveₓ'. -/
 @[to_additive]
 theorem mul_left_surjective (a : G) : Function.Surjective ((· * ·) a) := fun x =>

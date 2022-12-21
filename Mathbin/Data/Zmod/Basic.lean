@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.zmod.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -538,15 +538,14 @@ theorem int_cast_mod (a : ℤ) (b : ℕ) : ((a % b : ℤ) : Zmod b) = (a : Zmod 
 theorem ker_int_cast_add_hom (n : ℕ) : (Int.castAddHom (Zmod n)).ker = AddSubgroup.zmultiples n :=
   by 
   ext
-  rw [Int.mem_zmultiples_iff, AddMonoidHom.mem_ker, Int.coe_cast_add_hom,
+  rw [Int.mem_zmultiples_iff, AddMonoidHom.mem_ker, Int.coe_castAddHom,
     int_coe_zmod_eq_zero_iff_dvd]
 #align zmod.ker_int_cast_add_hom Zmod.ker_int_cast_add_hom
 
 theorem ker_int_cast_ring_hom (n : ℕ) : (Int.castRingHom (Zmod n)).ker = Ideal.span ({n} : Set ℤ) :=
   by 
   ext
-  rw [Ideal.mem_span_singleton, RingHom.mem_ker, Int.coe_cast_ring_hom,
-    int_coe_zmod_eq_zero_iff_dvd]
+  rw [Ideal.mem_span_singleton, RingHom.mem_ker, Int.coe_castRingHom, int_coe_zmod_eq_zero_iff_dvd]
 #align zmod.ker_int_cast_ring_hom Zmod.ker_int_cast_ring_hom
 
 attribute [local semireducible] Int.NonNeg
@@ -928,7 +927,7 @@ theorem val_min_abs_mul_two_eq_iff {n : ℕ} (a : Zmod n) : a.valMinAbs * 2 = n 
 #align zmod.val_min_abs_mul_two_eq_iff Zmod.val_min_abs_mul_two_eq_iff
 
 theorem val_min_abs_mem_Ioc {n : ℕ} [NeZero n] (x : Zmod n) :
-    x.valMinAbs * 2 ∈ Set.ioc (-n : ℤ) n := by
+    x.valMinAbs * 2 ∈ Set.Ioc (-n : ℤ) n := by
   simp_rw [val_min_abs_def_pos, Nat.le_div_two_iff_mul_two_le]; split_ifs
   · refine' ⟨(neg_lt_zero.2 <| by exact_mod_cast NeZero.pos n).trans_le (mul_nonneg _ _), h⟩
     exacts[Nat.cast_nonneg _, zero_le_two]
@@ -939,7 +938,7 @@ theorem val_min_abs_mem_Ioc {n : ℕ} [NeZero n] (x : Zmod n) :
 #align zmod.val_min_abs_mem_Ioc Zmod.val_min_abs_mem_Ioc
 
 theorem val_min_abs_spec {n : ℕ} [NeZero n] (x : Zmod n) (y : ℤ) :
-    x.valMinAbs = y ↔ x = y ∧ y * 2 ∈ Set.ioc (-n : ℤ) n :=
+    x.valMinAbs = y ↔ x = y ∧ y * 2 ∈ Set.Ioc (-n : ℤ) n :=
   ⟨by 
     rintro rfl
     exact ⟨x.coe_val_min_abs.symm, x.val_min_abs_mem_Ioc⟩, fun h => by
@@ -1083,7 +1082,7 @@ instance (p : ℕ) [hp : Fact p.Prime] : IsDomain (Zmod p) :=
   -- We need `cases p` here in order to resolve which `comm_ring` instance is being used.
   cases p
   · exact (Nat.not_prime_zero hp.out).elim
-  exact @Field.IsDomain (Zmod _) (Zmod.field _)
+  exact @Field.isDomain (Zmod _) (Zmod.field _)
 
 end Zmod
 

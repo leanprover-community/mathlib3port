@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.stream.init
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -454,7 +454,7 @@ theorem head_even (s : Stream' α) : head (even s) = head s :=
   rfl
 #align stream.head_even Stream'.head_even
 
-theorem tail_even (s : Stream' α) : tail (even s) = even (tail (tail s)) := by unfold even;
+theorem tail_even (s : Stream' α) : tail (even s) = even (tail (tail s)) := by unfold Even;
   rw [corec_eq]; rfl
 #align stream.tail_even Stream'.tail_even
 
@@ -462,7 +462,7 @@ theorem tail_even (s : Stream' α) : tail (even s) = even (tail (tail s)) := by 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem even_cons_cons (a₁ a₂ : α) (s : Stream' α) : even (a₁::a₂::s) = a₁::even s := by
-  unfold even; rw [corec_eq]; rfl
+  unfold Even; rw [corec_eq]; rfl
 #align stream.even_cons_cons Stream'.even_cons_cons
 
 theorem even_tail (s : Stream' α) : even (tail s) = odd s :=
@@ -491,7 +491,7 @@ theorem interleave_even_odd (s₁ : Stream' α) : even s₁ ⋈ odd s₁ = s₁ 
 theorem nth_even : ∀ (n : Nat) (s : Stream' α), nth (even s) n = nth s (2 * n)
   | 0, s => rfl
   | succ n, s => by 
-    change nth (even s) (succ n) = nth s (succ (succ (2 * n)))
+    change nth (Even s) (succ n) = nth s (succ (succ (2 * n)))
     rw [nth_succ, nth_succ, tail_even, nth_even]; rfl
 #align stream.nth_even Stream'.nth_even
 

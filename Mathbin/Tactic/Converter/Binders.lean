@@ -6,7 +6,7 @@ Authors: Johannes Hölzl
 Binder elimination
 
 ! This file was ported from Lean 3 source module tactic.converter.binders
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -233,15 +233,15 @@ unsafe def forall_eq_elim :
 unsafe def supr_eq_elim :
     binder_eq_elim where 
   match_binder e := do
-    let q(@supr $(α) $(cl) $(β) $(f)) ← return e
+    let q(@supᵢ $(α) $(cl) $(β) $(f)) ← return e
     return (β, f)
   adapt_rel c := do
     let r ← current_relation
     guard (r = `eq)
     c
-  apply_comm := applyc `` supr_comm
+  apply_comm := applyc `` supᵢ_comm
   applyCongr := congr_arg ∘ funext'
-  apply_elim_eq := applyc `` supr_supr_eq_left <|> applyc `` supr_supr_eq_right
+  apply_elim_eq := applyc `` supᵢ_supᵢ_eq_left <|> applyc `` supᵢ_supᵢ_eq_right
 #align supr_eq_elim supr_eq_elim
 
 unsafe def infi_eq_elim :
@@ -253,9 +253,9 @@ unsafe def infi_eq_elim :
     let r ← current_relation
     guard (r = `eq)
     c
-  apply_comm := applyc `` infi_comm
+  apply_comm := applyc `` infᵢ_comm
   applyCongr := congr_arg ∘ funext'
-  apply_elim_eq := applyc `` infi_infi_eq_left <|> applyc `` infi_infi_eq_right
+  apply_elim_eq := applyc `` infᵢ_infᵢ_eq_left <|> applyc `` infᵢ_infᵢ_eq_right
 #align infi_eq_elim infi_eq_elim
 
 universe u v w w₂
@@ -267,14 +267,14 @@ section
 variable [CompleteLattice α]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic old_conv.conversion -/
-example {s : Set β} {f : β → α} : inf (Set.image f s) = ⨅ a ∈ s, f a := by
-  simp [Inf_eq_infi, infi_and]
+example {s : Set β} {f : β → α} : infₛ (Set.image f s) = ⨅ a ∈ s, f a := by
+  simp [infₛ_eq_infᵢ, infᵢ_and]
   run_tac
     conversion infi_eq_elim.old_conv
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic old_conv.conversion -/
-example {s : Set β} {f : β → α} : sup (Set.image f s) = ⨆ a ∈ s, f a := by
-  simp [Sup_eq_supr, supr_and]
+example {s : Set β} {f : β → α} : supₛ (Set.image f s) = ⨆ a ∈ s, f a := by
+  simp [supₛ_eq_supᵢ, supᵢ_and]
   run_tac
     conversion supr_eq_elim.old_conv
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module data.polynomial.unit_trinomial
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -228,7 +228,7 @@ namespace IsUnitTrinomial
 theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Units ℤ)
     (hp : p = trinomial k m n u v w) :
     c ↑v * (c ↑u * X ^ (m + n) + c ↑w * X ^ (n - m + k + n)) =
-      ⟨Finsupp.filter (Set.ioo (k + n) (n + n)) (p * p.mirror).toFinsupp⟩ :=
+      ⟨Finsupp.filter (Set.Ioo (k + n) (n + n)) (p * p.mirror).toFinsupp⟩ :=
   by 
   have key : n - m + k < n := by rwa [← lt_tsub_iff_right, tsub_lt_tsub_iff_left_of_le hmn.le]
   rw [hp, trinomial_mirror hkm hmn u.ne_zero w.ne_zero]
@@ -258,7 +258,7 @@ theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Unit
 theorem irreducible_aux2 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k < m') (hmn' : m' < n)
     (u v w : Units ℤ) (hp : p = trinomial k m n u v w) (hq : q = trinomial k m' n u v w)
     (h : p * p.mirror = q * q.mirror) : q = p ∨ q = p.mirror := by
-  let f : ℤ[X] → ℤ[X] := fun p => ⟨Finsupp.filter (Set.ioo (k + n) (n + n)) p.toFinsupp⟩
+  let f : ℤ[X] → ℤ[X] := fun p => ⟨Finsupp.filter (Set.Ioo (k + n) (n + n)) p.toFinsupp⟩
   replace h := congr_arg f h
   replace h := (irreducible_aux1 hkm hmn u v w hp).trans h
   replace h := h.trans (irreducible_aux1 hkm' hmn' u v w hq).symm
@@ -325,7 +325,7 @@ theorem irreducible_of_coprime (hp : p.IsUnitTrinomial)
   subst hk
   subst hn
   rcases eq_or_eq_neg_of_sq_eq_sq (↑y) (↑v)
-      ((Int.is_unit_sq y.is_unit).trans (Int.is_unit_sq v.is_unit).symm) with
+      ((Int.isUnit_sq y.is_unit).trans (Int.isUnit_sq v.is_unit).symm) with
     (h1 | h1)
   · rw [h1] at *
     rcases irreducible_aux3 hkm hmn hkm' hmn' u v w x z hp hq hpq with (h2 | h2)

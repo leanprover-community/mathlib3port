@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module order.conditionally_complete_lattice.group
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ theorem le_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : 
 
 @[to_additive]
 theorem mul_csupr_le [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : α} {h : ι → α}
-    (H : ∀ j, g * h j ≤ a) : g * supr h ≤ a :=
+    (H : ∀ j, g * h j ≤ a) : g * supᵢ h ≤ a :=
   @le_mul_cinfi αᵒᵈ _ _ _ _ _ _ _ _ H
 #align mul_csupr_le mul_csupr_le
 
@@ -42,7 +42,7 @@ theorem le_cinfi_mul [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)
 
 @[to_additive]
 theorem csupr_mul_le [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α}
-    {h : α} (H : ∀ i, g i * h ≤ a) : supr g * h ≤ a :=
+    {h : α} (H : ∀ i, g i * h ≤ a) : supᵢ g * h ≤ a :=
   @le_cinfi_mul αᵒᵈ _ _ _ _ _ _ _ _ H
 #align csupr_mul_le csupr_mul_le
 
@@ -56,7 +56,7 @@ theorem le_cinfi_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)]
 @[to_additive]
 theorem csupr_mul_csupr_le [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α} {h : ι' → α}
-    (H : ∀ i j, g i * h j ≤ a) : supr g * supr h ≤ a :=
+    (H : ∀ i j, g i * h j ≤ a) : supᵢ g * supᵢ h ≤ a :=
   csupr_mul_le fun i => mul_csupr_le <| H _
 #align csupr_mul_csupr_le csupr_mul_csupr_le
 

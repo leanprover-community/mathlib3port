@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.adic_completion
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ instance : IsHausdorff I (HausdorffificationCat I M) :=
       (Quotient.mk_eq_zero _).2 <|
         (mem_infi _).2 fun n => by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
-          simp only [sup_of_le_right (infi_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
+          simp only [sup_of_le_right (infᵢ_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
           rw [← this, map_smul'', mem_comap, map_top, range_mkq, ← Smodeq.zero]; exact hx n⟩
 
 variable {M} [h : IsHausdorff I N]
@@ -181,8 +181,8 @@ def lift (f : M →ₗ[R] N) : HausdorffificationCat I M →ₗ[R] N :=
   liftq _ f <|
     map_le_iff_le_comap.1 <|
       h.infi_pow_smul ▸
-        le_infi fun n =>
-          le_trans (map_mono <| infi_le _ n) <| by
+        le_infᵢ fun n =>
+          le_trans (map_mono <| infᵢ_le _ n) <| by
             rw [map_smul'']
             exact smul_mono le_rfl le_top
 #align Hausdorffification.lift HausdorffificationCat.lift

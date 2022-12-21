@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module order.boolean_algebra
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1176,7 +1176,7 @@ instance Prop.booleanAlgebra : BooleanAlgebra Prop :=
 #print Pi.booleanAlgebra /-
 instance Pi.booleanAlgebra {ι : Type u} {α : ι → Type v} [∀ i, BooleanAlgebra (α i)] :
     BooleanAlgebra (∀ i, α i) :=
-  { Pi.hasSdiff, Pi.heytingAlgebra, Pi.distribLattice with
+  { Pi.sdiff, Pi.heytingAlgebra, Pi.distribLattice with
     sdiff_eq := fun x y => funext fun i => sdiff_eq
     himp_eq := fun x y => funext fun i => himp_eq
     inf_compl_le_bot := fun _ _ => BooleanAlgebra.inf_compl_le_bot _
@@ -1203,7 +1203,7 @@ instance : BooleanAlgebra Bool :=
 lean 3 declaration is
   Eq.{1} (Bool -> Bool -> Bool) (HasSup.sup.{0} Bool (SemilatticeSup.toHasSup.{0} Bool (Lattice.toSemilatticeSup.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} Bool Bool.booleanAlgebra)))))) or
 but is expected to have type
-  Eq.{1} (Bool -> Bool -> Bool) (fun (x._@.Mathlib.Order.BooleanAlgebra._hyg.10890 : Bool) (x._@.Mathlib.Order.BooleanAlgebra._hyg.10892 : Bool) => HasSup.sup.{0} Bool (SemilatticeSup.toHasSup.{0} Bool (Lattice.toSemilatticeSup.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool)))))) x._@.Mathlib.Order.BooleanAlgebra._hyg.10890 x._@.Mathlib.Order.BooleanAlgebra._hyg.10892) or
+  Eq.{1} (Bool -> Bool -> Bool) (fun (x._@.Mathlib.Order.BooleanAlgebra._hyg.10906 : Bool) (x._@.Mathlib.Order.BooleanAlgebra._hyg.10908 : Bool) => HasSup.sup.{0} Bool (SemilatticeSup.toHasSup.{0} Bool (Lattice.toSemilatticeSup.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool)))))) x._@.Mathlib.Order.BooleanAlgebra._hyg.10906 x._@.Mathlib.Order.BooleanAlgebra._hyg.10908) or
 Case conversion may be inaccurate. Consider using '#align bool.sup_eq_bor Bool.sup_eq_borₓ'. -/
 @[simp]
 theorem Bool.sup_eq_bor : (· ⊔ ·) = or :=
@@ -1214,7 +1214,7 @@ theorem Bool.sup_eq_bor : (· ⊔ ·) = or :=
 lean 3 declaration is
   Eq.{1} (Bool -> Bool -> Bool) (HasInf.inf.{0} Bool (SemilatticeInf.toHasInf.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} Bool Bool.booleanAlgebra)))))) and
 but is expected to have type
-  Eq.{1} (Bool -> Bool -> Bool) (fun (x._@.Mathlib.Order.BooleanAlgebra._hyg.10922 : Bool) (x._@.Mathlib.Order.BooleanAlgebra._hyg.10924 : Bool) => HasInf.inf.{0} Bool (Lattice.toHasInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool))))) x._@.Mathlib.Order.BooleanAlgebra._hyg.10922 x._@.Mathlib.Order.BooleanAlgebra._hyg.10924) and
+  Eq.{1} (Bool -> Bool -> Bool) (fun (x._@.Mathlib.Order.BooleanAlgebra._hyg.10938 : Bool) (x._@.Mathlib.Order.BooleanAlgebra._hyg.10940 : Bool) => HasInf.inf.{0} Bool (Lattice.toHasInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool))))) x._@.Mathlib.Order.BooleanAlgebra._hyg.10938 x._@.Mathlib.Order.BooleanAlgebra._hyg.10940) and
 Case conversion may be inaccurate. Consider using '#align bool.inf_eq_band Bool.inf_eq_bandₓ'. -/
 @[simp]
 theorem Bool.inf_eq_band : (· ⊓ ·) = and :=

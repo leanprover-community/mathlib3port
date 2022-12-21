@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.signed_hahn
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -405,7 +405,7 @@ theorem zero_mem_measure_of_negatives : (0 : ℝ) ∈ s.measureOfNegatives :=
   measure_theory.signed_measure.zero_mem_measure_of_negatives MeasureTheory.SignedMeasure.zero_mem_measure_of_negatives
 
 theorem bdd_below_measure_of_negatives : BddBelow s.measureOfNegatives := by
-  simp_rw [BddBelow, Set.Nonempty, mem_lower_bounds]
+  simp_rw [BddBelow, Set.Nonempty, mem_lowerBounds]
   by_contra' h
   have h' : ∀ n : ℕ, ∃ y : ℝ, y ∈ s.measure_of_negatives ∧ y < -n := fun n => h (-n)
   choose f hf using h'

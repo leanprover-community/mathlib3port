@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module topology.category.CompHaus.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -256,9 +256,9 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
       exact hy y' hy'
     haveI : NormalSpace ↥Y.to_Top := normalOfCompactT2
     obtain ⟨φ, hφ0, hφ1, hφ01⟩ := exists_continuous_zero_one_of_closed hC hD hCD
-    haveI : CompactSpace (ULift.{u} <| Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
-    haveI : T2Space (ULift.{u} <| Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
-    let Z := of (ULift.{u} <| Set.icc (0 : ℝ) 1)
+    haveI : CompactSpace (ULift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
+    haveI : T2Space (ULift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
+    let Z := of (ULift.{u} <| Set.Icc (0 : ℝ) 1)
     let g : Y ⟶ Z :=
       ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩,
         continuous_ulift_up.comp (φ.continuous.subtype_mk fun y' => hφ01 y')⟩

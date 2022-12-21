@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.inv_submonoid
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem span_inv_submonoid : Submodule.span R (invSubmonoid M S : Set S) = ⊤ :
   exact Submodule.smul_mem _ _ (Submodule.subset_span (to_inv_submonoid M S m).Prop)
 #align is_localization.span_inv_submonoid IsLocalization.span_inv_submonoid
 
-theorem finiteTypeOfMonoidFg [Monoid.Fg M] : Algebra.FiniteType R S := by
+theorem finite_type_of_monoid_fg [Monoid.Fg M] : Algebra.FiniteType R S := by
   have := Monoid.fg_of_surjective _ (to_inv_submonoid_surjective M S)
   rw [Monoid.fg_iff_submonoid_fg] at this
   rcases this with ⟨s, hs⟩
@@ -130,7 +130,7 @@ theorem finiteTypeOfMonoidFg [Monoid.Fg M] : Algebra.FiniteType R S := by
   change x ∈ ((Algebra.adjoin R _ : Subalgebra R S).toSubmodule : Set S)
   rw [Algebra.adjoin_eq_span, hs, span_inv_submonoid]
   trivial
-#align is_localization.finite_type_of_monoid_fg IsLocalization.finiteTypeOfMonoidFg
+#align is_localization.finite_type_of_monoid_fg IsLocalization.finite_type_of_monoid_fg
 
 end InvSubmonoid
 

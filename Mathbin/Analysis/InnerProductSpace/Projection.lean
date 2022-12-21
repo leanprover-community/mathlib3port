@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -889,7 +889,7 @@ theorem orthogonal_projection_tendsto_closure_supr [CompleteSpace E] {ι : Type 
   let y := (orthogonalProjection (⨆ i, U i).topologicalClosure x : E)
   have proj_x : ∀ i, orthogonalProjection (U i) x = orthogonalProjection (U i) y := fun i =>
     (orthogonal_projection_orthogonal_projection_of_le
-        ((le_supr U i).trans (supr U).le_topological_closure) _).symm
+        ((le_supᵢ U i).trans (supᵢ U).le_topological_closure) _).symm
   suffices ∀ ε > 0, ∃ I, ∀ i ≥ I, ‖(orthogonalProjection (U i) y : E) - y‖ < ε by
     simpa only [proj_x, NormedAddCommGroup.tendsto_at_top] using this
   intro ε hε
@@ -1246,8 +1246,8 @@ they provide an internal direct sum decomposition of `E`) if and only if their s
 orthogonal complement. -/
 theorem OrthogonalFamily.is_internal_iff_of_is_complete [DecidableEq ι] {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ)
-    (hc : IsComplete (↑(supr V) : Set E)) : DirectSum.IsInternal V ↔ (supr V)ᗮ = ⊥ := by
-  haveI : CompleteSpace ↥(supr V) := hc.complete_space_coe
+    (hc : IsComplete (↑(supᵢ V) : Set E)) : DirectSum.IsInternal V ↔ (supᵢ V)ᗮ = ⊥ := by
+  haveI : CompleteSpace ↥(supᵢ V) := hc.complete_space_coe
   simp only [DirectSum.is_internal_submodule_iff_independent_and_supr_eq_top, hV.independent,
     true_and_iff, Submodule.orthogonal_eq_bot_iff]
 #align
@@ -1259,8 +1259,8 @@ orthogonal complement. -/
 theorem OrthogonalFamily.is_internal_iff [DecidableEq ι] [FiniteDimensional 𝕜 E]
     {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
-    DirectSum.IsInternal V ↔ (supr V)ᗮ = ⊥ :=
-  haveI h := FiniteDimensional.properIsROrC 𝕜 ↥(supr V)
+    DirectSum.IsInternal V ↔ (supᵢ V)ᗮ = ⊥ :=
+  haveI h := FiniteDimensional.properIsROrC 𝕜 ↥(supᵢ V)
   hV.is_internal_iff_of_is_complete (complete_space_coe_iff_is_complete.mp inferInstance)
 #align orthogonal_family.is_internal_iff OrthogonalFamily.is_internal_iff
 

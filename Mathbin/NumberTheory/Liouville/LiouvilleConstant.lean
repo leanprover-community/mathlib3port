@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.liouville_constant
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,7 +135,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
           one_div_pow_le_one_div_pow_of_le m1.le (b.add_factorial_succ_le_factorial_add_succ n))
         (-- 3. the term with index `i = 2` of the first series is strictly smaller than
           -- the corresponding term of the second series
-          one_div_pow_strict_anti
+          one_div_pow_strictAnti
           m1 (n.add_factorial_succ_lt_factorial_add_succ rfl.le))
         (-- 4. the second series is summable, since its terms grow quickly
           summable_one_div_pow_of_le

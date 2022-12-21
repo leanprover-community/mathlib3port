@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.closure
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -276,8 +276,8 @@ variable [CompleteLattice α] (c : ClosureOperator α)
 
 @[simp]
 theorem closure_supr_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f i) :=
-  le_antisymm ((c.le_closure_iff _ _).1 <| supr_le fun i => c.Monotone <| le_supr f i) <|
-    c.Monotone <| supr_mono fun i => c.le_closure _
+  le_antisymm ((c.le_closure_iff _ _).1 <| supᵢ_le fun i => c.Monotone <| le_supᵢ f i) <|
+    c.Monotone <| supᵢ_mono fun i => c.le_closure _
 #align closure_operator.closure_supr_closure ClosureOperator.closure_supr_closure
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -285,8 +285,8 @@ theorem closure_supr_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f 
 @[simp]
 theorem closure_supr₂_closure (f : ∀ i, κ i → α) :
     c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
-  le_antisymm ((c.le_closure_iff _ _).1 <| supr₂_le fun i j => c.Monotone <| le_supr₂ i j) <|
-    c.Monotone <| supr₂_mono fun i j => c.le_closure _
+  le_antisymm ((c.le_closure_iff _ _).1 <| supᵢ₂_le fun i j => c.Monotone <| le_supᵢ₂ i j) <|
+    c.Monotone <| supᵢ₂_mono fun i j => c.le_closure _
 #align closure_operator.closure_supr₂_closure ClosureOperator.closure_supr₂_closure
 
 end CompleteLattice

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.normal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,7 +250,7 @@ instance normalSupr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i,
     · exact finset.prod_ne_zero_iff.mpr fun i hi => minpoly.ne_zero ((h i.1).IsIntegral i.2)
     · exact Polynomial.splits_comp_of_splits _ (algebraMap (t i.1) K) ((h i.1).Splits i.2)
   have hE : E ≤ ⨆ i, t i := by
-    refine' supr_le fun i => supr_le fun hi => le_supr_of_le i.1 _
+    refine' supᵢ_le fun i => supᵢ_le fun hi => le_supᵢ_of_le i.1 _
     rw [adjoin_le_iff, ← image_root_set ((h i.1).Splits i.2) (t i.1).val]
     exact fun _ ⟨a, _, h⟩ => h ▸ a.2
   have := hF.splits ⟨x, hx⟩
@@ -461,17 +461,17 @@ variable (F K) (L : Type _) [Field L] [Algebra F L] [Algebra K L] [IsScalarTower
 noncomputable def normalClosure : IntermediateField K L :=
   { (⨆ f : K →ₐ[F] L, f.fieldRange).toSubfield with
     algebra_map_mem' := fun r =>
-      le_supr (fun f : K →ₐ[F] L => f.fieldRange) (IsScalarTower.toAlgHom F K L) ⟨r, rfl⟩ }
+      le_supᵢ (fun f : K →ₐ[F] L => f.fieldRange) (IsScalarTower.toAlgHom F K L) ⟨r, rfl⟩ }
 #align normal_closure normalClosure
 
 namespace normalClosure
 
 theorem restrict_scalars_eq_supr_adjoin [h : Normal F L] :
     (normalClosure F K L).restrictScalars F = ⨆ x : K, adjoin F ((minpoly F x).rootSet L) := by
-  refine' le_antisymm (supr_le _) (supr_le fun x => adjoin_le_iff.mpr fun y hy => _)
+  refine' le_antisymm (supᵢ_le _) (supᵢ_le fun x => adjoin_le_iff.mpr fun y hy => _)
   · rintro f _ ⟨x, rfl⟩
     refine'
-      le_supr (fun x => adjoin F ((minpoly F x).rootSet L)) x
+      le_supᵢ (fun x => adjoin F ((minpoly F x).rootSet L)) x
         (subset_adjoin F ((minpoly F x).rootSet L) _)
     rw [mem_root_set_of_ne, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom,
       Polynomial.aeval_alg_hom_apply, minpoly.aeval, map_zero]
@@ -486,7 +486,7 @@ theorem restrict_scalars_eq_supr_adjoin [h : Normal F L] :
               (h.is_integral (algebraMap K L x)))).symm
         ⟨y, hy⟩
     refine'
-      le_supr (fun f : K →ₐ[F] L => f.fieldRange)
+      le_supᵢ (fun f : K →ₐ[F] L => f.fieldRange)
         ((g.lift_normal L).comp (IsScalarTower.toAlgHom F K L))
         ⟨x, (g.lift_normal_commutes L (adjoin_simple.gen F x)).trans _⟩
     rw [Algebra.id.map_eq_id, RingHom.id_apply]

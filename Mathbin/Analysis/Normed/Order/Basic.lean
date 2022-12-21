@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.order.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,11 +94,11 @@ noncomputable instance : NormedLinearOrderedField ℝ :=
 
 @[to_additive]
 instance [NormedOrderedGroup α] : NormedOrderedGroup αᵒᵈ :=
-  { NormedOrderedGroup.toNormedCommGroup, instOrderedCommGroupOrderDual with }
+  { NormedOrderedGroup.toNormedCommGroup, OrderDual.orderedCommGroup with }
 
 @[to_additive]
 instance [NormedLinearOrderedGroup α] : NormedLinearOrderedGroup αᵒᵈ :=
-  { OrderDual.normedOrderedGroup, OrderDual.instLinearOrderOrderDual _ with }
+  { OrderDual.normedOrderedGroup, OrderDual.linearOrder _ with }
 
 instance [NormedOrderedGroup α] : NormedOrderedAddGroup (Additive α) :=
   { Additive.normedAddCommGroup with }

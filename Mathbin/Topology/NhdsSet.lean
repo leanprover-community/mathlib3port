@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.nhds_set
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {s t s₁ 
 
 /-- The filter of neighborhoods of a set in a topological space. -/
 def nhdsSet (s : Set α) : Filter α :=
-  sup (nhds '' s)
+  supₛ (nhds '' s)
 #align nhds_set nhdsSet
 
 -- mathport name: nhds_set
@@ -113,19 +113,19 @@ theorem nhds_set_univ : 𝓝ˢ (univ : Set α) = ⊤ := by rw [is_open_univ.nhds
 
 @[mono]
 theorem nhds_set_mono (h : s ⊆ t) : 𝓝ˢ s ≤ 𝓝ˢ t :=
-  Sup_le_Sup <| image_subset _ h
+  supₛ_le_supₛ <| image_subset _ h
 #align nhds_set_mono nhds_set_mono
 
 theorem monotone_nhds_set : Monotone (𝓝ˢ : Set α → Filter α) := fun s t => nhds_set_mono
 #align monotone_nhds_set monotone_nhds_set
 
 theorem nhds_le_nhds_set (h : x ∈ s) : 𝓝 x ≤ 𝓝ˢ s :=
-  le_Sup <| mem_image_of_mem _ h
+  le_supₛ <| mem_image_of_mem _ h
 #align nhds_le_nhds_set nhds_le_nhds_set
 
 @[simp]
 theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t := by
-  simp only [nhdsSet, image_union, Sup_union]
+  simp only [nhdsSet, image_union, supₛ_union]
 #align nhds_set_union nhds_set_union
 
 theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by

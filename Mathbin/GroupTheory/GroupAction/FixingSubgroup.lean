@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Chambert-Loir
 
 ! This file was ported from Lean 3 source module group_theory.group_action.fixing_subgroup
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ theorem fixed_points_submonoid_sup {P Q : Submonoid M} :
 
 /-- Fixed points of supr of submonoids is intersection -/
 theorem fixed_points_submonoid_supr {ι : Sort _} {P : ι → Submonoid M} :
-    fixedPoints (↥(supr P)) α = ⋂ i, fixedPoints (P i) α :=
+    fixedPoints (↥(supᵢ P)) α = ⋂ i, fixedPoints (P i) α :=
   (fixing_submonoid_fixed_points_gc M α).u_infi
 #align fixed_points_submonoid_supr fixed_points_submonoid_supr
 
@@ -158,7 +158,7 @@ theorem fixed_points_subgroup_sup {P Q : Subgroup M} :
 
 /-- Fixed points of supr of subgroups is intersection -/
 theorem fixed_points_subgroup_supr {ι : Sort _} {P : ι → Subgroup M} :
-    fixedPoints (↥(supr P)) α = ⋂ i, fixedPoints (P i) α :=
+    fixedPoints (↥(supᵢ P)) α = ⋂ i, fixedPoints (P i) α :=
   (fixing_subgroup_fixed_points_gc M α).u_infi
 #align fixed_points_subgroup_supr fixed_points_subgroup_supr
 

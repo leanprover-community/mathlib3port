@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.ratfunc
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -192,7 +192,7 @@ theorem mk_coe_def (p : K[X]) (q : K[X]⁰) :
 
 theorem mk_def_of_mem (p : K[X]) {q} (hq : q ∈ K[X]⁰) :
     Ratfunc.mk p q = of_fraction_ring (IsLocalization.mk' _ p ⟨q, hq⟩) := by
-  simp only [← mk_coe_def, SetLike.coe_mk]
+  simp only [← mk_coe_def, [anonymous]]
 #align ratfunc.mk_def_of_mem Ratfunc.mk_def_of_mem
 
 theorem mk_def_of_ne (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
@@ -214,7 +214,7 @@ theorem mk_one' (p : K[X]) : Ratfunc.mk p 1 = of_fraction_ring (algebraMap _ _ p
 theorem mk_eq_mk {p q p' q' : K[X]} (hq : q ≠ 0) (hq' : q' ≠ 0) :
     Ratfunc.mk p q = Ratfunc.mk p' q' ↔ p * q' = p' * q := by
   rw [mk_def_of_ne _ hq, mk_def_of_ne _ hq', of_fraction_ring_injective.eq_iff,
-    IsLocalization.mk'_eq_iff_eq, SetLike.coe_mk, SetLike.coe_mk,
+    IsLocalization.mk'_eq_iff_eq, [anonymous], [anonymous],
     (IsFractionRing.injective K[X] (FractionRing K[X])).eq_iff]
 #align ratfunc.mk_eq_mk Ratfunc.mk_eq_mk
 
@@ -229,7 +229,7 @@ theorem lift_on_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p
       lift_on_of_fraction_ring_mk, Submonoid.coe_one]
   ·
     simp only [mk_eq_localization_mk _ hq, Localization.lift_on_mk, lift_on_of_fraction_ring_mk,
-      SetLike.coe_mk]
+      [anonymous]]
 #align ratfunc.lift_on_mk Ratfunc.lift_on_mk
 
 theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X], P}
@@ -642,7 +642,7 @@ theorem map_injective [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S
   ·
     simpa only [map_apply_of_fraction_ring_mk, of_fraction_ring_injective.eq_iff,
       Localization.mk_eq_mk_iff, Localization.r_iff_exists, mul_cancel_right_coe_non_zero_divisor,
-      exists_const, SetLike.coe_mk, ← map_mul, hf.eq_iff] using h
+      exists_const, [anonymous], ← map_mul, hf.eq_iff] using h
   · rfl
   · rfl
 #align ratfunc.map_injective Ratfunc.map_injective
@@ -661,7 +661,7 @@ def mapRingHom [RingHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.co
     map_add' := by 
       rintro ⟨x⟩ ⟨y⟩; induction x; induction y
       ·
-        simp only [← of_fraction_ring_add, Localization.add_mk, map_add, SetLike.coe_mk, map_mul,
+        simp only [← of_fraction_ring_add, Localization.add_mk, map_add, [anonymous], map_mul,
           MonoidHom.to_fun_eq_coe, map_apply_of_fraction_ring_mk, Submonoid.mk_mul_mk,
           Submonoid.coe_mul]
       · rfl
@@ -842,7 +842,7 @@ theorem map_apply_div_ne_zero {R F : Type _} [CommRing R] [IsDomain R] [MonoidHo
   by 
   have hq' : φ q ≠ 0 := nonZeroDivisors.ne_zero (hφ (mem_non_zero_divisors_iff_ne_zero.mpr hq))
   simp only [← mk_eq_div, mk_eq_localization_mk _ hq, map_apply_of_fraction_ring_mk,
-    mk_eq_localization_mk _ hq', SetLike.coe_mk]
+    mk_eq_localization_mk _ hq', [anonymous]]
 #align ratfunc.map_apply_div_ne_zero Ratfunc.map_apply_div_ne_zero
 
 @[simp]

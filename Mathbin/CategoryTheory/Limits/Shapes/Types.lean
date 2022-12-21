@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.types
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -330,7 +330,7 @@ theorem binary_cofan_is_colimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
       · intro T f g
         ext x
         dsimp
-        simp only [forall_exists_index, Equiv.of_injective_symm_apply, dif_ctx_congr,
+        simp only [forall_exists_index, Equiv.ofInjective_symm_apply, dif_ctx_congr,
           dite_eq_right_iff]
         intro y e
         have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
@@ -339,7 +339,7 @@ theorem binary_cofan_is_colimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
       · rintro T _ _ m rfl rfl
         ext x
         dsimp
-        split_ifs <;> exact congr_arg _ (Equiv.apply_of_injective_symm _ ⟨_, _⟩).symm
+        split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
 #align
   category_theory.limits.types.binary_cofan_is_colimit_iff CategoryTheory.Limits.Types.binary_cofan_is_colimit_iff
 

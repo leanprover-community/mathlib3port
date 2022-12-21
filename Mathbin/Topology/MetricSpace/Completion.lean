@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.completion
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,7 +176,7 @@ protected theorem uniformity_dist' :
 #align uniform_space.completion.uniformity_dist' UniformSpace.Completion.uniformity_dist'
 
 protected theorem uniformity_dist : 𝓤 (Completion α) = ⨅ ε > 0, 𝓟 { p | dist p.1 p.2 < ε } := by
-  simpa [infi_subtype] using @completion.uniformity_dist' α _
+  simpa [infᵢ_subtype] using @completion.uniformity_dist' α _
 #align uniform_space.completion.uniformity_dist UniformSpace.Completion.uniformity_dist
 
 /-- Metric space structure on the completion of a pseudo_metric space. -/

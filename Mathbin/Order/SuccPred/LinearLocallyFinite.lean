@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.succ_pred.linear_locally_finite
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,18 +69,18 @@ noncomputable def succFn (i : ι) : ι :=
   (exists_glb_Ioi i).some
 #align linear_locally_finite_order.succ_fn LinearLocallyFiniteOrder.succFn
 
-theorem succ_fn_spec (i : ι) : IsGlb (Set.ioi i) (succFn i) :=
+theorem succ_fn_spec (i : ι) : IsGLB (Set.Ioi i) (succFn i) :=
   (exists_glb_Ioi i).some_spec
 #align linear_locally_finite_order.succ_fn_spec LinearLocallyFiniteOrder.succ_fn_spec
 
 theorem le_succ_fn (i : ι) : i ≤ succFn i := by
-  rw [le_is_glb_iff (succ_fn_spec i), mem_lower_bounds]
+  rw [le_isGLB_iff (succ_fn_spec i), mem_lowerBounds]
   exact fun x hx => le_of_lt hx
 #align linear_locally_finite_order.le_succ_fn LinearLocallyFiniteOrder.le_succ_fn
 
-theorem is_glb_Ioc_of_is_glb_Ioi {i j k : ι} (hij_lt : i < j) (h : IsGlb (Set.ioi i) k) :
-    IsGlb (Set.ioc i j) k := by
-  simp_rw [IsGlb, IsGreatest, mem_upper_bounds, mem_lower_bounds] at h⊢
+theorem is_glb_Ioc_of_is_glb_Ioi {i j k : ι} (hij_lt : i < j) (h : IsGLB (Set.Ioi i) k) :
+    IsGLB (Set.Ioc i j) k := by
+  simp_rw [IsGLB, IsGreatest, mem_upperBounds, mem_lowerBounds] at h⊢
   refine' ⟨fun x hx => h.1 x hx.1, fun x hx => h.2 x _⟩
   intro y hy
   cases' le_or_lt y j with h_le h_lt
@@ -92,7 +92,7 @@ theorem is_glb_Ioc_of_is_glb_Ioi {i j k : ι} (hij_lt : i < j) (h : IsGlb (Set.i
 theorem is_max_of_succ_fn_le [LocallyFiniteOrder ι] (i : ι) (hi : succFn i ≤ i) : IsMax i := by
   refine' fun j hij => not_lt.mp fun hij_lt => _
   have h_succ_fn_eq : succ_fn i = i := le_antisymm hi (le_succ_fn i)
-  have h_glb : IsGlb (Finset.ioc i j : Set ι) i := by
+  have h_glb : IsGLB (Finset.ioc i j : Set ι) i := by
     rw [Finset.coe_Ioc]
     have h := succ_fn_spec i
     rw [h_succ_fn_eq] at h
@@ -107,14 +107,14 @@ theorem is_max_of_succ_fn_le [LocallyFiniteOrder ι] (i : ι) (hi : succFn i ≤
 
 theorem succ_fn_le_of_lt (i j : ι) (hij : i < j) : succFn i ≤ j := by
   have h := succ_fn_spec i
-  rw [IsGlb, IsGreatest, mem_lower_bounds] at h
+  rw [IsGLB, IsGreatest, mem_lowerBounds] at h
   exact h.1 j hij
 #align linear_locally_finite_order.succ_fn_le_of_lt LinearLocallyFiniteOrder.succ_fn_le_of_lt
 
 theorem le_of_lt_succ_fn (j i : ι) (hij : j < succFn i) : j ≤ i := by
-  rw [lt_is_glb_iff (succ_fn_spec i)] at hij
+  rw [lt_isGLB_iff (succ_fn_spec i)] at hij
   obtain ⟨k, hk_lb, hk⟩ := hij
-  rw [mem_lower_bounds] at hk_lb
+  rw [mem_lowerBounds] at hk_lb
   exact not_lt.mp fun hi_lt_j => not_le.mpr hk (hk_lb j hi_lt_j)
 #align linear_locally_finite_order.le_of_lt_succ_fn LinearLocallyFiniteOrder.le_of_lt_succ_fn
 
@@ -292,11 +292,11 @@ theorem to_Z_iterate_pred_of_not_is_min (n : ℕ) (hn : ¬IsMin ((pred^[n]) i0))
 theorem le_of_to_Z_le {j : ι} (h_le : toZ i0 i ≤ toZ i0 j) : i ≤ j := by
   cases' le_or_lt i0 i with hi hi <;> cases' le_or_lt i0 j with hj hj
   · rw [← iterate_succ_to_Z i hi, ← iterate_succ_to_Z j hj]
-    exact Monotone.monotone_iterate_of_le_map succ_mono (le_succ _) (Int.to_nat_le_to_nat h_le)
+    exact Monotone.monotone_iterate_of_le_map succ_mono (le_succ _) (Int.toNat_le_toNat h_le)
   · exact absurd ((to_Z_neg hj).trans_le (to_Z_nonneg hi)) (not_lt.mpr h_le)
   · exact hi.le.trans hj
   · rw [← iterate_pred_to_Z i hi, ← iterate_pred_to_Z j hj]
-    refine' Monotone.antitone_iterate_of_map_le pred_mono (pred_le _) (Int.to_nat_le_to_nat _)
+    refine' Monotone.antitone_iterate_of_map_le pred_mono (pred_le _) (Int.toNat_le_toNat _)
     exact neg_le_neg h_le
 #align le_of_to_Z_le le_of_to_Z_le
 
@@ -424,7 +424,7 @@ def orderIsoNatOfLinearSuccPredArch [NoMaxOrder ι] [OrderBot ι] :
     rw [to_Z_iterate_succ]
     exact Int.toNat_coe_nat n
   map_rel_iff' i j := by 
-    simp only [Equiv.coe_fn_mk, Int.to_nat_le]
+    simp only [Equiv.coe_fn_mk, Int.toNat_le]
     rw [← @to_Z_le_iff ι _ _ _ _ ⊥, Int.toNat_of_nonneg (to_Z_nonneg bot_le)]
 #align order_iso_nat_of_linear_succ_pred_arch orderIsoNatOfLinearSuccPredArch
 
@@ -437,14 +437,14 @@ def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] :
           1) where 
   toFun i :=
     ⟨(toZ ⊥ i).toNat,
-      Finset.mem_range_succ_iff.mpr (Int.to_nat_le_to_nat ((to_Z_le_iff _ _).mpr le_top))⟩
+      Finset.mem_range_succ_iff.mpr (Int.toNat_le_toNat ((to_Z_le_iff _ _).mpr le_top))⟩
   invFun n := (succ^[n]) ⊥
   left_inv i := iterate_succ_to_Z i bot_le
   right_inv n := by 
     ext1
     simp only [Subtype.coe_mk]
     refine' le_antisymm _ _
-    · rw [Int.to_nat_le]
+    · rw [Int.toNat_le]
       exact to_Z_iterate_succ_le _
     by_cases hn_max : IsMax ((succ^[↑n]) (⊥ : ι))
     · rw [← isTop_iff_is_max, isTop_iff_eq_top] at hn_max
@@ -453,7 +453,7 @@ def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] :
     · rw [to_Z_iterate_succ_of_not_is_max _ hn_max]
       simp only [Int.toNat_coe_nat]
   map_rel_iff' i j := by
-    simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, Int.to_nat_le]
+    simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, Int.toNat_le]
     rw [← @to_Z_le_iff ι _ _ _ _ ⊥, Int.toNat_of_nonneg (to_Z_nonneg bot_le)]
 #align order_iso_range_of_linear_succ_pred_arch orderIsoRangeOfLinearSuccPredArch
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.ordmap.ordset
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -906,7 +906,7 @@ theorem Bounded.dual :
 theorem Bounded.dual_iff {t : Ordnode α} {o₁ o₂} :
     Bounded t o₁ o₂ ↔ @Bounded αᵒᵈ _ (dual t) o₂ o₁ :=
   ⟨Bounded.dual, fun h => by
-    have := bounded.dual h <;> rwa [dual_dual, OrderDual.preorder.dual_dual] at this⟩
+    have := bounded.dual h <;> rwa [dual_dual, OrderDual.Preorder.dual_dual] at this⟩
 #align ordnode.bounded.dual_iff Ordnode.Bounded.dual_iff
 
 theorem Bounded.weak_left : ∀ {t : Ordnode α} {o₁ o₂}, Bounded t o₁ o₂ → Bounded t ⊥ o₂
@@ -1072,7 +1072,7 @@ theorem Valid'.dual : ∀ {t : Ordnode α} {o₁ o₂} (h : Valid' o₁ t o₂),
 
 theorem Valid'.dual_iff {t : Ordnode α} {o₁ o₂} : Valid' o₁ t o₂ ↔ @Valid' αᵒᵈ _ o₂ (dual t) o₁ :=
   ⟨Valid'.dual, fun h => by
-    have := valid'.dual h <;> rwa [dual_dual, OrderDual.preorder.dual_dual] at this⟩
+    have := valid'.dual h <;> rwa [dual_dual, OrderDual.Preorder.dual_dual] at this⟩
 #align ordnode.valid'.dual_iff Ordnode.Valid'.dual_iff
 
 theorem Valid.dual {t : Ordnode α} : Valid t → @Valid αᵒᵈ _ (dual t) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module logic.equiv.embedding
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,6 +26,7 @@ open Function.Embedding
 
 namespace Equiv
 
+#print Equiv.sumEmbeddingEquivProdEmbeddingDisjoint /-
 /-- Embeddings from a sum type are equivalent to two separate embeddings with disjoint ranges. -/
 def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
     (Sum α β ↪ γ) ≃
@@ -66,7 +67,9 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
     constructor <;> ext <;> simp!
 #align
   equiv.sum_embedding_equiv_prod_embedding_disjoint Equiv.sumEmbeddingEquivProdEmbeddingDisjoint
+-/
 
+#print Equiv.codRestrict /-
 /-- Embeddings whose range lies within a set are equivalent to embeddings to that set.
 This is `function.embedding.cod_restrict` as an equiv. -/
 def codRestrict (α : Type _) {β : Type _} (bs : Set β) :
@@ -77,7 +80,9 @@ def codRestrict (α : Type _) {β : Type _} (bs : Set β) :
   left_inv x := by ext <;> rfl
   right_inv x := by ext <;> rfl
 #align equiv.cod_restrict Equiv.codRestrict
+-/
 
+#print Equiv.prodEmbeddingDisjointEquivSigmaEmbeddingRestricted /-
 /-- Pairs of embeddings with disjoint ranges are equivalent to a dependent sum of embeddings,
 in which the second embedding cannot take values in the range of the first. -/
 def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
@@ -92,7 +97,14 @@ def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
         (codRestrict _ _)
 #align
   equiv.prod_embedding_disjoint_equiv_sigma_embedding_restricted Equiv.prodEmbeddingDisjointEquivSigmaEmbeddingRestricted
+-/
 
+/- warning: equiv.sum_embedding_equiv_sigma_embedding_restricted -> Equiv.sumEmbeddingEquivSigmaEmbeddingRestricted is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}}, Equiv.{max 1 (max (succ u1) (succ u2)) (succ u3), max (succ (max u1 u3)) (succ (max u2 u3))} (Function.Embedding.{max (succ u1) (succ u2), succ u3} (Sum.{u1, u2} α β) γ) (Sigma.{max u1 u3, max u2 u3} (Function.Embedding.{succ u1, succ u3} α γ) (fun (f : Function.Embedding.{succ u1, succ u3} α γ) => Function.Embedding.{succ u2, succ u3} β (coeSort.{succ u3, succ (succ u3)} (Set.{u3} γ) Type.{u3} (Set.hasCoeToSort.{u3} γ) (HasCompl.compl.{u3} (Set.{u3} γ) (BooleanAlgebra.toHasCompl.{u3} (Set.{u3} γ) (Set.booleanAlgebra.{u3} γ)) (Set.range.{u3, succ u1} γ α (coeFn.{max 1 (succ u1) (succ u3), max (succ u1) (succ u3)} (Function.Embedding.{succ u1, succ u3} α γ) (fun (_x : Function.Embedding.{succ u1, succ u3} α γ) => α -> γ) (Function.Embedding.hasCoeToFun.{succ u1, succ u3} α γ) f))))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}}, Equiv.{max (succ u3) (succ u2) (succ u1), max (succ (max u2 u3)) (succ (max u1 u3))} (Function.Embedding.{max (succ u2) (succ u1), succ u3} (Sum.{u1, u2} α β) γ) (Sigma.{max u1 u3, max u2 u3} (Function.Embedding.{succ u1, succ u3} α γ) (fun (f : Function.Embedding.{succ u1, succ u3} α γ) => Function.Embedding.{succ u2, succ u3} β (Set.Elem.{u3} γ (HasCompl.compl.{u3} (Set.{u3} γ) (BooleanAlgebra.toHasCompl.{u3} (Set.{u3} γ) (Set.instBooleanAlgebraSet.{u3} γ)) (Set.range.{u3, succ u1} γ α (FunLike.coe.{max (succ u1) (succ u3), succ u1, succ u3} (Function.Embedding.{succ u1, succ u3} α γ) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u3), succ u1, succ u3} (Function.Embedding.{succ u1, succ u3} α γ) α γ (Function.instEmbeddingLikeEmbedding.{succ u1, succ u3} α γ)) f))))))
+Case conversion may be inaccurate. Consider using '#align equiv.sum_embedding_equiv_sigma_embedding_restricted Equiv.sumEmbeddingEquivSigmaEmbeddingRestrictedₓ'. -/
 /-- A combination of the above results, allowing us to turn one embedding over a sum type
 into two dependent embeddings, the second of which avoids any members of the range
 of the first. This is helpful for constructing larger embeddings out of smaller ones. -/
@@ -103,6 +115,7 @@ def sumEmbeddingEquivSigmaEmbeddingRestricted {α β γ : Type _} :
 #align
   equiv.sum_embedding_equiv_sigma_embedding_restricted Equiv.sumEmbeddingEquivSigmaEmbeddingRestricted
 
+#print Equiv.uniqueEmbeddingEquivResult /-
 /-- Embeddings from a single-member type are equivalent to members of the target type. -/
 def uniqueEmbeddingEquivResult {α β : Type _} [Unique α] :
     (α ↪ β) ≃ β where 
@@ -114,6 +127,7 @@ def uniqueEmbeddingEquivResult {α β : Type _} [Unique α] :
     congr
   right_inv _ := by simp
 #align equiv.unique_embedding_equiv_result Equiv.uniqueEmbeddingEquivResult
+-/
 
 end Equiv
 

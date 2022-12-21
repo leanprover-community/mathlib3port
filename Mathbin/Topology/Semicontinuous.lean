@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.semicontinuous
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -260,13 +260,13 @@ end
 
 
 theorem lower_semicontinuous_iff_is_open_preimage :
-    LowerSemicontinuous f ↔ ∀ y, IsOpen (f ⁻¹' ioi y) :=
+    LowerSemicontinuous f ↔ ∀ y, IsOpen (f ⁻¹' Ioi y) :=
   ⟨fun H y => is_open_iff_mem_nhds.2 fun x hx => H x y hx, fun H x y y_lt =>
     IsOpen.mem_nhds (H y) y_lt⟩
 #align lower_semicontinuous_iff_is_open_preimage lower_semicontinuous_iff_is_open_preimage
 
 theorem LowerSemicontinuous.is_open_preimage (hf : LowerSemicontinuous f) (y : β) :
-    IsOpen (f ⁻¹' ioi y) :=
+    IsOpen (f ⁻¹' Ioi y) :=
   lower_semicontinuous_iff_is_open_preimage.1 hf y
 #align lower_semicontinuous.is_open_preimage LowerSemicontinuous.is_open_preimage
 
@@ -276,7 +276,7 @@ variable {γ : Type _} [LinearOrder γ]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
 theorem lower_semicontinuous_iff_is_closed_preimage {f : α → γ} :
-    LowerSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' iic y) := by
+    LowerSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' Iic y) := by
   rw [lower_semicontinuous_iff_is_open_preimage]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
@@ -284,7 +284,7 @@ theorem lower_semicontinuous_iff_is_closed_preimage {f : α → γ} :
 #align lower_semicontinuous_iff_is_closed_preimage lower_semicontinuous_iff_is_closed_preimage
 
 theorem LowerSemicontinuous.is_closed_preimage {f : α → γ} (hf : LowerSemicontinuous f) (y : γ) :
-    IsClosed (f ⁻¹' iic y) :=
+    IsClosed (f ⁻¹' Iic y) :=
   lower_semicontinuous_iff_is_closed_preimage.1 hf y
 #align lower_semicontinuous.is_closed_preimage LowerSemicontinuous.is_closed_preimage
 
@@ -577,7 +577,7 @@ theorem lower_semicontinuous_within_at_csupr {f : ι → α → δ'}
     (h : ∀ i, LowerSemicontinuousWithinAt (f i) s x) :
     LowerSemicontinuousWithinAt (fun x' => ⨆ i, f i x') s x := by
   cases isEmpty_or_nonempty ι
-  · simpa only [supr_of_empty'] using lower_semicontinuous_within_at_const
+  · simpa only [supᵢ_of_empty'] using lower_semicontinuous_within_at_const
   · intro y hy
     rcases exists_lt_of_lt_csupr hy with ⟨i, hi⟩
     filter_upwards [h i y hi, bdd] with y hy hy' using hy.trans_le (le_csupr hy' i)
@@ -813,13 +813,13 @@ end
 
 
 theorem upper_semicontinuous_iff_is_open_preimage :
-    UpperSemicontinuous f ↔ ∀ y, IsOpen (f ⁻¹' iio y) :=
+    UpperSemicontinuous f ↔ ∀ y, IsOpen (f ⁻¹' Iio y) :=
   ⟨fun H y => is_open_iff_mem_nhds.2 fun x hx => H x y hx, fun H x y y_lt =>
     IsOpen.mem_nhds (H y) y_lt⟩
 #align upper_semicontinuous_iff_is_open_preimage upper_semicontinuous_iff_is_open_preimage
 
 theorem UpperSemicontinuous.is_open_preimage (hf : UpperSemicontinuous f) (y : β) :
-    IsOpen (f ⁻¹' iio y) :=
+    IsOpen (f ⁻¹' Iio y) :=
   upper_semicontinuous_iff_is_open_preimage.1 hf y
 #align upper_semicontinuous.is_open_preimage UpperSemicontinuous.is_open_preimage
 
@@ -829,7 +829,7 @@ variable {γ : Type _} [LinearOrder γ]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
 theorem upper_semicontinuous_iff_is_closed_preimage {f : α → γ} :
-    UpperSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' ici y) := by
+    UpperSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' Ici y) := by
   rw [upper_semicontinuous_iff_is_open_preimage]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
@@ -837,7 +837,7 @@ theorem upper_semicontinuous_iff_is_closed_preimage {f : α → γ} :
 #align upper_semicontinuous_iff_is_closed_preimage upper_semicontinuous_iff_is_closed_preimage
 
 theorem UpperSemicontinuous.is_closed_preimage {f : α → γ} (hf : UpperSemicontinuous f) (y : γ) :
-    IsClosed (f ⁻¹' ici y) :=
+    IsClosed (f ⁻¹' Ici y) :=
   upper_semicontinuous_iff_is_closed_preimage.1 hf y
 #align upper_semicontinuous.is_closed_preimage UpperSemicontinuous.is_closed_preimage
 

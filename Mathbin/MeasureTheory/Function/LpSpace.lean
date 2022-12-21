@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1499,7 +1499,7 @@ theorem ae_bdd_liminf_at_top_rpow_of_snorm_bdd {p : ℝ≥0∞} {f : ℕ → α 
   simp_rw [snorm_eq_lintegral_rpow_nnnorm hp hp'] at hbdd
   simp_rw [liminf_eq, eventually_at_top]
   exact
-    Sup_le fun b ⟨a, ha⟩ =>
+    supₛ_le fun b ⟨a, ha⟩ =>
       (ha a le_rfl).trans ((Ennreal.rpow_one_div_le_iff (Ennreal.to_real_pos hp hp')).1 (hbdd _))
 #align
   measure_theory.ae_bdd_liminf_at_top_rpow_of_snorm_bdd MeasureTheory.ae_bdd_liminf_at_top_rpow_of_snorm_bdd

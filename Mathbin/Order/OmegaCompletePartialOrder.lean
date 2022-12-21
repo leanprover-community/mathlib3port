@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module order.omega_complete_partial_order
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -484,12 +484,12 @@ instance (priority := 100) [CompleteLattice α] :
     OmegaCompletePartialOrder α where 
   ωSup c := ⨆ i, c i
   ωSup_le := fun ⟨c, _⟩ s hs => by
-    simp only [supr_le_iff, OrderHom.coe_fun_mk] at hs⊢ <;> intro i <;> apply hs i
-  le_ωSup := fun ⟨c, _⟩ i => by simp only [OrderHom.coe_fun_mk] <;> apply le_supr_of_le i <;> rfl
+    simp only [supᵢ_le_iff, OrderHom.coe_fun_mk] at hs⊢ <;> intro i <;> apply hs i
+  le_ωSup := fun ⟨c, _⟩ i => by simp only [OrderHom.coe_fun_mk] <;> apply le_supᵢ_of_le i <;> rfl
 
 variable {α} {β : Type v} [OmegaCompletePartialOrder α] [CompleteLattice β]
 
-theorem Sup_continuous (s : Set <| α →o β) (hs : ∀ f ∈ s, Continuous f) : Continuous (sup s) := by
+theorem Sup_continuous (s : Set <| α →o β) (hs : ∀ f ∈ s, Continuous f) : Continuous (supₛ s) := by
   intro c
   apply eq_of_forall_ge_iff
   intro z
@@ -503,17 +503,17 @@ theorem supr_continuous {ι : Sort _} {f : ι → α →o β} (h : ∀ i, Contin
   Sup_continuous _ <| Set.forall_range_iff.2 h
 #align complete_lattice.supr_continuous CompleteLattice.supr_continuous
 
-theorem Sup_continuous' (s : Set (α → β)) (hc : ∀ f ∈ s, Continuous' f) : Continuous' (sup s) := by
+theorem Sup_continuous' (s : Set (α → β)) (hc : ∀ f ∈ s, Continuous' f) : Continuous' (supₛ s) := by
   lift s to Set (α →o β) using fun f hf => (hc f hf).to_monotone
   simp only [Set.ball_image_iff, continuous'_coe] at hc
-  rw [Sup_image]
+  rw [supₛ_image]
   norm_cast
   exact supr_continuous fun f => supr_continuous fun hf => hc f hf
 #align complete_lattice.Sup_continuous' CompleteLattice.Sup_continuous'
 
 theorem sup_continuous {f g : α →o β} (hf : Continuous f) (hg : Continuous g) :
     Continuous (f ⊔ g) := by 
-  rw [← Sup_pair]; apply Sup_continuous
+  rw [← supₛ_pair]; apply Sup_continuous
   rintro f (rfl | rfl | _) <;> assumption
 #align complete_lattice.sup_continuous CompleteLattice.sup_continuous
 
@@ -524,7 +524,7 @@ theorem top_continuous : Continuous (⊤ : α →o β) := by
 #align complete_lattice.top_continuous CompleteLattice.top_continuous
 
 theorem bot_continuous : Continuous (⊥ : α →o β) := by
-  rw [← Sup_empty]
+  rw [← supₛ_empty]
   exact Sup_continuous _ fun f hf => hf.elim
 #align complete_lattice.bot_continuous CompleteLattice.bot_continuous
 

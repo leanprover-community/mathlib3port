@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -368,7 +368,7 @@ theorem exists_norm_eq {c : ℝ} (hc : 0 ≤ c) : ∃ x : E, ‖x‖ = c := by
 #align exists_norm_eq exists_norm_eq
 
 @[simp]
-theorem range_norm : range (norm : E → ℝ) = ici 0 :=
+theorem range_norm : range (norm : E → ℝ) = Ici 0 :=
   Subset.antisymm (range_subset_iff.2 norm_nonneg) fun _ => exists_norm_eq E
 #align range_norm range_norm
 

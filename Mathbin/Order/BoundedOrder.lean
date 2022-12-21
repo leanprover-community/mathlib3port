@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.bounded_order
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -943,102 +943,62 @@ section Preorder
 
 variable [Preorder α]
 
-/- warning: monotone_and -> monotone_and is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {p : α -> Prop} {q : α -> Prop}, (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) p) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) q) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (fun (x : α) => And (p x) (q x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {p : α -> Prop} {q : α -> Prop}, (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) p) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) q) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (fun (x : α) => And (p x) (q x)))
-Case conversion may be inaccurate. Consider using '#align monotone_and monotone_andₓ'. -/
+#print monotone_and /-
 theorem monotone_and {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) :
     Monotone fun x => p x ∧ q x := fun a b h => And.imp (m_p h) (m_q h)
 #align monotone_and monotone_and
+-/
 
-/- warning: monotone_or -> monotone_or is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {p : α -> Prop} {q : α -> Prop}, (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) p) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) q) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (fun (x : α) => Or (p x) (q x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {p : α -> Prop} {q : α -> Prop}, (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) p) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) q) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (fun (x : α) => Or (p x) (q x)))
-Case conversion may be inaccurate. Consider using '#align monotone_or monotone_orₓ'. -/
+#print monotone_or /-
 -- Note: by finish [monotone] doesn't work
 theorem monotone_or {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) :
     Monotone fun x => p x ∨ q x := fun a b h => Or.imp (m_p h) (m_q h)
 #align monotone_or monotone_or
+-/
 
-/- warning: monotone_le -> monotone_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) ((fun (x._@.Mathlib.Order.BoundedOrder._hyg.4443 : α) (x._@.Mathlib.Order.BoundedOrder._hyg.4445 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.BoundedOrder._hyg.4443 x._@.Mathlib.Order.BoundedOrder._hyg.4445) x)
-Case conversion may be inaccurate. Consider using '#align monotone_le monotone_leₓ'. -/
+#print monotone_le /-
 theorem monotone_le {x : α} : Monotone ((· ≤ ·) x) := fun y z h' h => h.trans h'
 #align monotone_le monotone_le
+-/
 
-/- warning: monotone_lt -> monotone_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) ((fun (x._@.Mathlib.Order.BoundedOrder._hyg.4483 : α) (x._@.Mathlib.Order.BoundedOrder._hyg.4485 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.BoundedOrder._hyg.4483 x._@.Mathlib.Order.BoundedOrder._hyg.4485) x)
-Case conversion may be inaccurate. Consider using '#align monotone_lt monotone_ltₓ'. -/
+#print monotone_lt /-
 theorem monotone_lt {x : α} : Monotone ((· < ·) x) := fun y z h' h => h.trans_le h'
 #align monotone_lt monotone_lt
+-/
 
-/- warning: antitone_le -> antitone_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (fun (_x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) _x x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (fun (_x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) _x x)
-Case conversion may be inaccurate. Consider using '#align antitone_le antitone_leₓ'. -/
+#print antitone_le /-
 theorem antitone_le {x : α} : Antitone (· ≤ x) := fun y z h' h => h'.trans h
 #align antitone_le antitone_le
+-/
 
-/- warning: antitone_lt -> antitone_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (fun (_x : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) _x x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (fun (_x : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) _x x)
-Case conversion may be inaccurate. Consider using '#align antitone_lt antitone_ltₓ'. -/
+#print antitone_lt /-
 theorem antitone_lt {x : α} : Antitone (· < x) := fun y z h' h => h'.trans_lt h
 #align antitone_lt antitone_lt
+-/
 
-/- warning: monotone.forall -> Monotone.forall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {P : β -> α -> Prop}, (forall (x : β), Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (P x)) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (fun (y : α) => forall (x : β), P x y))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {P : β -> α -> Prop}, (forall (x : β), Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (P x)) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (fun (y : α) => forall (x : β), P x y))
-Case conversion may be inaccurate. Consider using '#align monotone.forall Monotone.forallₓ'. -/
+#print Monotone.forall /-
 theorem Monotone.forall {P : β → α → Prop} (hP : ∀ x, Monotone (P x)) :
     Monotone fun y => ∀ x, P x y := fun y y' hy h x => hP x hy <| h x
 #align monotone.forall Monotone.forall
+-/
 
-/- warning: antitone.forall -> Antitone.forall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {P : β -> α -> Prop}, (forall (x : β), Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (P x)) -> (Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (fun (y : α) => forall (x : β), P x y))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {P : β -> α -> Prop}, (forall (x : β), Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (P x)) -> (Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (fun (y : α) => forall (x : β), P x y))
-Case conversion may be inaccurate. Consider using '#align antitone.forall Antitone.forallₓ'. -/
+#print Antitone.forall /-
 theorem Antitone.forall {P : β → α → Prop} (hP : ∀ x, Antitone (P x)) :
     Antitone fun y => ∀ x, P x y := fun y y' hy h x => hP x hy (h x)
 #align antitone.forall Antitone.forall
+-/
 
-/- warning: monotone.ball -> Monotone.ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {P : β -> α -> Prop} {s : Set.{u2} β}, (forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (P x))) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (fun (y : α) => forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) -> (P x y)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {P : β -> α -> Prop} {s : Set.{u2} β}, (forall (x : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (P x))) -> (Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (fun (y : α) => forall (x : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) -> (P x y)))
-Case conversion may be inaccurate. Consider using '#align monotone.ball Monotone.ballₓ'. -/
+#print Monotone.ball /-
 theorem Monotone.ball {P : β → α → Prop} {s : Set β} (hP : ∀ x ∈ s, Monotone (P x)) :
     Monotone fun y => ∀ x ∈ s, P x y := fun y y' hy h x hx => hP x hx hy (h x hx)
 #align monotone.ball Monotone.ball
+-/
 
-/- warning: antitone.ball -> Antitone.ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {P : β -> α -> Prop} {s : Set.{u2} β}, (forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) -> (Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (P x))) -> (Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) (fun (y : α) => forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) -> (P x y)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {P : β -> α -> Prop} {s : Set.{u2} β}, (forall (x : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) -> (Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (P x))) -> (Antitone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) (fun (y : α) => forall (x : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) -> (P x y)))
-Case conversion may be inaccurate. Consider using '#align antitone.ball Antitone.ballₓ'. -/
+#print Antitone.ball /-
 theorem Antitone.ball {P : β → α → Prop} {s : Set β} (hP : ∀ x ∈ s, Antitone (P x)) :
     Antitone fun y => ∀ x ∈ s, P x y := fun y y' hy h x hx => hP x hx hy (h x hx)
 #align antitone.ball Antitone.ball
+-/
 
 end Preorder
 
@@ -1046,16 +1006,12 @@ section SemilatticeSup
 
 variable [SemilatticeSup α]
 
-/- warning: exists_ge_and_iff_exists -> exists_ge_and_iff_exists is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] {P : α -> Prop} {x₀ : α}, (Monotone.{u1, 0} α Prop (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) P) -> (Iff (Exists.{succ u1} α (fun (x : α) => And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x₀ x) (P x))) (Exists.{succ u1} α (fun (x : α) => P x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] {P : α -> Prop} {x₀ : α}, (Monotone.{u1, 0} α Prop (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) P) -> (Iff (Exists.{succ u1} α (fun (x : α) => And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x₀ x) (P x))) (Exists.{succ u1} α (fun (x : α) => P x)))
-Case conversion may be inaccurate. Consider using '#align exists_ge_and_iff_exists exists_ge_and_iff_existsₓ'. -/
+#print exists_ge_and_iff_exists /-
 theorem exists_ge_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Monotone P) :
     (∃ x, x₀ ≤ x ∧ P x) ↔ ∃ x, P x :=
   ⟨fun h => h.imp fun x h => h.2, fun ⟨x, hx⟩ => ⟨x ⊔ x₀, le_sup_right, hP le_sup_left hx⟩⟩
 #align exists_ge_and_iff_exists exists_ge_and_iff_exists
+-/
 
 end SemilatticeSup
 
@@ -1063,16 +1019,12 @@ section SemilatticeInf
 
 variable [SemilatticeInf α]
 
-/- warning: exists_le_and_iff_exists -> exists_le_and_iff_exists is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] {P : α -> Prop} {x₀ : α}, (Antitone.{u1, 0} α Prop (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{0} Prop PropCat.partialOrder) P) -> (Iff (Exists.{succ u1} α (fun (x : α) => And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x x₀) (P x))) (Exists.{succ u1} α (fun (x : α) => P x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] {P : α -> Prop} {x₀ : α}, (Antitone.{u1, 0} α Prop (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{0} Prop instPartialOrderProp) P) -> (Iff (Exists.{succ u1} α (fun (x : α) => And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x x₀) (P x))) (Exists.{succ u1} α (fun (x : α) => P x)))
-Case conversion may be inaccurate. Consider using '#align exists_le_and_iff_exists exists_le_and_iff_existsₓ'. -/
+#print exists_le_and_iff_exists /-
 theorem exists_le_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Antitone P) :
     (∃ x, x ≤ x₀ ∧ P x) ↔ ∃ x, P x :=
   exists_ge_and_iff_exists hP.dual_left
 #align exists_le_and_iff_exists exists_le_and_iff_exists
+-/
 
 end SemilatticeInf
 

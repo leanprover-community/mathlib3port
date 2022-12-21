@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.zorn
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,9 +144,9 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
 theorem zorn_nonempty_Ici₀ (a : α)
-    (ih : ∀ (c) (_ : c ⊆ ici a), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, a ≤ ub ∧ ∀ z ∈ c, z ≤ ub)
+    (ih : ∀ (c) (_ : c ⊆ Ici a), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, a ≤ ub ∧ ∀ z ∈ c, z ≤ ub)
     (x : α) (hax : a ≤ x) : ∃ m, x ≤ m ∧ ∀ z, m ≤ z → z ≤ m :=
-  let ⟨m, hma, hxm, hm⟩ := zorn_nonempty_preorder₀ (ici a) (by simpa using ih) x hax
+  let ⟨m, hma, hxm, hm⟩ := zorn_nonempty_preorder₀ (Ici a) (by simpa using ih) x hax
   ⟨m, hxm, fun z hmz => hm _ (hax.trans <| hxm.trans hmz) hmz⟩
 #align zorn_nonempty_Ici₀ zorn_nonempty_Ici₀
 

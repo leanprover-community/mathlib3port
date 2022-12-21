@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes, Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.factorial.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,12 +27,14 @@ This file defines the factorial, along with the ascending and descending variant
 
 namespace Nat
 
+#print Nat.factorial /-
 /-- `nat.factorial n` is the factorial of `n`. -/
 @[simp]
 def factorial : ℕ → ℕ
   | 0 => 1
   | succ n => succ n * factorial n
 #align nat.factorial Nat.factorial
+-/
 
 -- mathport name: nat.factorial
 scoped notation:10000 n "!" => Nat.factorial n
@@ -41,39 +43,54 @@ section Factorial
 
 variable {m n : ℕ}
 
+#print Nat.factorial_zero /-
 @[simp]
 theorem factorial_zero : 0! = 1 :=
   rfl
 #align nat.factorial_zero Nat.factorial_zero
+-/
 
+#print Nat.factorial_succ /-
 @[simp]
 theorem factorial_succ (n : ℕ) : n.succ ! = (n + 1) * n ! :=
   rfl
 #align nat.factorial_succ Nat.factorial_succ
+-/
 
+#print Nat.factorial_one /-
 @[simp]
 theorem factorial_one : 1! = 1 :=
   rfl
 #align nat.factorial_one Nat.factorial_one
+-/
 
+#print Nat.factorial_two /-
 @[simp]
 theorem factorial_two : 2! = 2 :=
   rfl
 #align nat.factorial_two Nat.factorial_two
+-/
 
+#print Nat.mul_factorial_pred /-
 theorem mul_factorial_pred (hn : 0 < n) : n * (n - 1)! = n ! :=
   tsub_add_cancel_of_le (Nat.succ_le_of_lt hn) ▸ rfl
 #align nat.mul_factorial_pred Nat.mul_factorial_pred
+-/
 
+#print Nat.factorial_pos /-
 theorem factorial_pos : ∀ n, 0 < n !
   | 0 => zero_lt_one
   | succ n => mul_pos (succ_pos _) (factorial_pos n)
 #align nat.factorial_pos Nat.factorial_pos
+-/
 
+#print Nat.factorial_ne_zero /-
 theorem factorial_ne_zero (n : ℕ) : n ! ≠ 0 :=
   ne_of_gt (factorial_pos _)
 #align nat.factorial_ne_zero Nat.factorial_ne_zero
+-/
 
+#print Nat.factorial_dvd_factorial /-
 theorem factorial_dvd_factorial {m n} (h : m ≤ n) : m ! ∣ n ! := by
   induction' n with n IH
   · simp [Nat.eq_zero_of_le_zero h]
@@ -81,16 +98,22 @@ theorem factorial_dvd_factorial {m n} (h : m ≤ n) : m ! ∣ n ! := by
   · simp
   exact (IH (le_of_lt_succ hl)).mul_left _
 #align nat.factorial_dvd_factorial Nat.factorial_dvd_factorial
+-/
 
+#print Nat.dvd_factorial /-
 theorem dvd_factorial : ∀ {m n}, 0 < m → m ≤ n → m ∣ n !
   | succ m, n, _, h => dvd_of_mul_right_dvd (factorial_dvd_factorial h)
 #align nat.dvd_factorial Nat.dvd_factorial
+-/
 
+#print Nat.factorial_le /-
 @[mono]
 theorem factorial_le {m n} (h : m ≤ n) : m ! ≤ n ! :=
   le_of_dvd (factorial_pos _) (factorial_dvd_factorial h)
 #align nat.factorial_le Nat.factorial_le
+-/
 
+#print Nat.factorial_mul_pow_le_factorial /-
 theorem factorial_mul_pow_le_factorial : ∀ {m n : ℕ}, m ! * m.succ ^ n ≤ (m + n)!
   | m, 0 => by simp
   | m, n + 1 => by
@@ -99,10 +122,14 @@ theorem factorial_mul_pow_le_factorial : ∀ {m n : ℕ}, m ! * m.succ ^ n ≤ (
         mul_le_mul factorial_mul_pow_le_factorial (Nat.succ_le_succ (Nat.le_add_right _ _))
           (Nat.zero_le _) (Nat.zero_le _)
 #align nat.factorial_mul_pow_le_factorial Nat.factorial_mul_pow_le_factorial
+-/
 
+#print Nat.monotone_factorial /-
 theorem monotone_factorial : Monotone factorial := fun n m => factorial_le
 #align nat.monotone_factorial Nat.monotone_factorial
+-/
 
+#print Nat.factorial_lt /-
 theorem factorial_lt (hn : 0 < n) : n ! < m ! ↔ n < m := by
   refine' ⟨fun h => not_le.mp fun hmn => not_le_of_lt h (factorial_le hmn), fun h => _⟩
   have : ∀ {n}, 0 < n → n ! < n.succ ! := by 
@@ -113,17 +140,23 @@ theorem factorial_lt (hn : 0 < n) : n ! < m ! ↔ n < m := by
   · exact this hn
   · exact (ih hn).trans (this <| hn.trans <| lt_of_succ_le hnk)
 #align nat.factorial_lt Nat.factorial_lt
+-/
 
+#print Nat.one_lt_factorial /-
 theorem one_lt_factorial : 1 < n ! ↔ 1 < n :=
   factorial_lt one_pos
 #align nat.one_lt_factorial Nat.one_lt_factorial
+-/
 
+#print Nat.factorial_eq_one /-
 theorem factorial_eq_one : n ! = 1 ↔ n ≤ 1 := by
   refine' ⟨fun h => _, by rintro (_ | _ | _) <;> rfl⟩
   rw [← not_lt, ← one_lt_factorial, h]
   apply lt_irrefl
 #align nat.factorial_eq_one Nat.factorial_eq_one
+-/
 
+#print Nat.factorial_inj /-
 theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m := by
   refine' ⟨fun h => _, congr_arg _⟩
   obtain hnm | rfl | hnm := lt_trichotomy n m
@@ -134,19 +167,25 @@ theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m := by
   rw [← factorial_lt (lt_trans one_pos hn), h] at hnm
   cases lt_irrefl _ hnm
 #align nat.factorial_inj Nat.factorial_inj
+-/
 
+#print Nat.self_le_factorial /-
 theorem self_le_factorial : ∀ n : ℕ, n ≤ n !
   | 0 => zero_le_one
   | k + 1 => le_mul_of_one_le_right k.zero_lt_succ.le (Nat.one_le_of_lt <| Nat.factorial_pos _)
 #align nat.self_le_factorial Nat.self_le_factorial
+-/
 
+#print Nat.lt_factorial_self /-
 theorem lt_factorial_self {n : ℕ} (hi : 3 ≤ n) : n < n ! := by
   rw [← succ_pred_eq_of_pos ((zero_lt_two.trans (lt.base 2)).trans_le hi), factorial_succ]
   exact
     lt_mul_of_one_lt_right (pred n).succ_pos
       ((one_lt_two.trans_le (le_pred_of_lt (succ_le_iff.mp hi))).trans_le (self_le_factorial _))
 #align nat.lt_factorial_self Nat.lt_factorial_self
+-/
 
+#print Nat.add_factorial_succ_lt_factorial_add_succ /-
 theorem add_factorial_succ_lt_factorial_add_succ {i : ℕ} (n : ℕ) (hi : 2 ≤ i) :
     i + (n + 1)! < (i + n + 1)! := by
   rw [factorial_succ (i + _), add_mul, one_mul]
@@ -161,7 +200,9 @@ theorem add_factorial_succ_lt_factorial_add_succ {i : ℕ} (n : ℕ) (hi : 2 ≤
       (factorial_le
         ((le_of_eq (add_comm n 1)).trans ((add_le_add_iff_right n).mpr (one_le_two.trans hi))))
 #align nat.add_factorial_succ_lt_factorial_add_succ Nat.add_factorial_succ_lt_factorial_add_succ
+-/
 
+#print Nat.add_factorial_lt_factorial_add /-
 theorem add_factorial_lt_factorial_add {i n : ℕ} (hi : 2 ≤ i) (hn : 1 ≤ n) : i + n ! < (i + n)! :=
   by 
   cases hn
@@ -169,7 +210,9 @@ theorem add_factorial_lt_factorial_add {i n : ℕ} (hi : 2 ≤ i) (hn : 1 ≤ n)
     exact lt_factorial_self (succ_le_succ hi)
   exact add_factorial_succ_lt_factorial_add_succ _ hi
 #align nat.add_factorial_lt_factorial_add Nat.add_factorial_lt_factorial_add
+-/
 
+#print Nat.add_factorial_succ_le_factorial_add_succ /-
 theorem add_factorial_succ_le_factorial_add_succ (i : ℕ) (n : ℕ) : i + (n + 1)! ≤ (i + (n + 1))! :=
   by 
   obtain i2 | _ | i0 := le_or_lt 2 i
@@ -178,13 +221,17 @@ theorem add_factorial_succ_le_factorial_add_succ (i : ℕ) (n : ℕ) : i + (n + 
     exact (add_le_add_iff_right _).mpr (one_le_mul (Nat.le_add_left 1 n) (n + 1).factorial_pos)
   rw [le_zero_iff.mp (nat.succ_le_succ_iff.mp i0), zero_add, zero_add]
 #align nat.add_factorial_succ_le_factorial_add_succ Nat.add_factorial_succ_le_factorial_add_succ
+-/
 
+#print Nat.add_factorial_le_factorial_add /-
 theorem add_factorial_le_factorial_add (i : ℕ) {n : ℕ} (n1 : 1 ≤ n) : i + n ! ≤ (i + n)! := by
   cases' n1 with h
   · exact self_le_factorial _
   exact add_factorial_succ_le_factorial_add_succ i h
 #align nat.add_factorial_le_factorial_add Nat.add_factorial_le_factorial_add
+-/
 
+#print Nat.factorial_mul_pow_sub_le_factorial /-
 theorem factorial_mul_pow_sub_le_factorial {n m : ℕ} (hnm : n ≤ m) : n ! * n ^ (m - n) ≤ m ! := by
   suffices n ! * (n + 1) ^ (m - n) ≤ m ! by
     apply trans _ this
@@ -194,6 +241,7 @@ theorem factorial_mul_pow_sub_le_factorial {n m : ℕ} (hnm : n ≤ m) : n ! * n
   convert Nat.factorial_mul_pow_le_factorial
   exact (add_tsub_cancel_of_le hnm).symm
 #align nat.factorial_mul_pow_sub_le_factorial Nat.factorial_mul_pow_sub_le_factorial
+-/
 
 end Factorial
 
@@ -202,6 +250,9 @@ end Factorial
 
 section AscFactorial
 
+/- warning: nat.asc_factorial clashes with nat.ascFactorial -> Nat.ascFactorial
+Case conversion may be inaccurate. Consider using '#align nat.asc_factorial Nat.ascFactorialₓ'. -/
+#print Nat.ascFactorial /-
 /-- `n.asc_factorial k = (n + k)! / n!` (as seen in `nat.asc_factorial_eq_div`), but implemented
 recursively to allow for "quick" computation when using `norm_num`. This is closely related to
 `pochhammer`, but much less general. -/
@@ -209,6 +260,7 @@ def ascFactorial (n : ℕ) : ℕ → ℕ
   | 0 => 1
   | k + 1 => (n + k + 1) * asc_factorial k
 #align nat.asc_factorial Nat.ascFactorial
+-/
 
 @[simp]
 theorem asc_factorial_zero (n : ℕ) : n.ascFactorial 0 = 1 :=
@@ -304,6 +356,9 @@ end AscFactorial
 
 section DescFactorial
 
+/- warning: nat.desc_factorial clashes with nat.descFactorial -> Nat.descFactorial
+Case conversion may be inaccurate. Consider using '#align nat.desc_factorial Nat.descFactorialₓ'. -/
+#print Nat.descFactorial /-
 /-- `n.desc_factorial k = n! / (n - k)!` (as seen in `nat.desc_factorial_eq_div`), but
 implemented recursively to allow for "quick" computation when using `norm_num`. This is closely
 related to `pochhammer`, but much less general. -/
@@ -311,6 +366,7 @@ def descFactorial (n : ℕ) : ℕ → ℕ
   | 0 => 1
   | k + 1 => (n - k) * desc_factorial k
 #align nat.desc_factorial Nat.descFactorial
+-/
 
 @[simp]
 theorem desc_factorial_zero (n : ℕ) : n.descFactorial 0 = 1 :=

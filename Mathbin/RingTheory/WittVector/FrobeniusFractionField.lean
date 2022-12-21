@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.frobenius_fraction_field
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem succ_nth_defining_poly_degree [IsDomain k] (n : ℕ) (a₁ a₂ : 𝕎 k
   by
   have : (X ^ p * C (a₁.coeff 0 ^ p ^ (n + 1))).degree = p := by
     rw [degree_mul, degree_C]
-    · simp only [Nat.cast_with_bot, add_zero, degree_X, degree_pow, Nat.smul_one_eq_coe]
+    · simp only [Nat.cast_withBot, add_zero, degree_X, degree_pow, Nat.smul_one_eq_coe]
     · exact pow_ne_zero _ ha₁
   have : (X ^ p * C (a₁.coeff 0 ^ p ^ (n + 1)) - X * C (a₂.coeff 0 ^ p ^ (n + 1))).degree = p := by
     rw [degree_sub_eq_left_of_degree_lt, this]

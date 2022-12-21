@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.interval_cases
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -262,7 +262,7 @@ By default `interval_cases_using` automatically generates a name for the new hyp
 can be specified via the optional argument `n`.
 -/
 unsafe def interval_cases_using (hl hu : expr) (n : Option Name) : tactic Unit :=
-  (to_expr ``(mem_set_elems (ico _ _) ⟨$(hl), $(hu)⟩) >>=
+  (to_expr ``(mem_set_elems (Ico _ _) ⟨$(hl), $(hu)⟩) >>=
       if hn : n.isSome then note (Option.get hn) else note_anon none) >>=
     fin_cases_at none none
 #align tactic.interval_cases_using tactic.interval_cases_using

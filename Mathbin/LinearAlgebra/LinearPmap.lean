@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Moritz Doll
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_pmap
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -472,11 +472,11 @@ theorem sup_span_singleton_apply_mk (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x
 end
 
 private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) c) :
-    ∃ f : ↥(sup (domain '' c)) →ₗ[R] F, (⟨_, f⟩ : E →ₗ.[R] F) ∈ upperBounds c := by
+    ∃ f : ↥(supₛ (domain '' c)) →ₗ[R] F, (⟨_, f⟩ : E →ₗ.[R] F) ∈ upperBounds c := by
   cases' c.eq_empty_or_nonempty with ceq cne
   · subst c
     simp
-  have hdir : DirectedOn (· ≤ ·) (domain '' c) := directed_on_image.2 (hc.mono domain_mono.monotone)
+  have hdir : DirectedOn (· ≤ ·) (domain '' c) := directedOn_image.2 (hc.mono domain_mono.monotone)
   have P : ∀ x : Sup (domain '' c), { p : c // (x : E) ∈ p.val.domain } := by
     rintro x
     apply Classical.indefiniteDescription
@@ -498,7 +498,7 @@ private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) 
   · intro c x
     simp [f_eq (P x).1 (c • x) (c • ⟨x, (P x).2⟩) rfl, ← map_smul]
   · intro p hpc
-    refine' ⟨le_Sup <| mem_image_of_mem domain hpc, fun x y hxy => Eq.symm _⟩
+    refine' ⟨le_supₛ <| mem_image_of_mem domain hpc, fun x y hxy => Eq.symm _⟩
     exact f_eq ⟨p, hpc⟩ _ _ hxy.symm
 #align linear_pmap.Sup_aux linear_pmap.Sup_aux
 
@@ -523,7 +523,7 @@ protected theorem le_Sup {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·)
 protected theorem Sup_le {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {g : E →ₗ.[R] F}
     (hg : ∀ f ∈ c, f ≤ g) : LinearPmap.sup c hc ≤ g :=
   le_of_eq_locus_ge <|
-    Sup_le fun _ ⟨f, hf, Eq⟩ =>
+    supₛ_le fun _ ⟨f, hf, Eq⟩ =>
       Eq ▸
         have : f ≤ LinearPmap.sup c hc ⊓ g := le_inf (LinearPmap.le_Sup _ hf) (hg f hf)
         this.1

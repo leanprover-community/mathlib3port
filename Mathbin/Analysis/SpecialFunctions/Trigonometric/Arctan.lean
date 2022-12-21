@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.arctan
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
   continuous_on_iff_continuous_restrict.1 continuous_on_tan
 #align real.continuous_tan Real.continuous_tan
 
-theorem continuous_on_tan_Ioo : ContinuousOn tan (ioo (-(π / 2)) (π / 2)) := by
+theorem continuous_on_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) := by
   refine' ContinuousOn.mono continuous_on_tan fun x => _
   simp only [and_imp, mem_Ioo, mem_set_of_eq, Ne.def]
   rw [cos_eq_zero_iff]
@@ -97,7 +97,7 @@ theorem continuous_on_tan_Ioo : ContinuousOn tan (ioo (-(π / 2)) (π / 2)) := b
     · exact zero_lt_two
 #align real.continuous_on_tan_Ioo Real.continuous_on_tan_Ioo
 
-theorem surj_on_tan : SurjOn tan (ioo (-(π / 2)) (π / 2)) univ :=
+theorem surj_on_tan : SurjOn tan (Ioo (-(π / 2)) (π / 2)) univ :=
   have := neg_lt_self pi_div_two_pos
   continuous_on_tan_Ioo.surj_on_of_tendsto (nonempty_Ioo.2 this)
     (by simp [tendsto_tan_neg_pi_div_two, this]) (by simp [tendsto_tan_pi_div_two, this])
@@ -106,12 +106,12 @@ theorem surj_on_tan : SurjOn tan (ioo (-(π / 2)) (π / 2)) univ :=
 theorem tan_surjective : Function.Surjective tan := fun x => surj_on_tan.subset_range trivial
 #align real.tan_surjective Real.tan_surjective
 
-theorem image_tan_Ioo : tan '' ioo (-(π / 2)) (π / 2) = univ :=
+theorem image_tan_Ioo : tan '' Ioo (-(π / 2)) (π / 2) = univ :=
   univ_subset_iff.1 surj_on_tan
 #align real.image_tan_Ioo Real.image_tan_Ioo
 
 /-- `real.tan` as an `order_iso` between `(-(π / 2), π / 2)` and `ℝ`. -/
-def tanOrderIso : ioo (-(π / 2)) (π / 2) ≃o ℝ :=
+def tanOrderIso : Ioo (-(π / 2)) (π / 2) ≃o ℝ :=
   (strict_mono_on_tan.OrderIso _ _).trans <|
     (OrderIso.setCongr _ _ image_tan_Ioo).trans OrderIso.Set.univ
 #align real.tan_order_iso Real.tanOrderIso
@@ -128,12 +128,12 @@ theorem tan_arctan (x : ℝ) : tan (arctan x) = x :=
   tanOrderIso.apply_symm_apply x
 #align real.tan_arctan Real.tan_arctan
 
-theorem arctan_mem_Ioo (x : ℝ) : arctan x ∈ ioo (-(π / 2)) (π / 2) :=
+theorem arctan_mem_Ioo (x : ℝ) : arctan x ∈ Ioo (-(π / 2)) (π / 2) :=
   Subtype.coe_prop _
 #align real.arctan_mem_Ioo Real.arctan_mem_Ioo
 
 @[simp]
-theorem range_arctan : range arctan = ioo (-(π / 2)) (π / 2) :=
+theorem range_arctan : range arctan = Ioo (-(π / 2)) (π / 2) :=
   ((EquivLike.surjective _).range_comp _).trans Subtype.range_coe
 #align real.range_arctan Real.range_arctan
 
@@ -169,7 +169,7 @@ theorem arctan_eq_arcsin (x : ℝ) : arctan x = arcsin (x / sqrt (1 + x ^ 2)) :=
   Eq.symm <| arcsin_eq_of_sin_eq (sin_arctan x) (mem_Icc_of_Ioo <| arctan_mem_Ioo x)
 #align real.arctan_eq_arcsin Real.arctan_eq_arcsin
 
-theorem arcsin_eq_arctan {x : ℝ} (h : x ∈ ioo (-(1 : ℝ)) 1) :
+theorem arcsin_eq_arctan {x : ℝ} (h : x ∈ Ioo (-(1 : ℝ)) 1) :
     arcsin x = arctan (x / sqrt (1 - x ^ 2)) := by
   rw [arctan_eq_arcsin, div_pow, sq_sqrt, one_add_div, div_div, ← sqrt_mul, mul_div_cancel',
       sub_add_cancel, sqrt_one, div_one] <;>
@@ -180,7 +180,7 @@ theorem arcsin_eq_arctan {x : ℝ} (h : x ∈ ioo (-(1 : ℝ)) 1) :
 theorem arctan_zero : arctan 0 = 0 := by simp [arctan_eq_arcsin]
 #align real.arctan_zero Real.arctan_zero
 
-theorem arctan_eq_of_tan_eq {x y : ℝ} (h : tan x = y) (hx : x ∈ ioo (-(π / 2)) (π / 2)) :
+theorem arctan_eq_of_tan_eq {x y : ℝ} (h : tan x = y) (hx : x ∈ Ioo (-(π / 2)) (π / 2)) :
     arctan y = x :=
   inj_on_tan (arctan_mem_Ioo _) hx (by rw [tan_arctan, h])
 #align real.arctan_eq_of_tan_eq Real.arctan_eq_of_tan_eq
@@ -224,9 +224,9 @@ def tanLocalHomeomorph : LocalHomeomorph ℝ
       ℝ where 
   toFun := tan
   invFun := arctan
-  source := ioo (-(π / 2)) (π / 2)
+  source := Ioo (-(π / 2)) (π / 2)
   target := univ
-  map_source' := maps_to_univ _ _
+  map_source' := mapsTo_univ _ _
   map_target' y hy := arctan_mem_Ioo y
   left_inv' x hx := arctan_tan hx.1 hx.2
   right_inv' y hy := tan_arctan y

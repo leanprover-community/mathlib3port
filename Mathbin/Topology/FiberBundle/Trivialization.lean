@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.trivialization
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -776,7 +776,7 @@ such that `proj p ≤ a` and is equal to `e'` otherwise. -/
 noncomputable def piecewiseLeOfEq [LinearOrder B] [OrderTopology B] (e e' : Trivialization F proj)
     (a : B) (He : a ∈ e.baseSet) (He' : a ∈ e'.baseSet) (Heq : ∀ p, proj p = a → e p = e' p) :
     Trivialization F proj :=
-  e.piecewise e' (iic a)
+  e.piecewise e' (Iic a)
     (Set.ext fun x =>
       and_congr_left_iff.2 fun hx => by
         simp [He, He', mem_singleton_iff.1 (frontier_Iic_subset _ hx)])

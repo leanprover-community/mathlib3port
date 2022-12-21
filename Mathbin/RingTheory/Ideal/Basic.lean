@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -313,7 +313,7 @@ theorem IsMaximal.eq_of_le {I J : Ideal α} (hI : I.IsMaximal) (hJ : J ≠ ⊤) 
 instance : IsCoatomic (Ideal α) := by
   apply CompleteLattice.coatomic_of_top_compact
   rw [← span_singleton_one]
-  exact Submodule.singletonSpanIsCompactElement 1
+  exact Submodule.singleton_span_is_compact_element 1
 
 /-- **Krull's theorem**: if `I` is an ideal that is not the whole ring, then it is included in some
     maximal ideal. -/
@@ -372,17 +372,17 @@ theorem mem_sup_right {S T : Ideal R} : ∀ {x : R}, x ∈ T → x ∈ S ⊔ T :
   show T ≤ S ⊔ T from le_sup_right
 #align ideal.mem_sup_right Ideal.mem_sup_right
 
-theorem mem_supr_of_mem {ι : Sort _} {S : ι → Ideal R} (i : ι) : ∀ {x : R}, x ∈ S i → x ∈ supr S :=
-  show S i ≤ supr S from le_supr _ _
+theorem mem_supr_of_mem {ι : Sort _} {S : ι → Ideal R} (i : ι) : ∀ {x : R}, x ∈ S i → x ∈ supᵢ S :=
+  show S i ≤ supᵢ S from le_supᵢ _ _
 #align ideal.mem_supr_of_mem Ideal.mem_supr_of_mem
 
 theorem mem_Sup_of_mem {S : Set (Ideal R)} {s : Ideal R} (hs : s ∈ S) :
-    ∀ {x : R}, x ∈ s → x ∈ sup S :=
-  show s ≤ sup S from le_Sup hs
+    ∀ {x : R}, x ∈ s → x ∈ supₛ S :=
+  show s ≤ supₛ S from le_supₛ hs
 #align ideal.mem_Sup_of_mem Ideal.mem_Sup_of_mem
 
-theorem mem_Inf {s : Set (Ideal R)} {x : R} : x ∈ inf s ↔ ∀ ⦃I⦄, I ∈ s → x ∈ I :=
-  ⟨fun hx I his => hx I ⟨I, infi_pos his⟩, fun H I ⟨J, hij⟩ => hij ▸ fun S ⟨hj, hS⟩ => hS ▸ H hj⟩
+theorem mem_Inf {s : Set (Ideal R)} {x : R} : x ∈ infₛ s ↔ ∀ ⦃I⦄, I ∈ s → x ∈ I :=
+  ⟨fun hx I his => hx I ⟨I, infᵢ_pos his⟩, fun H I ⟨J, hij⟩ => hij ▸ fun S ⟨hj, hS⟩ => hS ▸ H hj⟩
 #align ideal.mem_Inf Ideal.mem_Inf
 
 @[simp]
@@ -421,10 +421,10 @@ theorem mem_pi (x : ι → α) : x ∈ I.pi ι ↔ ∀ i, x i ∈ I :=
 end Pi
 
 theorem Inf_is_prime_of_is_chain {s : Set (Ideal α)} (hs : s.Nonempty) (hs' : IsChain (· ≤ ·) s)
-    (H : ∀ p ∈ s, Ideal.IsPrime p) : (inf s).IsPrime :=
+    (H : ∀ p ∈ s, Ideal.IsPrime p) : (infₛ s).IsPrime :=
   ⟨fun e =>
     let ⟨x, hx⟩ := hs
-    (H x hx).ne_top (eq_top_iff.mpr (e.symm.trans_le (Inf_le hx))),
+    (H x hx).ne_top (eq_top_iff.mpr (e.symm.trans_le (infₛ_le hx))),
     fun x y e =>
     or_iff_not_imp_left.mpr fun hx => by
       rw [Ideal.mem_Inf] at hx e⊢

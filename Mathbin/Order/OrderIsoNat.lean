@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.order_iso_nat
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -243,7 +243,7 @@ type, `monotonic_sequence_limit_index a` is the least natural number `n` for whi
 constant value. For sequences that are not eventually constant, `monotonic_sequence_limit_index a`
 is defined, but is a junk value. -/
 noncomputable def monotonicSequenceLimitIndex [Preorder α] (a : ℕ →o α) : ℕ :=
-  inf { n | ∀ m, n ≤ m → a n = a m }
+  infₛ { n | ∀ m, n ≤ m → a n = a m }
 #align monotonic_sequence_limit_index monotonicSequenceLimitIndex
 
 /-- The constant value of an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a
@@ -253,10 +253,10 @@ noncomputable def monotonicSequenceLimit [Preorder α] (a : ℕ →o α) :=
 #align monotonic_sequence_limit monotonicSequenceLimit
 
 theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α]
-    (h : WellFounded ((· > ·) : α → α → Prop)) (a : ℕ →o α) : supr a = monotonicSequenceLimit a :=
+    (h : WellFounded ((· > ·) : α → α → Prop)) (a : ℕ →o α) : supᵢ a = monotonicSequenceLimit a :=
   by 
-  suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by exact le_antisymm this (le_supr a _)
-  apply supr_le
+  suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by exact le_antisymm this (le_supᵢ a _)
+  apply supᵢ_le
   intro m
   by_cases hm : m ≤ monotonicSequenceLimitIndex a
   · exact a.monotone hm

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1077,19 +1077,19 @@ theorem ediv_dvd_of_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t := by
 /-! ### to_nat -/
 
 
-#print Int.to_nat_le /-
+#print Int.toNat_le /-
 @[simp]
-theorem to_nat_le {a : ℤ} {n : ℕ} : toNat a ≤ n ↔ a ≤ n := by
+theorem toNat_le {a : ℤ} {n : ℕ} : toNat a ≤ n ↔ a ≤ n := by
   rw [(coe_nat_le_coe_nat_iff _ _).symm, to_nat_eq_max, max_le_iff] <;>
     exact and_iff_left (coe_zero_le _)
-#align int.to_nat_le Int.to_nat_le
+#align int.to_nat_le Int.toNat_le
 -/
 
-#print Int.lt_to_nat /-
+#print Int.lt_toNat /-
 @[simp]
-theorem lt_to_nat {n : ℕ} {a : ℤ} : n < toNat a ↔ (n : ℤ) < a :=
-  le_iff_le_iff_lt_iff_lt.1 to_nat_le
-#align int.lt_to_nat Int.lt_to_nat
+theorem lt_toNat {n : ℕ} {a : ℤ} : n < toNat a ↔ (n : ℤ) < a :=
+  le_iff_le_iff_lt_iff_lt.1 toNat_le
+#align int.lt_to_nat Int.lt_toNat
 -/
 
 #print Int.coe_nat_nonpos_iff /-
@@ -1100,35 +1100,35 @@ theorem coe_nat_nonpos_iff {n : ℕ} : (n : ℤ) ≤ 0 ↔ n = 0 :=
 #align int.coe_nat_nonpos_iff Int.coe_nat_nonpos_iff
 -/
 
-#print Int.to_nat_le_to_nat /-
-theorem to_nat_le_to_nat {a b : ℤ} (h : a ≤ b) : toNat a ≤ toNat b := by
+#print Int.toNat_le_toNat /-
+theorem toNat_le_toNat {a b : ℤ} (h : a ≤ b) : toNat a ≤ toNat b := by
   rw [to_nat_le] <;> exact le_trans h (le_to_nat b)
-#align int.to_nat_le_to_nat Int.to_nat_le_to_nat
+#align int.to_nat_le_to_nat Int.toNat_le_toNat
 -/
 
-#print Int.to_nat_lt_to_nat /-
-theorem to_nat_lt_to_nat {a b : ℤ} (hb : 0 < b) : toNat a < toNat b ↔ a < b :=
+#print Int.toNat_lt_toNat /-
+theorem toNat_lt_toNat {a b : ℤ} (hb : 0 < b) : toNat a < toNat b ↔ a < b :=
   ⟨fun h => by cases a; exact lt_to_nat.1 h; exact lt_trans (neg_succ_of_nat_lt_zero a) hb, fun h =>
     by rw [lt_to_nat]; cases a; exact h; exact hb⟩
-#align int.to_nat_lt_to_nat Int.to_nat_lt_to_nat
+#align int.to_nat_lt_to_nat Int.toNat_lt_toNat
 -/
 
-#print Int.lt_of_to_nat_lt /-
-theorem lt_of_to_nat_lt {a b : ℤ} (h : toNat a < toNat b) : a < b :=
-  (to_nat_lt_to_nat <| lt_to_nat.1 <| lt_of_le_of_lt (Nat.zero_le _) h).1 h
-#align int.lt_of_to_nat_lt Int.lt_of_to_nat_lt
+#print Int.lt_of_toNat_lt /-
+theorem lt_of_toNat_lt {a b : ℤ} (h : toNat a < toNat b) : a < b :=
+  (to_nat_lt_to_nat <| lt_toNat.1 <| lt_of_le_of_lt (Nat.zero_le _) h).1 h
+#align int.lt_of_to_nat_lt Int.lt_of_toNat_lt
 -/
 
-#print Int.to_nat_pred_coe_of_pos /-
+#print Int.toNat_pred_coe_of_pos /-
 @[simp]
-theorem to_nat_pred_coe_of_pos {i : ℤ} (h : 0 < i) : ((i.toNat - 1 : ℕ) : ℤ) = i - 1 := by
+theorem toNat_pred_coe_of_pos {i : ℤ} (h : 0 < i) : ((i.toNat - 1 : ℕ) : ℤ) = i - 1 := by
   simp [h, le_of_lt h, push_cast]
-#align int.to_nat_pred_coe_of_pos Int.to_nat_pred_coe_of_pos
+#align int.to_nat_pred_coe_of_pos Int.toNat_pred_coe_of_pos
 -/
 
-#print Int.to_nat_eq_zero /-
+#print Int.toNat_eq_zero /-
 @[simp]
-theorem to_nat_eq_zero : ∀ {n : ℤ}, n.toNat = 0 ↔ n ≤ 0
+theorem toNat_eq_zero : ∀ {n : ℤ}, n.toNat = 0 ↔ n ≤ 0
   | (n : ℕ) =>
     calc
       _ ↔ n = 0 := ⟨(toNat_coe_nat n).symm.trans, (toNat_coe_nat n).trans⟩
@@ -1140,14 +1140,14 @@ theorem to_nat_eq_zero : ∀ {n : ℤ}, n.toNat = 0 ↔ n ≤ 0
         _ ↔ True := ⟨fun _ => trivial, fun h => to_nat_neg_nat _⟩
         _ ↔ _ := ⟨fun h => neg_nonpos_of_nonneg (ofNat_zero_le _), fun _ => trivial⟩
         
-#align int.to_nat_eq_zero Int.to_nat_eq_zero
+#align int.to_nat_eq_zero Int.toNat_eq_zero
 -/
 
-#print Int.to_nat_sub_of_le /-
+#print Int.toNat_sub_of_le /-
 @[simp]
-theorem to_nat_sub_of_le {a b : ℤ} (h : b ≤ a) : (toNat (a - b) : ℤ) = a - b :=
+theorem toNat_sub_of_le {a b : ℤ} (h : b ≤ a) : (toNat (a - b) : ℤ) = a - b :=
   Int.toNat_of_nonneg (sub_nonneg_of_le h)
-#align int.to_nat_sub_of_le Int.to_nat_sub_of_le
+#align int.to_nat_sub_of_le Int.toNat_sub_of_le
 -/
 
 end Int

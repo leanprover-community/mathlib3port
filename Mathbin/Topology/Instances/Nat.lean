@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.nat
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ theorem preimage_closed_ball (x : ℕ) (r : ℝ) : coe ⁻¹' closedBall (x : �
   rfl
 #align nat.preimage_closed_ball Nat.preimage_closed_ball
 
-theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
+theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
   rcases le_or_lt 0 r with (hr | hr)
   · rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
     exact add_nonneg (cast_nonneg x) hr
@@ -89,7 +89,7 @@ instance : ProperSpace ℕ :=
     exact (Set.finite_Icc _ _).IsCompact⟩
 
 instance : NoncompactSpace ℕ :=
-  noncompact_space_of_ne_bot <| by simp [Filter.atTopNeBot]
+  noncompact_space_of_ne_bot <| by simp [Filter.at_top_ne_bot]
 
 end Nat
 

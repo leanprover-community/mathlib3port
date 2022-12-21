@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -348,15 +348,15 @@ theorem finite [IsDomain B] [h₁ : Finite S] [h₂ : IsCyclotomicExtension S A 
 #align is_cyclotomic_extension.finite IsCyclotomicExtension.finite
 
 /-- A cyclotomic finite extension of a number field is a number field. -/
-theorem numberField [h : NumberField K] [Finite S] [IsCyclotomicExtension S K L] : NumberField L :=
+theorem number_field [h : NumberField K] [Finite S] [IsCyclotomicExtension S K L] : NumberField L :=
   { to_char_zero := char_zero_of_injective_algebra_map (algebraMap K L).Injective
     to_finite_dimensional :=
       @Module.Finite.trans _ K L _ _ _ _
         (@algebraRat L _ (char_zero_of_injective_algebra_map (algebraMap K L).Injective)) _ _
         h.to_finite_dimensional (Finite S K L) }
-#align is_cyclotomic_extension.number_field IsCyclotomicExtension.numberField
+#align is_cyclotomic_extension.number_field IsCyclotomicExtension.number_field
 
-scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.numberField
+scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.number_field
 
 /-- A finite cyclotomic extension of an integral noetherian domain is integral -/
 theorem integral [IsDomain B] [IsNoetherianRing A] [Finite S] [IsCyclotomicExtension S A B] :
@@ -439,7 +439,7 @@ theorem IsPrimitiveRoot.adjoin_is_cyclotomic_extension {ζ : B} {n : ℕ+} (h : 
       · rw [Set.mem_singleton_iff] at hb
         refine' subset_adjoin _
         simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq, hb]
-        rw [← Subalgebra.coe_eq_one, Subalgebra.coe_pow, SetLike.coe_mk]
+        rw [← Subalgebra.coe_eq_one, Subalgebra.coe_pow, [anonymous]]
         exact ((IsPrimitiveRoot.iff_def ζ n).1 h).1
       · exact Subalgebra.algebra_map_mem _ _
       · exact Subalgebra.add_mem _ hb₁ hb₂
@@ -688,18 +688,18 @@ instance [NeZero ((n : ℕ) : A)] :
           _⟩
       letI : IsScalarTower A K (CyclotomicField n K) :=
         IsScalarTower.of_algebra_map_eq (congr_fun rfl)
-      rw [SetLike.coe_mk, ← IsScalarTower.algebra_map_apply, ← IsScalarTower.algebra_map_apply,
+      rw [[anonymous], ← IsScalarTower.algebra_map_apply, ← IsScalarTower.algebra_map_apply,
         @IsScalarTower.algebra_map_apply A K _ _ _ _ _ (_root_.cyclotomic_field.algebra n K) _ _ w,
         ← RingHom.map_mul, hw, ← IsScalarTower.algebra_map_apply]
     · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
       refine' ⟨⟨a.1 * b.2 + b.1 * a.2, a.2 * b.2, mul_mem_non_zero_divisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
-      rw [SetLike.coe_mk, RingHom.map_mul, add_mul, ← mul_assoc, ha,
-        mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, hb]
+      rw [[anonymous], RingHom.map_mul, add_mul, ← mul_assoc, ha, mul_comm ((algebraMap _ _) ↑a.2),
+        ← mul_assoc, hb]
       simp only [map_add, map_mul]
     · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
       refine' ⟨⟨a.1 * b.1, a.2 * b.2, mul_mem_non_zero_divisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
-      rw [SetLike.coe_mk, RingHom.map_mul, mul_comm ((algebraMap _ _) ↑a.2), mul_assoc, ←
-        mul_assoc z, hb, ← mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, ha]
+      rw [[anonymous], RingHom.map_mul, mul_comm ((algebraMap _ _) ↑a.2), mul_assoc, ← mul_assoc z,
+        hb, ← mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, ha]
       simp only [map_mul]
   eq_iff_exists x y :=
     ⟨fun h => ⟨1, by rw [adjoin_algebra_injective n A K h]⟩, fun ⟨c, hc⟩ => by

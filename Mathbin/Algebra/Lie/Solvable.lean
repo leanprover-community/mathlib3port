@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.solvable
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ instance (priority := 100) of_abelian_is_solvable [IsLieAbelian L] : IsSolvable 
 
 /-- The (solvable) radical of Lie algebra is the `Sup` of all solvable ideals. -/
 def radical :=
-  sup { I : LieIdeal R L | IsSolvable R I }
+  supₛ { I : LieIdeal R L | IsSolvable R I }
 #align lie_algebra.radical LieAlgebra.radical
 
 /-- The radical of a Noetherian Lie algebra is solvable. -/
@@ -298,12 +298,12 @@ instance radical_is_solvable [IsNoetherian R L] : IsSolvable R (radical R L) := 
 /-- The `→` direction of this lemma is actually true without the `is_noetherian` assumption. -/
 theorem LieIdeal.solvable_iff_le_radical [IsNoetherian R L] (I : LieIdeal R L) :
     IsSolvable R I ↔ I ≤ radical R L :=
-  ⟨fun h => le_Sup h, fun h => le_solvable_ideal_solvable h inferInstance⟩
+  ⟨fun h => le_supₛ h, fun h => le_solvable_ideal_solvable h inferInstance⟩
 #align lie_algebra.lie_ideal.solvable_iff_le_radical LieAlgebra.LieIdeal.solvable_iff_le_radical
 
 theorem center_le_radical : center R L ≤ radical R L :=
   have h : IsSolvable R (center R L) := by infer_instance
-  le_Sup h
+  le_supₛ h
 #align lie_algebra.center_le_radical LieAlgebra.center_le_radical
 
 /-- Given a solvable Lie ideal `I` with derived series `I = D₀ ≥ D₁ ≥ ⋯ ≥ Dₖ = ⊥`, this is the
@@ -311,7 +311,7 @@ natural number `k` (the number of inclusions).
 
 For a non-solvable ideal, the value is 0. -/
 noncomputable def derivedLengthOfIdeal (I : LieIdeal R L) : ℕ :=
-  inf { k | derivedSeriesOfIdeal R L k I = ⊥ }
+  infₛ { k | derivedSeriesOfIdeal R L k I = ⊥ }
 #align lie_algebra.derived_length_of_ideal LieAlgebra.derivedLengthOfIdeal
 
 /-- The derived length of a Lie algebra is the derived length of its 'top' Lie ideal.

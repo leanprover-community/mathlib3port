@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.borel_cantelli
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ variable {Ω : Type _} {m0 : MeasurableSpace Ω} {μ : Measure Ω} {ℱ : Filtra
 -- refactor is complete
 /-- `least_ge f r n` is the stopping time corresponding to the first time `f ≥ r`. -/
 noncomputable def leastGe (f : ℕ → Ω → ℝ) (r : ℝ) (n : ℕ) :=
-  hitting f (Set.ici r) 0 n
+  hitting f (Set.Ici r) 0 n
 #align measure_theory.least_ge MeasureTheory.leastGe
 
 theorem Adapted.isStoppingTimeLeastGe (r : ℝ) (n : ℕ) (hf : Adapted ℱ f) :
@@ -77,7 +77,7 @@ theorem least_ge_eq_min (π : Ω → ℕ) (r : ℝ) (ω : Ω) {n : ℕ} (hπn : 
     refine' le_antisymm (le_min (least_ge_le _) (least_ge_mono (hπn ω) r ω)) _
     by_cases hle : π ω ≤ least_ge f r n ω
     · rw [min_eq_left hle, least_ge]
-      by_cases h : ∃ j ∈ Set.icc 0 (π ω), f j ω ∈ Set.ici r
+      by_cases h : ∃ j ∈ Set.Icc 0 (π ω), f j ω ∈ Set.Ici r
       · refine' hle.trans (Eq.le _)
         rw [least_ge, ← hitting_eq_hitting_of_exists (hπn ω) h]
       · simp only [hitting, if_neg h]
@@ -177,7 +177,7 @@ theorem Submartingale.exists_tendsto_of_abs_bdd_above_aux [IsFiniteMeasure μ]
   obtain ⟨i, hi⟩ := exists_nat_gt hωb.some
   have hib : ∀ n, f n ω < i := by 
     intro n
-    exact lt_of_le_of_lt ((mem_upper_bounds.1 hωb.some_mem) _ ⟨n, rfl⟩) hi
+    exact lt_of_le_of_lt ((mem_upperBounds.1 hωb.some_mem) _ ⟨n, rfl⟩) hi
   have heq : ∀ n, stopped_value f (least_ge f i n) ω = f n ω := by
     intro n
     rw [least_ge, hitting, stopped_value]
@@ -272,10 +272,10 @@ theorem Martingale.bdd_above_range_iff_bdd_below_range [IsFiniteMeasure μ] (hf 
       simp only [neg_neg, Pi.neg_apply]
   rw [hω₁, this, ← hω₂]
   constructor <;> rintro ⟨c, hc⟩ <;> refine' ⟨-c, fun ω hω => _⟩
-  · rw [mem_upper_bounds] at hc
+  · rw [mem_upperBounds] at hc
     refine' neg_le.2 (hc _ _)
     simpa only [Pi.neg_apply, Set.mem_range, neg_inj]
-  · rw [mem_lower_bounds] at hc
+  · rw [mem_lowerBounds] at hc
     simp_rw [Set.mem_range, Pi.neg_apply, neg_eq_iff_neg_eq, eq_comm] at hω
     refine' le_neg.1 (hc _ _)
     simpa only [Set.mem_range]

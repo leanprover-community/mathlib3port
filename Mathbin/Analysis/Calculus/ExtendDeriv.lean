@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.extend_deriv
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
 its derivative also converges at `a`, then `f` is differentiable on the right at `a`. -/
 theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
     (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a) (hs : s ∈ 𝓝[>] a)
-    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[>] a) (𝓝 e)) : HasDerivWithinAt f e (ici a) a :=
+    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[>] a) (𝓝 e)) : HasDerivWithinAt f e (Ici a) a :=
   by
   /- This is a specialization of `has_fderiv_at_boundary_of_tendsto_fderiv`. To be in the setting of
     this theorem, we need to work on an open interval with closure contained in `s ∪ {a}`, that we
@@ -156,7 +156,7 @@ theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : 
 its derivative also converges at `a`, then `f` is differentiable on the left at `a`. -/
 theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
     (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a) (hs : s ∈ 𝓝[<] a)
-    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[<] a) (𝓝 e)) : HasDerivWithinAt f e (iic a) a :=
+    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[<] a) (𝓝 e)) : HasDerivWithinAt f e (Iic a) a :=
   by
   /- This is a specialization of `has_fderiv_at_boundary_of_differentiable`. To be in the setting of
     this theorem, we need to work on an open interval with closure contained in `s ∪ {a}`, that we

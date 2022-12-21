@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.lattice
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -391,7 +391,7 @@ theorem Ne.lt_sup_or_lt_sup (hab : a ≠ b) : a < a ⊔ b ∨ b < a ⊔ b :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : α -> β}, (Monotone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) _inst_2 f) -> (Antitone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) _inst_2 g) -> (LE.le.{max u1 u2} (α -> β) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Preorder.toLE.{u2} β _inst_2)) f g) -> (forall (m : α) (n : α), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (f m) (g n))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {f : α -> β} {g : α -> β}, (Monotone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 f) -> (Antitone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 g) -> (LE.le.{max u2 u1} (α -> β) (instLEForAll.{u2, u1} α (fun (ᾰ : α) => β) (fun (i : α) => Preorder.toLE.{u1} β _inst_2)) f g) -> (forall (m : α) (n : α), LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f m) (g n))
+  forall {α : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {f : α -> β} {g : α -> β}, (Monotone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 f) -> (Antitone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 g) -> (LE.le.{max u2 u1} (α -> β) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => β) (fun (i : α) => Preorder.toLE.{u1} β _inst_2)) f g) -> (forall (m : α) (n : α), LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f m) (g n))
 Case conversion may be inaccurate. Consider using '#align monotone.forall_le_of_antitone Monotone.forall_le_of_antitoneₓ'. -/
 /-- If `f` is monotone, `g` is antitone, and `f ≤ g`, then for all `a`, `b` we have `f a ≤ g b`. -/
 theorem Monotone.forall_le_of_antitone {β : Type _} [Preorder β] {f g : α → β} (hf : Monotone f)

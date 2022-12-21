@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.ae_measurable
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -245,7 +245,7 @@ end AeMeasurable
 
 theorem ae_measurable_interval_oc_iff [LinearOrder α] {f : α → β} {a b : α} :
     (AeMeasurable f <| μ.restrict <| Ι a b) ↔
-      (AeMeasurable f <| μ.restrict <| ioc a b) ∧ (AeMeasurable f <| μ.restrict <| ioc b a) :=
+      (AeMeasurable f <| μ.restrict <| Ioc a b) ∧ (AeMeasurable f <| μ.restrict <| Ioc b a) :=
   by rw [interval_oc_eq_union, ae_measurable_union_iff]
 #align ae_measurable_interval_oc_iff ae_measurable_interval_oc_iff
 
@@ -309,8 +309,8 @@ theorem AeMeasurable.restrict (hfm : AeMeasurable f μ) {s} : AeMeasurable f (μ
 
 theorem aeMeasurableIoiOfForallIoc {β} {mβ : MeasurableSpace β} [LinearOrder α]
     [(atTop : Filter α).IsCountablyGenerated] {x : α} {g : α → β}
-    (g_meas : ∀ t > x, AeMeasurable g (μ.restrict (ioc x t))) :
-    AeMeasurable g (μ.restrict (ioi x)) := by
+    (g_meas : ∀ t > x, AeMeasurable g (μ.restrict (Ioc x t))) :
+    AeMeasurable g (μ.restrict (Ioi x)) := by
   haveI : Nonempty α := ⟨x⟩
   haveI : (at_top : Filter α).ne_bot := at_top_ne_bot
   obtain ⟨u, hu_tendsto⟩ := exists_seq_tendsto (at_top : Filter α)

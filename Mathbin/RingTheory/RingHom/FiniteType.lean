@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.finite_type
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ theorem finite_type_holds_for_localization_away : HoldsForLocalizationAway @Fini
     ext
     rw [Algebra.smul_def]
     rfl
-  exact IsLocalization.finiteTypeOfMonoidFg (Submonoid.powers r) S
+  exact IsLocalization.finite_type_of_monoid_fg (Submonoid.powers r) S
 #align
   ring_hom.finite_type_holds_for_localization_away RingHom.finite_type_holds_for_localization_away
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Martin Zinkevich, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.pi_system
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,16 +140,16 @@ theorem is_pi_system_image_Iio (s : Set α) : IsPiSystem (Iio '' s) := by
   exact ⟨a ⊓ b, inf_ind a b ha hb, Iio_inter_Iio.symm⟩
 #align is_pi_system_image_Iio is_pi_system_image_Iio
 
-theorem is_pi_system_Iio : IsPiSystem (range iio : Set (Set α)) :=
-  @image_univ α _ iio ▸ is_pi_system_image_Iio univ
+theorem is_pi_system_Iio : IsPiSystem (range Iio : Set (Set α)) :=
+  @image_univ α _ Iio ▸ is_pi_system_image_Iio univ
 #align is_pi_system_Iio is_pi_system_Iio
 
 theorem is_pi_system_image_Ioi (s : Set α) : IsPiSystem (Ioi '' s) :=
   @is_pi_system_image_Iio αᵒᵈ _ s
 #align is_pi_system_image_Ioi is_pi_system_image_Ioi
 
-theorem is_pi_system_Ioi : IsPiSystem (range ioi : Set (Set α)) :=
-  @image_univ α _ ioi ▸ is_pi_system_image_Ioi univ
+theorem is_pi_system_Ioi : IsPiSystem (range Ioi : Set (Set α)) :=
+  @image_univ α _ Ioi ▸ is_pi_system_image_Ioi univ
 #align is_pi_system_Ioi is_pi_system_Ioi
 
 theorem is_pi_system_Ixx_mem {Ixx : α → α → Set α} {p : α → α → Prop}
@@ -169,44 +169,44 @@ theorem is_pi_system_Ixx {Ixx : α → α → Set α} {p : α → α → Prop}
 #align is_pi_system_Ixx is_pi_system_Ixx
 
 theorem is_pi_system_Ioo_mem (s t : Set α) :
-    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, ioo l u = S } :=
+    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioo l u = S } :=
   is_pi_system_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) s t
 #align is_pi_system_Ioo_mem is_pi_system_Ioo_mem
 
 theorem is_pi_system_Ioo (f : ι → α) (g : ι' → α) :
-    @IsPiSystem α { S | ∃ (l u : _)(h : f l < g u), ioo (f l) (g u) = S } :=
+    @IsPiSystem α { S | ∃ (l u : _)(h : f l < g u), Ioo (f l) (g u) = S } :=
   is_pi_system_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) f g
 #align is_pi_system_Ioo is_pi_system_Ioo
 
 theorem is_pi_system_Ioc_mem (s t : Set α) :
-    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, ioc l u = S } :=
+    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioc l u = S } :=
   is_pi_system_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) s
     t
 #align is_pi_system_Ioc_mem is_pi_system_Ioc_mem
 
 theorem is_pi_system_Ioc (f : ι → α) (g : ι' → α) :
-    @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), ioc (f i) (g j) = S } :=
+    @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), Ioc (f i) (g j) = S } :=
   is_pi_system_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) f g
 #align is_pi_system_Ioc is_pi_system_Ioc
 
 theorem is_pi_system_Ico_mem (s t : Set α) :
-    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, ico l u = S } :=
+    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ico l u = S } :=
   is_pi_system_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) s
     t
 #align is_pi_system_Ico_mem is_pi_system_Ico_mem
 
 theorem is_pi_system_Ico (f : ι → α) (g : ι' → α) :
-    @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), ico (f i) (g j) = S } :=
+    @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), Ico (f i) (g j) = S } :=
   is_pi_system_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) f g
 #align is_pi_system_Ico is_pi_system_Ico
 
 theorem is_pi_system_Icc_mem (s t : Set α) :
-    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l ≤ u, icc l u = S } :=
+    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l ≤ u, Icc l u = S } :=
   is_pi_system_Ixx_mem (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) s t
 #align is_pi_system_Icc_mem is_pi_system_Icc_mem
 
 theorem is_pi_system_Icc (f : ι → α) (g : ι' → α) :
-    @IsPiSystem α { S | ∃ (i j : _)(h : f i ≤ g j), icc (f i) (g j) = S } :=
+    @IsPiSystem α { S | ∃ (i j : _)(h : f i ≤ g j), Icc (f i) (g j) = S } :=
   is_pi_system_Ixx (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) f g
 #align is_pi_system_Icc is_pi_system_Icc
 
@@ -507,7 +507,7 @@ theorem measurableSetSuprOfMemPiUnionInter (m : ι → MeasurableSpace α) (S : 
   refine' pt.measurable_set_bInter fun i hi => _
   suffices h_le : m i ≤ ⨆ i ∈ S, m i; exact h_le (ft i) (ht_m i hi)
   have hi' : i ∈ S := hpt hi
-  exact le_supr₂ i hi'
+  exact le_supᵢ₂ i hi'
 #align measurable_set_supr_of_mem_pi_Union_Inter measurableSetSuprOfMemPiUnionInter
 
 theorem generate_from_pi_Union_Inter_measurable_set (m : ι → MeasurableSpace α) (S : Set ι) :
@@ -515,7 +515,7 @@ theorem generate_from_pi_Union_Inter_measurable_set (m : ι → MeasurableSpace 
   refine' le_antisymm _ _
   · rw [← @generate_from_measurable_set α (⨆ i ∈ S, m i)]
     exact generate_from_mono (measurableSetSuprOfMemPiUnionInter m S)
-  · refine' supr₂_le fun i hi => _
+  · refine' supᵢ₂_le fun i hi => _
     rw [← @generate_from_measurable_set α (m i)]
     exact generate_from_mono (mem_pi_Union_Inter_of_measurable_set m hi)
 #align generate_from_pi_Union_Inter_measurable_set generate_from_pi_Union_Inter_measurable_set

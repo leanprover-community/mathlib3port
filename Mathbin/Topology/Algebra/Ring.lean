@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.ring
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -427,7 +427,7 @@ instance : PartialOrder (RingTopology α) :=
 local notation "cont" => @Continuous _ _
 
 private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
-  let Inf_S' := inf (to_topological_space '' S)
+  let Inf_S' := infₛ (to_topological_space '' S)
   { toTopologicalSpace := Inf_S'
     continuous_add := by 
       apply continuous_Inf_rng.2
@@ -474,13 +474,13 @@ instance : CompleteLattice (RingTopology α) :=
 /-- Given `f : α → β` and a topology on `α`, the coinduced ring topology on `β` is the finest
 topology such that `f` is continuous and `β` is a topological ring. -/
 def coinduced {α β : Type _} [t : TopologicalSpace α] [Ring β] (f : α → β) : RingTopology β :=
-  inf { b : RingTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
+  infₛ { b : RingTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
 #align ring_topology.coinduced RingTopology.coinduced
 
 theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ring β] (f : α → β) :
     cont t (coinduced f).toTopologicalSpace f := by
   rw [continuous_iff_coinduced_le]
-  refine' le_Inf _
+  refine' le_infₛ _
   rintro _ ⟨t', ht', rfl⟩
   exact ht'
 #align ring_topology.coinduced_continuous RingTopology.coinduced_continuous

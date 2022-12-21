@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.sampleable
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -325,7 +325,7 @@ finds the first that satisfies `p` and recursively tries
 to shrink that one. -/
 def iterateShrink {α} [ToString α] [Sampleable α] (p : α → Prop) [DecidablePred p] : α → Option α :=
   (WellFounded.fix WellFoundedRelation.wf) fun x f_rec => do
-    (trace s! "{x} : {(shrink x).toList}") <| pure ()
+    (trace s! "{x} : {(Shrink x).toList}") <| pure ()
     let y ← (shrink x).find fun a => p a
     f_rec y y <|> some y
 #align slim_check.iterate_shrink SlimCheck.iterateShrink
@@ -430,11 +430,11 @@ instance Sum.sampleable : SampleableBifunctor.{u, v}
 #align slim_check.sum.sampleable SlimCheck.Sum.sampleable
 
 instance Rat.sampleable : Sampleable ℚ :=
-  (Sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x Rat.mkPnat) fun r =>
+  (Sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x [anonymous]) fun r =>
       (r.Num, ⟨r.denom, r.Pos⟩)) <|
     by 
     intro i
-    rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [Rat.mkPnat]
+    rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [[anonymous]]
     mono*
     · rw [← Int.ofNat_le, ← Int.abs_eq_natAbs, ← Int.abs_eq_natAbs]
       apply Int.abs_ediv_le_abs

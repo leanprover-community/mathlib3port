@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 
 ! This file was ported from Lean 3 source module order.upper_lower
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,23 +211,23 @@ section Preorder
 
 variable [Preorder α] [Preorder β] {s : Set α} {p : α → Prop} (a : α)
 
-theorem is_upper_set_Ici : IsUpperSet (ici a) := fun _ _ => ge_trans
+theorem is_upper_set_Ici : IsUpperSet (Ici a) := fun _ _ => ge_trans
 #align is_upper_set_Ici is_upper_set_Ici
 
-theorem is_lower_set_Iic : IsLowerSet (iic a) := fun _ _ => le_trans
+theorem is_lower_set_Iic : IsLowerSet (Iic a) := fun _ _ => le_trans
 #align is_lower_set_Iic is_lower_set_Iic
 
-theorem is_upper_set_Ioi : IsUpperSet (ioi a) := fun _ _ => flip lt_of_lt_of_le
+theorem is_upper_set_Ioi : IsUpperSet (Ioi a) := fun _ _ => flip lt_of_lt_of_le
 #align is_upper_set_Ioi is_upper_set_Ioi
 
-theorem is_lower_set_Iio : IsLowerSet (iio a) := fun _ _ => lt_of_le_of_lt
+theorem is_lower_set_Iio : IsLowerSet (Iio a) := fun _ _ => lt_of_le_of_lt
 #align is_lower_set_Iio is_lower_set_Iio
 
-theorem is_upper_set_iff_Ici_subset : IsUpperSet s ↔ ∀ ⦃a⦄, a ∈ s → ici a ⊆ s := by
+theorem is_upper_set_iff_Ici_subset : IsUpperSet s ↔ ∀ ⦃a⦄, a ∈ s → Ici a ⊆ s := by
   simp [IsUpperSet, subset_def, @forall_swap (_ ∈ s)]
 #align is_upper_set_iff_Ici_subset is_upper_set_iff_Ici_subset
 
-theorem is_lower_set_iff_Iic_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → iic a ⊆ s := by
+theorem is_lower_set_iff_Iic_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → Iic a ⊆ s := by
   simp [IsLowerSet, subset_def, @forall_swap (_ ∈ s)]
 #align is_lower_set_iff_Iic_subset is_lower_set_iff_Iic_subset
 
@@ -329,11 +329,11 @@ theorem IsUpperSet.not_bdd_above (hs : IsUpperSet s) : s.Nonempty → ¬BddAbove
   exact hc.not_le (hb <| hs ((hb ha).trans hc.le) ha)
 #align is_upper_set.not_bdd_above IsUpperSet.not_bdd_above
 
-theorem not_bdd_above_Ici : ¬BddAbove (ici a) :=
+theorem not_bdd_above_Ici : ¬BddAbove (Ici a) :=
   (is_upper_set_Ici _).not_bdd_above nonempty_Ici
 #align not_bdd_above_Ici not_bdd_above_Ici
 
-theorem not_bdd_above_Ioi : ¬BddAbove (ioi a) :=
+theorem not_bdd_above_Ioi : ¬BddAbove (Ioi a) :=
   (is_upper_set_Ioi _).not_bdd_above nonempty_Ioi
 #align not_bdd_above_Ioi not_bdd_above_Ioi
 
@@ -349,11 +349,11 @@ theorem IsLowerSet.not_bdd_below (hs : IsLowerSet s) : s.Nonempty → ¬BddBelow
   exact hc.not_le (hb <| hs (hc.le.trans <| hb ha) ha)
 #align is_lower_set.not_bdd_below IsLowerSet.not_bdd_below
 
-theorem not_bdd_below_Iic : ¬BddBelow (iic a) :=
+theorem not_bdd_below_Iic : ¬BddBelow (Iic a) :=
   (is_lower_set_Iic _).not_bdd_below nonempty_Iic
 #align not_bdd_below_Iic not_bdd_below_Iic
 
-theorem not_bdd_below_Iio : ¬BddBelow (iio a) :=
+theorem not_bdd_below_Iio : ¬BddBelow (Iio a) :=
   (is_lower_set_Iio _).not_bdd_below nonempty_Iio
 #align not_bdd_below_Iio not_bdd_below_Iio
 
@@ -373,11 +373,11 @@ theorem is_lower_set_iff_forall_lt : IsLowerSet s ↔ ∀ ⦃a b : α⦄, b < a 
   forall_congr' fun a => by simp [le_iff_eq_or_lt, or_imp, forall_and]
 #align is_lower_set_iff_forall_lt is_lower_set_iff_forall_lt
 
-theorem is_upper_set_iff_Ioi_subset : IsUpperSet s ↔ ∀ ⦃a⦄, a ∈ s → ioi a ⊆ s := by
+theorem is_upper_set_iff_Ioi_subset : IsUpperSet s ↔ ∀ ⦃a⦄, a ∈ s → Ioi a ⊆ s := by
   simp [is_upper_set_iff_forall_lt, subset_def, @forall_swap (_ ∈ s)]
 #align is_upper_set_iff_Ioi_subset is_upper_set_iff_Ioi_subset
 
-theorem is_lower_set_iff_Iio_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → iio a ⊆ s := by
+theorem is_lower_set_iff_Iio_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → Iio a ⊆ s := by
   simp [is_lower_set_iff_forall_lt, subset_def, @forall_swap (_ ∈ s)]
 #align is_lower_set_iff_Iio_subset is_lower_set_iff_Iio_subset
 
@@ -485,10 +485,10 @@ instance : Top (UpperSet α) :=
 instance : Bot (UpperSet α) :=
   ⟨⟨univ, is_upper_set_univ⟩⟩
 
-instance : HasSup (UpperSet α) :=
+instance : SupSet (UpperSet α) :=
   ⟨fun S => ⟨⋂ s ∈ S, ↑s, is_upper_set_Inter₂ fun s _ => s.upper⟩⟩
 
-instance : HasInf (UpperSet α) :=
+instance : InfSet (UpperSet α) :=
   ⟨fun S => ⟨⋃ s ∈ S, ↑s, is_upper_set_Union₂ fun s _ => s.upper⟩⟩
 
 instance : CompleteDistribLattice (UpperSet α) :=
@@ -532,17 +532,17 @@ theorem coe_inf (s t : UpperSet α) : (↑(s ⊓ t) : Set α) = s ∪ t :=
 #align upper_set.coe_inf UpperSet.coe_inf
 
 @[simp, norm_cast]
-theorem coe_Sup (S : Set (UpperSet α)) : (↑(sup S) : Set α) = ⋂ s ∈ S, ↑s :=
+theorem coe_Sup (S : Set (UpperSet α)) : (↑(supₛ S) : Set α) = ⋂ s ∈ S, ↑s :=
   rfl
 #align upper_set.coe_Sup UpperSet.coe_Sup
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (UpperSet α)) : (↑(inf S) : Set α) = ⋃ s ∈ S, ↑s :=
+theorem coe_Inf (S : Set (UpperSet α)) : (↑(infₛ S) : Set α) = ⋃ s ∈ S, ↑s :=
   rfl
 #align upper_set.coe_Inf UpperSet.coe_Inf
 
 @[simp, norm_cast]
-theorem coe_supr (f : ι → UpperSet α) : (↑(⨆ i, f i) : Set α) = ⋂ i, f i := by simp [supr]
+theorem coe_supr (f : ι → UpperSet α) : (↑(⨆ i, f i) : Set α) = ⋂ i, f i := by simp [supᵢ]
 #align upper_set.coe_supr UpperSet.coe_supr
 
 @[simp, norm_cast]
@@ -584,12 +584,12 @@ theorem mem_inf_iff : a ∈ s ⊓ t ↔ a ∈ s ∨ a ∈ t :=
 #align upper_set.mem_inf_iff UpperSet.mem_inf_iff
 
 @[simp]
-theorem mem_Sup_iff : a ∈ sup S ↔ ∀ s ∈ S, a ∈ s :=
+theorem mem_Sup_iff : a ∈ supₛ S ↔ ∀ s ∈ S, a ∈ s :=
   mem_Inter₂
 #align upper_set.mem_Sup_iff UpperSet.mem_Sup_iff
 
 @[simp]
-theorem mem_Inf_iff : a ∈ inf S ↔ ∃ s ∈ S, a ∈ s :=
+theorem mem_Inf_iff : a ∈ infₛ S ↔ ∃ s ∈ S, a ∈ s :=
   mem_Union₂
 #align upper_set.mem_Inf_iff UpperSet.mem_Inf_iff
 
@@ -640,10 +640,10 @@ instance : Top (LowerSet α) :=
 instance : Bot (LowerSet α) :=
   ⟨⟨∅, fun a b h => id⟩⟩
 
-instance : HasSup (LowerSet α) :=
+instance : SupSet (LowerSet α) :=
   ⟨fun S => ⟨⋃ s ∈ S, ↑s, is_lower_set_Union₂ fun s _ => s.lower⟩⟩
 
-instance : HasInf (LowerSet α) :=
+instance : InfSet (LowerSet α) :=
   ⟨fun S => ⟨⋂ s ∈ S, ↑s, is_lower_set_Inter₂ fun s _ => s.lower⟩⟩
 
 instance : CompleteDistribLattice (LowerSet α) :=
@@ -687,18 +687,18 @@ theorem coe_inf (s t : LowerSet α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
 #align lower_set.coe_inf LowerSet.coe_inf
 
 @[simp, norm_cast]
-theorem coe_Sup (S : Set (LowerSet α)) : (↑(sup S) : Set α) = ⋃ s ∈ S, ↑s :=
+theorem coe_Sup (S : Set (LowerSet α)) : (↑(supₛ S) : Set α) = ⋃ s ∈ S, ↑s :=
   rfl
 #align lower_set.coe_Sup LowerSet.coe_Sup
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (LowerSet α)) : (↑(inf S) : Set α) = ⋂ s ∈ S, ↑s :=
+theorem coe_Inf (S : Set (LowerSet α)) : (↑(infₛ S) : Set α) = ⋂ s ∈ S, ↑s :=
   rfl
 #align lower_set.coe_Inf LowerSet.coe_Inf
 
 @[simp, norm_cast]
 theorem coe_supr (f : ι → LowerSet α) : (↑(⨆ i, f i) : Set α) = ⋃ i, f i := by
-  simp_rw [supr, coe_Sup, mem_range, Union_exists, Union_Union_eq']
+  simp_rw [supᵢ, coe_Sup, mem_range, Union_exists, Union_Union_eq']
 #align lower_set.coe_supr LowerSet.coe_supr
 
 @[simp, norm_cast]
@@ -741,12 +741,12 @@ theorem mem_inf_iff : a ∈ s ⊓ t ↔ a ∈ s ∧ a ∈ t :=
 #align lower_set.mem_inf_iff LowerSet.mem_inf_iff
 
 @[simp]
-theorem mem_Sup_iff : a ∈ sup S ↔ ∃ s ∈ S, a ∈ s :=
+theorem mem_Sup_iff : a ∈ supₛ S ↔ ∃ s ∈ S, a ∈ s :=
   mem_Union₂
 #align lower_set.mem_Sup_iff LowerSet.mem_Sup_iff
 
 @[simp]
-theorem mem_Inf_iff : a ∈ inf S ↔ ∀ s ∈ S, a ∈ s :=
+theorem mem_Inf_iff : a ∈ infₛ S ↔ ∀ s ∈ S, a ∈ s :=
   mem_Inter₂
 #align lower_set.mem_Inf_iff LowerSet.mem_Inf_iff
 
@@ -839,12 +839,12 @@ protected theorem compl_bot : (⊥ : UpperSet α).compl = ⊥ :=
 #align upper_set.compl_bot UpperSet.compl_bot
 
 @[simp]
-protected theorem compl_Sup (S : Set (UpperSet α)) : (sup S).compl = ⨆ s ∈ S, UpperSet.compl s :=
+protected theorem compl_Sup (S : Set (UpperSet α)) : (supₛ S).compl = ⨆ s ∈ S, UpperSet.compl s :=
   LowerSet.ext <| by simp only [coe_compl, coe_Sup, compl_Inter₂, LowerSet.coe_supr₂]
 #align upper_set.compl_Sup UpperSet.compl_Sup
 
 @[simp]
-protected theorem compl_Inf (S : Set (UpperSet α)) : (inf S).compl = ⨅ s ∈ S, UpperSet.compl s :=
+protected theorem compl_Inf (S : Set (UpperSet α)) : (infₛ S).compl = ⨅ s ∈ S, UpperSet.compl s :=
   LowerSet.ext <| by simp only [coe_compl, coe_Inf, compl_Union₂, LowerSet.coe_infi₂]
 #align upper_set.compl_Inf UpperSet.compl_Inf
 
@@ -914,11 +914,11 @@ protected theorem compl_bot : (⊥ : LowerSet α).compl = ⊥ :=
   UpperSet.ext compl_empty
 #align lower_set.compl_bot LowerSet.compl_bot
 
-protected theorem compl_Sup (S : Set (LowerSet α)) : (sup S).compl = ⨆ s ∈ S, LowerSet.compl s :=
+protected theorem compl_Sup (S : Set (LowerSet α)) : (supₛ S).compl = ⨆ s ∈ S, LowerSet.compl s :=
   UpperSet.ext <| by simp only [coe_compl, coe_Sup, compl_Union₂, UpperSet.coe_supr₂]
 #align lower_set.compl_Sup LowerSet.compl_Sup
 
-protected theorem compl_Inf (S : Set (LowerSet α)) : (inf S).compl = ⨅ s ∈ S, LowerSet.compl s :=
+protected theorem compl_Inf (S : Set (LowerSet α)) : (infₛ S).compl = ⨅ s ∈ S, LowerSet.compl s :=
   UpperSet.ext <| by simp only [coe_compl, coe_Inf, compl_Inter₂, UpperSet.coe_infi₂]
 #align lower_set.compl_Inf LowerSet.compl_Inf
 
@@ -1032,14 +1032,14 @@ protected theorem map_bot : map f ⊥ = ⊥ :=
 #align upper_set.map_bot UpperSet.map_bot
 
 @[simp]
-protected theorem map_Sup (S : Set (UpperSet α)) : map f (sup S) = ⨆ s ∈ S, map f s :=
+protected theorem map_Sup (S : Set (UpperSet α)) : map f (supₛ S) = ⨆ s ∈ S, map f s :=
   ext <| by 
     push_cast
     exact image_Inter₂ f.bijective _
 #align upper_set.map_Sup UpperSet.map_Sup
 
 @[simp]
-protected theorem map_Inf (S : Set (UpperSet α)) : map f (inf S) = ⨅ s ∈ S, map f s :=
+protected theorem map_Inf (S : Set (UpperSet α)) : map f (infₛ S) = ⨅ s ∈ S, map f s :=
   ext <| by 
     push_cast
     exact image_Union₂ _ _
@@ -1127,13 +1127,13 @@ protected theorem map_bot : map f ⊥ = ⊥ :=
 #align lower_set.map_bot LowerSet.map_bot
 
 @[simp]
-protected theorem map_Sup (S : Set (LowerSet α)) : map f (sup S) = ⨆ s ∈ S, map f s :=
+protected theorem map_Sup (S : Set (LowerSet α)) : map f (supₛ S) = ⨆ s ∈ S, map f s :=
   ext <| by 
     push_cast
     exact image_Union₂ _ _
 #align lower_set.map_Sup LowerSet.map_Sup
 
-protected theorem map_Inf (S : Set (LowerSet α)) : map f (inf S) = ⨅ s ∈ S, map f s :=
+protected theorem map_Inf (S : Set (LowerSet α)) : map f (infₛ S) = ⨅ s ∈ S, map f s :=
   ext <| by 
     push_cast
     exact image_Inter₂ f.bijective _
@@ -1184,21 +1184,21 @@ variable [Preorder α] [Preorder β] {s : UpperSet α} {a b : α}
 
 /-- The smallest upper set containing a given element. -/
 def ici (a : α) : UpperSet α :=
-  ⟨ici a, is_upper_set_Ici a⟩
+  ⟨Ici a, is_upper_set_Ici a⟩
 #align upper_set.Ici UpperSet.ici
 
 /-- The smallest upper set containing a given element. -/
 def ioi (a : α) : UpperSet α :=
-  ⟨ioi a, is_upper_set_Ioi a⟩
+  ⟨Ioi a, is_upper_set_Ioi a⟩
 #align upper_set.Ioi UpperSet.ioi
 
 @[simp]
-theorem coe_Ici (a : α) : ↑(ici a) = Set.ici a :=
+theorem coe_Ici (a : α) : ↑(ici a) = Set.Ici a :=
   rfl
 #align upper_set.coe_Ici UpperSet.coe_Ici
 
 @[simp]
-theorem coe_Ioi (a : α) : ↑(ioi a) = Set.ioi a :=
+theorem coe_Ioi (a : α) : ↑(ioi a) = Set.Ioi a :=
   rfl
 #align upper_set.coe_Ioi UpperSet.coe_Ioi
 
@@ -1266,13 +1266,13 @@ section CompleteLattice
 variable [CompleteLattice α]
 
 @[simp]
-theorem Ici_Sup (S : Set α) : ici (sup S) = ⨆ a ∈ S, ici a :=
-  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, Sup_le_iff]
+theorem Ici_Sup (S : Set α) : ici (supₛ S) = ⨆ a ∈ S, ici a :=
+  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, supₛ_le_iff]
 #align upper_set.Ici_Sup UpperSet.Ici_Sup
 
 @[simp]
 theorem Ici_supr (f : ι → α) : ici (⨆ i, f i) = ⨆ i, ici (f i) :=
-  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, supr_le_iff]
+  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, supᵢ_le_iff]
 #align upper_set.Ici_supr UpperSet.Ici_supr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -1283,13 +1283,16 @@ theorem Ici_supr₂ (f : ∀ i, κ i → α) : ici (⨆ (i) (j), f i j) = ⨆ (i
 #align upper_set.Ici_supr₂ UpperSet.Ici_supr₂
 
 /- warning: upper_set.Ici_Sup_hom clashes with upper_set.Ici_sup_hom -> UpperSet.iciSupHom
+warning: upper_set.Ici_Sup_hom -> UpperSet.iciSupHom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α], SupHom.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α], SupHom.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α _inst_1) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align upper_set.Ici_Sup_hom UpperSet.iciSupHomₓ'. -/
-#print UpperSet.iciSupHom /-
 /-- `upper_set.Ici` as a `Sup_hom`. -/
 def iciSupHom : SupHom α (UpperSet α) :=
-  ⟨ici, fun s => (Ici_Sup s).trans Sup_image.symm⟩
+  ⟨ici, fun s => (Ici_Sup s).trans supₛ_image.symm⟩
 #align upper_set.Ici_Sup_hom UpperSet.iciSupHom
--/
 
 @[simp]
 theorem Ici_Sup_hom_apply (a : α) : iciSupHom a = toDual (ici a) :=
@@ -1309,21 +1312,21 @@ variable [Preorder α] [Preorder β] {s : LowerSet α} {a b : α}
 /-- Principal lower set. `set.Iic` as a lower set. The smallest lower set containing a given
 element. -/
 def iic (a : α) : LowerSet α :=
-  ⟨iic a, is_lower_set_Iic a⟩
+  ⟨Iic a, is_lower_set_Iic a⟩
 #align lower_set.Iic LowerSet.iic
 
 /-- Strict principal lower set. `set.Iio` as a lower set. -/
 def iio (a : α) : LowerSet α :=
-  ⟨iio a, is_lower_set_Iio a⟩
+  ⟨Iio a, is_lower_set_Iio a⟩
 #align lower_set.Iio LowerSet.iio
 
 @[simp]
-theorem coe_Iic (a : α) : ↑(iic a) = Set.iic a :=
+theorem coe_Iic (a : α) : ↑(iic a) = Set.Iic a :=
   rfl
 #align lower_set.coe_Iic LowerSet.coe_Iic
 
 @[simp]
-theorem coe_Iio (a : α) : ↑(iio a) = Set.iio a :=
+theorem coe_Iio (a : α) : ↑(iio a) = Set.Iio a :=
   rfl
 #align lower_set.coe_Iio LowerSet.coe_Iio
 
@@ -1349,7 +1352,7 @@ theorem map_Iio (f : α ≃o β) (a : α) : map f (iio a) = iio (f a) := by
   simp
 #align lower_set.map_Iio LowerSet.map_Iio
 
-theorem Ioi_le_Ici (a : α) : ioi a ≤ ici a :=
+theorem Ioi_le_Ici (a : α) : Ioi a ≤ Ici a :=
   Ioi_subset_Ici_self
 #align lower_set.Ioi_le_Ici LowerSet.Ioi_le_Ici
 
@@ -1396,13 +1399,13 @@ section CompleteLattice
 variable [CompleteLattice α]
 
 @[simp]
-theorem Iic_Inf (S : Set α) : iic (inf S) = ⨅ a ∈ S, iic a :=
-  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi₂_iff, le_Inf_iff]
+theorem Iic_Inf (S : Set α) : iic (infₛ S) = ⨅ a ∈ S, iic a :=
+  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi₂_iff, le_infₛ_iff]
 #align lower_set.Iic_Inf LowerSet.Iic_Inf
 
 @[simp]
 theorem Iic_infi (f : ι → α) : iic (⨅ i, f i) = ⨅ i, iic (f i) :=
-  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi_iff, le_infi_iff]
+  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi_iff, le_infᵢ_iff]
 #align lower_set.Iic_infi LowerSet.Iic_infi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -1413,13 +1416,16 @@ theorem Iic_infi₂ (f : ∀ i, κ i → α) : iic (⨅ (i) (j), f i j) = ⨅ (i
 #align lower_set.Iic_infi₂ LowerSet.Iic_infi₂
 
 /- warning: lower_set.Iic_Inf_hom clashes with lower_set.Iic_inf_hom -> LowerSet.iicInfHom
+warning: lower_set.Iic_Inf_hom -> LowerSet.iicInfHom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α], InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α], InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align lower_set.Iic_Inf_hom LowerSet.iicInfHomₓ'. -/
-#print LowerSet.iicInfHom /-
 /-- `lower_set.Iic` as an `Inf_hom`. -/
 def iicInfHom : InfHom α (LowerSet α) :=
-  ⟨iic, fun s => (Iic_Inf s).trans Inf_image.symm⟩
+  ⟨iic, fun s => (Iic_Inf s).trans infₛ_image.symm⟩
 #align lower_set.Iic_Inf_hom LowerSet.iicInfHom
--/
 
 @[simp]
 theorem coe_Iic_Inf_hom : (iicInfHom : α → LowerSet α) = Iic :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.group.unique_prods
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,8 +103,8 @@ theorem exists_iff_exists_exists_unique :
 @[to_additive "`unique_add` is preserved by inverse images under injective, additive maps."]
 theorem mul_hom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : G) {A B : Finset H}
     (u : UniqueMul A B (f a0) (f b0)) :
-    UniqueMul (A.Preimage f (Set.inj_on_of_injective hf _))
-      (B.Preimage f (Set.inj_on_of_injective hf _)) a0 b0 :=
+    UniqueMul (A.Preimage f (Set.injOn_of_injective hf _))
+      (B.Preimage f (Set.injOn_of_injective hf _)) a0 b0 :=
   by 
   intro a b ha hb ab
   rw [← hf.eq_iff, ← hf.eq_iff]

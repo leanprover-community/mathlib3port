@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_group
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,7 +204,7 @@ variable [Group β]
 
 @[to_additive]
 theorem uniform_group_Inf {us : Set (UniformSpace β)} (h : ∀ u ∈ us, @UniformGroup β u _) :
-    @UniformGroup β (inf us) _ :=
+    @UniformGroup β (infₛ us) _ :=
   { uniform_continuous_div :=
       uniform_continuous_Inf_rng fun u hu =>
         uniform_continuous_Inf_dom₂ hu hu (@UniformGroup.uniform_continuous_div β u _ (h u hu)) }
@@ -213,14 +213,14 @@ theorem uniform_group_Inf {us : Set (UniformSpace β)} (h : ∀ u ∈ us, @Unifo
 @[to_additive]
 theorem uniform_group_infi {ι : Sort _} {us' : ι → UniformSpace β}
     (h' : ∀ i, @UniformGroup β (us' i) _) : @UniformGroup β (⨅ i, us' i) _ := by
-  rw [← Inf_range]
+  rw [← infₛ_range]
   exact uniform_group_Inf (set.forall_range_iff.mpr h')
 #align uniform_group_infi uniform_group_infi
 
 @[to_additive]
 theorem uniform_group_inf {u₁ u₂ : UniformSpace β} (h₁ : @UniformGroup β u₁ _)
     (h₂ : @UniformGroup β u₂ _) : @UniformGroup β (u₁ ⊓ u₂) _ := by
-  rw [inf_eq_infi]
+  rw [inf_eq_infᵢ]
   refine' uniform_group_infi fun b => _
   cases b <;> assumption
 #align uniform_group_inf uniform_group_inf

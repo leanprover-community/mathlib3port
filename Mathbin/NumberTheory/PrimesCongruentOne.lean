@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.primes_congruent_one
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,8 +52,7 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
   haveI hprime : Fact p.prime := ⟨min_fac_prime (ne_of_lt hgt).symm⟩
   have hroot : is_root (cyclotomic k (Zmod p)) (cast_ring_hom (Zmod p) b) := by
     rw [is_root.def, ← map_cyclotomic_int k (Zmod p), eval_map, coe_cast_ring_hom, ← Int.cast_ofNat,
-      ← Int.coe_cast_ring_hom, eval₂_hom, Int.coe_cast_ring_hom,
-      Zmod.int_coe_zmod_eq_zero_iff_dvd _ _]
+      ← Int.coe_castRingHom, eval₂_hom, Int.coe_castRingHom, Zmod.int_coe_zmod_eq_zero_iff_dvd _ _]
     apply Int.dvd_natAbs.1
     exact_mod_cast min_fac_dvd (eval (↑b) (cyclotomic k ℤ)).natAbs
   refine' ⟨p, hprime.1, _, _⟩

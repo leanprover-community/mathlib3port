@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module measure_theory.card_measurable_space
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ this will be enough to generate all sets in the sigma-algebra.
 This construction is very similar to that of the Borel hierarchy. -/
 def generateMeasurableRec (s : Set (Set α)) : ω₁ → Set (Set α)
   | i =>
-    let S := ⋃ j : iio i, generate_measurable_rec j.1
+    let S := ⋃ j : Iio i, generate_measurable_rec j.1
     s ∪ {∅} ∪ compl '' S ∪ Set.range fun f : ℕ → S => ⋃ n, (f n).1decreasing_by
   exact j.2
 #align measurable_space.generate_measurable_rec MeasurableSpace.generateMeasurableRec

@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.linear_map
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1119,7 +1119,7 @@ instance Module.EndCat.ring : Ring (Module.EndCat R N₁) :=
   { Module.EndCat.semiring, LinearMap.addCommGroup with
     intCast := fun z => z • 1
     int_cast_of_nat := of_nat_zsmul _
-    int_cast_neg_succ_of_nat := zsmul_neg_succ_of_nat _ }
+    int_cast_neg_succ_of_nat := negSucc_zsmul _ }
 #align module.End.ring Module.EndCat.ring
 
 /-- See also `module.End.int_cast_def`. -/

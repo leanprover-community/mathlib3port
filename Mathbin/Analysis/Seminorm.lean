@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.seminorm
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -462,7 +462,7 @@ noncomputable instance :
         simp_rw [Real.mul_infi_of_nonneg (norm_nonneg a), mul_add, ← map_smul_eq_mul p, ←
           map_smul_eq_mul q, smul_sub]
         refine'
-          Function.Surjective.infi_congr ((· • ·) a⁻¹ : E → E)
+          Function.Surjective.infᵢ_congr ((· • ·) a⁻¹ : E → E)
             (fun u => ⟨a • u, inv_smul_smul₀ ha u⟩) fun u => _
         rw [smul_inv_smul₀ ha] }
 
@@ -512,13 +512,13 @@ need for an additional case disjunction. As discussed on Zulip, this doesn't wor
 give a function which does *not* satisfy the seminorm axioms (typically sub-additivity).
 -/
 noncomputable instance :
-    HasSup
+    SupSet
       (Seminorm 𝕜
         E) where sup s :=
     if h : BddAbove (coeFn '' s : Set (E → ℝ)) then
       { toFun := ⨆ p : s, ((p : Seminorm 𝕜 E) : E → ℝ)
         map_zero' := by 
-          rw [supr_apply, ← @Real.csupr_const_zero s]
+          rw [supᵢ_apply, ← @Real.csupr_const_zero s]
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
           exact map_zero i.1
@@ -527,20 +527,20 @@ noncomputable instance :
           obtain rfl | h := s.eq_empty_or_nonempty
           · simp [Real.csupr_empty]
           haveI : Nonempty ↥s := h.coe_sort
-          simp only [supr_apply]
+          simp only [supᵢ_apply]
           refine'
                 csupr_le fun i =>
                   ((i : Seminorm 𝕜 E).add_le' x y).trans <|
                     add_le_add (le_csupr ⟨q x, _⟩ i) (le_csupr ⟨q y, _⟩ i) <;>
-              rw [mem_upper_bounds, forall_range_iff] <;>
+              rw [mem_upperBounds, forall_range_iff] <;>
             exact fun j => hq (mem_image_of_mem _ j.2) _
         neg' := fun x => by 
-          simp only [supr_apply]
+          simp only [supᵢ_apply]
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
           exact i.1.neg' _
         smul' := fun a x => by 
-          simp only [supr_apply]
+          simp only [supᵢ_apply]
           rw [← smul_eq_mul,
             Real.smul_supr_of_nonneg (norm_nonneg a) fun i : s => (i : Seminorm 𝕜 E) x]
           trace
@@ -549,34 +549,34 @@ noncomputable instance :
     else ⊥
 
 protected theorem coe_Sup_eq' {s : Set <| Seminorm 𝕜 E} (hs : BddAbove (coeFn '' s : Set (E → ℝ))) :
-    coeFn (sup s) = ⨆ p : s, p :=
+    coeFn (supₛ s) = ⨆ p : s, p :=
   congr_arg _ (dif_pos hs)
 #align seminorm.coe_Sup_eq' Seminorm.coe_Sup_eq'
 
 protected theorem bdd_above_iff {s : Set <| Seminorm 𝕜 E} :
     BddAbove s ↔ BddAbove (coeFn '' s : Set (E → ℝ)) :=
   ⟨fun ⟨q, hq⟩ => ⟨q, ball_image_of_ball fun p hp => hq hp⟩, fun H =>
-    ⟨sup s, fun p hp x => by 
-      rw [Seminorm.coe_Sup_eq' H, supr_apply]
+    ⟨supₛ s, fun p hp x => by 
+      rw [Seminorm.coe_Sup_eq' H, supᵢ_apply]
       rcases H with ⟨q, hq⟩
       exact
         le_csupr ⟨q x, forall_range_iff.mpr fun i : s => hq (mem_image_of_mem _ i.2) x⟩ ⟨p, hp⟩⟩⟩
 #align seminorm.bdd_above_iff Seminorm.bdd_above_iff
 
 protected theorem coe_Sup_eq {s : Set <| Seminorm 𝕜 E} (hs : BddAbove s) :
-    coeFn (sup s) = ⨆ p : s, p :=
+    coeFn (supₛ s) = ⨆ p : s, p :=
   Seminorm.coe_Sup_eq' (Seminorm.bdd_above_iff.mp hs)
 #align seminorm.coe_Sup_eq Seminorm.coe_Sup_eq
 
 protected theorem coe_supr_eq {ι : Type _} {p : ι → Seminorm 𝕜 E} (hp : BddAbove (range p)) :
     coeFn (⨆ i, p i) = ⨆ i, p i := by
-  rw [← Sup_range, Seminorm.coe_Sup_eq hp] <;> exact supr_range' (coeFn : Seminorm 𝕜 E → E → ℝ) p
+  rw [← supₛ_range, Seminorm.coe_Sup_eq hp] <;> exact supᵢ_range' (coeFn : Seminorm 𝕜 E → E → ℝ) p
 #align seminorm.coe_supr_eq Seminorm.coe_supr_eq
 
 private theorem seminorm.is_lub_Sup (s : Set (Seminorm 𝕜 E)) (hs₁ : BddAbove s) (hs₂ : s.Nonempty) :
-    IsLub s (sup s) := by
+    IsLUB s (supₛ s) := by
   refine' ⟨fun p hp x => _, fun p hp x => _⟩ <;> haveI : Nonempty ↥s := hs₂.coe_sort <;>
-    rw [Seminorm.coe_Sup_eq hs₁, supr_apply]
+    rw [Seminorm.coe_Sup_eq hs₁, supᵢ_apply]
   · rcases hs₁ with ⟨q, hq⟩
     exact le_csupr ⟨q x, forall_range_iff.mpr fun i : s => hq i.2 x⟩ ⟨p, hp⟩
   · exact csupr_le fun q => hp q.2 x

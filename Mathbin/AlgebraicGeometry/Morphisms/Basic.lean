@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -356,7 +356,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                 "("
                 [(Lean.binderIdent `hU)]
                 ":"
-                («term_=_» (Term.app `supr [`U]) "=" (Order.BoundedOrder.«term⊤» "⊤"))
+                («term_=_» (Term.app `supᵢ [`U]) "=" (Order.BoundedOrder.«term⊤» "⊤"))
                 ")")
                (Lean.bracketedExplicitBinders
                 "("
@@ -1245,7 +1245,7 @@ theorem
             ∃
               ( ι : Type u )
                 ( U : ι → Opens Y . carrier )
-                ( hU : supr U = ⊤ )
+                ( hU : supᵢ U = ⊤ )
                 ( hU' : ∀ i , IsAffineOpen U i )
               ,
               ∀ i , @ P f ∣_ U i hU' i
@@ -1545,7 +1545,7 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
                 "("
                 [(Lean.binderIdent `hU)]
                 ":"
-                («term_=_» (Term.app `supr [`U]) "=" (Order.BoundedOrder.«term⊤» "⊤"))
+                («term_=_» (Term.app `supᵢ [`U]) "=" (Order.BoundedOrder.«term⊤» "⊤"))
                 ")")])
              ","
              (Term.forall
@@ -2224,7 +2224,7 @@ theorem
               ,
               P ( pullback.snd : pullback f g ⟶ U )
             ,
-            ∃ ( ι : Type u ) ( U : ι → Opens Y . carrier ) ( hU : supr U = ⊤ ) , ∀ i , P f ∣_ U i
+            ∃ ( ι : Type u ) ( U : ι → Opens Y . carrier ) ( hU : supᵢ U = ⊤ ) , ∀ i , P f ∣_ U i
           ]
   :=
     by
@@ -3086,7 +3086,7 @@ theorem universally_is_local_at_target (P : MorphismProperty SchemeCat)
 theorem universally_is_local_at_target_of_morphism_restrict (P : MorphismProperty SchemeCat)
     (hP₁ : P.RespectsIso)
     (hP₂ :
-      ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) {ι : Type u} (U : ι → Opens Y.carrier) (hU : supr U = ⊤),
+      ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) {ι : Type u} (U : ι → Opens Y.carrier) (hU : supᵢ U = ⊤),
         (∀ i, P (f ∣_ U i)) → P f) :
     PropertyIsLocalAtTarget P.universally :=
   universally_is_local_at_target P

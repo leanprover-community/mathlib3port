@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.vitali_caratheodory
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -418,7 +418,7 @@ theorem exists_upper_semicontinuous_le_lintegral_le (f : α → ℝ≥0) (int_f 
     have := Ennreal.lt_add_right int_f (Ennreal.half_pos ε0).ne'
     conv_rhs at this => rw [lintegral_eq_nnreal (fun x => (f x : ℝ≥0∞)) μ]
     erw [Ennreal.bsupr_add] at this <;> [skip, exact ⟨0, fun x => by simp⟩]
-    simp only [lt_supr_iff] at this
+    simp only [lt_supᵢ_iff] at this
     rcases this with ⟨fs, fs_le_f, int_fs⟩
     refine' ⟨fs, fun x => by simpa only [Ennreal.coe_le_coe] using fs_le_f x, _⟩
     convert int_fs.le

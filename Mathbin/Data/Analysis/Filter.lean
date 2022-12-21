@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.analysis.filter
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -331,8 +331,12 @@ protected def bind {f : Filter α} {m : α → Filter β} (F : f.Realizer) (G : 
 #align filter.realizer.bind Filter.Realizer.bind
 
 /- warning: filter.realizer.Sup clashes with filter.realizer.sup -> Filter.Realizer.sup
+warning: filter.realizer.Sup -> Filter.Realizer.sup is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> (Filter.{u2} β)}, (forall (i : α), Filter.Realizer.{u2, u3} β (f i)) -> (Filter.Realizer.{u2, max u1 u3} β (supᵢ.{u2, succ u1} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) α (fun (i : α) => f i)))
+but is expected to have type
+  PUnit.{max (max (succ (succ u1)) (succ (succ u2))) (succ (succ u3))}
 Case conversion may be inaccurate. Consider using '#align filter.realizer.Sup Filter.Realizer.supₓ'. -/
-#print Filter.Realizer.sup /-
 /-- Construct a realizer for indexed supremum -/
 protected def sup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i, f i).Realizer :=
   let F' : (⨆ i, f i).Realizer :=
@@ -343,7 +347,6 @@ protected def sup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i, f
       ⟨fun ⟨_, f⟩ i => f i ⟨⟩, fun f => ⟨(), fun i _ => f i⟩, fun ⟨⟨⟩, f⟩ => by
         dsimp <;> congr <;> simp, fun f => rfl⟩
 #align filter.realizer.Sup Filter.Realizer.sup
--/
 
 /-- Construct a realizer for the product of filters -/
 protected def prod {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f.Prod g).Realizer :=

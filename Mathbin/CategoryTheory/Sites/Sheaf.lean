@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.sheaf
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -272,15 +272,17 @@ theorem IsSheaf.hom_ext {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X 
 
 theorem is_sheaf_of_iso_iff {P P' : Cᵒᵖ ⥤ A} (e : P ≅ P') : IsSheaf J P ↔ IsSheaf J P' :=
   forall_congr' fun a =>
-    ⟨Presieve.isSheafIso J (isoWhiskerRight e _), Presieve.isSheafIso J (isoWhiskerRight e.symm _)⟩
+    ⟨Presieve.is_sheaf_iso J (isoWhiskerRight e _),
+      Presieve.is_sheaf_iso J (isoWhiskerRight e.symm _)⟩
 #align category_theory.presheaf.is_sheaf_of_iso_iff CategoryTheory.Presheaf.is_sheaf_of_iso_iff
 
 variable (J)
 
-theorem isSheafOfIsTerminal {X : A} (hX : IsTerminal X) :
+theorem is_sheaf_of_is_terminal {X : A} (hX : IsTerminal X) :
     Presheaf.IsSheaf J ((CategoryTheory.Functor.const _).obj X) := fun _ _ _ _ _ _ =>
   ⟨hX.from _, fun _ _ _ => hX.hom_ext _ _, fun _ _ => hX.hom_ext _ _⟩
-#align category_theory.presheaf.is_sheaf_of_is_terminal CategoryTheory.Presheaf.isSheafOfIsTerminal
+#align
+  category_theory.presheaf.is_sheaf_of_is_terminal CategoryTheory.Presheaf.is_sheaf_of_is_terminal
 
 end Presheaf
 

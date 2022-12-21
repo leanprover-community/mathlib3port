@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -989,7 +989,7 @@ theorem max_eq_zero {a b : Ordinal} : max a b = 0 ↔ a = 0 ∧ b = 0 :=
 #align ordinal.max_eq_zero Ordinal.max_eq_zero
 
 @[simp]
-theorem Inf_empty : inf (∅ : Set Ordinal) = 0 :=
+theorem Inf_empty : infₛ (∅ : Set Ordinal) = 0 :=
   dif_neg not_nonempty_empty
 #align ordinal.Inf_empty Ordinal.Inf_empty
 
@@ -1082,7 +1082,7 @@ theorem nat_cast_succ (n : ℕ) : ↑n.succ = succ (n : Ordinal) :=
 #align ordinal.nat_cast_succ Ordinal.nat_cast_succ
 
 instance uniqueIioOne :
-    Unique (iio (1 : Ordinal)) where 
+    Unique (Iio (1 : Ordinal)) where 
   default := ⟨0, zero_lt_one⟩
   uniq a := Subtype.ext <| lt_one_iff_zero.1 a.Prop
 #align ordinal.unique_Iio_one Ordinal.uniqueIioOne
@@ -1186,7 +1186,7 @@ def enumIso (r : α → α → Prop) [IsWellOrder α r] :
 /-- The order isomorphism between ordinals less than `o` and `o.out.α`. -/
 @[simps]
 noncomputable def enumIsoOut (o : Ordinal) :
-    Set.iio o ≃o
+    Set.Iio o ≃o
       o.out.α where 
   toFun x :=
     enum (· < ·) x.1 <| by 

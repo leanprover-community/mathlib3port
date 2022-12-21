@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.opposites
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,14 +94,14 @@ theorem op_ring_equiv_symm_C_mul_X_pow (r : Rᵐᵒᵖ) (n : ℕ) :
 @[simp]
 theorem coeff_op_ring_equiv (p : R[X]ᵐᵒᵖ) (n : ℕ) :
     (opRingEquiv R p).coeff n = op ((unop p).coeff n) := by
-  induction p using MulOpposite.rec
+  induction p using MulOpposite.rec'
   cases p
   rfl
 #align polynomial.coeff_op_ring_equiv Polynomial.coeff_op_ring_equiv
 
 @[simp]
 theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).support = (unop p).support := by
-  induction p using MulOpposite.rec
+  induction p using MulOpposite.rec'
   cases p
   exact Finsupp.support_map_range_of_injective _ _ op_injective
 #align polynomial.support_op_ring_equiv Polynomial.support_op_ring_equiv

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.index
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -409,7 +409,7 @@ theorem relindex_infi_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
   le_of_le_of_eq
     (Finite.card_le_of_embedding' (quotientInfiSubgroupOfEmbedding f L) fun h =>
       let ⟨i, hi, h⟩ := Finset.prod_eq_zero_iff.mp (Nat.card_pi.symm.trans h)
-      relindex_eq_zero_of_le_left (infi_le f i) h)
+      relindex_eq_zero_of_le_left (infᵢ_le f i) h)
     Nat.card_pi
 #align subgroup.relindex_infi_le Subgroup.relindex_infi_le
 

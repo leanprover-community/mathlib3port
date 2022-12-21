@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.connected
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -751,7 +751,7 @@ theorem Continuous.image_connected_component_subset [TopologicalSpace β] {f : �
 
 theorem Continuous.maps_to_connected_component [TopologicalSpace β] {f : α → β} (h : Continuous f)
     (a : α) : MapsTo f (connectedComponent a) (connectedComponent (f a)) :=
-  maps_to'.2 <| h.image_connected_component_subset a
+  mapsTo'.2 <| h.image_connected_component_subset a
 #align continuous.maps_to_connected_component Continuous.maps_to_connected_component
 
 theorem irreducible_component_subset_connected_component {x : α} :

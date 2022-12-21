@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module data.vector.mem
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem not_mem_zero (v : Vector α 0) : a ∉ v.toList :=
 #align vector.not_mem_zero Vector.not_mem_zero
 
 theorem mem_cons_iff (v : Vector α n) : a' ∈ (a ::ᵥ v).toList ↔ a' = a ∨ a' ∈ v.toList := by
-  rw [Vector.to_list_cons, List.mem_cons_iff]
+  rw [Vector.toList_cons, List.mem_cons_iff]
 #align vector.mem_cons_iff Vector.mem_cons_iff
 
 theorem mem_succ_iff (v : Vector α (n + 1)) : a ∈ v.toList ↔ a = v.head ∨ a ∈ v.tail.toList := by
@@ -80,7 +80,7 @@ theorem mem_map_iff (b : β) (v : Vector α n) (f : α → β) :
 #align vector.mem_map_iff Vector.mem_map_iff
 
 theorem not_mem_map_zero (b : β) (v : Vector α 0) (f : α → β) : b ∉ (v.map f).toList := by
-  simpa only [Vector.eq_nil v, Vector.map_nil, Vector.to_list_nil] using List.not_mem_nil b
+  simpa only [Vector.eq_nil v, Vector.map_nil, Vector.toList_nil] using List.not_mem_nil b
 #align vector.not_mem_map_zero Vector.not_mem_map_zero
 
 theorem mem_map_succ_iff (b : β) (v : Vector α (n + 1)) (f : α → β) :

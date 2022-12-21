@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module algebraic_geometry.Spec
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,7 +253,7 @@ def SpecCat.locallyRingedSpaceMap {R S : CommRingCat} (f : R ⟶ S) :
       replace ha := (stalk_iso S p).Hom.is_unit_map ha
       rw [iso.inv_hom_id_apply] at ha
       replace ha := IsLocalRingHom.map_nonunit _ ha
-      convert RingHom.is_unit_map (stalk_iso R (PrimeSpectrum.comap f p)).inv ha
+      convert RingHom.isUnit_map (stalk_iso R (PrimeSpectrum.comap f p)).inv ha
       rw [iso.hom_inv_id_apply]
 #align
   algebraic_geometry.Spec.LocallyRingedSpace_map AlgebraicGeometry.SpecCat.locallyRingedSpaceMap

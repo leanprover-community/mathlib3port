@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module algebra.quandle
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -208,14 +208,14 @@ instance oppositeRack :
     Rack Rᵐᵒᵖ where 
   act x y := op (invAct (unop x) (unop y))
   self_distrib :=
-    MulOpposite.rec fun x =>
-      MulOpposite.rec fun y =>
-        MulOpposite.rec fun z => by 
+    MulOpposite.rec' fun x =>
+      MulOpposite.rec' fun y =>
+        MulOpposite.rec' fun z => by 
           simp only [unop_op, op_inj]
           exact self_distrib_inv
   invAct x y := op (Shelf.act (unop x) (unop y))
-  left_inv := MulOpposite.rec fun x => MulOpposite.rec fun y => by simp
-  right_inv := MulOpposite.rec fun x => MulOpposite.rec fun y => by simp
+  left_inv := MulOpposite.rec' fun x => MulOpposite.rec' fun y => by simp
+  right_inv := MulOpposite.rec' fun x => MulOpposite.rec' fun y => by simp
 #align rack.opposite_rack Rack.oppositeRack
 
 @[simp]
@@ -366,7 +366,7 @@ theorem fix_inv {x : Q} : x ◃⁻¹ x = x := by
 
 instance oppositeQuandle :
     Quandle Qᵐᵒᵖ where fix x := by 
-    induction x using MulOpposite.rec
+    induction x using MulOpposite.rec'
     simp
 #align quandle.opposite_quandle Quandle.oppositeQuandle
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -240,11 +240,11 @@ instance [HasSmul R α] : HasSmul R (Matrix m n α) :=
   Pi.instSMul
 
 instance [HasSmul R α] [HasSmul S α] [SMulCommClass R S α] : SMulCommClass R S (Matrix m n α) :=
-  Pi.smul_comm_class
+  Pi.smulCommClass
 
 instance [HasSmul R S] [HasSmul R α] [HasSmul S α] [IsScalarTower R S α] :
     IsScalarTower R S (Matrix m n α) :=
-  Pi.is_scalar_tower
+  Pi.isScalarTower
 
 instance [HasSmul R α] [HasSmul Rᵐᵒᵖ α] [IsCentralScalar R α] : IsCentralScalar R (Matrix m n α) :=
   Pi.is_central_scalar

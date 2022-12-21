@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module data.set.equitable
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
 #align set.equitable_on_iff_exists_le_le_add_one Set.equitable_on_iff_exists_le_le_add_one
 
 theorem equitable_on_iff_exists_image_subset_Icc {s : Set α} {f : α → ℕ} :
-    s.EquitableOn f ↔ ∃ b, f '' s ⊆ icc b (b + 1) := by
+    s.EquitableOn f ↔ ∃ b, f '' s ⊆ Icc b (b + 1) := by
   simpa only [image_subset_iff] using equitable_on_iff_exists_le_le_add_one
 #align set.equitable_on_iff_exists_image_subset_Icc Set.equitable_on_iff_exists_image_subset_Icc
 

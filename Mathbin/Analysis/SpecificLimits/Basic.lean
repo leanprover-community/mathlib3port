@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem tendsto_one_div_add_at_top_nhds_0_nat :
 theorem tendsto_add_one_pow_at_top_at_top_of_pos [LinearOrderedSemiring α] [Archimedean α] {r : α}
     (h : 0 < r) : Tendsto (fun n : ℕ => (r + 1) ^ n) atTop atTop :=
   (tendsto_at_top_at_top_of_monotone' fun n m => pow_le_pow (le_add_of_nonneg_left (le_of_lt h))) <|
-    not_bdd_above_iff.2 fun x => Set.exists_range_iff.2 <| add_one_pow_unbounded_of_pos _ h
+    not_bddAbove_iff.2 fun x => Set.exists_range_iff.2 <| add_one_pow_unbounded_of_pos _ h
 #align tendsto_add_one_pow_at_top_at_top_of_pos tendsto_add_one_pow_at_top_at_top_of_pos
 
 theorem tendsto_pow_at_top_at_top_of_one_lt [LinearOrderedRing α] [Archimedean α] {r : α}
@@ -259,7 +259,7 @@ theorem Ennreal.tsum_geometric (r : ℝ≥0∞) : (∑' n : ℕ, r ^ n) = (1 - r
     norm_cast  at *
     convert Ennreal.tsum_coe_eq (Nnreal.has_sum_geometric hr)
     rw [Ennreal.coe_inv <| ne_of_gt <| tsub_pos_iff_lt.2 hr]
-  · rw [tsub_eq_zero_iff_le.mpr hr, Ennreal.inv_zero, Ennreal.tsum_eq_supr_nat, supr_eq_top]
+  · rw [tsub_eq_zero_iff_le.mpr hr, Ennreal.inv_zero, Ennreal.tsum_eq_supr_nat, supᵢ_eq_top]
     refine' fun a ha =>
       (Ennreal.exists_nat_gt (lt_top_iff_ne_top.1 ha)).imp fun n hn => lt_of_lt_of_le hn _
     calc

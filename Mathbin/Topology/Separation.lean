@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1474,13 +1474,13 @@ theorem infinite_of_mem_nhds {α} [TopologicalSpace α] [T1Space α] (x : α) [h
   exact is_open_singleton_of_finite_mem_nhds x hs hsf
 #align infinite_of_mem_nhds infinite_of_mem_nhds
 
-theorem discreteOfT1OfFinite {X : Type _} [TopologicalSpace X] [T1Space X] [Finite X] :
+theorem discrete_of_t1_of_finite {X : Type _} [TopologicalSpace X] [T1Space X] [Finite X] :
     DiscreteTopology X := by 
   apply singletons_open_iff_discrete.mp
   intro x
   rw [← is_closed_compl_iff]
   exact (Set.to_finite _).IsClosed
-#align discrete_of_t1_of_finite discreteOfT1OfFinite
+#align discrete_of_t1_of_finite discrete_of_t1_of_finite
 
 theorem PreconnectedSpace.trivial_of_discrete [PreconnectedSpace α] [DiscreteTopology α] :
     Subsingleton α := by 
@@ -1493,7 +1493,7 @@ theorem PreconnectedSpace.trivial_of_discrete [PreconnectedSpace α] [DiscreteTo
 theorem IsPreconnected.infinite_of_nontrivial [T1Space α] {s : Set α} (h : IsPreconnected s)
     (hs : s.Nontrivial) : s.Infinite := by
   refine' mt (fun hf => (subsingleton_coe s).mp _) (not_subsingleton_iff.mpr hs)
-  haveI := @discreteOfT1OfFinite s _ _ hf.to_subtype
+  haveI := @discrete_of_t1_of_finite s _ _ hf.to_subtype
   exact @PreconnectedSpace.trivial_of_discrete _ _ (Subtype.preconnected_space h) _
 #align is_preconnected.infinite_of_nontrivial IsPreconnected.infinite_of_nontrivial
 
@@ -1570,23 +1570,23 @@ theorem induced_bot {X Y : Type _} {f : X → Y} (hf : Function.Injective f) :
 
 /-- The topology induced under an inclusion `f : X → Y` from the discrete topological space `Y`
 is the discrete topology on `X`. -/
-theorem discreteTopologyInduced {X Y : Type _} [tY : TopologicalSpace Y] [DiscreteTopology Y]
+theorem discrete_topology_induced {X Y : Type _} [tY : TopologicalSpace Y] [DiscreteTopology Y]
     {f : X → Y} (hf : Function.Injective f) : @DiscreteTopology X (TopologicalSpace.induced f tY) :=
   by apply DiscreteTopology.mk <;> · rw [DiscreteTopology.eq_bot Y, induced_bot hf]
-#align discrete_topology_induced discreteTopologyInduced
+#align discrete_topology_induced discrete_topology_induced
 
-theorem Embedding.discreteTopology {X Y : Type _} [TopologicalSpace X] [tY : TopologicalSpace Y]
+theorem Embedding.discrete_topology {X Y : Type _} [TopologicalSpace X] [tY : TopologicalSpace Y]
     [DiscreteTopology Y] {f : X → Y} (hf : Embedding f) : DiscreteTopology X :=
   ⟨by rw [hf.induced, DiscreteTopology.eq_bot Y, induced_bot hf.inj]⟩
-#align embedding.discrete_topology Embedding.discreteTopology
+#align embedding.discrete_topology Embedding.discrete_topology
 
 /-- Let `s, t ⊆ X` be two subsets of a topological space `X`.  If `t ⊆ s` and the topology induced
 by `X`on `s` is discrete, then also the topology induces on `t` is discrete.  -/
-theorem DiscreteTopology.ofSubset {X : Type _} [TopologicalSpace X] {s t : Set X}
+theorem DiscreteTopology.of_subset {X : Type _} [TopologicalSpace X] {s t : Set X}
     (ds : DiscreteTopology s) (ts : t ⊆ s) : DiscreteTopology t := by
   rw [TopologicalSpace.subset_trans ts, ds.eq_bot]
   exact { eq_bot := induced_bot (Set.inclusion_injective ts) }
-#align discrete_topology.of_subset DiscreteTopology.ofSubset
+#align discrete_topology.of_subset DiscreteTopology.of_subset
 
 /-- A T₂ space, also known as a Hausdorff space, is one in which for every
   `x ≠ y` there exists disjoint open sets around `x` and `y`. This is
@@ -2010,7 +2010,7 @@ theorem IsCompact.is_closed [T2Space α] {s : Set α} (hs : IsCompact s) : IsClo
 
 @[simp]
 theorem Filter.coclosed_compact_eq_cocompact [T2Space α] : coclosedCompact α = cocompact α := by
-  simp [coclosed_compact, cocompact, infi_and', and_iff_right_of_imp IsCompact.is_closed]
+  simp [coclosed_compact, cocompact, infᵢ_and', and_iff_right_of_imp IsCompact.is_closed]
 #align filter.coclosed_compact_eq_cocompact Filter.coclosed_compact_eq_cocompact
 
 @[simp]
@@ -3233,7 +3233,7 @@ theorem regularSpaceInduced (f : β → α) : @RegularSpace β (induced f ‹_�
 #align regular_space_induced regularSpaceInduced
 
 theorem regularSpaceInf {X} {T : Set (TopologicalSpace X)} (h : ∀ t ∈ T, @RegularSpace X t) :
-    @RegularSpace X (inf T) := by 
+    @RegularSpace X (infₛ T) := by 
   letI := Inf T
   have :
     ∀ a,
@@ -3243,10 +3243,10 @@ theorem regularSpaceInf {X} {T : Set (TopologicalSpace X)} (h : ∀ t ∈ T, @Re
         fun If => ⋂ i : If.1, If.snd i :=
     by 
     intro a
-    rw [nhds_Inf, ← infi_subtype'']
+    rw [nhds_Inf, ← infᵢ_subtype'']
     exact has_basis_infi fun t : T => @closed_nhds_basis X t (h t t.2) a
   refine' RegularSpace.ofBasis this fun a If hIf => is_closed_Inter fun i => _
-  exact (hIf.2 i).2.mono (Inf_le (i : T).2)
+  exact (hIf.2 i).2.mono (infₛ_le (i : T).2)
 #align regular_space_Inf regularSpaceInf
 
 theorem regularSpaceInfi {ι X} {t : ι → TopologicalSpace X} (h : ∀ i, @RegularSpace X (t i)) :
@@ -3256,7 +3256,7 @@ theorem regularSpaceInfi {ι X} {t : ι → TopologicalSpace X} (h : ∀ i, @Reg
 
 theorem RegularSpace.inf {X} {t₁ t₂ : TopologicalSpace X} (h₁ : @RegularSpace X t₁)
     (h₂ : @RegularSpace X t₂) : @RegularSpace X (t₁ ⊓ t₂) := by
-  rw [inf_eq_infi]
+  rw [inf_eq_infᵢ]
   exact regularSpaceInfi (Bool.forall_bool.2 ⟨h₂, h₁⟩)
 #align regular_space.inf RegularSpace.inf
 
@@ -3435,7 +3435,7 @@ theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α]
     refine' ⟨range V, _, forall_range_iff.2 <| Subtype.forall.2 hd, fun n => _⟩
     · rw [bUnion_range]
       exact fun x hx => mem_Union.2 ⟨⟨x, hx⟩, hxu x hx⟩
-    · simp only [← supr_eq_Union, supr_and']
+    · simp only [← supr_eq_Union, supᵢ_and']
       exact
         is_closed_bUnion
           (((finite_le_nat n).preimage_embedding (Encodable.encode' _)).Subset <|

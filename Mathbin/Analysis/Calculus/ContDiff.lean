@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2223,7 +2223,7 @@ theorem ContDiffWithinAt.comp' {s : Set E} {t : Set F} {g : F → G} {f : E → 
 
 theorem ContDiffAt.compContDiffWithinAt {n} (x : E) (hg : ContDiffAt 𝕜 n g (f x))
     (hf : ContDiffWithinAt 𝕜 n f s x) : ContDiffWithinAt 𝕜 n (g ∘ f) s x :=
-  hg.comp x hf (maps_to_univ _ _)
+  hg.comp x hf (mapsTo_univ _ _)
 #align cont_diff_at.comp_cont_diff_within_at ContDiffAt.compContDiffWithinAt
 
 /-- The composition of `C^n` functions at points is `C^n`. -/

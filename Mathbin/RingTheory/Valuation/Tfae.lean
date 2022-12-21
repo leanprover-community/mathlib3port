@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.tfae
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,9 +114,9 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
     have : (Ideal.span {a}).radical = maximal_ideal R := by
       rw [Ideal.radical_eq_Inf]
       apply le_antisymm
-      · exact Inf_le ⟨hle, inferInstance⟩
+      · exact infₛ_le ⟨hle, inferInstance⟩
       · refine'
-          le_Inf fun I hI =>
+          le_infₛ fun I hI =>
             (eq_maximal_ideal <| IsDedekindDomain.dimension_le_one _ (fun e => ha₂ _) hI.2).ge
         rw [← Ideal.span_singleton_eq_bot, eq_bot_iff, ← e]
         exact hI.1

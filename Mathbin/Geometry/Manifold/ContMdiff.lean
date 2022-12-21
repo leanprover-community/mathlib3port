@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1091,7 +1091,7 @@ theorem SmoothWithinAt.comp' {t : Set M'} {g : M' → M''} (x : M)
 `f` is `C^n` within `s` at `x`. -/
 theorem ContMdiffAt.compContMdiffWithinAt {g : M' → M''} (x : M) (hg : ContMdiffAt I' I'' n g (f x))
     (hf : ContMdiffWithinAt I I' n f s x) : ContMdiffWithinAt I I'' n (g ∘ f) s x :=
-  hg.comp x hf (maps_to_univ _ _)
+  hg.comp x hf (mapsTo_univ _ _)
 #align cont_mdiff_at.comp_cont_mdiff_within_at ContMdiffAt.compContMdiffWithinAt
 
 /-- `g ∘ f` is `C^∞` within `s` at `x` if `g` is `C^∞` at `f x` and
@@ -1104,7 +1104,7 @@ theorem SmoothAt.compSmoothWithinAt {g : M' → M''} (x : M) (hg : SmoothAt I' I
 /-- The composition of `C^n` functions at points is `C^n`. -/
 theorem ContMdiffAt.comp {g : M' → M''} (x : M) (hg : ContMdiffAt I' I'' n g (f x))
     (hf : ContMdiffAt I I' n f x) : ContMdiffAt I I'' n (g ∘ f) x :=
-  hg.comp x hf (maps_to_univ _ _)
+  hg.comp x hf (mapsTo_univ _ _)
 #align cont_mdiff_at.comp ContMdiffAt.comp
 
 /-- The composition of `C^∞` functions at points is `C^∞`. -/

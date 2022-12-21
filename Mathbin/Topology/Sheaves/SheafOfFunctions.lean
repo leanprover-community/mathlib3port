@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_of_functions
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,9 +64,9 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
   by-- Our first goal is to define a function "lifted" to all of `U`.
     -- We do this one point at a time. Using the axiom of choice, we can pick for each
     -- `x : supr U` an index `i : ι` such that `x` lies in `U i`
-    choose index index_spec using fun x : supr U => opens.mem_supr.mp x.2
+    choose index index_spec using fun x : supᵢ U => opens.mem_supr.mp x.2
     -- Using this data, we can glue our functions together to a single section
-    let s : ∀ x : supr U, T x := fun x => sf (index x) ⟨x.1, index_spec x⟩
+    let s : ∀ x : supᵢ U, T x := fun x => sf (index x) ⟨x.1, index_spec x⟩
     refine' ⟨s, _, _⟩
     · intro i
       ext x

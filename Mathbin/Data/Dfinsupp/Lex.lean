@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.lex
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y 
 
 instance Lex.is_strict_order [LinearOrder ι] [∀ i, PartialOrder (α i)] :
     IsStrictOrder (Lex (Π₀ i, α i)) (· < ·) :=
-  let i : IsStrictOrder (Lex (∀ i, α i)) (· < ·) := Pi.Lex.is_strict_order
+  let i : IsStrictOrder (Lex (∀ i, α i)) (· < ·) := Pi.Lex.isStrictOrder
   { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_is_irrefl a
     trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_is_trans a b c }
 #align dfinsupp.lex.is_strict_order Dfinsupp.Lex.is_strict_order

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.induced_topology
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,20 +106,20 @@ def inducedTopology :
   category_theory.locally_cover_dense.induced_topology CategoryTheory.LocallyCoverDense.inducedTopology
 
 /-- `G` is cover-lifting wrt the induced topology. -/
-theorem inducedTopologyCoverLifting : CoverLifting Hld.inducedTopology K G :=
+theorem induced_topology_cover_lifting : CoverLifting Hld.inducedTopology K G :=
   ⟨fun _ S hS => Hld ⟨S, hS⟩⟩
 #align
-  category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.inducedTopologyCoverLifting
+  category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.induced_topology_cover_lifting
 
 /-- `G` is cover-preserving wrt the induced topology. -/
-theorem inducedTopologyCoverPreserving : CoverPreserving Hld.inducedTopology K G :=
+theorem induced_topology_cover_preserving : CoverPreserving Hld.inducedTopology K G :=
   ⟨fun _ S hS => hS⟩
 #align
-  category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.inducedTopologyCoverPreserving
+  category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.induced_topology_cover_preserving
 
 end LocallyCoverDense
 
-theorem CoverDense.locallyCoverDense [Full G] (H : CoverDense K G) : LocallyCoverDense K G := by
+theorem CoverDense.locally_cover_dense [Full G] (H : CoverDense K G) : LocallyCoverDense K G := by
   intro X T
   refine' K.superset_covering _ (K.bind_covering T.property fun Y f Hf => H.is_cover Y)
   rintro Y _ ⟨Z, _, f, hf, ⟨W, g, f', rfl : _ = _⟩, rfl⟩
@@ -127,7 +127,7 @@ theorem CoverDense.locallyCoverDense [Full G] (H : CoverDense K G) : LocallyCove
   constructor
   simpa using T.val.downward_closed hf f'
   simp
-#align category_theory.cover_dense.locally_cover_dense CategoryTheory.CoverDense.locallyCoverDense
+#align category_theory.cover_dense.locally_cover_dense CategoryTheory.CoverDense.locally_cover_dense
 
 /-- Given a fully faithful cover-dense functor `G : C ⥤ (D, K)`, we may induce a topology on `C`.
 -/
@@ -138,7 +138,7 @@ abbrev CoverDense.inducedTopology [Full G] [Faithful G] (H : CoverDense K G) :
 
 variable (J)
 
-theorem overForgetLocallyCoverDense (X : C) : LocallyCoverDense J (Over.forget X) := by
+theorem over_forget_locally_cover_dense (X : C) : LocallyCoverDense J (Over.forget X) := by
   intro Y T
   convert T.property
   ext (Z f)
@@ -147,7 +147,8 @@ theorem overForgetLocallyCoverDense (X : C) : LocallyCoverDense J (Over.forget X
     exact T.val.downward_closed hg g'
   · intro hf
     exact ⟨over.mk (f ≫ Y.hom), over.hom_mk f, 𝟙 _, hf, (category.id_comp _).symm⟩
-#align category_theory.over_forget_locally_cover_dense CategoryTheory.overForgetLocallyCoverDense
+#align
+  category_theory.over_forget_locally_cover_dense CategoryTheory.over_forget_locally_cover_dense
 
 end
 
@@ -166,8 +167,8 @@ is complete.
 -/
 noncomputable def CoverDense.sheafEquiv [Full G] [Faithful G] (H : CoverDense K G) [HasLimits A] :
     SheafCat H.inducedTopology A ≌ SheafCat K A :=
-  H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.inducedTopologyCoverPreserving
-    H.LocallyCoverDense.inducedTopologyCoverLifting
+  H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.induced_topology_cover_preserving
+    H.LocallyCoverDense.induced_topology_cover_lifting
 #align category_theory.cover_dense.Sheaf_equiv CategoryTheory.CoverDense.sheafEquiv
 
 end SmallSite

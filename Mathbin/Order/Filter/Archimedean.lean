@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.archimedean
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ theorem tendsto_coe_rat_at_bot_iff [LinearOrderedField R] [Archimedean R] {f : �
 #align tendsto_coe_rat_at_bot_iff tendsto_coe_rat_at_bot_iff
 
 theorem at_top_countable_basis_of_archimedean [LinearOrderedSemiring R] [Archimedean R] :
-    (atTop : Filter R).HasCountableBasis (fun n : ℕ => True) fun n => ici n :=
+    (atTop : Filter R).HasCountableBasis (fun n : ℕ => True) fun n => Ici n :=
   { Countable := to_countable _
     to_has_basis :=
       at_top_basis.to_has_basis
@@ -112,7 +112,7 @@ theorem at_top_countable_basis_of_archimedean [LinearOrderedSemiring R] [Archime
 #align at_top_countable_basis_of_archimedean at_top_countable_basis_of_archimedean
 
 theorem at_bot_countable_basis_of_archimedean [LinearOrderedRing R] [Archimedean R] :
-    (atBot : Filter R).HasCountableBasis (fun m : ℤ => True) fun m => iic m :=
+    (atBot : Filter R).HasCountableBasis (fun m : ℤ => True) fun m => Iic m :=
   { Countable := to_countable _
     to_has_basis :=
       at_bot_basis.to_has_basis

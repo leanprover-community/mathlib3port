@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.ess_sup
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ section ConditionallyCompleteLinearOrder
 variable [ConditionallyCompleteLinearOrder β]
 
 theorem ess_sup_eq_Inf {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
-    essSup f μ = inf { a | μ { x | a < f x } = 0 } := by
+    essSup f μ = infₛ { a | μ { x | a < f x } = 0 } := by
   dsimp [essSup, limsup, Limsup]
   congr
   ext a
@@ -84,7 +84,7 @@ variable [CompleteLattice β]
 
 @[simp]
 theorem ess_sup_measure_zero {m : MeasurableSpace α} {f : α → β} : essSup f (0 : Measure α) = ⊥ :=
-  le_bot_iff.mp (Inf_le (by simp [Set.mem_setOf_eq, eventually_le, ae_iff]))
+  le_bot_iff.mp (infₛ_le (by simp [Set.mem_setOf_eq, eventually_le, ae_iff]))
 #align ess_sup_measure_zero ess_sup_measure_zero
 
 @[simp]

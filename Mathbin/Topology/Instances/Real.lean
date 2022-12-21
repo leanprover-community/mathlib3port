@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.real
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,13 +71,13 @@ instance : SecondCountableTopology ℝ :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem Real.is_topological_basis_Ioo_rat :
-    @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {ioo a b}) :=
+    @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_of_open_of_nhds (by simp (config := { contextual := true }) [is_open_Ioo])
     fun a v hav hv =>
     let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
-    ⟨ioo q p, by 
+    ⟨Ioo q p, by 
       simp only [mem_Union]
       exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
@@ -205,7 +205,8 @@ theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBe
     fun h => boundedOfBddAboveOfBddBelow h.2 h.1⟩
 #align real.bounded_iff_bdd_below_bdd_above Real.bounded_iff_bdd_below_bdd_above
 
-theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) : s ⊆ icc (inf s) (sup s) :=
+theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) :
+    s ⊆ Icc (infₛ s) (supₛ s) :=
   subset_Icc_cInf_cSup (Real.bounded_iff_bdd_below_bdd_above.1 h).1
     (Real.bounded_iff_bdd_below_bdd_above.1 h).2
 #align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_Inf_Sup_of_bounded
@@ -303,7 +304,7 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
     cases' lt_or_gt_of_ne g₀_ne with Hg₀ Hg₀
     · exact ⟨-g₀, G.neg_mem g₀_in, neg_pos.mpr Hg₀⟩
     · exact ⟨g₀, g₀_in, Hg₀⟩
-  obtain ⟨a, ha⟩ : ∃ a, IsGlb G_pos a :=
+  obtain ⟨a, ha⟩ : ∃ a, IsGLB G_pos a :=
     ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
   have a_notin : a ∉ G_pos := by 
     intro H

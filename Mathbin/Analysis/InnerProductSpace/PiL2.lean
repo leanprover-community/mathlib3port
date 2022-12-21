@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -718,7 +718,7 @@ theorem Orthonormal.exists_orthonormal_basis_extension_of_card_eq {ι : Type _} 
     exact FiniteDimensional.finrank_eq_card_finset_basis b₀.to_basis
   have hvsY : s.maps_to v Y := (s.maps_to_image v).mono_right (by rwa [← range_restrict])
   have hsv' : Set.InjOn v s := by 
-    rw [Set.inj_on_iff_injective]
+    rw [Set.injOn_iff_injective]
     exact hsv
   obtain ⟨g, hg⟩ := hvsY.exists_equiv_extend_of_card_eq hιY hsv'
   use b₀.reindex g.symm

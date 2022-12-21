@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.one_dim
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,14 +27,14 @@ open TopologicalSpace
 namespace Real
 
 theorem Icc_mem_vitali_family_at_right {x y : ℝ} (hxy : x < y) :
-    icc x y ∈ (VitaliFamily (volume : Measure ℝ) 1).setsAt x := by
+    Icc x y ∈ (VitaliFamily (volume : Measure ℝ) 1).setsAt x := by
   rw [Icc_eq_closed_ball]
   refine' closed_ball_mem_vitali_family_of_dist_le_mul _ _ (by linarith)
   rw [dist_comm, Real.dist_eq, abs_of_nonneg] <;> linarith
 #align real.Icc_mem_vitali_family_at_right Real.Icc_mem_vitali_family_at_right
 
 theorem tendsto_Icc_vitali_family_right (x : ℝ) :
-    Tendsto (fun y => icc x y) (𝓝[>] x) ((VitaliFamily (volume : Measure ℝ) 1).filterAt x) := by
+    Tendsto (fun y => Icc x y) (𝓝[>] x) ((VitaliFamily (volume : Measure ℝ) 1).filterAt x) := by
   refine' (VitaliFamily.tendsto_filter_at_iff _).2 ⟨_, _⟩
   · filter_upwards [self_mem_nhds_within] with y hy using Icc_mem_vitali_family_at_right hy
   · intro ε εpos
@@ -45,14 +45,14 @@ theorem tendsto_Icc_vitali_family_right (x : ℝ) :
 #align real.tendsto_Icc_vitali_family_right Real.tendsto_Icc_vitali_family_right
 
 theorem Icc_mem_vitali_family_at_left {x y : ℝ} (hxy : x < y) :
-    icc x y ∈ (VitaliFamily (volume : Measure ℝ) 1).setsAt y := by
+    Icc x y ∈ (VitaliFamily (volume : Measure ℝ) 1).setsAt y := by
   rw [Icc_eq_closed_ball]
   refine' closed_ball_mem_vitali_family_of_dist_le_mul _ _ (by linarith)
   rw [Real.dist_eq, abs_of_nonneg] <;> linarith
 #align real.Icc_mem_vitali_family_at_left Real.Icc_mem_vitali_family_at_left
 
 theorem tendsto_Icc_vitali_family_left (x : ℝ) :
-    Tendsto (fun y => icc y x) (𝓝[<] x) ((VitaliFamily (volume : Measure ℝ) 1).filterAt x) := by
+    Tendsto (fun y => Icc y x) (𝓝[<] x) ((VitaliFamily (volume : Measure ℝ) 1).filterAt x) := by
   refine' (VitaliFamily.tendsto_filter_at_iff _).2 ⟨_, _⟩
   · filter_upwards [self_mem_nhds_within] with y hy using Icc_mem_vitali_family_at_left hy
   · intro ε εpos

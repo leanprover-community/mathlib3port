@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.spectrum
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ theorem nnnorm_apply_le (a : A) : ‖(φ a : B)‖₊ ≤ ‖a‖₊ := by
     simpa only [hs.spectral_radius_eq_nnnorm, (hs.star_hom_apply φ).spectral_radius_eq_nnnorm,
       coe_le_coe] using
       show spectralRadius ℂ (φ s) ≤ spectralRadius ℂ s from
-        supr_le_supr_of_subset (AlgHom.spectrum_apply_subset φ s)
+        supᵢ_le_supᵢ_of_subset (AlgHom.spectrum_apply_subset φ s)
 #align star_alg_hom.nnnorm_apply_le StarAlgHom.nnnorm_apply_le
 
 /-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/

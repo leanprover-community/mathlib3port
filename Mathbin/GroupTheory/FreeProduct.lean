@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.free_product
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,8 +193,8 @@ theorem lift_mrange_le {N} [Monoid N] (f : ∀ i, M i →* N) {s : Submonoid N}
 
 theorem mrange_eq_supr {N} [Monoid N] (f : ∀ i, M i →* N) : (lift f).mrange = ⨆ i, (f i).mrange :=
   by 
-  apply le_antisymm (lift_mrange_le f fun i => le_supr _ i)
-  apply supr_le _
+  apply le_antisymm (lift_mrange_le f fun i => le_supᵢ _ i)
+  apply supᵢ_le _
   rintro i _ ⟨x, rfl⟩
   exact ⟨of x, by simp only [lift_of]⟩
 #align free_product.mrange_eq_supr FreeProduct.mrange_eq_supr
@@ -242,8 +242,8 @@ theorem lift_range_le {N} [Group N] (f : ∀ i, G i →* N) {s : Subgroup N}
 #align free_product.lift_range_le FreeProduct.lift_range_le
 
 theorem range_eq_supr {N} [Group N] (f : ∀ i, G i →* N) : (lift f).range = ⨆ i, (f i).range := by
-  apply le_antisymm (lift_range_le _ f fun i => le_supr _ i)
-  apply supr_le _
+  apply le_antisymm (lift_range_le _ f fun i => le_supᵢ _ i)
+  apply supᵢ_le _
   rintro i _ ⟨x, rfl⟩
   exact ⟨of x, by simp only [lift_of]⟩
 #align free_product.range_eq_supr FreeProduct.range_eq_supr

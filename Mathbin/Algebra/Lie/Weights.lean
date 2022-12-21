@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.weights
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ variable (R)
 theorem exists_pre_weight_space_zero_le_ker_of_is_noetherian [IsNoetherian R M] (x : L) :
     ∃ k : ℕ, preWeightSpace M (0 : L → R) ≤ (toEndomorphism R L M x ^ k).ker := by
   use (to_endomorphism R L M x).maximalGeneralizedEigenspaceIndex 0
-  simp only [← Module.EndCat.generalized_eigenspace_zero, pre_weight_space, Pi.zero_apply, infi_le,
+  simp only [← Module.EndCat.generalized_eigenspace_zero, pre_weight_space, Pi.zero_apply, infᵢ_le,
     ← (to_endomorphism R L M x).maximal_generalized_eigenspace_eq]
 #align
   lie_module.exists_pre_weight_space_zero_le_ker_of_is_noetherian LieModule.exists_pre_weight_space_zero_le_ker_of_is_noetherian

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.bounds
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,34 +51,34 @@ theorem BddBelow.inv (h : BddBelow s) : BddAbove s⁻¹ :=
 #align bdd_below.inv BddBelow.inv
 
 @[simp, to_additive]
-theorem is_lub_inv : IsLub s⁻¹ a ↔ IsGlb s a⁻¹ :=
+theorem is_lub_inv : IsLUB s⁻¹ a ↔ IsGLB s a⁻¹ :=
   (OrderIso.inv G).is_lub_preimage
 #align is_lub_inv is_lub_inv
 
 @[to_additive]
-theorem is_lub_inv' : IsLub s⁻¹ a⁻¹ ↔ IsGlb s a :=
+theorem is_lub_inv' : IsLUB s⁻¹ a⁻¹ ↔ IsGLB s a :=
   (OrderIso.inv G).is_lub_preimage'
 #align is_lub_inv' is_lub_inv'
 
 @[to_additive]
-theorem IsGlb.inv (h : IsGlb s a) : IsLub s⁻¹ a⁻¹ :=
+theorem IsGLB.inv (h : IsGLB s a) : IsLUB s⁻¹ a⁻¹ :=
   is_lub_inv'.2 h
-#align is_glb.inv IsGlb.inv
+#align is_glb.inv IsGLB.inv
 
 @[simp, to_additive]
-theorem is_glb_inv : IsGlb s⁻¹ a ↔ IsLub s a⁻¹ :=
+theorem is_glb_inv : IsGLB s⁻¹ a ↔ IsLUB s a⁻¹ :=
   (OrderIso.inv G).is_glb_preimage
 #align is_glb_inv is_glb_inv
 
 @[to_additive]
-theorem is_glb_inv' : IsGlb s⁻¹ a⁻¹ ↔ IsLub s a :=
+theorem is_glb_inv' : IsGLB s⁻¹ a⁻¹ ↔ IsLUB s a :=
   (OrderIso.inv G).is_glb_preimage'
 #align is_glb_inv' is_glb_inv'
 
 @[to_additive]
-theorem IsLub.inv (h : IsLub s a) : IsGlb s⁻¹ a⁻¹ :=
+theorem IsLUB.inv (h : IsLUB s a) : IsGLB s⁻¹ a⁻¹ :=
   is_glb_inv'.2 h
-#align is_lub.inv IsLub.inv
+#align is_lub.inv IsLUB.inv
 
 end InvNeg
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.l2_space
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,7 +269,7 @@ protected theorem range_linear_isometry [∀ i, CompleteSpace (G i)] :
     refine' mem_supr_of_mem i _
     exact LinearMap.mem_range_self _ (f i)
   · apply topological_closure_minimal
-    · refine' supr_le _
+    · refine' supᵢ_le _
       rintro i x ⟨x, rfl⟩
       use lp.single 2 i x
       exact hV.linear_isometry_apply_single x
@@ -400,7 +400,7 @@ theorem Submodule.isHilbertSumOrthogonal (K : Submodule 𝕜 E) [hK : CompleteSp
     cases b <;> first |exact orthogonal.complete_space K|assumption
   refine' IsHilbertSum.mkInternal _ K.orthogonal_family_self _
   refine' le_trans _ (Submodule.le_topological_closure _)
-  rw [supr_bool_eq, cond, cond]
+  rw [supᵢ_bool_eq, cond, cond]
   refine' Codisjoint.top_le _
   exact submodule.is_compl_orthogonal_of_complete_space.codisjoint
 #align submodule.is_hilbert_sum_orthogonal Submodule.isHilbertSumOrthogonal

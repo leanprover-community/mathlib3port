@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.extr
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,11 +146,11 @@ theorem is_max_on_univ_iff : IsMaxOn f univ a ↔ ∀ x, f x ≤ f a :=
   univ_subset_iff.trans eq_univ_iff_forall
 #align is_max_on_univ_iff is_max_on_univ_iff
 
-theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : Tendsto f l (𝓟 <| ici (f a)) :=
+theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : Tendsto f l (𝓟 <| Ici (f a)) :=
   tendsto_principal.2 h
 #align is_min_filter.tendsto_principal_Ici IsMinFilter.tendsto_principal_Ici
 
-theorem IsMaxFilter.tendsto_principal_Iic (h : IsMaxFilter f l a) : Tendsto f l (𝓟 <| iic (f a)) :=
+theorem IsMaxFilter.tendsto_principal_Iic (h : IsMaxFilter f l a) : Tendsto f l (𝓟 <| Iic (f a)) :=
   tendsto_principal.2 h
 #align is_max_filter.tendsto_principal_Iic IsMaxFilter.tendsto_principal_Iic
 

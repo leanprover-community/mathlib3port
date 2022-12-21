@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.coloring
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -169,7 +169,7 @@ def selfColoring : G.Coloring V :=
 /-- The chromatic number of a graph is the minimal number of colors needed to color it.
 If `G` isn't colorable with finitely many colors, this will be 0. -/
 noncomputable def chromaticNumber : ℕ :=
-  inf { n : ℕ | G.Colorable n }
+  infₛ { n : ℕ | G.Colorable n }
 #align simple_graph.chromatic_number SimpleGraph.chromaticNumber
 
 /-- Given an embedding, there is an induced embedding of colorings. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.semantics
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1159,7 +1159,7 @@ theorem model_distinct_constants_theory {M : Type w} [L[[α]].StructureCat M] (s
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem card_le_of_model_distinct_constants_theory (s : Set α) (M : Type w) [L[[α]].StructureCat M]
     [h : M ⊨ L.distinctConstantsTheory s] : Cardinal.lift.{w} (#s) ≤ Cardinal.lift.{u'} (#M) :=
-  lift_mk_le'.2 ⟨⟨_, Set.inj_on_iff_injective.1 ((L.model_distinct_constants_theory s).1 h)⟩⟩
+  lift_mk_le'.2 ⟨⟨_, Set.injOn_iff_injective.1 ((L.model_distinct_constants_theory s).1 h)⟩⟩
 #align
   first_order.language.card_le_of_model_distinct_constants_theory FirstOrder.Language.card_le_of_model_distinct_constants_theory
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,7 +188,7 @@ theorem bot_boxes : (⊥ : Prepartition I).boxes = ∅ :=
 /-- An auxiliary lemma used to prove that the same point can't belong to more than
 `2 ^ fintype.card ι` closed boxes of a prepartition. -/
 theorem inj_on_set_of_mem_Icc_set_of_lower_eq (x : ι → ℝ) :
-    InjOn (fun J : Box ι => { i | J.lower i = x i }) { J | J ∈ π ∧ x ∈ J.icc } := by
+    InjOn (fun J : Box ι => { i | J.lower i = x i }) { J | J ∈ π ∧ x ∈ J.IccCat } := by
   rintro J₁ ⟨h₁, hx₁⟩ J₂ ⟨h₂, hx₂⟩ (H : { i | J₁.lower i = x i } = { i | J₂.lower i = x i })
   suffices ∀ i, (Ioc (J₁.lower i) (J₁.upper i) ∩ Ioc (J₂.lower i) (J₂.upper i)).Nonempty by
     choose y hy₁ hy₂
@@ -209,7 +209,7 @@ theorem inj_on_set_of_mem_Icc_set_of_lower_eq (x : ι → ℝ) :
 /-- The set of boxes of a prepartition that contain `x` in their closures has cardinality
 at most `2 ^ fintype.card ι`. -/
 theorem card_filter_mem_Icc_le [Fintype ι] (x : ι → ℝ) :
-    (π.boxes.filter fun J : Box ι => x ∈ J.icc).card ≤ 2 ^ Fintype.card ι := by
+    (π.boxes.filter fun J : Box ι => x ∈ J.IccCat).card ≤ 2 ^ Fintype.card ι := by
   rw [← Fintype.card_set]
   refine'
     Finset.card_le_card_of_inj_on (fun J : box ι => { i | J.lower i = x i })

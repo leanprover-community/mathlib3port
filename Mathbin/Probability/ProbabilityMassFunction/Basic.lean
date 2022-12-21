@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,7 +213,7 @@ theorem to_outer_measure_apply_fintype [Fintype α] : p.toOuterMeasure s = ∑ x
 
 @[simp]
 theorem to_outer_measure_caratheodory (p : Pmf α) : (toOuterMeasure p).caratheodory = ⊤ := by
-  refine' eq_top_iff.2 <| le_trans (le_Inf fun x hx => _) (le_sum_caratheodory _)
+  refine' eq_top_iff.2 <| le_trans (le_infₛ fun x hx => _) (le_sum_caratheodory _)
   obtain ⟨y, hy⟩ := hx
   exact
     ((le_of_eq (dirac_caratheodory y).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eq hy)

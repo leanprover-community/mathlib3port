@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -874,23 +874,23 @@ theorem inf_to_subsemiring (S T : Subalgebra R A) :
 #align algebra.inf_to_subsemiring Algebra.inf_to_subsemiring
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (Subalgebra R A)) : (↑(inf S) : Set A) = ⋂ s ∈ S, ↑s :=
-  Inf_image
+theorem coe_Inf (S : Set (Subalgebra R A)) : (↑(infₛ S) : Set A) = ⋂ s ∈ S, ↑s :=
+  infₛ_image
 #align algebra.coe_Inf Algebra.coe_Inf
 
-theorem mem_Inf {S : Set (Subalgebra R A)} {x : A} : x ∈ inf S ↔ ∀ p ∈ S, x ∈ p := by
+theorem mem_Inf {S : Set (Subalgebra R A)} {x : A} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p := by
   simp only [← SetLike.mem_coe, coe_Inf, Set.mem_Inter₂]
 #align algebra.mem_Inf Algebra.mem_Inf
 
 @[simp]
 theorem Inf_to_submodule (S : Set (Subalgebra R A)) :
-    (inf S).toSubmodule = inf (Subalgebra.toSubmodule '' S) :=
+    (infₛ S).toSubmodule = infₛ (Subalgebra.toSubmodule '' S) :=
   SetLike.coe_injective <| by simp
 #align algebra.Inf_to_submodule Algebra.Inf_to_submodule
 
 @[simp]
 theorem Inf_to_subsemiring (S : Set (Subalgebra R A)) :
-    (inf S).toSubsemiring = inf (Subalgebra.toSubsemiring '' S) :=
+    (infₛ S).toSubsemiring = infₛ (Subalgebra.toSubsemiring '' S) :=
   SetLike.coe_injective <| by simp
 #align algebra.Inf_to_subsemiring Algebra.Inf_to_subsemiring
 
@@ -1172,7 +1172,7 @@ section SuprLift
 variable {ι : Type _}
 
 theorem coe_supr_of_directed [Nonempty ι] {S : ι → Subalgebra R A} (dir : Directed (· ≤ ·) S) :
-    ↑(supr S) = ⋃ i, (S i : Set A) :=
+    ↑(supᵢ S) = ⋃ i, (S i : Set A) :=
   let K : Subalgebra R A :=
     { carrier := ⋃ i, S i
       mul_mem' := fun x y hx hy =>
@@ -1188,9 +1188,9 @@ theorem coe_supr_of_directed [Nonempty ι] {S : ι → Subalgebra R A} (dir : Di
       algebra_map_mem' := fun r =>
         let i := @Nonempty.some ι inferInstance
         Set.mem_Union.2 ⟨i, Subalgebra.algebra_map_mem _ _⟩ }
-  have : supr S = K :=
-    le_antisymm (supr_le fun i => Set.subset_Union (fun i => ↑(S i)) i)
-      (SetLike.coe_subset_coe.1 (Set.Union_subset fun i => SetLike.coe_subset_coe.2 (le_supr _ _)))
+  have : supᵢ S = K :=
+    le_antisymm (supᵢ_le fun i => Set.subset_Union (fun i => ↑(S i)) i)
+      (SetLike.coe_subset_coe.1 (Set.Union_subset fun i => SetLike.coe_subset_coe.2 (le_supᵢ _ _)))
   this.symm ▸ rfl
 #align subalgebra.coe_supr_of_directed Subalgebra.coe_supr_of_directed
 
@@ -1198,7 +1198,7 @@ theorem coe_supr_of_directed [Nonempty ι] {S : ι → Subalgebra R A} (dir : Di
 it on each subalgebra, and proving that it agrees on the intersection of subalgebras. -/
 noncomputable def suprLift [Nonempty ι] (K : ι → Subalgebra R A) (dir : Directed (· ≤ ·) K)
     (f : ∀ i, K i →ₐ[R] B) (hf : ∀ (i j : ι) (h : K i ≤ K j), f i = (f j).comp (inclusion h))
-    (T : Subalgebra R A) (hT : T = supr K) : ↥T →ₐ[R] B := by
+    (T : Subalgebra R A) (hT : T = supᵢ K) : ↥T →ₐ[R] B := by
   subst hT <;>
     exact
       { toFun :=
@@ -1207,7 +1207,7 @@ noncomputable def suprLift [Nonempty ι] (K : ι → Subalgebra R A) (dir : Dire
               let ⟨k, hik, hjk⟩ := dir i j
               rw [hf i k hik, hf j k hjk]
               rfl)
-            (↑(supr K)) (by rw [coe_supr_of_directed dir] <;> rfl)
+            (↑(supᵢ K)) (by rw [coe_supr_of_directed dir] <;> rfl)
         map_one' := Set.Union_lift_const _ (fun _ => 1) (fun _ => rfl) _ (by simp)
         map_zero' := Set.Union_lift_const _ (fun _ => 0) (fun _ => rfl) _ (by simp)
         map_mul' :=
@@ -1223,7 +1223,7 @@ noncomputable def suprLift [Nonempty ι] (K : ι → Subalgebra R A) (dir : Dire
 
 variable [Nonempty ι] {K : ι → Subalgebra R A} {dir : Directed (· ≤ ·) K} {f : ∀ i, K i →ₐ[R] B}
   {hf : ∀ (i j : ι) (h : K i ≤ K j), f i = (f j).comp (inclusion h)} {T : Subalgebra R A}
-  {hT : T = supr K}
+  {hT : T = supᵢ K}
 
 @[simp]
 theorem supr_lift_inclusion {i : ι} (x : K i) (h : K i ≤ T) :

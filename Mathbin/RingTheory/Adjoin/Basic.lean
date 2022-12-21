@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,8 +50,8 @@ theorem adjoin_le {S : Subalgebra R A} (H : s ⊆ S) : adjoin R s ≤ S :=
   Algebra.gc.l_le H
 #align algebra.adjoin_le Algebra.adjoin_le
 
-theorem adjoin_eq_Inf : adjoin R s = inf { p | s ⊆ p } :=
-  le_antisymm (le_Inf fun _ h => adjoin_le h) (Inf_le subset_adjoin)
+theorem adjoin_eq_Inf : adjoin R s = infₛ { p | s ⊆ p } :=
+  le_antisymm (le_infₛ fun _ h => adjoin_le h) (infₛ_le subset_adjoin)
 #align algebra.adjoin_eq_Inf Algebra.adjoin_eq_Inf
 
 theorem adjoin_le_iff {S : Subalgebra R A} : adjoin R s ≤ S ↔ s ⊆ S :=

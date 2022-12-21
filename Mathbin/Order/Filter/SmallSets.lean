@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.small_sets
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ def smallSets (l : Filter α) : Filter (Set α) :=
 #align filter.small_sets Filter.smallSets
 
 theorem small_sets_eq_generate {f : Filter α} : f.smallSets = generate (powerset '' f.sets) := by
-  simp_rw [generate_eq_binfi, small_sets, infi_image]
+  simp_rw [generate_eq_binfi, small_sets, infᵢ_image]
   rfl
 #align filter.small_sets_eq_generate Filter.small_sets_eq_generate
 
@@ -126,9 +126,9 @@ theorem small_sets_inf (l₁ l₂ : Filter α) : (l₁ ⊓ l₂).smallSets = l�
   lift'_inf _ _ powerset_inter
 #align filter.small_sets_inf Filter.small_sets_inf
 
-instance smallSetsNeBot (l : Filter α) : NeBot l.smallSets :=
+instance small_sets_ne_bot (l : Filter α) : NeBot l.smallSets :=
   (lift'_ne_bot_iff monotone_powerset).2 fun _ _ => powerset_nonempty
-#align filter.small_sets_ne_bot Filter.smallSetsNeBot
+#align filter.small_sets_ne_bot Filter.small_sets_ne_bot
 
 theorem Tendsto.small_sets_mono {s t : α → Set β} (ht : Tendsto t la lb.smallSets)
     (hst : ∀ᶠ x in la, s x ⊆ t x) : Tendsto s la lb.smallSets := by

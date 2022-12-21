@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.diff_cont_on_cl
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,6 +146,6 @@ end DiffContOnCl
 
 theorem Differentiable.compDiffContOnCl {g : G → E} {t : Set G} (hf : Differentiable 𝕜 f)
     (hg : DiffContOnCl 𝕜 g t) : DiffContOnCl 𝕜 (f ∘ g) t :=
-  hf.DiffContOnCl.comp hg (maps_to_image _ _)
+  hf.DiffContOnCl.comp hg (mapsTo_image _ _)
 #align differentiable.comp_diff_cont_on_cl Differentiable.compDiffContOnCl
 

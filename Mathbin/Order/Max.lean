@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.max
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,29 +114,53 @@ instance OrderDual.noMaxOrder (α : Type _) [LT α] [NoMinOrder α] : NoMaxOrder
 #align order_dual.no_max_order OrderDual.noMaxOrder
 -/
 
-instance no_max_order_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α × β) :=
+/- warning: no_max_order_of_left -> noMaxOrder_of_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMaxOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMaxOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
+Case conversion may be inaccurate. Consider using '#align no_max_order_of_left noMaxOrder_of_leftₓ'. -/
+instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α × β) :=
   ⟨fun ⟨a, b⟩ => by 
     obtain ⟨c, h⟩ := exists_gt a
     exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
-#align no_max_order_of_left no_max_order_of_left
+#align no_max_order_of_left noMaxOrder_of_left
 
-instance no_max_order_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMaxOrder (α × β) :=
+/- warning: no_max_order_of_right -> noMaxOrder_of_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMaxOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMaxOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
+Case conversion may be inaccurate. Consider using '#align no_max_order_of_right noMaxOrder_of_rightₓ'. -/
+instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMaxOrder (α × β) :=
   ⟨fun ⟨a, b⟩ => by 
     obtain ⟨c, h⟩ := exists_gt b
     exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
-#align no_max_order_of_right no_max_order_of_right
+#align no_max_order_of_right noMaxOrder_of_right
 
-instance no_min_order_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinOrder (α × β) :=
+/- warning: no_min_order_of_left -> noMinOrder_of_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMinOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMinOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
+Case conversion may be inaccurate. Consider using '#align no_min_order_of_left noMinOrder_of_leftₓ'. -/
+instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinOrder (α × β) :=
   ⟨fun ⟨a, b⟩ => by 
     obtain ⟨c, h⟩ := exists_lt a
     exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
-#align no_min_order_of_left no_min_order_of_left
+#align no_min_order_of_left noMinOrder_of_left
 
-instance no_min_order_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMinOrder (α × β) :=
+/- warning: no_min_order_of_right -> noMinOrder_of_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMinOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMinOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
+Case conversion may be inaccurate. Consider using '#align no_min_order_of_right noMinOrder_of_rightₓ'. -/
+instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMinOrder (α × β) :=
   ⟨fun ⟨a, b⟩ => by 
     obtain ⟨c, h⟩ := exists_lt b
     exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
-#align no_min_order_of_right no_min_order_of_right
+#align no_min_order_of_right noMinOrder_of_right
 
 instance [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMaxOrder (π i)] : NoMaxOrder (∀ i, π i) :=
   ⟨fun a => by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.fin.interval
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,22 +96,22 @@ theorem card_Ioo : (ioo a b).card = b - a - 1 := by
 #align fin.card_Ioo Fin.card_Ioo
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.icc a b) = b + 1 - a := by
+theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = b + 1 - a := by
   rw [← card_Icc, Fintype.card_of_finset]
 #align fin.card_fintype_Icc Fin.card_fintype_Icc
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.ico a b) = b - a := by
+theorem card_fintype_Ico : Fintype.card (Set.Ico a b) = b - a := by
   rw [← card_Ico, Fintype.card_of_finset]
 #align fin.card_fintype_Ico Fin.card_fintype_Ico
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.ioc a b) = b - a := by
+theorem card_fintype_Ioc : Fintype.card (Set.Ioc a b) = b - a := by
   rw [← card_Ioc, Fintype.card_of_finset]
 #align fin.card_fintype_Ioc Fin.card_fintype_Ioc
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.ioo a b) = b - a - 1 := by
+theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
   rw [← card_Ioo, Fintype.card_of_finset]
 #align fin.card_fintype_Ioo Fin.card_fintype_Ioo
 
@@ -191,22 +191,22 @@ theorem card_Iio : (iio b).card = b := by
 #align fin.card_Iio Fin.card_Iio
 
 @[simp]
-theorem card_fintype_Ici : Fintype.card (Set.ici a) = n - a := by
+theorem card_fintype_Ici : Fintype.card (Set.Ici a) = n - a := by
   rw [Fintype.card_of_finset, card_Ici]
 #align fin.card_fintype_Ici Fin.card_fintype_Ici
 
 @[simp]
-theorem card_fintype_Ioi : Fintype.card (Set.ioi a) = n - 1 - a := by
+theorem card_fintype_Ioi : Fintype.card (Set.Ioi a) = n - 1 - a := by
   rw [Fintype.card_of_finset, card_Ioi]
 #align fin.card_fintype_Ioi Fin.card_fintype_Ioi
 
 @[simp]
-theorem card_fintype_Iic : Fintype.card (Set.iic b) = b + 1 := by
+theorem card_fintype_Iic : Fintype.card (Set.Iic b) = b + 1 := by
   rw [Fintype.card_of_finset, card_Iic]
 #align fin.card_fintype_Iic Fin.card_fintype_Iic
 
 @[simp]
-theorem card_fintype_Iio : Fintype.card (Set.iio b) = b := by rw [Fintype.card_of_finset, card_Iio]
+theorem card_fintype_Iio : Fintype.card (Set.Iio b) = b := by rw [Fintype.card_of_finset, card_Iio]
 #align fin.card_fintype_Iio Fin.card_fintype_Iio
 
 end Fin

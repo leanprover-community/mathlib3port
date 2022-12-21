@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_mul_action
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ is. -/
       "If an additive action is central, then its right action is uniform\ncontinuous when its left action,is."]
 instance (priority := 100) HasUniformContinuousConstSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X]
     [HasUniformContinuousConstSmul M X] : HasUniformContinuousConstSmul Mᵐᵒᵖ X :=
-  ⟨MulOpposite.rec fun c => by
+  ⟨MulOpposite.rec' fun c => by
       change UniformContinuous fun m => MulOpposite.op c • m
       simp_rw [op_smul_eq_smul]
       exact uniform_continuous_const_smul c⟩

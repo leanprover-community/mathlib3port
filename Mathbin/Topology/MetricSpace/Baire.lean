@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.baire
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ theorem eventually_residual {p : α → Prop} :
     (∀ᶠ x in residual α, p x) ↔ ∃ t : Set α, IsGδ t ∧ Dense t ∧ ∀ x ∈ t, p x :=
   calc
     (∀ᶠ x in residual α, p x) ↔ ∀ᶠ x in ⨅ (t : Set α) (ht : IsGδ t ∧ Dense t), 𝓟 t, p x := by
-      simp only [residual, infi_and]
+      simp only [residual, infᵢ_and]
     _ ↔ ∃ (t : Set α)(ht : IsGδ t ∧ Dense t), ∀ᶠ x in 𝓟 t, p x :=
       mem_binfi_of_directed
         (fun t₁ h₁ t₂ h₂ =>

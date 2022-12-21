@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.arithmetic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -659,7 +659,7 @@ instance SubNegMonoid.hasMeasurableSmulInt₂ (M : Type _) [SubNegMonoid M] [Mea
     induction' n with n n ih
     · simp only [of_nat_zsmul]
       exact measurable_const_smul _
-    · simp only [zsmul_neg_succ_of_nat]
+    · simp only [negSucc_zsmul]
       exact (measurable_const_smul _).neg⟩
 #align sub_neg_monoid.has_measurable_smul_int₂ SubNegMonoid.hasMeasurableSmulInt₂
 
@@ -760,7 +760,7 @@ instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasM
 /-- If a scalar is central, then its right action is measurable when its left action is. -/
 instance HasMeasurableSmul.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasSmul M α]
     [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] [HasMeasurableSmul M α] : HasMeasurableSmul Mᵐᵒᵖ α :=
-  ⟨MulOpposite.rec fun c =>
+  ⟨MulOpposite.rec' fun c =>
       show Measurable fun x => op c • x by
         simpa only [op_smul_eq_smul] using measurable_const_smul c,
     fun x =>

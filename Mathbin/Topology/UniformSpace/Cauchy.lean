@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.uniform_space.cauchy
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem Cauchy.ultrafilter_of {l : Filter α} (h : Cauchy l) :
     Cauchy (@Ultrafilter.of _ l h.1 : Filter α) := by
   haveI := h.1
   have := Ultrafilter.of_le l
-  exact ⟨Ultrafilter.neBot _, (Filter.prod_mono this this).trans h.2⟩
+  exact ⟨Ultrafilter.ne_bot _, (Filter.prod_mono this this).trans h.2⟩
 #align cauchy.ultrafilter_of Cauchy.ultrafilter_of
 
 theorem cauchy_map_iff {l : Filter β} {f : β → α} :
@@ -85,7 +85,7 @@ theorem Cauchy.mono' {f g : Filter α} (h_c : Cauchy f) (hg : NeBot g) (h_le : g
 #align cauchy.mono' Cauchy.mono'
 
 theorem cauchy_nhds {a : α} : Cauchy (𝓝 a) :=
-  ⟨nhdsNeBot, nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)⟩
+  ⟨nhds_ne_bot, nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)⟩
 #align cauchy_nhds cauchy_nhds
 
 theorem cauchy_pure {a : α} : Cauchy (pure a) :=
@@ -548,7 +548,7 @@ theorem TotallyBounded.image [UniformSpace β] {f : α → β} {s : Set α} (hs 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Ultrafilter.cauchy_of_totally_bounded {s : Set α} (f : Ultrafilter α)
     (hs : TotallyBounded s) (h : ↑f ≤ 𝓟 s) : Cauchy (f : Filter α) :=
-  ⟨f.neBot', fun t ht =>
+  ⟨f.ne_bot', fun t ht =>
     let ⟨t', ht'₁, ht'_symm, ht'_t⟩ := comp_symm_of_uniformity ht
     let ⟨i, hi, hs_union⟩ := hs t' ht'₁
     have : (⋃ y ∈ i, { x | (x, y) ∈ t' }) ∈ f := mem_of_superset (le_principal_iff.mp h) hs_union
@@ -575,14 +575,14 @@ theorem totally_bounded_iff_filter {s : Set α} :
         exact principal_mono.2 (diff_subset_diff_right <| bUnion_subset_bUnion_left h)
       · intro t
         simpa [nonempty_diff] using hd_cover t t.finite_to_set
-    have : f ≤ 𝓟 s := infi_le_of_le ∅ (by simp)
+    have : f ≤ 𝓟 s := infᵢ_le_of_le ∅ (by simp)
     refine' ⟨f, ‹_›, ‹_›, fun c hcf hc => _⟩
     rcases mem_prod_same_iff.1 (hc.2 hd) with ⟨m, hm, hmd⟩
     have : m ∩ s ∈ c := inter_mem hm (le_principal_iff.mp (hcf.trans ‹_›))
     rcases hc.1.nonempty_of_mem this with ⟨y, hym, hys⟩
     set ys := ⋃ y' ∈ ({y} : Finset α), { x | (x, y') ∈ d }
     have : m ⊆ ys := by simpa [ys] using fun x hx => hmd (mk_mem_prod hx hym)
-    have : c ≤ 𝓟 (s \ ys) := hcf.trans (infi_le_of_le {y} le_rfl)
+    have : c ≤ 𝓟 (s \ ys) := hcf.trans (infᵢ_le_of_le {y} le_rfl)
     refine' hc.1.Ne (empty_mem_iff_bot.mp _)
     filter_upwards [le_principal_iff.1 this, hm]
     refine' fun x hx hxm => hx.2 _
@@ -674,7 +674,7 @@ def setSeqAux (n : ℕ) : { s : Set α // ∃ _ : s ∈ f, s ×ˢ s ⊆ U n } :=
 /-- Given a Cauchy filter `f` and a sequence `U` of entourages, `set_seq` provides
 an antitone sequence of sets `s n ∈ f` such that `s n ×ˢ s n ⊆ U`. -/
 def setSeq (n : ℕ) : Set α :=
-  ⋂ m ∈ Set.iic n, (setSeqAux hf U_mem m).val
+  ⋂ m ∈ Set.Iic n, (setSeqAux hf U_mem m).val
 #align sequentially_complete.set_seq SequentiallyComplete.setSeq
 
 theorem set_seq_mem (n : ℕ) : setSeq hf U_mem n ∈ f :=

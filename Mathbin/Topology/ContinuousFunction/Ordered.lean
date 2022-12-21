@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ordered
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,13 +153,13 @@ variable [LinearOrder α] [OrderTopology α] {a b : α} (h : a ≤ b)
 
 /-- Extend a continuous function `f : C(set.Icc a b, β)` to a function `f : C(α, β)`.
 -/
-def iccExtend (f : C(Set.icc a b, β)) : C(α, β) :=
-  ⟨Set.iccExtend h f⟩
+def iccExtend (f : C(Set.Icc a b, β)) : C(α, β) :=
+  ⟨Set.IccExtend h f⟩
 #align continuous_map.Icc_extend ContinuousMap.iccExtend
 
 @[simp]
-theorem coe_Icc_extend (f : C(Set.icc a b, β)) :
-    ((iccExtend h f : C(α, β)) : α → β) = Set.iccExtend h f :=
+theorem coe_Icc_extend (f : C(Set.Icc a b, β)) :
+    ((iccExtend h f : C(α, β)) : α → β) = Set.IccExtend h f :=
   rfl
 #align continuous_map.coe_Icc_extend ContinuousMap.coe_Icc_extend
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.eval
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,17 +57,17 @@ theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRing R] [Semiring S
 private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] :
     0 < eval (-1 : R) (cyclotomic n R) := by
   haveI := NeZero.of_gt hn
-  rw [← map_cyclotomic_int, ← Int.cast_one, ← Int.cast_neg, eval_int_cast_map,
-    Int.coe_cast_ring_hom, Int.cast_pos]
+  rw [← map_cyclotomic_int, ← Int.cast_one, ← Int.cast_neg, eval_int_cast_map, Int.coe_castRingHom,
+    Int.cast_pos]
   suffices 0 < eval (↑(-1 : ℤ)) (cyclotomic n ℝ) by
-    rw [← map_cyclotomic_int n ℝ, eval_int_cast_map, Int.coe_cast_ring_hom] at this
+    rw [← map_cyclotomic_int n ℝ, eval_int_cast_map, Int.coe_castRingHom] at this
     exact_mod_cast this
   simp only [Int.cast_one, Int.cast_neg]
   have h0 := cyclotomic_coeff_zero ℝ hn.le
   rw [coeff_zero_eq_eval_zero] at h0
   by_contra' hx
   have := intermediate_value_univ (-1) 0 (cyclotomic n ℝ).Continuous
-  obtain ⟨y, hy : is_root _ y⟩ := this (show (0 : ℝ) ∈ Set.icc _ _ by simpa [h0] using hx)
+  obtain ⟨y, hy : is_root _ y⟩ := this (show (0 : ℝ) ∈ Set.Icc _ _ by simpa [h0] using hx)
   rw [is_root_cyclotomic_iff] at hy
   rw [hy.eq_order_of] at hn
   exact hn.not_le LinearOrderedRing.order_of_le_two

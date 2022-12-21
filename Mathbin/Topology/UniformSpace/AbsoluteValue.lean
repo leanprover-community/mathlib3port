@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.absolute_value
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,8 +51,8 @@ def uniformSpaceCore :
       R where 
   uniformity := ⨅ ε > 0, 𝓟 { p : R × R | abv (p.2 - p.1) < ε }
   refl :=
-    le_infi fun ε =>
-      le_infi fun ε_pos =>
+    le_infᵢ fun ε =>
+      le_infᵢ fun ε_pos =>
         principal_mono.2 fun ⟨x, y⟩ h => by simpa [show x = y from h, abv_zero abv]
   symm :=
     tendsto_infi.2 fun ε =>
@@ -63,8 +63,8 @@ def uniformSpaceCore :
               have h : abv (y - x) < ε := by simpa [-sub_eq_add_neg] using h
               rwa [abv_sub abv] at h
   comp :=
-    le_infi fun ε =>
-      le_infi fun h =>
+    le_infᵢ fun ε =>
+      le_infᵢ fun h =>
         lift'_le
             (mem_infi_of_mem (ε / 2) <| mem_infi_of_mem (div_pos h zero_lt_two) (Subset.refl _)) <|
           by
@@ -87,7 +87,7 @@ def uniformSpace : UniformSpace R :=
 theorem mem_uniformity {s : Set (R × R)} :
     s ∈ (uniformSpaceCore abv).uniformity ↔ ∃ ε > 0, ∀ {a b : R}, abv (b - a) < ε → (a, b) ∈ s := by
   suffices (s ∈ ⨅ ε : { ε : 𝕜 // ε > 0 }, 𝓟 { p : R × R | abv (p.2 - p.1) < ε.val }) ↔ _ by
-    rw [infi_subtype] at this
+    rw [infᵢ_subtype] at this
     exact this
   rw [mem_infi_of_directed]
   · simp [subset_def]

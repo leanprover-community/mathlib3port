@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.subsheaf
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -232,7 +232,7 @@ theorem Subpresheaf.eq_sheafify (h : Presieve.IsSheaf J F) (hG : Presieve.IsShea
 #align
   category_theory.grothendieck_topology.subpresheaf.eq_sheafify CategoryTheory.GrothendieckTopology.Subpresheaf.eq_sheafify
 
-theorem Subpresheaf.sheafifyIsSheaf (hF : Presieve.IsSheaf J F) :
+theorem Subpresheaf.sheafify_is_sheaf (hF : Presieve.IsSheaf J F) :
     Presieve.IsSheaf J (G.sheafify J).toPresheaf := by
   intro U S hS x hx
   let S' := sieve.bind S fun Y f hf => G.sieve_of_section (x f hf).1
@@ -271,11 +271,11 @@ theorem Subpresheaf.sheafifyIsSheaf (hF : Presieve.IsSheaf J F) :
   rw [ht _ hi]
   exact h₁ hi
 #align
-  category_theory.grothendieck_topology.subpresheaf.sheafify_is_sheaf CategoryTheory.GrothendieckTopology.Subpresheaf.sheafifyIsSheaf
+  category_theory.grothendieck_topology.subpresheaf.sheafify_is_sheaf CategoryTheory.GrothendieckTopology.Subpresheaf.sheafify_is_sheaf
 
 theorem Subpresheaf.eq_sheafify_iff (h : Presieve.IsSheaf J F) :
     G = G.sheafify J ↔ Presieve.IsSheaf J G.toPresheaf :=
-  ⟨fun e => e.symm ▸ G.sheafifyIsSheaf h, G.eq_sheafify h⟩
+  ⟨fun e => e.symm ▸ G.sheafify_is_sheaf h, G.eq_sheafify h⟩
 #align
   category_theory.grothendieck_topology.subpresheaf.eq_sheafify_iff CategoryTheory.GrothendieckTopology.Subpresheaf.eq_sheafify_iff
 
@@ -291,7 +291,7 @@ theorem Subpresheaf.is_sheaf_iff (h : Presieve.IsSheaf J F) :
 
 theorem Subpresheaf.sheafify_sheafify (h : Presieve.IsSheaf J F) :
     (G.sheafify J).sheafify J = G.sheafify J :=
-  ((Subpresheaf.eq_sheafify_iff _ h).mpr <| G.sheafifyIsSheaf h).symm
+  ((Subpresheaf.eq_sheafify_iff _ h).mpr <| G.sheafify_is_sheaf h).symm
 #align
   category_theory.grothendieck_topology.subpresheaf.sheafify_sheafify CategoryTheory.GrothendieckTopology.Subpresheaf.sheafify_sheafify
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.real
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,12 +165,12 @@ scoped[Manifold]
 `euclidean_half_space 1`.
 -/
 def iccLeftChart (x y : ℝ) [Fact (x < y)] :
-    LocalHomeomorph (icc x y)
+    LocalHomeomorph (Icc x y)
       (EuclideanHalfSpace
         1) where 
-  source := { z : icc x y | z.val < y }
+  source := { z : Icc x y | z.val < y }
   target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
-  toFun := fun z : icc x y => ⟨fun i => z.val - x, sub_nonneg.mpr z.property.1⟩
+  toFun := fun z : Icc x y => ⟨fun i => z.val - x, sub_nonneg.mpr z.property.1⟩
   invFun z := ⟨min (z.val 0 + x) y, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y))]⟩
   map_source' := by simp only [imp_self, sub_lt_sub_iff_right, mem_set_of_eq, forall_true_iff]
   map_target' := by 
@@ -218,12 +218,12 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] :
 `euclidean_half_space 1`.
 -/
 def iccRightChart (x y : ℝ) [Fact (x < y)] :
-    LocalHomeomorph (icc x y)
+    LocalHomeomorph (Icc x y)
       (EuclideanHalfSpace
         1) where 
-  source := { z : icc x y | x < z.val }
+  source := { z : Icc x y | x < z.val }
   target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
-  toFun := fun z : icc x y => ⟨fun i => y - z.val, sub_nonneg.mpr z.property.2⟩
+  toFun := fun z : Icc x y => ⟨fun i => y - z.val, sub_nonneg.mpr z.property.2⟩
   invFun z :=
     ⟨max (y - z.val 0) x, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y)), sub_eq_add_neg]⟩
   map_source' := by simp only [imp_self, mem_set_of_eq, sub_lt_sub_iff_left, forall_true_iff]
@@ -273,7 +273,7 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] :
 -/
 instance iccManifold (x y : ℝ) [Fact (x < y)] :
     ChartedSpace (EuclideanHalfSpace 1)
-      (icc x y) where 
+      (Icc x y) where 
   atlas := {iccLeftChart x y, iccRightChart x y}
   chartAt z := if z.val < y then iccLeftChart x y else iccRightChart x y
   mem_chart_source z := by 
@@ -288,7 +288,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] :
 
 /-- The manifold structure on `[x, y]` is smooth.
 -/
-instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorners (𝓡∂ 1) (icc x y) :=
+instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorners (𝓡∂ 1) (Icc x y) :=
   by
   have M : ContDiffOn ℝ ∞ (fun z : EuclideanSpace ℝ (Fin 1) => -z + fun i => y - x) univ := by
     rw [cont_diff_on_univ]
@@ -342,9 +342,9 @@ theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
 
 attribute [local instance] fact_zero_lt_one
 
-instance : ChartedSpace (EuclideanHalfSpace 1) (icc (0 : ℝ) 1) := by infer_instance
+instance : ChartedSpace (EuclideanHalfSpace 1) (Icc (0 : ℝ) 1) := by infer_instance
 
-instance : SmoothManifoldWithCorners (𝓡∂ 1) (icc (0 : ℝ) 1) := by infer_instance
+instance : SmoothManifoldWithCorners (𝓡∂ 1) (Icc (0 : ℝ) 1) := by infer_instance
 
 end
 

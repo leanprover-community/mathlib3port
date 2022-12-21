@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.asymptotics
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1328,7 +1328,7 @@ theorem is_o_one_left_iff : (fun x => 1 : α → F) =o[l] f ↔ Tendsto (fun x =
   calc
     (fun x => 1 : α → F) =o[l] f ↔ ∀ n : ℕ, ∀ᶠ x in l, ↑n * ‖(1 : F)‖ ≤ ‖f x‖ :=
       is_o_iff_nat_mul_le_aux <| Or.inl fun x => by simp only [norm_one, zero_le_one]
-    _ ↔ ∀ n : ℕ, True → ∀ᶠ x in l, ‖f x‖ ∈ ici (n : ℝ) := by
+    _ ↔ ∀ n : ℕ, True → ∀ᶠ x in l, ‖f x‖ ∈ Ici (n : ℝ) := by
       simp only [norm_one, mul_one, true_imp_iff, mem_Ici]
     _ ↔ Tendsto (fun x => ‖f x‖) l atTop :=
       at_top_countable_basis_of_archimedean.1.tendsto_right_iff.symm

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -655,7 +655,7 @@ theorem gcd_greatest_associated {α : Type _} [CancelCommMonoidWithZero α] [Gcd
 theorem is_unit_gcd_of_eq_mul_gcd {α : Type _} [CancelCommMonoidWithZero α] [GcdMonoid α]
     {x y x' y' : α} (ex : x = gcd x y * x') (ey : y = gcd x y * y') (h : gcd x y ≠ 0) :
     IsUnit (gcd x' y') := by 
-  rw [← associated_one_iff_is_unit]
+  rw [← associated_one_iff_isUnit]
   refine' Associated.of_mul_left _ (Associated.refl <| gcd x y) h
   convert (gcd_mul_left' _ _ _).symm using 1
   rw [← ex, ← ey, mul_one]
@@ -665,7 +665,7 @@ theorem extract_gcd {α : Type _} [CancelCommMonoidWithZero α] [GcdMonoid α] (
     ∃ x' y', x = gcd x y * x' ∧ y = gcd x y * y' ∧ IsUnit (gcd x' y') := by
   by_cases h : gcd x y = 0
   · obtain ⟨rfl, rfl⟩ := (gcd_eq_zero_iff x y).1 h
-    simp_rw [← associated_one_iff_is_unit]
+    simp_rw [← associated_one_iff_isUnit]
     exact ⟨1, 1, by rw [h, zero_mul], by rw [h, zero_mul], gcd_one_left' 1⟩
   obtain ⟨x', ex⟩ := gcd_dvd_left x y
   obtain ⟨y', ey⟩ := gcd_dvd_right x y
@@ -1013,7 +1013,7 @@ def normalizationMonoidOfMonoidHomRightInverse [DecidableEq α] (f : Associates 
     rw [if_neg (Units.ne_zero u), Units.ext_iff]
     apply mul_left_cancel₀ (Units.ne_zero u)
     rw [Units.mul_inv, map_mk_unit_aux hinv u,
-      Associates.mk_eq_mk_iff_associated.2 (associated_one_iff_is_unit.2 ⟨u, rfl⟩),
+      Associates.mk_eq_mk_iff_associated.2 (associated_one_iff_isUnit.2 ⟨u, rfl⟩),
       Associates.mk_one, MonoidHom.map_one]
 #align normalization_monoid_of_monoid_hom_right_inverse normalizationMonoidOfMonoidHomRightInverse
 

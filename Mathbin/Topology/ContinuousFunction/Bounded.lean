@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.bounded
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,9 +161,9 @@ def mkOfDiscrete [DiscreteTopology α] (f : α → β) (C : ℝ) (h : ∀ x y : 
 
 /-- The uniform distance between two bounded continuous functions -/
 instance : HasDist (α →ᵇ β) :=
-  ⟨fun f g => inf { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C }⟩
+  ⟨fun f g => infₛ { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C }⟩
 
-theorem dist_eq : dist f g = inf { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C } :=
+theorem dist_eq : dist f g = infₛ { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C } :=
   rfl
 #align bounded_continuous_function.dist_eq BoundedContinuousFunction.dist_eq
 
@@ -246,7 +246,7 @@ instance {α β} [TopologicalSpace α] [MetricSpace β] :
         β) where eq_of_dist_eq_zero f g hfg := by
     ext x <;> exact eq_of_dist_eq_zero (le_antisymm (hfg ▸ dist_coe_le_dist _) dist_nonneg)
 
-theorem nndist_eq : nndist f g = inf { C | ∀ x : α, nndist (f x) (g x) ≤ C } :=
+theorem nndist_eq : nndist f g = infₛ { C | ∀ x : α, nndist (f x) (g x) ≤ C } :=
   Subtype.ext <|
     dist_eq.trans <| by 
       rw [Nnreal.coe_Inf, Nnreal.coe_image]
@@ -268,7 +268,7 @@ theorem dist_zero_of_empty [IsEmpty α] : dist f g = 0 := by
 #align bounded_continuous_function.dist_zero_of_empty BoundedContinuousFunction.dist_zero_of_empty
 
 theorem dist_eq_supr : dist f g = ⨆ x : α, dist (f x) (g x) := by
-  cases isEmpty_or_nonempty α; · rw [supr_of_empty', Real.Sup_empty, dist_zero_of_empty]
+  cases isEmpty_or_nonempty α; · rw [supᵢ_of_empty', Real.Sup_empty, dist_zero_of_empty]
   refine' (dist_le_iff_of_nonempty.mpr <| le_csupr _).antisymm (csupr_le dist_coe_le_dist)
   exact dist_set_exists.imp fun C hC => forall_range_iff.2 hC.2
 #align bounded_continuous_function.dist_eq_supr BoundedContinuousFunction.dist_eq_supr
@@ -839,13 +839,13 @@ theorem norm_def : ‖f‖ = dist f 0 :=
 
 /-- The norm of a bounded continuous function is the supremum of `‖f x‖`.
 We use `Inf` to ensure that the definition works if `α` has no elements. -/
-theorem norm_eq (f : α →ᵇ β) : ‖f‖ = inf { C : ℝ | 0 ≤ C ∧ ∀ x : α, ‖f x‖ ≤ C } := by
+theorem norm_eq (f : α →ᵇ β) : ‖f‖ = infₛ { C : ℝ | 0 ≤ C ∧ ∀ x : α, ‖f x‖ ≤ C } := by
   simp [norm_def, BoundedContinuousFunction.dist_eq]
 #align bounded_continuous_function.norm_eq BoundedContinuousFunction.norm_eq
 
 /-- When the domain is non-empty, we do not need the `0 ≤ C` condition in the formula for ‖f‖ as an
 `Inf`. -/
-theorem norm_eq_of_nonempty [h : Nonempty α] : ‖f‖ = inf { C : ℝ | ∀ x : α, ‖f x‖ ≤ C } := by
+theorem norm_eq_of_nonempty [h : Nonempty α] : ‖f‖ = infₛ { C : ℝ | ∀ x : α, ‖f x‖ ≤ C } := by
   obtain ⟨a⟩ := h
   rw [norm_eq]
   congr
@@ -1037,7 +1037,7 @@ theorem mk_of_compact_sub [CompactSpace α] (f g : C(α, β)) :
 @[simp]
 theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
   | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
-  | -[n+1] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
+  | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmul_rec]
 #align bounded_continuous_function.coe_zsmul_rec BoundedContinuousFunction.coe_zsmul_rec
 
 instance hasIntScalar :

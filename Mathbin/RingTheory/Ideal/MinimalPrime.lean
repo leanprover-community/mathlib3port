@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.minimal_prime
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,12 +66,12 @@ theorem Ideal.exists_minimal_primes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.m
     ⟨OrderDual.toDual (Inf c),
       ⟨Ideal.Inf_is_prime_of_is_chain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
   · rw [OrderDual.ofDual_toDual]
-    convert le_Inf _
+    convert le_infₛ _
     intro x hx
     exact (hc hx).2
   · rintro z hz
     rw [OrderDual.le_toDual]
-    exact Inf_le hz
+    exact infₛ_le hz
 #align ideal.exists_minimal_primes_le Ideal.exists_minimal_primes_le
 
 @[simp]
@@ -83,7 +83,7 @@ theorem Ideal.radical_minimal_primes : I.radical.minimalPrimes = I.minimalPrimes
 #align ideal.radical_minimal_primes Ideal.radical_minimal_primes
 
 @[simp]
-theorem Ideal.Inf_minimal_primes : inf I.minimalPrimes = I.radical := by
+theorem Ideal.Inf_minimal_primes : infₛ I.minimalPrimes = I.radical := by
   rw [I.radical_eq_Inf]
   apply le_antisymm
   · intro x hx
@@ -92,7 +92,7 @@ theorem Ideal.Inf_minimal_primes : inf I.minimalPrimes = I.radical := by
     skip
     obtain ⟨p, hp, hp'⟩ := Ideal.exists_minimal_primes_le e
     exact hp' (hx hp)
-  · apply Inf_le_Inf _
+  · apply infₛ_le_infₛ _
     intro I hI
     exact hI.1.symm
 #align ideal.Inf_minimal_primes Ideal.Inf_minimal_primes

@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.operations
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -312,7 +312,7 @@ theorem map_sup (S T : Subsemigroup M) (f : M →ₙ* N) : (S ⊔ T).map f = S.m
 
 @[to_additive]
 theorem map_supr {ι : Sort _} (f : M →ₙ* N) (s : ι → Subsemigroup M) :
-    (supr s).map f = ⨆ i, (s i).map f :=
+    (supᵢ s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 #align subsemigroup.map_supr Subsemigroup.map_supr
 
@@ -387,7 +387,7 @@ theorem comap_sup_map_of_injective (S T : Subsemigroup M) : (S.map f ⊔ T.map f
 
 @[to_additive]
 theorem comap_supr_map_of_injective (S : ι → Subsemigroup M) :
-    (⨆ i, (S i).map f).comap f = supr S :=
+    (⨆ i, (S i).map f).comap f = supᵢ S :=
   (gciMapComap hf).u_supr_l _
 #align subsemigroup.comap_supr_map_of_injective Subsemigroup.comap_supr_map_of_injective
 
@@ -452,7 +452,7 @@ theorem map_sup_comap_of_surjective (S T : Subsemigroup N) :
 
 @[to_additive]
 theorem map_supr_comap_of_surjective (S : ι → Subsemigroup N) :
-    (⨆ i, (S i).comap f).map f = supr S :=
+    (⨆ i, (S i).comap f).map f = supᵢ S :=
   (giMapComap hf).l_supr_u _
 #align subsemigroup.map_supr_comap_of_surjective Subsemigroup.map_supr_comap_of_surjective
 

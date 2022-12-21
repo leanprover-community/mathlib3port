@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.modular_lattice
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -278,8 +278,8 @@ theorem well_founded_gt_exact_sequence {β γ : Type _} [Preorder β] [PartialOr
 /-- The diamond isomorphism between the intervals `[a ⊓ b, a]` and `[b, a ⊔ b]` -/
 @[simps]
 def infIccOrderIsoIccSup (a b : α) :
-    Set.icc (a ⊓ b) a ≃o
-      Set.icc b
+    Set.Icc (a ⊓ b) a ≃o
+      Set.Icc b
         (a ⊔
           b) where 
   toFun x := ⟨x ⊔ b, ⟨le_sup_right, sup_le_sup_right x.Prop.2 b⟩⟩
@@ -303,19 +303,19 @@ def infIccOrderIsoIccSup (a b : α) :
     exact inf_le_inf_left _ h
 #align inf_Icc_order_iso_Icc_sup infIccOrderIsoIccSup
 
-theorem inf_strict_mono_on_Icc_sup {a b : α} : StrictMonoOn (fun c => a ⊓ c) (icc b (a ⊔ b)) :=
+theorem inf_strict_mono_on_Icc_sup {a b : α} : StrictMonoOn (fun c => a ⊓ c) (Icc b (a ⊔ b)) :=
   StrictMono.of_restrict (infIccOrderIsoIccSup a b).symm.StrictMono
 #align inf_strict_mono_on_Icc_sup inf_strict_mono_on_Icc_sup
 
-theorem sup_strict_mono_on_Icc_inf {a b : α} : StrictMonoOn (fun c => c ⊔ b) (icc (a ⊓ b) a) :=
+theorem sup_strict_mono_on_Icc_inf {a b : α} : StrictMonoOn (fun c => c ⊔ b) (Icc (a ⊓ b) a) :=
   StrictMono.of_restrict (infIccOrderIsoIccSup a b).StrictMono
 #align sup_strict_mono_on_Icc_inf sup_strict_mono_on_Icc_inf
 
 /-- The diamond isomorphism between the intervals `]a ⊓ b, a[` and `}b, a ⊔ b[`. -/
 @[simps]
 def infIooOrderIsoIooSup (a b : α) :
-    ioo (a ⊓ b) a ≃o
-      ioo b
+    Ioo (a ⊓ b) a ≃o
+      Ioo b
         (a ⊔
           b) where 
   toFun c :=
@@ -364,11 +364,11 @@ namespace IsCompl
 variable [Lattice α] [BoundedOrder α] [IsModularLattice α]
 
 /-- The diamond isomorphism between the intervals `set.Iic a` and `set.Ici b`. -/
-def iicOrderIsoIci {a b : α} (h : IsCompl a b) : Set.iic a ≃o Set.ici b :=
-  (OrderIso.setCongr (Set.iic a) (Set.icc (a ⊓ b) a)
+def iicOrderIsoIci {a b : α} (h : IsCompl a b) : Set.Iic a ≃o Set.Ici b :=
+  (OrderIso.setCongr (Set.Iic a) (Set.Icc (a ⊓ b) a)
         (h.inf_eq_bot.symm ▸ Set.Icc_bot.symm)).trans <|
     (infIccOrderIsoIccSup a b).trans
-      (OrderIso.setCongr (Set.icc b (a ⊔ b)) (Set.ici b) (h.sup_eq_top.symm ▸ Set.Icc_top))
+      (OrderIso.setCongr (Set.Icc b (a ⊔ b)) (Set.Ici b) (h.sup_eq_top.symm ▸ Set.Icc_top))
 #align is_compl.Iic_order_iso_Ici IsCompl.iicOrderIsoIci
 
 end IsCompl
@@ -409,11 +409,11 @@ namespace IsModularLattice
 
 variable [Lattice α] [IsModularLattice α] {a : α}
 
-instance is_modular_lattice_Iic : IsModularLattice (Set.iic a) :=
+instance is_modular_lattice_Iic : IsModularLattice (Set.Iic a) :=
   ⟨fun x y z xz => (sup_inf_le_assoc_of_le (y : α) xz : (↑x ⊔ ↑y) ⊓ ↑z ≤ ↑x ⊔ ↑y ⊓ ↑z)⟩
 #align is_modular_lattice.is_modular_lattice_Iic IsModularLattice.is_modular_lattice_Iic
 
-instance is_modular_lattice_Ici : IsModularLattice (Set.ici a) :=
+instance is_modular_lattice_Ici : IsModularLattice (Set.Ici a) :=
   ⟨fun x y z xz => (sup_inf_le_assoc_of_le (y : α) xz : (↑x ⊔ ↑y) ⊓ ↑z ≤ ↑x ⊔ ↑y ⊓ ↑z)⟩
 #align is_modular_lattice.is_modular_lattice_Ici IsModularLattice.is_modular_lattice_Ici
 
@@ -421,7 +421,7 @@ section ComplementedLattice
 
 variable [BoundedOrder α] [ComplementedLattice α]
 
-instance complemented_lattice_Iic : ComplementedLattice (Set.iic a) :=
+instance complemented_lattice_Iic : ComplementedLattice (Set.Iic a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_is_compl x
     ⟨⟨y ⊓ a, Set.mem_Iic.2 inf_le_right⟩, by 
@@ -437,7 +437,7 @@ instance complemented_lattice_Iic : ComplementedLattice (Set.iic a) :=
         rw [← sup_inf_assoc_of_le _ (Set.mem_Iic.1 hx), hy.2.eq_top, top_inf_eq]⟩⟩
 #align is_modular_lattice.complemented_lattice_Iic IsModularLattice.complemented_lattice_Iic
 
-instance complemented_lattice_Ici : ComplementedLattice (Set.ici a) :=
+instance complemented_lattice_Ici : ComplementedLattice (Set.Ici a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_is_compl x
     ⟨⟨y ⊔ a, Set.mem_Ici.2 le_sup_right⟩, by 

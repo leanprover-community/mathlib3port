@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.monoid_localization
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ quotient is the localization of `M` at `S`, defined as the unique congruence rel
 @[to_additive
       "The congruence relation on `M × S`, `M` an `add_comm_monoid` and `S`\nan `add_submonoid` of `M`, whose quotient is the localization of `M` at `S`, defined as the unique\ncongruence relation on `M × S` such that for any other congruence relation `s` on `M × S` where\nfor all `y ∈ S`, `(0, 0) ∼ (y, y)` under `s`, we have that `(x₁, y₁) ∼ (x₂, y₂)` by `r` implies\n`(x₁, y₁) ∼ (x₂, y₂)` by `s`."]
 def r (S : Submonoid M) : Con (M × S) :=
-  inf { c | ∀ y : S, c 1 (y, y) }
+  infₛ { c | ∀ y : S, c 1 (y, y) }
 #align localization.r Localization.r
 
 /-- An alternate form of the congruence relation on `M × S`, `M` a `comm_monoid` and `S` a
@@ -165,8 +165,8 @@ equivalently as an infimum (see `localization.r`) or explicitly
 @[to_additive
       "The additive congruence relation used to localize an `add_comm_monoid` at a\nsubmonoid can be expressed equivalently as an infimum (see `add_localization.r`) or\nexplicitly (see `add_localization.r'`)."]
 theorem r_eq_r' : r S = r' S :=
-  le_antisymm (Inf_le fun _ => ⟨1, by simp⟩) <|
-    le_Inf fun b H ⟨p, q⟩ y ⟨t, ht⟩ => by
+  le_antisymm (infₛ_le fun _ => ⟨1, by simp⟩) <|
+    le_infₛ fun b H ⟨p, q⟩ y ⟨t, ht⟩ => by
       rw [← mul_one (p, q), ← mul_one y]
       refine' b.trans (b.mul (b.refl _) (H (y.2 * t))) _
       convert b.symm (b.mul (b.refl y) (H (q * t))) using 1

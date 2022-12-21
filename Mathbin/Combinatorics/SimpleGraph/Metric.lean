@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Vincent Beffara
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.metric
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ variable {V : Type _} (G : SimpleGraph V)
 /-- The distance between two vertices is the length of the shortest walk between them.
 If no such walk exists, this uses the junk value of `0`. -/
 noncomputable def dist (u v : V) : ℕ :=
-  inf (Set.range (Walk.length : G.Walk u v → ℕ))
+  infₛ (Set.range (Walk.length : G.Walk u v → ℕ))
 #align simple_graph.dist SimpleGraph.dist
 
 variable {G}

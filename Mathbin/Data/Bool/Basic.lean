@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.bool.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -605,7 +605,6 @@ def ofNat (n : ℕ) : Bool :=
 #align bool.of_nat Bool.ofNat
 -/
 
-#print Bool.of_nat_le_of_nat /-
 theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m := by
   simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
   · subst m
@@ -614,19 +613,14 @@ theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m := by
   · left
     rfl
 #align bool.of_nat_le_of_nat Bool.of_nat_le_of_nat
--/
 
-#print Bool.to_nat_le_to_nat /-
 theorem to_nat_le_to_nat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
   cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [to_nat, Nat.zero_le]
 #align bool.to_nat_le_to_nat Bool.to_nat_le_to_nat
--/
 
-#print Bool.of_nat_to_nat /-
 theorem of_nat_to_nat (b : Bool) : ofNat (toNat b) = b := by
   cases b <;> simp only [of_nat, to_nat] <;> exact by decide
 #align bool.of_nat_to_nat Bool.of_nat_to_nat
--/
 
 #print Bool.injective_iff /-
 @[simp]

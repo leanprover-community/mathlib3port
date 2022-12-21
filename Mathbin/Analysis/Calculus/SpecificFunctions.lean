@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.specific_functions
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -664,7 +664,7 @@ theorem exists_cont_diff_bump_function_of_mem_nhds [NormedAddCommGroup E] [Norme
     [FiniteDimensional ℝ E] {x : E} {s : Set E} (hs : s ∈ 𝓝 x) :
     ∃ f : E → ℝ,
       f =ᶠ[𝓝 x] 1 ∧
-        (∀ y, f y ∈ icc (0 : ℝ) 1) ∧ ContDiff ℝ ⊤ f ∧ HasCompactSupport f ∧ tsupport f ⊆ s :=
+        (∀ y, f y ∈ Icc (0 : ℝ) 1) ∧ ContDiff ℝ ⊤ f ∧ HasCompactSupport f ∧ tsupport f ⊆ s :=
   let ⟨f, hf⟩ := ContDiffBump.exists_tsupport_subset hs
   ⟨f, f.eventually_eq_one, fun y => ⟨f.Nonneg, f.le_one⟩, f.ContDiff, f.HasCompactSupport, hf⟩
 #align exists_cont_diff_bump_function_of_mem_nhds exists_cont_diff_bump_function_of_mem_nhds

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.instances.rat_lemmas
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,11 +51,11 @@ theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
   interior_eq_empty_iff_dense_compl.1 (interior_compact_eq_empty hs)
 #align rat.dense_compl_compact Rat.dense_compl_compact
 
-instance cocompactInfNhdsNeBot : NeBot (cocompact ℚ ⊓ 𝓝 p) := by
+instance cocompact_inf_nhds_ne_bot : NeBot (cocompact ℚ ⊓ 𝓝 p) := by
   refine' (has_basis_cocompact.inf (nhds_basis_opens _)).ne_bot_iff.2 _
   rintro ⟨s, o⟩ ⟨hs, hpo, ho⟩; rw [inter_comm]
   exact (dense_compl_compact hs).inter_open_nonempty _ ho ⟨p, hpo⟩
-#align rat.cocompact_inf_nhds_ne_bot Rat.cocompactInfNhdsNeBot
+#align rat.cocompact_inf_nhds_ne_bot Rat.cocompact_inf_nhds_ne_bot
 
 theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact ℚ) := by
   intro H

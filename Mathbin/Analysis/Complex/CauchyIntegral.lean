@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.cauchy_integral
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,7 +171,7 @@ over the rectangle. -/
 theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → E) (f' : ℂ → ℂ →L[ℝ] E)
     (z w : ℂ) (s : Set ℂ) (hs : s.Countable) (Hc : ContinuousOn f ([z.re, w.re] ×ℂ [z.im, w.im]))
     (Hd :
-      ∀ x ∈ ioo (min z.re w.re) (max z.re w.re) ×ℂ ioo (min z.im w.im) (max z.im w.im) \ s,
+      ∀ x ∈ Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im) \ s,
         HasFderivAt f (f' x) x)
     (Hi : IntegrableOn (fun z => I • f' z 1 - f' z i) ([z.re, w.re] ×ℂ [z.im, w.im])) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
@@ -222,7 +222,7 @@ over the rectangle. -/
 theorem integral_boundary_rect_of_continuous_on_of_has_fderiv_at_real (f : ℂ → E)
     (f' : ℂ → ℂ →L[ℝ] E) (z w : ℂ) (Hc : ContinuousOn f ([z.re, w.re] ×ℂ [z.im, w.im]))
     (Hd :
-      ∀ x ∈ ioo (min z.re w.re) (max z.re w.re) ×ℂ ioo (min z.im w.im) (max z.im w.im),
+      ∀ x ∈ Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im),
         HasFderivAt f (f' x) x)
     (Hi : IntegrableOn (fun z => I • f' z 1 - f' z i) ([z.re, w.re] ×ℂ [z.im, w.im])) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
@@ -265,7 +265,7 @@ rectangle, then its integral over the boundary of the rectangle equals zero. -/
 theorem integral_boundary_rect_eq_zero_of_differentiable_on_off_countable (f : ℂ → E) (z w : ℂ)
     (s : Set ℂ) (hs : s.Countable) (Hc : ContinuousOn f ([z.re, w.re] ×ℂ [z.im, w.im]))
     (Hd :
-      ∀ x ∈ ioo (min z.re w.re) (max z.re w.re) ×ℂ ioo (min z.im w.im) (max z.im w.im) \ s,
+      ∀ x ∈ Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im) \ s,
         DifferentiableAt ℂ f x) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
@@ -289,7 +289,7 @@ theorem integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on (f 
     (Hc : ContinuousOn f ([z.re, w.re] ×ℂ [z.im, w.im]))
     (Hd :
       DifferentiableOn ℂ f
-        (ioo (min z.re w.re) (max z.re w.re) ×ℂ ioo (min z.im w.im) (max z.im w.im))) :
+        (Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im))) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =

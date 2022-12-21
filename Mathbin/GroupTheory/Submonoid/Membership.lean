@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.membership
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,7 @@ namespace Submonoid
 @[to_additive]
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S)
     {x : M} : (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
-  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supr S i) hi⟩
+  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
   suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by
     simpa only [closure_Union, closure_eq (S _)] using this
   refine' fun hx => closure_induction hx (fun _ => mem_Union.1) _ _
@@ -201,14 +201,14 @@ theorem coe_supr_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : D
 
 @[to_additive]
 theorem mem_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.Nonempty)
-    (hS : DirectedOn (· ≤ ·) S) {x : M} : x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
+    (hS : DirectedOn (· ≤ ·) S) {x : M} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s := by
   haveI : Nonempty S := Sne.to_subtype
-  simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+  simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 #align submonoid.mem_Sup_of_directed_on Submonoid.mem_Sup_of_directed_on
 
 @[to_additive]
 theorem coe_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.Nonempty)
-    (hS : DirectedOn (· ≤ ·) S) : (↑(sup S) : Set M) = ⋃ s ∈ S, ↑s :=
+    (hS : DirectedOn (· ≤ ·) S) : (↑(supₛ S) : Set M) = ⋃ s ∈ S, ↑s :=
   Set.ext fun x => by simp [mem_Sup_of_directed_on Sne hS]
 #align submonoid.coe_Sup_of_directed_on Submonoid.coe_Sup_of_directed_on
 
@@ -229,14 +229,14 @@ theorem mul_mem_sup {S T : Submonoid M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) 
 
 @[to_additive]
 theorem mem_supr_of_mem {ι : Sort _} {S : ι → Submonoid M} (i : ι) :
-    ∀ {x : M}, x ∈ S i → x ∈ supr S :=
-  show S i ≤ supr S from le_supr _ _
+    ∀ {x : M}, x ∈ S i → x ∈ supᵢ S :=
+  show S i ≤ supᵢ S from le_supᵢ _ _
 #align submonoid.mem_supr_of_mem Submonoid.mem_supr_of_mem
 
 @[to_additive]
 theorem mem_Sup_of_mem {S : Set (Submonoid M)} {s : Submonoid M} (hs : s ∈ S) :
-    ∀ {x : M}, x ∈ s → x ∈ sup S :=
-  show s ≤ sup S from le_Sup hs
+    ∀ {x : M}, x ∈ s → x ∈ supₛ S :=
+  show s ≤ supₛ S from le_supₛ hs
 #align submonoid.mem_Sup_of_mem Submonoid.mem_Sup_of_mem
 
 /-- An induction principle for elements of `⨆ i, S i`.

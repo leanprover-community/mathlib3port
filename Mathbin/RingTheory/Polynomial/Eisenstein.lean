@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.eisenstein
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -327,7 +327,7 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
       exact (cyclotomicCompXAddOneIsEisensteinAt p).Mem hi
     · intro i hi
       rw [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ← Zmod.int_coe_zmod_eq_zero_iff_dvd, ←
-        Int.coe_cast_ring_hom, ← coeff_map, map_comp, map_cyclotomic, Polynomial.map_add, map_X,
+        Int.coe_castRingHom, ← coeff_map, map_comp, map_cyclotomic, Polynomial.map_add, map_X,
         Polynomial.map_one, pow_add, pow_one, cyclotomic_mul_prime_dvd_eq_pow, pow_comp, ←
         Zmod.expand_card, coeff_expand hp.out.pos]
       · simp only [ite_eq_right_iff]
@@ -339,7 +339,7 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
         rw [hk, mul_comm, Nat.mul_div_cancel _ hp.out.pos]
         replace hn := hn (lt_of_mul_lt_mul_left' hi)
         rw [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ← Zmod.int_coe_zmod_eq_zero_iff_dvd,
-          ← Int.coe_cast_ring_hom, ← coeff_map] at hn
+          ← Int.coe_castRingHom, ← coeff_map] at hn
         simpa [map_comp] using hn
       · exact ⟨p ^ n, by rw [pow_succ]⟩
   · rw [coeff_zero_eq_eval_zero, eval_comp, cyclotomic_prime_pow_eq_geom_sum hp.out, eval_add,

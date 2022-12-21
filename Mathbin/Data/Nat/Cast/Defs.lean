@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module data.nat.cast.defs
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,7 +182,7 @@ theorem cast_add [AddMonoidWithOne R] (m n : ℕ) : ((m + n : ℕ) : R) = m + n 
 #print Nat.binCast /-
 /-- Computationally friendlier cast than `nat.unary_cast`, using binary representation. -/
 protected def binCast [Zero R] [One R] [Add R] (n : ℕ) : R :=
-  @Nat.binaryRec (fun _ => R) 0 (fun odd k a => cond odd (a + a + 1) (a + a)) n
+  @Nat.binaryRec (fun _ => R) 0 (fun odd k a => cond Odd (a + a + 1) (a + a)) n
 #align nat.bin_cast Nat.binCast
 -/
 

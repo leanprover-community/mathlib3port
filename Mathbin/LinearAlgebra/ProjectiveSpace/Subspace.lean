@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Blyth
 
 ! This file was ported from Lean 3 source module linear_algebra.projective_space.subspace
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,16 +126,19 @@ instance hasInf : HasInf (Subspace K V) :=
 #align projectivization.subspace.has_inf Projectivization.Subspace.hasInf
 
 /- warning: projectivization.subspace.has_Inf clashes with projectivization.subspace.has_inf -> Projectivization.Subspace.hasInf
+warning: projectivization.subspace.has_Inf -> Projectivization.Subspace.hasInf is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], InfSet.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3)
+but is expected to have type
+  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], HasInf.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3)
 Case conversion may be inaccurate. Consider using '#align projectivization.subspace.has_Inf Projectivization.Subspace.hasInfₓ'. -/
-#print Projectivization.Subspace.hasInf /-
 /-- Infimums of arbitrary collections of subspaces exist. -/
-instance hasInf : HasInf (Subspace K V) :=
+instance hasInf : InfSet (Subspace K V) :=
   ⟨fun A =>
-    ⟨inf (coe '' A), fun v w hv hw hvw h1 h2 t => by
+    ⟨infₛ (coe '' A), fun v w hv hw hvw h1 h2 t => by
       rintro ⟨s, hs, rfl⟩
       exact s.mem_add v w hv hw _ (h1 s ⟨s, hs, rfl⟩) (h2 s ⟨s, hs, rfl⟩)⟩⟩
 #align projectivization.subspace.has_Inf Projectivization.Subspace.hasInf
--/
 
 /-- The subspaces of a projective space form a complete lattice. -/
 instance : CompleteLattice (Subspace K V) :=
@@ -215,13 +218,13 @@ theorem mem_span {S : Set (ℙ K V)} (u : ℙ K V) : u ∈ span S ↔ ∀ W : Su
 
 /-- The span of a set of points in a projective space is equal to the infimum of the collection of
 subspaces which contain the set. -/
-theorem span_eq_Inf {S : Set (ℙ K V)} : span S = inf { W | S ⊆ W } := by
+theorem span_eq_Inf {S : Set (ℙ K V)} : span S = infₛ { W | S ⊆ W } := by
   ext
   simp_rw [mem_carrier_iff, mem_span x]
   refine' ⟨fun hx => _, fun hx W hW => _⟩
   · rintro W ⟨T, ⟨hT, rfl⟩⟩
     exact hx T hT
-  · exact (@Inf_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) x hx
+  · exact (@infₛ_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) x hx
 #align projectivization.subspace.span_eq_Inf Projectivization.Subspace.span_eq_Inf
 
 /-- If a set of points in projective space is contained in a subspace, and that subspace is

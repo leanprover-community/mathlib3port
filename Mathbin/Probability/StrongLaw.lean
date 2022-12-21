@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module probability.strong_law
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ variable {α : Type _}
 
 /-- Truncating a real-valued function to the interval `(-A, A]`. -/
 def truncation (f : α → ℝ) (A : ℝ) :=
-  indicator (Set.ioc (-A) A) id ∘ f
+  indicator (Set.Ioc (-A) A) id ∘ f
 #align probability_theory.truncation ProbabilityTheory.truncation
 
 variable {m : MeasurableSpace α} {μ : Measure α} {f : α → ℝ}
@@ -112,7 +112,7 @@ theorem truncation_eq_self {f : α → ℝ} {A : ℝ} {x : α} (h : |f x| < A) :
 #align probability_theory.truncation_eq_self ProbabilityTheory.truncation_eq_self
 
 theorem truncation_eq_of_nonneg {f : α → ℝ} {A : ℝ} (h : ∀ x, 0 ≤ f x) :
-    truncation f A = indicator (Set.ioc 0 A) id ∘ f := by
+    truncation f A = indicator (Set.Ioc 0 A) id ∘ f := by
   ext x
   rcases(h x).lt_or_eq with (hx | hx)
   · simp only [truncation, indicator, hx, Set.mem_Ioc, id.def, Function.comp_apply, true_and_iff]
@@ -143,8 +143,8 @@ theorem MeasureTheory.AeStronglyMeasurable.integrableTruncation [IsFiniteMeasure
 theorem moment_truncation_eq_interval_integral (hf : AeStronglyMeasurable f μ) {A : ℝ} (hA : 0 ≤ A)
     {n : ℕ} (hn : n ≠ 0) : (∫ x, truncation f A x ^ n ∂μ) = ∫ y in -A..A, y ^ n ∂Measure.map f μ :=
   by 
-  have M : MeasurableSet (Set.ioc (-A) A) := measurableSetIoc
-  change (∫ x, (fun z => indicator (Set.ioc (-A) A) id z ^ n) (f x) ∂μ) = _
+  have M : MeasurableSet (Set.Ioc (-A) A) := measurableSetIoc
+  change (∫ x, (fun z => indicator (Set.Ioc (-A) A) id z ^ n) (f x) ∂μ) = _
   rw [← integral_map hf.ae_measurable, intervalIntegral.integral_of_le, ← integral_indicator M]
   · simp only [indicator, zero_pow' _ hn, id.def, ite_pow]
   · linarith
@@ -155,10 +155,10 @@ theorem moment_truncation_eq_interval_integral (hf : AeStronglyMeasurable f μ) 
 theorem moment_truncation_eq_interval_integral_of_nonneg (hf : AeStronglyMeasurable f μ) {A : ℝ}
     {n : ℕ} (hn : n ≠ 0) (h'f : 0 ≤ f) :
     (∫ x, truncation f A x ^ n ∂μ) = ∫ y in 0 ..A, y ^ n ∂Measure.map f μ := by
-  have M : MeasurableSet (Set.ioc 0 A) := measurableSetIoc
-  have M' : MeasurableSet (Set.ioc A 0) := measurableSetIoc
+  have M : MeasurableSet (Set.Ioc 0 A) := measurableSetIoc
+  have M' : MeasurableSet (Set.Ioc A 0) := measurableSetIoc
   rw [truncation_eq_of_nonneg h'f]
-  change (∫ x, (fun z => indicator (Set.ioc 0 A) id z ^ n) (f x) ∂μ) = _
+  change (∫ x, (fun z => indicator (Set.Ioc 0 A) id z ^ n) (f x) ∂μ) = _
   rcases le_or_lt 0 A with (hA | hA)
   · rw [← integral_map hf.ae_measurable, intervalIntegral.integral_of_le hA, ← integral_indicator M]
     · simp only [indicator, zero_pow' _ hn, id.def, ite_pow]
@@ -238,7 +238,7 @@ section MomentEstimates
 
 theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) {K : ℕ} {N : ℕ}
     (hKN : K ≤ N) :
-    (∑ j in range K, ℙ { ω | X ω ∈ Set.ioc (j : ℝ) N }) ≤ Ennreal.ofReal (𝔼[X] + 1) := by
+    (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) ≤ Ennreal.ofReal (𝔼[X] + 1) := by
   let ρ : Measure ℝ := measure.map X ℙ
   haveI : is_probability_measure ρ := is_probability_measure_map hint.ae_measurable
   have A : (∑ j in range K, ∫ x in j..N, (1 : ℝ) ∂ρ) ≤ 𝔼[X] + 1 :=
@@ -304,17 +304,17 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
         rw [← Ennreal.one_to_real]
         exact Ennreal.to_real_mono Ennreal.one_ne_top prob_le_one
       
-  have B : ∀ a b, ℙ { ω | X ω ∈ Set.ioc a b } = Ennreal.ofReal (∫ x in Set.ioc a b, (1 : ℝ) ∂ρ) :=
+  have B : ∀ a b, ℙ { ω | X ω ∈ Set.Ioc a b } = Ennreal.ofReal (∫ x in Set.Ioc a b, (1 : ℝ) ∂ρ) :=
     by 
     intro a b
     rw [of_real_set_integral_one ρ _,
       measure.map_apply_of_ae_measurable hint.ae_measurable measurableSetIoc]
     rfl
   calc
-    (∑ j in range K, ℙ { ω | X ω ∈ Set.ioc (j : ℝ) N }) =
-        ∑ j in range K, Ennreal.ofReal (∫ x in Set.ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
+    (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) =
+        ∑ j in range K, Ennreal.ofReal (∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
       by simp_rw [B]
-    _ = Ennreal.ofReal (∑ j in range K, ∫ x in Set.ioc (j : ℝ) N, (1 : ℝ) ∂ρ) := by
+    _ = Ennreal.ofReal (∑ j in range K, ∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) := by
       rw [Ennreal.of_real_sum_of_nonneg]
       simp only [integral_const, Algebra.id.smul_eq_mul, mul_one, Ennreal.to_real_nonneg,
         imp_true_iff]
@@ -327,19 +327,19 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
 #align probability_theory.sum_prob_mem_Ioc_le ProbabilityTheory.sum_prob_mem_Ioc_le
 
 theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) :
-    (∑' j : ℕ, ℙ { ω | X ω ∈ Set.ioi (j : ℝ) }) < ∞ := by
-  suffices : ∀ K : ℕ, (∑ j in range K, ℙ { ω | X ω ∈ Set.ioi (j : ℝ) }) ≤ Ennreal.ofReal (𝔼[X] + 1)
+    (∑' j : ℕ, ℙ { ω | X ω ∈ Set.Ioi (j : ℝ) }) < ∞ := by
+  suffices : ∀ K : ℕ, (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioi (j : ℝ) }) ≤ Ennreal.ofReal (𝔼[X] + 1)
   exact
     (le_of_tendsto_of_tendsto (Ennreal.tendsto_nat_tsum _) tendsto_const_nhds
           (eventually_of_forall this)).trans_lt
       Ennreal.of_real_lt_top
   intro K
   have A :
-    tendsto (fun N : ℕ => ∑ j in range K, ℙ { ω | X ω ∈ Set.ioc (j : ℝ) N }) at_top
-      (𝓝 (∑ j in range K, ℙ { ω | X ω ∈ Set.ioi (j : ℝ) })) :=
+    tendsto (fun N : ℕ => ∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) at_top
+      (𝓝 (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioi (j : ℝ) })) :=
     by 
     refine' tendsto_finset_sum _ fun i hi => _
-    have : { ω | X ω ∈ Set.ioi (i : ℝ) } = ⋃ N : ℕ, { ω | X ω ∈ Set.ioc (i : ℝ) N } := by
+    have : { ω | X ω ∈ Set.Ioi (i : ℝ) } = ⋃ N : ℕ, { ω | X ω ∈ Set.Ioc (i : ℝ) N } := by
       apply Set.Subset.antisymm _ _
       · intro ω hω
         obtain ⟨N, hN⟩ : ∃ N : ℕ, X ω ≤ N := exists_nat_ge (X ω)
@@ -466,7 +466,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
   let ρ : Measure ℝ := measure.map (X 0) ℙ
   have hX : ∀ i, ae_strongly_measurable (X i) ℙ := fun i =>
     (hident i).symm.aeStronglyMeasurableSnd hint.1
-  have A : ∀ i, strongly_measurable (indicator (Set.ioc (-i : ℝ) i) id) := fun i =>
+  have A : ∀ i, strongly_measurable (indicator (Set.Ioc (-i : ℝ) i) id) := fun i =>
     strongly_measurable_id.indicator measurableSetIoc
   set Y := fun n : ℕ => truncation (X n) n with hY
   set S := fun n => ∑ i in range n, Y i with hS
@@ -639,7 +639,7 @@ theorem strong_law_aux5 :
       (fun n : ℕ => (∑ i in range n, truncation (X i) i ω) - ∑ i in range n, X i ω) =o[at_top]
         fun n : ℕ => (n : ℝ) :=
   by
-  have A : (∑' j : ℕ, ℙ { ω | X j ω ∈ Set.ioi (j : ℝ) }) < ∞ := by
+  have A : (∑' j : ℕ, ℙ { ω | X j ω ∈ Set.Ioi (j : ℝ) }) < ∞ := by
     convert tsum_prob_mem_Ioi_lt_top hint (hnonneg 0)
     ext1 j
     exact (hident j).measure_mem_eq measurableSetIoi

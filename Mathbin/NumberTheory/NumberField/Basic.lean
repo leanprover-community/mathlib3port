@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan, Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.number_field.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,15 +162,15 @@ namespace Rat
 
 open NumberField
 
-instance numberField : NumberField
-      ℚ where 
+instance number_field :
+    NumberField ℚ where 
   to_char_zero := inferInstance
   to_finite_dimensional :=-- The vector space structure of `ℚ` over itself can arise in multiple ways:
   -- all fields are vector spaces over themselves (used in `rat.finite_dimensional`)
   -- all char 0 fields have a canonical embedding of `ℚ` (used in `number_field`).
   -- Show that these coincide:
   by convert (inferInstance : FiniteDimensional ℚ ℚ)
-#align rat.number_field Rat.numberField
+#align rat.number_field Rat.number_field
 
 /-- The ring of integers of `ℚ` as a number field is just `ℤ`. -/
 noncomputable def ringOfIntegersEquiv : ringOfIntegers ℚ ≃+* ℤ :=

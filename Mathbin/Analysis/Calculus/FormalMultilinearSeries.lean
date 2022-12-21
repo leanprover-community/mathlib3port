@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.formal_multilinear_series
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -208,7 +208,7 @@ variable [CommRing 𝕜] {n : ℕ} [AddCommGroup E] [Module 𝕜 E] [Topological
   is the order of the isolated zero of an analytic function `f` at a point if `p` is the Taylor
   series of `f` at that point. -/
 noncomputable def order (p : FormalMultilinearSeries 𝕜 E F) : ℕ :=
-  inf { n | p n ≠ 0 }
+  infₛ { n | p n ≠ 0 }
 #align formal_multilinear_series.order FormalMultilinearSeries.order
 
 @[simp]

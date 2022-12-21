@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.cover
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,11 +105,11 @@ instance Wcovby.is_refl : IsRefl α (· ⩿ ·) :=
   ⟨Wcovby.refl⟩
 #align wcovby.is_refl Wcovby.is_refl
 
-theorem Wcovby.Ioo_eq (h : a ⩿ b) : ioo a b = ∅ :=
+theorem Wcovby.Ioo_eq (h : a ⩿ b) : Ioo a b = ∅ :=
   eq_empty_iff_forall_not_mem.2 fun x hx => h.2 hx.1 hx.2
 #align wcovby.Ioo_eq Wcovby.Ioo_eq
 
-theorem wcovby_iff_Ioo_eq : a ⩿ b ↔ a ≤ b ∧ ioo a b = ∅ :=
+theorem wcovby_iff_Ioo_eq : a ⩿ b ↔ a ≤ b ∧ Ioo a b = ∅ :=
   and_congr_right' <| by simp [eq_empty_iff_forall_not_mem]
 #align wcovby_iff_Ioo_eq wcovby_iff_Ioo_eq
 
@@ -170,16 +170,16 @@ theorem Wcovby.le_and_le_iff (h : a ⩿ b) : a ≤ c ∧ c ≤ b ↔ c = a ∨ c
   exacts[⟨le_rfl, h.le⟩, ⟨h.le, le_rfl⟩]
 #align wcovby.le_and_le_iff Wcovby.le_and_le_iff
 
-theorem Wcovby.Icc_eq (h : a ⩿ b) : icc a b = {a, b} := by
+theorem Wcovby.Icc_eq (h : a ⩿ b) : Icc a b = {a, b} := by
   ext c
   exact h.le_and_le_iff
 #align wcovby.Icc_eq Wcovby.Icc_eq
 
-theorem Wcovby.Ico_subset (h : a ⩿ b) : ico a b ⊆ {a} := by
+theorem Wcovby.Ico_subset (h : a ⩿ b) : Ico a b ⊆ {a} := by
   rw [← Icc_diff_right, h.Icc_eq, diff_singleton_subset_iff, pair_comm]
 #align wcovby.Ico_subset Wcovby.Ico_subset
 
-theorem Wcovby.Ioc_subset (h : a ⩿ b) : ioc a b ⊆ {b} := by
+theorem Wcovby.Ioc_subset (h : a ⩿ b) : Ioc a b ⊆ {b} := by
   rw [← Icc_diff_left, h.Icc_eq, diff_singleton_subset_iff]
 #align wcovby.Ioc_subset Wcovby.Ioc_subset
 
@@ -329,11 +329,11 @@ instance Covby.is_irrefl : IsIrrefl α (· ⋖ ·) :=
   ⟨fun a ha => ha.Ne rfl⟩
 #align covby.is_irrefl Covby.is_irrefl
 
-theorem Covby.Ioo_eq (h : a ⋖ b) : ioo a b = ∅ :=
+theorem Covby.Ioo_eq (h : a ⋖ b) : Ioo a b = ∅ :=
   h.Wcovby.Ioo_eq
 #align covby.Ioo_eq Covby.Ioo_eq
 
-theorem covby_iff_Ioo_eq : a ⋖ b ↔ a < b ∧ ioo a b = ∅ :=
+theorem covby_iff_Ioo_eq : a ⋖ b ↔ a < b ∧ Ioo a b = ∅ :=
   and_congr_right' <| by simp [eq_empty_iff_forall_not_mem]
 #align covby_iff_Ioo_eq covby_iff_Ioo_eq
 
@@ -394,15 +394,15 @@ theorem covby_iff_lt_and_eq_or_eq : a ⋖ b ↔ a < b ∧ ∀ c, a ≤ c → c �
   ⟨fun h => ⟨h.lt, fun c => h.eq_or_eq⟩, And.ndrec covby_of_eq_or_eq⟩
 #align covby_iff_lt_and_eq_or_eq covby_iff_lt_and_eq_or_eq
 
-theorem Covby.Ico_eq (h : a ⋖ b) : ico a b = {a} := by
+theorem Covby.Ico_eq (h : a ⋖ b) : Ico a b = {a} := by
   rw [← Ioo_union_left h.lt, h.Ioo_eq, empty_union]
 #align covby.Ico_eq Covby.Ico_eq
 
-theorem Covby.Ioc_eq (h : a ⋖ b) : ioc a b = {b} := by
+theorem Covby.Ioc_eq (h : a ⋖ b) : Ioc a b = {b} := by
   rw [← Ioo_union_right h.lt, h.Ioo_eq, empty_union]
 #align covby.Ioc_eq Covby.Ioc_eq
 
-theorem Covby.Icc_eq (h : a ⋖ b) : icc a b = {a, b} :=
+theorem Covby.Icc_eq (h : a ⋖ b) : Icc a b = {a, b} :=
   h.Wcovby.Icc_eq
 #align covby.Icc_eq Covby.Icc_eq
 
@@ -412,11 +412,11 @@ section LinearOrder
 
 variable [LinearOrder α] {a b c : α}
 
-theorem Covby.Ioi_eq (h : a ⋖ b) : ioi a = ici b := by
+theorem Covby.Ioi_eq (h : a ⋖ b) : Ioi a = Ici b := by
   rw [← Ioo_union_Ici_eq_Ioi h.lt, h.Ioo_eq, empty_union]
 #align covby.Ioi_eq Covby.Ioi_eq
 
-theorem Covby.Iio_eq (h : a ⋖ b) : iio b = iic a := by
+theorem Covby.Iio_eq (h : a ⋖ b) : Iio b = Iic a := by
   rw [← Iic_union_Ioo_eq_Iio h.lt, h.Ioo_eq, union_empty]
 #align covby.Iio_eq Covby.Iio_eq
 

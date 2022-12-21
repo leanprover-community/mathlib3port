@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.log_deriv
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
   LocalHomeomorph.ofContinuousOpen
     { toFun := exp
       invFun := log
-      source := { z : ℂ | z.im ∈ ioo (-π) π }
+      source := { z : ℂ | z.im ∈ Ioo (-π) π }
       target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 }
       map_source' := by 
         rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.quadratic_reciprocity
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem euler_criterion_units (x : (Zmod p)ˣ) : (∃ y : (Zmod p)ˣ, y ^ 2 = x)
     simp only [eq_iff_true_of_subsingleton, exists_const]
   · have h₀ := FiniteField.unit_is_square_iff (by rwa [ring_char_zmod_n]) x
     have hs : (∃ y : (Zmod p)ˣ, y ^ 2 = x) ↔ IsSquare x := by
-      rw [is_square_iff_exists_sq x]
+      rw [isSquare_iff_exists_sq x]
       simp_rw [eq_comm]
     rw [hs]
     rwa [card p] at h₀

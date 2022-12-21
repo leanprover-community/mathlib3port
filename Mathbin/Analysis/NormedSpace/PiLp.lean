@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -296,7 +296,7 @@ def pseudoEmetricAux :
       cases isEmpty_or_nonempty ι
       · simp only [csupr_of_empty, Ennreal.bot_eq_zero, add_zero, nonpos_iff_eq_zero]
       exact
-        supr_le fun i => (edist_triangle _ (g i) _).trans <| add_le_add (le_supr _ i) (le_supr _ i)
+        supᵢ_le fun i => (edist_triangle _ (g i) _).trans <| add_le_add (le_supᵢ _ i) (le_supᵢ _ i)
     · simp only [edist_eq_sum (zero_lt_one.trans_le hp)]
       calc
         (∑ i, edist (f i) (h i) ^ p.to_real) ^ (1 / p.to_real) ≤
@@ -320,7 +320,7 @@ theorem supr_edist_ne_top_aux {ι : Type _} [Finite ι] {α : ι → Type _}
     [∀ i, PseudoMetricSpace (α i)] (f g : PiLp ∞ α) : (⨆ i, edist (f i) (g i)) ≠ ⊤ := by
   cases nonempty_fintype ι
   obtain ⟨M, hM⟩ := Fintype.exists_le fun i => (⟨dist (f i) (g i), dist_nonneg⟩ : ℝ≥0)
-  refine' ne_of_lt ((supr_le fun i => _).trans_lt (@Ennreal.coe_lt_top M))
+  refine' ne_of_lt ((supᵢ_le fun i => _).trans_lt (@Ennreal.coe_lt_top M))
   simp only [edist, PseudoMetricSpace.edist_dist, Ennreal.of_real_eq_coe_nnreal dist_nonneg]
   exact_mod_cast hM i
 #align pi_Lp.supr_edist_ne_top_aux PiLp.supr_edist_ne_top_aux
@@ -354,8 +354,8 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
         · refine' le_antisymm (csupr_le fun i => _) _
           · rw [← Ennreal.of_real_le_iff_le_to_real (supr_edist_ne_top_aux f g), ←
               PseudoMetricSpace.edist_dist]
-            exact le_supr _ i
-          · refine' Ennreal.to_real_le_of_le_of_real (Real.Sup_nonneg _ _) (supr_le fun i => _)
+            exact le_supᵢ _ i
+          · refine' Ennreal.to_real_le_of_le_of_real (Real.Sup_nonneg _ _) (supᵢ_le fun i => _)
             · rintro - ⟨i, rfl⟩
               exact dist_nonneg
             · unfold edist
@@ -374,7 +374,7 @@ theorem lipschitzWithEquivAux : LipschitzWith 1 (PiLp.equiv p β) := by
   rcases p.dichotomy with (rfl | h)
   ·
     simpa only [Ennreal.coe_one, one_mul, edist_eq_supr, edist, Finset.sup_le_iff, Finset.mem_univ,
-      forall_true_left] using le_supr fun i => edist (x i) (y i)
+      forall_true_left] using le_supᵢ fun i => edist (x i) (y i)
   · have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (zero_lt_one.trans_le h).ne'
     rw [edist_eq_sum (zero_lt_one.trans_le h)]
     simp only [edist, forall_prop_of_true, one_mul, Finset.mem_univ, Finset.sup_le_iff,
@@ -394,7 +394,7 @@ theorem antilipschitzWithEquivAux :
   intro x y
   rcases p.dichotomy with (rfl | h)
   · simp only [edist_eq_supr, Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero,
-      Ennreal.coe_one, one_mul, supr_le_iff]
+      Ennreal.coe_one, one_mul, supᵢ_le_iff]
     exact fun i => Finset.le_sup (Finset.mem_univ i)
   · have pos : 0 < p.to_real := zero_lt_one.trans_le h
     have nonneg : 0 ≤ 1 / p.to_real := one_div_nonneg.2 (le_of_lt Pos)

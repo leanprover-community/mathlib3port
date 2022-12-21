@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.countable_dense_linear_order
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,9 +210,9 @@ theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [No
     Nonempty (α ↪o β) := by 
   rcases exists_pair_lt β with ⟨x, y, hxy⟩
   cases' exists_between hxy with a ha
-  haveI : Nonempty (Set.ioo x y) := ⟨⟨a, ha⟩⟩
+  haveI : Nonempty (Set.Ioo x y) := ⟨⟨a, ha⟩⟩
   let our_ideal : ideal (partial_iso α _) :=
-    ideal_of_cofinals default (defined_at_left (Set.ioo x y))
+    ideal_of_cofinals default (defined_at_left (Set.Ioo x y))
   let F a := fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
   refine'
     ⟨RelEmbedding.trans (OrderEmbedding.ofStrictMono (fun a => (F a).val) fun a₁ a₂ => _)

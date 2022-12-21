@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.sets.opens
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ instance : CompleteLattice (Opens α) :=
     (funext fun U => funext fun V => ext (U.2.inter V.2).interior_eq.symm)
     (-- Sup
     fun S => ⟨⋃ s ∈ S, ↑s, is_open_bUnion fun s _ => s.2⟩)
-    (funext fun S => ext Sup_image.symm)-- Inf
+    (funext fun S => ext supₛ_image.symm)-- Inf
     _
     rfl
 
@@ -164,7 +164,7 @@ theorem coe_top : ((⊤ : Opens α) : Set α) = Set.univ :=
 #align topological_space.opens.coe_top TopologicalSpace.Opens.coe_top
 
 @[simp, norm_cast]
-theorem coe_Sup {S : Set (Opens α)} : (↑(sup S) : Set α) = ⋃ i ∈ S, ↑i :=
+theorem coe_Sup {S : Set (Opens α)} : (↑(supₛ S) : Set α) = ⋃ i ∈ S, ↑i :=
   rfl
 #align topological_space.opens.coe_Sup TopologicalSpace.Opens.coe_Sup
 
@@ -208,7 +208,7 @@ theorem empty_eq : (∅ : Opens α) = ⊥ :=
 theorem supr_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is_open_Union fun i => (s i).2⟩ :=
   by 
   ext
-  simp only [supr, coe_Sup, bUnion_range]
+  simp only [supᵢ, coe_Sup, bUnion_range]
   rfl
 #align topological_space.opens.supr_def TopologicalSpace.Opens.supr_def
 
@@ -225,19 +225,19 @@ theorem coe_supr {ι} (s : ι → Opens α) : ((⨆ i, s i : Opens α) : Set α)
 #align topological_space.opens.coe_supr TopologicalSpace.Opens.coe_supr
 
 @[simp]
-theorem mem_supr {ι} {x : α} {s : ι → Opens α} : x ∈ supr s ↔ ∃ i, x ∈ s i := by
+theorem mem_supr {ι} {x : α} {s : ι → Opens α} : x ∈ supᵢ s ↔ ∃ i, x ∈ s i := by
   rw [← mem_coe]
   simp
 #align topological_space.opens.mem_supr TopologicalSpace.Opens.mem_supr
 
 @[simp]
-theorem mem_Sup {Us : Set (Opens α)} {x : α} : x ∈ sup Us ↔ ∃ u ∈ Us, x ∈ u := by
-  simp_rw [Sup_eq_supr, mem_supr]
+theorem mem_Sup {Us : Set (Opens α)} {x : α} : x ∈ supₛ Us ↔ ∃ u ∈ Us, x ∈ u := by
+  simp_rw [supₛ_eq_supᵢ, mem_supr]
 #align topological_space.opens.mem_Sup TopologicalSpace.Opens.mem_Sup
 
 instance : Frame (Opens α) :=
   { Opens.completeLattice with 
-    sup := sup
+    sup := supₛ
     inf_Sup_le_supr_inf := fun a s =>
       (ext <| by simp only [coe_inf, coe_supr, coe_Sup, Set.inter_Union₂]).le }
 
@@ -290,20 +290,20 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
 theorem is_basis_iff_cover {B : Set (Opens α)} :
-    IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
+    IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = supₛ Us := by
   constructor
   · intro hB U
     refine' ⟨{ V : opens α | V ∈ B ∧ V ⊆ U }, fun U hU => hU.left, _⟩
     apply ext
     rw [coe_Sup, hB.open_eq_sUnion' U.prop]
-    simp_rw [sUnion_eq_bUnion, Union, supr_and, supr_image]
+    simp_rw [sUnion_eq_bUnion, Union, supᵢ_and, supᵢ_image]
     rfl
   · intro h
     rw [is_basis_iff_nbhd]
     intro U x hx
     rcases h U with ⟨Us, hUs, rfl⟩
     rcases mem_Sup.1 hx with ⟨U, Us, xU⟩
-    exact ⟨U, hUs Us, xU, le_Sup Us⟩
+    exact ⟨U, hUs Us, xU, le_supₛ Us⟩
 #align topological_space.opens.is_basis_iff_cover TopologicalSpace.Opens.is_basis_iff_cover
 
 /-- If `α` has a basis consisting of compact opens, then an open set in `α` is compact open iff
@@ -330,7 +330,7 @@ theorem is_compact_element_iff (s : Opens α) :
     rw [coe_finset_sup, Finset.sup_eq_supr]
     rfl
   · obtain ⟨t, ht⟩ :=
-      H (fun i => U i) (fun i => (U i).Prop) (by simpa using show (s : Set α) ⊆ ↑(supr U) from hU)
+      H (fun i => U i) (fun i => (U i).Prop) (by simpa using show (s : Set α) ⊆ ↑(supᵢ U) from hU)
     refine' ⟨t, Set.Subset.trans ht _⟩
     simp only [Set.Union_subset_iff]
     show ∀ i ∈ t, U i ≤ t.sup U

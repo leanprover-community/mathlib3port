@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.extrema
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,8 +31,8 @@ open Classical TopologicalSpace
 /-- Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
-    (h_local_min : IsLocalMinOn f (icc a b) a) (h_conv : ConvexOn ℝ (icc a b) f) :
-    IsMinOn f (icc a b) a := by 
+    (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) :
+    IsMinOn f (Icc a b) a := by 
   rintro c hc
   dsimp only [mem_set_of_eq]
   rw [IsLocalMinOn, nhds_within_Icc_eq_nhds_within_Ici a_lt_b] at h_local_min

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.quasi_compact
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,7 +204,7 @@ theorem QuasiCompact.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) 
           CompactSpace (pullback f (𝒰.map i)).carrier,
         ∀ {U : SchemeCat} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g],
           CompactSpace (pullback f g).carrier,
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supr U = ⊤)(hU' : ∀ i, IsAffineOpen (U i)),
+        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤)(hU' : ∀ i, IsAffineOpen (U i)),
           ∀ i, CompactSpace (f.1.base ⁻¹' (U i).1)] :=
   quasi_compact_eq_affine_property.symm ▸
     QuasiCompact.affinePropertyIsLocal.affine_open_cover_tfae f
@@ -227,7 +227,7 @@ theorem QuasiCompact.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
         ∀ U : Opens Y.carrier, QuasiCompact (f ∣_ U),
         ∀ {U : SchemeCat} (g : U ⟶ Y) [IsOpenImmersion g],
           QuasiCompact (pullback.snd : pullback f g ⟶ _),
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supr U = ⊤), ∀ i, QuasiCompact (f ∣_ U i)] :=
+        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤), ∀ i, QuasiCompact (f ∣_ U i)] :=
   quasi_compact_eq_affine_property.symm ▸
     QuasiCompact.affinePropertyIsLocal.target_affine_locally_is_local.open_cover_tfae f
 #align
@@ -313,13 +313,13 @@ theorem compact_open_induction_on {P : Opens X.carrier → Prop} (S : Opens X.ca
     P S := by
   classical 
     obtain ⟨s, hs, hs'⟩ := (is_compact_open_iff_eq_finset_affine_union S.1).mp ⟨hS, S.2⟩
-    replace hs' : S = supr fun i : s => (i : opens X.carrier) := by
+    replace hs' : S = supᵢ fun i : s => (i : opens X.carrier) := by
       ext1
       simpa using hs'
     subst hs'
     apply hs.induction_on
     · convert h₁
-      rw [supr_eq_bot]
+      rw [supᵢ_eq_bot]
       rintro ⟨_, h⟩
       exact h.elim
     · intro x s h₃ hs h₄
@@ -328,9 +328,9 @@ theorem compact_open_induction_on {P : Opens X.carrier → Prop} (S : Opens X.ca
         exact ⟨s, hs, by simp⟩
       convert h₂ _ this x h₄
       simp only [coe_coe]
-      rw [supr_subtype, sup_comm]
-      conv_rhs => rw [supr_subtype]
-      exact supr_insert
+      rw [supᵢ_subtype, sup_comm]
+      conv_rhs => rw [supᵢ_subtype]
+      exact supᵢ_insert
 #align algebraic_geometry.compact_open_induction_on AlgebraicGeometry.compact_open_induction_on
 
 theorem exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_affine_open (X : SchemeCat)
@@ -349,14 +349,14 @@ theorem exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_compact (X : Sche
     {U : Opens X.carrier} (hU : IsCompact U.1) (x f : X.Presheaf.obj (op U))
     (H : x |_ X.basicOpen f = 0) : ∃ n : ℕ, f ^ n * x = 0 := by
   obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_finset_affine_union U.1).mp ⟨hU, U.2⟩
-  replace e : U = supr fun i : s => (i : opens X.carrier)
+  replace e : U = supᵢ fun i : s => (i : opens X.carrier)
   · ext1
     simpa using e
   have h₁ : ∀ i : s, i.1.1 ≤ U := by 
     intro i
     change (i : opens X.carrier) ≤ U
     rw [e]
-    exact le_supr _ _
+    exact le_supᵢ _ _
   have H' := fun i : s =>
     exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_affine_open X i.1.2
       (X.presheaf.map (hom_of_le (h₁ i)).op x) (X.presheaf.map (hom_of_le (h₁ i)).op f) _

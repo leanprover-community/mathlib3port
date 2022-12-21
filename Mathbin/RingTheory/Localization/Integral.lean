@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.integral
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -335,7 +335,7 @@ theorem is_fraction_ring_of_algebraic (alg : IsAlgebraic A L)
       ⟨⟨mk' C (x : L) x.2, algebraMap _ _ y,
           mem_non_zero_divisors_iff_ne_zero.mpr fun h =>
             hy (inj _ (by rw [IsScalarTower.algebra_map_apply A C L, h, RingHom.map_zero]))⟩,
-        by rw [SetLike.coe_mk, algebra_map_mk', ← IsScalarTower.algebra_map_apply A C L, hxy]⟩
+        by rw [[anonymous], algebra_map_mk', ← IsScalarTower.algebra_map_apply A C L, hxy]⟩
     eq_iff_exists := fun x y =>
       ⟨fun h => ⟨1, by simpa using algebra_map_injective C A L h⟩, fun ⟨c, hc⟩ =>
         congr_arg (algebraMap _ L)
@@ -456,11 +456,11 @@ theorem ideal_span_singleton_map_subset {L : Type _} [IsDomain R] [IsDomain S] [
   have hz0' : algebraMap R S z ∈ S⁰ :=
     map_mem_non_zero_divisors (algebraMap R S) injRS (mem_non_zero_divisors_of_ne_zero hz0)
   have mk_yz_eq : IsLocalization.mk' L y' z' = IsLocalization.mk' L y ⟨_, hz0'⟩ := by
-    rw [Algebra.smul_def, mul_comm _ y, mul_comm _ y', ← SetLike.coe_mk (algebraMap R S z) hz0'] at
+    rw [Algebra.smul_def, mul_comm _ y, mul_comm _ y', ← [anonymous] (algebraMap R S z) hz0'] at
       yz_eq
     exact IsLocalization.mk'_eq_of_eq yz_eq.symm
   suffices hy : algebraMap S L (a * y) ∈ Submodule.span K (⇑(algebraMap S L) '' b)
-  · rw [mk_yz_eq, IsFractionRing.mk'_eq_div, SetLike.coe_mk, ← IsScalarTower.algebra_map_apply,
+  · rw [mk_yz_eq, IsFractionRing.mk'_eq_div, [anonymous], ← IsScalarTower.algebra_map_apply,
       IsScalarTower.algebra_map_apply R K L, div_eq_mul_inv, ← mul_assoc, mul_comm, ← map_inv₀, ←
       Algebra.smul_def, ← _root_.map_mul]
     exact (Submodule.span K _).smul_mem _ hy

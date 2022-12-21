@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.antichain
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -217,13 +217,13 @@ variable [Preorder α]
 theorem is_antichain_and_least_iff : IsAntichain (· ≤ ·) s ∧ IsLeast s a ↔ s = {a} :=
   ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq' hb h.2.1 (h.2.2 hb)⟩, by
     rintro rfl
-    exact ⟨is_antichain_singleton _ _, is_least_singleton⟩⟩
+    exact ⟨is_antichain_singleton _ _, isLeast_singleton⟩⟩
 #align is_antichain_and_least_iff is_antichain_and_least_iff
 
 theorem is_antichain_and_greatest_iff : IsAntichain (· ≤ ·) s ∧ IsGreatest s a ↔ s = {a} :=
   ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.Eq hb h.2.1 (h.2.2 hb)⟩, by
     rintro rfl
-    exact ⟨is_antichain_singleton _ _, is_greatest_singleton⟩⟩
+    exact ⟨is_antichain_singleton _ _, isGreatest_singleton⟩⟩
 #align is_antichain_and_greatest_iff is_antichain_and_greatest_iff
 
 theorem IsAntichain.least_iff (hs : IsAntichain (· ≤ ·) s) : IsLeast s a ↔ s = {a} :=
@@ -243,11 +243,11 @@ theorem IsGreatest.antichain_iff (hs : IsGreatest s a) : IsAntichain (· ≤ ·)
 #align is_greatest.antichain_iff IsGreatest.antichain_iff
 
 theorem IsAntichain.bot_mem_iff [OrderBot α] (hs : IsAntichain (· ≤ ·) s) : ⊥ ∈ s ↔ s = {⊥} :=
-  is_least_bot_iff.symm.trans hs.least_iff
+  isLeast_bot_iff.symm.trans hs.least_iff
 #align is_antichain.bot_mem_iff IsAntichain.bot_mem_iff
 
 theorem IsAntichain.top_mem_iff [OrderTop α] (hs : IsAntichain (· ≤ ·) s) : ⊤ ∈ s ↔ s = {⊤} :=
-  is_greatest_top_iff.symm.trans hs.greatest_iff
+  isGreatest_top_iff.symm.trans hs.greatest_iff
 #align is_antichain.top_mem_iff IsAntichain.top_mem_iff
 
 end Preorder
@@ -335,7 +335,7 @@ variable {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] {s t : Set 
   {a b c : ∀ i, α i}
 
 -- mathport name: «expr ≺ »
-local infixl:50 " ≺ " => StrongLt
+local infixl:50 " ≺ " => StrongLT
 
 /-- A weak antichain in `Π i, α i` is a set such that no two distinct elements are strongly less
 than each other. -/
@@ -367,7 +367,7 @@ theorem is_weak_antichain_insert :
 #align is_weak_antichain_insert is_weak_antichain_insert
 
 protected theorem IsAntichain.is_weak_antichain (hs : IsAntichain (· ≤ ·) s) : IsWeakAntichain s :=
-  hs.mono fun a b => le_of_strong_lt
+  hs.mono fun a b => le_of_strongLT
 #align is_antichain.is_weak_antichain IsAntichain.is_weak_antichain
 
 theorem Set.Subsingleton.is_weak_antichain (hs : s.Subsingleton) : IsWeakAntichain s :=

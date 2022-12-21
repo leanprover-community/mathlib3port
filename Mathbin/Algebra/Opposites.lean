@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.opposites
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,16 +110,16 @@ theorem unop_comp_op : (unop : αᵐᵒᵖ → α) ∘ op = id :=
 #align mul_opposite.unop_comp_op MulOpposite.unop_comp_op
 -/
 
-/- warning: mul_opposite.rec -> MulOpposite.rec is a dubious translation:
+/- warning: mul_opposite.rec -> MulOpposite.rec' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {F : (MulOpposite.{u1} α) -> Sort.{u2}}, (forall (X : α), F (MulOpposite.op.{u1} α X)) -> (forall (X : MulOpposite.{u1} α), F X)
 but is expected to have type
   forall {α : Type.{u2}} {F : (MulOpposite.{u2} α) -> Sort.{u1}}, (forall (X : α), F (MulOpposite.op.{u2} α X)) -> (forall (X : MulOpposite.{u2} α), F X)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.rec MulOpposite.recₓ'. -/
+Case conversion may be inaccurate. Consider using '#align mul_opposite.rec MulOpposite.rec'ₓ'. -/
 /-- A recursor for `mul_opposite`. Use as `induction x using mul_opposite.rec`. -/
 @[simp, to_additive "A recursor for `add_opposite`. Use as `induction x using add_opposite.rec`."]
-protected def rec {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X := fun X => h (unop X)
-#align mul_opposite.rec MulOpposite.rec
+protected def rec' {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X := fun X => h (unop X)
+#align mul_opposite.rec MulOpposite.rec'
 
 #print MulOpposite.opEquiv /-
 /-- The canonical bijection between `α` and `αᵐᵒᵖ`. -/

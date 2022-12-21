@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.finsupp_vector_space
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,10 +55,10 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
   · intro i t ht hit
     refine' (disjoint_lsingle_lsingle {i} t (disjoint_singleton_left.2 hit)).mono _ _
     · rw [span_le]
-      simp only [supr_singleton]
+      simp only [supᵢ_singleton]
       rw [range_coe]
       apply range_comp_subset_range
-    · refine' supr₂_mono fun i hi => _
+    · refine' supᵢ₂_mono fun i hi => _
       rw [span_le, range_coe]
       apply range_comp_subset_range
 #align finsupp.linear_independent_single Finsupp.linear_independent_single
@@ -85,7 +85,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
             simpa [hg] using b }
       invFun := fun g =>
         { toFun := fun i =>
-            (b i).repr.symm (g.comapDomain _ (Set.inj_on_of_injective sigma_mk_injective _))
+            (b i).repr.symm (g.comapDomain _ (Set.injOn_of_injective sigma_mk_injective _))
           support := g.support.image Sigma.fst
           mem_support_to_fun := fun i => by
             rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]

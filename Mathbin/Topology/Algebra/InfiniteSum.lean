@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -784,7 +784,7 @@ theorem relSuprTsum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : �
 theorem relSuprSum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
     (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s : δ → β) (t : Finset δ) :
     R (m (⨆ d ∈ t, s d)) (∑ d in t, m (s d)) := by
-  rw [supr_subtype', ← Finset.tsum_subtype]
+  rw [supᵢ_subtype', ← Finset.tsum_subtype]
   exact relSuprTsum m m0 R m_supr _
 #align rel_supr_sum relSuprSum
 
@@ -793,7 +793,7 @@ theorem relSupAdd [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α 
     (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s₁ s₂ : β) :
     R (m (s₁ ⊔ s₂)) (m s₁ + m s₂) := by
   convert relSuprTsum m m0 R m_supr fun b => cond b s₁ s₂
-  · simp only [supr_bool_eq, cond]
+  · simp only [supᵢ_bool_eq, cond]
   · rw [tsum_fintype, Fintype.sum_bool, cond, cond]
 #align rel_sup_add relSupAdd
 
@@ -1278,7 +1278,7 @@ theorem sum_le_has_sum (s : Finset β) (hs : ∀ (b) (_ : b ∉ s), 0 ≤ f b) (
 #align sum_le_has_sum sum_le_has_sum
 
 theorem is_lub_has_sum (h : ∀ b, 0 ≤ f b) (hf : HasSum f a) :
-    IsLub (Set.range fun s : Finset β => ∑ b in s, f b) a :=
+    IsLUB (Set.range fun s : Finset β => ∑ b in s, f b) a :=
   is_lub_of_tendsto_at_top (Finset.sum_mono_set_of_nonneg h) hf
 #align is_lub_has_sum is_lub_has_sum
 
@@ -1430,7 +1430,7 @@ theorem tsum_ne_zero_iff (hf : Summable f) : (∑' i, f i) ≠ 0 ↔ ∃ x, f x 
   rw [Ne.def, tsum_eq_zero_iff hf, not_forall]
 #align tsum_ne_zero_iff tsum_ne_zero_iff
 
-theorem is_lub_has_sum' (hf : HasSum f a) : IsLub (Set.range fun s : Finset β => ∑ b in s, f b) a :=
+theorem is_lub_has_sum' (hf : HasSum f a) : IsLUB (Set.range fun s : Finset β => ∑ b in s, f b) a :=
   is_lub_of_tendsto_at_top (Finset.sum_mono_set f) hf
 #align is_lub_has_sum' is_lub_has_sum'
 
@@ -1642,7 +1642,7 @@ theorem Summable.tendsto_top_of_pos {α : Type _} [LinearOrderedField α] [Topol
   apply Filter.Tendsto.inv_tendsto_zero
   apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (Summable.tendsto_at_top_zero hf)
   rw [eventually_iff_exists_mem]
-  refine' ⟨Set.ioi 0, Ioi_mem_at_top _, fun _ _ => _⟩
+  refine' ⟨Set.Ioi 0, Ioi_mem_at_top _, fun _ _ => _⟩
   rw [Set.mem_Ioi, inv_eq_one_div, one_div, Pi.inv_apply, _root_.inv_pos]
   exact hf' _
 #align summable.tendsto_top_of_pos Summable.tendsto_top_of_pos
@@ -1675,12 +1675,12 @@ the existence of a least upper bound.
 
 theorem has_sum_of_is_lub_of_nonneg [LinearOrderedAddCommMonoid β] [TopologicalSpace β]
     [OrderTopology β] {f : α → β} (b : β) (h : ∀ b, 0 ≤ f b)
-    (hf : IsLub (Set.range fun s => ∑ a in s, f a) b) : HasSum f b :=
+    (hf : IsLUB (Set.range fun s => ∑ a in s, f a) b) : HasSum f b :=
   tendsto_at_top_is_lub (Finset.sum_mono_set_of_nonneg h) hf
 #align has_sum_of_is_lub_of_nonneg has_sum_of_is_lub_of_nonneg
 
 theorem has_sum_of_is_lub [CanonicallyLinearOrderedAddMonoid β] [TopologicalSpace β]
-    [OrderTopology β] {f : α → β} (b : β) (hf : IsLub (Set.range fun s => ∑ a in s, f a) b) :
+    [OrderTopology β] {f : α → β} (b : β) (hf : IsLUB (Set.range fun s => ∑ a in s, f a) b) :
     HasSum f b :=
   tendsto_at_top_is_lub (Finset.sum_mono_set f) hf
 #align has_sum_of_is_lub has_sum_of_is_lub

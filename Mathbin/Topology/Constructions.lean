@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.constructions
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -247,17 +247,17 @@ instance {p : α → Prop} [TopologicalSpace α] [DiscreteTopology α] : Discret
   ⟨bot_unique fun s hs =>
       ⟨coe '' s, is_open_discrete _, Set.preimage_image_eq _ Subtype.coe_injective⟩⟩
 
-instance Sum.discreteTopology [TopologicalSpace α] [TopologicalSpace β] [hα : DiscreteTopology α]
+instance Sum.discrete_topology [TopologicalSpace α] [TopologicalSpace β] [hα : DiscreteTopology α]
     [hβ : DiscreteTopology β] : DiscreteTopology (Sum α β) :=
   ⟨by unfold Sum.topologicalSpace <;> simp [hα.eq_bot, hβ.eq_bot]⟩
-#align sum.discrete_topology Sum.discreteTopology
+#align sum.discrete_topology Sum.discrete_topology
 
-instance Sigma.discreteTopology {β : α → Type v} [∀ a, TopologicalSpace (β a)]
+instance Sigma.discrete_topology {β : α → Type v} [∀ a, TopologicalSpace (β a)]
     [h : ∀ a, DiscreteTopology (β a)] : DiscreteTopology (Sigma β) :=
   ⟨by 
     unfold Sigma.topologicalSpace
     simp [fun a => (h a).eq_bot]⟩
-#align sigma.discrete_topology Sigma.discreteTopology
+#align sigma.discrete_topology Sigma.discrete_topology
 
 section Topα
 
@@ -1393,7 +1393,7 @@ theorem pi_eq_generate_from :
         { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s } :=
   le_antisymm
     (le_generate_from fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ is_open_set_pi (Finset.finite_to_set _) hi)
-    (le_infi fun a s ⟨t, ht, s_eq⟩ =>
+    (le_infᵢ fun a s ⟨t, ht, s_eq⟩ =>
       GenerateOpen.basic _ <|
         ⟨update (fun a => univ) a t, {a}, by simpa using ht, s_eq ▸ by ext f <;> simp [Set.pi]⟩)
 #align pi_eq_generate_from pi_eq_generate_from
@@ -1460,13 +1460,13 @@ theorem inducing_infi_to_pi {X : Type _} (f : ∀ i, X → π i) :
 variable [Finite ι] [∀ i, DiscreteTopology (π i)]
 
 /-- A finite product of discrete spaces is discrete. -/
-instance PiCat.discreteTopology : DiscreteTopology (∀ i, π i) :=
+instance PiCat.discrete_topology : DiscreteTopology (∀ i, π i) :=
   singletons_open_iff_discrete.mp fun x => by
     rw [show {x} = ⋂ i, { y : ∀ i, π i | y i = x i } by ext;
         simp only [funext_iff, Set.mem_singleton_iff, Set.mem_Inter, Set.mem_setOf_eq]]
     exact
       is_open_Inter fun i => (continuous_apply i).is_open_preimage {x i} (is_open_discrete {x i})
-#align Pi.discrete_topology PiCat.discreteTopology
+#align Pi.discrete_topology PiCat.discrete_topology
 
 end Pi
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Wrenna Robson
 
 ! This file was ported from Lean 3 source module linear_algebra.lagrange
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) : (∑ j in s, Lagrang
 theorem basis_divisor_add_symm {x y : F} (hxy : x ≠ y) : basisDivisor x y + basisDivisor y x = 1 :=
   by
   classical rw [←
-      sum_basis (Set.inj_on_of_injective Function.injective_id _) ⟨x, mem_insert_self _ {y}⟩,
+      sum_basis (Set.injOn_of_injective Function.injective_id _) ⟨x, mem_insert_self _ {y}⟩,
       sum_insert (not_mem_singleton.mpr hxy), sum_singleton, basis_pair_left hxy,
       basis_pair_right hxy, id, id]
 #align lagrange.basis_divisor_add_symm Lagrange.basis_divisor_add_symm

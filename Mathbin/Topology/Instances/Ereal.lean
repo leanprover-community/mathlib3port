@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.instances.ereal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -222,22 +222,22 @@ theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} :
 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
-theorem nhds_top : 𝓝 (⊤ : Ereal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (ioi a) :=
+theorem nhds_top : 𝓝 (⊤ : Ereal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (Ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
 #align ereal.nhds_top Ereal.nhds_top
 
-theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (ioi a) := by
+theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (Ioi a) := by
   rw [nhds_top]
   apply le_antisymm
-  · exact infi_mono' fun x => ⟨x, by simp⟩
-  · refine' le_infi fun r => le_infi fun hr => _
+  · exact infᵢ_mono' fun x => ⟨x, by simp⟩
+  · refine' le_infᵢ fun r => le_infᵢ fun hr => _
     induction r using Ereal.rec
-    · exact (infi_le _ 0).trans (by simp)
-    · exact infi_le _ _
+    · exact (infᵢ_le _ 0).trans (by simp)
+    · exact infᵢ_le _ _
     · simpa using hr
 #align ereal.nhds_top' Ereal.nhds_top'
 
-theorem mem_nhds_top_iff {s : Set Ereal} : s ∈ 𝓝 (⊤ : Ereal) ↔ ∃ y : ℝ, ioi (y : Ereal) ⊆ s := by
+theorem mem_nhds_top_iff {s : Set Ereal} : s ∈ 𝓝 (⊤ : Ereal) ↔ ∃ y : ℝ, Ioi (y : Ereal) ⊆ s := by
   rw [nhds_top', mem_infi_of_directed]
   · rfl
   exact fun x y => ⟨max x y, by simp [le_refl], by simp [le_refl]⟩
@@ -249,22 +249,22 @@ theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → Ereal} {f : Filter �
 #align ereal.tendsto_nhds_top_iff_real Ereal.tendsto_nhds_top_iff_real
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
-theorem nhds_bot : 𝓝 (⊥ : Ereal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (iio a) :=
+theorem nhds_bot : 𝓝 (⊥ : Ereal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 #align ereal.nhds_bot Ereal.nhds_bot
 
-theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (iio a) := by
+theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (Iio a) := by
   rw [nhds_bot]
   apply le_antisymm
-  · exact infi_mono' fun x => ⟨x, by simp⟩
-  · refine' le_infi fun r => le_infi fun hr => _
+  · exact infᵢ_mono' fun x => ⟨x, by simp⟩
+  · refine' le_infᵢ fun r => le_infᵢ fun hr => _
     induction r using Ereal.rec
     · simpa using hr
-    · exact infi_le _ _
-    · exact (infi_le _ 0).trans (by simp)
+    · exact infᵢ_le _ _
+    · exact (infᵢ_le _ 0).trans (by simp)
 #align ereal.nhds_bot' Ereal.nhds_bot'
 
-theorem mem_nhds_bot_iff {s : Set Ereal} : s ∈ 𝓝 (⊥ : Ereal) ↔ ∃ y : ℝ, iio (y : Ereal) ⊆ s := by
+theorem mem_nhds_bot_iff {s : Set Ereal} : s ∈ 𝓝 (⊥ : Ereal) ↔ ∃ y : ℝ, Iio (y : Ereal) ⊆ s := by
   rw [nhds_bot', mem_infi_of_directed]
   · rfl
   exact fun x y => ⟨min x y, by simp [le_refl], by simp [le_refl]⟩

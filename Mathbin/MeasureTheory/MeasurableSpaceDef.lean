@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space_def
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -487,7 +487,7 @@ theorem measurable_set_bot_iff {s : Set α} : @MeasurableSet α ⊥ s ↔ s = �
         by_cases
           (fun h : ∃ i, f i = univ =>
             let ⟨i, hi⟩ := h
-            Or.inr <| eq_univ_of_univ_subset <| hi ▸ le_supr f i)
+            Or.inr <| eq_univ_of_univ_subset <| hi ▸ le_supᵢ f i)
           fun h : ¬∃ i, f i = univ =>
           Or.inl <|
             eq_empty_of_subset_empty <|
@@ -513,7 +513,7 @@ theorem measurable_set_inf {m₁ m₂ : MeasurableSpace α} {s : Set α} :
 
 @[simp]
 theorem measurable_set_Inf {ms : Set (MeasurableSpace α)} {s : Set α} :
-    @MeasurableSet _ (inf ms) s ↔ ∀ m ∈ ms, @MeasurableSet _ m s :=
+    @MeasurableSet _ (infₛ ms) s ↔ ∀ m ∈ ms, @MeasurableSet _ m s :=
   show s ∈ ⋂₀ _ ↔ _ by simp
 #align measurable_space.measurable_set_Inf MeasurableSpace.measurable_set_Inf
 
@@ -529,15 +529,16 @@ theorem measurable_set_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
 #align measurable_space.measurable_set_sup MeasurableSpace.measurable_set_sup
 
 theorem measurable_set_Sup {ms : Set (MeasurableSpace α)} {s : Set α} :
-    measurable_set[sup ms] s ↔ GenerateMeasurable { s : Set α | ∃ m ∈ ms, measurable_set[m] s } s :=
+    measurable_set[supₛ ms] s ↔
+      GenerateMeasurable { s : Set α | ∃ m ∈ ms, measurable_set[m] s } s :=
   by 
   change @measurable_set' _ (generate_from <| ⋃₀_) _ ↔ _
   simp [generate_from, ← set_of_exists]
 #align measurable_space.measurable_set_Sup MeasurableSpace.measurable_set_Sup
 
 theorem measurable_set_supr {ι} {m : ι → MeasurableSpace α} {s : Set α} :
-    @MeasurableSet _ (supr m) s ↔ GenerateMeasurable { s : Set α | ∃ i, measurable_set[m i] s } s :=
-  by simp only [supr, measurable_set_Sup, exists_range_iff]
+    @MeasurableSet _ (supᵢ m) s ↔ GenerateMeasurable { s : Set α | ∃ i, measurable_set[m i] s } s :=
+  by simp only [supᵢ, measurable_set_Sup, exists_range_iff]
 #align measurable_space.measurable_set_supr MeasurableSpace.measurable_set_supr
 
 theorem measurable_space_supr_eq (m : ι → MeasurableSpace α) :

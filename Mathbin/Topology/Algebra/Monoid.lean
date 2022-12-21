@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.algebra.monoid
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -730,7 +730,7 @@ variable {ι' : Sort _} [Mul M]
 
 @[to_additive]
 theorem has_continuous_mul_Inf {ts : Set (TopologicalSpace M)}
-    (h : ∀ t ∈ ts, @HasContinuousMul M t _) : @HasContinuousMul M (inf ts) _ :=
+    (h : ∀ t ∈ ts, @HasContinuousMul M t _) : @HasContinuousMul M (infₛ ts) _ :=
   { continuous_mul :=
       continuous_Inf_rng.2 fun t ht =>
         continuous_Inf_dom₂ ht ht (@HasContinuousMul.continuous_mul M t _ (h t ht)) }
@@ -739,14 +739,14 @@ theorem has_continuous_mul_Inf {ts : Set (TopologicalSpace M)}
 @[to_additive]
 theorem has_continuous_mul_infi {ts : ι' → TopologicalSpace M}
     (h' : ∀ i, @HasContinuousMul M (ts i) _) : @HasContinuousMul M (⨅ i, ts i) _ := by
-  rw [← Inf_range]
+  rw [← infₛ_range]
   exact has_continuous_mul_Inf (set.forall_range_iff.mpr h')
 #align has_continuous_mul_infi has_continuous_mul_infi
 
 @[to_additive]
 theorem has_continuous_mul_inf {t₁ t₂ : TopologicalSpace M} (h₁ : @HasContinuousMul M t₁ _)
     (h₂ : @HasContinuousMul M t₂ _) : @HasContinuousMul M (t₁ ⊓ t₂) _ := by
-  rw [inf_eq_infi]
+  rw [inf_eq_infᵢ]
   refine' has_continuous_mul_infi fun b => _
   cases b <;> assumption
 #align has_continuous_mul_inf has_continuous_mul_inf

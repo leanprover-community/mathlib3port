@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.instances.nnreal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ instance : SecondCountableTopology ℝ≥0 :=
   TopologicalSpace.Subtype.second_countable_topology _ _
 
 instance : OrderTopology ℝ≥0 :=
-  @order_topology_of_ord_connected _ _ _ _ (ici 0) _
+  @order_topology_of_ord_connected _ _ _ _ (Ici 0) _
 
 section coe
 
@@ -236,7 +236,7 @@ theorem sum_add_tsum_nat_add {f : ℕ → ℝ≥0} (k : ℕ) (hf : Summable f) :
 
 theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
     (⨅ (n : ℝ) (h : 0 < n), f n) = ⨅ (n : ℝ≥0) (h : 0 < n), f n :=
-  le_antisymm (infi_mono' fun r => ⟨r, le_rfl⟩) (infi₂_mono' fun r hr => ⟨⟨r, hr.le⟩, hr, le_rfl⟩)
+  le_antisymm (infᵢ_mono' fun r => ⟨r, le_rfl⟩) (infᵢ₂_mono' fun r hr => ⟨⟨r, hr.le⟩, hr, le_rfl⟩)
 #align nnreal.infi_real_pos_eq_infi_nnreal_pos Nnreal.infi_real_pos_eq_infi_nnreal_pos
 
 end coe
@@ -265,7 +265,7 @@ theorem tendsto_tsum_compl_at_top_zero {α : Type _} (f : α → ℝ≥0) :
 /-- `x ↦ x ^ n` as an order isomorphism of `ℝ≥0`. -/
 def powOrderIso (n : ℕ) (hn : n ≠ 0) : ℝ≥0 ≃o ℝ≥0 :=
   (StrictMono.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
-      strict_mono_on_pow hn.bot_lt (zero_le x) (zero_le y) h) <|
+      strictMonoOn_pow hn.bot_lt (zero_le x) (zero_le y) h) <|
     (continuous_id.pow _).Surjective (tendsto_pow_at_top hn) <| by
       simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
 #align nnreal.pow_order_iso Nnreal.powOrderIso

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.local_properties
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -538,7 +538,7 @@ theorem finite_of_localization_span : RingHom.OfLocalizationSpan @RingHom.Finite
   rw [Submonoid.smul_def, ← Algebra.smul_def, smul_smul, Subtype.coe_mk, ← pow_add] at hn₂
   simp_rw [Submonoid.map_powers] at hn₂
   use n₂ + n₁
-  exact le_supr (fun x : s => Submodule.span R (sf x : Set S)) r hn₂
+  exact le_supᵢ (fun x : s => Submodule.span R (sf x : Set S)) r hn₂
 #align finite_of_localization_span finite_of_localization_span
 
 end Finite
@@ -684,7 +684,7 @@ theorem finite_type_of_localization_span : RingHom.OfLocalizationSpan @RingHom.F
   rw [Submonoid.smul_def, ← Algebra.smul_def, smul_smul, Subtype.coe_mk, ← pow_add] at hn₂
   simp_rw [Submonoid.map_powers] at hn₂
   use n₂ + n₁
-  exact le_supr (fun x : s => Algebra.adjoin R (sf x : Set S)) r hn₂
+  exact le_supᵢ (fun x : s => Algebra.adjoin R (sf x : Set S)) r hn₂
 #align finite_type_of_localization_span finite_type_of_localization_span
 
 end FiniteType

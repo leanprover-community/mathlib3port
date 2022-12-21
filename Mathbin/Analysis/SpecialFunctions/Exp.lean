@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.exp
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,7 +269,7 @@ theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) 
 #align real.tendsto_div_pow_mul_exp_add_at_top Real.tendsto_div_pow_mul_exp_add_at_top
 
 /-- `real.exp` as an order isomorphism between `ℝ` and `(0, +∞)`. -/
-def expOrderIso : ℝ ≃o ioi (0 : ℝ) :=
+def expOrderIso : ℝ ≃o Ioi (0 : ℝ) :=
   StrictMono.orderIsoOfSurjective _ (exp_strict_mono.codRestrict exp_pos) <|
     (continuous_exp.subtype_mk _).Surjective
       (by simp only [tendsto_Ioi_at_top, Subtype.coe_mk, tendsto_exp_at_top])
@@ -287,7 +287,7 @@ theorem coe_comp_exp_order_iso : coe ∘ exp_order_iso = exp :=
 #align real.coe_comp_exp_order_iso Real.coe_comp_exp_order_iso
 
 @[simp]
-theorem range_exp : range exp = ioi 0 := by
+theorem range_exp : range exp = Ioi 0 := by
   rw [← coe_comp_exp_order_iso, range_comp, exp_order_iso.range_eq, image_univ, Subtype.range_coe]
 #align real.range_exp Real.range_exp
 

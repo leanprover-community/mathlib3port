@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -371,7 +371,7 @@ theorem SpecialLinearGroup.im_smul_eq_div_norm_sq :
     (g • z).im = z.im / Complex.normSq (denom g z) := by
   convert im_smul_eq_div_norm_sq g z
   simp only [coe_coe, general_linear_group.coe_det_apply, coe_GL_pos_coe_GL_coe_matrix,
-    Int.coe_cast_ring_hom, (g : SL(2, ℝ)).Prop, one_mul]
+    Int.coe_castRingHom, (g : SL(2, ℝ)).Prop, one_mul]
 #align
   upper_half_plane.special_linear_group.im_smul_eq_div_norm_sq UpperHalfPlane.SpecialLinearGroup.im_smul_eq_div_norm_sq
 

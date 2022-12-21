@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.cast
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -340,49 +340,49 @@ theorem cast_abs {q : ℚ} : ((|q| : ℚ) : K) = |q| := by simp [abs_eq_max_neg]
 open Set
 
 @[simp]
-theorem preimage_cast_Icc (a b : ℚ) : coe ⁻¹' icc (a : K) b = icc a b := by
+theorem preimage_cast_Icc (a b : ℚ) : coe ⁻¹' Icc (a : K) b = Icc a b := by
   ext x
   simp
 #align rat.preimage_cast_Icc Rat.preimage_cast_Icc
 
 @[simp]
-theorem preimage_cast_Ico (a b : ℚ) : coe ⁻¹' ico (a : K) b = ico a b := by
+theorem preimage_cast_Ico (a b : ℚ) : coe ⁻¹' Ico (a : K) b = Ico a b := by
   ext x
   simp
 #align rat.preimage_cast_Ico Rat.preimage_cast_Ico
 
 @[simp]
-theorem preimage_cast_Ioc (a b : ℚ) : coe ⁻¹' ioc (a : K) b = ioc a b := by
+theorem preimage_cast_Ioc (a b : ℚ) : coe ⁻¹' Ioc (a : K) b = Ioc a b := by
   ext x
   simp
 #align rat.preimage_cast_Ioc Rat.preimage_cast_Ioc
 
 @[simp]
-theorem preimage_cast_Ioo (a b : ℚ) : coe ⁻¹' ioo (a : K) b = ioo a b := by
+theorem preimage_cast_Ioo (a b : ℚ) : coe ⁻¹' Ioo (a : K) b = Ioo a b := by
   ext x
   simp
 #align rat.preimage_cast_Ioo Rat.preimage_cast_Ioo
 
 @[simp]
-theorem preimage_cast_Ici (a : ℚ) : coe ⁻¹' ici (a : K) = ici a := by
+theorem preimage_cast_Ici (a : ℚ) : coe ⁻¹' Ici (a : K) = Ici a := by
   ext x
   simp
 #align rat.preimage_cast_Ici Rat.preimage_cast_Ici
 
 @[simp]
-theorem preimage_cast_Iic (a : ℚ) : coe ⁻¹' iic (a : K) = iic a := by
+theorem preimage_cast_Iic (a : ℚ) : coe ⁻¹' Iic (a : K) = Iic a := by
   ext x
   simp
 #align rat.preimage_cast_Iic Rat.preimage_cast_Iic
 
 @[simp]
-theorem preimage_cast_Ioi (a : ℚ) : coe ⁻¹' ioi (a : K) = ioi a := by
+theorem preimage_cast_Ioi (a : ℚ) : coe ⁻¹' Ioi (a : K) = Ioi a := by
   ext x
   simp
 #align rat.preimage_cast_Ioi Rat.preimage_cast_Ioi
 
 @[simp]
-theorem preimage_cast_Iio (a : ℚ) : coe ⁻¹' iio (a : K) = iio a := by
+theorem preimage_cast_Iio (a : ℚ) : coe ⁻¹' Iio (a : K) = Iio a := by
   ext x
   simp
 #align rat.preimage_cast_Iio Rat.preimage_cast_Iio

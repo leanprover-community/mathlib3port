@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2563,7 +2563,7 @@ theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α)
 theorem count_map_eq_count' [DecidableEq β] (f : α → β) (s : Multiset α) (hf : Function.Injective f)
     (x : α) : (s.map f).count (f x) = s.count x := by
   by_cases H : x ∈ s
-  · exact count_map_eq_count f _ (Set.inj_on_of_injective hf _) _ H
+  · exact count_map_eq_count f _ (Set.injOn_of_injective hf _) _ H
   · rw [count_eq_zero_of_not_mem H, count_eq_zero, mem_map]
     rintro ⟨k, hks, hkx⟩
     rw [hf hkx] at *

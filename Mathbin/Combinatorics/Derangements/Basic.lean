@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson
 
 ! This file was ported from Lean 3 source module combinatorics.derangements.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ protected def subtypeEquiv (p : α → Prop) [DecidablePred p] :
       refine' (perm.subtype_equiv_subtype_perm p).subtypeEquiv fun f => ⟨fun hf a hfa ha => _, _⟩
       · refine' hf ⟨a, ha⟩ (Subtype.ext _)
         rwa [mem_fixed_points, is_fixed_pt, perm.subtype_equiv_subtype_perm, @coe_fn_coe_base',
-          Equiv.coe_fn_mk, Subtype.coe_mk, Equiv.Perm.of_subtype_apply_of_mem] at hfa
+          Equiv.coe_fn_mk, Subtype.coe_mk, Equiv.Perm.ofSubtype_apply_of_mem] at hfa
       rintro hf ⟨a, ha⟩ hfa
       refine' hf _ _ ha
       change perm.subtype_equiv_subtype_perm p f a = a

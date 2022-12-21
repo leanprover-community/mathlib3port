@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_convergence_topology
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -377,8 +377,8 @@ protected theorem inf_eq {u₁ u₂ : UniformSpace γ} : 𝒰(α, γ, u₁ ⊓ u
   by
   -- This follows directly from the fact that the upper adjoint in a Galois connection maps
   -- infimas to infimas.
-  rw [inf_eq_infi, inf_eq_infi, UniformFun.infi_eq]
-  refine' infi_congr fun i => _
+  rw [inf_eq_infᵢ, inf_eq_infᵢ, UniformFun.infi_eq]
+  refine' infᵢ_congr fun i => _
   cases i <;> rfl
 #align uniform_fun.inf_eq UniformFun.inf_eq
 
@@ -541,7 +541,7 @@ protected def uniformEquivPiComm : UniformEquiv (α →ᵤ ∀ i, δ i) (∀ i, 
       congr
       rw [PiCat.uniformSpace, UniformSpace.of_core_eq_to_core, PiCat.uniformSpace,
         UniformSpace.of_core_eq_to_core, UniformSpace.comap_infi, UniformFun.infi_eq]
-      refine' infi_congr fun i => _
+      refine' infᵢ_congr fun i => _
       rw [← UniformSpace.comap_comap, UniformFun.comap_eq])
 #align uniform_fun.uniform_equiv_Pi_comm UniformFun.uniformEquivPiComm
 
@@ -699,9 +699,9 @@ protected theorem uniform_continuous_restrict (h : s ∈ 𝔖) :
     UniformContinuous (UniformFun.ofFun ∘ (s.restrict : (α → β) → s → β) ∘ toFun 𝔖) := by
   change _ ≤ _
   rw [UniformOnFun.uniformSpace, map_le_iff_le_comap, uniformity, infi_uniformity]
-  refine' infi_le_of_le s _
+  refine' infᵢ_le_of_le s _
   rw [infi_uniformity]
-  exact infi_le _ h
+  exact infᵢ_le _ h
 #align uniform_on_fun.uniform_continuous_restrict UniformOnFun.uniform_continuous_restrict
 
 variable {α}
@@ -711,8 +711,8 @@ variable {α}
 protected theorem mono ⦃u₁ u₂ : UniformSpace γ⦄ (hu : u₁ ≤ u₂) ⦃𝔖₁ 𝔖₂ : Set (Set α)⦄
     (h𝔖 : 𝔖₂ ⊆ 𝔖₁) : 𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₂) :=
   calc
-    𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₁) := infi_le_infi_of_subset h𝔖
-    _ ≤ 𝒱(α, γ, 𝔖₂, u₂) := infi₂_mono fun i hi => UniformSpace.comap_mono <| UniformFun.mono hu
+    𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₁) := infᵢ_le_infᵢ_of_subset h𝔖
+    _ ≤ 𝒱(α, γ, 𝔖₂, u₂) := infᵢ₂_mono fun i hi => UniformSpace.comap_mono <| UniformFun.mono hu
     
 #align uniform_on_fun.mono UniformOnFun.mono
 
@@ -731,16 +731,16 @@ variable {β} {𝔖}
 protected theorem infi_eq {u : ι → UniformSpace γ} : 𝒱(α, γ, 𝔖, ⨅ i, u i) = ⨅ i, 𝒱(α, γ, 𝔖, u i) :=
   by 
   simp_rw [UniformOnFun.uniformSpace, UniformFun.infi_eq, UniformSpace.comap_infi]
-  rw [infi_comm]
-  exact infi_congr fun s => infi_comm
+  rw [infᵢ_comm]
+  exact infᵢ_congr fun s => infᵢ_comm
 #align uniform_on_fun.infi_eq UniformOnFun.infi_eq
 
 /-- If `u₁` and `u₂` are two uniform structures on `γ`, then
 `𝒱(α, γ, 𝔖, u₁ ⊓ u₂) = 𝒱(α, γ, 𝔖, u₁) ⊓ 𝒱(α, γ, 𝔖, u₂)`. -/
 protected theorem inf_eq {u₁ u₂ : UniformSpace γ} :
     𝒱(α, γ, 𝔖, u₁ ⊓ u₂) = 𝒱(α, γ, 𝔖, u₁) ⊓ 𝒱(α, γ, 𝔖, u₂) := by
-  rw [inf_eq_infi, inf_eq_infi, UniformOnFun.infi_eq]
-  refine' infi_congr fun i => _
+  rw [inf_eq_infᵢ, inf_eq_infᵢ, UniformOnFun.infi_eq]
+  refine' infᵢ_congr fun i => _
   cases i <;> rfl
 #align uniform_on_fun.inf_eq UniformOnFun.inf_eq
 
@@ -816,7 +816,7 @@ protected theorem precomp_uniform_continuous {𝔗 : Set (Set γ)} {f : γ → �
     UniformSpace.comap_comap]
   -- For any `t ∈ 𝔗`, note `s := f '' t ∈ 𝔖`.
   -- We will show that `comap s.restrict 𝒰(↥s, β, uβ) ≤ comap (t.restrict ∘ (— ∘ f)) 𝒰(↥t, β, uβ)`.
-  refine' le_infi₂ fun t ht => infi_le_of_le (f '' t) <| infi_le_of_le (hf ht) _
+  refine' le_infᵢ₂ fun t ht => infᵢ_le_of_le (f '' t) <| infᵢ_le_of_le (hf ht) _
   -- Let `f'` be the map from `t` to `f '' t` induced by `f`.
   let f' : t → f '' t := (maps_to_image f t).restrict f t (f '' t)
   -- By definition `t.restrict ∘ (— ∘ f) = (— ∘ f') ∘ (f '' t).restrict`.
@@ -931,7 +931,7 @@ protected def uniformEquivPiComm : (α →ᵤ[𝔖] ∀ i, δ i) ≃ᵤ ∀ i, �
       congr
       rw [PiCat.uniformSpace, UniformSpace.of_core_eq_to_core, PiCat.uniformSpace,
         UniformSpace.of_core_eq_to_core, UniformSpace.comap_infi, UniformOnFun.infi_eq]
-      refine' infi_congr fun i => _
+      refine' infᵢ_congr fun i => _
       rw [← UniformSpace.comap_comap, UniformOnFun.comap_eq])
 #align uniform_on_fun.uniform_equiv_Pi_comm UniformOnFun.uniformEquivPiComm
 

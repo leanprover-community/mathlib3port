@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.special_functions.japanese_bracket
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 variable {E}
 
 theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ) < r) :
-    (∫⁻ x : ℝ in ioc 0 1, Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n)) < ∞ := by
+    (∫⁻ x : ℝ in Ioc 0 1, Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n)) < ∞ := by
   have hr : 0 < r := lt_of_le_of_lt n.cast_nonneg hnr
   have h_int :
     ∀ (x : ℝ) (hx : x ∈ Ioc (0 : ℝ) 1),

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.circle_integral
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ theorem range_circle_map (c : ℂ) (R : ℝ) : range (circleMap c R) = sphere c 
 
 /-- The image of `(0, 2π]` under `circle_map c R` is the circle with center `c` and radius `|R|`. -/
 @[simp]
-theorem image_circle_map_Ioc (c : ℂ) (R : ℝ) : circleMap c R '' ioc 0 (2 * π) = sphere c (|R|) := by
+theorem image_circle_map_Ioc (c : ℂ) (R : ℝ) : circleMap c R '' Ioc 0 (2 * π) = sphere c (|R|) := by
   rw [← range_circle_map, ← (periodic_circle_map c R).image_Ioc Real.two_pi_pos 0, zero_add]
 #align image_circle_map_Ioc image_circle_map_Ioc
 
@@ -365,7 +365,7 @@ def circleIntegral (f : ℂ → E) (c : ℂ) (R : ℝ) : E :=
 notation3"∮ "(...)" in ""C("c", "R")"", "r:(scoped f => circleIntegral f c R) => r
 
 theorem circle_integral_def_Icc (f : ℂ → E) (c : ℂ) (R : ℝ) :
-    (∮ z in C(c, R), f z) = ∫ θ in icc 0 (2 * π), deriv (circleMap c R) θ • f (circleMap c R θ) :=
+    (∮ z in C(c, R), f z) = ∫ θ in Icc 0 (2 * π), deriv (circleMap c R) θ • f (circleMap c R θ) :=
   by
   simp only [circleIntegral, intervalIntegral.integral_of_le real.two_pi_pos.le,
     measure.restrict_congr_set Ioc_ae_eq_Icc]

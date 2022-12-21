@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.quotient
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,11 +103,11 @@ variable {M N : Type _} [SeminormedAddCommGroup M] [SeminormedAddCommGroup N]
 
 /-- The definition of the norm on the quotient by an additive subgroup. -/
 noncomputable instance normOnQuotient (S : AddSubgroup M) :
-    HasNorm (M ⧸ S) where norm x := inf (norm '' { m | mk' S m = x })
+    HasNorm (M ⧸ S) where norm x := infₛ (norm '' { m | mk' S m = x })
 #align norm_on_quotient normOnQuotient
 
 theorem AddSubgroup.quotient_norm_eq {S : AddSubgroup M} (x : M ⧸ S) :
-    ‖x‖ = inf (norm '' { m : M | (m : M ⧸ S) = x }) :=
+    ‖x‖ = infₛ (norm '' { m : M | (m : M ⧸ S) = x }) :=
   rfl
 #align add_subgroup.quotient_norm_eq AddSubgroup.quotient_norm_eq
 
@@ -159,7 +159,7 @@ theorem quotient_norm_mk_le' (S : AddSubgroup M) (m : M) : ‖(m : M ⧸ S)‖ �
 
 /-- The norm of the image under the natural morphism to the quotient. -/
 theorem quotient_norm_mk_eq (S : AddSubgroup M) (m : M) :
-    ‖mk' S m‖ = inf ((fun x => ‖m + x‖) '' S) := by
+    ‖mk' S m‖ = infₛ ((fun x => ‖m + x‖) '' S) := by
   change Inf _ = _
   congr 1
   ext r
@@ -444,7 +444,7 @@ namespace NormedAddGroupHom
 by the kernel of `f`. -/
 structure IsQuotient (f : NormedAddGroupHom M N) : Prop where
   Surjective : Function.Surjective f
-  norm : ∀ x, ‖f x‖ = inf ((fun m => ‖x + m‖) '' f.ker)
+  norm : ∀ x, ‖f x‖ = infₛ ((fun m => ‖x + m‖) '' f.ker)
 #align normed_add_group_hom.is_quotient NormedAddGroupHom.IsQuotient
 
 /-- Given  `f : normed_add_group_hom M N` such that `f s = 0` for all `s ∈ S`, where,

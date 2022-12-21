@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.std_basis
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (stdBasis R �
 
 theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) :
     (⨆ i ∈ I, range (stdBasis R φ i)) ≤ ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) := by
-  refine' supr_le fun i => supr_le fun hi => range_le_iff_comap.2 _
+  refine' supᵢ_le fun i => supᵢ_le fun hi => range_le_iff_comap.2 _
   simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
   rintro b - j hj
   rw [proj_std_basis_ne R φ j i, zero_apply]
@@ -133,7 +133,7 @@ theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J)
     (⨆ i ∈ I, range (stdBasis R φ i)) = ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) := by
   refine' le_antisymm (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _
   have : Set.univ ⊆ ↑hI.to_finset ∪ J := by rwa [hI.coe_to_finset]
-  refine' le_trans (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_mono fun i => _)
+  refine' le_trans (infi_ker_proj_le_supr_range_std_basis R φ this) (supᵢ_mono fun i => _)
   rw [Set.Finite.mem_to_finset]
   exact le_rfl
 #align
@@ -145,7 +145,7 @@ theorem supr_range_std_basis [Finite ι] : (⨆ i, range (stdBasis R φ i)) = �
   ·
     exact
       funext fun i =>
-        ((@supr_pos _ _ _ fun h => range <| std_basis R φ i) <| Finset.mem_univ i).symm
+        ((@supᵢ_pos _ _ _ fun h => range <| std_basis R φ i) <| Finset.mem_univ i).symm
   · rw [Finset.coe_univ, Set.union_empty]
 #align linear_map.supr_range_std_basis LinearMap.supr_range_std_basis
 
@@ -202,12 +202,12 @@ theorem linear_independent_std_basis [Ring R] [∀ i, AddCommGroup (Ms i)] [∀ 
       span R (range fun i : ιs j => std_basis R Ms j (v j i)) ≤
         ⨆ i ∈ {j}, range (std_basis R Ms i) :=
       by 
-      rw [@supr_singleton _ _ _ fun i => LinearMap.range (std_basis R (fun j : η => Ms j) i)]
+      rw [@supᵢ_singleton _ _ _ fun i => LinearMap.range (std_basis R (fun j : η => Ms j) i)]
       apply h₀
     have h₂ :
       (⨆ j ∈ J, span R (range fun i : ιs j => std_basis R Ms j (v j i))) ≤
         ⨆ j ∈ J, range (std_basis R (fun j : η => Ms j) j) :=
-      supr₂_mono fun i _ => h₀ i
+      supᵢ₂_mono fun i _ => h₀ i
     have h₃ : Disjoint (fun i : η => i ∈ {j}) J := by
       convert Set.disjoint_singleton_left.2 hiJ using 0
     exact (disjoint_std_basis_std_basis _ _ _ _ h₃).mono h₁ h₂

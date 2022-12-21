@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo
 
 ! This file was ported from Lean 3 source module dynamics.omega_limit
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ theorem omega_limit_image_eq {α' : Type _} (ϕ : τ → α' → β) (f : Filter
 
 theorem omega_limit_preimage_subset {α' : Type _} (ϕ : τ → α' → β) (s : Set α') (f : Filter τ)
     (g : α → α') : ω f (fun t x => ϕ t (g x)) (g ⁻¹' s) ⊆ ω f ϕ s :=
-  maps_to_omega_limit _ (maps_to_preimage _ _) (fun t x => rfl) continuous_id
+  maps_to_omega_limit _ (mapsTo_preimage _ _) (fun t x => rfl) continuous_id
 #align omega_limit_preimage_subset omega_limit_preimage_subset
 
 /-!

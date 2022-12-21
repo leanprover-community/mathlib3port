@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Keeley Hoek
 
 ! This file was ported from Lean 3 source module data.fin.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -983,7 +983,7 @@ theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.range (castLe h) = { i | (
 theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Fin k) (hi) :
     ((Equiv.ofInjective _ (castLe h).Injective).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_le]
-  exact congr_arg coe (Equiv.apply_of_injective_symm _ _)
+  exact congr_arg coe (Equiv.apply_ofInjective_symm _ _)
 #align fin.coe_of_injective_cast_le_symm Fin.coe_of_injective_cast_le_symm
 
 @[simp]
@@ -1268,7 +1268,7 @@ theorem range_cast_succ {n : ℕ} : Set.range (castSucc : Fin n → Fin n.succ) 
 theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Fin n.succ) (hi) :
     ((Equiv.ofInjective castSucc (cast_succ_injective _)).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_succ]
-  exact congr_arg coe (Equiv.apply_of_injective_symm _ _)
+  exact congr_arg coe (Equiv.apply_ofInjective_symm _ _)
 #align fin.coe_of_injective_cast_succ_symm Fin.coe_of_injective_cast_succ_symm
 
 theorem succ_cast_succ {n : ℕ} (i : Fin n) : i.cast_succ.succ = i.succ.cast_succ :=

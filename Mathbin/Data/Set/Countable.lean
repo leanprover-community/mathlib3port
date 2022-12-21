@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.countable
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ protected theorem countable_iff_exists_injective {s : Set α} :
 /-- A set `s : set α` is countable if and only if there exists a function `α → ℕ` injective
 on `s`. -/
 theorem countable_iff_exists_inj_on {s : Set α} : s.Countable ↔ ∃ f : α → ℕ, InjOn f s :=
-  Set.countable_iff_exists_injective.trans exists_inj_on_iff_injective.symm
+  Set.countable_iff_exists_injective.trans exists_injOn_iff_injective.symm
 #align set.countable_iff_exists_inj_on Set.countable_iff_exists_inj_on
 
 /-- Convert `set.countable s` to `encodable s` (noncomputable). -/
@@ -143,13 +143,13 @@ theorem Countable.image {s : Set α} (hs : s.Countable) (f : α → β) : (f '' 
 
 theorem MapsTo.countable_of_inj_on {s : Set α} {t : Set β} {f : α → β} (hf : MapsTo f s t)
     (hf' : InjOn f s) (ht : t.Countable) : s.Countable :=
-  have : Injective (hf.restrict f s t) := (inj_on_iff_injective.1 hf').codRestrict _
+  have : Injective (hf.restrict f s t) := (injOn_iff_injective.1 hf').codRestrict _
   ⟨@Encodable.ofInj _ _ ht.toEncodable _ this⟩
 #align set.maps_to.countable_of_inj_on Set.MapsTo.countable_of_inj_on
 
 theorem Countable.preimage_of_inj_on {s : Set β} (hs : s.Countable) {f : α → β}
     (hf : InjOn f (f ⁻¹' s)) : (f ⁻¹' s).Countable :=
-  (maps_to_preimage f s).countable_of_inj_on hf hs
+  (mapsTo_preimage f s).countable_of_inj_on hf hs
 #align set.countable.preimage_of_inj_on Set.Countable.preimage_of_inj_on
 
 protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α → β} (hf : Injective f) :
@@ -159,21 +159,21 @@ protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α →
 
 theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
     (∃ s : ℕ → α, (∀ n, p (s n)) ∧ (⨆ n, s n) = ⊤) ↔
-      ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ sup S = ⊤ :=
+      ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ supₛ S = ⊤ :=
   by 
   constructor
   · rintro ⟨s, hps, hs⟩
     refine' ⟨range s, countable_range s, forall_range_iff.2 hps, _⟩
-    rwa [Sup_range]
+    rwa [supₛ_range]
   · rintro ⟨S, hSc, hps, hS⟩
     rcases eq_empty_or_nonempty S with (rfl | hne)
-    · rw [Sup_empty] at hS
+    · rw [supₛ_empty] at hS
       haveI := subsingleton_of_bot_eq_top hS
       rcases h with ⟨x, hx⟩
       exact ⟨fun n => x, fun n => hx, Subsingleton.elim _ _⟩
     · rcases(Set.countable_iff_exists_surjective hne).1 hSc with ⟨s, hs⟩
       refine' ⟨fun n => s n, fun n => hps _ (s n).coe_prop, _⟩
-      rwa [hs.supr_comp, ← Sup_eq_supr']
+      rwa [hs.supr_comp, ← supₛ_eq_supᵢ']
 #align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_supr_eq_top_iff_countable
 
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
@@ -185,7 +185,7 @@ theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
 theorem countable_of_injective_of_countable_image {s : Set α} {f : α → β} (hf : InjOn f s)
     (hs : (f '' s).Countable) : s.Countable :=
   let ⟨g, hg⟩ := countable_iff_exists_inj_on.1 hs
-  countable_iff_exists_inj_on.2 ⟨g ∘ f, hg.comp hf (maps_to_image _ _)⟩
+  countable_iff_exists_inj_on.2 ⟨g ∘ f, hg.comp hf (mapsTo_image _ _)⟩
 #align set.countable_of_injective_of_countable_image Set.countable_of_injective_of_countable_image
 
 theorem countable_Union {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Countable) :

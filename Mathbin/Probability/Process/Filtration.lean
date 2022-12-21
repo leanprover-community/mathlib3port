@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.filtration
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,50 +124,50 @@ theorem coe_fn_inf {f g : Filtration ι m} : ⇑(f ⊓ g) = f ⊓ g :=
   rfl
 #align measure_theory.filtration.coe_fn_inf MeasureTheory.Filtration.coe_fn_inf
 
-instance : HasSup (Filtration ι m) :=
+instance : SupSet (Filtration ι m) :=
   ⟨fun s =>
-    { seq := fun i => sup ((fun f : Filtration ι m => f i) '' s)
+    { seq := fun i => supₛ ((fun f : Filtration ι m => f i) '' s)
       mono' := fun i j hij => by 
-        refine' Sup_le fun m' hm' => _
+        refine' supₛ_le fun m' hm' => _
         rw [Set.mem_image] at hm'
         obtain ⟨f, hf_mem, hfm'⟩ := hm'
         rw [← hfm']
         refine' (f.mono hij).trans _
         have hfj_mem : f j ∈ (fun g : filtration ι m => g j) '' s := ⟨f, hf_mem, rfl⟩
-        exact le_Sup hfj_mem
+        exact le_supₛ hfj_mem
       le' := fun i => by 
-        refine' Sup_le fun m' hm' => _
+        refine' supₛ_le fun m' hm' => _
         rw [Set.mem_image] at hm'
         obtain ⟨f, hf_mem, hfm'⟩ := hm'
         rw [← hfm']
         exact f.le i }⟩
 
 theorem Sup_def (s : Set (Filtration ι m)) (i : ι) :
-    sup s i = sup ((fun f : Filtration ι m => f i) '' s) :=
+    supₛ s i = supₛ ((fun f : Filtration ι m => f i) '' s) :=
   rfl
 #align measure_theory.filtration.Sup_def MeasureTheory.Filtration.Sup_def
 
-noncomputable instance : HasInf (Filtration ι m) :=
+noncomputable instance : InfSet (Filtration ι m) :=
   ⟨fun s =>
-    { seq := fun i => if Set.Nonempty s then inf ((fun f : Filtration ι m => f i) '' s) else m
+    { seq := fun i => if Set.Nonempty s then infₛ ((fun f : Filtration ι m => f i) '' s) else m
       mono' := fun i j hij => by 
         by_cases h_nonempty : Set.Nonempty s
         swap
         · simp only [h_nonempty, Set.nonempty_image_iff, if_false, le_refl]
-        simp only [h_nonempty, if_true, le_Inf_iff, Set.mem_image, forall_exists_index, and_imp,
+        simp only [h_nonempty, if_true, le_infₛ_iff, Set.mem_image, forall_exists_index, and_imp,
           forall_apply_eq_imp_iff₂]
         refine' fun f hf_mem => le_trans _ (f.mono hij)
         have hfi_mem : f i ∈ (fun g : filtration ι m => g i) '' s := ⟨f, hf_mem, rfl⟩
-        exact Inf_le hfi_mem
+        exact infₛ_le hfi_mem
       le' := fun i => by 
         by_cases h_nonempty : Set.Nonempty s
         swap; · simp only [h_nonempty, if_false, le_refl]
         simp only [h_nonempty, if_true]
         obtain ⟨f, hf_mem⟩ := h_nonempty
-        exact le_trans (Inf_le ⟨f, hf_mem, rfl⟩) (f.le i) }⟩
+        exact le_trans (infₛ_le ⟨f, hf_mem, rfl⟩) (f.le i) }⟩
 
 theorem Inf_def (s : Set (Filtration ι m)) (i : ι) :
-    inf s i = if Set.Nonempty s then inf ((fun f : Filtration ι m => f i) '' s) else m :=
+    infₛ s i = if Set.Nonempty s then infₛ ((fun f : Filtration ι m => f i) '' s) else m :=
   rfl
 #align measure_theory.filtration.Inf_def MeasureTheory.Filtration.Inf_def
 
@@ -185,24 +185,24 @@ noncomputable instance :
   inf_le_left f g i := inf_le_left
   inf_le_right f g i := inf_le_right
   le_inf f g h h_fg h_fh i := le_inf (h_fg i) (h_fh i)
-  sup := sup
-  le_Sup s f hf_mem i := le_Sup ⟨f, hf_mem, rfl⟩
+  sup := supₛ
+  le_Sup s f hf_mem i := le_supₛ ⟨f, hf_mem, rfl⟩
   Sup_le s f h_forall i :=
-    Sup_le fun m' hm' => by 
+    supₛ_le fun m' hm' => by 
       obtain ⟨g, hg_mem, hfm'⟩ := hm'
       rw [← hfm']
       exact h_forall g hg_mem i
-  inf := inf
+  inf := infₛ
   Inf_le s f hf_mem i := by 
     have hs : s.nonempty := ⟨f, hf_mem⟩
     simp only [Inf_def, hs, if_true]
-    exact Inf_le ⟨f, hf_mem, rfl⟩
+    exact infₛ_le ⟨f, hf_mem, rfl⟩
   le_Inf s f h_forall i := by 
     by_cases hs : s.nonempty
     swap;
     · simp only [Inf_def, hs, if_false]
       exact f.le i
-    simp only [Inf_def, hs, if_true, le_Inf_iff, Set.mem_image, forall_exists_index, and_imp,
+    simp only [Inf_def, hs, if_true, le_infₛ_iff, Set.mem_image, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂]
     exact fun g hg_mem => h_forall g hg_mem i
   top := ⊤
@@ -284,9 +284,9 @@ the filtration. -/
 def natural (u : ι → Ω → β) (hum : ∀ i, StronglyMeasurable (u i)) :
     Filtration ι m where 
   seq i := ⨆ j ≤ i, MeasurableSpace.comap (u j) mβ
-  mono' i j hij := bsupr_mono fun k => ge_trans hij
+  mono' i j hij := bsupᵢ_mono fun k => ge_trans hij
   le' i := by 
-    refine' supr₂_le _
+    refine' supᵢ₂_le _
     rintro j hj s ⟨t, ht, rfl⟩
     exact (hum j).Measurable ht
 #align measure_theory.filtration.natural MeasureTheory.Filtration.natural
@@ -361,7 +361,7 @@ theorem stronglyMeasurableLimitProcess : strongly_measurable[⨆ n, ℱ n] (limi
   measure_theory.filtration.strongly_measurable_limit_process MeasureTheory.Filtration.stronglyMeasurableLimitProcess
 
 theorem stronglyMeasurableLimitProcess' : strongly_measurable[m] (limitProcess f ℱ μ) :=
-  stronglyMeasurableLimitProcess.mono (Sup_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)
+  stronglyMeasurableLimitProcess.mono (supₛ_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)
 #align
   measure_theory.filtration.strongly_measurable_limit_process' MeasureTheory.Filtration.stronglyMeasurableLimitProcess'
 
@@ -372,11 +372,11 @@ theorem memℒpLimitProcessOfSnormBdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _
   split_ifs with h
   · refine'
       ⟨strongly_measurable.ae_strongly_measurable
-          ((Classical.choose_spec h).1.mono (Sup_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)),
+          ((Classical.choose_spec h).1.mono (supₛ_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)),
         lt_of_le_of_lt (Lp.snorm_lim_le_liminf_snorm hfm _ (Classical.choose_spec h).2)
           (lt_of_le_of_lt _ (Ennreal.coe_lt_top : ↑R < ∞))⟩
     simp_rw [liminf_eq, eventually_at_top]
-    exact Sup_le fun b ⟨a, ha⟩ => (ha a le_rfl).trans (hbdd _)
+    exact supₛ_le fun b ⟨a, ha⟩ => (ha a le_rfl).trans (hbdd _)
   · exact zero_mem_ℒp
 #align
   measure_theory.filtration.mem_ℒp_limit_process_of_snorm_bdd MeasureTheory.Filtration.memℒpLimitProcessOfSnormBdd

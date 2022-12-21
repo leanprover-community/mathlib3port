@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finite_presentation
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,11 +55,11 @@ namespace FiniteType
 variable {R A B}
 
 /-- A finitely presented algebra is of finite type. -/
-theorem ofFinitePresentation : FinitePresentation R A → FiniteType R A := by
+theorem of_finite_presentation : FinitePresentation R A → FiniteType R A := by
   rintro ⟨n, f, hf⟩
   apply finite_type.iff_quotient_mv_polynomial''.2
   exact ⟨n, f, hf.1⟩
-#align algebra.finite_type.of_finite_presentation Algebra.FiniteType.ofFinitePresentation
+#align algebra.finite_type.of_finite_presentation Algebra.FiniteType.of_finite_presentation
 
 end FiniteType
 
@@ -70,7 +70,7 @@ variable {R A B}
 /-- An algebra over a Noetherian ring is finitely generated if and only if it is finitely
 presented. -/
 theorem of_finite_type [IsNoetherianRing R] : FiniteType R A ↔ FinitePresentation R A := by
-  refine' ⟨fun h => _, Algebra.FiniteType.ofFinitePresentation⟩
+  refine' ⟨fun h => _, Algebra.FiniteType.of_finite_presentation⟩
   obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mv_polynomial''.1 h
   refine' ⟨n, f, hf, _⟩
   have hnoet : IsNoetherianRing (MvPolynomial (Fin n) R) := by infer_instance
@@ -400,7 +400,7 @@ def FinitePresentation (f : A →+* B) : Prop :=
 namespace FiniteType
 
 theorem of_finite_presentation {f : A →+* B} (hf : f.FinitePresentation) : f.FiniteType :=
-  @Algebra.FiniteType.ofFinitePresentation A B _ _ f.toAlgebra hf
+  @Algebra.FiniteType.of_finite_presentation A B _ _ f.toAlgebra hf
 #align ring_hom.finite_type.of_finite_presentation RingHom.FiniteType.of_finite_presentation
 
 end FiniteType

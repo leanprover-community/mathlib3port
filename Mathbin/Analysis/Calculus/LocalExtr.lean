@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.local_extr
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -293,8 +293,8 @@ variable (f f' : ℝ → ℝ) {a b : ℝ}
 
 /-- A continuous function on a closed interval with `f a = f b` takes either its maximum
 or its minimum value at a point in the interior of the interval. -/
-theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (icc a b)) (hfI : f a = f b) :
-    ∃ c ∈ ioo a b, IsExtrOn f (icc a b) c := by
+theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
+    ∃ c ∈ Ioo a b, IsExtrOn f (Icc a b) c := by
   have ne : (Icc a b).Nonempty := nonempty_Icc.2 (le_of_lt hab)
   -- Consider absolute min and max points
   obtain ⟨c, cmem, cle⟩ : ∃ c ∈ Icc a b, ∀ x ∈ Icc a b, f c ≤ f x
@@ -318,22 +318,22 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (icc a b)) (h
 
 /-- A continuous function on a closed interval with `f a = f b` has a local extremum at some
 point of the corresponding open interval. -/
-theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (icc a b)) (hfI : f a = f b) :
-    ∃ c ∈ ioo a b, IsLocalExtr f c :=
+theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
+    ∃ c ∈ Ioo a b, IsLocalExtr f c :=
   let ⟨c, cmem, hc⟩ := exists_Ioo_extr_on_Icc f hab hfc hfI
   ⟨c, cmem, hc.IsLocalExtr <| Icc_mem_nhds cmem.1 cmem.2⟩
 #align exists_local_extr_Ioo exists_local_extr_Ioo
 
 /-- **Rolle's Theorem** `has_deriv_at` version -/
-theorem exists_has_deriv_at_eq_zero (hab : a < b) (hfc : ContinuousOn f (icc a b)) (hfI : f a = f b)
-    (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ ioo a b, f' c = 0 :=
+theorem exists_has_deriv_at_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b)
+    (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.has_deriv_at_eq_zero <| hff' c cmem⟩
 #align exists_has_deriv_at_eq_zero exists_has_deriv_at_eq_zero
 
 /-- **Rolle's Theorem** `deriv` version -/
-theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (icc a b)) (hfI : f a = f b) :
-    ∃ c ∈ ioo a b, deriv f c = 0 :=
+theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
+    ∃ c ∈ Ioo a b, deriv f c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.deriv_eq_zero⟩
 #align exists_deriv_eq_zero exists_deriv_eq_zero
@@ -344,8 +344,8 @@ variable {f f'} {l : ℝ}
 on `(a, b)` and has the same limit `l` at `𝓝[>] a` and `𝓝[<] b`, then `f' c = 0`
 for some `c ∈ (a, b)`.  -/
 theorem exists_has_deriv_at_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l))
-    (hfb : Tendsto f (𝓝[<] b) (𝓝 l)) (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x) x) :
-    ∃ c ∈ ioo a b, f' c = 0 := by
+    (hfb : Tendsto f (𝓝[<] b) (𝓝 l)) (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) :
+    ∃ c ∈ Ioo a b, f' c = 0 := by
   have : ContinuousOn f (Ioo a b) := fun x hx => (hff' x hx).ContinuousAt.ContinuousWithinAt
   have hcont := continuous_on_Icc_extend_from_Ioo hab.ne this hfa hfb
   obtain ⟨c, hc, hcextr⟩ : ∃ c ∈ Ioo a b, IsLocalExtr (extendFrom (Ioo a b) f) c := by
@@ -363,13 +363,13 @@ theorem exists_has_deriv_at_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) 
 does not require differentiability of `f` because we define `deriv f c = 0` whenever `f` is not
 differentiable at `c`. -/
 theorem exists_deriv_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l))
-    (hfb : Tendsto f (𝓝[<] b) (𝓝 l)) : ∃ c ∈ ioo a b, deriv f c = 0 :=
+    (hfb : Tendsto f (𝓝[<] b) (𝓝 l)) : ∃ c ∈ Ioo a b, deriv f c = 0 :=
   by_cases
-    (fun h : ∀ x ∈ ioo a b, DifferentiableAt ℝ f x =>
-      show ∃ c ∈ ioo a b, deriv f c = 0 from
+    (fun h : ∀ x ∈ Ioo a b, DifferentiableAt ℝ f x =>
+      show ∃ c ∈ Ioo a b, deriv f c = 0 from
         exists_has_deriv_at_eq_zero' hab hfa hfb fun x hx => (h x hx).HasDerivAt)
-    fun h : ¬∀ x ∈ ioo a b, DifferentiableAt ℝ f x =>
-    have h : ∃ x, x ∈ ioo a b ∧ ¬DifferentiableAt ℝ f x := by
+    fun h : ¬∀ x ∈ Ioo a b, DifferentiableAt ℝ f x =>
+    have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x := by
       push_neg  at h
       exact h
     let ⟨c, hc, hcdiff⟩ := h

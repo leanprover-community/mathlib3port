@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.inverse
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -429,7 +429,7 @@ protected theorem injective (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s
 
 protected theorem inj_on (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c)
     (hc : Subsingleton E ∨ c < N⁻¹) : InjOn f s :=
-  inj_on_iff_injective.2 <| hf.Injective hc
+  injOn_iff_injective.2 <| hf.Injective hc
 #align approximates_linear_on.inj_on ApproximatesLinearOn.inj_on
 
 protected theorem surjective [CompleteSpace E] (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) univ c)

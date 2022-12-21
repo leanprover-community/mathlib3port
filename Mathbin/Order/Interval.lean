@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.interval
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ instance : Preorder (NonemptyInterval α) :=
   Preorder.lift toDualProd
 
 instance : CoeTC (NonemptyInterval α) (Set α) :=
-  ⟨fun s => icc s.fst s.snd⟩
+  ⟨fun s => Icc s.fst s.snd⟩
 
 instance (priority := 100) : Membership α (NonemptyInterval α) :=
   ⟨fun a s => a ∈ (s : Set α)⟩
@@ -228,12 +228,12 @@ instance : PartialOrder (NonemptyInterval α) :=
 
 /-- Consider a nonempty interval `[a, b]` as the set `[a, b]`. -/
 def coeHom : NonemptyInterval α ↪o Set α :=
-  OrderEmbedding.ofMapLeIff (fun s => icc s.fst s.snd) fun s t => Icc_subset_Icc_iff s.fst_le_snd
+  OrderEmbedding.ofMapLeIff (fun s => Icc s.fst s.snd) fun s t => Icc_subset_Icc_iff s.fst_le_snd
 #align nonempty_interval.coe_hom NonemptyInterval.coeHom
 
 instance : SetLike (NonemptyInterval α)
       α where 
-  coe s := icc s.fst s.snd
+  coe s := Icc s.fst s.snd
   coe_injective' := coeHom.Injective
 
 @[simp, norm_cast]
@@ -643,13 +643,13 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
                 by 
                 obtain ⟨s, hs, ha⟩ := not_subset.1 h
                 lift s to NonemptyInterval α using ha
-                exact infi₂_le_of_le s hs (le_supr₂_of_le s hs s.fst_le_snd)⟩
+                exact infᵢ₂_le_of_le s hs (le_supᵢ₂_of_le s hs s.fst_le_snd)⟩
         le_Sup := fun s s ha => by 
           split_ifs
           · exact (h ha).le
           cases s
           · exact bot_le
-          · exact WithBot.some_le_some.2 ⟨infi₂_le _ ha, le_supr₂_of_le _ ha le_rfl⟩
+          · exact WithBot.some_le_some.2 ⟨infᵢ₂_le _ ha, le_supᵢ₂_of_le _ ha le_rfl⟩
         Sup_le := fun s s ha => by 
           split_ifs
           · exact bot_le
@@ -657,8 +657,8 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
           lift s to NonemptyInterval α using ne_bot_of_le_ne_bot hb (ha _ hs)
           exact
             WithBot.coe_le_coe.2
-              ⟨le_infi₂ fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).1,
-                supr₂_le fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).2⟩
+              ⟨le_infᵢ₂ fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).1,
+                supᵢ₂_le fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).2⟩
         inf := fun S =>
           if h :
               ⊥ ∉ S ∧
@@ -667,12 +667,12 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
             some
               ⟨⟨⨆ (s : NonemptyInterval α) (h : ↑s ∈ S), s.fst,
                   ⨅ (s : NonemptyInterval α) (h : ↑s ∈ S), s.snd⟩,
-                supr₂_le fun s hs => le_infi₂ <| h.2 hs⟩
+                supᵢ₂_le fun s hs => le_infᵢ₂ <| h.2 hs⟩
           else ⊥
         Inf_le := fun s s ha => by 
           split_ifs
           · lift s to NonemptyInterval α using ne_of_mem_of_not_mem ha h.1
-            exact WithBot.coe_le_coe.2 ⟨le_supr₂ s ha, infi₂_le s ha⟩
+            exact WithBot.coe_le_coe.2 ⟨le_supᵢ₂ s ha, infᵢ₂_le s ha⟩
           · exact bot_le
         le_Inf := fun S s ha => by 
           cases s
@@ -681,8 +681,8 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
           ·
             exact
               WithBot.some_le_some.2
-                ⟨supr₂_le fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).1,
-                  le_infi₂ fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).2⟩
+                ⟨supᵢ₂_le fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).1,
+                  le_infᵢ₂ fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).2⟩
           rw [not_and_or, not_not] at h
           cases h
           · exact ha _ h
@@ -692,7 +692,7 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
                 s.fst_le_snd.trans (WithBot.coe_le_coe.1 <| ha _ hc).2 }
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (Interval α)) : ↑(inf S) = ⋂ s ∈ S, (s : Set α) := by
+theorem coe_Inf (S : Set (Interval α)) : ↑(infₛ S) = ⋂ s ∈ S, (s : Set α) := by
   change coe (dite _ _ _) = _
   split_ifs
   · ext

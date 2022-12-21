@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.spectrum
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem orthogonal_supr_eigenspaces (μ : 𝕜) :
     eigenspace (T.restrict hT.orthogonal_supr_eigenspaces_invariant) μ = ⊥ := by
   set p : Submodule 𝕜 E := (⨆ μ, eigenspace T μ)ᗮ
   refine' eigenspace_restrict_eq_bot hT.orthogonal_supr_eigenspaces_invariant _
-  have H₂ : p ≤ (eigenspace T μ)ᗮ := Submodule.orthogonal_le (le_supr _ _)
+  have H₂ : p ≤ (eigenspace T μ)ᗮ := Submodule.orthogonal_le (le_supᵢ _ _)
   exact (eigenspace T μ).orthogonal_disjoint.mono_right H₂
 #align
   linear_map.is_symmetric.orthogonal_supr_eigenspaces LinearMap.IsSymmetric.orthogonal_supr_eigenspaces
@@ -142,7 +142,7 @@ theorem orthogonal_supr_eigenspaces_eq_bot : (⨆ μ, eigenspace T μ)ᗮ = ⊥ 
 
 theorem orthogonal_supr_eigenspaces_eq_bot' : (⨆ μ : Eigenvalues T, eigenspace T μ)ᗮ = ⊥ :=
   show (⨆ μ : { μ // eigenspace T μ ≠ ⊥ }, eigenspace T μ)ᗮ = ⊥ by
-    rw [supr_ne_bot_subtype, hT.orthogonal_supr_eigenspaces_eq_bot]
+    rw [supᵢ_ne_bot_subtype, hT.orthogonal_supr_eigenspaces_eq_bot]
 #align
   linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot' LinearMap.IsSymmetric.orthogonal_supr_eigenspaces_eq_bot'
 

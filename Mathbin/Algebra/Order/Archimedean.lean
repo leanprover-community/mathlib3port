@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.archimedean
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,14 +80,14 @@ theorem exists_unique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) :
 #align exists_unique_zsmul_near_of_pos' exists_unique_zsmul_near_of_pos'
 
 theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) :
-    ∃! m : ℤ, b + m • a ∈ Set.ico c (c + a) :=
+    ∃! m : ℤ, b + m • a ∈ Set.Ico c (c + a) :=
   (Equiv.neg ℤ).Bijective.exists_unique_iff.2 <| by
     simpa only [Equiv.neg_apply, mem_Ico, neg_zsmul, ← sub_eq_add_neg, le_sub_iff_add_le, zero_add,
       add_comm c, sub_lt_iff_lt_add', add_assoc] using exists_unique_zsmul_near_of_pos' ha (b - c)
 #align exists_unique_add_zsmul_mem_Ico exists_unique_add_zsmul_mem_Ico
 
 theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) :
-    ∃! m : ℤ, b + m • a ∈ Set.ioc c (c + a) :=
+    ∃! m : ℤ, b + m • a ∈ Set.Ioc c (c + a) :=
   (Equiv.addRight (1 : ℤ)).Bijective.exists_unique_iff.2 <| by
     simpa only [add_zsmul, sub_lt_iff_lt_add', le_sub_iff_add_le', ← add_assoc, and_comm, mem_Ioc,
       Equiv.coe_addRight, one_zsmul, add_le_add_iff_right] using
@@ -183,7 +183,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 /-- Every positive `x` is between two successive integer powers of
 another `y` greater than one. This is the same as `exists_mem_Ioc_zpow`,
 but with ≤ and < the other way around. -/
-theorem exists_mem_Ico_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ ico (y ^ n) (y ^ (n + 1)) := by
+theorem exists_mem_Ico_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ Ico (y ^ n) (y ^ (n + 1)) := by
   classical exact
       let ⟨N, hN⟩ := pow_unbounded_of_one_lt x⁻¹ hy
       have he : ∃ m : ℤ, y ^ m ≤ x :=
@@ -205,7 +205,7 @@ theorem exists_mem_Ico_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ ico (
 /-- Every positive `x` is between two successive integer powers of
 another `y` greater than one. This is the same as `exists_mem_Ico_zpow`,
 but with ≤ and < the other way around. -/
-theorem exists_mem_Ioc_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ ioc (y ^ n) (y ^ (n + 1)) :=
+theorem exists_mem_Ioc_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ Ioc (y ^ n) (y ^ (n + 1)) :=
   let ⟨m, hle, hlt⟩ := exists_mem_Ico_zpow (inv_pos.2 hx) hy
   have hyp : 0 < y := lt_trans zero_lt_one hy
   ⟨-(m + 1), by rwa [zpow_neg, inv_lt (zpow_pos_of_pos hyp _) hx], by
@@ -255,13 +255,13 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
   rw [Int.cast_add, Int.cast_one]
   refine' lt_of_le_of_lt (add_le_add_right ((zh _).1 le_rfl) _) _
   rwa [← lt_sub_iff_add_lt', ← sub_mul, ← div_lt_iff' (sub_pos.2 h), one_div]
-  · rw [Rat.coe_int_denom, Nat.cast_one]
+  · rw [Rat.coe_int_den, Nat.cast_one]
     exact one_ne_zero
   · intro H
     rw [Rat.coe_nat_num, Int.cast_ofNat, Nat.cast_eq_zero] at H
     subst H
     cases n0
-  · rw [Rat.coe_nat_denom, Nat.cast_one]
+  · rw [Rat.coe_nat_den, Nat.cast_one]
     exact one_ne_zero
 #align exists_rat_btwn exists_rat_btwn
 

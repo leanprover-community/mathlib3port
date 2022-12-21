@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.pi
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
   by 
   cases nonempty_encodable ι
   apply le_antisymm
-  · refine' supr_le _
+  · refine' supᵢ_le _
     intro i
     rw [comap_generate_from]
     apply generate_from_le
@@ -310,7 +310,7 @@ end Encodable
 
 theorem pi_caratheodory :
     MeasurableSpace.pi ≤ (OuterMeasure.pi fun i => (μ i).toOuterMeasure).caratheodory := by
-  refine' supr_le _
+  refine' supᵢ_le _
   intro i s hs
   rw [MeasurableSpace.comap] at hs
   rcases hs with ⟨s, hs, rfl⟩
@@ -482,7 +482,7 @@ theorem tendsto_eval_ae_ae {i : ι} : Tendsto (eval i) (Measure.pi μ).ae (μ i)
 #align measure_theory.measure.tendsto_eval_ae_ae MeasureTheory.Measure.tendsto_eval_ae_ae
 
 theorem ae_pi_le_pi : (Measure.pi μ).ae ≤ Filter.pi fun i => (μ i).ae :=
-  le_infi fun i => tendsto_eval_ae_ae.le_comap
+  le_infᵢ fun i => tendsto_eval_ae_ae.le_comap
 #align measure_theory.measure.ae_pi_le_pi MeasureTheory.Measure.ae_pi_le_pi
 
 theorem ae_eq_pi {β : ι → Type _} {f f' : ∀ i, α i → β i} (h : ∀ i, f i =ᵐ[μ i] f' i) :
@@ -512,61 +512,61 @@ section Intervals
 variable {μ} [∀ i, PartialOrder (α i)] [∀ i, HasNoAtoms (μ i)]
 
 theorem pi_Iio_ae_eq_pi_Iic {s : Set ι} {f : ∀ i, α i} :
-    (pi s fun i => iio (f i)) =ᵐ[Measure.pi μ] pi s fun i => iic (f i) :=
+    (pi s fun i => Iio (f i)) =ᵐ[Measure.pi μ] pi s fun i => Iic (f i) :=
   ae_eq_set_pi fun i hi => Iio_ae_eq_Iic
 #align measure_theory.measure.pi_Iio_ae_eq_pi_Iic MeasureTheory.Measure.pi_Iio_ae_eq_pi_Iic
 
 theorem pi_Ioi_ae_eq_pi_Ici {s : Set ι} {f : ∀ i, α i} :
-    (pi s fun i => ioi (f i)) =ᵐ[Measure.pi μ] pi s fun i => ici (f i) :=
+    (pi s fun i => Ioi (f i)) =ᵐ[Measure.pi μ] pi s fun i => Ici (f i) :=
   ae_eq_set_pi fun i hi => Ioi_ae_eq_Ici
 #align measure_theory.measure.pi_Ioi_ae_eq_pi_Ici MeasureTheory.Measure.pi_Ioi_ae_eq_pi_Ici
 
 theorem univ_pi_Iio_ae_eq_Iic {f : ∀ i, α i} :
-    (pi univ fun i => iio (f i)) =ᵐ[Measure.pi μ] iic f := by
+    (pi univ fun i => Iio (f i)) =ᵐ[Measure.pi μ] Iic f := by
   rw [← pi_univ_Iic]
   exact pi_Iio_ae_eq_pi_Iic
 #align measure_theory.measure.univ_pi_Iio_ae_eq_Iic MeasureTheory.Measure.univ_pi_Iio_ae_eq_Iic
 
 theorem univ_pi_Ioi_ae_eq_Ici {f : ∀ i, α i} :
-    (pi univ fun i => ioi (f i)) =ᵐ[Measure.pi μ] ici f := by
+    (pi univ fun i => Ioi (f i)) =ᵐ[Measure.pi μ] Ici f := by
   rw [← pi_univ_Ici]
   exact pi_Ioi_ae_eq_pi_Ici
 #align measure_theory.measure.univ_pi_Ioi_ae_eq_Ici MeasureTheory.Measure.univ_pi_Ioi_ae_eq_Ici
 
 theorem pi_Ioo_ae_eq_pi_Icc {s : Set ι} {f g : ∀ i, α i} :
-    (pi s fun i => ioo (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => icc (f i) (g i) :=
+    (pi s fun i => Ioo (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => Icc (f i) (g i) :=
   ae_eq_set_pi fun i hi => Ioo_ae_eq_Icc
 #align measure_theory.measure.pi_Ioo_ae_eq_pi_Icc MeasureTheory.Measure.pi_Ioo_ae_eq_pi_Icc
 
 theorem pi_Ioo_ae_eq_pi_Ioc {s : Set ι} {f g : ∀ i, α i} :
-    (pi s fun i => ioo (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => ioc (f i) (g i) :=
+    (pi s fun i => Ioo (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => Ioc (f i) (g i) :=
   ae_eq_set_pi fun i hi => Ioo_ae_eq_Ioc
 #align measure_theory.measure.pi_Ioo_ae_eq_pi_Ioc MeasureTheory.Measure.pi_Ioo_ae_eq_pi_Ioc
 
 theorem univ_pi_Ioo_ae_eq_Icc {f g : ∀ i, α i} :
-    (pi univ fun i => ioo (f i) (g i)) =ᵐ[Measure.pi μ] icc f g := by
+    (pi univ fun i => Ioo (f i) (g i)) =ᵐ[Measure.pi μ] Icc f g := by
   rw [← pi_univ_Icc]
   exact pi_Ioo_ae_eq_pi_Icc
 #align measure_theory.measure.univ_pi_Ioo_ae_eq_Icc MeasureTheory.Measure.univ_pi_Ioo_ae_eq_Icc
 
 theorem pi_Ioc_ae_eq_pi_Icc {s : Set ι} {f g : ∀ i, α i} :
-    (pi s fun i => ioc (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => icc (f i) (g i) :=
+    (pi s fun i => Ioc (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => Icc (f i) (g i) :=
   ae_eq_set_pi fun i hi => Ioc_ae_eq_Icc
 #align measure_theory.measure.pi_Ioc_ae_eq_pi_Icc MeasureTheory.Measure.pi_Ioc_ae_eq_pi_Icc
 
 theorem univ_pi_Ioc_ae_eq_Icc {f g : ∀ i, α i} :
-    (pi univ fun i => ioc (f i) (g i)) =ᵐ[Measure.pi μ] icc f g := by
+    (pi univ fun i => Ioc (f i) (g i)) =ᵐ[Measure.pi μ] Icc f g := by
   rw [← pi_univ_Icc]
   exact pi_Ioc_ae_eq_pi_Icc
 #align measure_theory.measure.univ_pi_Ioc_ae_eq_Icc MeasureTheory.Measure.univ_pi_Ioc_ae_eq_Icc
 
 theorem pi_Ico_ae_eq_pi_Icc {s : Set ι} {f g : ∀ i, α i} :
-    (pi s fun i => ico (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => icc (f i) (g i) :=
+    (pi s fun i => Ico (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => Icc (f i) (g i) :=
   ae_eq_set_pi fun i hi => Ico_ae_eq_Icc
 #align measure_theory.measure.pi_Ico_ae_eq_pi_Icc MeasureTheory.Measure.pi_Ico_ae_eq_pi_Icc
 
 theorem univ_pi_Ico_ae_eq_Icc {f g : ∀ i, α i} :
-    (pi univ fun i => ico (f i) (g i)) =ᵐ[Measure.pi μ] icc f g := by
+    (pi univ fun i => Ico (f i) (g i)) =ᵐ[Measure.pi μ] Icc f g := by
   rw [← pi_univ_Icc]
   exact pi_Ico_ae_eq_pi_Icc
 #align measure_theory.measure.univ_pi_Ico_ae_eq_Icc MeasureTheory.Measure.univ_pi_Ico_ae_eq_Icc
@@ -696,7 +696,7 @@ theorem measurePreservingPiEquivPiSubtypeProd {ι : Type u} {α : ι → Type v}
   have :
     e ⁻¹' pi univ s =
       (pi univ fun i : { i // p i } => s i) ×ˢ pi univ fun i : { i // ¬p i } => s i :=
-    Equiv.preimage_pi_equiv_pi_subtype_prod_symm_pi p s
+    Equiv.preimage_piEquivPiSubtypeProd_symm_pi p s
   rw [e.map_apply, this, prod_prod, pi_pi, pi_pi]
   exact Fintype.prod_subtype_mul_prod_subtype p fun i => μ i (s i)
 #align

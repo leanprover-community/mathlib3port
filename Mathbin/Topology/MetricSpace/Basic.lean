@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,12 +71,12 @@ def UniformSpace.coreOfDist {α : Type _} (dist : α → α → ℝ) (dist_self 
       α where 
   uniformity := ⨅ ε > 0, 𝓟 { p : α × α | dist p.1 p.2 < ε }
   refl :=
-    le_infi fun ε =>
-      le_infi <| by
+    le_infᵢ fun ε =>
+      le_infᵢ <| by
         simp (config := { contextual := true }) [Set.subset_def, idRel, dist_self, (· > ·)]
   comp :=
-    le_infi fun ε =>
-      le_infi fun h =>
+    le_infᵢ fun ε =>
+      le_infᵢ fun h =>
         lift'_le
             (mem_infi_of_mem (ε / 2) <| mem_infi_of_mem (div_pos h zero_lt_two) (Subset.refl _)) <|
           by
@@ -1516,13 +1516,13 @@ theorem Real.dist_le_of_mem_interval {x y x' y' : ℝ} (hx : x ∈ interval x' y
     interval_subset_interval (by rwa [interval_swap]) (by rwa [interval_swap])
 #align real.dist_le_of_mem_interval Real.dist_le_of_mem_interval
 
-theorem Real.dist_le_of_mem_Icc {x y x' y' : ℝ} (hx : x ∈ icc x' y') (hy : y ∈ icc x' y') :
+theorem Real.dist_le_of_mem_Icc {x y x' y' : ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
     dist x y ≤ y' - x' := by
   simpa only [Real.dist_eq, abs_of_nonpos (sub_nonpos.2 <| hx.1.trans hx.2), neg_sub] using
     Real.dist_le_of_mem_interval (Icc_subset_interval hx) (Icc_subset_interval hy)
 #align real.dist_le_of_mem_Icc Real.dist_le_of_mem_Icc
 
-theorem Real.dist_le_of_mem_Icc_01 {x y : ℝ} (hx : x ∈ icc (0 : ℝ) 1) (hy : y ∈ icc (0 : ℝ) 1) :
+theorem Real.dist_le_of_mem_Icc_01 {x y : ℝ} (hx : x ∈ Icc (0 : ℝ) 1) (hy : y ∈ Icc (0 : ℝ) 1) :
     dist x y ≤ 1 := by simpa only [sub_zero] using Real.dist_le_of_mem_Icc hx hy
 #align real.dist_le_of_mem_Icc_01 Real.dist_le_of_mem_Icc_01
 
@@ -1530,24 +1530,24 @@ instance : OrderTopology ℝ :=
   order_topology_of_nhds_abs fun x => by
     simp only [nhds_basis_ball.eq_binfi, ball, Real.dist_eq, abs_sub_comm]
 
-theorem Real.ball_eq_Ioo (x r : ℝ) : ball x r = ioo (x - r) (x + r) :=
+theorem Real.ball_eq_Ioo (x r : ℝ) : ball x r = Ioo (x - r) (x + r) :=
   Set.ext fun y => by
     rw [mem_ball, dist_comm, Real.dist_eq, abs_sub_lt_iff, mem_Ioo, ← sub_lt_iff_lt_add',
       sub_lt_comm]
 #align real.ball_eq_Ioo Real.ball_eq_Ioo
 
-theorem Real.closed_ball_eq_Icc {x r : ℝ} : closedBall x r = icc (x - r) (x + r) := by
+theorem Real.closed_ball_eq_Icc {x r : ℝ} : closedBall x r = Icc (x - r) (x + r) := by
   ext y <;>
     rw [mem_closed_ball, dist_comm, Real.dist_eq, abs_sub_le_iff, mem_Icc, ← sub_le_iff_le_add',
       sub_le_comm]
 #align real.closed_ball_eq_Icc Real.closed_ball_eq_Icc
 
-theorem Real.Ioo_eq_ball (x y : ℝ) : ioo x y = ball ((x + y) / 2) ((y - x) / 2) := by
+theorem Real.Ioo_eq_ball (x y : ℝ) : Ioo x y = ball ((x + y) / 2) ((y - x) / 2) := by
   rw [Real.ball_eq_Ioo, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
     add_div, add_assoc, add_sub_cancel'_right, add_self_div_two]
 #align real.Ioo_eq_ball Real.Ioo_eq_ball
 
-theorem Real.Icc_eq_closed_ball (x y : ℝ) : icc x y = closedBall ((x + y) / 2) ((y - x) / 2) := by
+theorem Real.Icc_eq_closed_ball (x y : ℝ) : Icc x y = closedBall ((x + y) / 2) ((y - x) / 2) := by
   rw [Real.closed_ball_eq_Icc, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
     add_div, add_assoc, add_sub_cancel'_right, add_self_div_two]
 #align real.Icc_eq_closed_ball Real.Icc_eq_closed_ball
@@ -1556,19 +1556,19 @@ section MetricOrdered
 
 variable [Preorder α] [CompactIccSpace α]
 
-theorem totally_bounded_Icc (a b : α) : TotallyBounded (icc a b) :=
+theorem totally_bounded_Icc (a b : α) : TotallyBounded (Icc a b) :=
   is_compact_Icc.TotallyBounded
 #align totally_bounded_Icc totally_bounded_Icc
 
-theorem totally_bounded_Ico (a b : α) : TotallyBounded (ico a b) :=
+theorem totally_bounded_Ico (a b : α) : TotallyBounded (Ico a b) :=
   totally_bounded_subset Ico_subset_Icc_self (totally_bounded_Icc a b)
 #align totally_bounded_Ico totally_bounded_Ico
 
-theorem totally_bounded_Ioc (a b : α) : TotallyBounded (ioc a b) :=
+theorem totally_bounded_Ioc (a b : α) : TotallyBounded (Ioc a b) :=
   totally_bounded_subset Ioc_subset_Icc_self (totally_bounded_Icc a b)
 #align totally_bounded_Ioc totally_bounded_Ioc
 
-theorem totally_bounded_Ioo (a b : α) : TotallyBounded (ioo a b) :=
+theorem totally_bounded_Ioo (a b : α) : TotallyBounded (Ioo a b) :=
   totally_bounded_subset Ioo_subset_Icc_self (totally_bounded_Icc a b)
 #align totally_bounded_Ioo totally_bounded_Ioo
 
@@ -2440,7 +2440,7 @@ variable [ProperSpace α] {x : α} {r : ℝ} {s : Set α}
 /-- If a nonempty ball in a proper space includes a closed set `s`, then there exists a nonempty
 ball with the same center and a strictly smaller radius that includes `s`. -/
 theorem exists_pos_lt_subset_ball (hr : 0 < r) (hs : IsClosed s) (h : s ⊆ ball x r) :
-    ∃ r' ∈ ioo 0 r, s ⊆ ball x r' := by
+    ∃ r' ∈ Ioo 0 r, s ⊆ ball x r' := by
   rcases eq_empty_or_nonempty s with (rfl | hne)
   · exact ⟨r / 2, ⟨half_pos hr, half_lt_self hr⟩, empty_subset _⟩
   have : IsCompact s :=
@@ -2791,19 +2791,19 @@ section ConditionallyCompleteLinearOrder
 
 variable [Preorder α] [CompactIccSpace α]
 
-theorem boundedIcc (a b : α) : Bounded (icc a b) :=
+theorem boundedIcc (a b : α) : Bounded (Icc a b) :=
   (totally_bounded_Icc a b).Bounded
 #align metric.bounded_Icc Metric.boundedIcc
 
-theorem boundedIco (a b : α) : Bounded (ico a b) :=
+theorem boundedIco (a b : α) : Bounded (Ico a b) :=
   (totally_bounded_Ico a b).Bounded
 #align metric.bounded_Ico Metric.boundedIco
 
-theorem boundedIoc (a b : α) : Bounded (ioc a b) :=
+theorem boundedIoc (a b : α) : Bounded (Ioc a b) :=
   (totally_bounded_Ioc a b).Bounded
 #align metric.bounded_Ioc Metric.boundedIoc
 
-theorem boundedIoo (a b : α) : Bounded (ioo a b) :=
+theorem boundedIoo (a b : α) : Bounded (Ioo a b) :=
   (totally_bounded_Ioo a b).Bounded
 #align metric.bounded_Ioo Metric.boundedIoo
 
@@ -3372,7 +3372,7 @@ instance : MetricSpace PUnit.{u + 1} where
   uniformity_dist := by 
     simp only
     have : ne_bot (⨅ ε > (0 : ℝ), 𝓟 { p : PUnit.{u + 1} × PUnit.{u + 1} | 0 < ε }) :=
-      @uniformity.neBot _
+      @uniformity.ne_bot _
         (uniformSpaceOfDist (fun _ _ => 0) (fun _ => rfl) (fun _ _ => rfl) fun _ _ _ => by
           rw [zero_add])
         _

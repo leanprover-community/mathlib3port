@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.AffineScheme
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -743,7 +743,7 @@ theorem IsAffineOpen.self_le_basic_open_union_iff {X : SchemeCat} {U : Opens X.c
     (U ≤ ⨆ f : s, X.basicOpen (f : X.Presheaf.obj <| op U)) ↔ Ideal.span s = ⊤ := by
   rw [← hU.basic_open_union_eq_self_iff, @comm _ Eq]
   refine' ⟨fun h => le_antisymm h _, le_of_eq⟩
-  simp only [supr_le_iff, SetCoe.forall]
+  simp only [supᵢ_le_iff, SetCoe.forall]
   intro x hx
   exact X.basic_open_le x
 #align

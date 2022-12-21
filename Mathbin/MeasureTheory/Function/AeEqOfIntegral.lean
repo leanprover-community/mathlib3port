@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_eq_of_integral
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,15 +141,15 @@ theorem ae_const_le_iff_forall_lt_measure_zero {β} [LinearOrder β] [Topologica
       apply Set.eq_empty_iff_forall_not_mem.2 fun x hx => _
       exact (lt_irrefl _ (lt_of_lt_of_le hx (h (f x)))).elim
     simp [this]
-  by_cases H : ¬IsLub (Set.iio c) c
-  · have : c ∈ upperBounds (Set.iio c) := fun y hy => le_of_lt hy
-    obtain ⟨b, b_up, bc⟩ : ∃ b : β, b ∈ upperBounds (Set.iio c) ∧ b < c := by
-      simpa [IsLub, IsLeast, this, lowerBounds] using H
+  by_cases H : ¬IsLUB (Set.Iio c) c
+  · have : c ∈ upperBounds (Set.Iio c) := fun y hy => le_of_lt hy
+    obtain ⟨b, b_up, bc⟩ : ∃ b : β, b ∈ upperBounds (Set.Iio c) ∧ b < c := by
+      simpa [IsLUB, IsLeast, this, lowerBounds] using H
     exact measure_mono_null (fun x hx => b_up hx) (hc b bc)
   push_neg  at H h
   obtain ⟨u, u_mono, u_lt, u_lim, -⟩ :
     ∃ u : ℕ → β,
-      StrictMono u ∧ (∀ n : ℕ, u n < c) ∧ tendsto u at_top (nhds c) ∧ ∀ n : ℕ, u n ∈ Set.iio c :=
+      StrictMono u ∧ (∀ n : ℕ, u n < c) ∧ tendsto u at_top (nhds c) ∧ ∀ n : ℕ, u n ∈ Set.Iio c :=
     H.exists_seq_strict_mono_tendsto_of_not_mem (lt_irrefl c) h
   have h_Union : { x | f x < c } = ⋃ n : ℕ, { x | f x ≤ u n } := by
     ext1 x

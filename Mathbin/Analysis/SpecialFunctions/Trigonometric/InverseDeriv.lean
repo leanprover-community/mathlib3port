@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.inverse_deriv
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem contDiffAtArcsin {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : ℕ�
 #align real.cont_diff_at_arcsin Real.contDiffAtArcsin
 
 theorem hasDerivWithinAtArcsinIci {x : ℝ} (h : x ≠ -1) :
-    HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (ici x) x := by
+    HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Ici x) x := by
   rcases em (x = 1) with (rfl | h')
   ·
     convert (hasDerivWithinAtConst _ _ (π / 2)).congr _ _ <;>
@@ -79,7 +79,7 @@ theorem hasDerivWithinAtArcsinIci {x : ℝ} (h : x ≠ -1) :
 #align real.has_deriv_within_at_arcsin_Ici Real.hasDerivWithinAtArcsinIci
 
 theorem hasDerivWithinAtArcsinIic {x : ℝ} (h : x ≠ 1) :
-    HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (iic x) x := by
+    HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Iic x) x := by
   rcases em (x = -1) with (rfl | h')
   ·
     convert (hasDerivWithinAtConst _ _ (-(π / 2))).congr _ _ <;>
@@ -88,7 +88,7 @@ theorem hasDerivWithinAtArcsinIic {x : ℝ} (h : x ≠ 1) :
 #align real.has_deriv_within_at_arcsin_Iic Real.hasDerivWithinAtArcsinIic
 
 theorem differentiable_within_at_arcsin_Ici {x : ℝ} :
-    DifferentiableWithinAt ℝ arcsin (ici x) x ↔ x ≠ -1 := by
+    DifferentiableWithinAt ℝ arcsin (Ici x) x ↔ x ≠ -1 := by
   refine' ⟨_, fun h => (has_deriv_within_at_arcsin_Ici h).DifferentiableWithinAt⟩
   rintro h rfl
   have : sin ∘ arcsin =ᶠ[𝓝[≥] (-1 : ℝ)] id := by
@@ -99,7 +99,7 @@ theorem differentiable_within_at_arcsin_Ici {x : ℝ} :
 #align real.differentiable_within_at_arcsin_Ici Real.differentiable_within_at_arcsin_Ici
 
 theorem differentiable_within_at_arcsin_Iic {x : ℝ} :
-    DifferentiableWithinAt ℝ arcsin (iic x) x ↔ x ≠ 1 := by
+    DifferentiableWithinAt ℝ arcsin (Iic x) x ↔ x ≠ 1 := by
   refine' ⟨fun h => _, fun h => (has_deriv_within_at_arcsin_Iic h).DifferentiableWithinAt⟩
   rw [← neg_neg x, ← image_neg_Ici] at h
   have := (h.comp (-x) differentiable_within_at_id.neg (maps_to_image _ _)).neg
@@ -161,22 +161,22 @@ theorem contDiffAtArccos {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : ℕ�
 #align real.cont_diff_at_arccos Real.contDiffAtArccos
 
 theorem hasDerivWithinAtArccosIci {x : ℝ} (h : x ≠ -1) :
-    HasDerivWithinAt arccos (-(1 / sqrt (1 - x ^ 2))) (ici x) x :=
+    HasDerivWithinAt arccos (-(1 / sqrt (1 - x ^ 2))) (Ici x) x :=
   (hasDerivWithinAtArcsinIci h).const_sub _
 #align real.has_deriv_within_at_arccos_Ici Real.hasDerivWithinAtArccosIci
 
 theorem hasDerivWithinAtArccosIic {x : ℝ} (h : x ≠ 1) :
-    HasDerivWithinAt arccos (-(1 / sqrt (1 - x ^ 2))) (iic x) x :=
+    HasDerivWithinAt arccos (-(1 / sqrt (1 - x ^ 2))) (Iic x) x :=
   (hasDerivWithinAtArcsinIic h).const_sub _
 #align real.has_deriv_within_at_arccos_Iic Real.hasDerivWithinAtArccosIic
 
 theorem differentiable_within_at_arccos_Ici {x : ℝ} :
-    DifferentiableWithinAt ℝ arccos (ici x) x ↔ x ≠ -1 :=
+    DifferentiableWithinAt ℝ arccos (Ici x) x ↔ x ≠ -1 :=
   (differentiable_within_at_const_sub_iff _).trans differentiable_within_at_arcsin_Ici
 #align real.differentiable_within_at_arccos_Ici Real.differentiable_within_at_arccos_Ici
 
 theorem differentiable_within_at_arccos_Iic {x : ℝ} :
-    DifferentiableWithinAt ℝ arccos (iic x) x ↔ x ≠ 1 :=
+    DifferentiableWithinAt ℝ arccos (Iic x) x ↔ x ≠ 1 :=
   (differentiable_within_at_const_sub_iff _).trans differentiable_within_at_arcsin_Iic
 #align real.differentiable_within_at_arccos_Iic Real.differentiable_within_at_arccos_Iic
 

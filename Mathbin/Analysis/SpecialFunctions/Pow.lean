@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1379,9 +1379,9 @@ theorem continuous_of_real_cpow_const {y : ℂ} (hs : 0 < y.re) :
   cases' le_or_lt 0 x with hx hx
   · refine' (continuous_at_cpow_const_of_re_pos _ hs).comp continuous_of_real.continuous_at
     exact Or.inl hx
-  · suffices : ContinuousOn (fun x => x ^ y : ℝ → ℂ) (Set.iio 0)
+  · suffices : ContinuousOn (fun x => x ^ y : ℝ → ℂ) (Set.Iio 0)
     exact ContinuousOn.continuous_at this (Iio_mem_nhds hx)
-    have : eq_on (fun x => x ^ y : ℝ → ℂ) (fun x => (-x : ℂ) ^ y * exp (π * I * y)) (Set.iio 0) :=
+    have : eq_on (fun x => x ^ y : ℝ → ℂ) (fun x => (-x : ℂ) ^ y * exp (π * I * y)) (Set.Iio 0) :=
       fun y hy => of_real_cpow_of_nonpos (le_of_lt hy) _
     refine' (ContinuousOn.mul (fun y hy => _) continuous_on_const).congr this
     refine' continuous_of_real.continuous_within_at.neg.cpow continuous_within_at_const _
@@ -2239,7 +2239,7 @@ theorem tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ≥0∞
   intro x
   obtain ⟨c, _, hc⟩ :=
     (at_top_basis_Ioi.tendsto_iff at_top_basis_Ioi).mp (Nnreal.tendsto_rpow_at_top hy) x trivial
-  have hc' : Set.ioi ↑c ∈ 𝓝 (⊤ : ℝ≥0∞) := Ioi_mem_nhds coe_lt_top
+  have hc' : Set.Ioi ↑c ∈ 𝓝 (⊤ : ℝ≥0∞) := Ioi_mem_nhds coe_lt_top
   refine' eventually_of_mem hc' _
   intro a ha
   by_cases ha' : a = ⊤

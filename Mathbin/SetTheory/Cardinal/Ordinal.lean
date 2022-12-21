@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.ordinal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,7 +221,7 @@ theorem aleph'_le_of_limit {o : Ordinal} (l : o.IsLimit) {c} :
     exact h _ h'⟩
 #align cardinal.aleph'_le_of_limit Cardinal.aleph'_le_of_limit
 
-theorem aleph'_limit {o : Ordinal} (ho : IsLimit o) : aleph' o = ⨆ a : iio o, aleph' a := by
+theorem aleph'_limit {o : Ordinal} (ho : IsLimit o) : aleph' o = ⨆ a : Iio o, aleph' a := by
   refine' le_antisymm _ (csupr_le' fun i => aleph'_le.2 (le_of_lt i.2))
   rw [aleph'_le_of_limit ho]
   exact fun a ha => le_csupr (bdd_above_of_small _) (⟨a, ha⟩ : Iio o)
@@ -273,7 +273,7 @@ theorem aleph_succ {o : Ordinal} : aleph (succ o) = succ (aleph o) := by
 theorem aleph_zero : aleph 0 = ℵ₀ := by rw [aleph, add_zero, aleph'_omega]
 #align cardinal.aleph_zero Cardinal.aleph_zero
 
-theorem aleph_limit {o : Ordinal} (ho : IsLimit o) : aleph o = ⨆ a : iio o, aleph a := by
+theorem aleph_limit {o : Ordinal} (ho : IsLimit o) : aleph o = ⨆ a : Iio o, aleph a := by
   apply le_antisymm _ (csupr_le' _)
   · rw [aleph, aleph'_limit (ho.add _)]
     refine' csupr_mono' (bdd_above_of_small _) _
@@ -410,7 +410,7 @@ a limit ordinal, `beth o` is the supremum of `beth o'` for `o' < o`.
 Assuming the generalized continuum hypothesis, which is undecidable in ZFC, `beth o = aleph o` for
 every `o`. -/
 def beth (o : Ordinal.{u}) : Cardinal.{u} :=
-  limitRecOn o aleph0 (fun _ x => 2 ^ x) fun a ha IH => ⨆ b : iio a, IH b.1 b.2
+  limitRecOn o aleph0 (fun _ x => 2 ^ x) fun a ha IH => ⨆ b : Iio a, IH b.1 b.2
 #align cardinal.beth Cardinal.beth
 
 @[simp]
@@ -423,7 +423,7 @@ theorem beth_succ (o : Ordinal) : beth (succ o) = 2 ^ beth o :=
   limit_rec_on_succ _ _ _ _
 #align cardinal.beth_succ Cardinal.beth_succ
 
-theorem beth_limit {o : Ordinal} : IsLimit o → beth o = ⨆ a : iio o, beth a :=
+theorem beth_limit {o : Ordinal} : IsLimit o → beth o = ⨆ a : Iio o, beth a :=
   limit_rec_on_limit _ _ _ _
 #align cardinal.beth_limit Cardinal.beth_limit
 

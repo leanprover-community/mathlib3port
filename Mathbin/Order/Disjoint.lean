@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.disjoint
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -725,25 +725,17 @@ protected theorem symm (h : IsCompl x y) : IsCompl y x :=
 #align is_compl.symm IsCompl.symm
 -/
 
-/- warning: is_compl.dual -> IsCompl.dual is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {x : α} {y : α}, (IsCompl.{u1} α _inst_1 _inst_2 x y) -> (IsCompl.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.boundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) x) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {x : α} {y : α}, (IsCompl.{u1} α _inst_1 _inst_2 x y) -> (IsCompl.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => OrderDual.{u1} α) x) (OrderDual.instPartialOrderOrderDual.{u1} α _inst_1) (OrderDual.boundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => OrderDual.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)))) (OrderDual.toDual.{u1} α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => OrderDual.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)))) (OrderDual.toDual.{u1} α) y))
-Case conversion may be inaccurate. Consider using '#align is_compl.dual IsCompl.dualₓ'. -/
+#print IsCompl.dual /-
 theorem dual (h : IsCompl x y) : IsCompl (toDual x) (toDual y) :=
   ⟨h.2, h.1⟩
 #align is_compl.dual IsCompl.dual
+-/
 
-/- warning: is_compl.of_dual -> IsCompl.ofDual is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : OrderDual.{u1} α} {b : OrderDual.{u1} α}, (IsCompl.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.boundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) a b) -> (IsCompl.{u1} α _inst_1 _inst_2 (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) => (OrderDual.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.ofDual.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) => (OrderDual.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.ofDual.{u1} α) b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : OrderDual.{u1} α} {b : OrderDual.{u1} α}, (IsCompl.{u1} (OrderDual.{u1} α) (OrderDual.instPartialOrderOrderDual.{u1} α _inst_1) (OrderDual.boundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) a b) -> (IsCompl.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u1} α) => α) a) _inst_1 _inst_2 (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) (fun (_x : OrderDual.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u1} α) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} α) α))) (OrderDual.ofDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) (fun (_x : OrderDual.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u1} α) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} α) α))) (OrderDual.ofDual.{u1} α) b))
-Case conversion may be inaccurate. Consider using '#align is_compl.of_dual IsCompl.ofDualₓ'. -/
+#print IsCompl.ofDual /-
 theorem ofDual {a b : αᵒᵈ} (h : IsCompl a b) : IsCompl (ofDual a) (ofDual b) :=
   ⟨h.2, h.1⟩
 #align is_compl.of_dual IsCompl.ofDual
+-/
 
 end BoundedPartialOrder
 
@@ -956,16 +948,12 @@ section
 
 variable [Lattice α] [BoundedOrder α] {a b x : α}
 
-/- warning: is_compl_to_dual_iff -> isCompl_toDual_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {b : α}, Iff (IsCompl.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (OrderDual.boundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) b)) (IsCompl.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 a b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {b : α}, Iff (IsCompl.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => OrderDual.{u1} α) a) (OrderDual.instPartialOrderOrderDual.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (OrderDual.boundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => OrderDual.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)))) (OrderDual.toDual.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => OrderDual.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)))) (OrderDual.toDual.{u1} α) b)) (IsCompl.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 a b)
-Case conversion may be inaccurate. Consider using '#align is_compl_to_dual_iff isCompl_toDual_iffₓ'. -/
+#print isCompl_toDual_iff /-
 @[simp]
 theorem isCompl_toDual_iff : IsCompl (toDual a) (toDual b) ↔ IsCompl a b :=
   ⟨IsCompl.ofDual, IsCompl.dual⟩
 #align is_compl_to_dual_iff isCompl_toDual_iff
+-/
 
 #print isCompl_ofDual_iff /-
 @[simp]

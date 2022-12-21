@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.direct_limit
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,7 @@ theorem unify_sigma_mk_self {α : Type _} {i : ι} {x : α → G i} :
 
 theorem comp_unify {α : Type _} {x : α → Σi, G i} {i j : ι} (ij : i ≤ j)
     (h : i ∈ upperBounds (range (Sigma.fst ∘ x))) :
-    f i j ij ∘ unify f x i h = unify f x j fun k hk => trans (mem_upper_bounds.1 h k hk) ij := by
+    f i j ij ∘ unify f x i h = unify f x j fun k hk => trans (mem_upperBounds.1 h k hk) ij := by
   ext a
   simp [unify, DirectedSystem.map_map]
 #align first_order.language.direct_limit.comp_unify FirstOrder.Language.DirectLimit.comp_unify
@@ -205,7 +205,7 @@ theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σi, G i} (xy :
       i ∈ upperBounds (range (Sigma.fst ∘ y))), unify f x i hx = unify f y i hy :=
   by 
   obtain ⟨i, hi⟩ := Fintype.bdd_above_range (Sum.elim (fun a => (x a).1) fun a => (y a).1)
-  rw [sum.elim_range, upper_bounds_union] at hi
+  rw [sum.elim_range, upperBounds_union] at hi
   simp_rw [← Function.comp_apply Sigma.fst _] at hi
   exact ⟨i, hi.1, hi.2, funext fun a => (equiv_iff G f _ _).1 (xy a)⟩
 #align
@@ -389,7 +389,7 @@ theorem cg {ι : Type _} [Encodable ι] [Preorder ι] [IsDirected ι (· ≤ ·)
   · exact Set.countable_Union fun i => Set.Countable.image (Classical.choose_spec (h i).out).1 _
   · rw [eq_top_iff, substructure.closure_Union]
     simp_rw [← embedding.coe_to_hom, substructure.closure_image]
-    rw [le_supr_iff]
+    rw [le_supᵢ_iff]
     intro S hS x hx
     let out := @Quotient.out _ (direct_limit.setoid G f)
     refine' hS (out x).1 ⟨(out x).2, _, _⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.type
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -444,7 +444,7 @@ def vectorEquiv :
         (n +
           1) where 
   toFun v :=
-    ⟨v.toList.Prod⁻¹ ::ᵥ v, by rw [mem_iff, Vector.to_list_cons, List.prod_cons, inv_mul_self]⟩
+    ⟨v.toList.Prod⁻¹ ::ᵥ v, by rw [mem_iff, Vector.toList_cons, List.prod_cons, inv_mul_self]⟩
   invFun v := v.1.tail
   left_inv v := v.tail_cons v.toList.Prod⁻¹
   right_inv v :=
@@ -452,7 +452,7 @@ def vectorEquiv :
       ((congr_arg₂ Vector.cons
             (eq_inv_of_mul_eq_one_left
                 (by 
-                  rw [← List.prod_cons, ← Vector.to_list_cons, v.1.cons_head_tail]
+                  rw [← List.prod_cons, ← Vector.toList_cons, v.1.cons_head_tail]
                   exact v.2)).symm
             rfl).trans
         v.1.cons_head_tail)

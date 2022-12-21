@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1805,7 +1805,7 @@ alias has_compact_support_norm_iff ↔ _ HasCompactSupport.norm
 
 theorem Continuous.bounded_above_of_compact_support (hf : Continuous f) (h : HasCompactSupport f) :
     ∃ C, ∀ x, ‖f x‖ ≤ C := by
-  simpa [bdd_above_def] using hf.norm.bdd_above_range_of_has_compact_support h.norm
+  simpa [bddAbove_def] using hf.norm.bdd_above_range_of_has_compact_support h.norm
 #align continuous.bounded_above_of_compact_support Continuous.bounded_above_of_compact_support
 
 end NormedAddGroup

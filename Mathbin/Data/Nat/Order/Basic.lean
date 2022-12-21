@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.order.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,11 +105,15 @@ theorem one_lt_iff_ne_zero_and_ne_one : ∀ {n : ℕ}, 1 < n ↔ n ≠ 0 ∧ n �
 #align nat.one_lt_iff_ne_zero_and_ne_one Nat.one_lt_iff_ne_zero_and_ne_one
 -/
 
-#print Nat.mul_ne_zero /-
+/- warning: nat.mul_ne_zero -> Nat.mul_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Ne.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Ne.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) n m) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
+but is expected to have type
+  forall {m : Nat} {n : Nat}, (Ne.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
+Case conversion may be inaccurate. Consider using '#align nat.mul_ne_zero Nat.mul_ne_zeroₓ'. -/
 protected theorem mul_ne_zero (n0 : n ≠ 0) (m0 : m ≠ 0) : n * m ≠ 0
   | nm => (eq_zero_of_mul_eq_zero nm).elim n0 m0
 #align nat.mul_ne_zero Nat.mul_ne_zero
--/
 
 #print Nat.mul_eq_zero /-
 @[simp]

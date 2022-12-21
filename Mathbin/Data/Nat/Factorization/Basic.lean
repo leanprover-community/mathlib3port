@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stuart Presnell
 
 ! This file was ported from Lean 3 source module data.nat.factorization.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -670,7 +670,7 @@ theorem prod_factors_gcd_mul_prod_factors_mul {β : Type _} [CommMonoid β] (m n
 #align nat.prod_factors_gcd_mul_prod_factors_mul Nat.prod_factors_gcd_mul_prod_factors_mul
 
 theorem set_of_pow_dvd_eq_Icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
-    { i : ℕ | i ≠ 0 ∧ p ^ i ∣ n } = Set.icc 1 (n.factorization p) := by
+    { i : ℕ | i ≠ 0 ∧ p ^ i ∣ n } = Set.Icc 1 (n.factorization p) := by
   ext
   simp [lt_succ_iff, one_le_iff_ne_zero, pp.pow_dvd_iff_le_factorization hn]
 #align nat.set_of_pow_dvd_eq_Icc_factorization Nat.set_of_pow_dvd_eq_Icc_factorization

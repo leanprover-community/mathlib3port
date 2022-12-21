@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mitchell Rowett, Scott Morrison
 
 ! This file was ported from Lean 3 source module group_theory.coset
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -495,7 +495,7 @@ variable (s)
   stated in terms of an arbitrary `h : s`, rathern that the specific `h = g⁻¹ * (mk g).out'`. -/
 @[to_additive QuotientAddGroup.mk_out'_eq_mul]
 theorem mk_out'_eq_mul (g : α) : ∃ h : s, (mk g : α ⧸ s).out' = g * h :=
-  ⟨⟨g⁻¹ * (mk g).out', eq'.mp (mk g).out_eq'.symm⟩, by rw [SetLike.coe_mk, mul_inv_cancel_left]⟩
+  ⟨⟨g⁻¹ * (mk g).out', eq'.mp (mk g).out_eq'.symm⟩, by rw [[anonymous], mul_inv_cancel_left]⟩
 #align quotient_group.mk_out'_eq_mul QuotientGroup.mk_out'_eq_mul
 
 variable {s}
@@ -517,7 +517,7 @@ theorem preimage_image_coe (N : Subgroup α) (s : Set α) :
     coe ⁻¹' ((coe : α → α ⧸ N) '' s) = ⋃ x : N, (fun y : α => y * x) ⁻¹' s := by
   ext x
   simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_Union,
-    Set.mem_image, SetLike.coe_mk, ← eq_inv_mul_iff_mul_eq]
+    Set.mem_image, [anonymous], ← eq_inv_mul_iff_mul_eq]
   exact
     ⟨fun ⟨y, hs, hN⟩ => ⟨_, N.inv_mem hN, by simpa using hs⟩, fun ⟨z, hz, hxz⟩ =>
       ⟨x * z, hxz, by simpa using hz⟩⟩
@@ -607,7 +607,7 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α)
       rwa [mul_inv_rev, mul_assoc, inv_mul_cancel_left]
   left_inv := by 
     refine' Quotient.ind' fun a => _
-    simp_rw [Quotient.map'_mk', id.def, SetLike.coe_mk, mul_inv_cancel_left]
+    simp_rw [Quotient.map'_mk', id.def, [anonymous], mul_inv_cancel_left]
   right_inv := by 
     refine' Prod.rec _
     refine' Quotient.ind' fun a => _
@@ -692,7 +692,7 @@ def quotientInfiSubgroupOfEmbedding {ι : Type _} (f : ι → Subgroup α) (H : 
         H ⧸
           (f i).subgroupOf
             H where 
-  toFun q i := quotientSubgroupOfMapOfLe H (infi_le f i) q
+  toFun q i := quotientSubgroupOfMapOfLe H (infᵢ_le f i) q
   inj' :=
     Quotient.ind₂' <| by
       simp_rw [funext_iff, quotient_subgroup_of_map_of_le_apply_mk, eq', mem_subgroup_of, mem_infi,
@@ -712,7 +712,7 @@ theorem quotient_infi_subgroup_of_embedding_apply_mk {ι : Type _} (f : ι → S
 def quotientInfiEmbedding {ι : Type _} (f : ι → Subgroup α) :
     (α ⧸ ⨅ i, f i) ↪
       ∀ i, α ⧸ f i where 
-  toFun q i := quotientMapOfLe (infi_le f i) q
+  toFun q i := quotientMapOfLe (infᵢ_le f i) q
   inj' :=
     Quotient.ind₂' <| by
       simp_rw [funext_iff, quotient_map_of_le_apply_mk, eq', mem_infi, imp_self, forall_const]

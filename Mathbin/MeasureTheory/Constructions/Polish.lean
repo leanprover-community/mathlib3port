@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.polish
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -656,7 +656,7 @@ theorem Continuous.measurableEmbedding (f_cont : Continuous f) (f_inj : Injectiv
 the restriction of `f` to `s` is a measurable embedding. -/
 theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : ContinuousOn f s)
     (f_inj : InjOn f s) : MeasurableEmbedding (s.restrict f) :=
-  { Injective := inj_on_iff_injective.1 f_inj
+  { Injective := injOn_iff_injective.1 f_inj
     Measurable := (continuous_on_iff_continuous_restrict.1 f_cont).Measurable
     measurableSetImage' := by 
       intro u hu

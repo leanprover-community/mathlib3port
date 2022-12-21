@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.iterate
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ open Function
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u1} α _inst_1)) (Function.comp.{succ u2, succ u2, succ u1} β β α h g) (Function.comp.{succ u2, succ u1, succ u1} β α α f h)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u1} α _inst_1)) (Function.comp.{succ u2, succ u2, succ u1} β β α h (Nat.iterate.{succ u2} β g n)) (Function.comp.{succ u2, succ u1, succ u1} β α α (Nat.iterate.{succ u1} α f n) h))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u2, u2} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (instLEForAll.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u1, succ u2} β β α h g) (Function.comp.{succ u1, succ u2, succ u2} β α α f h)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (instLEForAll.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u1, succ u2} β β α h (Nat.iterate.{succ u1} β g n)) (Function.comp.{succ u1, succ u2, succ u2} β α α (Nat.iterate.{succ u2} α f n) h))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u2, u2} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u1, succ u2} β β α h g) (Function.comp.{succ u1, succ u2, succ u2} β α α f h)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u1, succ u2} β β α h (Nat.iterate.{succ u1} β g n)) (Function.comp.{succ u1, succ u2, succ u2} β α α (Nat.iterate.{succ u2} α f n) h))
 Case conversion may be inaccurate. Consider using '#align monotone.le_iterate_comp_of_le Monotone.le_iterate_comp_of_leₓ'. -/
 theorem le_iterate_comp_of_le (hf : Monotone f) (H : h ∘ g ≤ f ∘ h) (n : ℕ) :
     h ∘ g^[n] ≤ f^[n] ∘ h := fun x => by
@@ -122,7 +122,7 @@ theorem le_iterate_comp_of_le (hf : Monotone f) (H : h ∘ g ≤ f ∘ h) (n : �
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u1} α _inst_1)) (Function.comp.{succ u2, succ u1, succ u1} β α α f h) (Function.comp.{succ u2, succ u2, succ u1} β β α h g)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u1} α _inst_1)) (Function.comp.{succ u2, succ u1, succ u1} β α α (Nat.iterate.{succ u1} α f n) h) (Function.comp.{succ u2, succ u2, succ u1} β β α h (Nat.iterate.{succ u2} β g n)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u2, u2} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (instLEForAll.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u2, succ u2} β α α f h) (Function.comp.{succ u1, succ u1, succ u2} β β α h g)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (instLEForAll.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u2, succ u2} β α α (Nat.iterate.{succ u2} α f n) h) (Function.comp.{succ u1, succ u1, succ u2} β β α h (Nat.iterate.{succ u1} β g n)))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u2, u2} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u2, succ u2} β α α f h) (Function.comp.{succ u1, succ u1, succ u2} β β α h g)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u2, succ u2} β α α (Nat.iterate.{succ u2} α f n) h) (Function.comp.{succ u1, succ u1, succ u2} β β α h (Nat.iterate.{succ u1} β g n)))
 Case conversion may be inaccurate. Consider using '#align monotone.iterate_comp_le_of_le Monotone.iterate_comp_le_of_leₓ'. -/
 theorem iterate_comp_le_of_le (hf : Monotone f) (H : f ∘ h ≤ h ∘ g) (n : ℕ) :
     f^[n] ∘ h ≤ h ∘ g^[n] :=
@@ -173,27 +173,19 @@ theorem iterate_le_id_of_le_id (h : f ≤ id) (n : ℕ) : f^[n] ≤ id :=
 #align function.iterate_le_id_of_le_id Function.iterate_le_id_of_le_id
 -/
 
-/- warning: function.monotone_iterate_of_id_le -> Function.monotone_iterate_of_id_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (a : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) (id.{succ u1} α) f) -> (Monotone.{0, u1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (Pi.preorder.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u1} α f m))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (instLEForAll.{u1, u1} α (fun (a : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) (id.{succ u1} α) f) -> (Monotone.{0, u1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (instPreorderForAll.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u1} α f m))
-Case conversion may be inaccurate. Consider using '#align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_leₓ'. -/
+#print Function.monotone_iterate_of_id_le /-
 theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
   monotone_nat_of_le_succ fun n x => by 
     rw [iterate_succ_apply']
     exact h _
 #align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_le
+-/
 
-/- warning: function.antitone_iterate_of_le_id -> Function.antitone_iterate_of_le_id is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) f (id.{succ u1} α)) -> (Antitone.{0, u1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (Pi.preorder.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u1} α f m))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (instLEForAll.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) f (id.{succ u1} α)) -> (Antitone.{0, u1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (instPreorderForAll.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u1} α f m))
-Case conversion may be inaccurate. Consider using '#align function.antitone_iterate_of_le_id Function.antitone_iterate_of_le_idₓ'. -/
+#print Function.antitone_iterate_of_le_id /-
 theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] := fun m n hmn =>
   @monotone_iterate_of_id_le αᵒᵈ _ f h m n hmn
 #align function.antitone_iterate_of_le_id Function.antitone_iterate_of_le_id
+-/
 
 end Preorder
 

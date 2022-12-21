@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_dimension
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,14 +115,14 @@ theorem dimH_def (s : Set X) : dimH s = ⨆ (d : ℝ≥0) (hd : μH[d] s = ∞),
 #align dimH_def dimH_def
 
 theorem hausdorff_measure_of_lt_dimH {s : Set X} {d : ℝ≥0} (h : ↑d < dimH s) : μH[d] s = ∞ := by
-  simp only [dimH_def, lt_supr_iff] at h
+  simp only [dimH_def, lt_supᵢ_iff] at h
   rcases h with ⟨d', hsd', hdd'⟩
   rw [Ennreal.coe_lt_coe, ← Nnreal.coe_lt_coe] at hdd'
   exact top_unique (hsd' ▸ hausdorff_measure_mono hdd'.le _)
 #align hausdorff_measure_of_lt_dimH hausdorff_measure_of_lt_dimH
 
 theorem dimH_le {s : Set X} {d : ℝ≥0∞} (H : ∀ d' : ℝ≥0, μH[d'] s = ∞ → ↑d' ≤ d) : dimH s ≤ d :=
-  (dimH_def s).trans_le <| supr₂_le H
+  (dimH_def s).trans_le <| supᵢ₂_le H
 #align dimH_le dimH_le
 
 theorem dimH_le_of_hausdorff_measure_ne_top {s : Set X} {d : ℝ≥0} (h : μH[d] s ≠ ∞) : dimH s ≤ d :=
@@ -132,14 +132,14 @@ theorem dimH_le_of_hausdorff_measure_ne_top {s : Set X} {d : ℝ≥0} (h : μH[d
 theorem le_dimH_of_hausdorff_measure_eq_top {s : Set X} {d : ℝ≥0} (h : μH[d] s = ∞) : ↑d ≤ dimH s :=
   by 
   rw [dimH_def]
-  exact le_supr₂ d h
+  exact le_supᵢ₂ d h
 #align le_dimH_of_hausdorff_measure_eq_top le_dimH_of_hausdorff_measure_eq_top
 
 theorem hausdorff_measure_of_dimH_lt {s : Set X} {d : ℝ≥0} (h : dimH s < d) : μH[d] s = 0 := by
   rw [dimH_def] at h
   rcases Ennreal.lt_iff_exists_nnreal_btwn.1 h with ⟨d', hsd', hd'd⟩
   rw [Ennreal.coe_lt_coe, ← Nnreal.coe_lt_coe] at hd'd
-  exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le <| le_supr₂ d' h
+  exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le <| le_supᵢ₂ d' h
 #align hausdorff_measure_of_dimH_lt hausdorff_measure_of_dimH_lt
 
 theorem measure_zero_of_dimH_lt {μ : Measure X} {d : ℝ≥0} (h : μ ≪ μH[d]) {s : Set X}
@@ -187,10 +187,10 @@ theorem dimH_singleton (x : X) : dimH ({x} : Set X) = 0 :=
 @[simp]
 theorem dimH_Union [Encodable ι] (s : ι → Set X) : dimH (⋃ i, s i) = ⨆ i, dimH (s i) := by
   borelize X
-  refine' le_antisymm (dimH_le fun d hd => _) (supr_le fun i => dimH_mono <| subset_Union _ _)
+  refine' le_antisymm (dimH_le fun d hd => _) (supᵢ_le fun i => dimH_mono <| subset_Union _ _)
   contrapose! hd
   have : ∀ i, μH[d] (s i) = 0 := fun i =>
-    hausdorff_measure_of_dimH_lt ((le_supr (fun i => dimH (s i)) i).trans_lt hd)
+    hausdorff_measure_of_dimH_lt ((le_supᵢ (fun i => dimH (s i)) i).trans_lt hd)
   rw [measure_Union_null this]
   exact Ennreal.zero_ne_top
 #align dimH_Union dimH_Union
@@ -199,7 +199,7 @@ theorem dimH_Union [Encodable ι] (s : ι → Set X) : dimH (⋃ i, s i) = ⨆ i
 theorem dimH_bUnion {s : Set ι} (hs : s.Countable) (t : ι → Set X) :
     dimH (⋃ i ∈ s, t i) = ⨆ i ∈ s, dimH (t i) := by
   haveI := hs.to_encodable
-  rw [bUnion_eq_Union, dimH_Union, ← supr_subtype'']
+  rw [bUnion_eq_Union, dimH_Union, ← supᵢ_subtype'']
 #align dimH_bUnion dimH_bUnion
 
 @[simp]
@@ -209,7 +209,7 @@ theorem dimH_sUnion {S : Set (Set X)} (hS : S.Countable) : dimH (⋃₀S) = ⨆ 
 
 @[simp]
 theorem dimH_union (s t : Set X) : dimH (s ∪ t) = max (dimH s) (dimH t) := by
-  rw [union_eq_Union, dimH_Union, supr_bool_eq, cond, cond, Ennreal.sup_eq_max]
+  rw [union_eq_Union, dimH_Union, supᵢ_bool_eq, cond, cond, Ennreal.sup_eq_max]
 #align dimH_union dimH_union
 
 theorem dimH_countable {s : Set X} (hs : s.Countable) : dimH s = 0 :=
@@ -250,7 +250,7 @@ theorem exists_mem_nhds_within_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (
   calc
     dimH s ≤ dimH (⋃ x ∈ S, t x) := dimH_mono hSU
     _ = ⨆ x ∈ S, dimH (t x) := dimH_bUnion hSc _
-    _ ≤ r := supr₂_le fun x hx => htr x <| hSs hx
+    _ ≤ r := supᵢ₂_le fun x hx => htr x <| hSs hx
     
 #align exists_mem_nhds_within_lt_dimH_of_lt_dimH exists_mem_nhds_within_lt_dimH_of_lt_dimH
 
@@ -258,14 +258,14 @@ theorem exists_mem_nhds_within_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (
 of a set `s` is the supremum over `x ∈ s` of the limit superiors of `dimH t` along
 `(𝓝[s] x).small_sets`. -/
 theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsup dimH (𝓝[s] x).smallSets) = dimH s := by
-  refine' le_antisymm (supr₂_le fun x hx => _) _
+  refine' le_antisymm (supᵢ₂_le fun x hx => _) _
   · refine' Limsup_le_of_le (by infer_param) (eventually_map.2 _)
     exact eventually_small_sets.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
   · refine' le_of_forall_ge_of_dense fun r hr => _
     rcases exists_mem_nhds_within_lt_dimH_of_lt_dimH hr with ⟨x, hxs, hxr⟩
-    refine' le_supr₂_of_le x hxs _
+    refine' le_supᵢ₂_of_le x hxs _
     rw [limsup_eq]
-    refine' le_Inf fun b hb => _
+    refine' le_infₛ fun b hb => _
     rcases eventually_small_sets.1 hb with ⟨t, htx, ht⟩
     exact (hxr t htx).le.trans (ht t subset.rfl)
 #align bsupr_limsup_dimH bsupr_limsup_dimH
@@ -274,11 +274,11 @@ theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsup dimH (𝓝[s] x).sm
 of a set `s` is the supremum over all `x` of the limit superiors of `dimH t` along
 `(𝓝[s] x).small_sets`. -/
 theorem supr_limsup_dimH (s : Set X) : (⨆ x, limsup dimH (𝓝[s] x).smallSets) = dimH s := by
-  refine' le_antisymm (supr_le fun x => _) _
+  refine' le_antisymm (supᵢ_le fun x => _) _
   · refine' Limsup_le_of_le (by infer_param) (eventually_map.2 _)
     exact eventually_small_sets.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
   · rw [← bsupr_limsup_dimH]
-    exact supr₂_le_supr _ _
+    exact supᵢ₂_le_supᵢ _ _
 #align supr_limsup_dimH supr_limsup_dimH
 
 end
@@ -334,7 +334,7 @@ theorem dimH_image_le_of_locally_holder_on [SecondCountableTopology X] {r : ℝ�
   rcases countable_cover_nhds_within htn with ⟨u, hus, huc, huU⟩
   replace huU := inter_eq_self_of_subset_left huU; rw [inter_Union₂] at huU
   rw [← huU, image_Union₂, dimH_bUnion huc, dimH_bUnion huc]; simp only [Ennreal.supr_div]
-  exact supr₂_mono fun x hx => ((hC x (hus hx)).mono (inter_subset_right _ _)).dimH_image_le hr
+  exact supᵢ₂_mono fun x hx => ((hC x (hus hx)).mono (inter_subset_right _ _)).dimH_image_le hr
 #align dimH_image_le_of_locally_holder_on dimH_image_le_of_locally_holder_on
 
 /-- If `f : X → Y` is Hölder continuous in a neighborhood of every point `x : X` with the same
@@ -490,7 +490,7 @@ theorem dimH_ball_pi_fin {n : ℕ} (x : Fin n → ℝ) {r : ℝ} (hr : 0 < r) :
 
 theorem dimH_univ_pi (ι : Type _) [Fintype ι] : dimH (univ : Set (ι → ℝ)) = Fintype.card ι := by
   simp only [← Metric.Union_ball_nat_succ (0 : ι → ℝ), dimH_Union,
-    dimH_ball_pi _ (Nat.cast_add_one_pos _), supr_const]
+    dimH_ball_pi _ (Nat.cast_add_one_pos _), supᵢ_const]
 #align real.dimH_univ_pi Real.dimH_univ_pi
 
 theorem dimH_univ_pi_fin (n : ℕ) : dimH (univ : Set (Fin n → ℝ)) = n := by

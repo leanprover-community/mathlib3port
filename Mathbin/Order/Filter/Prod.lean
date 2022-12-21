@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johanes Hölzl, Patrick Massot, Yury Kudryashov, Kevin Wilson, Heather Macbeth
 
 ! This file was ported from Lean 3 source module order.filter.prod
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -216,13 +216,13 @@ theorem tendsto_diag : Tendsto (fun i => (i, i)) f (f ×ᶠ f) :=
 
 theorem prod_infi_left [Nonempty ι] {f : ι → Filter α} {g : Filter β} :
     (⨅ i, f i) ×ᶠ g = ⨅ i, f i ×ᶠ g := by
-  rw [Filter.prod, comap_infi, infi_inf]
+  rw [Filter.prod, comap_infi, infᵢ_inf]
   simp only [Filter.prod, eq_self_iff_true]
 #align filter.prod_infi_left Filter.prod_infi_left
 
 theorem prod_infi_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} :
     (f ×ᶠ ⨅ i, g i) = ⨅ i, f ×ᶠ g i := by
-  rw [Filter.prod, comap_infi, inf_infi]
+  rw [Filter.prod, comap_infi, inf_infᵢ]
   simp only [Filter.prod, eq_self_iff_true]
 #align filter.prod_infi_right Filter.prod_infi_right
 
@@ -438,9 +438,10 @@ theorem NeBot.prod {f : Filter α} {g : Filter β} (hf : NeBot f) (hg : NeBot g)
   prod_ne_bot.2 ⟨hf, hg⟩
 #align filter.ne_bot.prod Filter.NeBot.prod
 
-instance prodNeBot' {f : Filter α} {g : Filter β} [hf : NeBot f] [hg : NeBot g] : NeBot (f ×ᶠ g) :=
+instance prod_ne_bot' {f : Filter α} {g : Filter β} [hf : NeBot f] [hg : NeBot g] :
+    NeBot (f ×ᶠ g) :=
   hf.Prod hg
-#align filter.prod_ne_bot' Filter.prodNeBot'
+#align filter.prod_ne_bot' Filter.prod_ne_bot'
 
 theorem tendsto_prod_iff {f : α × β → γ} {x : Filter α} {y : Filter β} {z : Filter γ} :
     Filter.Tendsto f (x ×ᶠ y) z ↔ ∀ W ∈ z, ∃ U ∈ x, ∃ V ∈ y, ∀ x y, x ∈ U → y ∈ V → f (x, y) ∈ W :=
@@ -501,14 +502,14 @@ theorem coprod_ne_bot_iff : (f.coprod g).ne_bot ↔ f.ne_bot ∧ Nonempty β ∨
 #align filter.coprod_ne_bot_iff Filter.coprod_ne_bot_iff
 
 @[instance]
-theorem coprodNeBotLeft [NeBot f] [Nonempty β] : (f.coprod g).ne_bot :=
+theorem coprod_ne_bot_left [NeBot f] [Nonempty β] : (f.coprod g).ne_bot :=
   coprod_ne_bot_iff.2 (Or.inl ⟨‹_›, ‹_›⟩)
-#align filter.coprod_ne_bot_left Filter.coprodNeBotLeft
+#align filter.coprod_ne_bot_left Filter.coprod_ne_bot_left
 
 @[instance]
-theorem coprodNeBotRight [NeBot g] [Nonempty α] : (f.coprod g).ne_bot :=
+theorem coprod_ne_bot_right [NeBot g] [Nonempty α] : (f.coprod g).ne_bot :=
   coprod_ne_bot_iff.2 (Or.inr ⟨‹_›, ‹_›⟩)
-#align filter.coprod_ne_bot_right Filter.coprodNeBotRight
+#align filter.coprod_ne_bot_right Filter.coprod_ne_bot_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem principal_coprod_principal (s : Set α) (t : Set β) : (𝓟 s).coprod (𝓟 t) = 𝓟 ((sᶜ ×ˢ tᶜ)ᶜ) :=

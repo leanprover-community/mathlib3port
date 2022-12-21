@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.integral.periodic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ attribute [-instance] QuotientAddGroup.measurableSpace Quotient.measurableSpace
 
 theorem isAddFundamentalDomainIoc {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
-    IsAddFundamentalDomain (AddSubgroup.zmultiples T) (ioc t (t + T)) μ := by
+    IsAddFundamentalDomain (AddSubgroup.zmultiples T) (Ioc t (t + T)) μ := by
   refine' is_add_fundamental_domain.mk' measurable_set_Ioc.null_measurable_set fun x => _
   have : bijective (cod_restrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
     (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strict_mono_left hT).Injective).Bijective
@@ -46,7 +46,7 @@ theorem isAddFundamentalDomainIoc {T : ℝ} (hT : 0 < T) (t : ℝ)
 
 theorem isAddFundamentalDomainIoc' {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
-    IsAddFundamentalDomain (AddSubgroup.zmultiples T).opposite (ioc t (t + T)) μ := by
+    IsAddFundamentalDomain (AddSubgroup.zmultiples T).opposite (Ioc t (t + T)) μ := by
   refine' is_add_fundamental_domain.mk' measurable_set_Ioc.null_measurable_set fun x => _
   have : bijective (cod_restrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
     (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strict_mono_left hT).Injective).Bijective
@@ -85,7 +85,7 @@ considered with respect to the standard measure (defined to be the Haar measure 
 on the additive circle, and with respect to the restriction of Lebsegue measure on `ℝ` to an
 interval (t, t + T]. -/
 protected theorem measurePreservingMk (t : ℝ) :
-    MeasurePreserving (coe : ℝ → AddCircle T) (volume.restrict (ioc t (t + T))) :=
+    MeasurePreserving (coe : ℝ → AddCircle T) (volume.restrict (Ioc t (t + T))) :=
   MeasurePreservingQuotientAddGroup.mk' (isAddFundamentalDomainIoc' hT.out t)
     (⊤ : PositiveCompacts (AddCircle T)) (by simp) T.toNnreal
     (by simp [← Ennreal.of_real_coe_nnreal, Real.coe_to_nnreal T hT.out.le])
@@ -126,7 +126,7 @@ instance : IsDoublingMeasure (volume : Measure (AddCircle T)) := by
 /-- The integral of a measurable function over `add_circle T` is equal to the integral over an
 interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
 protected theorem lintegral_preimage (t : ℝ) {f : AddCircle T → ℝ≥0∞} (hf : Measurable f) :
-    (∫⁻ a in ioc t (t + T), f a) = ∫⁻ b : AddCircle T, f b := by
+    (∫⁻ a in Ioc t (t + T), f a) = ∫⁻ b : AddCircle T, f b := by
   rw [← lintegral_map hf AddCircle.measurableMk', (AddCircle.measurePreservingMk T t).map_eq]
 #align add_circle.lintegral_preimage AddCircle.lintegral_preimage
 
@@ -135,7 +135,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace 
 /-- The integral of an almost-everywhere strongly measurable function over `add_circle T` is equal
 to the integral over an interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
 protected theorem integral_preimage (t : ℝ) {f : AddCircle T → E}
-    (hf : AeStronglyMeasurable f volume) : (∫ a in ioc t (t + T), f a) = ∫ b : AddCircle T, f b :=
+    (hf : AeStronglyMeasurable f volume) : (∫ a in Ioc t (t + T), f a) = ∫ b : AddCircle T, f b :=
   by 
   rw [← (AddCircle.measurePreservingMk T t).map_eq] at hf⊢
   rw [integral_map add_circle.measurable_mk'.ae_measurable hf]
@@ -176,14 +176,14 @@ considered with respect to the standard measure (defined to be the Haar measure 
 on the additive circle, and with respect to the restriction of Lebsegue measure on `ℝ` to an
 interval (t, t + 1]. -/
 protected theorem measurePreservingMk (t : ℝ) :
-    MeasurePreserving (coe : ℝ → UnitAddCircle) (volume.restrict (ioc t (t + 1))) :=
+    MeasurePreserving (coe : ℝ → UnitAddCircle) (volume.restrict (Ioc t (t + 1))) :=
   AddCircle.measurePreservingMk 1 t
 #align unit_add_circle.measure_preserving_mk UnitAddCircle.measurePreservingMk
 
 /-- The integral of a measurable function over `unit_add_circle` is equal to the integral over an
 interval (t, t + 1] in `ℝ` of its lift to `ℝ`. -/
 protected theorem lintegral_preimage (t : ℝ) {f : UnitAddCircle → ℝ≥0∞} (hf : Measurable f) :
-    (∫⁻ a in ioc t (t + 1), f a) = ∫⁻ b : UnitAddCircle, f b :=
+    (∫⁻ a in Ioc t (t + 1), f a) = ∫⁻ b : UnitAddCircle, f b :=
   AddCircle.lintegral_preimage 1 t hf
 #align unit_add_circle.lintegral_preimage UnitAddCircle.lintegral_preimage
 
@@ -192,7 +192,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace 
 /-- The integral of an almost-everywhere strongly measurable function over `unit_add_circle` is
 equal to the integral over an interval (t, t + 1] in `ℝ` of its lift to `ℝ`. -/
 protected theorem integral_preimage (t : ℝ) {f : UnitAddCircle → E}
-    (hf : AeStronglyMeasurable f volume) : (∫ a in ioc t (t + 1), f a) = ∫ b : UnitAddCircle, f b :=
+    (hf : AeStronglyMeasurable f volume) : (∫ a in Ioc t (t + 1), f a) = ∫ b : UnitAddCircle, f b :=
   AddCircle.integral_preimage 1 t hf
 #align unit_add_circle.integral_preimage UnitAddCircle.integral_preimage
 
@@ -264,7 +264,7 @@ theorem interval_integral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
   -- Then prove it for all integers
   cases' n with n n
   · simp [← this n]
-  · conv_rhs => rw [zsmul_neg_succ_of_nat]
+  · conv_rhs => rw [negSucc_zsmul]
     have h₀ : Int.negSucc n • T + (n + 1) • T = 0 := by
       simp
       linarith
@@ -288,7 +288,7 @@ include hg h_int
 `t ↦ ∫ x in 0..t, g x` is bounded below by `t ↦ X + ⌊t/T⌋ • Y` for appropriate constants `X` and
 `Y`. -/
 theorem Inf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
-    (inf ((fun t => ∫ x in 0 ..t, g x) '' icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x) ≤
+    (infₛ ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x) ≤
       ∫ x in 0 ..t, g x :=
   by 
   let ε := Int.fract (t / T) * T
@@ -308,7 +308,7 @@ theorem Inf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
 `Y`. -/
 theorem integral_le_Sup_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
     (∫ x in 0 ..t, g x) ≤
-      sup ((fun t => ∫ x in 0 ..t, g x) '' icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x :=
+      supₛ ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x :=
   by 
   let ε := Int.fract (t / T) * T
   conv_lhs =>

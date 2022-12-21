@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module algebra.tropical.lattice
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,9 +53,9 @@ instance [SemilatticeSup R] : SemilatticeSup (Tropical R) :=
 instance [Lattice R] : Lattice (Tropical R) :=
   { Tropical.semilatticeInf, Tropical.semilatticeSup with }
 
-instance [HasSup R] : HasSup (Tropical R) where sup s := trop (sup (untrop '' s))
+instance [SupSet R] : SupSet (Tropical R) where sup s := trop (supₛ (untrop '' s))
 
-instance [HasInf R] : HasInf (Tropical R) where inf s := trop (inf (untrop '' s))
+instance [InfSet R] : InfSet (Tropical R) where inf s := trop (infₛ (untrop '' s))
 
 instance [ConditionallyCompleteLattice R] : ConditionallyCompleteLattice (Tropical R) :=
   { Tropical.hasSup, Tropical.hasInf, Tropical.lattice with

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.unique_factorization_domain
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ instance wf_dvd_monoid_associates : WfDvdMonoid (Associates α) :=
 #align wf_dvd_monoid.wf_dvd_monoid_associates WfDvdMonoid.wf_dvd_monoid_associates
 
 theorem well_founded_associates : WellFounded ((· < ·) : Associates α → Associates α → Prop) :=
-  Subrelation.wf (fun x y => dvd_not_unit_of_lt) well_founded_dvd_not_unit
+  Subrelation.wf (fun x y => dvdNotUnit_of_lt) well_founded_dvd_not_unit
 #align wf_dvd_monoid.well_founded_associates WfDvdMonoid.well_founded_associates
 
 attribute [local elab_as_elim] WellFounded.fix
@@ -141,7 +141,7 @@ theorem WfDvdMonoid.of_well_founded_associates [CancelCommMonoidWithZero α]
     ⟨by 
       convert h
       ext
-      exact Associates.dvd_not_unit_iff_lt⟩
+      exact Associates.dvdNotUnit_iff_lt⟩
 #align wf_dvd_monoid.of_well_founded_associates WfDvdMonoid.of_well_founded_associates
 
 theorem WfDvdMonoid.iff_well_founded_associates [CancelCommMonoidWithZero α] :
@@ -224,7 +224,7 @@ theorem prime_factors_unique [CancelCommMonoidWithZero α] :
     (fun g _ hg h =>
       Multiset.rel_zero_left.2 <|
         Multiset.eq_zero_of_forall_not_mem fun x hx =>
-          have : IsUnit g.Prod := by simpa [associated_one_iff_is_unit] using h.symm
+          have : IsUnit g.Prod := by simpa [associated_one_iff_isUnit] using h.symm
           (hg x hx).not_unit <|
             isUnit_iff_dvd_one.2 <| (Multiset.dvd_prod hx).trans (isUnit_iff_dvd_one.1 this))
     fun p f ih g hf hg hfg => by
@@ -260,7 +260,7 @@ theorem prime_factors_irreducible [CancelCommMonoidWithZero α] {a : α} {f : Mu
   haveI := Classical.decEq α
   refine'
     Multiset.induction_on f
-      (fun h => (ha.not_unit (associated_one_iff_is_unit.1 (Associated.symm h))).elim) _ pfa.2 pfa.1
+      (fun h => (ha.not_unit (associated_one_iff_isUnit.1 (Associated.symm h))).elim) _ pfa.2 pfa.1
   rintro p s _ ⟨u, hu⟩ hs
   use p
   have hs0 : s = 0 := by 

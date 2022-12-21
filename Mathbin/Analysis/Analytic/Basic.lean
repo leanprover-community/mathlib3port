@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ def radius (p : FormalMultilinearSeries 𝕜 E F) : ℝ≥0∞ :=
 /-- If `‖pₙ‖ rⁿ` is bounded in `n`, then the radius of `p` is at least `r`. -/
 theorem le_radius_of_bound (C : ℝ) {r : ℝ≥0} (h : ∀ n : ℕ, ‖p n‖ * r ^ n ≤ C) :
     (r : ℝ≥0∞) ≤ p.radius :=
-  le_supr_of_le r <| le_supr_of_le C <| le_supr (fun _ => (r : ℝ≥0∞)) h
+  le_supᵢ_of_le r <| le_supᵢ_of_le C <| le_supᵢ (fun _ => (r : ℝ≥0∞)) h
 #align formal_multilinear_series.le_radius_of_bound FormalMultilinearSeries.le_radius_of_bound
 
 /-- If `‖pₙ‖ rⁿ` is bounded in `n`, then the radius of `p` is at least `r`. -/
@@ -194,9 +194,9 @@ theorem const_formal_multilinear_series_radius {v : F} :
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ` tends to zero exponentially:
 for some `0 < a < 1`, `‖p n‖ rⁿ = o(aⁿ)`. -/
 theorem is_o_of_lt_radius (h : ↑r < p.radius) :
-    ∃ a ∈ ioo (0 : ℝ) 1, (fun n => ‖p n‖ * r ^ n) =o[at_top] pow a := by
+    ∃ a ∈ Ioo (0 : ℝ) 1, (fun n => ‖p n‖ * r ^ n) =o[at_top] pow a := by
   rw [(tfae_exists_lt_is_o_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 4]
-  simp only [radius, lt_supr_iff] at h
+  simp only [radius, lt_supᵢ_iff] at h
   rcases h with ⟨t, C, hC, rt⟩
   rw [Ennreal.coe_lt_coe, ← Nnreal.coe_lt_coe] at rt
   have : 0 < (t : ℝ) := r.coe_nonneg.trans_lt rt
@@ -219,7 +219,7 @@ theorem is_o_one_of_lt_radius (h : ↑r < p.radius) :
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ` tends to zero exponentially:
 for some `0 < a < 1` and `C > 0`,  `‖p n‖ * r ^ n ≤ C * a ^ n`. -/
 theorem norm_mul_pow_le_mul_pow_of_lt_radius (h : ↑r < p.radius) :
-    ∃ a ∈ ioo (0 : ℝ) 1, ∃ C > 0, ∀ n, ‖p n‖ * r ^ n ≤ C * a ^ n := by
+    ∃ a ∈ Ioo (0 : ℝ) 1, ∃ C > 0, ∀ n, ‖p n‖ * r ^ n ≤ C * a ^ n := by
   rcases((tfae_exists_lt_is_o_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 5).mp
       (p.is_o_of_lt_radius h) with
     ⟨a, ha, C, hC, H⟩
@@ -228,7 +228,7 @@ theorem norm_mul_pow_le_mul_pow_of_lt_radius (h : ↑r < p.radius) :
   formal_multilinear_series.norm_mul_pow_le_mul_pow_of_lt_radius FormalMultilinearSeries.norm_mul_pow_le_mul_pow_of_lt_radius
 
 /-- If `r ≠ 0` and `‖pₙ‖ rⁿ = O(aⁿ)` for some `-1 < a < 1`, then `r < p.radius`. -/
-theorem lt_radius_of_is_O (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ ioo (-1 : ℝ) 1)
+theorem lt_radius_of_is_O (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ) 1)
     (hp : (fun n => ‖p n‖ * r ^ n) =O[at_top] pow a) : ↑r < p.radius := by
   rcases((tfae_exists_lt_is_o_pow (fun n => ‖p n‖ * r ^ n) 1).out 2 5).mp ⟨a, ha, hp⟩ with
     ⟨a, ha, C, hC, hp⟩
@@ -660,7 +660,7 @@ This version provides an upper estimate that decreases both in `‖y‖` and `n`
 `has_fpower_series_on_ball.uniform_geometric_approx` for a weaker version. -/
 theorem HasFpowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0}
     (hf : HasFpowerSeriesOnBall f p x r) (h : (r' : ℝ≥0∞) < r) :
-    ∃ a ∈ ioo (0 : ℝ) 1,
+    ∃ a ∈ Ioo (0 : ℝ) 1,
       ∃ C > 0,
         ∀ y ∈ Metric.ball (0 : E) r',
           ∀ n, ‖f (x + y) - p.partialSum n y‖ ≤ C * (a * (‖y‖ / r')) ^ n :=
@@ -699,7 +699,7 @@ theorem HasFpowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0}
 sums of this power series on strict subdisks of the disk of convergence. -/
 theorem HasFpowerSeriesOnBall.uniform_geometric_approx {r' : ℝ≥0}
     (hf : HasFpowerSeriesOnBall f p x r) (h : (r' : ℝ≥0∞) < r) :
-    ∃ a ∈ ioo (0 : ℝ) 1,
+    ∃ a ∈ Ioo (0 : ℝ) 1,
       ∃ C > 0, ∀ y ∈ Metric.ball (0 : E) r', ∀ n, ‖f (x + y) - p.partialSum n y‖ ≤ C * a ^ n :=
   by
   obtain ⟨a, ha, C, hC, hp⟩ :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.rename
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ def killCompl : MvPolynomial τ R →ₐ[R] MvPolynomial σ R :=
 theorem kill_compl_comp_rename : (killCompl hf).comp (rename f) = AlgHom.id R _ :=
   alg_hom_ext fun i => by 
     dsimp
-    rw [rename, kill_compl, aeval_X, aeval_X, dif_pos, Equiv.of_injective_symm_apply]
+    rw [rename, kill_compl, aeval_X, aeval_X, dif_pos, Equiv.ofInjective_symm_apply]
 #align mv_polynomial.kill_compl_comp_rename MvPolynomial.kill_compl_comp_rename
 
 @[simp]

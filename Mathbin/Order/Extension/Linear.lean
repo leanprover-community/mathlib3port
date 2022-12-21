@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module order.extension.linear
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,12 +33,12 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
   have hS : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ S, ∀ z ∈ c, z ≤ ub := by
     rintro c hc₁ hc₂ s hs
     haveI := (hc₁ hs).1
-    refine' ⟨Sup c, _, fun z hz => le_Sup hz⟩
+    refine' ⟨Sup c, _, fun z hz => le_supₛ hz⟩
     refine'
         { refl := _
           trans := _
           antisymm := _ } <;>
-      simp_rw [binary_relation_Sup_iff]
+      simp_rw [binary_relation_supₛ_iff]
     · intro x
       exact ⟨s, hs, refl x⟩
     · rintro x y z ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩

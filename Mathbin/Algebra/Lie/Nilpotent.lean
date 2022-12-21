@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.nilpotent
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,7 +270,7 @@ the natural number `k` (the number of inclusions).
 
 For a non-nilpotent module, we use the junk value 0. -/
 noncomputable def nilpotencyLength : ℕ :=
-  inf { k | lowerCentralSeries R L M k = ⊥ }
+  infₛ { k | lowerCentralSeries R L M k = ⊥ }
 #align lie_module.nilpotency_length LieModule.nilpotencyLength
 
 theorem nilpotency_length_eq_zero_iff [IsNilpotent R L M] :

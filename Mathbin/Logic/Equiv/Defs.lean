@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.defs
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -225,10 +225,12 @@ protected def trans (e₁ : α ≃ β) (e₂ : β ≃ γ) : α ≃ γ :=
 #align equiv.trans Equiv.trans
 -/
 
+#print Equiv.to_fun_as_coe /-
 @[simp]
 theorem to_fun_as_coe (e : α ≃ β) : e.toFun = e :=
   rfl
 #align equiv.to_fun_as_coe Equiv.to_fun_as_coe
+-/
 
 #print Equiv.inv_fun_as_coe /-
 @[simp]
@@ -578,17 +580,13 @@ theorem trans_assoc {δ} (ab : α ≃ β) (bc : β ≃ γ) (cd : γ ≃ δ) :
   Equiv.ext fun a => rfl
 #align equiv.trans_assoc Equiv.trans_assoc
 
-#print Equiv.left_inverse_symm /-
 theorem left_inverse_symm (f : Equiv α β) : LeftInverse f.symm f :=
   f.left_inv
 #align equiv.left_inverse_symm Equiv.left_inverse_symm
--/
 
-#print Equiv.right_inverse_symm /-
 theorem right_inverse_symm (f : Equiv α β) : Function.RightInverse f.symm f :=
   f.right_inv
 #align equiv.right_inverse_symm Equiv.right_inverse_symm
--/
 
 #print Equiv.injective_comp /-
 theorem injective_comp (e : α ≃ β) (f : β → γ) : Injective (f ∘ e) ↔ Injective f :=

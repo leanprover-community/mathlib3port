@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.real.pointwise
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ section MulActionWithZero
 
 variable [MulActionWithZero α ℝ] [OrderedSmul α ℝ] {a : α}
 
-theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : inf (a • s) = a • inf s := by
+theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : infₛ (a • s) = a • infₛ s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Inf_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
@@ -50,10 +50,10 @@ theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : inf (a • s) = a
 #align real.Inf_smul_of_nonneg Real.Inf_smul_of_nonneg
 
 theorem Real.smul_infi_of_nonneg (ha : 0 ≤ a) (f : ι → ℝ) : (a • ⨅ i, f i) = ⨅ i, a • f i :=
-  (Real.Inf_smul_of_nonneg ha _).symm.trans <| congr_arg inf <| (range_comp _ _).symm
+  (Real.Inf_smul_of_nonneg ha _).symm.trans <| congr_arg infₛ <| (range_comp _ _).symm
 #align real.smul_infi_of_nonneg Real.smul_infi_of_nonneg
 
-theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : sup (a • s) = a • sup s := by
+theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : supₛ (a • s) = a • supₛ s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Sup_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
@@ -67,7 +67,7 @@ theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : sup (a • s) = a
 #align real.Sup_smul_of_nonneg Real.Sup_smul_of_nonneg
 
 theorem Real.smul_supr_of_nonneg (ha : 0 ≤ a) (f : ι → ℝ) : (a • ⨆ i, f i) = ⨆ i, a • f i :=
-  (Real.Sup_smul_of_nonneg ha _).symm.trans <| congr_arg sup <| (range_comp _ _).symm
+  (Real.Sup_smul_of_nonneg ha _).symm.trans <| congr_arg supₛ <| (range_comp _ _).symm
 #align real.smul_supr_of_nonneg Real.smul_supr_of_nonneg
 
 end MulActionWithZero
@@ -76,7 +76,7 @@ section Module
 
 variable [Module α ℝ] [OrderedSmul α ℝ] {a : α}
 
-theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : inf (a • s) = a • sup s := by
+theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : infₛ (a • s) = a • supₛ s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Inf_empty, Real.Sup_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
@@ -90,10 +90,10 @@ theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : inf (a • s) = a
 #align real.Inf_smul_of_nonpos Real.Inf_smul_of_nonpos
 
 theorem Real.smul_supr_of_nonpos (ha : a ≤ 0) (f : ι → ℝ) : (a • ⨆ i, f i) = ⨅ i, a • f i :=
-  (Real.Inf_smul_of_nonpos ha _).symm.trans <| congr_arg inf <| (range_comp _ _).symm
+  (Real.Inf_smul_of_nonpos ha _).symm.trans <| congr_arg infₛ <| (range_comp _ _).symm
 #align real.smul_supr_of_nonpos Real.smul_supr_of_nonpos
 
-theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : sup (a • s) = a • inf s := by
+theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : supₛ (a • s) = a • infₛ s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Sup_empty, Real.Inf_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
@@ -107,7 +107,7 @@ theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : sup (a • s) = a
 #align real.Sup_smul_of_nonpos Real.Sup_smul_of_nonpos
 
 theorem Real.smul_infi_of_nonpos (ha : a ≤ 0) (f : ι → ℝ) : (a • ⨅ i, f i) = ⨆ i, a • f i :=
-  (Real.Sup_smul_of_nonpos ha _).symm.trans <| congr_arg sup <| (range_comp _ _).symm
+  (Real.Sup_smul_of_nonpos ha _).symm.trans <| congr_arg supₛ <| (range_comp _ _).symm
 #align real.smul_infi_of_nonpos Real.smul_infi_of_nonpos
 
 end Module

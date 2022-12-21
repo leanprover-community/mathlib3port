@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.minpoly
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -354,7 +354,7 @@ theorem eq_of_irreducible_of_monic [Nontrivial B] {p : A[X]} (hp1 : Irreducible 
   let ⟨q, hq⟩ := dvd A x hp2
   eq_of_monic_of_associated hp3 (monic ⟨p, ⟨hp3, hp2⟩⟩) <|
     mul_one (minpoly A x) ▸ hq.symm ▸ Associated.mul_left _ <|
-      associated_one_iff_is_unit.2 <| (hp1.is_unit_or_is_unit hq).resolve_left <| not_is_unit A x
+      associated_one_iff_isUnit.2 <| (hp1.is_unit_or_is_unit hq).resolve_left <| not_is_unit A x
 #align minpoly.eq_of_irreducible_of_monic minpoly.eq_of_irreducible_of_monic
 
 theorem eq_of_irreducible [Nontrivial B] {p : A[X]} (hp1 : Irreducible p)

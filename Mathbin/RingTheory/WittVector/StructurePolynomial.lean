@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.structure_polynomial
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ theorem map_witt_structure_int (Φ : MvPolynomial idx ℤ) (n : ℕ) :
   apply Nat.strong_induction_on n
   clear n
   intro n IH
-  rw [wittStructureInt, map_map_range_eq_iff, Int.coe_cast_ring_hom]
+  rw [wittStructureInt, map_map_range_eq_iff, Int.coe_castRingHom]
   intro c
   rw [witt_structure_rat_rec, coeff_C_mul, mul_comm, mul_div_assoc', mul_one]
   have sum_induction_steps :
@@ -299,7 +299,7 @@ theorem map_witt_structure_int (Φ : MvPolynomial idx ℤ) (n : ℕ) :
   simp only [← sum_induction_steps, ← map_witt_polynomial p (Int.castRingHom ℚ), ← map_rename, ←
     map_bind₁, ← RingHom.map_sub, coeff_map]
   rw [show (p : ℚ) ^ n = ((p ^ n : ℕ) : ℤ) by norm_cast]
-  rw [← Rat.denom_eq_one_iff, eq_int_cast, Rat.denom_div_cast_eq_one_iff]
+  rw [← Rat.den_eq_one_iff, eq_int_cast, Rat.denom_div_cast_eq_one_iff]
   swap
   · exact_mod_cast pow_ne_zero n hp.1.NeZero
   revert c

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.category.Top.limits
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ def limitConeInfi (F : J ⥤ TopCat.{max v u}) :
       ⨅ j, (F.obj j).str.induced ((Types.limitCone (F ⋙ forget)).π.app j)⟩
   π :=
     { app := fun j =>
-        ⟨(Types.limitCone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (infi_le _ _)⟩
+        ⟨(Types.limitCone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (infᵢ_le _ _)⟩
       naturality' := fun j j' f =>
         ContinuousMap.coe_injective ((Types.limitCone (F ⋙ forget)).π.naturality f) }
 #align Top.limit_cone_infi TopCat.limitConeInfi
@@ -100,7 +100,7 @@ def limitConeInfiIsLimit (F : J ⥤ TopCat.{max v u}) : IsLimit (limitConeInfi F
   refine' is_limit.of_faithful forget (types.limit_cone_is_limit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_coinduced_le.mpr
-      (le_infi fun j =>
+      (le_infᵢ fun j =>
         coinduced_le_iff_le_induced.mp <|
           (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
 #align Top.limit_cone_infi_is_limit TopCat.limitConeInfiIsLimit
@@ -147,7 +147,7 @@ def colimitCocone (F : J ⥤ TopCat.{max v u}) :
       ⨆ j, (F.obj j).str.coinduced ((Types.colimitCocone (F ⋙ forget)).ι.app j)⟩
   ι :=
     { app := fun j =>
-        ⟨(Types.colimitCocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_supr _ j)⟩
+        ⟨(Types.colimitCocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_supᵢ _ j)⟩
       naturality' := fun j j' f =>
         ContinuousMap.coe_injective ((Types.colimitCocone (F ⋙ forget)).ι.naturality f) }
 #align Top.colimit_cocone TopCat.colimitCocone
@@ -161,7 +161,7 @@ def colimitCoconeIsColimit (F : J ⥤ TopCat.{max v u}) : IsColimit (colimitCoco
     is_colimit.of_faithful forget (types.colimit_cocone_is_colimit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_le_induced.mpr
-      (supr_le fun j =>
+      (supᵢ_le fun j =>
         coinduced_le_iff_le_induced.mp <|
           (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
 #align Top.colimit_cocone_is_colimit TopCat.colimitCoconeIsColimit
@@ -915,18 +915,18 @@ theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
         ext x
         refine' (dif_pos _).trans _
         · exact ⟨x, rfl⟩
-        · rw [Equiv.of_injective_symm_apply]
+        · rw [Equiv.ofInjective_symm_apply]
       · intro T f g
         ext x
         refine' (dif_neg _).trans _
         · rintro ⟨y, e⟩
           have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
           rwa [disjoint_iff.mp h₃.1] at this
-        · exact congr_arg g (Equiv.of_injective_symm_apply _ _)
+        · exact congr_arg g (Equiv.ofInjective_symm_apply _ _)
       · rintro T _ _ m rfl rfl
         ext x
         change m x = dite _ _ _
-        split_ifs <;> exact congr_arg _ (Equiv.apply_of_injective_symm _ ⟨_, _⟩).symm
+        split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
 #align Top.binary_cofan_is_colimit_iff TopCat.binary_cofan_is_colimit_iff
 
 --TODO: Add analogous constructions for `pushout`.

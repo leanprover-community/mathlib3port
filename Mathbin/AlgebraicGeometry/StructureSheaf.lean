@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -501,7 +501,7 @@ theorem is_unit_to_basic_open_self (f : R) : IsUnit (toOpen R (basicOpen f) f) :
 theorem is_unit_to_stalk (x : PrimeSpectrum.top R) (f : x.asIdeal.primeCompl) :
     IsUnit (toStalk R x (f : R)) := by
   erw [← germ_to_open R (basic_open (f : R)) ⟨x, f.2⟩ (f : R)]
-  exact RingHom.is_unit_map _ (is_unit_to_basic_open_self R f)
+  exact RingHom.isUnit_map _ (is_unit_to_basic_open_self R f)
 #align
   algebraic_geometry.structure_sheaf.is_unit_to_stalk AlgebraicGeometry.StructureSheaf.is_unit_to_stalk
 
@@ -807,7 +807,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     -- Crucially, we need injectivity of `to_basic_open`
     apply to_basic_open_injective R (h i * h j)
     rw [to_basic_open_mk', to_basic_open_mk']
-    simp only [SetLike.coe_mk]
+    simp only [[anonymous]]
     -- Here, both sides of the equation are equal to a restriction of `s`
     trans
     convert congr_arg ((structure_sheaf R).1.map iDj.op) (hs j).symm using 1

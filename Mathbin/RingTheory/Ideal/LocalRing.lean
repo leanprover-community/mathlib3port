@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.local_ring
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,8 +188,10 @@ theorem of_surjective' [CommRing S] [Nontrivial S] (f : R →+* S) (hf : Functio
 theorem jacobson_eq_maximal_ideal (I : Ideal R) (h : I ≠ ⊤) :
     I.jacobson = LocalRing.maximalIdeal R := by
   apply le_antisymm
-  · exact Inf_le ⟨LocalRing.le_maximal_ideal h, LocalRing.maximalIdeal.is_maximal R⟩
-  · exact le_Inf fun J (hJ : I ≤ J ∧ J.IsMaximal) => le_of_eq (LocalRing.eq_maximal_ideal hJ.2).symm
+  · exact infₛ_le ⟨LocalRing.le_maximal_ideal h, LocalRing.maximalIdeal.is_maximal R⟩
+  ·
+    exact
+      le_infₛ fun J (hJ : I ≤ J ∧ J.IsMaximal) => le_of_eq (LocalRing.eq_maximal_ideal hJ.2).symm
 #align local_ring.jacobson_eq_maximal_ideal LocalRing.jacobson_eq_maximal_ideal
 
 end LocalRing

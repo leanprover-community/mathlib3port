@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -268,7 +268,7 @@ variable (F E)
 then it is trivial over any closed interval. -/
 theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinearOrder B]
     [OrderTopology B] [FiberBundle F E] (a b : B) :
-    ∃ e : Trivialization F (π E), icc a b ⊆ e.baseSet := by
+    ∃ e : Trivialization F (π E), Icc a b ⊆ e.baseSet := by
   classical 
     obtain ⟨ea, hea⟩ : ∃ ea : Trivialization F (π E), a ∈ ea.baseSet :=
       ⟨trivialization_at F E a, mem_base_set_trivialization_at F E a⟩
@@ -283,7 +283,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
     have hsb : b ∈ upperBounds s := fun x hx => hx.1.2
     have sbd : BddAbove s := ⟨b, hsb⟩
     set c := Sup s
-    have hsc : IsLub s c := is_lub_cSup sne sbd
+    have hsc : IsLUB s c := is_lub_cSup sne sbd
     have hc : c ∈ Icc a b := ⟨hsc.1 ha, hsc.2 hsb⟩
     obtain ⟨-, ec : Trivialization F (π E), hec : Icc a c ⊆ ec.base_set⟩ : c ∈ s := by
       cases' hc.1.eq_or_lt with heq hlt
@@ -822,7 +822,7 @@ theorem continuous_symm_of_mem_pretrivialization_atlas (he : e ∈ a.pretriviali
   refine'
     id fun z H =>
       id fun U h => preimage_nhds_within_coinduced' H e.open_target (le_def.1 (nhds_mono _) U h)
-  exact le_supr₂ e he
+  exact le_supᵢ₂ e he
 #align
   fiber_prebundle.continuous_symm_of_mem_pretrivialization_atlas FiberPrebundle.continuous_symm_of_mem_pretrivialization_atlas
 

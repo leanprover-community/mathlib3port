@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.order
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,11 +83,11 @@ theorem nhds_generate_from {g : Set (Set α)} {a : α} :
     @nhds α (generateFrom g) a = ⨅ s ∈ { s | a ∈ s ∧ s ∈ g }, 𝓟 s := by
   rw [nhds_def] <;>
     exact
-      le_antisymm (binfi_mono fun s ⟨as, sg⟩ => ⟨as, generate_open.basic _ sg⟩)
-        (le_infi fun s =>
-          le_infi fun ⟨as, hs⟩ => by 
+      le_antisymm (binfᵢ_mono fun s ⟨as, sg⟩ => ⟨as, generate_open.basic _ sg⟩)
+        (le_infᵢ fun s =>
+          le_infᵢ fun ⟨as, hs⟩ => by 
             revert as; clear_; induction hs
-            case basic s hs => exact fun as => infi_le_of_le s <| infi_le _ ⟨as, hs⟩
+            case basic s hs => exact fun as => infᵢ_le_of_le s <| infᵢ_le _ ⟨as, hs⟩
             case univ => 
               rw [principal_univ]
               exact fun _ => le_top
@@ -323,9 +323,9 @@ class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where
   eq_bot : t = ⊥
 #align discrete_topology DiscreteTopology
 
-instance (priority := 100) discreteTopologyBot (α : Type _) :
+instance (priority := 100) discrete_topology_bot (α : Type _) :
     @DiscreteTopology α ⊥ where eq_bot := rfl
-#align discrete_topology_bot discreteTopologyBot
+#align discrete_topology_bot discrete_topology_bot
 
 @[simp]
 theorem is_open_discrete [TopologicalSpace α] [DiscreteTopology α] (s : Set α) : IsOpen s :=
@@ -607,10 +607,10 @@ instance (priority := 100) Subsingleton.uniqueTopologicalSpace [Subsingleton α]
       Subsingleton.set_cases (@is_open_empty _ t) (@is_open_univ _ t) ({x} : Set α)
 #align subsingleton.unique_topological_space Subsingleton.uniqueTopologicalSpace
 
-instance (priority := 100) Subsingleton.discreteTopology [t : TopologicalSpace α] [Subsingleton α] :
-    DiscreteTopology α :=
+instance (priority := 100) Subsingleton.discrete_topology [t : TopologicalSpace α]
+    [Subsingleton α] : DiscreteTopology α :=
   ⟨Unique.eq_default t⟩
-#align subsingleton.discrete_topology Subsingleton.discreteTopology
+#align subsingleton.discrete_topology Subsingleton.discrete_topology
 
 instance : TopologicalSpace Empty :=
   ⊥
@@ -764,7 +764,7 @@ theorem nhds_infi {ι : Sort _} {t : ι → TopologicalSpace α} {a : α} :
 #align nhds_infi nhds_infi
 
 theorem nhds_Inf {s : Set (TopologicalSpace α)} {a : α} :
-    @nhds α (inf s) a = ⨅ t ∈ s, @nhds α t a :=
+    @nhds α (infₛ s) a = ⨅ t ∈ s, @nhds α t a :=
   (gc_nhds a).u_Inf
 #align nhds_Inf nhds_Inf
 
@@ -860,21 +860,22 @@ theorem continuous_sup_rng_right {t₁ : tspace α} {t₃ t₂ : tspace β} :
 #align continuous_sup_rng_right continuous_sup_rng_right
 
 theorem continuous_Sup_dom {T : Set (tspace α)} {t₂ : tspace β} :
-    cont (sup T) t₂ f ↔ ∀ t ∈ T, cont t t₂ f := by simp only [continuous_iff_le_induced, Sup_le_iff]
+    cont (supₛ T) t₂ f ↔ ∀ t ∈ T, cont t t₂ f := by
+  simp only [continuous_iff_le_induced, supₛ_le_iff]
 #align continuous_Sup_dom continuous_Sup_dom
 
 theorem continuous_Sup_rng {t₁ : tspace α} {t₂ : Set (tspace β)} {t : tspace β} (h₁ : t ∈ t₂)
-    (hf : cont t₁ t f) : cont t₁ (sup t₂) f :=
-  continuous_iff_coinduced_le.2 <| le_Sup_of_le h₁ <| continuous_iff_coinduced_le.1 hf
+    (hf : cont t₁ t f) : cont t₁ (supₛ t₂) f :=
+  continuous_iff_coinduced_le.2 <| le_supₛ_of_le h₁ <| continuous_iff_coinduced_le.1 hf
 #align continuous_Sup_rng continuous_Sup_rng
 
 theorem continuous_supr_dom {t₁ : ι → tspace α} {t₂ : tspace β} :
-    cont (supr t₁) t₂ f ↔ ∀ i, cont (t₁ i) t₂ f := by
-  simp only [continuous_iff_le_induced, supr_le_iff]
+    cont (supᵢ t₁) t₂ f ↔ ∀ i, cont (t₁ i) t₂ f := by
+  simp only [continuous_iff_le_induced, supᵢ_le_iff]
 #align continuous_supr_dom continuous_supr_dom
 
 theorem continuous_supr_rng {t₁ : tspace α} {t₂ : ι → tspace β} {i : ι} (h : cont t₁ (t₂ i) f) :
-    cont t₁ (supr t₂) f :=
+    cont t₁ (supᵢ t₂) f :=
   continuous_Sup_rng ⟨i, rfl⟩ h
 #align continuous_supr_rng continuous_supr_rng
 
@@ -894,23 +895,23 @@ theorem continuous_inf_dom_right {t₁ t₂ : tspace α} {t₃ : tspace β} :
 #align continuous_inf_dom_right continuous_inf_dom_right
 
 theorem continuous_Inf_dom {t₁ : Set (tspace α)} {t₂ : tspace β} {t : tspace α} (h₁ : t ∈ t₁) :
-    cont t t₂ f → cont (inf t₁) t₂ f :=
-  continuous_le_dom <| Inf_le h₁
+    cont t t₂ f → cont (infₛ t₁) t₂ f :=
+  continuous_le_dom <| infₛ_le h₁
 #align continuous_Inf_dom continuous_Inf_dom
 
 theorem continuous_Inf_rng {t₁ : tspace α} {T : Set (tspace β)} :
-    cont t₁ (inf T) f ↔ ∀ t ∈ T, cont t₁ t f := by
-  simp only [continuous_iff_coinduced_le, le_Inf_iff]
+    cont t₁ (infₛ T) f ↔ ∀ t ∈ T, cont t₁ t f := by
+  simp only [continuous_iff_coinduced_le, le_infₛ_iff]
 #align continuous_Inf_rng continuous_Inf_rng
 
 theorem continuous_infi_dom {t₁ : ι → tspace α} {t₂ : tspace β} {i : ι} :
     cont (t₁ i) t₂ f → cont (infi t₁) t₂ f :=
-  continuous_le_dom <| infi_le _ _
+  continuous_le_dom <| infᵢ_le _ _
 #align continuous_infi_dom continuous_infi_dom
 
 theorem continuous_infi_rng {t₁ : tspace α} {t₂ : ι → tspace β} :
     cont t₁ (infi t₂) f ↔ ∀ i, cont t₁ (t₂ i) f := by
-  simp only [continuous_iff_coinduced_le, le_infi_iff]
+  simp only [continuous_iff_coinduced_le, le_infᵢ_iff]
 #align continuous_infi_rng continuous_infi_rng
 
 @[continuity]
@@ -1049,25 +1050,25 @@ theorem set_of_is_open_sup (t₁ t₂ : TopologicalSpace α) :
 
 theorem generate_from_Union {f : ι → Set (Set α)} :
     TopologicalSpace.generateFrom (⋃ i, f i) = ⨅ i, TopologicalSpace.generateFrom (f i) :=
-  @GaloisConnection.l_supr _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _
+  @GaloisConnection.l_supᵢ _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _
     (fun g t => generate_from_le_iff_subset_is_open) f
 #align generate_from_Union generate_from_Union
 
 theorem set_of_is_open_supr {t : ι → TopologicalSpace α} :
     { s | (⨆ i, t i).IsOpen s } = ⋂ i, { s | (t i).IsOpen s } :=
-  @GaloisConnection.u_infi _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _
+  @GaloisConnection.u_infᵢ _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _
     (fun g t => generate_from_le_iff_subset_is_open) t
 #align set_of_is_open_supr set_of_is_open_supr
 
 theorem generate_from_sUnion {S : Set (Set (Set α))} :
     TopologicalSpace.generateFrom (⋃₀S) = ⨅ s ∈ S, TopologicalSpace.generateFrom s :=
-  @GaloisConnection.l_Sup _ (TopologicalSpace α)ᵒᵈ _ _ _ _
+  @GaloisConnection.l_supₛ _ (TopologicalSpace α)ᵒᵈ _ _ _ _
     (fun g t => generate_from_le_iff_subset_is_open) S
 #align generate_from_sUnion generate_from_sUnion
 
 theorem set_of_is_open_Sup {T : Set (TopologicalSpace α)} :
-    { s | (sup T).IsOpen s } = ⋂ t ∈ T, { s | (t : TopologicalSpace α).IsOpen s } :=
-  @GaloisConnection.u_Inf _ (TopologicalSpace α)ᵒᵈ _ _ _ _
+    { s | (supₛ T).IsOpen s } = ⋂ t ∈ T, { s | (t : TopologicalSpace α).IsOpen s } :=
+  @GaloisConnection.u_infₛ _ (TopologicalSpace α)ᵒᵈ _ _ _ _
     (fun g t => generate_from_le_iff_subset_is_open) T
 #align set_of_is_open_Sup set_of_is_open_Sup
 
@@ -1078,7 +1079,7 @@ theorem generate_from_union_is_open (a b : TopologicalSpace α) :
 
 theorem generate_from_Union_is_open (f : ι → TopologicalSpace α) :
     TopologicalSpace.generateFrom (⋃ i, { s | (f i).IsOpen s }) = ⨅ i, f i :=
-  @GaloisInsertion.l_supr_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f
+  @GaloisInsertion.l_supᵢ_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f
 #align generate_from_Union_is_open generate_from_Union_is_open
 
 theorem generate_from_inter (a b : TopologicalSpace α) :
@@ -1088,19 +1089,19 @@ theorem generate_from_inter (a b : TopologicalSpace α) :
 
 theorem generate_from_Inter (f : ι → TopologicalSpace α) :
     TopologicalSpace.generateFrom (⋂ i, { s | (f i).IsOpen s }) = ⨆ i, f i :=
-  @GaloisInsertion.l_infi_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f
+  @GaloisInsertion.l_infᵢ_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f
 #align generate_from_Inter generate_from_Inter
 
 theorem generate_from_Inter_of_generate_from_eq_self (f : ι → Set (Set α))
     (hf : ∀ i, { s | (TopologicalSpace.generateFrom (f i)).IsOpen s } = f i) :
     TopologicalSpace.generateFrom (⋂ i, f i) = ⨆ i, TopologicalSpace.generateFrom (f i) :=
-  @GaloisInsertion.l_infi_of_ul_eq_self _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f hf
+  @GaloisInsertion.l_infᵢ_of_ul_eq_self _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f hf
 #align generate_from_Inter_of_generate_from_eq_self generate_from_Inter_of_generate_from_eq_self
 
 variable {t : ι → TopologicalSpace α}
 
 theorem is_open_supr_iff {s : Set α} : @IsOpen _ (⨆ i, t i) s ↔ ∀ i, @IsOpen _ (t i) s :=
-  show s ∈ setOf (supr t).IsOpen ↔ s ∈ { x : Set α | ∀ i : ι, (t i).IsOpen x } by
+  show s ∈ setOf (supᵢ t).IsOpen ↔ s ∈ { x : Set α | ∀ i : ι, (t i).IsOpen x } by
     simp [set_of_is_open_supr]
 #align is_open_supr_iff is_open_supr_iff
 

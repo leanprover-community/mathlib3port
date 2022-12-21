@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.complete_field
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ theorem coe_mem_cut_map_iff [CharZero β] : (q : β) ∈ cutMap β a ↔ (q : α
   Rat.cast_injective.mem_set_image
 #align linear_ordered_field.coe_mem_cut_map_iff LinearOrderedField.coe_mem_cut_map_iff
 
-theorem cut_map_self (a : α) : cutMap α a = iio a ∩ range (coe : ℚ → α) := by
+theorem cut_map_self (a : α) : cutMap α a = Iio a ∩ range (coe : ℚ → α) := by
   ext
   constructor
   · rintro ⟨q, h, rfl⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.filter.ennreal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
 
 theorem limsup_add_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
     f.limsup (u + v) ≤ f.limsup u + f.limsup v :=
-  Inf_le
+  infₛ_le
     ((eventually_le_limsup u).mp
       ((eventually_le_limsup v).mono fun _ hxg hxf => add_le_add hxf hxg))
 #align ennreal.limsup_add_le Ennreal.limsup_add_le
@@ -132,7 +132,7 @@ theorem limsup_liminf_le_liminf_limsup {β} [Countable β] {f : Filter α} [Coun
   have h1 : ∀ᶠ a in f, ∀ b, u a b ≤ f.limsup fun a' => u a' b := by
     rw [eventually_countable_forall]
     exact fun b => Ennreal.eventually_le_limsup fun a => u a b
-  refine' Inf_le (h1.mono fun x hx => Filter.liminf_le_liminf (Filter.eventually_of_forall hx) _)
+  refine' infₛ_le (h1.mono fun x hx => Filter.liminf_le_liminf (Filter.eventually_of_forall hx) _)
   run_tac
     filter.is_bounded_default
 #align ennreal.limsup_liminf_le_liminf_limsup Ennreal.limsup_liminf_le_liminf_limsup

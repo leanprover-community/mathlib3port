@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.torsion
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ theorem CompleteLattice.Independent.linear_independent' {ι R M : Type _} {v : �
     (h_ne_zero : ∀ i, Ideal.torsionOf R M (v i) = ⊥) : LinearIndependent R v := by
   refine' linear_independent_iff_not_smul_mem_span.mpr fun i r hi => _
   replace hv := complete_lattice.independent_def.mp hv i
-  simp only [supr_subtype', ← Submodule.span_range_eq_supr, disjoint_iff] at hv
+  simp only [supᵢ_subtype', ← Submodule.span_range_eq_supr, disjoint_iff] at hv
   have : r • v i ∈ ⊥ := by 
     rw [← hv, Submodule.mem_inf]
     refine' ⟨submodule.mem_span_singleton.mpr ⟨r, rfl⟩, _⟩
@@ -171,7 +171,7 @@ def torsionBy (a : R) : Submodule R M :=
 /-- The submodule containing all elements `x` of `M` such that `a • x = 0` for all `a` in `s`. -/
 @[simps]
 def torsionBySet (s : Set R) : Submodule R M :=
-  inf (torsionBy R M '' s)
+  infₛ (torsionBy R M '' s)
 #align submodule.torsion_by_set Submodule.torsionBySet
 
 /-- The `S`-torsion submodule, containing all elements `x` of `M` such that `a • x = 0` for some
@@ -264,7 +264,7 @@ theorem torsion_by_singleton_eq : torsionBySet R M {a} = torsionBy R M a := by
 
 theorem torsion_by_set_le_torsion_by_set_of_subset {s t : Set R} (st : s ⊆ t) :
     torsionBySet R M t ≤ torsionBySet R M s :=
-  Inf_le_Inf fun _ ⟨a, ha, h⟩ => ⟨a, st ha, h⟩
+  infₛ_le_infₛ fun _ ⟨a, ha, h⟩ => ⟨a, st ha, h⟩
 #align
   submodule.torsion_by_set_le_torsion_by_set_of_subset Submodule.torsion_by_set_le_torsion_by_set_of_subset
 
@@ -391,17 +391,17 @@ theorem supr_torsion_by_ideal_eq_torsion_by_infi :
     (⨆ i ∈ S, torsionBySet R M <| p i) = torsionBySet R M ↑(⨅ i ∈ S, p i) := by
   cases' S.eq_empty_or_nonempty with h h
   · rw [h]
-    convert supr_emptyset
+    convert supᵢ_emptyset
     convert torsion_by_univ
     convert top_coe
-    exact infi_emptyset
+    exact infᵢ_emptyset
   apply le_antisymm
-  · apply supr_le _
+  · apply supᵢ_le _
     intro i
-    apply supr_le _
+    apply supᵢ_le _
     intro is
     apply torsion_by_set_le_torsion_by_set_of_subset
-    exact (infi_le (fun i => ⨅ H : i ∈ S, p i) i).trans (infi_le _ is)
+    exact (infᵢ_le (fun i => ⨅ H : i ∈ S, p i) i).trans (infᵢ_le _ is)
   · intro x hx
     rw [mem_supr_finset_iff_exists_sum]
     obtain ⟨μ, hμ⟩ :=
@@ -489,7 +489,7 @@ theorem torsion_by_set_is_internal {p : ι → Ideal R}
     DirectSum.IsInternal fun i : S => torsionBySet R M <| p i :=
   DirectSum.is_internal_submodule_of_independent_of_supr_eq_top
     (CompleteLattice.independent_iff_sup_indep.mpr <| sup_indep_torsion_by_ideal hp)
-    (((supr_subtype'' ↑S) fun i => torsionBySet R M <| p i).trans <|
+    (((supᵢ_subtype'' ↑S) fun i => torsionBySet R M <| p i).trans <|
       (supr_torsion_by_ideal_eq_torsion_by_infi hp).trans <|
         (Module.is_torsion_by_set_iff_torsion_by_set_eq_top _).mp hM)
 #align submodule.torsion_by_set_is_internal Submodule.torsion_by_set_is_internal

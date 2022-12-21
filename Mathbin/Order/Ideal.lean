@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.ideal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -426,7 +426,7 @@ section SemilatticeSupOrderBot
 
 variable [SemilatticeSup P] [OrderBot P] {x : P} {I J K : Ideal P}
 
-instance : HasInf (Ideal P) :=
+instance : InfSet (Ideal P) :=
   ⟨fun S =>
     { toLowerSet := ⨅ s ∈ S, toLowerSet s
       nonempty' :=
@@ -442,12 +442,12 @@ instance : HasInf (Ideal P) :=
 variable {S : Set (Ideal P)}
 
 @[simp]
-theorem coe_Inf : (↑(inf S) : Set P) = ⋂ s ∈ S, ↑s :=
+theorem coe_Inf : (↑(infₛ S) : Set P) = ⋂ s ∈ S, ↑s :=
   LowerSet.coe_infi₂ _
 #align order.ideal.coe_Inf Order.Ideal.coe_Inf
 
 @[simp]
-theorem mem_Inf : x ∈ inf S ↔ ∀ s ∈ S, x ∈ s := by simp_rw [← SetLike.mem_coe, coe_Inf, mem_Inter₂]
+theorem mem_Inf : x ∈ infₛ S ↔ ∀ s ∈ S, x ∈ s := by simp_rw [← SetLike.mem_coe, coe_Inf, mem_Inter₂]
 #align order.ideal.mem_Inf Order.Ideal.mem_Inf
 
 instance : CompleteLattice (Ideal P) :=

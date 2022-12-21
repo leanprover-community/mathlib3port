@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.tagged
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ prepartition. For simiplicity we require that `tag` is defined for all boxes in 
 we will use onle the values of `tag` on the boxes of the partition. -/
 structure TaggedPrepartition (I : Box ι) extends Prepartition I where
   Tag : Box ι → ι → ℝ
-  tag_mem_Icc : ∀ J, tag J ∈ I.icc
+  tag_mem_Icc : ∀ J, tag J ∈ I.IccCat
 #align box_integral.tagged_prepartition BoxIntegral.TaggedPrepartition
 
 namespace TaggedPrepartition
@@ -242,13 +242,13 @@ open Metric
 /-- A tagged partition is said to be a Henstock partition if for each `J ∈ π`, the tag of `J`
 belongs to `J.Icc`. -/
 def IsHenstock (π : TaggedPrepartition I) : Prop :=
-  ∀ J ∈ π, π.Tag J ∈ J.icc
+  ∀ J ∈ π, π.Tag J ∈ J.IccCat
 #align box_integral.tagged_prepartition.is_Henstock BoxIntegral.TaggedPrepartition.IsHenstock
 
 @[simp]
 theorem is_Henstock_bUnion_tagged {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J} :
     IsHenstock (π.bUnionTagged πi) ↔ ∀ J ∈ π, (πi J).IsHenstock :=
-  π.forall_bUnion_tagged (fun x J => x ∈ J.icc) πi
+  π.forall_bUnion_tagged (fun x J => x ∈ J.IccCat) πi
 #align
   box_integral.tagged_prepartition.is_Henstock_bUnion_tagged BoxIntegral.TaggedPrepartition.is_Henstock_bUnion_tagged
 
@@ -256,7 +256,8 @@ theorem is_Henstock_bUnion_tagged {π : Prepartition I} {πi : ∀ J, TaggedPrep
 theorem IsHenstock.card_filter_tag_eq_le [Fintype ι] (h : π.IsHenstock) (x : ι → ℝ) :
     (π.boxes.filter fun J => π.Tag J = x).card ≤ 2 ^ Fintype.card ι :=
   calc
-    (π.boxes.filter fun J => π.Tag J = x).card ≤ (π.boxes.filter fun J : Box ι => x ∈ J.icc).card :=
+    (π.boxes.filter fun J => π.Tag J = x).card ≤
+        (π.boxes.filter fun J : Box ι => x ∈ J.IccCat).card :=
       by 
       refine' Finset.card_le_of_subset fun J hJ => _
       rw [Finset.mem_filter] at hJ⊢; rcases hJ with ⟨hJ, rfl⟩
@@ -268,17 +269,17 @@ theorem IsHenstock.card_filter_tag_eq_le [Fintype ι] (h : π.IsHenstock) (x : �
 
 /-- A tagged partition `π` is subordinate to `r : (ι → ℝ) → ℝ` if each box `J ∈ π` is included in
 the closed ball with center `π.tag J` and radius `r (π.tag J)`. -/
-def IsSubordinate [Fintype ι] (π : TaggedPrepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) : Prop :=
-  ∀ J ∈ π, (J : _).icc ⊆ closedBall (π.Tag J) (r <| π.Tag J)
+def IsSubordinate [Fintype ι] (π : TaggedPrepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) : Prop :=
+  ∀ J ∈ π, (J : _).IccCat ⊆ closedBall (π.Tag J) (r <| π.Tag J)
 #align box_integral.tagged_prepartition.is_subordinate BoxIntegral.TaggedPrepartition.IsSubordinate
 
-variable {r r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)}
+variable {r r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)}
 
 @[simp]
 theorem is_subordinate_bUnion_tagged [Fintype ι] {π : Prepartition I}
     {πi : ∀ J, TaggedPrepartition J} :
     IsSubordinate (π.bUnionTagged πi) r ↔ ∀ J ∈ π, (πi J).IsSubordinate r :=
-  π.forall_bUnion_tagged (fun x J => J.icc ⊆ closedBall x (r x)) πi
+  π.forall_bUnion_tagged (fun x J => J.IccCat ⊆ closedBall x (r x)) πi
 #align
   box_integral.tagged_prepartition.is_subordinate_bUnion_tagged BoxIntegral.TaggedPrepartition.is_subordinate_bUnion_tagged
 
@@ -302,15 +303,16 @@ theorem IsSubordinate.mono' [Fintype ι] {π : TaggedPrepartition I} (hr₁ : π
   box_integral.tagged_prepartition.is_subordinate.mono' BoxIntegral.TaggedPrepartition.IsSubordinate.mono'
 
 theorem IsSubordinate.mono [Fintype ι] {π : TaggedPrepartition I} (hr₁ : π.IsSubordinate r₁)
-    (h : ∀ x ∈ I.icc, r₁ x ≤ r₂ x) : π.IsSubordinate r₂ :=
+    (h : ∀ x ∈ I.IccCat, r₁ x ≤ r₂ x) : π.IsSubordinate r₂ :=
   hr₁.mono' fun J _ => h _ <| π.tag_mem_Icc J
 #align
   box_integral.tagged_prepartition.is_subordinate.mono BoxIntegral.TaggedPrepartition.IsSubordinate.mono
 
 theorem IsSubordinate.diam_le [Fintype ι] {π : TaggedPrepartition I} (h : π.IsSubordinate r)
-    (hJ : J ∈ π.boxes) : diam J.icc ≤ 2 * r (π.Tag J) :=
+    (hJ : J ∈ π.boxes) : diam J.IccCat ≤ 2 * r (π.Tag J) :=
   calc
-    diam J.icc ≤ diam (closedBall (π.Tag J) (r <| π.Tag J)) := diam_mono (h J hJ) boundedClosedBall
+    diam J.IccCat ≤ diam (closedBall (π.Tag J) (r <| π.Tag J)) :=
+      diam_mono (h J hJ) boundedClosedBall
     _ ≤ 2 * r (π.Tag J) := diam_closed_ball (le_of_lt (r _).2)
     
 #align
@@ -318,56 +320,56 @@ theorem IsSubordinate.diam_le [Fintype ι] {π : TaggedPrepartition I} (h : π.I
 
 /-- Tagged prepartition with single box and prescribed tag. -/
 @[simps (config := { fullyApplied := false })]
-def single (I J : Box ι) (hJ : J ≤ I) (x : ι → ℝ) (h : x ∈ I.icc) : TaggedPrepartition I :=
+def single (I J : Box ι) (hJ : J ≤ I) (x : ι → ℝ) (h : x ∈ I.IccCat) : TaggedPrepartition I :=
   ⟨Prepartition.single I J hJ, fun J => x, fun J => h⟩
 #align box_integral.tagged_prepartition.single BoxIntegral.TaggedPrepartition.single
 
 @[simp]
-theorem mem_single {J'} (hJ : J ≤ I) (h : x ∈ I.icc) : J' ∈ single I J hJ x h ↔ J' = J :=
+theorem mem_single {J'} (hJ : J ≤ I) (h : x ∈ I.IccCat) : J' ∈ single I J hJ x h ↔ J' = J :=
   Finset.mem_singleton
 #align box_integral.tagged_prepartition.mem_single BoxIntegral.TaggedPrepartition.mem_single
 
 instance (I : Box ι) : Inhabited (TaggedPrepartition I) :=
   ⟨single I I le_rfl I.upper I.upper_mem_Icc⟩
 
-theorem is_partition_single_iff (hJ : J ≤ I) (h : x ∈ I.icc) :
+theorem is_partition_single_iff (hJ : J ≤ I) (h : x ∈ I.IccCat) :
     (single I J hJ x h).IsPartition ↔ J = I :=
   Prepartition.is_partition_single_iff hJ
 #align
   box_integral.tagged_prepartition.is_partition_single_iff BoxIntegral.TaggedPrepartition.is_partition_single_iff
 
-theorem isPartitionSingle (h : x ∈ I.icc) : (single I I le_rfl x h).IsPartition :=
+theorem isPartitionSingle (h : x ∈ I.IccCat) : (single I I le_rfl x h).IsPartition :=
   Prepartition.isPartitionTop I
 #align
   box_integral.tagged_prepartition.is_partition_single BoxIntegral.TaggedPrepartition.isPartitionSingle
 
-theorem forall_mem_single (p : (ι → ℝ) → Box ι → Prop) (hJ : J ≤ I) (h : x ∈ I.icc) :
+theorem forall_mem_single (p : (ι → ℝ) → Box ι → Prop) (hJ : J ≤ I) (h : x ∈ I.IccCat) :
     (∀ J' ∈ single I J hJ x h, p ((single I J hJ x h).Tag J') J') ↔ p x J := by simp
 #align
   box_integral.tagged_prepartition.forall_mem_single BoxIntegral.TaggedPrepartition.forall_mem_single
 
 @[simp]
-theorem is_Henstock_single_iff (hJ : J ≤ I) (h : x ∈ I.icc) :
-    IsHenstock (single I J hJ x h) ↔ x ∈ J.icc :=
-  forall_mem_single (fun x J => x ∈ J.icc) hJ h
+theorem is_Henstock_single_iff (hJ : J ≤ I) (h : x ∈ I.IccCat) :
+    IsHenstock (single I J hJ x h) ↔ x ∈ J.IccCat :=
+  forall_mem_single (fun x J => x ∈ J.IccCat) hJ h
 #align
   box_integral.tagged_prepartition.is_Henstock_single_iff BoxIntegral.TaggedPrepartition.is_Henstock_single_iff
 
 @[simp]
-theorem isHenstockSingle (h : x ∈ I.icc) : IsHenstock (single I I le_rfl x h) :=
+theorem isHenstockSingle (h : x ∈ I.IccCat) : IsHenstock (single I I le_rfl x h) :=
   (is_Henstock_single_iff (le_refl I) h).2 h
 #align
   box_integral.tagged_prepartition.is_Henstock_single BoxIntegral.TaggedPrepartition.isHenstockSingle
 
 @[simp]
-theorem is_subordinate_single [Fintype ι] (hJ : J ≤ I) (h : x ∈ I.icc) :
-    IsSubordinate (single I J hJ x h) r ↔ J.icc ⊆ closedBall x (r x) :=
-  forall_mem_single (fun x J => J.icc ⊆ closedBall x (r x)) hJ h
+theorem is_subordinate_single [Fintype ι] (hJ : J ≤ I) (h : x ∈ I.IccCat) :
+    IsSubordinate (single I J hJ x h) r ↔ J.IccCat ⊆ closedBall x (r x) :=
+  forall_mem_single (fun x J => J.IccCat ⊆ closedBall x (r x)) hJ h
 #align
   box_integral.tagged_prepartition.is_subordinate_single BoxIntegral.TaggedPrepartition.is_subordinate_single
 
 @[simp]
-theorem Union_single (hJ : J ≤ I) (h : x ∈ I.icc) : (single I J hJ x h).union = J :=
+theorem Union_single (hJ : J ≤ I) (h : x ∈ I.IccCat) : (single I J hJ x h).union = J :=
   Prepartition.Union_single hJ
 #align box_integral.tagged_prepartition.Union_single BoxIntegral.TaggedPrepartition.Union_single
 
@@ -498,7 +500,7 @@ theorem distortion_of_const {c} (h₁ : π.boxes.Nonempty) (h₂ : ∀ J ∈ π,
   box_integral.tagged_prepartition.distortion_of_const BoxIntegral.TaggedPrepartition.distortion_of_const
 
 @[simp]
-theorem distortion_single (hJ : J ≤ I) (h : x ∈ I.icc) :
+theorem distortion_single (hJ : J ≤ I) (h : x ∈ I.IccCat) :
     distortion (single I J hJ x h) = J.distortion :=
   sup_singleton
 #align

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_field
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,7 +182,7 @@ end UniformSpace
 
 variable (L : Type _) [Field L] [UniformSpace L] [CompletableTopField L]
 
-instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :=
+instance Subfield.completable_top_field (K : Subfield L) : CompletableTopField K :=
   { Subtype.separated_space (K : Set L) with
     nice := by 
       intro F F_cau inf_F
@@ -195,9 +195,9 @@ instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :
             rfl)]
       apply CompletableTopField.nice _ F_cau
       rw [← Filter.push_pull', ← map_zero i, ← hi.inducing.nhds_eq_comap, inf_F, Filter.map_bot] }
-#align subfield.completable_top_field Subfield.completableTopField
+#align subfield.completable_top_field Subfield.completable_top_field
 
-instance (priority := 100) completableTopFieldOfComplete (L : Type _) [Field L] [UniformSpace L]
+instance (priority := 100) completable_top_field_of_complete (L : Type _) [Field L] [UniformSpace L]
     [TopologicalDivisionRing L] [SeparatedSpace L] [CompleteSpace L] : CompletableTopField L :=
   { ‹SeparatedSpace L› with
     nice := fun F cau_F hF => by 
@@ -213,5 +213,5 @@ instance (priority := 100) completableTopFieldOfComplete (L : Type _) [Field L] 
             map (fun x => x⁻¹) F ≤ map (fun x => x⁻¹) (𝓝 x) := map_mono hx
             _ ≤ 𝓝 x⁻¹ := continuous_at_inv₀ hx'
             ) }
-#align completable_top_field_of_complete completableTopFieldOfComplete
+#align completable_top_field_of_complete completable_top_field_of_complete
 

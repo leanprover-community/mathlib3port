@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.convolution
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -760,7 +760,7 @@ theorem dist_convolution_le' {x₀ : G} {R ε : ℝ} {z₀ : E'} (hε : 0 ≤ ε
     swap
     · refine' fun t => mt fun ht : f t = 0 => _
       simp_rw [ht, L.map_zero₂]
-    rw [bdd_above_def]
+    rw [bddAbove_def]
     refine' ⟨‖z₀‖ + ε, _⟩
     rintro _ ⟨x, hx, rfl⟩
     refine' norm_le_norm_add_const_of_dist_le (hg x _)

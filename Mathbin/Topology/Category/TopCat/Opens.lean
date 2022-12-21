@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.category.Top.opens
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,8 +77,8 @@ def infLeRight (U V : Opens X) : U ⊓ V ⟶ V :=
 
 /-- The inclusion `U i ⟶ supr U` as a morphism in the category of open sets.
 -/
-def leSupr {ι : Type _} (U : ι → Opens X) (i : ι) : U i ⟶ supr U :=
-  (le_supr U i).Hom
+def leSupr {ι : Type _} (U : ι → Opens X) (i : ι) : U i ⟶ supᵢ U :=
+  (le_supᵢ U i).Hom
 #align topological_space.opens.le_supr TopologicalSpace.Opens.leSupr
 
 /-- The inclusion `⊥ ⟶ U` as a morphism in the category of open sets.
@@ -108,7 +108,7 @@ theorem inf_le_left_apply_mk (U V : Opens X) (x) (m) :
 
 @[simp]
 theorem le_supr_apply_mk {ι : Type _} (U : ι → Opens X) (i : ι) (x) (m) :
-    (leSupr U i) ⟨x, m⟩ = ⟨x, (le_supr U i : _) m⟩ :=
+    (leSupr U i) ⟨x, m⟩ = ⟨x, (le_supᵢ U i : _) m⟩ :=
   rfl
 #align topological_space.opens.le_supr_apply_mk TopologicalSpace.Opens.le_supr_apply_mk
 
@@ -226,7 +226,7 @@ theorem op_map_comp_obj (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
 #align topological_space.opens.op_map_comp_obj TopologicalSpace.Opens.op_map_comp_obj
 
 theorem map_supr (f : X ⟶ Y) {ι : Type _} (U : ι → Opens Y) :
-    (map f).obj (supr U) = supr ((map f).obj ∘ U) := by
+    (map f).obj (supᵢ U) = supᵢ ((map f).obj ∘ U) := by
   apply Subtype.eq; rw [supr_def, supr_def, map_obj]
   dsimp; rw [Set.preimage_Union]; rfl
 #align topological_space.opens.map_supr TopologicalSpace.Opens.map_supr

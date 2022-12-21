@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.cardinality
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -222,7 +222,7 @@ theorem not_countable_real : ¬(Set.univ : Set ℝ).Countable := by
 #align cardinal.not_countable_real Cardinal.not_countable_real
 
 /-- The cardinality of the interval (a, ∞). -/
-theorem mk_Ioi_real (a : ℝ) : (#ioi a) = 𝔠 := by
+theorem mk_Ioi_real (a : ℝ) : (#Ioi a) = 𝔠 := by
   refine' le_antisymm (mk_real ▸ mk_set_le _) _
   rw [← not_lt]
   intro h
@@ -244,12 +244,12 @@ theorem mk_Ioi_real (a : ℝ) : (#ioi a) = 𝔠 := by
 #align cardinal.mk_Ioi_real Cardinal.mk_Ioi_real
 
 /-- The cardinality of the interval [a, ∞). -/
-theorem mk_Ici_real (a : ℝ) : (#ici a) = 𝔠 :=
+theorem mk_Ici_real (a : ℝ) : (#Ici a) = 𝔠 :=
   le_antisymm (mk_real ▸ mk_set_le _) (mk_Ioi_real a ▸ mk_le_mk_of_subset Ioi_subset_Ici_self)
 #align cardinal.mk_Ici_real Cardinal.mk_Ici_real
 
 /-- The cardinality of the interval (-∞, a). -/
-theorem mk_Iio_real (a : ℝ) : (#iio a) = 𝔠 := by
+theorem mk_Iio_real (a : ℝ) : (#Iio a) = 𝔠 := by
   refine' le_antisymm (mk_real ▸ mk_set_le _) _
   have h2 : (fun x => a + a - x) '' Iio a = Ioi a := by
     convert image_const_sub_Iio _ _
@@ -258,12 +258,12 @@ theorem mk_Iio_real (a : ℝ) : (#iio a) = 𝔠 := by
 #align cardinal.mk_Iio_real Cardinal.mk_Iio_real
 
 /-- The cardinality of the interval (-∞, a]. -/
-theorem mk_Iic_real (a : ℝ) : (#iic a) = 𝔠 :=
+theorem mk_Iic_real (a : ℝ) : (#Iic a) = 𝔠 :=
   le_antisymm (mk_real ▸ mk_set_le _) (mk_Iio_real a ▸ mk_le_mk_of_subset Iio_subset_Iic_self)
 #align cardinal.mk_Iic_real Cardinal.mk_Iic_real
 
 /-- The cardinality of the interval (a, b). -/
-theorem mk_Ioo_real {a b : ℝ} (h : a < b) : (#ioo a b) = 𝔠 := by
+theorem mk_Ioo_real {a b : ℝ} (h : a < b) : (#Ioo a b) = 𝔠 := by
   refine' le_antisymm (mk_real ▸ mk_set_le _) _
   have h1 : (#(fun x => x - a) '' Ioo a b) ≤ (#Ioo a b) := mk_image_le
   refine' le_trans _ h1
@@ -275,17 +275,17 @@ theorem mk_Ioo_real {a b : ℝ} (h : a < b) : (#ioo a b) = 𝔠 := by
 #align cardinal.mk_Ioo_real Cardinal.mk_Ioo_real
 
 /-- The cardinality of the interval [a, b). -/
-theorem mk_Ico_real {a b : ℝ} (h : a < b) : (#ico a b) = 𝔠 :=
+theorem mk_Ico_real {a b : ℝ} (h : a < b) : (#Ico a b) = 𝔠 :=
   le_antisymm (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ico_self)
 #align cardinal.mk_Ico_real Cardinal.mk_Ico_real
 
 /-- The cardinality of the interval [a, b]. -/
-theorem mk_Icc_real {a b : ℝ} (h : a < b) : (#icc a b) = 𝔠 :=
+theorem mk_Icc_real {a b : ℝ} (h : a < b) : (#Icc a b) = 𝔠 :=
   le_antisymm (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Icc_self)
 #align cardinal.mk_Icc_real Cardinal.mk_Icc_real
 
 /-- The cardinality of the interval (a, b]. -/
-theorem mk_Ioc_real {a b : ℝ} (h : a < b) : (#ioc a b) = 𝔠 :=
+theorem mk_Ioc_real {a b : ℝ} (h : a < b) : (#Ioc a b) = 𝔠 :=
   le_antisymm (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ioc_self)
 #align cardinal.mk_Ioc_real Cardinal.mk_Ioc_real
 

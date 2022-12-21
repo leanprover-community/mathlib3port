@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yury Kudryashov, Sébastien Gouëzel, Chris Hughes
 
 ! This file was ported from Lean 3 source module data.fin.tuple.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -675,19 +675,19 @@ open Set
 
 theorem insert_nth_mem_Icc {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)}
     {q₁ q₂ : ∀ j, α j} :
-    i.insertNth x p ∈ icc q₁ q₂ ↔
-      x ∈ icc (q₁ i) (q₂ i) ∧ p ∈ icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
+    i.insertNth x p ∈ Icc q₁ q₂ ↔
+      x ∈ Icc (q₁ i) (q₂ i) ∧ p ∈ Icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
   by simp only [mem_Icc, insert_nth_le_iff, le_insert_nth_iff, and_assoc, and_left_comm]
 #align fin.insert_nth_mem_Icc Fin.insert_nth_mem_Icc
 
 theorem preimage_insert_nth_Icc_of_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j}
-    (hx : x ∈ icc (q₁ i) (q₂ i)) :
-    i.insertNth x ⁻¹' icc q₁ q₂ = icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
+    (hx : x ∈ Icc (q₁ i) (q₂ i)) :
+    i.insertNth x ⁻¹' Icc q₁ q₂ = Icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
   Set.ext fun p => by simp only [mem_preimage, insert_nth_mem_Icc, hx, true_and_iff]
 #align fin.preimage_insert_nth_Icc_of_mem Fin.preimage_insert_nth_Icc_of_mem
 
 theorem preimage_insert_nth_Icc_of_not_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j}
-    (hx : x ∉ icc (q₁ i) (q₂ i)) : i.insertNth x ⁻¹' icc q₁ q₂ = ∅ :=
+    (hx : x ∉ Icc (q₁ i) (q₂ i)) : i.insertNth x ⁻¹' Icc q₁ q₂ = ∅ :=
   Set.ext fun p => by
     simp only [mem_preimage, insert_nth_mem_Icc, hx, false_and_iff, mem_empty_iff_false]
 #align fin.preimage_insert_nth_Icc_of_not_mem Fin.preimage_insert_nth_Icc_of_not_mem

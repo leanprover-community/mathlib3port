@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.radical
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,11 +170,11 @@ theorem Ideal.IsPrime.homogeneous_core {I : Ideal A} (h : I.IsPrime) :
 #align ideal.is_prime.homogeneous_core Ideal.IsPrime.homogeneous_core
 
 theorem Ideal.IsHomogeneous.radical_eq {I : Ideal A} (hI : I.IsHomogeneous 𝒜) :
-    I.radical = inf { J | J.IsHomogeneous 𝒜 ∧ I ≤ J ∧ J.IsPrime } := by
+    I.radical = infₛ { J | J.IsHomogeneous 𝒜 ∧ I ≤ J ∧ J.IsPrime } := by
   rw [Ideal.radical_eq_Inf]
   apply le_antisymm
-  · exact Inf_le_Inf fun J => And.right
-  · refine' Inf_le_Inf_of_forall_exists_le _
+  · exact infₛ_le_infₛ fun J => And.right
+  · refine' infₛ_le_infₛ_of_forall_exists_le _
     rintro J ⟨HJ₁, HJ₂⟩
     refine' ⟨(J.homogeneous_core 𝒜).toIdeal, _, J.to_ideal_homogeneous_core_le _⟩
     refine' ⟨HomogeneousIdeal.is_homogeneous _, _, HJ₂.homogeneous_core⟩

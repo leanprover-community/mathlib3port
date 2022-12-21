@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,7 +242,7 @@ section OrderedAddCommMonoid
 
 variable [OrderedAddCommMonoid β] [Module 𝕜 β] [OrderedSmul 𝕜 β]
 
-theorem convex_Iic (r : β) : Convex 𝕜 (iic r) := fun x hx y hy a b ha hb hab =>
+theorem convex_Iic (r : β) : Convex 𝕜 (Iic r) := fun x hx y hy a b ha hb hab =>
   calc
     a • x + b • y ≤ a • r + b • r :=
       add_le_add (smul_le_smul_of_nonneg hx ha) (smul_le_smul_of_nonneg hy hb)
@@ -250,11 +250,11 @@ theorem convex_Iic (r : β) : Convex 𝕜 (iic r) := fun x hx y hy a b ha hb hab
     
 #align convex_Iic convex_Iic
 
-theorem convex_Ici (r : β) : Convex 𝕜 (ici r) :=
+theorem convex_Ici (r : β) : Convex 𝕜 (Ici r) :=
   @convex_Iic 𝕜 βᵒᵈ _ _ _ _ r
 #align convex_Ici convex_Ici
 
-theorem convex_Icc (r s : β) : Convex 𝕜 (icc r s) :=
+theorem convex_Icc (r s : β) : Convex 𝕜 (Icc r s) :=
   Ici_inter_Iic.subst ((convex_Ici r).inter <| convex_Iic s)
 #align convex_Icc convex_Icc
 
@@ -277,7 +277,7 @@ section OrderedCancelAddCommMonoid
 
 variable [OrderedCancelAddCommMonoid β] [Module 𝕜 β] [OrderedSmul 𝕜 β]
 
-theorem convex_Iio (r : β) : Convex 𝕜 (iio r) := by
+theorem convex_Iio (r : β) : Convex 𝕜 (Iio r) := by
   intro x hx y hy a b ha hb hab
   obtain rfl | ha' := ha.eq_or_lt
   · rw [zero_add] at hab
@@ -290,19 +290,19 @@ theorem convex_Iio (r : β) : Convex 𝕜 (iio r) := by
     
 #align convex_Iio convex_Iio
 
-theorem convex_Ioi (r : β) : Convex 𝕜 (ioi r) :=
+theorem convex_Ioi (r : β) : Convex 𝕜 (Ioi r) :=
   @convex_Iio 𝕜 βᵒᵈ _ _ _ _ r
 #align convex_Ioi convex_Ioi
 
-theorem convex_Ioo (r s : β) : Convex 𝕜 (ioo r s) :=
+theorem convex_Ioo (r s : β) : Convex 𝕜 (Ioo r s) :=
   Ioi_inter_Iio.subst ((convex_Ioi r).inter <| convex_Iio s)
 #align convex_Ioo convex_Ioo
 
-theorem convex_Ico (r s : β) : Convex 𝕜 (ico r s) :=
+theorem convex_Ico (r s : β) : Convex 𝕜 (Ico r s) :=
   Ici_inter_Iio.subst ((convex_Ici r).inter <| convex_Iio s)
 #align convex_Ico convex_Ico
 
-theorem convex_Ioc (r s : β) : Convex 𝕜 (ioc r s) :=
+theorem convex_Ioc (r s : β) : Convex 𝕜 (Ioc r s) :=
   Ioi_inter_Iic.subst ((convex_Ioi r).inter <| convex_Iic s)
 #align convex_Ioc convex_Ioc
 
@@ -463,7 +463,7 @@ section AddCommGroup
 variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F] {s t : Set E}
 
 theorem Convex.add_smul_mem (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : x + y ∈ s) {t : 𝕜}
-    (ht : t ∈ icc (0 : 𝕜) 1) : x + t • y ∈ s := by
+    (ht : t ∈ Icc (0 : 𝕜) 1) : x + t • y ∈ s := by
   have h : x + t • y = (1 - t) • x + t • (x + y) := by
     rw [smul_add, ← add_assoc, ← add_smul, sub_add_cancel, one_smul]
   rw [h]
@@ -471,12 +471,12 @@ theorem Convex.add_smul_mem (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : 
 #align convex.add_smul_mem Convex.add_smul_mem
 
 theorem Convex.smul_mem_of_zero_mem (hs : Convex 𝕜 s) {x : E} (zero_mem : (0 : E) ∈ s) (hx : x ∈ s)
-    {t : 𝕜} (ht : t ∈ icc (0 : 𝕜) 1) : t • x ∈ s := by
+    {t : 𝕜} (ht : t ∈ Icc (0 : 𝕜) 1) : t • x ∈ s := by
   simpa using hs.add_smul_mem zero_mem (by simpa using hx) ht
 #align convex.smul_mem_of_zero_mem Convex.smul_mem_of_zero_mem
 
 theorem Convex.add_smul_sub_mem (h : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : y ∈ s) {t : 𝕜}
-    (ht : t ∈ icc (0 : 𝕜) 1) : x + t • (y - x) ∈ s := by
+    (ht : t ∈ Icc (0 : 𝕜) 1) : x + t • (y - x) ∈ s := by
   apply h.segment_subset hx hy
   rw [segment_eq_image']
   exact mem_image_of_mem _ ht

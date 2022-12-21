@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.side
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -772,7 +772,7 @@ theorem s_opp_side_line_map_right {s : AffineSubspace R P} {x y : P} (hx : x ∈
 #align affine_subspace.s_opp_side_line_map_right AffineSubspace.s_opp_side_line_map_right
 
 theorem set_of_w_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.WSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.ici 0) s := by
+    { y | s.WSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Ici 0) s := by
   ext y
   simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Ici, mem_coe]
   constructor
@@ -791,7 +791,7 @@ theorem set_of_w_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x 
 #align affine_subspace.set_of_w_same_side_eq_image2 AffineSubspace.set_of_w_same_side_eq_image2
 
 theorem set_of_s_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.SSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.ioi 0) s := by
+    { y | s.SSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Ioi 0) s := by
   ext y
   simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Ioi, mem_coe]
   constructor
@@ -809,7 +809,7 @@ theorem set_of_s_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x 
 #align affine_subspace.set_of_s_same_side_eq_image2 AffineSubspace.set_of_s_same_side_eq_image2
 
 theorem set_of_w_opp_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.WOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.iic 0) s := by
+    { y | s.WOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Iic 0) s := by
   ext y
   simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Iic, mem_coe]
   constructor
@@ -828,7 +828,7 @@ theorem set_of_w_opp_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x �
 #align affine_subspace.set_of_w_opp_side_eq_image2 AffineSubspace.set_of_w_opp_side_eq_image2
 
 theorem set_of_s_opp_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.SOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.iio 0) s := by
+    { y | s.SOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Iio 0) s := by
   ext y
   simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Iio, mem_coe]
   constructor

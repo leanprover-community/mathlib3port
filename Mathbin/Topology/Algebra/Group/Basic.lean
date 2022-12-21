@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,8 @@ theorem IsClosed.right_coset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (ri
 #align is_closed.right_coset IsClosed.right_coset
 
 @[to_additive]
-theorem discreteTopologyOfOpenSingletonOne (h : IsOpen ({1} : Set G)) : DiscreteTopology G := by
+theorem discrete_topology_of_open_singleton_one (h : IsOpen ({1} : Set G)) : DiscreteTopology G :=
+  by 
   rw [← singletons_open_iff_discrete]
   intro g
   suffices {g} = (fun x : G => g⁻¹ * x) ⁻¹' {1} by
@@ -146,11 +147,11 @@ theorem discreteTopologyOfOpenSingletonOne (h : IsOpen ({1} : Set G)) : Discrete
     exact (continuous_mul_left g⁻¹).is_open_preimage _ h
   simp only [mul_one, Set.preimage_mul_left_singleton, eq_self_iff_true, inv_inv,
     Set.singleton_eq_singleton_iff]
-#align discrete_topology_of_open_singleton_one discreteTopologyOfOpenSingletonOne
+#align discrete_topology_of_open_singleton_one discrete_topology_of_open_singleton_one
 
 @[to_additive]
 theorem discrete_topology_iff_open_singleton_one : DiscreteTopology G ↔ IsOpen ({1} : Set G) :=
-  ⟨fun h => forall_open_iff_discrete.mpr h {1}, discreteTopologyOfOpenSingletonOne⟩
+  ⟨fun h => forall_open_iff_discrete.mpr h {1}, discrete_topology_of_open_singleton_one⟩
 #align discrete_topology_iff_open_singleton_one discrete_topology_iff_open_singleton_one
 
 end ContinuousMulGroup
@@ -340,7 +341,7 @@ variable {ι' : Sort _} [Inv G]
 
 @[to_additive]
 theorem has_continuous_inv_Inf {ts : Set (TopologicalSpace G)}
-    (h : ∀ t ∈ ts, @HasContinuousInv G t _) : @HasContinuousInv G (inf ts) _ :=
+    (h : ∀ t ∈ ts, @HasContinuousInv G t _) : @HasContinuousInv G (infₛ ts) _ :=
   { continuous_inv :=
       continuous_Inf_rng.2 fun t ht =>
         continuous_Inf_dom ht (@HasContinuousInv.continuous_inv G t _ (h t ht)) }
@@ -349,14 +350,14 @@ theorem has_continuous_inv_Inf {ts : Set (TopologicalSpace G)}
 @[to_additive]
 theorem has_continuous_inv_infi {ts' : ι' → TopologicalSpace G}
     (h' : ∀ i, @HasContinuousInv G (ts' i) _) : @HasContinuousInv G (⨅ i, ts' i) _ := by
-  rw [← Inf_range]
+  rw [← infₛ_range]
   exact has_continuous_inv_Inf (set.forall_range_iff.mpr h')
 #align has_continuous_inv_infi has_continuous_inv_infi
 
 @[to_additive]
 theorem has_continuous_inv_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @HasContinuousInv G t₁ _)
     (h₂ : @HasContinuousInv G t₂ _) : @HasContinuousInv G (t₁ ⊓ t₂) _ := by
-  rw [inf_eq_infi]
+  rw [inf_eq_infᵢ]
   refine' has_continuous_inv_infi fun b => _
   cases b <;> assumption
 #align has_continuous_inv_inf has_continuous_inv_inf
@@ -1561,7 +1562,7 @@ variable {ι : Sort _} [Group G]
 
 @[to_additive]
 theorem topological_group_Inf {ts : Set (TopologicalSpace G)}
-    (h : ∀ t ∈ ts, @TopologicalGroup G t _) : @TopologicalGroup G (inf ts) _ :=
+    (h : ∀ t ∈ ts, @TopologicalGroup G t _) : @TopologicalGroup G (infₛ ts) _ :=
   { to_has_continuous_inv :=
       (@has_continuous_inv_Inf _ _ _) fun t ht =>
         @TopologicalGroup.to_has_continuous_inv G t _ <| h t ht
@@ -1573,14 +1574,14 @@ theorem topological_group_Inf {ts : Set (TopologicalSpace G)}
 @[to_additive]
 theorem topological_group_infi {ts' : ι → TopologicalSpace G}
     (h' : ∀ i, @TopologicalGroup G (ts' i) _) : @TopologicalGroup G (⨅ i, ts' i) _ := by
-  rw [← Inf_range]
+  rw [← infₛ_range]
   exact topological_group_Inf (set.forall_range_iff.mpr h')
 #align topological_group_infi topological_group_infi
 
 @[to_additive]
 theorem topological_group_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @TopologicalGroup G t₁ _)
     (h₂ : @TopologicalGroup G t₂ _) : @TopologicalGroup G (t₁ ⊓ t₂) _ := by
-  rw [inf_eq_infi]
+  rw [inf_eq_infᵢ]
   refine' topological_group_infi fun b => _
   cases b <;> assumption
 #align topological_group_inf topological_group_inf
@@ -1721,21 +1722,21 @@ local notation "cont" => @Continuous _ _
 /-- Infimum of a collection of group topologies. -/
 @[to_additive "Infimum of a collection of additive group topologies"]
 instance :
-    HasInf
+    InfSet
       (GroupTopology
         α) where inf S :=
-    ⟨inf (to_topological_space '' S), topological_group_Inf <| ball_image_iff.2 fun t ht => t.2⟩
+    ⟨infₛ (to_topological_space '' S), topological_group_Inf <| ball_image_iff.2 fun t ht => t.2⟩
 
 @[simp, to_additive]
 theorem to_topological_space_Inf (s : Set (GroupTopology α)) :
-    (inf s).toTopologicalSpace = inf (to_topological_space '' s) :=
+    (infₛ s).toTopologicalSpace = infₛ (to_topological_space '' s) :=
   rfl
 #align group_topology.to_topological_space_Inf GroupTopology.to_topological_space_Inf
 
 @[simp, to_additive]
 theorem to_topological_space_infi {ι} (s : ι → GroupTopology α) :
     (⨅ i, s i).toTopologicalSpace = ⨅ i, (s i).toTopologicalSpace :=
-  congr_arg inf (range_comp _ _).symm
+  congr_arg infₛ (range_comp _ _).symm
 #align group_topology.to_topological_space_infi GroupTopology.to_topological_space_infi
 
 /-- Group topologies on `γ` form a complete lattice, with `⊥` the discrete topology and `⊤` the
@@ -1750,7 +1751,7 @@ topologies contained in the intersection of `s` and `t`. -/
       "Group topologies on `γ` form a complete lattice, with `⊥` the discrete topology and\n`⊤` the indiscrete topology.\n\nThe infimum of a collection of group topologies is the topology generated by all their open sets\n(which is a group topology).\n\nThe supremum of two group topologies `s` and `t` is the infimum of the family of all group\ntopologies contained in the intersection of `s` and `t`."]
 instance : CompleteSemilatticeInf (GroupTopology α) :=
   { GroupTopology.hasInf, GroupTopology.partialOrder with
-    Inf_le := fun S a haS => to_topological_space_le.1 <| Inf_le ⟨a, haS, rfl⟩
+    Inf_le := fun S a haS => to_topological_space_le.1 <| infₛ_le ⟨a, haS, rfl⟩
     le_Inf := by 
       intro S a hab
       apply topological_space.complete_lattice.le_Inf
@@ -1770,7 +1771,7 @@ topology such that `f` is continuous and `β` is a topological group. -/
 @[to_additive
       "Given `f : α → β` and a topology on `α`, the coinduced additive group topology on `β`\nis the finest topology such that `f` is continuous and `β` is a topological additive group."]
 def coinduced {α β : Type _} [t : TopologicalSpace α] [Group β] (f : α → β) : GroupTopology β :=
-  inf { b : GroupTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
+  infₛ { b : GroupTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
 #align group_topology.coinduced GroupTopology.coinduced
 
 @[to_additive]

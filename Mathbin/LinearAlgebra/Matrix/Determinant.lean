@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Tim Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.determinant
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -272,7 +272,7 @@ theorem det_reindex_self (e : m ≃ n) (A : Matrix m m R) : det (reindex e e A) 
 @[simp]
 theorem det_permutation (σ : Perm n) : Matrix.det (σ.toPequiv.toMatrix : Matrix n n R) = σ.sign :=
   by
-  rw [← Matrix.mul_one (σ.to_pequiv.to_matrix : Matrix n n R), Pequiv.to_pequiv_mul_matrix,
+  rw [← Matrix.mul_one (σ.to_pequiv.to_matrix : Matrix n n R), PEquiv.to_pequiv_mul_matrix,
     det_permute, det_one, mul_one]
 #align matrix.det_permutation Matrix.det_permutation
 

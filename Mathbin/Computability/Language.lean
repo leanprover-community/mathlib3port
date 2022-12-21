@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.language
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -217,12 +217,12 @@ theorem mul_supr {ι : Sort v} (l : ι → Language α) (m : Language α) :
 
 theorem supr_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
     (⨆ i, l i) + m = ⨆ i, l i + m :=
-  supr_sup
+  supᵢ_sup
 #align language.supr_add Language.supr_add
 
 theorem add_supr {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
     (m + ⨆ i, l i) = ⨆ i, m + l i :=
-  sup_supr
+  sup_supᵢ
 #align language.add_supr Language.add_supr
 
 theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
@@ -267,7 +267,7 @@ theorem mul_self_star_comm (l : Language α) : l.star * l = l * l.star := by
 @[simp]
 theorem one_add_self_mul_star_eq_star (l : Language α) : 1 + l * l.star = l.star := by
   simp only [star_eq_supr_pow, mul_supr, ← pow_succ, ← pow_zero l]
-  exact sup_supr_nat_succ _
+  exact sup_supᵢ_nat_succ _
 #align language.one_add_self_mul_star_eq_star Language.one_add_self_mul_star_eq_star
 
 @[simp]
@@ -278,7 +278,7 @@ theorem one_add_star_mul_self_eq_star (l : Language α) : 1 + l.star * l = l.sta
 theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → l.star * m ≤ m := by
   intro h
   rw [star_eq_supr_pow, supr_mul]
-  refine' supr_le _
+  refine' supᵢ_le _
   intro n
   induction' n with n ih
   · simp
@@ -289,7 +289,7 @@ theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → 
 theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m * l.star ≤ m := by
   intro h
   rw [star_eq_supr_pow, mul_supr]
-  refine' supr_le _
+  refine' supᵢ_le _
   intro n
   induction' n with n ih
   · simp

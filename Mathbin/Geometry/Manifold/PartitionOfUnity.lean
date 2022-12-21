@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.partition_of_unity
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -495,7 +495,7 @@ exists an infinitely smooth function that is equal to `0` on one of them and is 
 other. -/
 theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t : Set M}
     (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
-    ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1 := by
+    ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 := by
   have : ∀ x ∈ t, sᶜ ∈ 𝓝 x := fun x hx => hs.is_open_compl.mem_nhds (disjoint_right.1 hd hx)
   rcases SmoothBumpCovering.exists_is_subordinate I ht this with ⟨ι, f, hf⟩
   set g := f.to_smooth_partition_of_unity

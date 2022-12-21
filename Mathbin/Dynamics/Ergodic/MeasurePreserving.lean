@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.measure_preserving
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ variable {μ : Measure α} {f : α → α} {s : Set α}
 then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
 theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f μ μ)
     (hs : MeasurableSet s) {n : ℕ} (hvol : μ (univ : Set α) < n * μ s) :
-    ∃ x ∈ s, ∃ m ∈ ioo 0 n, (f^[m]) x ∈ s := by
+    ∃ x ∈ s, ∃ m ∈ Ioo 0 n, (f^[m]) x ∈ s := by
   have A : ∀ m, MeasurableSet (f^[m] ⁻¹' s) := fun m => (hf.iterate m).Measurable hs
   have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s := fun m => (hf.iterate m).measure_preimage hs
   have : μ (univ : Set α) < (Finset.range n).Sum fun m => μ (f^[m] ⁻¹' s) := by

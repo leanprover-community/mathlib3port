@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.subadditive
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ include h
 this limit is given in `subadditive.tendsto_lim` -/
 @[nolint unused_arguments]
 protected irreducible_def lim :=
-  inf ((fun n : ℕ => u n / n) '' ici 1)
+  infₛ ((fun n : ℕ => u n / n) '' Ici 1)
 #align subadditive.lim Subadditive.lim
 
 theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) :

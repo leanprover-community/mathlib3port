@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_lebesgue
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ open Ennreal Pointwise TopologicalSpace Nnreal
 /-- The interval `[0,1]` as a compact set with non-empty interior. -/
 def TopologicalSpace.PositiveCompacts.icc01 :
     PositiveCompacts ℝ where 
-  carrier := icc 0 1
+  carrier := Icc 0 1
   is_compact' := is_compact_Icc
   interior_nonempty' := by simp_rw [interior_Icc, nonempty_Ioo, zero_lt_one]
 #align topological_space.positive_compacts.Icc01 TopologicalSpace.PositiveCompacts.icc01
@@ -64,7 +64,7 @@ universe u
 /-- The set `[0,1]^ι` as a compact set with non-empty interior. -/
 def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] :
     PositiveCompacts (ι → ℝ) where 
-  carrier := pi univ fun i => icc 0 1
+  carrier := pi univ fun i => Icc 0 1
   is_compact' := is_compact_univ_pi fun i => is_compact_Icc
   interior_nonempty' := by
     simp only [interior_pi_set, Set.to_finite, interior_Icc, univ_pi_nonempty_iff, nonempty_Ioo,
@@ -177,7 +177,7 @@ theorem add_haar_submodule {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ 
     convert s.sub_mem hym hyn
     simp only [sub_smul, neg_sub_neg, add_sub_add_right_eq_sub]
   have H : c ^ n - c ^ m ≠ 0 := by
-    simpa only [sub_eq_zero, Ne.def] using (strict_anti_pow cpos cone).Injective.Ne hmn.symm
+    simpa only [sub_eq_zero, Ne.def] using (strictAnti_pow cpos cone).Injective.Ne hmn.symm
   have : x ∈ s := by 
     convert s.smul_mem (c ^ n - c ^ m)⁻¹ A
     rw [smul_smul, inv_mul_cancel H, one_smul]

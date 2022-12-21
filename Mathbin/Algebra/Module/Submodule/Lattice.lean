@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.lattice
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,18 +211,18 @@ def topEquiv : (⊤ : Submodule R M) ≃ₗ[R]
     rfl
 #align submodule.top_equiv Submodule.topEquiv
 
-instance : HasInf (Submodule R M) :=
+instance : InfSet (Submodule R M) :=
   ⟨fun S =>
     { carrier := ⋂ s ∈ S, (s : Set M)
       zero_mem' := by simp [zero_mem]
       add_mem' := by simp (config := { contextual := true }) [add_mem]
       smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 
-private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → inf S ≤ p :=
+private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → infₛ S ≤ p :=
   Set.bInter_subset_of_mem
 #align submodule.Inf_le' submodule.Inf_le'
 
-private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q ∈ S, p ≤ q) → p ≤ inf S :=
+private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q ∈ S, p ≤ q) → p ≤ infₛ S :=
   Set.subset_Inter₂
 #align submodule.le_Inf' submodule.le_Inf'
 
@@ -235,7 +235,7 @@ instance : HasInf (Submodule R M) :=
 
 instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with
-    sup := fun a b => inf { x | a ≤ x ∧ b ≤ x }
+    sup := fun a b => infₛ { x | a ≤ x ∧ b ≤ x }
     le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha
     le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb
     sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩
@@ -243,10 +243,10 @@ instance : CompleteLattice (Submodule R M) :=
     le_inf := fun a b c => Set.subset_inter
     inf_le_left := fun a b => Set.inter_subset_left _ _
     inf_le_right := fun a b => Set.inter_subset_right _ _
-    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t }
+    sup := fun tt => infₛ { t | ∀ t' ∈ tt, t' ≤ t }
     le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs
     Sup_le := fun s p hs => Inf_le' hs
-    inf := inf
+    inf := infₛ
     le_Inf := fun s a => le_Inf'
     Inf_le := fun s a => Inf_le' }
 
@@ -261,7 +261,7 @@ theorem mem_inf {p q : Submodule R M} {x : M} : x ∈ p ⊓ q ↔ x ∈ p ∧ x 
 #align submodule.mem_inf Submodule.mem_inf
 
 @[simp]
-theorem Inf_coe (P : Set (Submodule R M)) : (↑(inf P) : Set M) = ⋂ p ∈ P, ↑p :=
+theorem Inf_coe (P : Set (Submodule R M)) : (↑(infₛ P) : Set M) = ⋂ p ∈ P, ↑p :=
   rfl
 #align submodule.Inf_coe Submodule.Inf_coe
 
@@ -281,7 +281,7 @@ theorem infi_coe {ι} (p : ι → Submodule R M) : (↑(⨅ i, p i) : Set M) = �
 #align submodule.infi_coe Submodule.infi_coe
 
 @[simp]
-theorem mem_Inf {S : Set (Submodule R M)} {x : M} : x ∈ inf S ↔ ∀ p ∈ S, x ∈ p :=
+theorem mem_Inf {S : Set (Submodule R M)} {x : M} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
   Set.mem_Inter₂
 #align submodule.mem_Inf Submodule.mem_Inf
 
@@ -316,7 +316,7 @@ theorem sub_mem_sup {R' M' : Type _} [Ring R'] [AddCommGroup M'] [Module R' M']
 
 theorem mem_supr_of_mem {ι : Sort _} {b : M} {p : ι → Submodule R M} (i : ι) (h : b ∈ p i) :
     b ∈ ⨆ i, p i :=
-  have : p i ≤ ⨆ i, p i := le_supr p i
+  have : p i ≤ ⨆ i, p i := le_supᵢ p i
   @this b h
 #align submodule.mem_supr_of_mem Submodule.mem_supr_of_mem
 
@@ -336,8 +336,8 @@ theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → S
 
 
 theorem mem_Sup_of_mem {S : Set (Submodule R M)} {s : Submodule R M} (hs : s ∈ S) :
-    ∀ {x : M}, x ∈ s → x ∈ sup S :=
-  show s ≤ sup S from le_Sup hs
+    ∀ {x : M}, x ∈ s → x ∈ supₛ S :=
+  show s ≤ supₛ S from le_supₛ hs
 #align submodule.mem_Sup_of_mem Submodule.mem_Sup_of_mem
 
 theorem disjoint_def {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x ∈ p, x ∈ p' → x = (0 : M) :=

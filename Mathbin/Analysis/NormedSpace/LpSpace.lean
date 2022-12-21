@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_space
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -398,7 +398,7 @@ theorem norm_eq_csupr (f : lp E ∞) : ‖f‖ = ⨆ i, ‖f i‖ := by
   rw [dif_neg Ennreal.top_ne_zero, if_pos rfl]
 #align lp.norm_eq_csupr lp.norm_eq_csupr
 
-theorem is_lub_norm [Nonempty α] (f : lp E ∞) : IsLub (Set.range fun i => ‖f i‖) ‖f‖ := by
+theorem is_lub_norm [Nonempty α] (f : lp E ∞) : IsLUB (Set.range fun i => ‖f i‖) ‖f‖ := by
   rw [lp.norm_eq_csupr]
   exact is_lub_csupr (lp.memℓp f)
 #align lp.is_lub_norm lp.is_lub_norm
@@ -464,7 +464,7 @@ theorem norm_eq_zero_iff {f : lp E p} : ‖f‖ = 0 ↔ f = 0 := by
       tauto
     · cases' isEmpty_or_nonempty α with _i _i <;> skip
       · simp
-      have H : IsLub (Set.range fun i => ‖f i‖) 0 := by simpa [h] using lp.is_lub_norm f
+      have H : IsLUB (Set.range fun i => ‖f i‖) 0 := by simpa [h] using lp.is_lub_norm f
       ext i
       have : ‖f i‖ = 0 := le_antisymm (H.1 ⟨i, rfl⟩) (norm_nonneg _)
       simpa using this

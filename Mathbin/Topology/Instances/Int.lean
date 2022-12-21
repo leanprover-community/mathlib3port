@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.int
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,11 +61,11 @@ theorem preimage_closed_ball (x : ℤ) (r : ℝ) : coe ⁻¹' closedBall (x : �
   rfl
 #align int.preimage_closed_ball Int.preimage_closed_ball
 
-theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : ball x r = ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
+theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : ball x r = Ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
   rw [← preimage_ball, Real.ball_eq_Ioo, preimage_Ioo]
 #align int.ball_eq_Ioo Int.ball_eq_Ioo
 
-theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : closedBall x r = icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
+theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
   rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
 #align int.closed_ball_eq_Icc Int.closed_ball_eq_Icc
 

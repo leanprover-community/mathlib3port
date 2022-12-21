@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.darboux
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,8 +28,8 @@ variable {a b : ℝ} {f f' : ℝ → ℝ}
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a < m < f' b`, then `f' c = m` for some
 `c ∈ [a, b]`. -/
 theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
-    (hf : ∀ x ∈ icc a b, HasDerivWithinAt f (f' x) (icc a b) x) {m : ℝ} (hma : f' a < m)
-    (hmb : m < f' b) : m ∈ f' '' icc a b := by
+    (hf : ∀ x ∈ Icc a b, HasDerivWithinAt f (f' x) (Icc a b) x) {m : ℝ} (hma : f' a < m)
+    (hmb : m < f' b) : m ∈ f' '' Icc a b := by
   have hab' : a < b := by 
     refine' lt_of_le_of_ne hab fun hab' => _
     subst b
@@ -71,8 +71,8 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a > m > f' b`, then `f' c = m` for some `c ∈ [a, b]`.
 -/
 theorem exists_has_deriv_within_at_eq_of_lt_of_gt (hab : a ≤ b)
-    (hf : ∀ x ∈ icc a b, HasDerivWithinAt f (f' x) (icc a b) x) {m : ℝ} (hma : m < f' a)
-    (hmb : f' b < m) : m ∈ f' '' icc a b :=
+    (hf : ∀ x ∈ Icc a b, HasDerivWithinAt f (f' x) (Icc a b) x) {m : ℝ} (hma : m < f' a)
+    (hmb : f' b < m) : m ∈ f' '' Icc a b :=
   let ⟨c, cmem, hc⟩ :=
     exists_has_deriv_within_at_eq_of_gt_of_lt hab (fun x hx => (hf x hx).neg) (neg_lt_neg hma)
       (neg_lt_neg hmb)

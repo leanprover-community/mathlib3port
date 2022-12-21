@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.urysohns_lemma
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -192,7 +192,7 @@ theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (
 #align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_U_sub_C
 
 theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
-    c.approx n x ∈ icc (c.right.approx n x) (c.left.approx n x) := by
+    c.approx n x ∈ Icc (c.right.approx n x) (c.left.approx n x) := by
   induction' n with n ihn generalizing c
   ·
     exact
@@ -258,7 +258,7 @@ theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
   csupr_le fun n => c.approx_le_one _ _
 #align urysohns.CU.lim_le_one Urysohns.CU.lim_le_one
 
-theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ icc (0 : ℝ) 1 :=
+theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
   ⟨c.lim_nonneg x, c.lim_le_one x⟩
 #align urysohns.CU.lim_mem_Icc Urysohns.CU.lim_mem_Icc
 
@@ -320,7 +320,7 @@ then there exists a continuous function `f : X → ℝ` such that
 * `0 ≤ f x ≤ 1` for all `x`.
 -/
 theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t)
-    (hd : Disjoint s t) : ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1 :=
+    (hd : Disjoint s t) : ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
   by
   -- The actual proof is in the code above. Here we just repack it into the expected format.
   set c : Urysohns.CU X := ⟨s, tᶜ, hs, ht.is_open_compl, disjoint_left.1 hd⟩

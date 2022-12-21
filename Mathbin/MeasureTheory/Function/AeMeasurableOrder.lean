@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_measurable_order
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       ext y
       simp only [not_exists, exists_prop, mem_set_of_eq, mem_compl_iff, not_not_mem]
     filter_upwards [this] with x hx
-    apply (infi_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
+    apply (infᵢ_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
       by_cases H : x ∈ u' i
       swap

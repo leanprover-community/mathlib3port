@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.bilinear
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,13 +53,13 @@ def map₂ (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q : Submodule R 
 
 theorem apply_mem_map₂ (f : M →ₗ[R] N →ₗ[R] P) {m : M} {n : N} {p : Submodule R M}
     {q : Submodule R N} (hm : m ∈ p) (hn : n ∈ q) : f m n ∈ map₂ f p q :=
-  (le_supr _ ⟨m, hm⟩ : _ ≤ map₂ f p q) ⟨n, hn, rfl⟩
+  (le_supᵢ _ ⟨m, hm⟩ : _ ≤ map₂ f p q) ⟨n, hn, rfl⟩
 #align submodule.apply_mem_map₂ Submodule.apply_mem_map₂
 
 theorem map₂_le {f : M →ₗ[R] N →ₗ[R] P} {p : Submodule R M} {q : Submodule R N}
     {r : Submodule R P} : map₂ f p q ≤ r ↔ ∀ m ∈ p, ∀ n ∈ q, f m n ∈ r :=
   ⟨fun H m hm n hn => H <| apply_mem_map₂ _ hm hn, fun H =>
-    supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
+    supᵢ_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 #align submodule.map₂_le Submodule.map₂_le
 
 variable (R)

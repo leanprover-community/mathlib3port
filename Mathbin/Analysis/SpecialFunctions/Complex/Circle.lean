@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.circle
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,9 +56,9 @@ noncomputable def argLocalEquiv :
   toFun := arg ∘ coe
   invFun := expMapCircle
   source := univ
-  target := ioc (-π) π
+  target := Ioc (-π) π
   map_source' z _ := ⟨neg_pi_lt_arg _, arg_le_pi _⟩
-  map_target' := maps_to_univ _ _
+  map_target' := mapsTo_univ _ _
   left_inv' z _ := exp_map_circle_arg z
   right_inv' x hx := arg_exp_map_circle hx.1 hx.2
 #align circle.arg_local_equiv circle.argLocalEquiv
@@ -66,7 +66,7 @@ noncomputable def argLocalEquiv :
 /-- `complex.arg` and `exp_map_circle` define an equivalence between `circle and `(-π, π]`. -/
 @[simps (config := { fullyApplied := false })]
 noncomputable def argEquiv :
-    circle ≃ ioc (-π)
+    circle ≃ Ioc (-π)
         π where 
   toFun z := ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
   invFun := expMapCircle ∘ coe
@@ -80,11 +80,11 @@ theorem left_inverse_exp_map_circle_arg : LeftInverse expMapCircle (arg ∘ coe)
   exp_map_circle_arg
 #align left_inverse_exp_map_circle_arg left_inverse_exp_map_circle_arg
 
-theorem inv_on_arg_exp_map_circle : InvOn (arg ∘ coe) expMapCircle (ioc (-π) π) univ :=
+theorem inv_on_arg_exp_map_circle : InvOn (arg ∘ coe) expMapCircle (Ioc (-π) π) univ :=
   circle.argLocalEquiv.symm.InvOn
 #align inv_on_arg_exp_map_circle inv_on_arg_exp_map_circle
 
-theorem surj_on_exp_map_circle_neg_pi_pi : SurjOn expMapCircle (ioc (-π) π) univ :=
+theorem surj_on_exp_map_circle_neg_pi_pi : SurjOn expMapCircle (Ioc (-π) π) univ :=
   circle.argLocalEquiv.symm.SurjOn
 #align surj_on_exp_map_circle_neg_pi_pi surj_on_exp_map_circle_neg_pi_pi
 

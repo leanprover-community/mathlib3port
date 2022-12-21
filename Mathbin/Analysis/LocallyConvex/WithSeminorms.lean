@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.with_seminorms
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -192,7 +192,7 @@ protected def moduleFilterBasis :
 
 theorem filter_eq_infi (p : SeminormFamily 𝕜 E ι) :
     p.ModuleFilterBasis.toFilterBasis.filter = ⨅ i, (𝓝 0).comap (p i) := by
-  refine' le_antisymm (le_infi fun i => _) _
+  refine' le_antisymm (le_infᵢ fun i => _) _
   · rw [p.module_filter_basis.to_filter_basis.has_basis.le_basis_iff
         (metric.nhds_basis_ball.comap _)]
     intro ε hε
@@ -702,7 +702,7 @@ theorem LinearMap.withSeminormsInduced [hι : Nonempty ι] {q : SeminormFamily �
   letI : TopologicalAddGroup E := topological_add_group_induced f
   rw [(q.comp f).with_seminorms_iff_nhds_eq_infi, nhds_induced, map_zero,
     q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.comap_infi]
-  refine' infi_congr fun i => _
+  refine' infᵢ_congr fun i => _
   exact Filter.comap_comap
 #align linear_map.with_seminorms_induced LinearMap.withSeminormsInduced
 

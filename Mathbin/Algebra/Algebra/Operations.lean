@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.algebra.operations
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ protected theorem map_one {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A')
 theorem map_op_one :
     map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (1 : Submodule R A) = 1 := by
   ext
-  induction x using MulOpposite.rec
+  induction x using MulOpposite.rec'
   simp
 #align submodule.map_op_one Submodule.map_op_one
 
@@ -287,7 +287,7 @@ theorem map_op_mul :
     rw [mem_comap, map_equiv_eq_comap_symm, map_equiv_eq_comap_symm]
     show op n * op m ∈ _
     exact mul_mem_mul hn hm
-  · refine' mul_le.2 (MulOpposite.rec fun m hm => MulOpposite.rec fun n hn => _)
+  · refine' mul_le.2 (MulOpposite.rec' fun m hm => MulOpposite.rec' fun n hn => _)
     rw [Submodule.mem_map_equiv] at hm hn⊢
     exact mul_mem_mul hn hm
 #align submodule.map_op_mul Submodule.map_op_mul

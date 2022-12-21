@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.int.log
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,7 +162,7 @@ def zpowLogGi {b : ℕ} (hb : 1 < b) :
     GaloisCoinsertion
       (fun z : ℤ =>
         Subtype.mk ((b : R) ^ z) <| zpow_pos_of_pos (by exact_mod_cast zero_lt_one.trans hb) z)
-      fun r : Set.ioi (0 : R) => Int.log b (r : R) :=
+      fun r : Set.Ioi (0 : R) => Int.log b (r : R) :=
   GaloisCoinsertion.monotoneIntro (fun r₁ r₂ => log_mono_right r₁.Prop)
     (fun z₁ z₂ hz =>
       Subtype.coe_le_coe.mp <| (zpow_strict_mono <| by exact_mod_cast hb).Monotone hz)
@@ -283,7 +283,7 @@ variable (R)
 
 /-- Over suitable subtypes, `int.clog` and `zpow` form a galois insertion -/
 def clogZpowGi {b : ℕ} (hb : 1 < b) :
-    GaloisInsertion (fun r : Set.ioi (0 : R) => Int.clog b (r : R)) fun z : ℤ =>
+    GaloisInsertion (fun r : Set.Ioi (0 : R) => Int.clog b (r : R)) fun z : ℤ =>
       ⟨(b : R) ^ z, zpow_pos_of_pos (by exact_mod_cast zero_lt_one.trans hb) z⟩ :=
   GaloisInsertion.monotoneIntro
     (fun z₁ z₂ hz =>

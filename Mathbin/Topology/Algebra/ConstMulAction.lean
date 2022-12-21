@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.const_mul_action
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,7 @@ theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => 
       "If an additive action is central, then its right action is continuous when its left\naction is."]
 instance HasContinuousConstSmul.op [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] :
     HasContinuousConstSmul Mᵐᵒᵖ α :=
-  ⟨MulOpposite.rec fun c => by simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
+  ⟨MulOpposite.rec' fun c => by simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
 #align has_continuous_const_smul.op HasContinuousConstSmul.op
 
 @[to_additive]
@@ -164,7 +164,7 @@ instance Units.has_continuous_const_smul :
 
 @[to_additive]
 theorem smul_closure_subset (c : M) (s : Set α) : c • closure s ⊆ closure (c • s) :=
-  ((Set.maps_to_image _ _).closure <| continuous_id.const_smul c).image_subset
+  ((Set.mapsTo_image _ _).closure <| continuous_id.const_smul c).image_subset
 #align smul_closure_subset smul_closure_subset
 
 @[to_additive]

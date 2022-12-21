@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module data.real.hyperreal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -287,9 +287,9 @@ theorem not_infinite_of_exists_st {x : ℝ*} : (∃ r : ℝ, IsSt x r) → ¬Inf
       not_lt_of_lt (hr 2 zero_lt_two).1 (hin <| r - 2)
 #align hyperreal.not_infinite_of_exists_st Hyperreal.not_infinite_of_exists_st
 
-theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sup { y : ℝ | (y : ℝ*) < x }) :=
+theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (supₛ { y : ℝ | (y : ℝ*) < x }) :=
   let S : Set ℝ := { y : ℝ | (y : ℝ*) < x }
-  let R : _ := sup S
+  let R : _ := supₛ S
   have hnile := not_forall.mp (not_or.mp hni).1
   have hnige := not_forall.mp (not_or.mp hni).2
   Exists.dcases_on hnile <|
@@ -310,10 +310,10 @@ theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sup { y : ℝ | (y :
 #align hyperreal.is_st_Sup Hyperreal.is_st_Sup
 
 theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ, IsSt x r :=
-  ⟨sup { y : ℝ | (y : ℝ*) < x }, is_st_Sup hni⟩
+  ⟨supₛ { y : ℝ | (y : ℝ*) < x }, is_st_Sup hni⟩
 #align hyperreal.exists_st_of_not_infinite Hyperreal.exists_st_of_not_infinite
 
-theorem st_eq_Sup {x : ℝ*} : st x = sup { y : ℝ | (y : ℝ*) < x } := by
+theorem st_eq_Sup {x : ℝ*} : st x = supₛ { y : ℝ | (y : ℝ*) < x } := by
   unfold st; split_ifs
   · exact is_st_unique (Classical.choose_spec h) (is_st_Sup (not_infinite_of_exists_st h))
   · cases' not_imp_comm.mp exists_st_of_not_infinite h with H H

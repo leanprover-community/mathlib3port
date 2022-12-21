@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Alex Kontorovich
 
 ! This file was ported from Lean 3 source module order.filter.pi
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem le_pi {g : Filter (∀ i, α i)} : g ≤ pi f ↔ ∀ i, Tendsto (eval i
 
 @[mono]
 theorem pi_mono (h : ∀ i, f₁ i ≤ f₂ i) : pi f₁ ≤ pi f₂ :=
-  infi_mono fun i => comap_mono <| h i
+  infᵢ_mono fun i => comap_mono <| h i
 #align filter.pi_mono Filter.pi_mono
 
 theorem mem_pi_of_mem (i : ι) {s : Set (α i)} (hs : s ∈ f i) : eval i ⁻¹' s ∈ pi f :=
@@ -151,11 +151,11 @@ theorem pi_inf_principal_pi_ne_bot [∀ i, NeBot (f i)] {I : Set ι} :
     NeBot (pi f ⊓ 𝓟 (I.pi s)) ↔ ∀ i ∈ I, NeBot (f i ⊓ 𝓟 (s i)) := by simp [ne_bot_iff]
 #align filter.pi_inf_principal_pi_ne_bot Filter.pi_inf_principal_pi_ne_bot
 
-instance PiInfPrincipalPi.neBot [h : ∀ i, NeBot (f i ⊓ 𝓟 (s i))] {I : Set ι} :
+instance PiInfPrincipalPi.ne_bot [h : ∀ i, NeBot (f i ⊓ 𝓟 (s i))] {I : Set ι} :
     NeBot (pi f ⊓ 𝓟 (I.pi s)) :=
   (pi_inf_principal_univ_pi_ne_bot.2 ‹_›).mono <|
     inf_le_inf_left _ <| principal_mono.2 fun x hx i hi => hx i trivial
-#align filter.pi_inf_principal_pi.ne_bot Filter.PiInfPrincipalPi.neBot
+#align filter.pi_inf_principal_pi.ne_bot Filter.PiInfPrincipalPi.ne_bot
 
 @[simp]
 theorem pi_eq_bot : pi f = ⊥ ↔ ∃ i, f i = ⊥ := by
@@ -247,19 +247,19 @@ theorem Coprod_bot : Filter.coprod (fun _ => ⊥ : ∀ i, Filter (α i)) = ⊥ :
   Coprod_bot'
 #align filter.Coprod_bot Filter.Coprod_bot
 
-theorem NeBot.coprod [∀ i, Nonempty (α i)] {i : ι} (h : NeBot (f i)) : NeBot (Filter.coprod f) :=
+theorem NeBot.Coprod [∀ i, Nonempty (α i)] {i : ι} (h : NeBot (f i)) : NeBot (Filter.coprod f) :=
   Coprod_ne_bot_iff.2 ⟨i, h⟩
-#align filter.ne_bot.Coprod Filter.NeBot.coprod
+#align filter.ne_bot.Coprod Filter.NeBot.Coprod
 
 @[instance]
-theorem coprodNeBot [∀ i, Nonempty (α i)] [Nonempty ι] (f : ∀ i, Filter (α i))
+theorem Coprod_ne_bot [∀ i, Nonempty (α i)] [Nonempty ι] (f : ∀ i, Filter (α i))
     [H : ∀ i, NeBot (f i)] : NeBot (Filter.coprod f) :=
   (H (Classical.arbitrary ι)).coprod
-#align filter.Coprod_ne_bot Filter.coprodNeBot
+#align filter.Coprod_ne_bot Filter.Coprod_ne_bot
 
 @[mono]
 theorem Coprod_mono (hf : ∀ i, f₁ i ≤ f₂ i) : Filter.coprod f₁ ≤ Filter.coprod f₂ :=
-  supr_mono fun i => comap_mono (hf i)
+  supᵢ_mono fun i => comap_mono (hf i)
 #align filter.Coprod_mono Filter.Coprod_mono
 
 variable {β : ι → Type _} {m : ∀ i, α i → β i}

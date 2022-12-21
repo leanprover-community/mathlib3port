@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -281,7 +281,7 @@ theorem sub_apply : (f - g) x = f x - g x :=
 @[simp]
 theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
   | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
-  | -[n+1] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
+  | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmul_rec]
 #align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_zsmul_rec
 
 instance hasIntScalar : HasSmul ℤ C₀(α, β) :=

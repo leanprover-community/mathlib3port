@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2433,18 +2433,18 @@ theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {f 
 #align finset.piecewise_le_piecewise Finset.piecewise_le_piecewise
 
 theorem piecewise_mem_Icc_of_mem_of_mem {δ : α → Type _} [∀ i, Preorder (δ i)]
-    {f f₁ g g₁ : ∀ i, δ i} (hf : f ∈ Set.icc f₁ g₁) (hg : g ∈ Set.icc f₁ g₁) :
-    s.piecewise f g ∈ Set.icc f₁ g₁ :=
+    {f f₁ g g₁ : ∀ i, δ i} (hf : f ∈ Set.Icc f₁ g₁) (hg : g ∈ Set.Icc f₁ g₁) :
+    s.piecewise f g ∈ Set.Icc f₁ g₁ :=
   ⟨le_piecewise_of_le_of_le _ hf.1 hg.1, piecewise_le_of_le_of_le _ hf.2 hg.2⟩
 #align finset.piecewise_mem_Icc_of_mem_of_mem Finset.piecewise_mem_Icc_of_mem_of_mem
 
 theorem piecewise_mem_Icc {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : f ≤ g) :
-    s.piecewise f g ∈ Set.icc f g :=
+    s.piecewise f g ∈ Set.Icc f g :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.left_mem_Icc.2 h) (Set.right_mem_Icc.2 h)
 #align finset.piecewise_mem_Icc Finset.piecewise_mem_Icc
 
 theorem piecewise_mem_Icc' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : g ≤ f) :
-    s.piecewise f g ∈ Set.icc g f :=
+    s.piecewise f g ∈ Set.Icc g f :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.right_mem_Icc.2 h) (Set.left_mem_Icc.2 h)
 #align finset.piecewise_mem_Icc' Finset.piecewise_mem_Icc'
 

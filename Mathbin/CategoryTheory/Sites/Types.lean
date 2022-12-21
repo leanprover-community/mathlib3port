@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module category_theory.sites.types
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem generate_discrete_presieve_mem (α : Type u) :
 
 open Presieve
 
-theorem isSheafYoneda' {α : Type u} : IsSheaf typesGrothendieckTopology (yoneda.obj α) :=
+theorem is_sheaf_yoneda' {α : Type u} : IsSheaf typesGrothendieckTopology (yoneda.obj α) :=
   fun β S hs x hx =>
   ⟨fun y => x _ (hs y) PUnit.unit, fun γ f h =>
     funext fun z => by
@@ -69,7 +69,7 @@ theorem isSheafYoneda' {α : Type u} : IsSheaf typesGrothendieckTopology (yoneda
       convert this
       exact rfl,
     fun f hf => funext fun y => by convert congr_fun (hf _ (hs y)) PUnit.unit⟩
-#align category_theory.is_sheaf_yoneda' CategoryTheory.isSheafYoneda'
+#align category_theory.is_sheaf_yoneda' CategoryTheory.is_sheaf_yoneda'
 
 /-- The yoneda functor that sends a type to a sheaf over the category of types -/
 @[simps]
@@ -77,7 +77,7 @@ def yoneda' :
     Type u ⥤
       SheafOfTypesCat
         typesGrothendieckTopology where 
-  obj α := ⟨yoneda.obj α, isSheafYoneda'⟩
+  obj α := ⟨yoneda.obj α, is_sheaf_yoneda'⟩
   map α β f := ⟨yoneda.map f⟩
 #align category_theory.yoneda' CategoryTheory.yoneda'
 
@@ -193,15 +193,16 @@ noncomputable def typeEquiv : Type u ≌ SheafOfTypesCat typesGrothendieckTopolo
             funext fun α => funext fun s => funext fun x => eval_app S₁ S₂ f (unop α) s x)
 #align category_theory.type_equiv CategoryTheory.typeEquiv
 
-theorem subcanonicalTypesGrothendieckTopology : Sheaf.Subcanonical typesGrothendieckTopology.{u} :=
-  Sheaf.Subcanonical.ofYonedaIsSheaf _ fun X => isSheafYoneda'
+theorem subcanonical_types_grothendieck_topology :
+    Sheaf.Subcanonical typesGrothendieckTopology.{u} :=
+  Sheaf.Subcanonical.of_yoneda_is_sheaf _ fun X => is_sheaf_yoneda'
 #align
-  category_theory.subcanonical_types_grothendieck_topology CategoryTheory.subcanonicalTypesGrothendieckTopology
+  category_theory.subcanonical_types_grothendieck_topology CategoryTheory.subcanonical_types_grothendieck_topology
 
 theorem types_grothendieck_topology_eq_canonical :
     types_grothendieck_topology.{u} = Sheaf.canonicalTopology (Type u) :=
-  le_antisymm subcanonicalTypesGrothendieckTopology <|
-    Inf_le
+  le_antisymm subcanonical_types_grothendieck_topology <|
+    infₛ_le
       ⟨yoneda.obj (ULift Bool), ⟨_, rfl⟩,
         grothendieck_topology.ext <|
           funext fun α =>
@@ -214,7 +215,7 @@ theorem types_grothendieck_topology_eq_canonical :
                     (hs PUnit fun _ => x).IsSeparatedFor.ext fun β f hf =>
                       funext fun y => hsx.elim <| (S.2 hf) fun _ => y
                   Bool.noConfusion <| ULift.up.inj <| (congr_fun this PUnit.unit : _),
-                fun hs β f => (isSheafYoneda' _) fun y => hs _⟩⟩
+                fun hs β f => (is_sheaf_yoneda' _) fun y => hs _⟩⟩
 #align
   category_theory.types_grothendieck_topology_eq_canonical CategoryTheory.types_grothendieck_topology_eq_canonical
 

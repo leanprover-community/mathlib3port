@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.uniform_space.compact
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -187,7 +187,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     simp_rw [comap_supr, nhds_prod_eq, comap_prod,
       show Prod.fst ∘ Prod.mk x = fun y : γ => x by ext <;> simp,
       show Prod.snd ∘ Prod.mk x = (id : γ → γ) by ext <;> rfl, comap_id]
-    rw [supr_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
+    rw [supᵢ_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
     suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by simpa
     intro y hxy
     simp [comap_const_of_not_mem (compl_singleton_mem_nhds hxy) (by simp)]
@@ -206,8 +206,8 @@ theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] {f : α 
     map (Prod.map f f) (𝓤 α) = map (Prod.map f f) (⨆ x, 𝓝 (x, x)) := by
       rw [compact_space_uniformity]
     _ = ⨆ x, map (Prod.map f f) (𝓝 (x, x)) := by rw [Filter.map_supr]
-    _ ≤ ⨆ x, 𝓝 (f x, f x) := supr_mono fun x => (h.prod_map h).ContinuousAt
-    _ ≤ ⨆ y, 𝓝 (y, y) := supr_comp_le (fun y => 𝓝 (y, y)) f
+    _ ≤ ⨆ x, 𝓝 (f x, f x) := supᵢ_mono fun x => (h.prod_map h).ContinuousAt
+    _ ≤ ⨆ y, 𝓝 (y, y) := supᵢ_comp_le (fun y => 𝓝 (y, y)) f
     _ ≤ 𝓤 β := supr_nhds_le_uniformity
     
 #align compact_space.uniform_continuous_of_continuous CompactSpace.uniform_continuous_of_continuous

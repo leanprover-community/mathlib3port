@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.spectrum
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ theorem spectral_radius_zero : spectralRadius 𝕜 (0 : A) = 0 := by
 
 theorem mem_resolvent_set_of_spectral_radius_lt {a : A} {k : 𝕜} (h : spectralRadius 𝕜 a < ‖k‖₊) :
     k ∈ ρ a :=
-  not_not.mp fun hn => h.not_le <| le_supr₂ k hn
+  not_not.mp fun hn => h.not_le <| le_supᵢ₂ k hn
 #align
   spectrum.mem_resolvent_set_of_spectral_radius_lt spectrum.mem_resolvent_set_of_spectral_radius_lt
 
@@ -148,20 +148,20 @@ protected theorem is_compact [ProperSpace 𝕜] (a : A) : IsCompact (σ a) :=
 #align spectrum.is_compact spectrum.is_compact
 
 theorem spectral_radius_le_nnnorm [NormOneClass A] (a : A) : spectralRadius 𝕜 a ≤ ‖a‖₊ := by
-  refine' supr₂_le fun k hk => _
+  refine' supᵢ₂_le fun k hk => _
   exact_mod_cast norm_le_norm_of_mem hk
 #align spectrum.spectral_radius_le_nnnorm spectrum.spectral_radius_le_nnnorm
 
 theorem exists_nnnorm_eq_spectral_radius_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty) :
     ∃ k ∈ σ a, (‖k‖₊ : ℝ≥0∞) = spectralRadius 𝕜 a := by
   obtain ⟨k, hk, h⟩ := (spectrum.is_compact a).exists_forall_ge ha continuous_nnnorm.continuous_on
-  exact ⟨k, hk, le_antisymm (le_supr₂ k hk) (supr₂_le <| by exact_mod_cast h)⟩
+  exact ⟨k, hk, le_antisymm (le_supᵢ₂ k hk) (supᵢ₂_le <| by exact_mod_cast h)⟩
 #align
   spectrum.exists_nnnorm_eq_spectral_radius_of_nonempty spectrum.exists_nnnorm_eq_spectral_radius_of_nonempty
 
 theorem spectral_radius_lt_of_forall_lt_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty)
     {r : ℝ≥0} (hr : ∀ k ∈ σ a, ‖k‖₊ < r) : spectralRadius 𝕜 a < r :=
-  Sup_image.symm.trans_lt <|
+  supₛ_image.symm.trans_lt <|
     ((spectrum.is_compact a).Sup_lt_iff_of_continuous ha
           (Ennreal.continuous_coe.comp continuous_nnnorm).ContinuousOn (r : ℝ≥0∞)).mpr
       (by exact_mod_cast hr)
@@ -174,7 +174,7 @@ variable (𝕜)
 
 theorem spectral_radius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
     spectralRadius 𝕜 a ≤ ‖a ^ (n + 1)‖₊ ^ (1 / (n + 1) : ℝ) * ‖(1 : A)‖₊ ^ (1 / (n + 1) : ℝ) := by
-  refine' supr₂_le fun k hk => _
+  refine' supᵢ₂_le fun k hk => _
   -- apply easy direction of the spectral mapping theorem for polynomials
   have pow_mem : k ^ (n + 1) ∈ σ (a ^ (n + 1)) := by
     simpa only [one_mul, Algebra.algebra_map_eq_smul_one, one_smul, aeval_monomial, one_mul,
@@ -204,8 +204,8 @@ theorem spectral_radius_le_liminf_pow_nnnorm_pow_one_div (a : A) :
   obtain ⟨N, hN⟩ :=
     eventually_at_top.mp
       (Ennreal.eventually_pow_one_div_le (Ennreal.coe_ne_top : ↑‖(1 : A)‖₊ ≠ ∞) hε)
-  refine' le_trans _ (le_supr _ (N + 1))
-  refine' le_infi fun n => _
+  refine' le_trans _ (le_supᵢ _ (N + 1))
+  refine' le_infᵢ fun n => _
   simp only [← add_assoc]
   refine' (spectral_radius_le_pow_nnnorm_pow_one_div 𝕜 a (n + N)).trans _
   norm_cast

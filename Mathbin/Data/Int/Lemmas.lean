@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.lemmas
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,20 +85,20 @@ section Intervals
 
 open Set
 
-theorem strict_mono_on_nat_abs : StrictMonoOn natAbs (ici 0) := fun a ha b hb hab =>
+theorem strict_mono_on_nat_abs : StrictMonoOn natAbs (Ici 0) := fun a ha b hb hab =>
   natAbs_lt_natAbs_of_nonneg_of_lt ha hab
 #align int.strict_mono_on_nat_abs Int.strict_mono_on_nat_abs
 
-theorem strict_anti_on_nat_abs : StrictAntiOn natAbs (iic 0) := fun a ha b hb hab => by
+theorem strict_anti_on_nat_abs : StrictAntiOn natAbs (Iic 0) := fun a ha b hb hab => by
   simpa [Int.natAbs_neg] using
     nat_abs_lt_nat_abs_of_nonneg_of_lt (right.nonneg_neg_iff.mpr hb) (neg_lt_neg_iff.mpr hab)
 #align int.strict_anti_on_nat_abs Int.strict_anti_on_nat_abs
 
-theorem inj_on_nat_abs_Ici : InjOn natAbs (ici 0) :=
+theorem inj_on_nat_abs_Ici : InjOn natAbs (Ici 0) :=
   strict_mono_on_nat_abs.InjOn
 #align int.inj_on_nat_abs_Ici Int.inj_on_nat_abs_Ici
 
-theorem inj_on_nat_abs_Iic : InjOn natAbs (iic 0) :=
+theorem inj_on_nat_abs_Iic : InjOn natAbs (Iic 0) :=
   strict_anti_on_nat_abs.InjOn
 #align int.inj_on_nat_abs_Iic Int.inj_on_nat_abs_Iic
 

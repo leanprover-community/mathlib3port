@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.deriv
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -727,7 +727,7 @@ theorem abs_sinh (x : ℝ) : |sinh x| = sinh (|x|) := by
   cases le_total x 0 <;> simp [abs_of_nonneg, abs_of_nonpos, *]
 #align real.abs_sinh Real.abs_sinh
 
-theorem cosh_strict_mono_on : StrictMonoOn cosh (ici 0) :=
+theorem cosh_strict_mono_on : StrictMonoOn cosh (Ici 0) :=
   ((convex_Ici _).strict_mono_on_of_deriv_pos continuous_cosh.ContinuousOn) fun x hx => by
     rw [interior_Ici, mem_Ioi] at hx
     rwa [deriv_cosh, sinh_pos_iff]

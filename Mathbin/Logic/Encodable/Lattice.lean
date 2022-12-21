@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module logic.encodable.lattice
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ variable {α : Type _} {β : Type _} [Encodable β]
 
 theorem supr_decode₂ [CompleteLattice α] (f : β → α) :
     (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b := by
-  rw [supr_comm]
+  rw [supᵢ_comm]
   simp [mem_decode₂]
 #align encodable.supr_decode₂ Encodable.supr_decode₂
 

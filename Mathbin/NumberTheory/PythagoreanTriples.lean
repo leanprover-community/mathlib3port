@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul van Wamelen
 
 ! This file was ported from Lean 3 source module number_theory.pythagorean_triples
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -515,14 +515,14 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) 
   let n := q.num
   have hm0 : m ≠ 0 := by 
     norm_cast
-    apply Rat.denom_ne_zero q
-  have hq2 : q = n / m := (Rat.num_div_denom q).symm
+    apply Rat.den_nz q
+  have hq2 : q = n / m := (Rat.num_div_den q).symm
   have hm2n2 : 0 < m ^ 2 + n ^ 2 := by
     apply lt_add_of_pos_of_le _ (sq_nonneg n)
     exact lt_of_le_of_ne (sq_nonneg m) (Ne.symm (pow_ne_zero 2 hm0))
   have hw2 : w = (m ^ 2 - n ^ 2) / (m ^ 2 + n ^ 2) := by
     rw [ht4.2, hq2]
-    field_simp [hm2n2, Rat.denom_ne_zero q, -Rat.num_div_denom]
+    field_simp [hm2n2, Rat.den_nz q, -Rat.num_div_den]
   have hm2n20 : (m : ℚ) ^ 2 + (n : ℚ) ^ 2 ≠ 0 := by
     norm_cast
     simpa only [Int.coe_nat_pow] using ne_of_gt hm2n2
@@ -532,7 +532,7 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) 
     rw [ht4.1]
     field_simp [hQ q]
     rw [hq2]
-    field_simp [Rat.denom_ne_zero q, -Rat.num_div_denom]
+    field_simp [Rat.den_nz q, -Rat.num_div_den]
     ring
   have hnmcp : Int.gcd n m = 1 := q.cop
   have hmncp : Int.gcd m n = 1 := by 
@@ -567,7 +567,7 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) 
     have h2 : y = (m ^ 2 - n ^ 2) / 2 ∧ z = (m ^ 2 + n ^ 2) / 2 := by
       apply Rat.div_int_inj hzpos _ (h.coprime_of_coprime hc) h1.2.2.2
       · show w = _
-        rw [← Rat.mk_eq_div, ← Rat.div_mk_div_cancel_left (by norm_num : (2 : ℤ) ≠ 0)]
+        rw [← Rat.divInt_eq_div, ← Rat.divInt_mul_right (by norm_num : (2 : ℤ) ≠ 0)]
         rw [Int.ediv_mul_cancel h1.1, Int.ediv_mul_cancel h1.2.1, hw2]
         norm_cast
       · apply (mul_lt_mul_right (by norm_num : 0 < (2 : ℤ))).mp

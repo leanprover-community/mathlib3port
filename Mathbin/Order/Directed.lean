@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.directed
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,10 +66,10 @@ theorem directedOn_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s
 
 alias directedOn_iff_directed ↔ DirectedOn.directed_coe _
 
-#print directed_on_image /-
-theorem directed_on_image {s} {f : β → α} : DirectedOn r (f '' s) ↔ DirectedOn (f ⁻¹'o r) s := by
+#print directedOn_image /-
+theorem directedOn_image {s} {f : β → α} : DirectedOn r (f '' s) ↔ DirectedOn (f ⁻¹'o r) s := by
   simp only [DirectedOn, Set.ball_image_iff, Set.bex_image_iff, Order.Preimage]
-#align directed_on_image directed_on_image
+#align directed_on_image directedOn_image
 -/
 
 #print DirectedOn.mono' /-
@@ -193,12 +193,12 @@ theorem Antitone.directed_le [SemilatticeInf α] [Preorder β] {f : α → β} (
 #align antitone.directed_le Antitone.directed_le
 -/
 
-#print directed_on_of_inf_mem /-
+#print directedOn_of_inf_mem /-
 /-- A set stable by infimum is `≥`-directed. -/
-theorem directed_on_of_inf_mem [SemilatticeInf α] {S : Set α}
+theorem directedOn_of_inf_mem [SemilatticeInf α] {S : Set α}
     (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i ⊓ j ∈ S) : DirectedOn (· ≥ ·) S := fun a ha b hb =>
   ⟨a ⊓ b, H ha hb, inf_le_left, inf_le_right⟩
-#align directed_on_of_inf_mem directed_on_of_inf_mem
+#align directed_on_of_inf_mem directedOn_of_inf_mem
 -/
 
 #print IsDirected /-
@@ -243,19 +243,19 @@ theorem directedOn_univ_iff : DirectedOn r Set.univ ↔ IsDirected α r :=
 #align directed_on_univ_iff directedOn_univ_iff
 -/
 
-#print IsTotal.to_is_directed /-
+#print IsTotal.to_isDirected /-
 -- see Note [lower instance priority]
-instance (priority := 100) IsTotal.to_is_directed [IsTotal α r] : IsDirected α r :=
+instance (priority := 100) IsTotal.to_isDirected [IsTotal α r] : IsDirected α r :=
   ⟨fun a b => Or.cases_on (total_of r a b) (fun h => ⟨b, h, refl _⟩) fun h => ⟨a, refl _, h⟩⟩
-#align is_total.to_is_directed IsTotal.to_is_directed
+#align is_total.to_is_directed IsTotal.to_isDirected
 -/
 
-#print is_directed_mono /-
-theorem is_directed_mono [IsDirected α r] (h : ∀ ⦃a b⦄, r a b → s a b) : IsDirected α s :=
+#print isDirected_mono /-
+theorem isDirected_mono [IsDirected α r] (h : ∀ ⦃a b⦄, r a b → s a b) : IsDirected α s :=
   ⟨fun a b =>
     let ⟨c, ha, hb⟩ := IsDirected.directed a b
     ⟨c, h ha, h hb⟩⟩
-#align is_directed_mono is_directed_mono
+#align is_directed_mono isDirected_mono
 -/
 
 #print exists_ge_ge /-

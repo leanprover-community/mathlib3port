@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.topology
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ theorem is_open_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a := by
     · exact (ha ha').elim
 #align ordinal.is_open_singleton_iff Ordinal.is_open_singleton_iff
 
-theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.ioo a o ⊆ s := by
+theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
   classical 
     refine' ⟨_, fun h => _⟩
     · rw [is_open_iff_generate_intervals]
@@ -89,7 +89,7 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.ioo
         rcases H u hu hu' with ⟨a, ha, ha'⟩
         exact ⟨a, ha, fun b hb => ⟨u, hu, ha' hb⟩⟩
     · let f : s → Set Ordinal := fun o =>
-        if ho : is_limit o.val then Set.ioo (Classical.choose (h o.val o.Prop ho)) (o + 1)
+        if ho : is_limit o.val then Set.Ioo (Classical.choose (h o.val o.Prop ho)) (o + 1)
         else {o.val}
       have : ∀ a, IsOpen (f a) := fun a => by
         change IsOpen (dite _ _ _)
@@ -124,7 +124,7 @@ theorem mem_closure_iff_sup :
     · have H := fun b (hba : b < a) => h _ (@is_open_Ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
       let f : a.out.α → Ordinal := fun i =>
         Classical.choose (H (typein (· < ·) i) (typein_lt_self i))
-      have hf : ∀ i, f i ∈ Set.ioo (typein (· < ·) i) (a + 1) ∩ s := fun i =>
+      have hf : ∀ i, f i ∈ Set.Ioo (typein (· < ·) i) (a + 1) ∩ s := fun i =>
         Classical.choose_spec (H _ _)
       rcases eq_zero_or_pos a with (rfl | ha₀)
       · rcases h _ (is_open_singleton_iff.2 not_zero_is_limit) rfl with ⟨b, hb, hb'⟩
@@ -230,7 +230,7 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
   · rw [is_normal_iff_strict_mono_limit]
     rintro ⟨h, h'⟩
     refine' ⟨h, fun o ho a h => _⟩
-    suffices : o ∈ f ⁻¹' Set.iic a
+    suffices : o ∈ f ⁻¹' Set.Iic a
     exact Set.mem_preimage.1 this
     rw [mem_closed_iff_sup (IsClosed.preimage h' (@is_closed_Iic _ _ _ _ a))]
     exact

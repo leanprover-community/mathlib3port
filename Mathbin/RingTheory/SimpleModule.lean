@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.simple_module
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem is_simple_module_iff_is_coatom : IsSimpleModule R (M ⧸ m) ↔ IsCoatom
 
 theorem covby_iff_quot_is_simple {A B : Submodule R M} (hAB : A ≤ B) :
     A ⋖ B ↔ IsSimpleModule R (B ⧸ Submodule.comap B.Subtype A) := by
-  set f : Submodule R B ≃o Set.iic B := Submodule.MapSubtype.relIso B with hf
+  set f : Submodule R B ≃o Set.Iic B := Submodule.MapSubtype.relIso B with hf
   rw [covby_iff_coatom_Iic hAB, is_simple_module_iff_is_coatom, ← OrderIso.is_coatom_iff f, hf]
   simp [-OrderIso.is_coatom_iff, Submodule.MapSubtype.relIso, Submodule.map_comap_subtype,
     inf_eq_right.2 hAB]
@@ -92,7 +92,7 @@ theorem is_atom : IsAtom m :=
 end IsSimpleModule
 
 theorem is_semisimple_of_Sup_simples_eq_top
-    (h : sup { m : Submodule R M | IsSimpleModule R m } = ⊤) : IsSemisimpleModule R M :=
+    (h : supₛ { m : Submodule R M | IsSimpleModule R m } = ⊤) : IsSemisimpleModule R M :=
   complemented_lattice_of_Sup_atoms_eq_top (by simp_rw [← h, is_simple_module_iff_is_atom])
 #align is_semisimple_of_Sup_simples_eq_top is_semisimple_of_Sup_simples_eq_top
 
@@ -100,20 +100,20 @@ namespace IsSemisimpleModule
 
 variable [IsSemisimpleModule R M]
 
-theorem Sup_simples_eq_top : sup { m : Submodule R M | IsSimpleModule R m } = ⊤ := by
+theorem Sup_simples_eq_top : supₛ { m : Submodule R M | IsSimpleModule R m } = ⊤ := by
   simp_rw [is_simple_module_iff_is_atom]
   exact Sup_atoms_eq_top
 #align is_semisimple_module.Sup_simples_eq_top IsSemisimpleModule.Sup_simples_eq_top
 
 instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
-  haveI f : Submodule R m ≃o Set.iic m := Submodule.MapSubtype.relIso m
+  haveI f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
   f.complemented_lattice_iff.2 IsModularLattice.complemented_lattice_Iic
 #align is_semisimple_module.is_semisimple_submodule IsSemisimpleModule.is_semisimple_submodule
 
 end IsSemisimpleModule
 
 theorem is_semisimple_iff_top_eq_Sup_simples :
-    sup { m : Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
+    supₛ { m : Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
   ⟨is_semisimple_of_Sup_simples_eq_top, by 
     intro
     exact IsSemisimpleModule.Sup_simples_eq_top⟩

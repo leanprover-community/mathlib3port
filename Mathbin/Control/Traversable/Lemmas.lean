@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.traversable.lemmas
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,11 +72,11 @@ def PureTransformation :
 #align traversable.pure_transformation Traversable.PureTransformation
 -/
 
-#print Traversable.pure_transformation_apply /-
+#print Traversable.pureTransformation_apply /-
 @[simp]
-theorem pure_transformation_apply {α} (x : id α) : PureTransformation F x = pure x :=
+theorem pureTransformation_apply {α} (x : id α) : PureTransformation F x = pure x :=
   rfl
-#align traversable.pure_transformation_apply Traversable.pure_transformation_apply
+#align traversable.pure_transformation_apply Traversable.pureTransformation_apply
 -/
 
 variable {F G} (x : t β)

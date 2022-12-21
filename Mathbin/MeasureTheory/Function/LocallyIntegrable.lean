@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.function.locally_integrable
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,17 +171,17 @@ theorem Continuous.locallyIntegrable (hf : Continuous f) : LocallyIntegrable f �
 #align continuous.locally_integrable Continuous.locallyIntegrable
 
 theorem ContinuousOn.integrableOnIcc [Preorder X] [CompactIccSpace X]
-    (hf : ContinuousOn f (icc a b)) : IntegrableOn f (icc a b) μ :=
+    (hf : ContinuousOn f (Icc a b)) : IntegrableOn f (Icc a b) μ :=
   hf.integrableOnCompact is_compact_Icc
 #align continuous_on.integrable_on_Icc ContinuousOn.integrableOnIcc
 
 theorem Continuous.integrableOnIcc [Preorder X] [CompactIccSpace X] (hf : Continuous f) :
-    IntegrableOn f (icc a b) μ :=
+    IntegrableOn f (Icc a b) μ :=
   hf.LocallyIntegrable is_compact_Icc
 #align continuous.integrable_on_Icc Continuous.integrableOnIcc
 
 theorem Continuous.integrableOnIoc [Preorder X] [CompactIccSpace X] (hf : Continuous f) :
-    IntegrableOn f (ioc a b) μ :=
+    IntegrableOn f (Ioc a b) μ :=
   hf.integrableOnIcc.monoSet Ioc_subset_Icc_self
 #align continuous.integrable_on_Ioc Continuous.integrableOnIoc
 

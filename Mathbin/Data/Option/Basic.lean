@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.option.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -870,7 +870,7 @@ theorem some_orElse' (a : α) (x : Option α) : (some a).orelse x = some a :=
 lean 3 declaration is
   forall {α : Type.{u1}} (a : α) (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α (Option.some.{u1} α a) x) (Option.some.{u1} α a)
 but is expected to have type
-  forall {α : Type.{u1}} (a : α) (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.some.{u1} α a) (fun (x._@.Std.Data.Option.Lemmas._hyg.3072 : Unit) => x)) (Option.some.{u1} α a)
+  forall {α : Type.{u1}} (a : α) (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.some.{u1} α a) (fun (x._@.Std.Data.Option.Lemmas._hyg.3067 : Unit) => x)) (Option.some.{u1} α a)
 Case conversion may be inaccurate. Consider using '#align option.some_orelse Option.some_orElseₓ'. -/
 @[simp]
 theorem some_orElse (a : α) (x : Option α) : (some a <|> x) = some a :=
@@ -891,7 +891,7 @@ theorem none_orElse' (x : Option α) : none.orelse x = x := by cases x <;> rfl
 lean 3 declaration is
   forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α (Option.none.{u1} α) x) x
 but is expected to have type
-  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.none.{u1} α) (fun (x._@.Std.Data.Option.Lemmas._hyg.3086 : Unit) => x)) x
+  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.none.{u1} α) (fun (x._@.Std.Data.Option.Lemmas._hyg.3081 : Unit) => x)) x
 Case conversion may be inaccurate. Consider using '#align option.none_orelse Option.none_orElseₓ'. -/
 @[simp]
 theorem none_orElse (x : Option α) : (none <|> x) = x :=
@@ -908,7 +908,7 @@ theorem orElse_none' (x : Option α) : x.orelse none = x := by cases x <;> rfl
 lean 3 declaration is
   forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α x (Option.none.{u1} α)) x
 but is expected to have type
-  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) x (fun (x._@.Std.Data.Option.Lemmas._hyg.3100 : Unit) => Option.none.{u1} α)) x
+  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) x (fun (x._@.Std.Data.Option.Lemmas._hyg.3095 : Unit) => Option.none.{u1} α)) x
 Case conversion may be inaccurate. Consider using '#align option.orelse_none Option.orElse_noneₓ'. -/
 @[simp]
 theorem orElse_none (x : Option α) : (x <|> none) = x :=

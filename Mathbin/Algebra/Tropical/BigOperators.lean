@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module algebra.tropical.big_operators
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem Finset.trop_inf [LinearOrder R] [OrderTop R] (s : Finset S) (f : S → R
 #align finset.trop_inf Finset.trop_inf
 
 theorem trop_Inf_image [ConditionallyCompleteLinearOrder R] (s : Finset S) (f : S → WithTop R) :
-    trop (inf (f '' s)) = ∑ i in s, trop (f i) := by
+    trop (infₛ (f '' s)) = ∑ i in s, trop (f i) := by
   rcases s.eq_empty_or_nonempty with (rfl | h)
   · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.cInf_empty, trop_top]
   rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, s.trop_inf]
@@ -128,7 +128,7 @@ theorem Finset.untrop_sum' [LinearOrder R] [OrderTop R] (s : Finset S) (f : S �
 #align finset.untrop_sum' Finset.untrop_sum'
 
 theorem untrop_sum_eq_Inf_image [ConditionallyCompleteLinearOrder R] (s : Finset S)
-    (f : S → Tropical (WithTop R)) : untrop (∑ i in s, f i) = inf (untrop ∘ f '' s) := by
+    (f : S → Tropical (WithTop R)) : untrop (∑ i in s, f i) = infₛ (untrop ∘ f '' s) := by
   rcases s.eq_empty_or_nonempty with (rfl | h)
   · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.cInf_empty, untrop_zero]
   rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, Finset.untrop_sum']

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -276,14 +276,14 @@ open Set Real
 
 /-- The operator norm of a continuous linear map is the inf of all its bounds. -/
 def opNorm (f : E →SL[σ₁₂] F) :=
-  inf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
+  infₛ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
 #align continuous_linear_map.op_norm ContinuousLinearMap.opNorm
 
 instance hasOpNorm : HasNorm (E →SL[σ₁₂] F) :=
   ⟨opNorm⟩
 #align continuous_linear_map.has_op_norm ContinuousLinearMap.hasOpNorm
 
-theorem norm_def (f : E →SL[σ₁₂] F) : ‖f‖ = inf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
+theorem norm_def (f : E →SL[σ₁₂] F) : ‖f‖ = infₛ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
   rfl
 #align continuous_linear_map.norm_def ContinuousLinearMap.norm_def
 
@@ -574,7 +574,7 @@ instance toSeminormedAddCommGroup :
 #align
   continuous_linear_map.to_seminormed_add_comm_group ContinuousLinearMap.toSeminormedAddCommGroup
 
-theorem nnnorm_def (f : E →SL[σ₁₂] F) : ‖f‖₊ = inf { c | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ } := by
+theorem nnnorm_def (f : E →SL[σ₁₂] F) : ‖f‖₊ = infₛ { c | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ } := by
   ext
   rw [Nnreal.coe_Inf, coe_nnnorm, norm_def, Nnreal.coe_image]
   simp_rw [← Nnreal.coe_le_coe, Nnreal.coe_mul, coe_nnnorm, mem_set_of_eq, Subtype.coe_mk,
@@ -671,7 +671,7 @@ theorem exists_mul_lt_apply_of_lt_op_nnnorm (f : E →SL[σ₁₂] F) {r : ℝ�
     ∃ x, r * ‖x‖₊ < ‖f x‖₊ := by
   simpa only [not_forall, not_le, Set.mem_setOf] using
     not_mem_of_lt_cInf (nnnorm_def f ▸ hr : r < Inf { c : ℝ≥0 | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ })
-      (OrderBot.bdd_below _)
+      (OrderBot.bddBelow _)
 #align
   continuous_linear_map.exists_mul_lt_apply_of_lt_op_nnnorm ContinuousLinearMap.exists_mul_lt_apply_of_lt_op_nnnorm
 
@@ -714,7 +714,7 @@ theorem exists_lt_apply_of_lt_op_norm {𝕜 𝕜₂ E F : Type _} [NormedAddComm
 theorem Sup_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
     [SeminormedAddCommGroup F] [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂}
     [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
-    sup ((fun x => ‖f x‖₊) '' ball 0 1) = ‖f‖₊ := by
+    supₛ ((fun x => ‖f x‖₊) '' ball 0 1) = ‖f‖₊ := by
   refine'
     cSup_eq_of_forall_le_of_forall_lt_exists_gt ((nonempty_ball.mpr zero_lt_one).image _) _
       fun ub hub => _
@@ -727,14 +727,14 @@ theorem Sup_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup 
 theorem Sup_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
     [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E]
     [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
-    sup ((fun x => ‖f x‖) '' ball 0 1) = ‖f‖ := by
+    supₛ ((fun x => ‖f x‖) '' ball 0 1) = ‖f‖ := by
   simpa only [Nnreal.coe_Sup, Set.image_image] using Nnreal.coe_eq.2 f.Sup_unit_ball_eq_nnnorm
 #align continuous_linear_map.Sup_unit_ball_eq_norm ContinuousLinearMap.Sup_unit_ball_eq_norm
 
 theorem Sup_closed_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
     [SeminormedAddCommGroup F] [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂}
     [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
-    sup ((fun x => ‖f x‖₊) '' closedBall 0 1) = ‖f‖₊ := by
+    supₛ ((fun x => ‖f x‖₊) '' closedBall 0 1) = ‖f‖₊ := by
   have hbdd : ∀ y ∈ (fun x => ‖f x‖₊) '' closed_ball 0 1, y ≤ ‖f‖₊ := by
     rintro - ⟨x, hx, rfl⟩
     exact f.unit_le_op_norm x (mem_closed_ball_zero_iff.1 hx)
@@ -749,7 +749,7 @@ theorem Sup_closed_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCom
 theorem Sup_closed_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
     [SeminormedAddCommGroup F] [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂}
     [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
-    sup ((fun x => ‖f x‖) '' closedBall 0 1) = ‖f‖ := by
+    supₛ ((fun x => ‖f x‖) '' closedBall 0 1) = ‖f‖ := by
   simpa only [Nnreal.coe_Sup, Set.image_image] using
     Nnreal.coe_eq.2 f.Sup_closed_unit_ball_eq_nnnorm
 #align

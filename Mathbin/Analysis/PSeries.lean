@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.p_series
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ variable {f : ℕ → ℝ≥0∞}
 theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
     (∑' k, f k) ≤ f 0 + ∑' k : ℕ, 2 ^ k * f (2 ^ k) := by
   rw [Ennreal.tsum_eq_supr_nat' (Nat.tendsto_pow_at_top_at_top_of_one_lt _root_.one_lt_two)]
-  refine' supr_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
+  refine' supᵢ_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
   simp only [nsmul_eq_mul, Nat.cast_pow, Nat.cast_two]
   apply Ennreal.sum_le_tsum
 #align ennreal.le_tsum_condensed Ennreal.le_tsum_condensed
@@ -109,7 +109,7 @@ theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
     (∑' k : ℕ, 2 ^ k * f (2 ^ k)) ≤ f 1 + 2 * ∑' k, f k := by
   rw [Ennreal.tsum_eq_supr_nat' (tendsto_at_top_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
   refine'
-    supr_le fun n =>
+    supᵢ_le fun n =>
       le_trans _
         (add_le_add_left
           (nsmul_le_nsmul_of_le_right (Ennreal.sum_le_tsum <| Finset.ico 2 (2 ^ n + 1)) _) _)

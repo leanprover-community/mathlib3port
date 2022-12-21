@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.homotopy.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,20 +167,20 @@ theorem curry_apply (F : Homotopy f₀ f₁) (t : I) (x : X) : F.curry t x = F (
 /-- Continuously extending a curried homotopy to a function from `ℝ` to `C(X, Y)`.
 -/
 def extend (F : Homotopy f₀ f₁) : C(ℝ, C(X, Y)) :=
-  F.curry.iccExtend zero_le_one
+  F.curry.IccExtend zero_le_one
 #align continuous_map.homotopy.extend ContinuousMap.Homotopy.extend
 
 theorem extend_apply_of_le_zero (F : Homotopy f₀ f₁) {t : ℝ} (ht : t ≤ 0) (x : X) :
     F.extend t x = f₀ x := by 
   rw [← F.apply_zero]
-  exact ContinuousMap.congr_fun (Set.Icc_extend_of_le_left (zero_le_one' ℝ) F.curry ht) x
+  exact ContinuousMap.congr_fun (Set.IccExtend_of_le_left (zero_le_one' ℝ) F.curry ht) x
 #align
   continuous_map.homotopy.extend_apply_of_le_zero ContinuousMap.Homotopy.extend_apply_of_le_zero
 
 theorem extend_apply_of_one_le (F : Homotopy f₀ f₁) {t : ℝ} (ht : 1 ≤ t) (x : X) :
     F.extend t x = f₁ x := by 
   rw [← F.apply_one]
-  exact ContinuousMap.congr_fun (Set.Icc_extend_of_right_le (zero_le_one' ℝ) F.curry ht) x
+  exact ContinuousMap.congr_fun (Set.IccExtend_of_right_le (zero_le_one' ℝ) F.curry ht) x
 #align continuous_map.homotopy.extend_apply_of_one_le ContinuousMap.Homotopy.extend_apply_of_one_le
 
 @[simp]
@@ -191,7 +191,7 @@ theorem extend_apply_coe (F : Homotopy f₀ f₁) (t : I) (x : X) : F.extend t x
 @[simp]
 theorem extend_apply_of_mem_I (F : Homotopy f₀ f₁) {t : ℝ} (ht : t ∈ I) (x : X) :
     F.extend t x = F (⟨t, ht⟩, x) :=
-  ContinuousMap.congr_fun (Set.Icc_extend_of_mem (zero_le_one' ℝ) F.curry ht) x
+  ContinuousMap.congr_fun (Set.IccExtend_of_mem (zero_le_one' ℝ) F.curry ht) x
 #align continuous_map.homotopy.extend_apply_of_mem_I ContinuousMap.Homotopy.extend_apply_of_mem_I
 
 theorem congr_fun {F G : Homotopy f₀ f₁} (h : F = G) (x : I × X) : F x = G x :=
@@ -259,7 +259,7 @@ theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Hom
         G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) :=
   show ite _ _ _ = _ by
     split_ifs <;>
-      · rw [extend, ContinuousMap.coe_Icc_extend, Set.Icc_extend_of_mem]
+      · rw [extend, ContinuousMap.coe_Icc_extend, Set.IccExtend_of_mem]
         rfl
 #align continuous_map.homotopy.trans_apply ContinuousMap.Homotopy.trans_apply
 

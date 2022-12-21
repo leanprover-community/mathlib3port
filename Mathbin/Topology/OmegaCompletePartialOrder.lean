@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module topology.omega_complete_partial_order
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ def IsωSup {α : Type u} [Preorder α] (c : Chain α) (x : α) : Prop :=
 #align Scott.is_ωSup ScottCat.IsωSup
 
 theorem is_ωSup_iff_is_lub {α : Type u} [Preorder α] {c : Chain α} {x : α} :
-    IsωSup c x ↔ IsLub (range c) x := by simp [is_ωSup, IsLub, IsLeast, upperBounds, lowerBounds]
+    IsωSup c x ↔ IsLUB (range c) x := by simp [is_ωSup, IsLUB, IsLeast, upperBounds, lowerBounds]
 #align Scott.is_ωSup_iff_is_lub ScottCat.is_ωSup_iff_is_lub
 
 variable (α : Type u) [OmegaCompletePartialOrder α]
@@ -63,8 +63,8 @@ theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOp
   simp only [IsOpen] at hs⊢
   convert CompleteLattice.Sup_continuous' (setOf ⁻¹' s) _
   · ext1 x
-    simp only [Sup_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage,
-      SetCoe.exists, supr_Prop_eq, mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
+    simp only [supₛ_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage,
+      SetCoe.exists, supᵢ_Prop_eq, mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
   · intro p hp
     convert hs (setOf p) (mem_preimage.1 hp)
     simp only [mem_set_of_eq]
@@ -149,7 +149,7 @@ theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α]
   specialize hf_h c
   simp only [notBelow, OrderHom.coe_fun_mk, eq_iff_iff, mem_set_of_eq] at hf_h
   rw [← not_iff_not]
-  simp only [ωSup_le_iff, hf_h, ωSup, supr, Sup, CompleteLattice.sup, CompleteSemilatticeSup.sup,
+  simp only [ωSup_le_iff, hf_h, ωSup, supᵢ, Sup, CompleteLattice.sup, CompleteSemilatticeSup.sup,
     exists_prop, mem_range, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_apply, eq_iff_iff,
     not_forall]
   tauto

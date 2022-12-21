@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.sqrt
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ theorem exists_mul_self (x : ℚ) : (∃ q, q * q = x) ↔ Rat.sqrt x * Rat.sqrt
 
 theorem sqrt_nonneg (q : ℚ) : 0 ≤ Rat.sqrt q :=
   nonneg_iff_zero_le.1 <|
-    (mk_nonneg _ <|
+    (divInt_nonneg _ <|
           Int.coe_nat_pos.2 <|
             Nat.pos_of_ne_zero fun H => pos_iff_ne_zero.1 q.Pos <| Nat.sqrt_eq_zero.1 H).2 <|
       Int.coe_nat_nonneg _

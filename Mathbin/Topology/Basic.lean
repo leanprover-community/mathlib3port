@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -856,22 +856,22 @@ scoped[TopologicalSpace] notation "𝓝[" s "] " x:100 => nhdsWithin x s
 scoped[TopologicalSpace] notation "𝓝[≠] " x:100 => nhdsWithin x ({x}ᶜ)
 
 -- mathport name: nhds_within.ge
-scoped[TopologicalSpace] notation "𝓝[≥] " x:100 => nhdsWithin x (Set.ici x)
+scoped[TopologicalSpace] notation "𝓝[≥] " x:100 => nhdsWithin x (Set.Ici x)
 
 -- mathport name: nhds_within.le
-scoped[TopologicalSpace] notation "𝓝[≤] " x:100 => nhdsWithin x (Set.iic x)
+scoped[TopologicalSpace] notation "𝓝[≤] " x:100 => nhdsWithin x (Set.Iic x)
 
 -- mathport name: nhds_within.gt
-scoped[TopologicalSpace] notation "𝓝[>] " x:100 => nhdsWithin x (Set.ioi x)
+scoped[TopologicalSpace] notation "𝓝[>] " x:100 => nhdsWithin x (Set.Ioi x)
 
 -- mathport name: nhds_within.lt
-scoped[TopologicalSpace] notation "𝓝[<] " x:100 => nhdsWithin x (Set.iio x)
+scoped[TopologicalSpace] notation "𝓝[<] " x:100 => nhdsWithin x (Set.Iio x)
 
 theorem nhds_def (a : α) : 𝓝 a = ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen s }, 𝓟 s := by rw [nhds]
 #align nhds_def nhds_def
 
 theorem nhds_def' (a : α) : 𝓝 a = ⨅ (s : Set α) (hs : IsOpen s) (ha : a ∈ s), 𝓟 s := by
-  simp only [nhds_def, mem_set_of_eq, and_comm' (a ∈ _), infi_and]
+  simp only [nhds_def, mem_set_of_eq, and_comm' (a ∈ _), infᵢ_and]
 #align nhds_def' nhds_def'
 
 /-- The open sets containing `a` are a basis for the neighborhood filter. See `nhds_basis_opens'`
@@ -899,7 +899,7 @@ theorem le_nhds_iff {f a} : f ≤ 𝓝 a ↔ ∀ s : Set α, a ∈ s → IsOpen 
 /-- To show a filter is above the neighborhood filter at `a`, it suffices to show that it is above
 the principal filter of some open set `s` containing `a`. -/
 theorem nhds_le_of_le {f a} {s : Set α} (h : a ∈ s) (o : IsOpen s) (sf : 𝓟 s ≤ f) : 𝓝 a ≤ f := by
-  rw [nhds_def] <;> exact infi_le_of_le s (infi_le_of_le ⟨h, o⟩ sf)
+  rw [nhds_def] <;> exact infᵢ_le_of_le s (infᵢ_le_of_le ⟨h, o⟩ sf)
 #align nhds_le_of_le nhds_le_of_le
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
@@ -1106,9 +1106,9 @@ theorem OrderTop.tendsto_at_top_nhds {α : Type _} [PartialOrder α] [OrderTop �
 #align order_top.tendsto_at_top_nhds OrderTop.tendsto_at_top_nhds
 
 @[simp]
-instance nhdsNeBot {a : α} : NeBot (𝓝 a) :=
-  neBotOfLe (pure_le_nhds a)
-#align nhds_ne_bot nhdsNeBot
+instance nhds_ne_bot {a : α} : NeBot (𝓝 a) :=
+  ne_bot_of_le (pure_le_nhds a)
+#align nhds_ne_bot nhds_ne_bot
 
 /-!
 ### Cluster points
@@ -1125,9 +1125,9 @@ def ClusterPt (x : α) (F : Filter α) : Prop :=
   NeBot (𝓝 x ⊓ F)
 #align cluster_pt ClusterPt
 
-theorem ClusterPt.neBot {x : α} {F : Filter α} (h : ClusterPt x F) : NeBot (𝓝 x ⊓ F) :=
+theorem ClusterPt.ne_bot {x : α} {F : Filter α} (h : ClusterPt x F) : NeBot (𝓝 x ⊓ F) :=
   h
-#align cluster_pt.ne_bot ClusterPt.neBot
+#align cluster_pt.ne_bot ClusterPt.ne_bot
 
 theorem Filter.HasBasis.cluster_pt_iff {ιa ιF} {pa : ιa → Prop} {sa : ιa → Set α} {pF : ιF → Prop}
     {sF : ιF → Set α} {F : Filter α} (ha : (𝓝 a).HasBasis pa sa) (hF : F.HasBasis pF sF) :
@@ -1161,7 +1161,7 @@ theorem ClusterPt.of_le_nhds' {x : α} {f : Filter α} (H : f ≤ 𝓝 x) (hf : 
 #align cluster_pt.of_le_nhds' ClusterPt.of_le_nhds'
 
 theorem ClusterPt.of_nhds_le {x : α} {f : Filter α} (H : 𝓝 x ≤ f) : ClusterPt x f := by
-  simp only [ClusterPt, inf_eq_left.mpr H, nhdsNeBot]
+  simp only [ClusterPt, inf_eq_left.mpr H, nhds_ne_bot]
 #align cluster_pt.of_nhds_le ClusterPt.of_nhds_le
 
 theorem ClusterPt.mono {x : α} {f g : Filter α} (H : ClusterPt x f) (h : f ≤ g) : ClusterPt x g :=
@@ -1825,7 +1825,7 @@ theorem Set.MapsTo.closure {s : Set α} {t : Set β} {f : α → β} (h : MapsTo
 
 theorem image_closure_subset_closure_image {f : α → β} {s : Set α} (h : Continuous f) :
     f '' closure s ⊆ closure (f '' s) :=
-  ((maps_to_image f s).closure h).image_subset
+  ((mapsTo_image f s).closure h).image_subset
 #align image_closure_subset_closure_image image_closure_subset_closure_image
 
 theorem closure_subset_preimage_closure_image {f : α → β} {s : Set α} (h : Continuous f) :

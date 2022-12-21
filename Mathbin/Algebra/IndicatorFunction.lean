@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module algebra.indicator_function
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -752,9 +752,9 @@ theorem mul_indicator_Union_apply {ι M} [CompleteLattice M] [One M] (h1 : (⊥ 
   by_cases hx : x ∈ ⋃ i, s i
   · rw [mul_indicator_of_mem hx]
     rw [mem_Union] at hx
-    refine' le_antisymm _ (supr_le fun i => mul_indicator_le_self' (fun x hx => h1 ▸ bot_le) x)
+    refine' le_antisymm _ (supᵢ_le fun i => mul_indicator_le_self' (fun x hx => h1 ▸ bot_le) x)
     rcases hx with ⟨i, hi⟩
-    exact le_supr_of_le i (ge_of_eq <| mul_indicator_of_mem hi _)
+    exact le_supᵢ_of_le i (ge_of_eq <| mul_indicator_of_mem hi _)
   · rw [mul_indicator_of_not_mem hx]
     simp only [mem_Union, not_exists] at hx
     simp [hx, ← h1]

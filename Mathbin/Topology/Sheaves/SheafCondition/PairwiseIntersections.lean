@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.pairwise_intersections
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -358,7 +358,7 @@ Every cone over `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)` factors through 
 -/
 def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
   let ι : ULift.{w} walking_pair → opens X := fun j => walking_pair.cases_on j.down U V
-  have hι : U ⊔ V = supr ι := by 
+  have hι : U ⊔ V = supᵢ ι := by 
     ext
     rw [opens.coe_supr, Set.mem_Union]
     constructor
@@ -414,7 +414,7 @@ theorem inter_union_pullback_cone_lift_right :
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`. -/
 def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
   let ι : ULift.{w} walking_pair → opens X := fun ⟨j⟩ => walking_pair.cases_on j U V
-  have hι : U ⊔ V = supr ι := by 
+  have hι : U ⊔ V = supᵢ ι := by 
     ext
     rw [opens.coe_supr, Set.mem_Union]
     constructor

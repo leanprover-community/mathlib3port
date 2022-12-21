@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,11 +94,11 @@ def reflTransSymm (p : Path x₀ x₁) :
     dsimp only [refl_trans_symm_aux, Path.coe_to_continuous_map, Path.trans]
     change _ = ite _ _ _
     split_ifs
-    · rw [Path.extend, Set.Icc_extend_of_mem]
+    · rw [Path.extend, Set.IccExtend_of_mem]
       · norm_num
       · rw [unitInterval.mul_pos_mem_iff zero_lt_two]
         exact ⟨unitInterval.nonneg x, h⟩
-    · rw [Path.symm, Path.extend, Set.Icc_extend_of_mem]
+    · rw [Path.symm, Path.extend, Set.IccExtend_of_mem]
       · congr 1
         ext
         norm_num [sub_sub_eq_add_sub]

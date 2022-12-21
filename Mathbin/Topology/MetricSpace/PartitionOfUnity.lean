@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.partition_of_unity
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem exists_forall_closed_ball_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU
     (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) (x : X) :
     ∃ r : ℝ,
       ∀ᶠ y in 𝓝 x,
-        r ∈ ioi (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i } :=
+        r ∈ Ioi (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i } :=
   by
   have :=
     (ennreal.continuous_of_real.tendsto' 0 0 Ennreal.of_real_zero).Eventually
@@ -83,7 +83,7 @@ theorem exists_forall_closed_ball_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU
 
 theorem exists_forall_closed_ball_subset_aux₂ (y : X) :
     Convex ℝ
-      (ioi (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i }) :=
+      (Ioi (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i }) :=
   (convex_Ioi _).inter <|
     ord_connected.convex <|
       ord_connected.preimage_ennreal_of_real <|

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.order_dual
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,16 +112,16 @@ instance OrderedCancelCommMonoid.to_contravariantClass [OrderedCancelCommMonoid 
 
 @[to_additive]
 instance [OrderedCancelCommMonoid α] : OrderedCancelCommMonoid αᵒᵈ :=
-  { OrderDual.instOrderedCommMonoidOrderDual, OrderDual.cancelCommMonoid with
+  { OrderDual.orderedCommMonoid, OrderDual.cancelCommMonoid with
     le_of_mul_le_mul_left := fun a b c : α => le_of_mul_le_mul_left' }
 
 @[to_additive]
 instance [LinearOrderedCancelCommMonoid α] : LinearOrderedCancelCommMonoid αᵒᵈ :=
-  { OrderDual.instLinearOrderOrderDual α, OrderDual.orderedCancelCommMonoid with }
+  { OrderDual.linearOrder α, OrderDual.orderedCancelCommMonoid with }
 
 @[to_additive]
 instance [LinearOrderedCommMonoid α] : LinearOrderedCommMonoid αᵒᵈ :=
-  { OrderDual.instLinearOrderOrderDual α, OrderDual.instOrderedCommMonoidOrderDual with }
+  { OrderDual.linearOrder α, OrderDual.orderedCommMonoid with }
 
 end OrderDual
 

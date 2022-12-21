@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -793,12 +793,12 @@ variable [∀ a, MeasurableSpace (π a)] [MeasurableSpace γ]
 
 theorem measurable_pi_iff {g : α → ∀ a, π a} : Measurable g ↔ ∀ a, Measurable fun x => g x a := by
   simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_supr,
-    MeasurableSpace.comap_comp, Function.comp, supr_le_iff]
+    MeasurableSpace.comap_comp, Function.comp, supᵢ_le_iff]
 #align measurable_pi_iff measurable_pi_iff
 
 @[measurability]
 theorem measurablePiApply (a : δ) : Measurable fun f : ∀ a, π a => f a :=
-  Measurable.ofComapLe <| le_supr _ a
+  Measurable.ofComapLe <| le_supᵢ _ a
 #align measurable_pi_apply measurablePiApply
 
 @[measurability]
@@ -1373,27 +1373,6 @@ def Set.singleton (a : α) :
   measurableInvFun := measurableConst
 #align measurable_equiv.set.singleton MeasurableEquiv.Set.singleton
 
-/-- A set is equivalent to its image under a function `f` as measurable spaces,
-  if `f` is an injective measurable function that sends measurable sets to measurable sets. -/
-noncomputable def Set.image (f : α → β) (s : Set α) (hf : Injective f) (hfm : Measurable f)
-    (hfi : ∀ s, MeasurableSet s → MeasurableSet (f '' s)) :
-    s ≃ᵐ f '' s where 
-  toEquiv := Equiv.Set.image f s hf
-  measurableToFun := (hfm.comp measurableId.subtype_coe).subtype_mk
-  measurableInvFun := by 
-    rintro t ⟨u, hu, rfl⟩; simp [preimage_preimage, set.image_symm_preimage hf]
-    exact measurableSubtypeCoe (hfi u hu)
-#align measurable_equiv.set.image MeasurableEquiv.Set.image
-
-/-- The domain of `f` is equivalent to its range as measurable spaces,
-  if `f` is an injective measurable function that sends measurable sets to measurable sets. -/
-noncomputable def Set.range (f : α → β) (hf : Injective f) (hfm : Measurable f)
-    (hfi : ∀ s, MeasurableSet s → MeasurableSet (f '' s)) : α ≃ᵐ range f :=
-  (MeasurableEquiv.Set.univ _).symm.trans <|
-    (MeasurableEquiv.Set.image f univ hf hfm hfi).trans <|
-      MeasurableEquiv.cast (by rw [image_univ]) (by rw [image_univ])
-#align measurable_equiv.set.range MeasurableEquiv.Set.range
-
 /-- `α` is equivalent to its image in `α ⊕ β` as measurable spaces. -/
 def Set.rangeInl :
     (range Sum.inl : Set (Sum α β)) ≃ᵐ
@@ -1568,15 +1547,22 @@ namespace MeasurableEmbedding
 
 variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α → β}
 
-/-- A measurable embedding defines a measurable equivalence between its domain
-and its range. -/
-noncomputable def equivRange (f : α → β) (hf : MeasurableEmbedding f) :
-    α ≃ᵐ range f where 
-  toEquiv := Equiv.ofInjective f hf.Injective
-  measurableToFun := hf.Measurable.subtype_mk
+/-- A set is equivalent to its image under a function `f` as measurable spaces,
+  if `f` is a measurable embedding -/
+noncomputable def equivImage (s : Set α) (hf : MeasurableEmbedding f) :
+    s ≃ᵐ f '' s where 
+  toEquiv := Equiv.Set.image f s hf.Injective
+  measurableToFun := (hf.Measurable.comp measurableId.subtype_coe).subtype_mk
   measurableInvFun := by 
-    rw [coe_of_injective_symm]
-    exact hf.measurable_range_splitting
+    rintro t ⟨u, hu, rfl⟩; simp [preimage_preimage, set.image_symm_preimage hf.injective]
+    exact measurableSubtypeCoe (hf.measurable_set_image' hu)
+#align measurable_embedding.equiv_image MeasurableEmbedding.equivImage
+
+/-- The domain of `f` is equivalent to its range as measurable spaces,
+  if `f` is a measurable embedding -/
+noncomputable def equivRange (hf : MeasurableEmbedding f) : α ≃ᵐ range f :=
+  (MeasurableEquiv.Set.univ _).symm.trans <|
+    (hf.equivImage univ).trans <| MeasurableEquiv.cast (by rw [image_univ]) (by rw [image_univ])
 #align measurable_embedding.equiv_range MeasurableEmbedding.equivRange
 
 theorem ofMeasurableInverseOnRange {g : range f → α} (hf₁ : Measurable f)

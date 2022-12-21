@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.choose.cast
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ theorem cast_add_choose {a b : ℕ} : ((a + b).choose a : K) = (a + b)! / (a ! *
 theorem cast_choose_eq_pochhammer_div (a b : ℕ) :
     (a.choose b : K) = (pochhammer K b).eval (a - (b - 1) : ℕ) / b ! := by
   rw [eq_div_iff_mul_eq (Nat.cast_ne_zero.2 b.factorial_ne_zero : (b ! : K) ≠ 0), ← Nat.cast_mul,
-    mul_comm, ← Nat.desc_factorial_eq_factorial_mul_choose, ← cast_desc_factorial]
+    mul_comm, ← Nat.descFactorial_eq_factorial_mul_choose, ← cast_desc_factorial]
 #align nat.cast_choose_eq_pochhammer_div Nat.cast_choose_eq_pochhammer_div
 
 theorem cast_choose_two (a : ℕ) : (a.choose 2 : K) = a * (a - 1) / 2 := by

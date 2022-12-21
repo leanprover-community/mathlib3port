@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.pequiv
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,19 +49,21 @@ pequiv, partial equivalence
 
 universe u v w x
 
+#print PEquiv /-
 /-- A `pequiv` is a partial equivalence, a representation of a bijection between a subset
   of `α` and a subset of `β`. See also `local_equiv` for a version that requires `to_fun` and
 `inv_fun` to be globally defined functions and has `source` and `target` sets as extra fields. -/
-structure Pequiv (α : Type u) (β : Type v) where
+structure PEquiv (α : Type u) (β : Type v) where
   toFun : α → Option β
   invFun : β → Option α
   inv : ∀ (a : α) (b : β), a ∈ inv_fun b ↔ b ∈ to_fun a
-#align pequiv Pequiv
+#align pequiv PEquiv
+-/
 
 -- mathport name: «expr ≃. »
-infixr:25 " ≃. " => Pequiv
+infixr:25 " ≃. " => PEquiv
 
-namespace Pequiv
+namespace PEquiv
 
 variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
@@ -70,12 +72,15 @@ open Function Option
 instance : CoeFun (α ≃. β) fun _ => α → Option β :=
   ⟨toFun⟩
 
+#print PEquiv.coe_mk_apply /-
 @[simp]
 theorem coe_mk_apply (f₁ : α → Option β) (f₂ : β → Option α) (h) (x : α) :
-    (Pequiv.mk f₁ f₂ h : α → Option β) x = f₁ x :=
+    (PEquiv.mk f₁ f₂ h : α → Option β) x = f₁ x :=
   rfl
-#align pequiv.coe_mk_apply Pequiv.coe_mk_apply
+#align pequiv.coe_mk_apply PEquiv.coe_mk_apply
+-/
 
+#print PEquiv.ext /-
 @[ext]
 theorem ext : ∀ {f g : α ≃. β} (h : ∀ x, f x = g x), f = g
   | ⟨f₁, f₂, hf⟩, ⟨g₁, g₂, hg⟩, h => by
@@ -91,12 +96,16 @@ theorem ext : ∀ {f g : α ≃. β} (h : ∀ x, f x = g x), f = g
         rwa [Option.eq_none_iff_forall_not_mem]
       · rw [← Option.mem_def, hf, ← hg, h, Option.mem_def]
     simp [*, funext_iff]
-#align pequiv.ext Pequiv.ext
+#align pequiv.ext PEquiv.ext
+-/
 
+#print PEquiv.ext_iff /-
 theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
   ⟨congr_fun ∘ congr_arg _, ext⟩
-#align pequiv.ext_iff Pequiv.ext_iff
+#align pequiv.ext_iff PEquiv.ext_iff
+-/
 
+#print PEquiv.refl /-
 /-- The identity map as a partial equivalence. -/
 @[refl]
 protected def refl (α : Type _) : α ≃.
@@ -104,8 +113,10 @@ protected def refl (α : Type _) : α ≃.
   toFun := some
   invFun := some
   inv _ _ := eq_comm
-#align pequiv.refl Pequiv.refl
+#align pequiv.refl PEquiv.refl
+-/
 
+#print PEquiv.symm /-
 /-- The inverse partial equivalence. -/
 @[symm]
 protected def symm (f : α ≃. β) : β ≃.
@@ -113,16 +124,22 @@ protected def symm (f : α ≃. β) : β ≃.
   toFun := f.2
   invFun := f.1
   inv _ _ := (f.inv _ _).symm
-#align pequiv.symm Pequiv.symm
+#align pequiv.symm PEquiv.symm
+-/
 
+#print PEquiv.mem_iff_mem /-
 theorem mem_iff_mem (f : α ≃. β) : ∀ {a : α} {b : β}, a ∈ f.symm b ↔ b ∈ f a :=
   f.3
-#align pequiv.mem_iff_mem Pequiv.mem_iff_mem
+#align pequiv.mem_iff_mem PEquiv.mem_iff_mem
+-/
 
+#print PEquiv.eq_some_iff /-
 theorem eq_some_iff (f : α ≃. β) : ∀ {a : α} {b : β}, f.symm b = some a ↔ f a = some b :=
   f.3
-#align pequiv.eq_some_iff Pequiv.eq_some_iff
+#align pequiv.eq_some_iff PEquiv.eq_some_iff
+-/
 
+#print PEquiv.trans /-
 /-- Composition of partial equivalences `f : α ≃. β` and `g : β ≃. γ`. -/
 @[trans]
 protected def trans (f : α ≃. β) (g : β ≃. γ) :
@@ -130,63 +147,87 @@ protected def trans (f : α ≃. β) (g : β ≃. γ) :
   toFun a := (f a).bind g
   invFun a := (g.symm a).bind f.symm
   inv a b := by simp_all [and_comm, eq_some_iff f, eq_some_iff g]
-#align pequiv.trans Pequiv.trans
+#align pequiv.trans PEquiv.trans
+-/
 
+#print PEquiv.refl_apply /-
 @[simp]
-theorem refl_apply (a : α) : Pequiv.refl α a = some a :=
+theorem refl_apply (a : α) : PEquiv.refl α a = some a :=
   rfl
-#align pequiv.refl_apply Pequiv.refl_apply
+#align pequiv.refl_apply PEquiv.refl_apply
+-/
 
+#print PEquiv.symm_refl /-
 @[simp]
-theorem symm_refl : (Pequiv.refl α).symm = Pequiv.refl α :=
+theorem symm_refl : (PEquiv.refl α).symm = PEquiv.refl α :=
   rfl
-#align pequiv.symm_refl Pequiv.symm_refl
+#align pequiv.symm_refl PEquiv.symm_refl
+-/
 
+#print PEquiv.symm_symm /-
 @[simp]
 theorem symm_symm (f : α ≃. β) : f.symm.symm = f := by cases f <;> rfl
-#align pequiv.symm_symm Pequiv.symm_symm
+#align pequiv.symm_symm PEquiv.symm_symm
+-/
 
-theorem symm_injective : Function.Injective (@Pequiv.symm α β) :=
+#print PEquiv.symm_injective /-
+theorem symm_injective : Function.Injective (@PEquiv.symm α β) :=
   LeftInverse.injective symm_symm
-#align pequiv.symm_injective Pequiv.symm_injective
+#align pequiv.symm_injective PEquiv.symm_injective
+-/
 
+#print PEquiv.trans_assoc /-
 theorem trans_assoc (f : α ≃. β) (g : β ≃. γ) (h : γ ≃. δ) :
     (f.trans g).trans h = f.trans (g.trans h) :=
   ext fun _ => Option.bind_assoc _ _ _
-#align pequiv.trans_assoc Pequiv.trans_assoc
+#align pequiv.trans_assoc PEquiv.trans_assoc
+-/
 
+#print PEquiv.mem_trans /-
 theorem mem_trans (f : α ≃. β) (g : β ≃. γ) (a : α) (c : γ) :
     c ∈ f.trans g a ↔ ∃ b, b ∈ f a ∧ c ∈ g b :=
   Option.bind_eq_some'
-#align pequiv.mem_trans Pequiv.mem_trans
+#align pequiv.mem_trans PEquiv.mem_trans
+-/
 
+#print PEquiv.trans_eq_some /-
 theorem trans_eq_some (f : α ≃. β) (g : β ≃. γ) (a : α) (c : γ) :
     f.trans g a = some c ↔ ∃ b, f a = some b ∧ g b = some c :=
   Option.bind_eq_some'
-#align pequiv.trans_eq_some Pequiv.trans_eq_some
+#align pequiv.trans_eq_some PEquiv.trans_eq_some
+-/
 
+#print PEquiv.trans_eq_none /-
 theorem trans_eq_none (f : α ≃. β) (g : β ≃. γ) (a : α) :
     f.trans g a = none ↔ ∀ b c, b ∉ f a ∨ c ∉ g b := by
   simp only [eq_none_iff_forall_not_mem, mem_trans, imp_iff_not_or.symm]
   push_neg; tauto
-#align pequiv.trans_eq_none Pequiv.trans_eq_none
+#align pequiv.trans_eq_none PEquiv.trans_eq_none
+-/
 
+#print PEquiv.refl_trans /-
 @[simp]
-theorem refl_trans (f : α ≃. β) : (Pequiv.refl α).trans f = f := by
-  ext <;> dsimp [Pequiv.trans] <;> rfl
-#align pequiv.refl_trans Pequiv.refl_trans
+theorem refl_trans (f : α ≃. β) : (PEquiv.refl α).trans f = f := by
+  ext <;> dsimp [PEquiv.trans] <;> rfl
+#align pequiv.refl_trans PEquiv.refl_trans
+-/
 
+#print PEquiv.trans_refl /-
 @[simp]
-theorem trans_refl (f : α ≃. β) : f.trans (Pequiv.refl β) = f := by
-  ext <;> dsimp [Pequiv.trans] <;> simp
-#align pequiv.trans_refl Pequiv.trans_refl
+theorem trans_refl (f : α ≃. β) : f.trans (PEquiv.refl β) = f := by
+  ext <;> dsimp [PEquiv.trans] <;> simp
+#align pequiv.trans_refl PEquiv.trans_refl
+-/
 
+#print PEquiv.inj /-
 protected theorem inj (f : α ≃. β) {a₁ a₂ : α} {b : β} (h₁ : b ∈ f a₁) (h₂ : b ∈ f a₂) : a₁ = a₂ :=
   by rw [← mem_iff_mem] at * <;> cases h : f.symm b <;> simp_all
-#align pequiv.inj Pequiv.inj
+#align pequiv.inj PEquiv.inj
+-/
 
+#print PEquiv.injective_of_forall_ne_isSome /-
 /-- If the domain of a `pequiv` is `α` except a point, its forward direction is injective. -/
-theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α)
+theorem injective_of_forall_ne_isSome (f : α ≃. β) (a₂ : α)
     (h : ∀ a₁ : α, a₁ ≠ a₂ → isSome (f a₁)) : Injective f :=
   HasLeftInverse.injective
     ⟨fun b => Option.recOn b a₂ fun b' => Option.recOn (f.symm b') a₂ id, fun x => by
@@ -197,19 +238,23 @@ theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α)
         · dsimp only
           rw [(eq_some_iff f).2 hfx]
           rfl⟩
-#align pequiv.injective_of_forall_ne_is_some Pequiv.injective_of_forall_ne_is_some
+#align pequiv.injective_of_forall_ne_is_some PEquiv.injective_of_forall_ne_isSome
+-/
 
+#print PEquiv.injective_of_forall_isSome /-
 /-- If the domain of a `pequiv` is all of `α`, its forward direction is injective. -/
-theorem injective_of_forall_is_some {f : α ≃. β} (h : ∀ a : α, isSome (f a)) : Injective f :=
+theorem injective_of_forall_isSome {f : α ≃. β} (h : ∀ a : α, isSome (f a)) : Injective f :=
   (Classical.em (Nonempty α)).elim
-    (fun hn => injective_of_forall_ne_is_some f (Classical.choice hn) fun a _ => h a) fun hn x =>
+    (fun hn => injective_of_forall_ne_isSome f (Classical.choice hn) fun a _ => h a) fun hn x =>
     (hn ⟨x⟩).elim
-#align pequiv.injective_of_forall_is_some Pequiv.injective_of_forall_is_some
+#align pequiv.injective_of_forall_is_some PEquiv.injective_of_forall_isSome
+-/
 
 section OfSet
 
 variable (s : Set α) [DecidablePred (· ∈ s)]
 
+#print PEquiv.ofSet /-
 /-- Creates a `pequiv` that is the identity on `s`, and `none` outside of it. -/
 def ofSet (s : Set α) [DecidablePred (· ∈ s)] :
     α ≃. α where 
@@ -221,13 +266,17 @@ def ofSet (s : Set α) [DecidablePred (· ∈ s)] :
     · simp [ne_of_mem_of_not_mem hb ha]
     · simp [ne_of_mem_of_not_mem ha hb]
     · simp
-#align pequiv.of_set Pequiv.ofSet
+#align pequiv.of_set PEquiv.ofSet
+-/
 
-theorem mem_of_set_self_iff {s : Set α} [DecidablePred (· ∈ s)] {a : α} : a ∈ ofSet s a ↔ a ∈ s :=
-  by dsimp [of_set] <;> split_ifs <;> simp [*]
-#align pequiv.mem_of_set_self_iff Pequiv.mem_of_set_self_iff
+#print PEquiv.mem_ofSet_self_iff /-
+theorem mem_ofSet_self_iff {s : Set α} [DecidablePred (· ∈ s)] {a : α} : a ∈ ofSet s a ↔ a ∈ s := by
+  dsimp [of_set] <;> split_ifs <;> simp [*]
+#align pequiv.mem_of_set_self_iff PEquiv.mem_ofSet_self_iff
+-/
 
-theorem mem_of_set_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} :
+#print PEquiv.mem_ofSet_iff /-
+theorem mem_ofSet_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} :
     a ∈ ofSet s b ↔ a = b ∧ a ∈ s := by 
   dsimp [of_set]
   split_ifs
@@ -237,65 +286,84 @@ theorem mem_of_set_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} :
   · simp only [false_iff_iff, not_and]
     rintro rfl
     exact h
-#align pequiv.mem_of_set_iff Pequiv.mem_of_set_iff
+#align pequiv.mem_of_set_iff PEquiv.mem_ofSet_iff
+-/
 
+#print PEquiv.ofSet_eq_some_iff /-
 @[simp]
-theorem of_set_eq_some_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a b : α} :
+theorem ofSet_eq_some_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a b : α} :
     ofSet s b = some a ↔ a = b ∧ a ∈ s :=
   mem_of_set_iff
-#align pequiv.of_set_eq_some_iff Pequiv.of_set_eq_some_iff
+#align pequiv.of_set_eq_some_iff PEquiv.ofSet_eq_some_iff
+-/
 
+#print PEquiv.ofSet_eq_some_self_iff /-
 @[simp]
-theorem of_set_eq_some_self_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a : α} :
+theorem ofSet_eq_some_self_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a : α} :
     ofSet s a = some a ↔ a ∈ s :=
   mem_of_set_self_iff
-#align pequiv.of_set_eq_some_self_iff Pequiv.of_set_eq_some_self_iff
+#align pequiv.of_set_eq_some_self_iff PEquiv.ofSet_eq_some_self_iff
+-/
 
+#print PEquiv.ofSet_symm /-
 @[simp]
-theorem of_set_symm : (ofSet s).symm = ofSet s :=
+theorem ofSet_symm : (ofSet s).symm = ofSet s :=
   rfl
-#align pequiv.of_set_symm Pequiv.of_set_symm
+#align pequiv.of_set_symm PEquiv.ofSet_symm
+-/
 
+#print PEquiv.ofSet_univ /-
 @[simp]
-theorem of_set_univ : ofSet Set.univ = Pequiv.refl α :=
+theorem ofSet_univ : ofSet Set.univ = PEquiv.refl α :=
   rfl
-#align pequiv.of_set_univ Pequiv.of_set_univ
+#align pequiv.of_set_univ PEquiv.ofSet_univ
+-/
 
+#print PEquiv.ofSet_eq_refl /-
 @[simp]
-theorem of_set_eq_refl {s : Set α} [DecidablePred (· ∈ s)] :
-    ofSet s = Pequiv.refl α ↔ s = Set.univ :=
+theorem ofSet_eq_refl {s : Set α} [DecidablePred (· ∈ s)] :
+    ofSet s = PEquiv.refl α ↔ s = Set.univ :=
   ⟨fun h => by 
     rw [Set.eq_univ_iff_forall]
     intro
     rw [← mem_of_set_self_iff, h]
     exact rfl, fun h => by simp only [← of_set_univ, h]⟩
-#align pequiv.of_set_eq_refl Pequiv.of_set_eq_refl
+#align pequiv.of_set_eq_refl PEquiv.ofSet_eq_refl
+-/
 
 end OfSet
 
+#print PEquiv.symm_trans_rev /-
 theorem symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = g.symm.trans f.symm :=
   rfl
-#align pequiv.symm_trans_rev Pequiv.symm_trans_rev
+#align pequiv.symm_trans_rev PEquiv.symm_trans_rev
+-/
 
+#print PEquiv.self_trans_symm /-
 theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).isSome } := by
   ext
-  dsimp [Pequiv.trans]
+  dsimp [PEquiv.trans]
   simp only [eq_some_iff f, Option.isSome_iff_exists, Option.mem_def, bind_eq_some',
     of_set_eq_some_iff]
   constructor
   · rintro ⟨b, hb₁, hb₂⟩
-    exact ⟨Pequiv.inj _ hb₂ hb₁, b, hb₂⟩
+    exact ⟨PEquiv.inj _ hb₂ hb₁, b, hb₂⟩
   · simp (config := { contextual := true })
-#align pequiv.self_trans_symm Pequiv.self_trans_symm
+#align pequiv.self_trans_symm PEquiv.self_trans_symm
+-/
 
+#print PEquiv.symm_trans_self /-
 theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = ofSet { b | (f.symm b).isSome } :=
   symm_injective <| by simp [symm_trans_rev, self_trans_symm, -symm_symm]
-#align pequiv.symm_trans_self Pequiv.symm_trans_self
+#align pequiv.symm_trans_self PEquiv.symm_trans_self
+-/
 
+#print PEquiv.trans_symm_eq_iff_forall_is_some /-
 theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} :
-    f.trans f.symm = Pequiv.refl α ↔ ∀ a, isSome (f a) := by
+    f.trans f.symm = PEquiv.refl α ↔ ∀ a, isSome (f a) := by
   rw [self_trans_symm, of_set_eq_refl, Set.eq_univ_iff_forall] <;> rfl
-#align pequiv.trans_symm_eq_iff_forall_is_some Pequiv.trans_symm_eq_iff_forall_is_some
+#align pequiv.trans_symm_eq_iff_forall_is_some PEquiv.trans_symm_eq_iff_forall_is_some
+-/
 
 instance : Bot (α ≃. β) :=
   ⟨{  toFun := fun _ => none
@@ -305,108 +373,144 @@ instance : Bot (α ≃. β) :=
 instance : Inhabited (α ≃. β) :=
   ⟨⊥⟩
 
+#print PEquiv.bot_apply /-
 @[simp]
 theorem bot_apply (a : α) : (⊥ : α ≃. β) a = none :=
   rfl
-#align pequiv.bot_apply Pequiv.bot_apply
+#align pequiv.bot_apply PEquiv.bot_apply
+-/
 
+#print PEquiv.symm_bot /-
 @[simp]
 theorem symm_bot : (⊥ : α ≃. β).symm = ⊥ :=
   rfl
-#align pequiv.symm_bot Pequiv.symm_bot
+#align pequiv.symm_bot PEquiv.symm_bot
+-/
 
+#print PEquiv.trans_bot /-
 @[simp]
 theorem trans_bot (f : α ≃. β) : f.trans (⊥ : β ≃. γ) = ⊥ := by
-  ext <;> dsimp [Pequiv.trans] <;> simp
-#align pequiv.trans_bot Pequiv.trans_bot
+  ext <;> dsimp [PEquiv.trans] <;> simp
+#align pequiv.trans_bot PEquiv.trans_bot
+-/
 
+#print PEquiv.bot_trans /-
 @[simp]
 theorem bot_trans (f : β ≃. γ) : (⊥ : α ≃. β).trans f = ⊥ := by
-  ext <;> dsimp [Pequiv.trans] <;> simp
-#align pequiv.bot_trans Pequiv.bot_trans
+  ext <;> dsimp [PEquiv.trans] <;> simp
+#align pequiv.bot_trans PEquiv.bot_trans
+-/
 
-theorem is_some_symm_get (f : α ≃. β) {a : α} (h : isSome (f a)) : isSome (f.symm (Option.get h)) :=
+#print PEquiv.isSome_symm_get /-
+theorem isSome_symm_get (f : α ≃. β) {a : α} (h : isSome (f a)) : isSome (f.symm (Option.get h)) :=
   isSome_iff_exists.2 ⟨a, by rw [f.eq_some_iff, some_get]⟩
-#align pequiv.is_some_symm_get Pequiv.is_some_symm_get
+#align pequiv.is_some_symm_get PEquiv.isSome_symm_get
+-/
 
 section Single
 
 variable [DecidableEq α] [DecidableEq β] [DecidableEq γ]
 
+#print PEquiv.single /-
 /-- Create a `pequiv` which sends `a` to `b` and `b` to `a`, but is otherwise `none`. -/
 def single (a : α) (b : β) :
     α ≃. β where 
   toFun x := if x = a then some b else none
   invFun x := if x = b then some a else none
   inv _ _ := by simp <;> split_ifs <;> cc
-#align pequiv.single Pequiv.single
+#align pequiv.single PEquiv.single
+-/
 
+#print PEquiv.mem_single /-
 theorem mem_single (a : α) (b : β) : b ∈ single a b a :=
   if_pos rfl
-#align pequiv.mem_single Pequiv.mem_single
+#align pequiv.mem_single PEquiv.mem_single
+-/
 
+#print PEquiv.mem_single_iff /-
 theorem mem_single_iff (a₁ a₂ : α) (b₁ b₂ : β) : b₁ ∈ single a₂ b₂ a₁ ↔ a₁ = a₂ ∧ b₁ = b₂ := by
   dsimp [single] <;> split_ifs <;> simp [*, eq_comm]
-#align pequiv.mem_single_iff Pequiv.mem_single_iff
+#align pequiv.mem_single_iff PEquiv.mem_single_iff
+-/
 
+#print PEquiv.symm_single /-
 @[simp]
 theorem symm_single (a : α) (b : β) : (single a b).symm = single b a :=
   rfl
-#align pequiv.symm_single Pequiv.symm_single
+#align pequiv.symm_single PEquiv.symm_single
+-/
 
+#print PEquiv.single_apply /-
 @[simp]
 theorem single_apply (a : α) (b : β) : single a b a = some b :=
   if_pos rfl
-#align pequiv.single_apply Pequiv.single_apply
+#align pequiv.single_apply PEquiv.single_apply
+-/
 
+#print PEquiv.single_apply_of_ne /-
 theorem single_apply_of_ne {a₁ a₂ : α} (h : a₁ ≠ a₂) (b : β) : single a₁ b a₂ = none :=
   if_neg h.symm
-#align pequiv.single_apply_of_ne Pequiv.single_apply_of_ne
+#align pequiv.single_apply_of_ne PEquiv.single_apply_of_ne
+-/
 
+#print PEquiv.single_trans_of_mem /-
 theorem single_trans_of_mem (a : α) {b : β} {c : γ} {f : β ≃. γ} (h : c ∈ f b) :
     (single a b).trans f = single a c := by 
   ext
-  dsimp [single, Pequiv.trans]
+  dsimp [single, PEquiv.trans]
   split_ifs <;> simp_all
-#align pequiv.single_trans_of_mem Pequiv.single_trans_of_mem
+#align pequiv.single_trans_of_mem PEquiv.single_trans_of_mem
+-/
 
+#print PEquiv.trans_single_of_mem /-
 theorem trans_single_of_mem {a : α} {b : β} (c : γ) {f : α ≃. β} (h : b ∈ f a) :
     f.trans (single b c) = single a c :=
   symm_injective <| single_trans_of_mem _ ((mem_iff_mem f).2 h)
-#align pequiv.trans_single_of_mem Pequiv.trans_single_of_mem
+#align pequiv.trans_single_of_mem PEquiv.trans_single_of_mem
+-/
 
+#print PEquiv.single_trans_single /-
 @[simp]
 theorem single_trans_single (a : α) (b : β) (c : γ) :
     (single a b).trans (single b c) = single a c :=
   single_trans_of_mem _ (mem_single _ _)
-#align pequiv.single_trans_single Pequiv.single_trans_single
+#align pequiv.single_trans_single PEquiv.single_trans_single
+-/
 
+#print PEquiv.single_subsingleton_eq_refl /-
 @[simp]
-theorem single_subsingleton_eq_refl [Subsingleton α] (a b : α) : single a b = Pequiv.refl α := by
+theorem single_subsingleton_eq_refl [Subsingleton α] (a b : α) : single a b = PEquiv.refl α := by
   ext (i j)
   dsimp [single]
   rw [if_pos (Subsingleton.elim i a), Subsingleton.elim i j, Subsingleton.elim b j]
-#align pequiv.single_subsingleton_eq_refl Pequiv.single_subsingleton_eq_refl
+#align pequiv.single_subsingleton_eq_refl PEquiv.single_subsingleton_eq_refl
+-/
 
+#print PEquiv.trans_single_of_eq_none /-
 theorem trans_single_of_eq_none {b : β} (c : γ) {f : δ ≃. β} (h : f.symm b = none) :
     f.trans (single b c) = ⊥ := by 
   ext
   simp only [eq_none_iff_forall_not_mem, Option.mem_def, f.eq_some_iff] at h
-  dsimp [Pequiv.trans, single]
+  dsimp [PEquiv.trans, single]
   simp
   intros
   split_ifs <;> simp_all
-#align pequiv.trans_single_of_eq_none Pequiv.trans_single_of_eq_none
+#align pequiv.trans_single_of_eq_none PEquiv.trans_single_of_eq_none
+-/
 
+#print PEquiv.single_trans_of_eq_none /-
 theorem single_trans_of_eq_none (a : α) {b : β} {f : β ≃. δ} (h : f b = none) :
     (single a b).trans f = ⊥ :=
   symm_injective <| trans_single_of_eq_none _ h
-#align pequiv.single_trans_of_eq_none Pequiv.single_trans_of_eq_none
+#align pequiv.single_trans_of_eq_none PEquiv.single_trans_of_eq_none
+-/
 
+#print PEquiv.single_trans_single_of_ne /-
 theorem single_trans_single_of_ne {b₁ b₂ : β} (h : b₁ ≠ b₂) (a : α) (c : γ) :
     (single a b₁).trans (single b₂ c) = ⊥ :=
   single_trans_of_eq_none _ (single_apply_of_ne h.symm _)
-#align pequiv.single_trans_single_of_ne Pequiv.single_trans_single_of_ne
+#align pequiv.single_trans_single_of_ne PEquiv.single_trans_single_of_ne
+-/
 
 end Single
 
@@ -425,16 +529,22 @@ instance : PartialOrder
         · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b <| h ▸ fg a b hb
         · exact gf _ _ h)
 
+/- warning: pequiv.le_def -> PEquiv.le_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : PEquiv.{u1, u2} α β} {g : PEquiv.{u1, u2} α β}, Iff (LE.le.{max u1 u2} (PEquiv.{u1, u2} α β) (Preorder.toLE.{max u1 u2} (PEquiv.{u1, u2} α β) (PartialOrder.toPreorder.{max u1 u2} (PEquiv.{u1, u2} α β) (PEquiv.partialOrder.{u1, u2} α β))) f g) (forall (a : α) (b : β), (Membership.Mem.{u2, u2} β (Option.{u2} β) (Option.hasMem.{u2} β) b (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (PEquiv.hasCoeToFun.{u1, u2} α β) f a)) -> (Membership.Mem.{u2, u2} β (Option.{u2} β) (Option.hasMem.{u2} β) b (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (PEquiv.hasCoeToFun.{u1, u2} α β) g a)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : PEquiv.{u1, u2} α β} {g : PEquiv.{u1, u2} α β}, Iff (LE.le.{max u1 u2} (PEquiv.{u1, u2} α β) (Preorder.toLE.{max u1 u2} (PEquiv.{u1, u2} α β) (PartialOrder.toPreorder.{max u1 u2} (PEquiv.{u1, u2} α β) (PEquiv.instPartialOrderPEquiv.{u1, u2} α β))) f g) (forall (a : α) (b : β), (Membership.mem.{u2, u2} β (Option.{u2} β) (Option.instMembershipOption.{u2} β) b (PEquiv.toFun.{u1, u2} α β f a)) -> (Membership.mem.{u2, u2} β (Option.{u2} β) (Option.instMembershipOption.{u2} β) b (PEquiv.toFun.{u1, u2} α β g a)))
+Case conversion may be inaccurate. Consider using '#align pequiv.le_def PEquiv.le_defₓ'. -/
 theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ (a : α) (b : β), b ∈ f a → b ∈ g a :=
   Iff.rfl
-#align pequiv.le_def Pequiv.le_def
+#align pequiv.le_def PEquiv.le_def
 
 instance : OrderBot (α ≃. β) :=
-  { Pequiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
+  { PEquiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
 
 instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
   { -- `split_ifs; finish` closes this goal from here
-    Pequiv.partialOrder with
+    PEquiv.partialOrder with
     inf := fun f g =>
       { toFun := fun a => if f a = g a then f a else none
         invFun := fun b => if f.symm b = g.symm b then f.symm b else none
@@ -458,41 +568,63 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
       intro H
       have hf := fg a b H
       have hg := gh a b H
-      simp only [Option.mem_def, Pequiv.coe_mk_apply]
+      simp only [Option.mem_def, PEquiv.coe_mk_apply]
       split_ifs with h1; · exact hf; · exact h1 (hf.trans hg.symm) }
 
 end Order
 
-end Pequiv
+end PEquiv
 
 namespace Equiv
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
+#print Equiv.toPEquiv /-
 /-- Turns an `equiv` into a `pequiv` of the whole type. -/
-def toPequiv (f : α ≃ β) : α ≃. β where 
+def toPEquiv (f : α ≃ β) : α ≃. β where 
   toFun := some ∘ f
   invFun := some ∘ f.symm
   inv := by simp [Equiv.eq_symm_apply, eq_comm]
-#align equiv.to_pequiv Equiv.toPequiv
+#align equiv.to_pequiv Equiv.toPEquiv
+-/
 
+#print Equiv.toPEquiv_refl /-
 @[simp]
-theorem to_pequiv_refl : (Equiv.refl α).toPequiv = Pequiv.refl α :=
+theorem toPEquiv_refl : (Equiv.refl α).toPequiv = PEquiv.refl α :=
   rfl
-#align equiv.to_pequiv_refl Equiv.to_pequiv_refl
+#align equiv.to_pequiv_refl Equiv.toPEquiv_refl
+-/
 
-theorem to_pequiv_trans (f : α ≃ β) (g : β ≃ γ) :
+/- warning: equiv.to_pequiv_trans -> Equiv.toPEquiv_trans is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : Equiv.{succ u1, succ u2} α β) (g : Equiv.{succ u2, succ u3} β γ), Eq.{max (succ u1) (succ u3)} (PEquiv.{u1, u3} α γ) (Equiv.toPEquiv.{u1, u3} α γ (Equiv.trans.{succ u1, succ u2, succ u3} α β γ f g)) (PEquiv.trans.{u1, u2, u3} α β γ (Equiv.toPEquiv.{u1, u2} α β f) (Equiv.toPEquiv.{u2, u3} β γ g))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : Equiv.{succ u3, succ u2} α β) (g : Equiv.{succ u2, succ u1} β γ), Eq.{max (succ u3) (succ u1)} (PEquiv.{u3, u1} α γ) (Equiv.toPEquiv.{u3, u1} α γ (Equiv.trans.{succ u3, succ u2, succ u1} α β γ f g)) (PEquiv.trans.{u3, u2, u1} α β γ (Equiv.toPEquiv.{u3, u2} α β f) (Equiv.toPEquiv.{u2, u1} β γ g))
+Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_trans Equiv.toPEquiv_transₓ'. -/
+theorem toPEquiv_trans (f : α ≃ β) (g : β ≃ γ) :
     (f.trans g).toPequiv = f.toPequiv.trans g.toPequiv :=
   rfl
-#align equiv.to_pequiv_trans Equiv.to_pequiv_trans
+#align equiv.to_pequiv_trans Equiv.toPEquiv_trans
 
-theorem to_pequiv_symm (f : α ≃ β) : f.symm.toPequiv = f.toPequiv.symm :=
+/- warning: equiv.to_pequiv_symm -> Equiv.toPEquiv_symm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : Equiv.{succ u1, succ u2} α β), Eq.{max (succ u2) (succ u1)} (PEquiv.{u2, u1} β α) (Equiv.toPEquiv.{u2, u1} β α (Equiv.symm.{succ u1, succ u2} α β f)) (PEquiv.symm.{u1, u2} α β (Equiv.toPEquiv.{u1, u2} α β f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β), Eq.{max (succ u2) (succ u1)} (PEquiv.{u1, u2} β α) (Equiv.toPEquiv.{u1, u2} β α (Equiv.symm.{succ u2, succ u1} α β f)) (PEquiv.symm.{u2, u1} α β (Equiv.toPEquiv.{u2, u1} α β f))
+Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_symm Equiv.toPEquiv_symmₓ'. -/
+theorem toPEquiv_symm (f : α ≃ β) : f.symm.toPequiv = f.toPequiv.symm :=
   rfl
-#align equiv.to_pequiv_symm Equiv.to_pequiv_symm
+#align equiv.to_pequiv_symm Equiv.toPEquiv_symm
 
-theorem to_pequiv_apply (f : α ≃ β) (x : α) : f.toPequiv x = some (f x) :=
+/- warning: equiv.to_pequiv_apply -> Equiv.toPEquiv_apply is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : Equiv.{succ u1, succ u2} α β) (x : α), Eq.{succ u2} (Option.{u2} β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (PEquiv.hasCoeToFun.{u1, u2} α β) (Equiv.toPEquiv.{u1, u2} α β f) x) (Option.some.{u2} β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) f x))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β) (x : α), Eq.{succ u1} (Option.{u1} β) (PEquiv.toFun.{u2, u1} α β (Equiv.toPEquiv.{u2, u1} α β f) x) (Option.some.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) f x))
+Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_apply Equiv.toPEquiv_applyₓ'. -/
+theorem toPEquiv_apply (f : α ≃ β) (x : α) : f.toPequiv x = some (f x) :=
   rfl
-#align equiv.to_pequiv_apply Equiv.to_pequiv_apply
+#align equiv.to_pequiv_apply Equiv.toPEquiv_apply
 
 end Equiv
 

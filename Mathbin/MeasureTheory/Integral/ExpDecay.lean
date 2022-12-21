@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module measure_theory.integral.exp_decay
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) :
 
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
 theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) :
-    IntegrableOn (fun x : ℝ => exp (-b * x)) (ioi a) := by
+    IntegrableOn (fun x : ℝ => exp (-b * x)) (Ioi a) := by
   have : ∀ X : ℝ, integrable_on (fun x : ℝ => exp (-b * x)) (Ioc a X) := by
     intro X
     exact (continuous_const.mul continuous_id).exp.integrableOnIoc
@@ -58,8 +58,8 @@ theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) :
 
 /-- If `f` is continuous on `[a, ∞)`, and is `O (exp (-b * x))` at `∞` for some `b > 0`, then
 `f` is integrable on `(a, ∞)`. -/
-theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : ContinuousOn f (ici a))
-    (h2 : f =O[at_top] fun x => exp (-b * x)) : IntegrableOn f (ioi a) := by
+theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : ContinuousOn f (Ici a))
+    (h2 : f =O[at_top] fun x => exp (-b * x)) : IntegrableOn f (Ioi a) := by
   cases' h2.is_O_with with c h3
   rw [Asymptotics.is_O_with_iff, eventually_at_top] at h3
   cases' h3 with r bdr

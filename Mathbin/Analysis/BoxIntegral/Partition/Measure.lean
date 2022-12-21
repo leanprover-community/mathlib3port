@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.measure
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,8 +45,8 @@ namespace Box
 
 variable (I : Box ι)
 
-theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.icc < ∞ :=
-  show μ (icc I.lower I.upper) < ∞ from I.is_compact_Icc.measure_lt_top
+theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.IccCat < ∞ :=
+  show μ (Icc I.lower I.upper) < ∞ from I.is_compact_Icc.measure_lt_top
 #align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_Icc_lt_top
 
 theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
@@ -62,11 +62,11 @@ theorem measurableSetCoe : MeasurableSet (I : Set (ι → ℝ)) := by
   exact MeasurableSet.univPi fun i => measurableSetIoc
 #align box_integral.box.measurable_set_coe BoxIntegral.Box.measurableSetCoe
 
-theorem measurableSetIcc : MeasurableSet I.icc :=
+theorem measurableSetIcc : MeasurableSet I.IccCat :=
   measurableSetIcc
 #align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurableSetIcc
 
-theorem measurableSetIoo : MeasurableSet I.ioo :=
+theorem measurableSetIoo : MeasurableSet I.IooCat :=
   MeasurableSet.univPi fun i => measurableSetIoo
 #align box_integral.box.measurable_set_Ioo BoxIntegral.Box.measurableSetIoo
 
@@ -74,12 +74,12 @@ end Countable
 
 variable [Fintype ι]
 
-theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.icc := by
+theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.IccCat := by
   rw [coe_eq_pi]
   exact measure.univ_pi_Ioc_ae_eq_Icc
 #align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_Icc
 
-theorem Ioo_ae_eq_Icc : I.ioo =ᵐ[volume] I.icc :=
+theorem Ioo_ae_eq_Icc : I.IooCat =ᵐ[volume] I.IccCat :=
   measure.univ_pi_Ioo_ae_eq_Icc
 #align box_integral.box.Ioo_ae_eq_Icc BoxIntegral.Box.Ioo_ae_eq_Icc
 

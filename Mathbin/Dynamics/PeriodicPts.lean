@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.periodic_pts
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,12 +65,12 @@ theorem IsFixedPt.is_periodic_pt (hf : IsFixedPt f x) (n : ℕ) : IsPeriodicPt f
 
 /-- For the identity map, all points are periodic. -/
 theorem is_periodic_id (n : ℕ) (x : α) : IsPeriodicPt id n x :=
-  (is_fixed_pt_id x).IsPeriodicPt n
+  (isFixedPt_id x).IsPeriodicPt n
 #align function.is_periodic_id Function.is_periodic_id
 
 /-- Any point is a periodic point of period `0`. -/
 theorem is_periodic_pt_zero (f : α → α) (x : α) : IsPeriodicPt f 0 x :=
-  is_fixed_pt_id x
+  isFixedPt_id x
 #align function.is_periodic_pt_zero Function.is_periodic_pt_zero
 
 namespace IsPeriodicPt
@@ -249,7 +249,7 @@ theorem bUnion_pts_of_period : (⋃ n > 0, ptsOfPeriod f n) = periodicPts f :=
 #align function.bUnion_pts_of_period Function.bUnion_pts_of_period
 
 theorem Union_pnat_pts_of_period : (⋃ n : ℕ+, ptsOfPeriod f n) = periodicPts f :=
-  supr_subtype.trans <| bUnion_pts_of_period f
+  supᵢ_subtype.trans <| bUnion_pts_of_period f
 #align function.Union_pnat_pts_of_period Function.Union_pnat_pts_of_period
 
 theorem bij_on_periodic_pts : BijOn f (periodicPts f) (periodicPts f) :=

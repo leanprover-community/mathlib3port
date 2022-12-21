@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wrenna Robson
 
 ! This file was ported from Lean 3 source module topology.metric_space.infsep
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,14 +53,14 @@ variable [HasEdist α] {x y : α} {s t : Set α}
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem le_einfsep_iff {d} :
     d ≤ s.einfsep ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (hxy : x ≠ y), d ≤ edist x y := by
-  simp_rw [einfsep, le_infi_iff]
+  simp_rw [einfsep, le_infᵢ_iff]
 #align set.le_einfsep_iff Set.le_einfsep_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_zero :
     s.einfsep = 0 ↔
       ∀ (C) (hC : 0 < C), ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s)(hxy : x ≠ y), edist x y < C :=
-  by simp_rw [einfsep, ← bot_eq_zero, infi_eq_bot, infi_lt_iff]
+  by simp_rw [einfsep, ← bot_eq_zero, infᵢ_eq_bot, infᵢ_lt_iff]
 #align set.einfsep_zero Set.einfsep_zero
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
@@ -75,13 +75,13 @@ theorem einfsep_pos :
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_top :
     s.einfsep = ∞ ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (hxy : x ≠ y), edist x y = ∞ := by
-  simp_rw [einfsep, infi_eq_top]
+  simp_rw [einfsep, infᵢ_eq_top]
 #align set.einfsep_top Set.einfsep_top
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_lt_top :
     s.einfsep < ∞ ↔ ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s)(hxy : x ≠ y), edist x y < ∞ := by
-  simp_rw [einfsep, infi_lt_iff]
+  simp_rw [einfsep, infᵢ_lt_iff]
 #align set.einfsep_lt_top Set.einfsep_lt_top
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
@@ -93,7 +93,7 @@ theorem einfsep_ne_top :
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_lt_iff {d} :
     s.einfsep < d ↔ ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s)(h : x ≠ y), edist x y < d := by
-  simp_rw [einfsep, infi_lt_iff]
+  simp_rw [einfsep, infᵢ_lt_iff]
 #align set.einfsep_lt_iff Set.einfsep_lt_iff
 
 theorem nontrivial_of_einfsep_lt_top (hs : s.einfsep < ∞) : s.Nontrivial := by
@@ -156,7 +156,7 @@ theorem einfsep_anti (hst : s ⊆ t) : t.einfsep ≤ s.einfsep :=
 #align set.einfsep_anti Set.einfsep_anti
 
 theorem einfsep_insert_le : (insert x s).einfsep ≤ ⨅ (y ∈ s) (hxy : x ≠ y), edist x y := by
-  simp_rw [le_infi_iff]
+  simp_rw [le_infᵢ_iff]
   refine' fun _ hy hxy => einfsep_le_edist_of_mem (mem_insert _ _) (mem_insert_of_mem _ hy) hxy
 #align set.einfsep_insert_le Set.einfsep_insert_le
 
@@ -179,7 +179,7 @@ theorem einfsep_pair_eq_inf (hxy : x ≠ y) : ({x, y} : Set α).einfsep = edist 
 
 theorem einfsep_eq_infi : s.einfsep = ⨅ d : s.offDiag, (uncurry edist) (d : α × α) := by
   refine' eq_of_forall_le_iff fun _ => _
-  simp_rw [le_einfsep_iff, le_infi_iff, imp_forall_iff, SetCoe.forall, Subtype.coe_mk, mem_off_diag,
+  simp_rw [le_einfsep_iff, le_infᵢ_iff, imp_forall_iff, SetCoe.forall, Subtype.coe_mk, mem_off_diag,
     Prod.forall, uncurry_apply_pair, and_imp]
 #align set.einfsep_eq_infi Set.einfsep_eq_infi
 
@@ -238,15 +238,15 @@ theorem einfsep_insert : einfsep (insert x s) = (⨅ (y ∈ s) (hxy : x ≠ y), 
   simp_rw [le_einfsep_iff, inf_le_iff, mem_insert_iff]
   rintro y (rfl | hy) z (rfl | hz) hyz
   · exact False.elim (hyz rfl)
-  · exact Or.inl (infi_le_of_le _ (infi₂_le hz hyz))
+  · exact Or.inl (infᵢ_le_of_le _ (infᵢ₂_le hz hyz))
   · rw [edist_comm]
-    exact Or.inl (infi_le_of_le _ (infi₂_le hy hyz.symm))
+    exact Or.inl (infᵢ_le_of_le _ (infᵢ₂_le hy hyz.symm))
   · exact Or.inr (einfsep_le_edist_of_mem hy hz hyz)
 #align set.einfsep_insert Set.einfsep_insert
 
 theorem einfsep_triple (hxy : x ≠ y) (hyz : y ≠ z) (hxz : x ≠ z) :
     einfsep ({x, y, z} : Set α) = edist x y ⊓ edist x z ⊓ edist y z := by
-  simp_rw [einfsep_insert, infi_insert, infi_singleton, einfsep_singleton, inf_top_eq,
+  simp_rw [einfsep_insert, infᵢ_insert, infᵢ_singleton, einfsep_singleton, inf_top_eq,
     cinfi_pos hxy, cinfi_pos hyz, cinfi_pos hxz]
 #align set.einfsep_triple Set.einfsep_triple
 
@@ -521,7 +521,7 @@ theorem Finset.coe_infsep [DecidableEq α] (s : Finset α) :
     (s : Set α).infsep = if hs : s.offDiag.Nonempty then s.offDiag.inf' hs (uncurry dist) else 0 :=
   by
   have H : (s : Set α).Nontrivial ↔ s.off_diag.nonempty := by
-    rwa [← Set.off_diag_nonempty, ← Finset.coe_off_diag, Finset.coe_nonempty]
+    rwa [← Set.offDiag_nonempty, ← Finset.coe_off_diag, Finset.coe_nonempty]
   split_ifs with hs
   · simp_rw [(H.mpr hs).infsep_of_fintype, ← Finset.coe_off_diag, Finset.to_finset_coe]
   · exact (not_nontrivial_iff.mp (H.mp.mt hs)).infsep_zero

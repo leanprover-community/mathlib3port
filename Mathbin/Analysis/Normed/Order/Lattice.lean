@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module analysis.normed.order.lattice
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem dual_solid (a b : α) (h : b ⊓ -b ≤ a ⊓ -a) : ‖a‖ ≤ ‖b‖ 
 normed lattice ordered group.
 -/
 instance (priority := 100) : NormedLatticeAddCommGroup αᵒᵈ :=
-  { instOrderedAddCommGroupOrderDual, OrderDual.normedAddCommGroup with solid := dual_solid }
+  { OrderDual.orderedAddCommGroup, OrderDual.normedAddCommGroup with solid := dual_solid }
 
 theorem norm_abs_eq_norm (a : α) : ‖|a|‖ = ‖a‖ :=
   (solid (abs_abs a).le).antisymm (solid (abs_abs a).symm.le)
@@ -213,7 +213,7 @@ theorem is_closed_le_of_is_closed_nonneg {G} [OrderedAddCommGroup G] [Topologica
   have : { p : G × G | p.fst ≤ p.snd } = (fun p : G × G => p.snd - p.fst) ⁻¹' { x : G | 0 ≤ x } :=
     by 
     ext1 p
-    simp only [sub_nonneg, Set.preimage_set_of_eq]
+    simp only [sub_nonneg, Set.preimage_setOf_eq]
   rw [this]
   exact IsClosed.preimage (continuous_snd.sub continuous_fst) h
 #align is_closed_le_of_is_closed_nonneg is_closed_le_of_is_closed_nonneg

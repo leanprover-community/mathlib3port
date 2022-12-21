@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.pnat.interval
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,22 +81,22 @@ theorem card_Ioo : (ioo a b).card = b - a - 1 := by
 #align pnat.card_Ioo PNat.card_Ioo
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.icc a b) = b + 1 - a := by
+theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = b + 1 - a := by
   rw [← card_Icc, Fintype.card_of_finset]
 #align pnat.card_fintype_Icc PNat.card_fintype_Icc
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.ico a b) = b - a := by
+theorem card_fintype_Ico : Fintype.card (Set.Ico a b) = b - a := by
   rw [← card_Ico, Fintype.card_of_finset]
 #align pnat.card_fintype_Ico PNat.card_fintype_Ico
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.ioc a b) = b - a := by
+theorem card_fintype_Ioc : Fintype.card (Set.Ioc a b) = b - a := by
   rw [← card_Ioc, Fintype.card_of_finset]
 #align pnat.card_fintype_Ioc PNat.card_fintype_Ioc
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.ioo a b) = b - a - 1 := by
+theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
   rw [← card_Ioo, Fintype.card_of_finset]
 #align pnat.card_fintype_Ioo PNat.card_fintype_Ioo
 

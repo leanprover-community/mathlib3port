@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.yoneda
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ def ext (X Y : C) (p : ∀ {Z : C}, (Z ⟶ X) → (Z ⟶ Y)) (q : ∀ {Z : C}, (
 /-- If `yoneda.map f` is an isomorphism, so was `f`.
 -/
 theorem is_iso {X Y : C} (f : X ⟶ Y) [IsIso (yoneda.map f)] : IsIso f :=
-  is_iso_of_fully_faithful yoneda f
+  isIso_of_fully_faithful yoneda f
 #align category_theory.yoneda.is_iso CategoryTheory.yoneda.is_iso
 
 end Yoneda
@@ -154,7 +154,7 @@ instance coyoneda_faithful :
 /-- If `coyoneda.map f` is an isomorphism, so was `f`.
 -/
 theorem is_iso {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso (coyoneda.map f)] : IsIso f :=
-  is_iso_of_fully_faithful coyoneda f
+  isIso_of_fully_faithful coyoneda f
 #align category_theory.coyoneda.is_iso CategoryTheory.coyoneda.is_iso
 
 /-- The identity functor on `Type` is isomorphic to the coyoneda functor coming from `punit`. -/

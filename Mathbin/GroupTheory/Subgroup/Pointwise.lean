@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.pointwise
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ theorem supr_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈
 
 @[to_additive]
 theorem closure_mul_le (S T : Set G) : closure (S * T) ≤ closure S ⊔ closure T :=
-  Inf_le fun x ⟨s, t, hs, ht, hx⟩ =>
+  infₛ_le fun x ⟨s, t, hs, ht, hx⟩ =>
     hx ▸
       (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
         (SetLike.le_def.mp le_sup_right <| subset_closure ht)
@@ -160,7 +160,7 @@ theorem mul_normal (H N : Subgroup G) [N.Normal] : (↑(H ⊔ N) : Set G) = H * 
   Set.Subset.antisymm
     (show H ⊔ N ≤ mulNormalAux H N by 
       rw [sup_eq_closure]
-      apply Inf_le _
+      apply infₛ_le _
       dsimp
       rfl)
     ((sup_eq_closure H N).symm ▸ subset_closure)
@@ -186,7 +186,7 @@ theorem normal_mul (N H : Subgroup G) [N.Normal] : (↑(N ⊔ H) : Set G) = N * 
   Set.Subset.antisymm
     (show N ⊔ H ≤ normalMulAux N H by 
       rw [sup_eq_closure]
-      apply Inf_le _
+      apply infₛ_le _
       dsimp
       rfl)
     ((sup_eq_closure N H).symm ▸ subset_closure)

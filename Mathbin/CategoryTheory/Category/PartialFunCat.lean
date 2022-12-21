@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.PartialFun
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ noncomputable def partialFunToPointed : PartialFunCat ⥤ PointedCat := by
             funext fun o => (Option.recOn o rfl) fun a => Part.some_to_option _
         map_comp' := fun X Y Z f g =>
           PointedCat.Hom.ext _ _ <|
-            funext fun o => (Option.recOn o rfl) fun a => Part.bind_to_option _ _ }
+            funext fun o => (Option.recOn o rfl) fun a => Part.bind_toOption _ _ }
 #align PartialFun_to_Pointed partialFunToPointed
 
 /-- The equivalence induced by `PartialFun_to_Pointed` and `Pointed_to_PartialFun`.
@@ -179,7 +179,7 @@ noncomputable def partialFunEquivPointed : PartialFunCat.{u} ≌ PointedCat := b
                 unfold_projs
                 dsimp
                 change Option.elim' _ _ _ = _
-                rw [Part.elim_to_option]
+                rw [Part.elim_toOption]
                 split_ifs
                 · rfl
                 · exact Eq.symm (of_not_not h))

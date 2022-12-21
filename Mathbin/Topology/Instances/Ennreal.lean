@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ theorem is_open_ne_top : IsOpen { a : ℝ≥0∞ | a ≠ ⊤ } :=
   is_open_ne
 #align ennreal.is_open_ne_top Ennreal.is_open_ne_top
 
-theorem is_open_Ico_zero : IsOpen (ico 0 b) := by
+theorem is_open_Ico_zero : IsOpen (Ico 0 b) := by
   rw [Ennreal.Ico_eq_Iio]
   exact is_open_Iio
 #align ennreal.is_open_Ico_zero Ennreal.is_open_Ico_zero
@@ -170,15 +170,15 @@ def ltTopHomeomorphNnreal : { a | a < ∞ } ≃ₜ ℝ≥0 := by
 #align ennreal.lt_top_homeomorph_nnreal Ennreal.ltTopHomeomorphNnreal
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
-theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (ioi a) :=
+theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (Ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
 #align ennreal.nhds_top Ennreal.nhds_top
 
-theorem nhds_top' : 𝓝 ∞ = ⨅ r : ℝ≥0, 𝓟 (ioi r) :=
+theorem nhds_top' : 𝓝 ∞ = ⨅ r : ℝ≥0, 𝓟 (Ioi r) :=
   nhds_top.trans <| infi_ne_top _
 #align ennreal.nhds_top' Ennreal.nhds_top'
 
-theorem nhds_top_basis : (𝓝 ∞).HasBasis (fun a => a < ∞) fun a => ioi a :=
+theorem nhds_top_basis : (𝓝 ∞).HasBasis (fun a => a < ∞) fun a => Ioi a :=
   nhds_top_basis
 #align ennreal.nhds_top_basis Ennreal.nhds_top_basis
 
@@ -217,32 +217,32 @@ theorem tendsto_of_real_at_top : Tendsto Ennreal.ofReal atTop (𝓝 ∞) :=
 #align ennreal.tendsto_of_real_at_top Ennreal.tendsto_of_real_at_top
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » 0) -/
-theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
+theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot, Iio]
 #align ennreal.nhds_zero Ennreal.nhds_zero
 
-theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) fun a => iio a :=
+theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) fun a => Iio a :=
   nhds_bot_basis
 #align ennreal.nhds_zero_basis Ennreal.nhds_zero_basis
 
-theorem nhds_zero_basis_Iic : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) iic :=
+theorem nhds_zero_basis_Iic : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) Iic :=
   nhds_bot_basis_Iic
 #align ennreal.nhds_zero_basis_Iic Ennreal.nhds_zero_basis_Iic
 
 @[instance]
-theorem nhdsWithinIoiCoeNeBot {r : ℝ≥0} : (𝓝[>] (r : ℝ≥0∞)).ne_bot :=
-  nhdsWithinIoiSelfNeBot' ⟨⊤, Ennreal.coe_lt_top⟩
-#align ennreal.nhds_within_Ioi_coe_ne_bot Ennreal.nhdsWithinIoiCoeNeBot
+theorem nhds_within_Ioi_coe_ne_bot {r : ℝ≥0} : (𝓝[>] (r : ℝ≥0∞)).ne_bot :=
+  nhds_within_Ioi_self_ne_bot' ⟨⊤, Ennreal.coe_lt_top⟩
+#align ennreal.nhds_within_Ioi_coe_ne_bot Ennreal.nhds_within_Ioi_coe_ne_bot
 
 @[instance]
-theorem nhdsWithinIoiZeroNeBot : (𝓝[>] (0 : ℝ≥0∞)).ne_bot :=
+theorem nhds_within_Ioi_zero_ne_bot : (𝓝[>] (0 : ℝ≥0∞)).ne_bot :=
   nhds_within_Ioi_coe_ne_bot
-#align ennreal.nhds_within_Ioi_zero_ne_bot Ennreal.nhdsWithinIoiZeroNeBot
+#align ennreal.nhds_within_Ioi_zero_ne_bot Ennreal.nhds_within_Ioi_zero_ne_bot
 
 -- using Icc because
 -- • don't have 'Ioo (x - ε) (x + ε) ∈ 𝓝 x' unless x > 0
 -- • (x - y ≤ ε ↔ x ≤ ε + y) is true, while (x - y < ε ↔ x < ε + y) is not
-theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : icc (x - ε) (x + ε) ∈ 𝓝 x := by
+theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : Icc (x - ε) (x + ε) ∈ 𝓝 x := by
   rw [_root_.mem_nhds_iff]
   by_cases x0 : x = 0
   · use Iio (x + ε)
@@ -257,19 +257,19 @@ theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : icc (x - ε) (x + ε) �
     exact ⟨is_open_Ioo, mem_Ioo_self_sub_add xt x0 ε0 ε0⟩
 #align ennreal.Icc_mem_nhds Ennreal.Icc_mem_nhds
 
-theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (icc (x - ε) (x + ε)) := by
+theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (Icc (x - ε) (x + ε)) := by
   refine' le_antisymm _ _
   -- first direction
-  simp only [le_infi_iff, le_principal_iff];
+  simp only [le_infᵢ_iff, le_principal_iff];
   intro ε ε0; exact Icc_mem_nhds xt ε0.lt.ne'
   -- second direction
   rw [nhds_generate_from];
-  refine' le_infi fun s => le_infi fun hs => _
+  refine' le_infᵢ fun s => le_infᵢ fun hs => _
   rcases hs with ⟨xs, ⟨a, (rfl : s = Ioi a) | (rfl : s = Iio a)⟩⟩
   · rcases exists_between xs with ⟨b, ab, bx⟩
     have xb_pos : 0 < x - b := tsub_pos_iff_lt.2 bx
     have xxb : x - (x - b) = b := sub_sub_cancel xt bx.le
-    refine' infi_le_of_le (x - b) (infi_le_of_le xb_pos _)
+    refine' infᵢ_le_of_le (x - b) (infᵢ_le_of_le xb_pos _)
     simp only [mem_principal, le_principal_iff]
     intro y
     rintro ⟨h₁, h₂⟩
@@ -281,7 +281,7 @@ theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (icc (x - ε
   · rcases exists_between xs with ⟨b, xb, ba⟩
     have bx_pos : 0 < b - x := tsub_pos_iff_lt.2 xb
     have xbx : x + (b - x) = b := add_tsub_cancel_of_le xb.le
-    refine' infi_le_of_le (b - x) (infi_le_of_le bx_pos _)
+    refine' infᵢ_le_of_le (b - x) (infᵢ_le_of_le bx_pos _)
     simp only [mem_principal, le_principal_iff]
     intro y
     rintro ⟨h₁, h₂⟩
@@ -295,7 +295,7 @@ theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (icc (x - ε
 /-- Characterization of neighborhoods for `ℝ≥0∞` numbers. See also `tendsto_order`
 for a version with strict inequalities. -/
 protected theorem tendsto_nhds {f : Filter α} {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha : a ≠ ⊤) :
-    Tendsto u f (𝓝 a) ↔ ∀ ε > 0, ∀ᶠ x in f, u x ∈ icc (a - ε) (a + ε) := by
+    Tendsto u f (𝓝 a) ↔ ∀ ε > 0, ∀ᶠ x in f, u x ∈ Icc (a - ε) (a + ε) := by
   simp only [nhds_of_ne_top ha, tendsto_infi, tendsto_principal, mem_Icc]
 #align ennreal.tendsto_nhds Ennreal.tendsto_nhds
 
@@ -306,7 +306,7 @@ protected theorem tendsto_nhds_zero {f : Filter α} {u : α → ℝ≥0∞} :
 #align ennreal.tendsto_nhds_zero Ennreal.tendsto_nhds_zero
 
 protected theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {f : β → ℝ≥0∞} {a : ℝ≥0∞}
-    (ha : a ≠ ⊤) : Tendsto f atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, f n ∈ icc (a - ε) (a + ε) := by
+    (ha : a ≠ ⊤) : Tendsto f atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, f n ∈ Icc (a - ε) (a + ε) := by
   simp only [Ennreal.tendsto_nhds ha, mem_at_top_sets, mem_set_of_eq, Filter.Eventually]
 #align ennreal.tendsto_at_top Ennreal.tendsto_at_top
 
@@ -520,7 +520,7 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0∞} (h : ∀ a < 1, a * x ≤ 
   have : tendsto (· * x) (𝓝[<] 1) (𝓝 (1 * x)) :=
     (Ennreal.continuous_at_mul_const (Or.inr one_ne_zero)).mono_left inf_le_left
   rw [one_mul] at this
-  haveI : (𝓝[<] (1 : ℝ≥0∞)).ne_bot := nhdsWithinIioSelfNeBot' ⟨0, Ennreal.zero_lt_one⟩
+  haveI : (𝓝[<] (1 : ℝ≥0∞)).ne_bot := nhds_within_Iio_self_ne_bot' ⟨0, Ennreal.zero_lt_one⟩
   exact le_of_tendsto this (eventually_nhds_within_iff.2 <| eventually_of_forall h)
 #align ennreal.le_of_forall_lt_one_mul_le Ennreal.le_of_forall_lt_one_mul_le
 
@@ -528,11 +528,11 @@ theorem infi_mul_left' {ι} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} (h : a = �
     (h0 : a = 0 → Nonempty ι) : (⨅ i, a * f i) = a * ⨅ i, f i := by
   by_cases H : a = ⊤ ∧ (⨅ i, f i) = 0
   · rcases h H.1 H.2 with ⟨i, hi⟩
-    rw [H.2, mul_zero, ← bot_eq_zero, infi_eq_bot]
+    rw [H.2, mul_zero, ← bot_eq_zero, infᵢ_eq_bot]
     exact fun b hb => ⟨i, by rwa [hi, mul_zero, ← bot_eq_zero]⟩
   · rw [not_and_or] at H
     cases isEmpty_or_nonempty ι
-    · rw [infi_of_empty, infi_of_empty, mul_top, if_neg]
+    · rw [infᵢ_of_empty, infᵢ_of_empty, mul_top, if_neg]
       exact mt h0 (not_nonempty_iff.2 ‹_›)
     ·
       exact
@@ -558,7 +558,7 @@ theorem inv_map_infi {ι : Sort _} {x : ι → ℝ≥0∞} : (infi x)⁻¹ = ⨆
   OrderIso.invEnnreal.map_infi x
 #align ennreal.inv_map_infi Ennreal.inv_map_infi
 
-theorem inv_map_supr {ι : Sort _} {x : ι → ℝ≥0∞} : (supr x)⁻¹ = ⨅ i, (x i)⁻¹ :=
+theorem inv_map_supr {ι : Sort _} {x : ι → ℝ≥0∞} : (supᵢ x)⁻¹ = ⨅ i, (x i)⁻¹ :=
   OrderIso.invEnnreal.map_supr x
 #align ennreal.inv_map_supr Ennreal.inv_map_supr
 
@@ -603,7 +603,7 @@ protected theorem tendsto_inv_nat_nhds_zero : Tendsto (fun n : ℕ => (n : ℝ�
   Ennreal.inv_top ▸ Ennreal.tendsto_inv_iff.2 tendsto_nat_nhds_top
 #align ennreal.tendsto_inv_nat_nhds_zero Ennreal.tendsto_inv_nat_nhds_zero
 
-theorem supr_add {ι : Sort _} {s : ι → ℝ≥0∞} [h : Nonempty ι] : supr s + a = ⨆ b, s b + a :=
+theorem supr_add {ι : Sort _} {s : ι → ℝ≥0∞} [h : Nonempty ι] : supᵢ s + a = ⨆ b, s b + a :=
   Monotone.map_supr_of_continuous_at' (continuous_at_id.add continuous_at_const) <|
     monotone_id.add monotone_const
 #align ennreal.supr_add Ennreal.supr_add
@@ -611,7 +611,7 @@ theorem supr_add {ι : Sort _} {s : ι → ℝ≥0∞} [h : Nonempty ι] : supr 
 theorem bsupr_add' {ι : Sort _} {p : ι → Prop} (h : ∃ i, p i) {f : ι → ℝ≥0∞} :
     (⨆ (i) (hi : p i), f i) + a = ⨆ (i) (hi : p i), f i + a := by
   haveI : Nonempty { i // p i } := nonempty_subtype.2 h
-  simp only [supr_subtype', supr_add]
+  simp only [supᵢ_subtype', supr_add]
 #align ennreal.bsupr_add' Ennreal.bsupr_add'
 
 theorem add_bsupr' {ι : Sort _} {p : ι → Prop} (h : ∃ i, p i) {f : ι → ℝ≥0∞} :
@@ -629,24 +629,24 @@ theorem add_bsupr {ι} {s : Set ι} (hs : s.Nonempty) {f : ι → ℝ≥0∞} :
   add_bsupr' hs
 #align ennreal.add_bsupr Ennreal.add_bsupr
 
-theorem Sup_add {s : Set ℝ≥0∞} (hs : s.Nonempty) : sup s + a = ⨆ b ∈ s, b + a := by
-  rw [Sup_eq_supr, bsupr_add hs]
+theorem Sup_add {s : Set ℝ≥0∞} (hs : s.Nonempty) : supₛ s + a = ⨆ b ∈ s, b + a := by
+  rw [supₛ_eq_supᵢ, bsupr_add hs]
 #align ennreal.Sup_add Ennreal.Sup_add
 
-theorem add_supr {ι : Sort _} {s : ι → ℝ≥0∞} [Nonempty ι] : a + supr s = ⨆ b, a + s b := by
+theorem add_supr {ι : Sort _} {s : ι → ℝ≥0∞} [Nonempty ι] : a + supᵢ s = ⨆ b, a + s b := by
   rw [add_comm, supr_add] <;> simp [add_comm]
 #align ennreal.add_supr Ennreal.add_supr
 
 theorem supr_add_supr_le {ι ι' : Sort _} [Nonempty ι] [Nonempty ι'] {f : ι → ℝ≥0∞} {g : ι' → ℝ≥0∞}
-    {a : ℝ≥0∞} (h : ∀ i j, f i + g j ≤ a) : supr f + supr g ≤ a := by
-  simpa only [add_supr, supr_add] using supr₂_le h
+    {a : ℝ≥0∞} (h : ∀ i j, f i + g j ≤ a) : supᵢ f + supᵢ g ≤ a := by
+  simpa only [add_supr, supr_add] using supᵢ₂_le h
 #align ennreal.supr_add_supr_le Ennreal.supr_add_supr_le
 
 theorem bsupr_add_bsupr_le' {ι ι'} {p : ι → Prop} {q : ι' → Prop} (hp : ∃ i, p i) (hq : ∃ j, q j)
     {f : ι → ℝ≥0∞} {g : ι' → ℝ≥0∞} {a : ℝ≥0∞} (h : ∀ (i) (hi : p i) (j) (hj : q j), f i + g j ≤ a) :
     ((⨆ (i) (hi : p i), f i) + ⨆ (j) (hj : q j), g j) ≤ a := by
   simp_rw [bsupr_add' hp, add_bsupr' hq]
-  exact supr₂_le fun i hi => supr₂_le (h i hi)
+  exact supᵢ₂_le fun i hi => supᵢ₂_le (h i hi)
 #align ennreal.bsupr_add_bsupr_le' Ennreal.bsupr_add_bsupr_le'
 
 theorem bsupr_add_bsupr_le {ι ι'} {s : Set ι} {t : Set ι'} (hs : s.Nonempty) (ht : t.Nonempty)
@@ -656,22 +656,22 @@ theorem bsupr_add_bsupr_le {ι ι'} {s : Set ι} {t : Set ι'} (hs : s.Nonempty)
 #align ennreal.bsupr_add_bsupr_le Ennreal.bsupr_add_bsupr_le
 
 theorem supr_add_supr {ι : Sort _} {f g : ι → ℝ≥0∞} (h : ∀ i j, ∃ k, f i + g j ≤ f k + g k) :
-    supr f + supr g = ⨆ a, f a + g a := by
+    supᵢ f + supᵢ g = ⨆ a, f a + g a := by
   cases isEmpty_or_nonempty ι
-  · simp only [supr_of_empty, bot_eq_zero, zero_add]
-  · refine' le_antisymm _ (supr_le fun a => add_le_add (le_supr _ _) (le_supr _ _))
+  · simp only [supᵢ_of_empty, bot_eq_zero, zero_add]
+  · refine' le_antisymm _ (supᵢ_le fun a => add_le_add (le_supᵢ _ _) (le_supᵢ _ _))
     refine' supr_add_supr_le fun i j => _
     rcases h i j with ⟨k, hk⟩
-    exact le_supr_of_le k hk
+    exact le_supᵢ_of_le k hk
 #align ennreal.supr_add_supr Ennreal.supr_add_supr
 
 theorem supr_add_supr_of_monotone {ι : Sort _} [SemilatticeSup ι] {f g : ι → ℝ≥0∞} (hf : Monotone f)
-    (hg : Monotone g) : supr f + supr g = ⨆ a, f a + g a :=
+    (hg : Monotone g) : supᵢ f + supᵢ g = ⨆ a, f a + g a :=
   supr_add_supr fun i j => ⟨i ⊔ j, add_le_add (hf <| le_sup_left) (hg <| le_sup_right)⟩
 #align ennreal.supr_add_supr_of_monotone Ennreal.supr_add_supr_of_monotone
 
 theorem finset_sum_supr_nat {α} {ι} [SemilatticeSup ι] {s : Finset α} {f : α → ι → ℝ≥0∞}
-    (hf : ∀ a, Monotone (f a)) : (∑ a in s, supr (f a)) = ⨆ n, ∑ a in s, f a n := by
+    (hf : ∀ a, Monotone (f a)) : (∑ a in s, supᵢ (f a)) = ⨆ n, ∑ a in s, f a n := by
   refine' Finset.induction_on s _ _
   · simp
   · intro a s has ih
@@ -681,7 +681,7 @@ theorem finset_sum_supr_nat {α} {ι} [SemilatticeSup ι] {s : Finset α} {f : �
     exact Finset.sum_le_sum fun a ha => hf a h
 #align ennreal.finset_sum_supr_nat Ennreal.finset_sum_supr_nat
 
-theorem mul_supr {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : a * supr f = ⨆ i, a * f i := by
+theorem mul_supr {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : a * supᵢ f = ⨆ i, a * f i := by
   by_cases hf : ∀ i, f i = 0
   · obtain rfl : f = fun _ => 0
     exact funext hf
@@ -691,15 +691,15 @@ theorem mul_supr {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : a * su
     exact mt supr_eq_zero.1 hf
 #align ennreal.mul_supr Ennreal.mul_supr
 
-theorem mul_Sup {s : Set ℝ≥0∞} {a : ℝ≥0∞} : a * sup s = ⨆ i ∈ s, a * i := by
-  simp only [Sup_eq_supr, mul_supr]
+theorem mul_Sup {s : Set ℝ≥0∞} {a : ℝ≥0∞} : a * supₛ s = ⨆ i ∈ s, a * i := by
+  simp only [supₛ_eq_supᵢ, mul_supr]
 #align ennreal.mul_Sup Ennreal.mul_Sup
 
-theorem supr_mul {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : supr f * a = ⨆ i, f i * a := by
+theorem supr_mul {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : supᵢ f * a = ⨆ i, f i * a := by
   rw [mul_comm, mul_supr] <;> congr <;> funext <;> rw [mul_comm]
 #align ennreal.supr_mul Ennreal.supr_mul
 
-theorem supr_div {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : supr f / a = ⨆ i, f i / a :=
+theorem supr_div {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : supᵢ f / a = ⨆ i, f i / a :=
   supr_mul
 #align ennreal.supr_div Ennreal.supr_div
 
@@ -719,11 +719,11 @@ protected theorem tendsto_coe_sub :
 theorem sub_supr {ι : Sort _} [Nonempty ι] {b : ι → ℝ≥0∞} (hr : a < ⊤) :
     (a - ⨆ i, b i) = ⨅ i, a - b i := by
   let ⟨r, Eq, _⟩ := lt_iff_exists_coe.mp hr
-  have : inf ((fun b => ↑r - b) '' range b) = ↑r - ⨆ i, b i :=
-    IsGlb.Inf_eq <|
+  have : infₛ ((fun b => ↑r - b) '' range b) = ↑r - ⨆ i, b i :=
+    IsGLB.Inf_eq <|
       is_lub_supr.is_glb_of_tendsto (fun x _ y _ => tsub_le_tsub (le_refl (r : ℝ≥0∞)))
         (range_nonempty _) (Ennreal.tendsto_coe_sub.comp (tendsto_id'.2 inf_le_left))
-  rw [Eq, ← this] <;> simp [Inf_image, infi_range, -mem_range] <;> exact le_rfl
+  rw [Eq, ← this] <;> simp [infₛ_image, infᵢ_range, -mem_range] <;> exact le_rfl
 #align ennreal.sub_supr Ennreal.sub_supr
 
 theorem exists_countable_dense_no_zero_top :
@@ -736,8 +736,8 @@ theorem exists_countable_dense_no_zero_top :
 
 theorem exists_lt_add_of_lt_add {x y z : ℝ≥0∞} (h : x < y + z) (hy : y ≠ 0) (hz : z ≠ 0) :
     ∃ y' z', y' < y ∧ z' < z ∧ x < y' + z' := by
-  haveI : ne_bot (𝓝[<] y) := nhdsWithinIioSelfNeBot' ⟨0, pos_iff_ne_zero.2 hy⟩
-  haveI : ne_bot (𝓝[<] z) := nhdsWithinIioSelfNeBot' ⟨0, pos_iff_ne_zero.2 hz⟩
+  haveI : ne_bot (𝓝[<] y) := nhds_within_Iio_self_ne_bot' ⟨0, pos_iff_ne_zero.2 hy⟩
+  haveI : ne_bot (𝓝[<] z) := nhds_within_Iio_self_ne_bot' ⟨0, pos_iff_ne_zero.2 hz⟩
   have A : tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 + p.2) ((𝓝[<] y).Prod (𝓝[<] z)) (𝓝 (y + z)) := by
     apply tendsto.mono_left _ (Filter.prod_mono nhds_within_le_nhds nhds_within_le_nhds)
     rw [← nhds_prod_eq]
@@ -916,9 +916,9 @@ protected theorem tsum_eq_liminf_sum_nat {f : ℕ → ℝ≥0∞} :
   rw [Ennreal.tsum_eq_supr_nat, Filter.liminf_eq_supr_infi_of_nat]
   congr
   refine' funext fun n => le_antisymm _ _
-  · refine' le_infi₂ fun i hi => Finset.sum_le_sum_of_subset_of_nonneg _ fun _ _ _ => zero_le _
+  · refine' le_infᵢ₂ fun i hi => Finset.sum_le_sum_of_subset_of_nonneg _ fun _ _ _ => zero_le _
     simpa only [Finset.range_subset, add_le_add_iff_right] using hi
-  · refine' le_trans (infi_le _ n) _
+  · refine' le_trans (infᵢ_le _ n) _
     simp [le_refl n, le_refl ((Finset.range n).Sum f)]
 #align ennreal.tsum_eq_liminf_sum_nat Ennreal.tsum_eq_liminf_sum_nat
 
@@ -992,7 +992,7 @@ theorem tsum_supr_eq {α : Type _} (a : α) {f : α → ℝ≥0∞} : (∑' b : 
     (by
       rw [Ennreal.tsum_eq_supr_sum] <;>
         exact
-          supr_le fun s =>
+          supᵢ_le fun s =>
             calc
               (∑ b in s, ⨆ h : a = b, f b) ≤ ∑ b in {a}, ⨆ h : a = b, f b :=
                 Finset.sum_le_sum_of_ne_zero fun b _ hb =>
@@ -1001,7 +1001,7 @@ theorem tsum_supr_eq {α : Type _} (a : α) {f : α → ℝ≥0∞} : (∑' b : 
               _ = f a := by simp
               )
     (calc
-      f a ≤ ⨆ h : a = a, f a := le_supr (fun h : a = a => f a) rfl
+      f a ≤ ⨆ h : a = a, f a := le_supᵢ (fun h : a = a => f a) rfl
       _ ≤ ∑' b : α, ⨆ h : a = b, f b := Ennreal.le_tsum _
       )
 #align ennreal.tsum_supr_eq Ennreal.tsum_supr_eq
@@ -1539,7 +1539,7 @@ theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s
     let b N := Sup ((fun p : β × β => edist (s p.1) (s p.2)) '' { p | p.1 ≥ N ∧ p.2 ≥ N })
     --Prove that it bounds the distances of points in the Cauchy sequence
     have C : ∀ n m N, N ≤ n → N ≤ m → edist (s n) (s m) ≤ b N := by
-      refine' fun m n N hm hn => le_Sup _
+      refine' fun m n N hm hn => le_supₛ _
       use Prod.mk m n
       simp only [and_true_iff, eq_self_iff_true, Set.mem_setOf_eq]
       exact ⟨hm, hn⟩
@@ -1550,7 +1550,7 @@ theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s
       rcases hs δ δpos with ⟨N, hN⟩
       refine' Filter.mem_at_top_sets.2 ⟨N, fun n hn => _⟩
       have : b n ≤ δ :=
-        Sup_le
+        supₛ_le
           (by 
             simp only [and_imp, Set.mem_image, Set.mem_setOf_eq, exists_imp, Prod.exists]
             intro d p q hp hq hd
@@ -1668,7 +1668,8 @@ namespace Real
 
 /-- For a bounded set `s : set ℝ`, its `emetric.diam` is equal to `Sup s - Inf s` reinterpreted as
 `ℝ≥0∞`. -/
-theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = Ennreal.ofReal (sup s - inf s) := by
+theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = Ennreal.ofReal (supₛ s - infₛ s) :=
+  by 
   rcases eq_empty_or_nonempty s with (rfl | hne); · simp
   refine' le_antisymm (Metric.ediam_le_of_forall_dist_le fun x hx y hy => _) _
   · have := Real.subset_Icc_Inf_Sup_of_bounded h
@@ -1684,51 +1685,51 @@ theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = Ennreal.ofReal
 #align real.ediam_eq Real.ediam_eq
 
 /-- For a bounded set `s : set ℝ`, its `metric.diam` is equal to `Sup s - Inf s`. -/
-theorem diam_eq {s : Set ℝ} (h : Bounded s) : Metric.diam s = sup s - inf s := by
+theorem diam_eq {s : Set ℝ} (h : Bounded s) : Metric.diam s = supₛ s - infₛ s := by
   rw [Metric.diam, Real.ediam_eq h, Ennreal.to_real_of_real]
   rw [Real.bounded_iff_bdd_below_bdd_above] at h
   exact sub_nonneg.2 (Real.Inf_le_Sup s h.1 h.2)
 #align real.diam_eq Real.diam_eq
 
 @[simp]
-theorem ediam_Ioo (a b : ℝ) : Emetric.diam (ioo a b) = Ennreal.ofReal (b - a) := by
+theorem ediam_Ioo (a b : ℝ) : Emetric.diam (Ioo a b) = Ennreal.ofReal (b - a) := by
   rcases le_or_lt b a with (h | h)
   · simp [h]
   · rw [Real.ediam_eq (bounded_Ioo _ _), cSup_Ioo h, cInf_Ioo h]
 #align real.ediam_Ioo Real.ediam_Ioo
 
 @[simp]
-theorem ediam_Icc (a b : ℝ) : Emetric.diam (icc a b) = Ennreal.ofReal (b - a) := by
+theorem ediam_Icc (a b : ℝ) : Emetric.diam (Icc a b) = Ennreal.ofReal (b - a) := by
   rcases le_or_lt a b with (h | h)
   · rw [Real.ediam_eq (bounded_Icc _ _), cSup_Icc h, cInf_Icc h]
   · simp [h, h.le]
 #align real.ediam_Icc Real.ediam_Icc
 
 @[simp]
-theorem ediam_Ico (a b : ℝ) : Emetric.diam (ico a b) = Ennreal.ofReal (b - a) :=
+theorem ediam_Ico (a b : ℝ) : Emetric.diam (Ico a b) = Ennreal.ofReal (b - a) :=
   le_antisymm (ediam_Icc a b ▸ diam_mono Ico_subset_Icc_self)
     (ediam_Ioo a b ▸ diam_mono Ioo_subset_Ico_self)
 #align real.ediam_Ico Real.ediam_Ico
 
 @[simp]
-theorem ediam_Ioc (a b : ℝ) : Emetric.diam (ioc a b) = Ennreal.ofReal (b - a) :=
+theorem ediam_Ioc (a b : ℝ) : Emetric.diam (Ioc a b) = Ennreal.ofReal (b - a) :=
   le_antisymm (ediam_Icc a b ▸ diam_mono Ioc_subset_Icc_self)
     (ediam_Ioo a b ▸ diam_mono Ioo_subset_Ioc_self)
 #align real.ediam_Ioc Real.ediam_Ioc
 
-theorem diam_Icc {a b : ℝ} (h : a ≤ b) : Metric.diam (icc a b) = b - a := by
+theorem diam_Icc {a b : ℝ} (h : a ≤ b) : Metric.diam (Icc a b) = b - a := by
   simp [Metric.diam, Ennreal.to_real_of_real, sub_nonneg.2 h]
 #align real.diam_Icc Real.diam_Icc
 
-theorem diam_Ico {a b : ℝ} (h : a ≤ b) : Metric.diam (ico a b) = b - a := by
+theorem diam_Ico {a b : ℝ} (h : a ≤ b) : Metric.diam (Ico a b) = b - a := by
   simp [Metric.diam, Ennreal.to_real_of_real, sub_nonneg.2 h]
 #align real.diam_Ico Real.diam_Ico
 
-theorem diam_Ioc {a b : ℝ} (h : a ≤ b) : Metric.diam (ioc a b) = b - a := by
+theorem diam_Ioc {a b : ℝ} (h : a ≤ b) : Metric.diam (Ioc a b) = b - a := by
   simp [Metric.diam, Ennreal.to_real_of_real, sub_nonneg.2 h]
 #align real.diam_Ioc Real.diam_Ioc
 
-theorem diam_Ioo {a b : ℝ} (h : a ≤ b) : Metric.diam (ioo a b) = b - a := by
+theorem diam_Ioo {a b : ℝ} (h : a ≤ b) : Metric.diam (Ioo a b) = b - a := by
   simp [Metric.diam, Ennreal.to_real_of_real, sub_nonneg.2 h]
 #align real.diam_Ioo Real.diam_Ioo
 

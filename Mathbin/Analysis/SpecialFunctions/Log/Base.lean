@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey, Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.base
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ theorem rpow_logb_of_neg (hx : x < 0) : b ^ logb b x = -x := by
   exact abs_of_neg hx
 #align real.rpow_logb_of_neg Real.rpow_logb_of_neg
 
-theorem surj_on_logb : SurjOn (logb b) (ioi 0) univ := fun x _ =>
+theorem surj_on_logb : SurjOn (logb b) (Ioi 0) univ := fun x _ =>
   ⟨rpow b x, rpow_pos_of_pos b_pos x, logb_rpow b_pos b_ne_one⟩
 #align real.surj_on_logb Real.surj_on_logb
 
@@ -130,7 +130,7 @@ theorem range_logb : range (logb b) = univ :=
   (logb_surjective b_pos b_ne_one).range_eq
 #align real.range_logb Real.range_logb
 
-theorem surj_on_logb' : SurjOn (logb b) (iio 0) univ := by
+theorem surj_on_logb' : SurjOn (logb b) (Iio 0) univ := by
   intro x x_in_univ
   use -b ^ x
   constructor
@@ -226,18 +226,18 @@ theorem logb_nonpos (hx : 0 ≤ x) (h'x : x ≤ 1) : logb b x ≤ 0 :=
   (logb_nonpos_iff' hb hx).2 h'x
 #align real.logb_nonpos Real.logb_nonpos
 
-theorem strict_mono_on_logb : StrictMonoOn (logb b) (Set.ioi 0) := fun x hx y hy hxy =>
+theorem strict_mono_on_logb : StrictMonoOn (logb b) (Set.Ioi 0) := fun x hx y hy hxy =>
   logb_lt_logb hb hx hxy
 #align real.strict_mono_on_logb Real.strict_mono_on_logb
 
-theorem strict_anti_on_logb : StrictAntiOn (logb b) (Set.iio 0) := by
+theorem strict_anti_on_logb : StrictAntiOn (logb b) (Set.Iio 0) := by
   rintro x (hx : x < 0) y (hy : y < 0) hxy
   rw [← logb_abs y, ← logb_abs x]
   refine' logb_lt_logb hb (abs_pos.2 hy.ne) _
   rwa [abs_of_neg hy, abs_of_neg hx, neg_lt_neg_iff]
 #align real.strict_anti_on_logb Real.strict_anti_on_logb
 
-theorem logb_inj_on_pos : Set.InjOn (logb b) (Set.ioi 0) :=
+theorem logb_inj_on_pos : Set.InjOn (logb b) (Set.Ioi 0) :=
   (strict_mono_on_logb hb).InjOn
 #align real.logb_inj_on_pos Real.logb_inj_on_pos
 
@@ -331,18 +331,18 @@ theorem logb_nonpos_iff_of_base_lt_one (hx : 0 < x) : logb b x ≤ 0 ↔ 1 ≤ x
   rw [← not_lt, logb_pos_iff_of_base_lt_one b_pos b_lt_one hx, not_lt]
 #align real.logb_nonpos_iff_of_base_lt_one Real.logb_nonpos_iff_of_base_lt_one
 
-theorem strict_anti_on_logb_of_base_lt_one : StrictAntiOn (logb b) (Set.ioi 0) :=
+theorem strict_anti_on_logb_of_base_lt_one : StrictAntiOn (logb b) (Set.Ioi 0) :=
   fun x hx y hy hxy => logb_lt_logb_of_base_lt_one b_pos b_lt_one hx hxy
 #align real.strict_anti_on_logb_of_base_lt_one Real.strict_anti_on_logb_of_base_lt_one
 
-theorem strict_mono_on_logb_of_base_lt_one : StrictMonoOn (logb b) (Set.iio 0) := by
+theorem strict_mono_on_logb_of_base_lt_one : StrictMonoOn (logb b) (Set.Iio 0) := by
   rintro x (hx : x < 0) y (hy : y < 0) hxy
   rw [← logb_abs y, ← logb_abs x]
   refine' logb_lt_logb_of_base_lt_one b_pos b_lt_one (abs_pos.2 hy.ne) _
   rwa [abs_of_neg hy, abs_of_neg hx, neg_lt_neg_iff]
 #align real.strict_mono_on_logb_of_base_lt_one Real.strict_mono_on_logb_of_base_lt_one
 
-theorem logb_inj_on_pos_of_base_lt_one : Set.InjOn (logb b) (Set.ioi 0) :=
+theorem logb_inj_on_pos_of_base_lt_one : Set.InjOn (logb b) (Set.Ioi 0) :=
   (strict_anti_on_logb_of_base_lt_one b_pos b_lt_one).InjOn
 #align real.logb_inj_on_pos_of_base_lt_one Real.logb_inj_on_pos_of_base_lt_one
 

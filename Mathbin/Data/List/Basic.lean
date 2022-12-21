@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3103,28 +3103,28 @@ section Take'
 variable [Inhabited α]
 
 @[simp]
-theorem take'_length : ∀ n l, length (@takeD α _ n l) = n
+theorem take'_length : ∀ n l, length (@takeI α _ n l) = n
   | 0, l => rfl
   | n + 1, l => congr_arg succ (take'_length _ _)
 #align list.take'_length List.take'_length
 
 @[simp]
-theorem take'_nil : ∀ n, takeD n (@nil α) = repeat default n
+theorem take'_nil : ∀ n, takeI n (@nil α) = repeat default n
   | 0 => rfl
   | n + 1 => congr_arg (cons _) (take'_nil _)
 #align list.take'_nil List.take'_nil
 
-theorem take'_eq_take : ∀ {n} {l : List α}, n ≤ length l → takeD n l = take n l
+theorem take'_eq_take : ∀ {n} {l : List α}, n ≤ length l → takeI n l = take n l
   | 0, l, h => rfl
   | n + 1, a :: l, h => congr_arg (cons _) <| take'_eq_take <| le_of_succ_le_succ h
 #align list.take'_eq_take List.take'_eq_take
 
 @[simp]
-theorem take'_left (l₁ l₂ : List α) : takeD (length l₁) (l₁ ++ l₂) = l₁ :=
+theorem take'_left (l₁ l₂ : List α) : takeI (length l₁) (l₁ ++ l₂) = l₁ :=
   (take'_eq_take (by simp only [length_append, Nat.le_add_right])).trans (take_left _ _)
 #align list.take'_left List.take'_left
 
-theorem take'_left' {l₁ l₂ : List α} {n} (h : length l₁ = n) : takeD n (l₁ ++ l₂) = l₁ := by
+theorem take'_left' {l₁ l₂ : List α} {n} (h : length l₁ = n) : takeI n (l₁ ++ l₂) = l₁ := by
   rw [← h] <;> apply take'_left
 #align list.take'_left' List.take'_left'
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_subspace
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -715,9 +715,9 @@ variable (k V)
 
 /-- The affine span is the `Inf` of subspaces containing the given
 points. -/
-theorem affine_span_eq_Inf (s : Set P) : affineSpan k s = inf { s' | s ⊆ s' } :=
+theorem affine_span_eq_Inf (s : Set P) : affineSpan k s = infₛ { s' | s ⊆ s' } :=
   le_antisymm (span_points_subset_coe_of_subset_coe <| Set.subset_Inter₂ fun _ => id)
-    (Inf_le (subset_span_points k _))
+    (infₛ_le (subset_span_points k _))
 #align affine_subspace.affine_span_eq_Inf AffineSubspace.affine_span_eq_Inf
 
 variable (P)
@@ -959,8 +959,8 @@ theorem direction_inf (s1 s2 : AffineSubspace k P) :
     (s1 ⊓ s2).direction ≤ s1.direction ⊓ s2.direction := by
   repeat' rw [direction_eq_vector_span, vector_span_def]
   exact
-    le_inf (Inf_le_Inf fun p hp => trans (vsub_self_mono (inter_subset_left _ _)) hp)
-      (Inf_le_Inf fun p hp => trans (vsub_self_mono (inter_subset_right _ _)) hp)
+    le_inf (infₛ_le_infₛ fun p hp => trans (vsub_self_mono (inter_subset_left _ _)) hp)
+      (infₛ_le_infₛ fun p hp => trans (vsub_self_mono (inter_subset_right _ _)) hp)
 #align affine_subspace.direction_inf AffineSubspace.direction_inf
 
 /-- If two affine subspaces have a point in common, the direction of
@@ -1007,8 +1007,8 @@ theorem sup_direction_le (s1 s2 : AffineSubspace k P) :
   repeat' rw [direction_eq_vector_span, vector_span_def]
   exact
     sup_le
-      (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_left : s1 ≤ s1 ⊔ s2)) hp)
-      (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_right : s2 ≤ s1 ⊔ s2)) hp)
+      (infₛ_le_infₛ fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_left : s1 ≤ s1 ⊔ s2)) hp)
+      (infₛ_le_infₛ fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_right : s2 ≤ s1 ⊔ s2)) hp)
 #align affine_subspace.sup_direction_le AffineSubspace.sup_direction_le
 
 /-- The sup of the directions of two nonempty affine subspaces with
@@ -1454,7 +1454,7 @@ theorem direction_sup {s1 s2 : AffineSubspace k P} {p1 p2 : P} (hp1 : p1 ∈ s1)
   · refine' sup_le (sup_direction_le _ _) _
     rw [direction_eq_vector_span, vector_span_def]
     exact
-      Inf_le_Inf fun p hp =>
+      infₛ_le_infₛ fun p hp =>
         Set.Subset.trans
           (Set.singleton_subset_iff.2
             (vsub_mem_vsub (mem_span_points k p2 _ (Set.mem_union_right _ hp2))
@@ -1702,7 +1702,7 @@ theorem map_sup (s t : AffineSubspace k P₁) (f : P₁ →ᵃ[k] P₂) : (s ⊔
 #align affine_subspace.map_sup AffineSubspace.map_sup
 
 theorem map_supr {ι : Sort _} (f : P₁ →ᵃ[k] P₂) (s : ι → AffineSubspace k P₁) :
-    (supr s).map f = ⨆ i, (s i).map f :=
+    (supᵢ s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 #align affine_subspace.map_supr AffineSubspace.map_supr
 

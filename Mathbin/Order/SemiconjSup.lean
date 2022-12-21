@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.semiconj_Sup
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,16 +45,16 @@ open Set
 to a least upper bound for `{x | f x ≤ y}`. If `α` is a partial order, and `f : α → β` has
 a right adjoint, then this right adjoint is unique. -/
 def IsOrderRightAdjoint [Preorder α] [Preorder β] (f : α → β) (g : β → α) :=
-  ∀ y, IsLub { x | f x ≤ y } (g y)
+  ∀ y, IsLUB { x | f x ≤ y } (g y)
 #align is_order_right_adjoint IsOrderRightAdjoint
 
 theorem is_order_right_adjoint_Sup [CompleteLattice α] [Preorder β] (f : α → β) :
-    IsOrderRightAdjoint f fun y => sup { x | f x ≤ y } := fun y => is_lub_Sup _
+    IsOrderRightAdjoint f fun y => supₛ { x | f x ≤ y } := fun y => is_lub_Sup _
 #align is_order_right_adjoint_Sup is_order_right_adjoint_Sup
 
 theorem is_order_right_adjoint_cSup [ConditionallyCompleteLattice α] [Preorder β] (f : α → β)
     (hne : ∀ y, ∃ x, f x ≤ y) (hbdd : ∀ y, BddAbove { x | f x ≤ y }) :
-    IsOrderRightAdjoint f fun y => sup { x | f x ≤ y } := fun y => is_lub_cSup (hne y) (hbdd y)
+    IsOrderRightAdjoint f fun y => supₛ { x | f x ≤ y } := fun y => is_lub_cSup (hne y) (hbdd y)
 #align is_order_right_adjoint_cSup is_order_right_adjoint_cSup
 
 namespace IsOrderRightAdjoint
@@ -76,7 +76,7 @@ theorem order_iso_comp [Preorder α] [Preorder β] [Preorder γ] {f : α → β}
 theorem comp_order_iso [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α}
     (h : IsOrderRightAdjoint f g) (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) := by
   intro y
-  change IsLub (e ⁻¹' { x | f x ≤ y }) (e.symm (g y))
+  change IsLUB (e ⁻¹' { x | f x ≤ y }) (e.symm (g y))
   rw [e.is_lub_preimage, e.apply_symm_apply]
   exact h y
 #align is_order_right_adjoint.comp_order_iso IsOrderRightAdjoint.comp_order_iso
@@ -102,7 +102,7 @@ theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} 
 variable {G : Type _}
 
 theorem semiconj_of_is_lub [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃o α) {h : α → α}
-    (H : ∀ x, IsLub (range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) :
+    (H : ∀ x, IsLUB (range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) :
     Function.Semiconj h (f₂ g) (f₁ g) := by
   refine' fun y => (H _).unique _
   have := (f₁ g).LeftOrdContinuous (H y)

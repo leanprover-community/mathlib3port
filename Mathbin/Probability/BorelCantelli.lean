@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.borel_cantelli
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i))
   suffices
     indep (⨆ k ∈ {j}, MeasurableSpace.comap (f k) mβ)
       (⨆ k ∈ { k | k ≤ i }, MeasurableSpace.comap (f k) mβ) μ
-    by rwa [supr_singleton] at this
+    by rwa [supᵢ_singleton] at this
   exact indep_supr_of_disjoint (fun k => (hf k).Measurable.comap_le) hfi (by simpa)
 #align
   probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepComapNaturalOfLt
@@ -109,7 +109,7 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
     exact Ennreal.to_real_nonneg
   · rintro ⟨B, hB⟩
     refine' not_eventually.2 (frequently_of_forall fun n => _) (htends B.to_nnreal)
-    rw [mem_upper_bounds] at hB
+    rw [mem_upperBounds] at hB
     specialize hB (∑ k : ℕ in Finset.range n, μ (s (k + 1))).toReal _
     · refine' ⟨n, _⟩
       rw [Ennreal.to_real_sum]

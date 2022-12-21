@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.ring.pi
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -180,7 +180,7 @@ protected def nonUnitalRingHom {γ : Type w} [∀ i, NonUnitalNonAssocSemiring (
 theorem non_unital_ring_hom_injective {γ : Type w} [Nonempty I]
     [∀ i, NonUnitalNonAssocSemiring (f i)] [NonUnitalNonAssocSemiring γ] (g : ∀ i, γ →ₙ+* f i)
     (hg : ∀ i, Function.Injective (g i)) : Function.Injective (Pi.nonUnitalRingHom g) :=
-  mul_hom_injective (fun i => (g i).toMulHom) hg
+  mulHom_injective (fun i => (g i).toMulHom) hg
 #align pi.non_unital_ring_hom_injective Pi.non_unital_ring_hom_injective
 
 /-- A family of ring homomorphisms `f a : γ →+* β a` defines a ring homomorphism
@@ -195,7 +195,7 @@ protected def ringHom {γ : Type w} [∀ i, NonAssocSemiring (f i)] [NonAssocSem
 theorem ring_hom_injective {γ : Type w} [Nonempty I] [∀ i, NonAssocSemiring (f i)]
     [NonAssocSemiring γ] (g : ∀ i, γ →+* f i) (hg : ∀ i, Function.Injective (g i)) :
     Function.Injective (Pi.ringHom g) :=
-  monoid_hom_injective (fun i => (g i).toMonoidHom) hg
+  monoidHom_injective (fun i => (g i).toMonoidHom) hg
 #align pi.ring_hom_injective Pi.ring_hom_injective
 
 end Pi

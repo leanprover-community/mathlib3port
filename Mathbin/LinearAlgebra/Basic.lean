@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -988,7 +988,7 @@ theorem map_sup_comap_of_surjective (p q : Submodule R₂ M₂) :
 #align submodule.map_sup_comap_of_surjective Submodule.map_sup_comap_of_surjective
 
 theorem map_supr_comap_of_sujective {ι : Sort _} (S : ι → Submodule R₂ M₂) :
-    (⨆ i, (S i).comap f).map f = supr S :=
+    (⨆ i, (S i).comap f).map f = supᵢ S :=
   (giMapComap hf).l_supr_u _
 #align submodule.map_supr_comap_of_sujective Submodule.map_supr_comap_of_sujective
 
@@ -1049,7 +1049,7 @@ theorem comap_sup_map_of_injective (p q : Submodule R M) : (p.map f ⊔ q.map f)
 #align submodule.comap_sup_map_of_injective Submodule.comap_sup_map_of_injective
 
 theorem comap_supr_map_of_injective {ι : Sort _} (S : ι → Submodule R M) :
-    (⨆ i, (S i).map f).comap f = supr S :=
+    (⨆ i, (S i).map f).comap f = supᵢ S :=
   (gciMapComap hf).u_supr_l _
 #align submodule.comap_supr_map_of_injective Submodule.comap_supr_map_of_injective
 
@@ -1109,7 +1109,7 @@ theorem LinearMap.infi_invariant {σ : R →+* R} [RingHomSurjective σ] {ι : S
     rintro i - ⟨v, hv, rfl⟩
     exact hf i v hv
   suffices (infi p).map f ≤ infi p by exact fun v hv => this ⟨v, hv, rfl⟩
-  exact le_infi fun i => (Submodule.map_mono (infi_le p i)).trans (this i)
+  exact le_infᵢ fun i => (Submodule.map_mono (infᵢ_le p i)).trans (this i)
 #align linear_map.infi_invariant LinearMap.infi_invariant
 
 end AddCommMonoid
@@ -2010,8 +2010,7 @@ def submoduleMap (p : Submodule R M) : p ≃ₛₗ[σ₁₂] ↥(p.map (e : M �
     right_inv := fun y => by 
       apply SetCoe.ext
       simp only [LinearMap.dom_restrict_apply, LinearMap.cod_restrict_apply,
-        LinearMap.to_fun_eq_coe, LinearEquiv.coe_coe, SetLike.coe_mk,
-        LinearEquiv.apply_symm_apply] }
+        LinearMap.to_fun_eq_coe, LinearEquiv.coe_coe, [anonymous], LinearEquiv.apply_symm_apply] }
 #align linear_equiv.submodule_map LinearEquiv.submoduleMap
 
 include σ₂₁

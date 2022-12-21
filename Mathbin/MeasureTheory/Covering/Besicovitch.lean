@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,7 +238,7 @@ noncomputable def index : Ordinal.{u} → β
     let Z := ⋃ j : { j // j < i }, ball (p.c (index j)) (p.R (index j))
     let
       R :=-- `R` is the supremum of the radii of balls with centers not in `Z`
-        supr
+        supᵢ
         fun b : { b : β // p.c b ∉ Z } => p.R b
     -- return an index `b` for which the center `c b` is not in `Z`, and the radius is at
       -- least `R / τ`, if such an index exists (and garbage otherwise).
@@ -260,7 +260,7 @@ theorem monotone_Union_up_to : Monotone p.unionUpTo := by
 
 /-- Supremum of the radii of balls whose centers are not yet covered at step `i`. -/
 def r (i : Ordinal.{u}) : ℝ :=
-  supr fun b : { b : β // p.c b ∉ p.unionUpTo i } => p.R b
+  supᵢ fun b : { b : β // p.c b ∉ p.unionUpTo i } => p.R b
 #align besicovitch.tau_package.R Besicovitch.TauPackage.r
 
 /-- Group the balls into disjoint families, by assigning to a ball the smallest color for which
@@ -272,14 +272,14 @@ noncomputable def color : Ordinal.{u} → ℕ
         (closedBall (p.c (p.index j)) (p.R (p.index j)) ∩
             closedBall (p.c (p.index i)) (p.R (p.index i))).Nonempty),
         {color j}
-    inf (univ \ A)decreasing_by
+    infₛ (univ \ A)decreasing_by
   exact j.2
 #align besicovitch.tau_package.color Besicovitch.TauPackage.color
 
 /-- `p.last_step` is the first ordinal where the construction stops making sense, i.e., `f` returns
 garbage since there is no point left to be chosen. We will only use ordinals before this step. -/
 def lastStep : Ordinal.{u} :=
-  inf { i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b }
+  infₛ { i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b }
 #align besicovitch.tau_package.last_step Besicovitch.TauPackage.lastStep
 
 theorem last_step_nonempty :
@@ -360,7 +360,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
     intro j ji hj
     exact (IH j ji (ji.trans hi)).ne'
   suffices Inf (univ \ A) ≠ N by
-    rcases(cInf_le (OrderBot.bdd_below (univ \ A)) N_mem).lt_or_eq with (H | H)
+    rcases(cInf_le (OrderBot.bddBelow (univ \ A)) N_mem).lt_or_eq with (H | H)
     · exact H
     · exact (this H).elim
   intro Inf_eq_N
@@ -412,7 +412,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
     rw [this]
     have : ∃ t, p.c t ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r t := by
       simpa only [not_exists, exists_prop, not_and, not_lt, not_le, mem_set_of_eq, not_forall] using
-        not_mem_of_lt_cInf (G_lt_last n hn) (OrderBot.bdd_below _)
+        not_mem_of_lt_cInf (G_lt_last n hn) (OrderBot.bddBelow _)
     exact Classical.epsilon_spec this
   -- the balls with indices `G k` satisfy the characteristic property of satellite configurations.
   have Gab :
@@ -719,7 +719,7 @@ For a version giving the conclusion in a nicer form, see `exists_disjoint_closed
 -/
 theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Measure α)
     [IsFiniteMeasure μ] (f : α → Set ℝ) (s : Set α)
-    (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ ioo 0 δ).Nonempty) :
+    (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) :
     ∃ t : Set (α × ℝ),
       t.Countable ∧
         (∀ p : α × ℝ, p ∈ t → p.1 ∈ s) ∧
@@ -877,7 +877,7 @@ proof technique.
 For a version giving the conclusion in a nicer form, see `exists_disjoint_closed_ball_covering_ae`.
 -/
 theorem exists_disjoint_closed_ball_covering_ae_aux (μ : Measure α) [SigmaFinite μ] (f : α → Set ℝ)
-    (s : Set α) (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ ioo 0 δ).Nonempty) :
+    (s : Set α) (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) :
     ∃ t : Set (α × ℝ),
       t.Countable ∧
         (∀ p : α × ℝ, p ∈ t → p.1 ∈ s) ∧
@@ -903,12 +903,12 @@ This version requires that the underlying measure is sigma-finite, and that the 
 Besicovitch covering property (which is satisfied for instance by normed real vector spaces).
 -/
 theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite μ] (f : α → Set ℝ)
-    (s : Set α) (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ ioo 0 δ).Nonempty) (R : α → ℝ)
+    (s : Set α) (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) (R : α → ℝ)
     (hR : ∀ x ∈ s, 0 < R x) :
     ∃ (t : Set α)(r : α → ℝ),
       t.Countable ∧
         t ⊆ s ∧
-          (∀ x ∈ t, r x ∈ f x ∩ ioo 0 (R x)) ∧
+          (∀ x ∈ t, r x ∈ f x ∩ Ioo 0 (R x)) ∧
             μ (s \ ⋃ x ∈ t, closedBall x (r x)) = 0 ∧
               t.PairwiseDisjoint fun x => closedBall x (r x) :=
   by 
@@ -974,7 +974,7 @@ add up to at most `μ s + ε`, for any positive `ε`. This works even if one res
 allowed radii around a point `x` to a set `f x` which accumulates at `0`. -/
 theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFinite μ]
     [Measure.OuterRegular μ] {ε : ℝ≥0∞} (hε : ε ≠ 0) (f : α → Set ℝ) (s : Set α)
-    (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ ioo 0 δ).Nonempty) :
+    (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) :
     ∃ (t : Set α)(r : α → ℝ),
       t.Countable ∧
         t ⊆ s ∧
@@ -1166,7 +1166,7 @@ forms a Vitali family. This is essentially a restatement of the measurable Besic
 protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] :
     VitaliFamily
       μ where 
-  setsAt x := (fun r : ℝ => closedBall x r) '' ioi (0 : ℝ)
+  setsAt x := (fun r : ℝ => closedBall x r) '' Ioi (0 : ℝ)
   MeasurableSet' := by 
     intro x y hy
     obtain ⟨r, rpos, rfl⟩ : ∃ r : ℝ, 0 < r ∧ closed_ball x r = y := by

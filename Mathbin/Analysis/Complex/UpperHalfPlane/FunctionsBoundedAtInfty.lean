@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.functions_bounded_at_infty
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ def atImInfty :=
   Filter.atTop.comap UpperHalfPlane.im
 #align upper_half_plane.at_im_infty UpperHalfPlane.atImInfty
 
-theorem at_im_infty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im ⁻¹' Set.ici i :=
+theorem at_im_infty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im ⁻¹' Set.Ici i :=
   Filter.HasBasis.comap UpperHalfPlane.im Filter.at_top_basis
 #align upper_half_plane.at_im_infty_basis UpperHalfPlane.at_im_infty_basis
 

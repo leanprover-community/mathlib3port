@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module algebra.order.to_interval_mod
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,12 +44,12 @@ def toIcoDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
 #align to_Ico_div toIcoDiv
 
 theorem add_to_Ico_div_zsmul_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) :
-    x + toIcoDiv a hb x • b ∈ Set.ico a (a + b) :=
+    x + toIcoDiv a hb x • b ∈ Set.Ico a (a + b) :=
   (exists_unique_add_zsmul_mem_Ico hb x a).some_spec.1
 #align add_to_Ico_div_zsmul_mem_Ico add_to_Ico_div_zsmul_mem_Ico
 
 theorem eq_to_Ico_div_of_add_zsmul_mem_Ico {a b x : α} (hb : 0 < b) {y : ℤ}
-    (hy : x + y • b ∈ Set.ico a (a + b)) : y = toIcoDiv a hb x :=
+    (hy : x + y • b ∈ Set.Ico a (a + b)) : y = toIcoDiv a hb x :=
   (exists_unique_add_zsmul_mem_Ico hb x a).some_spec.2 y hy
 #align eq_to_Ico_div_of_add_zsmul_mem_Ico eq_to_Ico_div_of_add_zsmul_mem_Ico
 
@@ -59,12 +59,12 @@ def toIocDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
 #align to_Ioc_div toIocDiv
 
 theorem add_to_Ioc_div_zsmul_mem_Ioc (a : α) {b : α} (hb : 0 < b) (x : α) :
-    x + toIocDiv a hb x • b ∈ Set.ioc a (a + b) :=
+    x + toIocDiv a hb x • b ∈ Set.Ioc a (a + b) :=
   (exists_unique_add_zsmul_mem_Ioc hb x a).some_spec.1
 #align add_to_Ioc_div_zsmul_mem_Ioc add_to_Ioc_div_zsmul_mem_Ioc
 
 theorem eq_to_Ioc_div_of_add_zsmul_mem_Ioc {a b x : α} (hb : 0 < b) {y : ℤ}
-    (hy : x + y • b ∈ Set.ioc a (a + b)) : y = toIocDiv a hb x :=
+    (hy : x + y • b ∈ Set.Ioc a (a + b)) : y = toIocDiv a hb x :=
   (exists_unique_add_zsmul_mem_Ioc hb x a).some_spec.2 y hy
 #align eq_to_Ioc_div_of_add_zsmul_mem_Ioc eq_to_Ioc_div_of_add_zsmul_mem_Ioc
 
@@ -79,17 +79,17 @@ def toIocMod (a : α) {b : α} (hb : 0 < b) (x : α) : α :=
 #align to_Ioc_mod toIocMod
 
 theorem to_Ico_mod_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoMod a hb x ∈ Set.ico a (a + b) :=
+    toIcoMod a hb x ∈ Set.Ico a (a + b) :=
   add_to_Ico_div_zsmul_mem_Ico a hb x
 #align to_Ico_mod_mem_Ico to_Ico_mod_mem_Ico
 
-theorem to_Ico_mod_mem_Ico' {b : α} (hb : 0 < b) (x : α) : toIcoMod 0 hb x ∈ Set.ico 0 b := by
+theorem to_Ico_mod_mem_Ico' {b : α} (hb : 0 < b) (x : α) : toIcoMod 0 hb x ∈ Set.Ico 0 b := by
   convert to_Ico_mod_mem_Ico 0 hb x
   exact (zero_add b).symm
 #align to_Ico_mod_mem_Ico' to_Ico_mod_mem_Ico'
 
 theorem to_Ioc_mod_mem_Ioc (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocMod a hb x ∈ Set.ioc a (a + b) :=
+    toIocMod a hb x ∈ Set.Ioc a (a + b) :=
   add_to_Ioc_div_zsmul_mem_Ioc a hb x
 #align to_Ioc_mod_mem_Ioc to_Ioc_mod_mem_Ioc
 
@@ -553,7 +553,7 @@ theorem to_Ioc_mod_periodic (a : α) {b : α} (hb : 0 < b) : Function.Periodic (
 @[simps symmApply]
 def QuotientAddGroup.equivIcoMod (a : α) {b : α} (hb : 0 < b) :
     α ⧸ AddSubgroup.zmultiples b ≃
-      Set.ico a
+      Set.Ico a
         (a +
           b) where 
   toFun x :=
@@ -577,7 +577,7 @@ theorem QuotientAddGroup.equiv_Ico_mod_coe (a : α) {b : α} (hb : 0 < b) (x : �
 @[simps symmApply]
 def QuotientAddGroup.equivIocMod (a : α) {b : α} (hb : 0 < b) :
     α ⧸ AddSubgroup.zmultiples b ≃
-      Set.ioc a
+      Set.Ioc a
         (a +
           b) where 
   toFun x :=

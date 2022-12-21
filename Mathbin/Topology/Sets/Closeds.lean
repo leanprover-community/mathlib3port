@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.sets.closeds
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ instance : CompleteLattice (Closeds α) :=
     rfl
     (-- Inf
     fun S => ⟨⋂ s ∈ S, ↑s, is_closed_bInter fun s _ => s.2⟩)
-    (funext fun S => SetLike.coe_injective Inf_image.symm)
+    (funext fun S => SetLike.coe_injective infₛ_image.symm)
 
 /-- The type of closed sets is inhabited, with default element the empty set. -/
 instance : Inhabited (Closeds α) :=
@@ -128,7 +128,7 @@ theorem coe_bot : (↑(⊥ : Closeds α) : Set α) = ∅ :=
 #align topological_space.closeds.coe_bot TopologicalSpace.Closeds.coe_bot
 
 @[simp, norm_cast]
-theorem coe_Inf {S : Set (Closeds α)} : (↑(inf S) : Set α) = ⋂ i ∈ S, ↑i :=
+theorem coe_Inf {S : Set (Closeds α)} : (↑(infₛ S) : Set α) = ⋂ i ∈ S, ↑i :=
   rfl
 #align topological_space.closeds.coe_Inf TopologicalSpace.Closeds.coe_Inf
 
@@ -167,13 +167,13 @@ theorem mem_infi {ι} {x : α} {s : ι → Closeds α} : x ∈ infi s ↔ ∀ i,
 #align topological_space.closeds.mem_infi TopologicalSpace.Closeds.mem_infi
 
 @[simp]
-theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ inf S ↔ ∀ s ∈ S, x ∈ s := by
-  simp_rw [Inf_eq_infi, mem_infi]
+theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ infₛ S ↔ ∀ s ∈ S, x ∈ s := by
+  simp_rw [infₛ_eq_infᵢ, mem_infi]
 #align topological_space.closeds.mem_Inf TopologicalSpace.Closeds.mem_Inf
 
 instance : Coframe (Closeds α) :=
   { Closeds.completeLattice with 
-    inf := inf
+    inf := infₛ
     infi_sup_le_sup_Inf := fun a s =>
       (SetLike.coe_injective <| by simp only [coe_sup, coe_infi, coe_Inf, Set.union_Inter₂]).le }
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.independence
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -490,7 +490,7 @@ theorem indepSuprOfDisjoint [IsProbabilityMeasure μ] {m : ι → MeasurableSpac
     (h_le : ∀ i, m i ≤ m0) (h_indep : IndepCat m μ) {S T : Set ι} (hST : Disjoint S T) :
     Indep (⨆ i ∈ S, m i) (⨆ i ∈ T, m i) μ := by
   refine'
-    indep_sets.indep (supr₂_le fun i _ => h_le i) (supr₂_le fun i _ => h_le i) _ _
+    indep_sets.indep (supᵢ₂_le fun i _ => h_le i) (supᵢ₂_le fun i _ => h_le i) _ _
       (generate_from_pi_Union_Inter_measurable_set m S).symm
       (generate_from_pi_Union_Inter_measurable_set m T).symm _
   · exact is_pi_system_pi_Union_Inter _ (fun n => @is_pi_system_measurable_set Ω (m n)) _
@@ -515,7 +515,7 @@ theorem indepSuprOfDirectedLe {Ω} {m : ι → MeasurableSpace Ω} {m' m0 : Meas
     simp_rw [h_gen_n, h_gen'] at h_indep
     exact fun n => (h_indep n).IndepSets
   -- now go from π-systems to σ-algebras
-  refine' indep_sets.indep (supr_le h_le) h_le' hp_supr_pi hp'_pi _ h_gen' h_pi_system_indep
+  refine' indep_sets.indep (supᵢ_le h_le) h_le' hp_supr_pi hp'_pi _ h_gen' h_pi_system_indep
   exact (generate_from_Union_measurable_set _).symm
 #align probability_theory.indep_supr_of_directed_le ProbabilityTheory.indepSuprOfDirectedLe
 
@@ -1077,7 +1077,7 @@ theorem indepBsuprLimsup (h_le : ∀ n, s n ≤ m0) (h_indep : IndepCat s μ) (h
           is_bounded_default)
       _
   simp only [Set.mem_compl_iff, eventually_map]
-  exact eventually_of_mem (hf t ht) le_supr₂
+  exact eventually_of_mem (hf t ht) le_supᵢ₂
 #align probability_theory.indep_bsupr_limsup ProbabilityTheory.indepBsuprLimsup
 
 theorem indepSuprDirectedLimsup (h_le : ∀ n, s n ≤ m0) (h_indep : IndepCat s μ)
@@ -1085,11 +1085,11 @@ theorem indepSuprDirectedLimsup (h_le : ∀ n, s n ≤ m0) (h_indep : IndepCat s
     Indep (⨆ a, ⨆ n ∈ ns a, s n) (limsup s f) μ := by
   refine' indep_supr_of_directed_le _ _ _ _
   · exact fun a => indep_bsupr_limsup h_le h_indep hf (hnsp a)
-  · exact fun a => supr₂_le fun n hn => h_le n
-  · exact limsup_le_supr.trans (supr_le h_le)
+  · exact fun a => supᵢ₂_le fun n hn => h_le n
+  · exact limsup_le_supr.trans (supᵢ_le h_le)
   · intro a b
     obtain ⟨c, hc⟩ := hns a b
-    refine' ⟨c, _, _⟩ <;> refine' supr_mono fun n => supr_mono' fun hn => ⟨_, le_rfl⟩
+    refine' ⟨c, _, _⟩ <;> refine' supᵢ_mono fun n => supᵢ_mono' fun hn => ⟨_, le_rfl⟩
     · exact hc.1 hn
     · exact hc.2 hn
 #align probability_theory.indep_supr_directed_limsup ProbabilityTheory.indepSuprDirectedLimsup
@@ -1100,11 +1100,11 @@ theorem indepSuprLimsup (h_le : ∀ n, s n ≤ m0) (h_indep : IndepCat s μ) (hf
   suffices (⨆ a, ⨆ n ∈ ns a, s n) = ⨆ n, s n by
     rw [← this]
     exact indep_supr_directed_limsup h_le h_indep hf hns hnsp
-  rw [supr_comm]
-  refine' supr_congr fun n => _
-  have : (⨆ (i : α) (H : n ∈ ns i), s n) = ⨆ h : ∃ i, n ∈ ns i, s n := by rw [supr_exists]
+  rw [supᵢ_comm]
+  refine' supᵢ_congr fun n => _
+  have : (⨆ (i : α) (H : n ∈ ns i), s n) = ⨆ h : ∃ i, n ∈ ns i, s n := by rw [supᵢ_exists]
   haveI : Nonempty (∃ i : α, n ∈ ns i) := ⟨hns_univ n⟩
-  rw [this, supr_const]
+  rw [this, supᵢ_const]
 #align probability_theory.indep_supr_limsup ProbabilityTheory.indepSuprLimsup
 
 theorem indepLimsupSelf (h_le : ∀ n, s n ≤ m0) (h_indep : IndepCat s μ) (hf : ∀ t, p t → tᶜ ∈ f)
@@ -1130,8 +1130,8 @@ variable [SemilatticeSup ι] [NoMaxOrder ι] [Nonempty ι]
 
 theorem indepLimsupAtTopSelf (h_le : ∀ n, s n ≤ m0) (h_indep : IndepCat s μ) :
     Indep (limsup s atTop) (limsup s atTop) μ := by
-  let ns : ι → Set ι := Set.iic
-  have hnsp : ∀ i, BddAbove (ns i) := fun i => bdd_above_Iic
+  let ns : ι → Set ι := Set.Iic
+  have hnsp : ∀ i, BddAbove (ns i) := fun i => bddAbove_Iic
   refine' indep_limsup_self h_le h_indep _ _ hnsp _
   · simp only [mem_at_top_sets, ge_iff_le, Set.mem_compl_iff, BddAbove, upperBounds, Set.Nonempty]
     rintro t ⟨a, ha⟩
@@ -1163,8 +1163,8 @@ variable [SemilatticeInf ι] [NoMinOrder ι] [Nonempty ι]
 
 theorem indepLimsupAtBotSelf (h_le : ∀ n, s n ≤ m0) (h_indep : IndepCat s μ) :
     Indep (limsup s atBot) (limsup s atBot) μ := by
-  let ns : ι → Set ι := Set.ici
-  have hnsp : ∀ i, BddBelow (ns i) := fun i => bdd_below_Ici
+  let ns : ι → Set ι := Set.Ici
+  have hnsp : ∀ i, BddBelow (ns i) := fun i => bddBelow_Ici
   refine' indep_limsup_self h_le h_indep _ _ hnsp _
   · simp only [mem_at_bot_sets, ge_iff_le, Set.mem_compl_iff, BddBelow, lowerBounds, Set.Nonempty]
     rintro t ⟨a, ha⟩

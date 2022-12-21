@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.concept
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -278,7 +278,7 @@ instance :
   bot := ⟨⟨extentClosure r univ, univ⟩, eq_univ_of_forall fun b a ha => ha trivial, rfl⟩
   bot_le _ := snd_subset_snd_iff.1 <| subset_univ _
 
-instance : HasSup (Concept α β r) :=
+instance : SupSet (Concept α β r) :=
   ⟨fun S =>
     { fst := extentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd)
       snd := ⋂ c ∈ S, (c : Concept _ _ _).snd
@@ -287,7 +287,7 @@ instance : HasSup (Concept α β r) :=
           intent_closure_extent_closure_intent_closure]
       closure_snd := rfl }⟩
 
-instance : HasInf (Concept α β r) :=
+instance : InfSet (Concept α β r) :=
   ⟨fun S =>
     { fst := ⋂ c ∈ S, (c : Concept _ _ _).fst
       snd := intentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst)
@@ -298,11 +298,11 @@ instance : HasInf (Concept α β r) :=
 
 instance : CompleteLattice (Concept α β r) :=
   { Concept.lattice, Concept.boundedOrder with 
-    sup := sup
+    sup := supₛ
     le_Sup := fun S c hc => snd_subset_snd_iff.1 <| bInter_subset_of_mem hc
     Sup_le := fun S c hc =>
       snd_subset_snd_iff.1 <| subset_Inter₂ fun d hd => snd_subset_snd_iff.2 <| hc d hd
-    inf := inf
+    inf := infₛ
     Inf_le := fun S c => bInter_subset_of_mem
     le_Inf := fun S c => subset_Inter₂ }
 
@@ -348,23 +348,23 @@ theorem inf_snd (c d : Concept α β r) : (c ⊓ d).snd = intentClosure r (c.fst
 
 @[simp]
 theorem Sup_fst (S : Set (Concept α β r)) :
-    (sup S).fst = extentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd) :=
+    (supₛ S).fst = extentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd) :=
   rfl
 #align concept.Sup_fst Concept.Sup_fst
 
 @[simp]
-theorem Sup_snd (S : Set (Concept α β r)) : (sup S).snd = ⋂ c ∈ S, (c : Concept _ _ _).snd :=
+theorem Sup_snd (S : Set (Concept α β r)) : (supₛ S).snd = ⋂ c ∈ S, (c : Concept _ _ _).snd :=
   rfl
 #align concept.Sup_snd Concept.Sup_snd
 
 @[simp]
-theorem Inf_fst (S : Set (Concept α β r)) : (inf S).fst = ⋂ c ∈ S, (c : Concept _ _ _).fst :=
+theorem Inf_fst (S : Set (Concept α β r)) : (infₛ S).fst = ⋂ c ∈ S, (c : Concept _ _ _).fst :=
   rfl
 #align concept.Inf_fst Concept.Inf_fst
 
 @[simp]
 theorem Inf_snd (S : Set (Concept α β r)) :
-    (inf S).snd = intentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst) :=
+    (infₛ S).snd = intentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst) :=
   rfl
 #align concept.Inf_snd Concept.Inf_snd
 

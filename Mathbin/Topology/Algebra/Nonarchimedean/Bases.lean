@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.bases
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -326,12 +326,12 @@ view definitionaly gives the same topology on `A`.
 variable [TopologicalSpace R] {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
   (hsmul : ∀ (m : A) (i : ι), ∀ᶠ a : R in 𝓝 0, a • m ∈ B i)
 
-theorem SubmodulesRingBasis.to_submodules_basis : SubmodulesBasis B :=
+theorem SubmodulesRingBasis.toSubmodulesBasis : SubmodulesBasis B :=
   { inter := hB.inter
     smul := hsmul }
-#align submodules_ring_basis.to_submodules_basis SubmodulesRingBasis.to_submodules_basis
+#align submodules_ring_basis.to_submodules_basis SubmodulesRingBasis.toSubmodulesBasis
 
-example [Nonempty ι] : hB.topology = (hB.to_submodules_basis hsmul).topology :=
+example [Nonempty ι] : hB.topology = (hB.toSubmodulesBasis hsmul).topology :=
   rfl
 
 end
@@ -345,7 +345,7 @@ structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → S
   smul : ∀ (m : M) (i : ι), ∃ U ∈ BR, U ⊆ (fun a => a • m) ⁻¹' B i
 #align ring_filter_basis.submodules_basis RingFilterBasis.SubmodulesBasis
 
-theorem RingFilterBasis.submodules_basis_is_basis (BR : RingFilterBasis R) {B : ι → Submodule R M}
+theorem RingFilterBasis.submodulesBasisIsBasis (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @SubmodulesBasis ι R _ M _ _ BR.topology B :=
   { inter := hB.inter
     smul := by 
@@ -353,13 +353,13 @@ theorem RingFilterBasis.submodules_basis_is_basis (BR : RingFilterBasis R) {B : 
       intro m i
       rcases hB.smul m i with ⟨V, V_in, hV⟩
       exact mem_of_superset (BR.to_add_group_filter_basis.mem_nhds_zero V_in) hV }
-#align ring_filter_basis.submodules_basis_is_basis RingFilterBasis.submodules_basis_is_basis
+#align ring_filter_basis.submodules_basis_is_basis RingFilterBasis.submodulesBasisIsBasis
 
 /-- The module filter basis associated to a ring filter basis and a compatible submodule basis.
 This allows to build a topological module structure compatible with the given module structure
 and the topology associated to the given ring filter basis. -/
 def RingFilterBasis.moduleFilterBasis [Nonempty ι] (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @ModuleFilterBasis R M _ BR.topology _ _ :=
-  @SubmodulesBasis.toModuleFilterBasis ι R _ M _ _ BR.topology _ _ (BR.submodules_basis_is_basis hB)
+  @SubmodulesBasis.toModuleFilterBasis ι R _ M _ _ BR.topology _ _ (BR.submodulesBasisIsBasis hB)
 #align ring_filter_basis.module_filter_basis RingFilterBasis.moduleFilterBasis
 

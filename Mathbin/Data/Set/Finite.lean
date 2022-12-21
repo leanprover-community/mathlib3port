@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -394,7 +394,7 @@ instance fintypeLeNat (n : ℕ) : Fintype { i | i ≤ n } := by
 
 /-- This is not an instance so that it does not conflict with the one
 in src/order/locally_finite. -/
-def Nat.fintypeIio (n : ℕ) : Fintype (iio n) :=
+def Nat.fintypeIio (n : ℕ) : Fintype (Iio n) :=
   Set.fintypeLtNat n
 #align set.nat.fintype_Iio Set.Nat.fintypeIio
 
@@ -1031,10 +1031,10 @@ so `u n` is related to the image of `{0, 1, ..., n-1}` under `u`.
 are totally bounded.)
 -/
 theorem seq_of_forall_finite_exists {γ : Type _} {P : γ → Set γ → Prop}
-    (h : ∀ t : Set γ, t.Finite → ∃ c, P c t) : ∃ u : ℕ → γ, ∀ n, P (u n) (u '' iio n) :=
+    (h : ∀ t : Set γ, t.Finite → ∃ c, P c t) : ∃ u : ℕ → γ, ∀ n, P (u n) (u '' Iio n) :=
   ⟨fun n =>
     (@Nat.strongRecOn' (fun _ => γ) n) fun n ih =>
-      Classical.choose <| h (range fun m : iio n => ih m.1 m.2) (finite_range _),
+      Classical.choose <| h (range fun m : Iio n => ih m.1 m.2) (finite_range _),
     fun n => by
     classical 
       refine' Nat.strongRecOn' n fun n ih => _
@@ -1197,7 +1197,7 @@ theorem infinite_image_iff {s : Set α} {f : α → β} (hi : InjOn f s) :
 
 theorem infinite_of_inj_on_maps_to {s : Set α} {t : Set β} {f : α → β} (hi : InjOn f s)
     (hm : MapsTo f s t) (hs : s.Infinite) : t.Infinite :=
-  ((infinite_image_iff hi).2 hs).mono (maps_to'.mp hm)
+  ((infinite_image_iff hi).2 hs).mono (mapsTo'.mp hm)
 #align set.infinite_of_inj_on_maps_to Set.infinite_of_inj_on_maps_to
 
 theorem Infinite.exists_ne_map_eq_of_maps_to {s : Set α} {t : Set β} {f : α → β} (hs : s.Infinite)
@@ -1293,11 +1293,11 @@ theorem Finite.supr_binfi_of_monotone {ι ι' α : Type _} [Preorder ι'] [Nonem
   revert hf
   refine' hs.induction_on _ _
   · intro hf
-    simp [supr_const]
+    simp [supᵢ_const]
   · intro a s has hs ihs hf
     rw [ball_insert_iff] at hf
-    simp only [infi_insert, ← ihs hf.2]
-    exact supr_inf_of_monotone hf.1 fun j₁ j₂ hj => infi₂_mono fun i hi => hf.2 i hi hj
+    simp only [infᵢ_insert, ← ihs hf.2]
+    exact supᵢ_inf_of_monotone hf.1 fun j₁ j₂ hj => infᵢ₂_mono fun i hi => hf.2 i hi hj
 #align set.finite.supr_binfi_of_monotone Set.Finite.supr_binfi_of_monotone
 
 theorem Finite.supr_binfi_of_antitone {ι ι' α : Type _} [Preorder ι'] [Nonempty ι']
@@ -1321,7 +1321,7 @@ theorem Finite.infi_bsupr_of_antitone {ι ι' α : Type _} [Preorder ι'] [Nonem
 theorem supr_infi_of_monotone {ι ι' α : Type _} [Finite ι] [Preorder ι'] [Nonempty ι']
     [IsDirected ι' (· ≤ ·)] [Order.Frame α] {f : ι → ι' → α} (hf : ∀ i, Monotone (f i)) :
     (⨆ j, ⨅ i, f i j) = ⨅ i, ⨆ j, f i j := by
-  simpa only [infi_univ] using finite_univ.supr_binfi_of_monotone fun i hi => hf i
+  simpa only [infᵢ_univ] using finite_univ.supr_binfi_of_monotone fun i hi => hf i
 #align supr_infi_of_monotone supr_infi_of_monotone
 
 theorem supr_infi_of_antitone {ι ι' α : Type _} [Finite ι] [Preorder ι'] [Nonempty ι']
@@ -1415,14 +1415,14 @@ variable [SemilatticeSup α] [Nonempty α] {s : Set α}
 
 /-- A finite set is bounded above.-/
 protected theorem Finite.bdd_above (hs : s.Finite) : BddAbove s :=
-  (Finite.induction_on hs bdd_above_empty) fun a s _ _ h => h.insert a
+  (Finite.induction_on hs bddAbove_empty) fun a s _ _ h => h.insert a
 #align set.finite.bdd_above Set.Finite.bdd_above
 
 /-- A finite union of sets which are all bounded above is still bounded above.-/
 theorem Finite.bdd_above_bUnion {I : Set β} {S : β → Set α} (H : I.Finite) :
     BddAbove (⋃ i ∈ I, S i) ↔ ∀ i ∈ I, BddAbove (S i) :=
-  Finite.induction_on H (by simp only [bUnion_empty, bdd_above_empty, ball_empty_iff])
-    fun a s ha _ hs => by simp only [bUnion_insert, ball_insert_iff, bdd_above_union, hs]
+  Finite.induction_on H (by simp only [bUnion_empty, bddAbove_empty, ball_empty_iff])
+    fun a s ha _ hs => by simp only [bUnion_insert, ball_insert_iff, bddAbove_union, hs]
 #align set.finite.bdd_above_bUnion Set.Finite.bdd_above_bUnion
 
 theorem infinite_of_not_bdd_above : ¬BddAbove s → s.Infinite :=

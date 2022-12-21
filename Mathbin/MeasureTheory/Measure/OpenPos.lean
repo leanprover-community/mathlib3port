@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.open_pos
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,42 +135,42 @@ section LinearOrder
 variable {X Y : Type _} [TopologicalSpace X] [LinearOrder X] [OrderTopology X]
   {m : MeasurableSpace X} [TopologicalSpace Y] [T2Space Y] (μ : Measure X) [IsOpenPosMeasure μ]
 
-theorem measure_Ioi_pos [NoMaxOrder X] (a : X) : 0 < μ (ioi a) :=
+theorem measure_Ioi_pos [NoMaxOrder X] (a : X) : 0 < μ (Ioi a) :=
   is_open_Ioi.measure_pos μ nonempty_Ioi
 #align measure_theory.measure.measure_Ioi_pos MeasureTheory.Measure.measure_Ioi_pos
 
-theorem measure_Iio_pos [NoMinOrder X] (a : X) : 0 < μ (iio a) :=
+theorem measure_Iio_pos [NoMinOrder X] (a : X) : 0 < μ (Iio a) :=
   is_open_Iio.measure_pos μ nonempty_Iio
 #align measure_theory.measure.measure_Iio_pos MeasureTheory.Measure.measure_Iio_pos
 
-theorem measure_Ioo_pos [DenselyOrdered X] {a b : X} : 0 < μ (ioo a b) ↔ a < b :=
+theorem measure_Ioo_pos [DenselyOrdered X] {a b : X} : 0 < μ (Ioo a b) ↔ a < b :=
   (is_open_Ioo.measure_pos_iff μ).trans nonempty_Ioo
 #align measure_theory.measure.measure_Ioo_pos MeasureTheory.Measure.measure_Ioo_pos
 
-theorem measure_Ioo_eq_zero [DenselyOrdered X] {a b : X} : μ (ioo a b) = 0 ↔ b ≤ a :=
+theorem measure_Ioo_eq_zero [DenselyOrdered X] {a b : X} : μ (Ioo a b) = 0 ↔ b ≤ a :=
   (is_open_Ioo.measure_eq_zero_iff μ).trans (Ioo_eq_empty_iff.trans not_lt)
 #align measure_theory.measure.measure_Ioo_eq_zero MeasureTheory.Measure.measure_Ioo_eq_zero
 
-theorem eq_on_Ioo_of_ae_eq {a b : X} {f g : X → Y} (hfg : f =ᵐ[μ.restrict (ioo a b)] g)
-    (hf : ContinuousOn f (ioo a b)) (hg : ContinuousOn g (ioo a b)) : EqOn f g (ioo a b) :=
+theorem eq_on_Ioo_of_ae_eq {a b : X} {f g : X → Y} (hfg : f =ᵐ[μ.restrict (Ioo a b)] g)
+    (hf : ContinuousOn f (Ioo a b)) (hg : ContinuousOn g (Ioo a b)) : EqOn f g (Ioo a b) :=
   eq_on_of_ae_eq hfg hf hg Ioo_subset_closure_interior
 #align measure_theory.measure.eq_on_Ioo_of_ae_eq MeasureTheory.Measure.eq_on_Ioo_of_ae_eq
 
 theorem eq_on_Ioc_of_ae_eq [DenselyOrdered X] {a b : X} {f g : X → Y}
-    (hfg : f =ᵐ[μ.restrict (ioc a b)] g) (hf : ContinuousOn f (ioc a b))
-    (hg : ContinuousOn g (ioc a b)) : EqOn f g (ioc a b) :=
+    (hfg : f =ᵐ[μ.restrict (Ioc a b)] g) (hf : ContinuousOn f (Ioc a b))
+    (hg : ContinuousOn g (Ioc a b)) : EqOn f g (Ioc a b) :=
   eq_on_of_ae_eq hfg hf hg (Ioc_subset_closure_interior _ _)
 #align measure_theory.measure.eq_on_Ioc_of_ae_eq MeasureTheory.Measure.eq_on_Ioc_of_ae_eq
 
 theorem eq_on_Ico_of_ae_eq [DenselyOrdered X] {a b : X} {f g : X → Y}
-    (hfg : f =ᵐ[μ.restrict (ico a b)] g) (hf : ContinuousOn f (ico a b))
-    (hg : ContinuousOn g (ico a b)) : EqOn f g (ico a b) :=
+    (hfg : f =ᵐ[μ.restrict (Ico a b)] g) (hf : ContinuousOn f (Ico a b))
+    (hg : ContinuousOn g (Ico a b)) : EqOn f g (Ico a b) :=
   eq_on_of_ae_eq hfg hf hg (Ico_subset_closure_interior _ _)
 #align measure_theory.measure.eq_on_Ico_of_ae_eq MeasureTheory.Measure.eq_on_Ico_of_ae_eq
 
 theorem eq_on_Icc_of_ae_eq [DenselyOrdered X] {a b : X} (hne : a ≠ b) {f g : X → Y}
-    (hfg : f =ᵐ[μ.restrict (icc a b)] g) (hf : ContinuousOn f (icc a b))
-    (hg : ContinuousOn g (icc a b)) : EqOn f g (icc a b) :=
+    (hfg : f =ᵐ[μ.restrict (Icc a b)] g) (hf : ContinuousOn f (Icc a b))
+    (hg : ContinuousOn g (Icc a b)) : EqOn f g (Icc a b) :=
   eq_on_of_ae_eq hfg hf hg (closure_interior_Icc hne).symm.Subset
 #align measure_theory.measure.eq_on_Icc_of_ae_eq MeasureTheory.Measure.eq_on_Icc_of_ae_eq
 

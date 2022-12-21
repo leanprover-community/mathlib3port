@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.nth
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,10 +48,10 @@ variable (p : ℕ → Prop)
 natural number satisfying `p`), or `0` if there is no such number. See also
 `subtype.order_iso_of_nat` for the order isomorphism with ℕ when `p` is infinitely often true. -/
 noncomputable def nth : ℕ → ℕ
-  | n => inf { i : ℕ | p i ∧ ∀ k < n, nth k < i }
+  | n => infₛ { i : ℕ | p i ∧ ∀ k < n, nth k < i }
 #align nat.nth Nat.nth
 
-theorem nth_zero : nth p 0 = inf { i : ℕ | p i } := by
+theorem nth_zero : nth p 0 = infₛ { i : ℕ | p i } := by
   rw [nth]
   simp
 #align nat.nth_zero Nat.nth_zero
@@ -276,7 +276,7 @@ theorem nth_count {n : ℕ} (hpn : p n) : nth p (count p n) = n := by
     apply count_nth_of_infinite p hp
 #align nat.nth_count Nat.nth_count
 
-theorem nth_count_eq_Inf {n : ℕ} : nth p (count p n) = inf { i : ℕ | p i ∧ n ≤ i } := by
+theorem nth_count_eq_Inf {n : ℕ} : nth p (count p n) = infₛ { i : ℕ | p i ∧ n ≤ i } := by
   rw [nth]
   congr
   ext a

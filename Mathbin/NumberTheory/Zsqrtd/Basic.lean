@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -413,7 +413,7 @@ theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) 
     obtain rfl : b = 0 := by
       simp only [ext, hre, eq_self_iff_true, zero_im, him, and_self_iff, zero_re]
     rw [zero_dvd_iff] at hdvd
-    simpa only [hdvd, zero_im, zero_re, not_coprime_zero_zero] using hcoprime
+    simpa only [hdvd, zero_im, zero_re, not_isCoprime_zero_zero] using hcoprime
   · intro z hz hznezero hzdvdu hzdvdv
     apply hz
     obtain ⟨ha, hb⟩ : z ∣ a.re ∧ z ∣ a.im := by

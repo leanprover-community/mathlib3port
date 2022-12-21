@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.stone_cech
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
     ↑u ≤ 𝓝 x ↔ x = joinM u := by
   rw [eq_comm, ← Ultrafilter.coe_le_coe]
   change ↑u ≤ 𝓝 x ↔ ∀ s ∈ x, { v : Ultrafilter α | s ∈ v } ∈ u
-  simp only [TopologicalSpace.nhds_generate_from, le_infi_iff, ultrafilterBasis, le_principal_iff,
+  simp only [TopologicalSpace.nhds_generate_from, le_infᵢ_iff, ultrafilterBasis, le_principal_iff,
     mem_set_of_eq]
   constructor
   · intro h a ha
@@ -108,8 +108,8 @@ theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) �
   simp only [comap_infi, comap_principal]
   intro s hs
   rw [← le_principal_iff]
-  refine' infi_le_of_le { u | s ∈ u } _
-  refine' infi_le_of_le ⟨hs, ⟨s, rfl⟩⟩ _
+  refine' infᵢ_le_of_le { u | s ∈ u } _
+  refine' infᵢ_le_of_le ⟨hs, ⟨s, rfl⟩⟩ _
   exact principal_mono.2 fun a => id
 #align ultrafilter_comap_pure_nhds ultrafilter_comap_pure_nhds
 

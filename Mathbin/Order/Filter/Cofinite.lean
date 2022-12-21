@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.cofinite
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,9 +59,9 @@ theorem has_basis_cofinite : HasBasis cofinite (fun s : Set α => s.Finite) comp
       htf.Subset <| compl_subset_comm.2 hts⟩⟩
 #align filter.has_basis_cofinite Filter.has_basis_cofinite
 
-instance cofiniteNeBot [Infinite α] : NeBot (@cofinite α) :=
+instance cofinite_ne_bot [Infinite α] : NeBot (@cofinite α) :=
   has_basis_cofinite.ne_bot_iff.2 fun s hs => hs.infinite_compl.Nonempty
-#align filter.cofinite_ne_bot Filter.cofiniteNeBot
+#align filter.cofinite_ne_bot Filter.cofinite_ne_bot
 
 theorem frequently_cofinite_iff_infinite {p : α → Prop} :
     (∃ᶠ x in cofinite, p x) ↔ Set.Infinite { x | p x } := by

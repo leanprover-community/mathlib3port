@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.nullstellensatz
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -199,7 +199,7 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
 theorem vanishing_ideal_zero_locus_eq_radical (I : Ideal (MvPolynomial σ k)) :
     vanishingIdeal (zeroLocus I) = I.radical := by
   rw [I.radical_eq_jacobson]
-  refine' le_antisymm (le_Inf _) fun p hp x hx => _
+  refine' le_antisymm (le_infₛ _) fun p hp x hx => _
   · rintro J ⟨hJI, hJ⟩
     obtain ⟨x, hx⟩ := (is_maximal_iff_eq_vanishing_ideal_singleton J).1 hJ
     refine' hx.symm ▸ vanishing_ideal_anti_mono fun y hy p hp => _

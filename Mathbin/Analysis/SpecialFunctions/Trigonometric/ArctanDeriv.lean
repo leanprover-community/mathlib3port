@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.arctan_deriv
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,12 +73,12 @@ theorem cont_diff_at_tan {n x} : ContDiffAt ℝ n tan x ↔ cos x ≠ 0 :=
     (Complex.cont_diff_at_tan.2 <| by exact_mod_cast h).realOfComplex⟩
 #align real.cont_diff_at_tan Real.cont_diff_at_tan
 
-theorem hasDerivAtTanOfMemIoo {x : ℝ} (h : x ∈ ioo (-(π / 2) : ℝ) (π / 2)) :
+theorem hasDerivAtTanOfMemIoo {x : ℝ} (h : x ∈ Ioo (-(π / 2) : ℝ) (π / 2)) :
     HasDerivAt tan (1 / cos x ^ 2) x :=
   hasDerivAtTan (cos_pos_of_mem_Ioo h).ne'
 #align real.has_deriv_at_tan_of_mem_Ioo Real.hasDerivAtTanOfMemIoo
 
-theorem differentiableAtTanOfMemIoo {x : ℝ} (h : x ∈ ioo (-(π / 2) : ℝ) (π / 2)) :
+theorem differentiableAtTanOfMemIoo {x : ℝ} (h : x ∈ Ioo (-(π / 2) : ℝ) (π / 2)) :
     DifferentiableAt ℝ tan x :=
   (hasDerivAtTanOfMemIoo h).DifferentiableAt
 #align real.differentiable_at_tan_of_mem_Ioo Real.differentiableAtTanOfMemIoo

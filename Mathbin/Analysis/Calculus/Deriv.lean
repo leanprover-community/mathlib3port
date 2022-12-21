@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -344,7 +344,7 @@ theorem has_deriv_within_at_diff_singleton :
 
 @[simp]
 theorem has_deriv_within_at_Ioi_iff_Ici [PartialOrder 𝕜] :
-    HasDerivWithinAt f f' (ioi x) x ↔ HasDerivWithinAt f f' (ici x) x := by
+    HasDerivWithinAt f f' (Ioi x) x ↔ HasDerivWithinAt f f' (Ici x) x := by
   rw [← Ici_diff_left, has_deriv_within_at_diff_singleton]
 #align has_deriv_within_at_Ioi_iff_Ici has_deriv_within_at_Ioi_iff_Ici
 
@@ -352,14 +352,14 @@ alias has_deriv_within_at_Ioi_iff_Ici ↔ HasDerivWithinAt.iciOfIoi HasDerivWith
 
 @[simp]
 theorem has_deriv_within_at_Iio_iff_Iic [PartialOrder 𝕜] :
-    HasDerivWithinAt f f' (iio x) x ↔ HasDerivWithinAt f f' (iic x) x := by
+    HasDerivWithinAt f f' (Iio x) x ↔ HasDerivWithinAt f f' (Iic x) x := by
   rw [← Iic_diff_right, has_deriv_within_at_diff_singleton]
 #align has_deriv_within_at_Iio_iff_Iic has_deriv_within_at_Iio_iff_Iic
 
 alias has_deriv_within_at_Iio_iff_Iic ↔ HasDerivWithinAt.iicOfIio HasDerivWithinAt.iioOfIic
 
 theorem HasDerivWithinAt.Ioi_iff_Ioo [LinearOrder 𝕜] [OrderClosedTopology 𝕜] {x y : 𝕜} (h : x < y) :
-    HasDerivWithinAt f f' (ioo x y) x ↔ HasDerivWithinAt f f' (ioi x) x :=
+    HasDerivWithinAt f f' (Ioo x y) x ↔ HasDerivWithinAt f f' (Ioi x) x :=
   has_deriv_within_at_congr_set (is_open_Iio.mem_nhds h) <| by
     rw [Ioi_inter_Iio, inter_eq_left_iff_subset]
     exact Ioo_subset_Iio_self
@@ -539,13 +539,13 @@ theorem deriv_within_mem_iff {f : 𝕜 → F} {t : Set 𝕜} {s : Set F} {x : �
 #align deriv_within_mem_iff deriv_within_mem_iff
 
 theorem differentiable_within_at_Ioi_iff_Ici [PartialOrder 𝕜] :
-    DifferentiableWithinAt 𝕜 f (ioi x) x ↔ DifferentiableWithinAt 𝕜 f (ici x) x :=
+    DifferentiableWithinAt 𝕜 f (Ioi x) x ↔ DifferentiableWithinAt 𝕜 f (Ici x) x :=
   ⟨fun h => h.HasDerivWithinAt.iciOfIoi.DifferentiableWithinAt, fun h =>
     h.HasDerivWithinAt.ioiOfIci.DifferentiableWithinAt⟩
 #align differentiable_within_at_Ioi_iff_Ici differentiable_within_at_Ioi_iff_Ici
 
 theorem deriv_within_Ioi_eq_Ici {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] (f : ℝ → E)
-    (x : ℝ) : derivWithin f (ioi x) x = derivWithin f (ici x) x := by
+    (x : ℝ) : derivWithin f (Ioi x) x = derivWithin f (Ici x) x := by
   by_cases H : DifferentiableWithinAt ℝ f (Ioi x) x
   · have A := H.has_deriv_within_at.Ici_of_Ioi
     have B := (differentiable_within_at_Ioi_iff_Ici.1 H).HasDerivWithinAt
@@ -1362,7 +1362,7 @@ theorem HasStrictDerivAt.scomp (hg : HasStrictDerivAt g₁ g₁' (h x)) (hh : Ha
 
 theorem HasDerivAt.scompHasDerivWithinAt (hg : HasDerivAt g₁ g₁' (h x))
     (hh : HasDerivWithinAt h h' s x) : HasDerivWithinAt (g₁ ∘ h) (h' • g₁') s x :=
-  HasDerivWithinAt.scomp x hg.HasDerivWithinAt hh (maps_to_univ _ _)
+  HasDerivWithinAt.scomp x hg.HasDerivWithinAt hh (mapsTo_univ _ _)
 #align has_deriv_at.scomp_has_deriv_within_at HasDerivAt.scompHasDerivWithinAt
 
 theorem derivWithin.scomp (hg : DifferentiableWithinAt 𝕜' g₁ t' (h x))
@@ -1444,7 +1444,7 @@ theorem HasStrictDerivAt.comp (hh₂ : HasStrictDerivAt h₂ h₂' (h x)) (hh : 
 
 theorem HasDerivAt.compHasDerivWithinAt (hh₂ : HasDerivAt h₂ h₂' (h x))
     (hh : HasDerivWithinAt h h' s x) : HasDerivWithinAt (h₂ ∘ h) (h₂' * h') s x :=
-  hh₂.HasDerivWithinAt.comp x hh (maps_to_univ _ _)
+  hh₂.HasDerivWithinAt.comp x hh (mapsTo_univ _ _)
 #align has_deriv_at.comp_has_deriv_within_at HasDerivAt.compHasDerivWithinAt
 
 theorem derivWithin.comp (hh₂ : DifferentiableWithinAt 𝕜' h₂ s' (h x))
@@ -1506,7 +1506,7 @@ theorem HasFderivWithinAt.compHasDerivWithinAt {t : Set F} (hl : HasFderivWithin
 
 theorem HasFderivAt.compHasDerivWithinAt (hl : HasFderivAt l l' (f x))
     (hf : HasDerivWithinAt f f' s x) : HasDerivWithinAt (l ∘ f) (l' f') s x :=
-  hl.HasFderivWithinAt.compHasDerivWithinAt x hf (maps_to_univ _ _)
+  hl.HasFderivWithinAt.compHasDerivWithinAt x hf (mapsTo_univ _ _)
 #align has_fderiv_at.comp_has_deriv_within_at HasFderivAt.compHasDerivWithinAt
 
 /-- The composition `l ∘ f` where `l : F → E` and `f : 𝕜 → F`, has a derivative equal to the
@@ -2418,7 +2418,7 @@ theorem HasDerivWithinAt.limsup_slope_le' (hf : HasDerivWithinAt f f' s x) (hs :
   (has_deriv_within_at_iff_tendsto_slope' hs).1 hf (IsOpen.mem_nhds is_open_Iio hr)
 #align has_deriv_within_at.limsup_slope_le' HasDerivWithinAt.limsup_slope_le'
 
-theorem HasDerivWithinAt.liminf_right_slope_le (hf : HasDerivWithinAt f f' (ici x) x)
+theorem HasDerivWithinAt.liminf_right_slope_le (hf : HasDerivWithinAt f f' (Ici x) x)
     (hr : f' < r) : ∃ᶠ z in 𝓝[>] x, slope f x z < r :=
   (hf.ioiOfIci.limsup_slope_le' (lt_irrefl x) hr).Frequently
 #align has_deriv_within_at.liminf_right_slope_le HasDerivWithinAt.liminf_right_slope_le
@@ -2470,7 +2470,7 @@ theorem HasDerivWithinAt.limsup_slope_norm_le (hf : HasDerivWithinAt f f' s x) (
 In other words, the limit inferior of this ratio as `z` tends to `x+0`
 is less than or equal to `‖f'‖`. See also `has_deriv_within_at.limsup_norm_slope_le`
 for a stronger version using limit superior and any set `s`. -/
-theorem HasDerivWithinAt.liminf_right_norm_slope_le (hf : HasDerivWithinAt f f' (ici x) x)
+theorem HasDerivWithinAt.liminf_right_norm_slope_le (hf : HasDerivWithinAt f f' (Ici x) x)
     (hr : ‖f'‖ < r) : ∃ᶠ z in 𝓝[>] x, ‖z - x‖⁻¹ * ‖f z - f x‖ < r :=
   (hf.ioiOfIci.limsup_norm_slope_le hr).Frequently
 #align has_deriv_within_at.liminf_right_norm_slope_le HasDerivWithinAt.liminf_right_norm_slope_le
@@ -2486,7 +2486,7 @@ See also
   limit superior and any set `s`;
 * `has_deriv_within_at.liminf_right_norm_slope_le` for a stronger version using
   `‖f z - f x‖` instead of `‖f z‖ - ‖f x‖`. -/
-theorem HasDerivWithinAt.liminf_right_slope_norm_le (hf : HasDerivWithinAt f f' (ici x) x)
+theorem HasDerivWithinAt.liminf_right_slope_norm_le (hf : HasDerivWithinAt f f' (Ici x) x)
     (hr : ‖f'‖ < r) : ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (‖f z‖ - ‖f x‖) < r := by
   have := (hf.Ioi_of_Ici.limsup_slope_norm_le hr).Frequently
   refine' this.mp (eventually.mono self_mem_nhds_within _)

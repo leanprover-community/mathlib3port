@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jesse Reimann, Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.integral.riesz_markov_kakutani
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ variable (Λ : (X →ᵇ ℝ≥0) →ₗ[ℝ≥0] ℝ≥0)
 `λ(K) = inf {Λf | 1≤f on K}`. When X is a compact Hausdorff space, this will be shown to be a
 content, and will be shown to agree with the Riesz measure on the compact subsets `K ⊆ X`. -/
 def rieszContentAux : Compacts X → ℝ≥0 := fun K =>
-  inf (Λ '' { f : X →ᵇ ℝ≥0 | ∀ x ∈ K, (1 : ℝ≥0) ≤ f x })
+  infₛ (Λ '' { f : X →ᵇ ℝ≥0 | ∀ x ∈ K, (1 : ℝ≥0) ≤ f x })
 #align riesz_content_aux rieszContentAux
 
 section RieszMonotone
@@ -64,7 +64,7 @@ theorem riesz_content_aux_image_nonempty (K : Compacts X) :
 monotone: if `K₁ ⊆ K₂` are compact subsets in X, then `λ(K₁) ≤ λ(K₂)`. -/
 theorem riesz_content_aux_mono {K₁ K₂ : Compacts X} (h : K₁ ≤ K₂) :
     rieszContentAux Λ K₁ ≤ rieszContentAux Λ K₂ :=
-  cInf_le_cInf (OrderBot.bdd_below _) (riesz_content_aux_image_nonempty Λ K₂)
+  cInf_le_cInf (OrderBot.bddBelow _) (riesz_content_aux_image_nonempty Λ K₂)
     (image_subset Λ (setOf_subset_setOf.mpr fun f f_hyp x x_in_K₁ => f_hyp x (h x_in_K₁)))
 #align riesz_content_aux_mono riesz_content_aux_mono
 
@@ -76,7 +76,7 @@ section RieszSubadditive
 content of K; namely `λ(K) ≤ Λ f`. -/
 theorem riesz_content_aux_le {K : Compacts X} {f : X →ᵇ ℝ≥0} (h : ∀ x ∈ K, (1 : ℝ≥0) ≤ f x) :
     rieszContentAux Λ K ≤ Λ f :=
-  cInf_le (OrderBot.bdd_below _) ⟨f, ⟨h, rfl⟩⟩
+  cInf_le (OrderBot.bddBelow _) ⟨f, ⟨h, rfl⟩⟩
 #align riesz_content_aux_le riesz_content_aux_le
 
 /-- The Riesz content can be approximated arbitrarily well by evaluating the positive linear

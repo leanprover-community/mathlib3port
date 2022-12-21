@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metrizable_uniformity
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
   dist x y := ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
   dist_self x :=
     (Nnreal.coe_eq_zero _).2 <|
-      nonpos_iff_eq_zero.1 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp [dist_self]
+      nonpos_iff_eq_zero.1 <| (cinfi_le (OrderBot.bddBelow _) []).trans_eq <| by simp [dist_self]
   dist_comm x y :=
     Nnreal.coe_eq.2 <| by 
       refine' reverse_surjective.infi_congr _ fun l => _
@@ -85,7 +85,7 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
     calc
       (⨅ l, (zip_with d (x::l) (l ++ [z])).Sum) ≤
           (zip_with d (x::lxy ++ y::lyz) ((lxy ++ y::lyz) ++ [z])).Sum :=
-        cinfi_le (OrderBot.bdd_below _) (lxy ++ y::lyz)
+        cinfi_le (OrderBot.bddBelow _) (lxy ++ y::lyz)
       _ = (zip_with d (x::lxy) (lxy ++ [y])).Sum + (zip_with d (y::lyz) (lyz ++ [z])).Sum := _
       
     rw [← sum_append, ← zip_with_append, cons_append, ← @singleton_append _ y, append_assoc,
@@ -107,7 +107,7 @@ theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x
         y ≤
       d x y :=
-  Nnreal.coe_le_coe.2 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp
+  Nnreal.coe_le_coe.2 <| (cinfi_le (OrderBot.bddBelow _) []).trans_eq <| by simp
 #align pseudo_metric_space.dist_of_prenndist_le PseudoMetricSpace.dist_of_prenndist_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -245,7 +245,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       intro x y n
       simp only [d]
       split_ifs with h
-      · rw [(strict_anti_pow hr.1 hr.2).le_iff_le, Nat.find_le_iff]
+      · rw [(strictAnti_pow hr.1 hr.2).le_iff_le, Nat.find_le_iff]
         exact ⟨fun ⟨m, hmn, hm⟩ hn => hm (hB.antitone hmn hn), fun h => ⟨n, le_rfl, h⟩⟩
       · push_neg  at h
         simp only [h, not_true, (pow_pos hr.1 _).not_le]

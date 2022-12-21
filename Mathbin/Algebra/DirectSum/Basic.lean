@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -360,7 +360,7 @@ def IsInternal {M S : Type _} [DecidableEq ι] [AddCommMonoid M] [SetLike S M]
 #align direct_sum.is_internal DirectSum.IsInternal
 
 theorem IsInternal.add_submonoid_supr_eq_top {M : Type _} [DecidableEq ι] [AddCommMonoid M]
-    (A : ι → AddSubmonoid M) (h : IsInternal A) : supr A = ⊤ := by
+    (A : ι → AddSubmonoid M) (h : IsInternal A) : supᵢ A = ⊤ := by
   rw [AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom, AddMonoidHom.mrange_top_iff_surjective]
   exact Function.Bijective.surjective h
 #align

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.shrinking_lemma
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ of a closed subset of a proper metric space by nonempty open balls can be shrunk
 nonempty open balls so that each of the new balls has strictly smaller radius than the old one. -/
 theorem exists_subset_Union_ball_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 < r i) (hs : IsClosed s)
     (uf : ∀ x ∈ s, { i | x ∈ ball (c i) (r i) }.Finite) (us : s ⊆ ⋃ i, ball (c i) (r i)) :
-    ∃ r' : ι → ℝ, (s ⊆ ⋃ i, ball (c i) (r' i)) ∧ ∀ i, r' i ∈ ioo 0 (r i) := by
+    ∃ r' : ι → ℝ, (s ⊆ ⋃ i, ball (c i) (r' i)) ∧ ∀ i, r' i ∈ Ioo 0 (r i) := by
   rcases exists_subset_Union_closed_subset hs (fun i => @is_open_ball _ _ (c i) (r i)) uf us with
     ⟨v, hsv, hvc, hcv⟩
   have := fun i => exists_pos_lt_subset_ball (hr i) (hvc i) (hcv i)
@@ -77,7 +77,7 @@ of a proper metric space by nonempty open balls can be shrunk to a new cover by 
 so that each of the new balls has strictly smaller radius than the old one. -/
 theorem exists_Union_ball_eq_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 < r i)
     (uf : ∀ x, { i | x ∈ ball (c i) (r i) }.Finite) (uU : (⋃ i, ball (c i) (r i)) = univ) :
-    ∃ r' : ι → ℝ, (⋃ i, ball (c i) (r' i)) = univ ∧ ∀ i, r' i ∈ ioo 0 (r i) :=
+    ∃ r' : ι → ℝ, (⋃ i, ball (c i) (r' i)) = univ ∧ ∀ i, r' i ∈ Ioo 0 (r i) :=
   let ⟨r', hU, hv⟩ :=
     exists_subset_Union_ball_radius_pos_lt hr is_closed_univ (fun x _ => uf x) uU.ge
   ⟨r', univ_subset_iff.1 hU, hv⟩

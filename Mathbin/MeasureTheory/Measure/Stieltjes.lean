@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.stieltjes
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ open BigOperators Ennreal Nnreal TopologicalSpace MeasureTheory
 structure StieltjesFunction where
   toFun : ℝ → ℝ
   mono' : Monotone to_fun
-  right_continuous' : ∀ x, ContinuousWithinAt to_fun (ici x) x
+  right_continuous' : ∀ x, ContinuousWithinAt to_fun (Ici x) x
 #align stieltjes_function StieltjesFunction
 
 namespace StieltjesFunction
@@ -59,7 +59,7 @@ theorem mono : Monotone f :=
   f.mono'
 #align stieltjes_function.mono StieltjesFunction.mono
 
-theorem right_continuous (x : ℝ) : ContinuousWithinAt f (ici x) x :=
+theorem right_continuous (x : ℝ) : ContinuousWithinAt f (Ici x) x :=
   f.right_continuous' x
 #align stieltjes_function.right_continuous StieltjesFunction.right_continuous
 
@@ -124,19 +124,19 @@ theorem countable_left_lim_ne (f : StieltjesFunction) : Set.Countable { x | left
 /-- Length of an interval. This is the largest monotone function which correctly measures all
 intervals. -/
 def length (s : Set ℝ) : ℝ≥0∞ :=
-  ⨅ (a) (b) (h : s ⊆ ioc a b), ofReal (f b - f a)
+  ⨅ (a) (b) (h : s ⊆ Ioc a b), ofReal (f b - f a)
 #align stieltjes_function.length StieltjesFunction.length
 
 @[simp]
 theorem length_empty : f.length ∅ = 0 :=
-  nonpos_iff_eq_zero.1 <| infi_le_of_le 0 <| infi_le_of_le 0 <| by simp
+  nonpos_iff_eq_zero.1 <| infᵢ_le_of_le 0 <| infᵢ_le_of_le 0 <| by simp
 #align stieltjes_function.length_empty StieltjesFunction.length_empty
 
 @[simp]
-theorem length_Ioc (a b : ℝ) : f.length (ioc a b) = ofReal (f b - f a) := by
+theorem length_Ioc (a b : ℝ) : f.length (Ioc a b) = ofReal (f b - f a) := by
   refine'
-    le_antisymm (infi_le_of_le a <| infi₂_le b subset.rfl)
-      (le_infi fun a' => le_infi fun b' => le_infi fun h => Ennreal.coe_le_coe.2 _)
+    le_antisymm (infᵢ_le_of_le a <| infᵢ₂_le b subset.rfl)
+      (le_infᵢ fun a' => le_infᵢ fun b' => le_infᵢ fun h => Ennreal.coe_le_coe.2 _)
   cases' le_or_lt b a with ab ab
   · rw [Real.to_nnreal_of_nonpos (sub_nonpos.2 (f.mono ab))]
     apply zero_le
@@ -145,7 +145,7 @@ theorem length_Ioc (a b : ℝ) : f.length (ioc a b) = ofReal (f b - f a) := by
 #align stieltjes_function.length_Ioc StieltjesFunction.length_Ioc
 
 theorem length_mono {s₁ s₂ : Set ℝ} (h : s₁ ⊆ s₂) : f.length s₁ ≤ f.length s₂ :=
-  infi_mono fun a => binfi_mono fun b => h.trans
+  infᵢ_mono fun a => binfᵢ_mono fun b => h.trans
 #align stieltjes_function.length_mono StieltjesFunction.length_mono
 
 open MeasureTheory
@@ -163,7 +163,7 @@ theorem outer_le_length (s : Set ℝ) : f.outer s ≤ f.length s :=
 `f b - f a ≤ ∑ f (d i) - f (c i)`. This is an auxiliary technical statement to prove the same
 statement for half-open intervals, the point of the current statement being that one can use
 compactness to reduce it to a finite sum, and argue by induction on the size of the covering set. -/
-theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : icc a b ⊆ ⋃ i, ioo (c i) (d i)) :
+theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b ⊆ ⋃ i, Ioo (c i) (d i)) :
     ofReal (f b - f a) ≤ ∑' i, ofReal (f (d i) - f (c i)) := by
   suffices
     ∀ (s : Finset ℕ) (b) (cv : Icc a b ⊆ ⋃ i ∈ (↑s : Set ℕ), Ioo (c i) (d i)),
@@ -176,7 +176,7 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : icc a b
       simp only [ext_iff, exists_prop, Finset.set_bUnion_coe, mem_Union, forall_const, iff_self_iff,
         finite.mem_to_finset]
     rw [Ennreal.tsum_eq_supr_sum]
-    refine' le_trans _ (le_supr _ hf.to_finset)
+    refine' le_trans _ (le_supᵢ _ hf.to_finset)
     exact this hf.to_finset _ (by simpa only [e] )
   clear ss b
   refine' fun s => Finset.strongInductionOn s fun s IH b cv => _
@@ -198,7 +198,7 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : icc a b
 #align stieltjes_function.length_subadditive_Icc_Ioo StieltjesFunction.length_subadditive_Icc_Ioo
 
 @[simp]
-theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) :=
+theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
   by
   /- It suffices to show that, if `(a, b]` is covered by sets `s i`, then `f b - f a` is bounded
     by `∑ f.length (s i) + ε`. The difficulty is that `f.length` is expressed in terms of half-open
@@ -216,7 +216,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) :=
       (by 
         rw [← f.length_Ioc]
         apply outer_le_length)
-      (le_infi₂ fun s hs => Ennreal.le_of_forall_pos_le_add fun ε εpos h => _)
+      (le_infᵢ₂ fun s hs => Ennreal.le_of_forall_pos_le_add fun ε εpos h => _)
   let δ := ε / 2
   have δpos : 0 < (δ : ℝ≥0∞) := by simpa using εpos.ne'
   rcases Ennreal.exists_pos_sum_of_countable δpos.ne' ℕ with ⟨ε', ε'0, hε⟩
@@ -236,7 +236,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) :=
     conv at this => 
       lhs
       rw [length]
-    simp only [infi_lt_iff, exists_prop] at this
+    simp only [infᵢ_lt_iff, exists_prop] at this
     rcases this with ⟨p, q', spq, hq'⟩
     have : ContinuousWithinAt (fun r => of_real (f r - f p)) (Ioi q') q' := by
       apply ennreal.continuous_of_real.continuous_at.comp_continuous_within_at
@@ -265,9 +265,9 @@ theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) :=
     
 #align stieltjes_function.outer_Ioc StieltjesFunction.outer_Ioc
 
-theorem measurableSetIoi {c : ℝ} : measurable_set[f.outer.caratheodory] (ioi c) := by
+theorem measurableSetIoi {c : ℝ} : measurable_set[f.outer.caratheodory] (Ioi c) := by
   apply outer_measure.of_function_caratheodory fun t => _
-  refine' le_infi fun a => le_infi fun b => le_infi fun h => _
+  refine' le_infᵢ fun a => le_infᵢ fun b => le_infᵢ fun h => _
   refine'
     le_trans
       (add_le_add (f.length_mono <| inter_subset_inter_left _ h)
@@ -292,7 +292,7 @@ theorem measurableSetIoi {c : ℝ} : measurable_set[f.outer.caratheodory] (ioi c
 theorem outer_trim : f.outer.trim = f.outer := by
   refine' le_antisymm (fun s => _) (outer_measure.le_trim _)
   rw [outer_measure.trim_eq_infi]
-  refine' le_infi fun t => le_infi fun ht => Ennreal.le_of_forall_pos_le_add fun ε ε0 h => _
+  refine' le_infᵢ fun t => le_infᵢ fun ht => Ennreal.le_of_forall_pos_le_add fun ε ε0 h => _
   rcases Ennreal.exists_pos_sum_of_countable (Ennreal.coe_pos.2 ε0).ne' ℕ with ⟨ε', ε'0, hε⟩
   refine' le_trans _ (add_le_add_left (le_of_lt hε) _)
   rw [← Ennreal.tsum_add]
@@ -304,14 +304,14 @@ theorem outer_trim : f.outer.trim = f.outer := by
       conv at this => 
         lhs
         rw [length]
-      simp only [infi_lt_iff] at this
+      simp only [infᵢ_lt_iff] at this
       rcases this with ⟨a, b, h₁, h₂⟩
       rw [← f.outer_Ioc] at h₂
       exact ⟨_, h₁, measurableSetIoc, le_of_lt <| by simpa using h₂⟩
   simp at hg
-  apply infi_le_of_le (Union g) _
-  apply infi_le_of_le (ht.trans <| Union_mono fun i => (hg i).1) _
-  apply infi_le_of_le (MeasurableSet.union fun i => (hg i).2.1) _
+  apply infᵢ_le_of_le (Union g) _
+  apply infᵢ_le_of_le (ht.trans <| Union_mono fun i => (hg i).1) _
+  apply infᵢ_le_of_le (MeasurableSet.union fun i => (hg i).2.1) _
   exact le_trans (f.outer.Union _) (Ennreal.tsum_le_tsum fun i => (hg i).2.2)
 #align stieltjes_function.outer_trim StieltjesFunction.outer_trim
 
@@ -333,7 +333,7 @@ protected irreducible_def measure : Measure ℝ :=
 #align stieltjes_function.measure StieltjesFunction.measure
 
 @[simp]
-theorem measure_Ioc (a b : ℝ) : f.Measure (ioc a b) = ofReal (f b - f a) := by
+theorem measure_Ioc (a b : ℝ) : f.Measure (Ioc a b) = ofReal (f b - f a) := by
   rw [StieltjesFunction.measure]
   exact f.outer_Ioc a b
 #align stieltjes_function.measure_Ioc StieltjesFunction.measure_Ioc
@@ -366,7 +366,7 @@ theorem measure_singleton (a : ℝ) : f.Measure {a} = ofReal (f a - leftLim f a)
 #align stieltjes_function.measure_singleton StieltjesFunction.measure_singleton
 
 @[simp]
-theorem measure_Icc (a b : ℝ) : f.Measure (icc a b) = ofReal (f b - leftLim f a) := by
+theorem measure_Icc (a b : ℝ) : f.Measure (Icc a b) = ofReal (f b - leftLim f a) := by
   rcases le_or_lt a b with (hab | hab)
   · have A : Disjoint {a} (Ioc a b) := by simp
     simp [← Icc_union_Ioc_eq_Icc le_rfl hab, -singleton_union, ← Ennreal.of_real_add,
@@ -377,7 +377,7 @@ theorem measure_Icc (a b : ℝ) : f.Measure (icc a b) = ofReal (f b - leftLim f 
 #align stieltjes_function.measure_Icc StieltjesFunction.measure_Icc
 
 @[simp]
-theorem measure_Ioo {a b : ℝ} : f.Measure (ioo a b) = ofReal (leftLim f b - f a) := by
+theorem measure_Ioo {a b : ℝ} : f.Measure (Ioo a b) = ofReal (leftLim f b - f a) := by
   rcases le_or_lt b a with (hab | hab)
   · simp only [hab, measure_empty, Ioo_eq_empty, not_lt]
     symm
@@ -394,7 +394,7 @@ theorem measure_Ioo {a b : ℝ} : f.Measure (ioo a b) = ofReal (leftLim f b - f 
 #align stieltjes_function.measure_Ioo StieltjesFunction.measure_Ioo
 
 @[simp]
-theorem measure_Ico (a b : ℝ) : f.Measure (ico a b) = ofReal (leftLim f b - leftLim f a) := by
+theorem measure_Ico (a b : ℝ) : f.Measure (Ico a b) = ofReal (leftLim f b - leftLim f a) := by
   rcases le_or_lt b a with (hab | hab)
   · simp only [hab, measure_empty, Ico_eq_empty, not_lt]
     symm
@@ -405,7 +405,7 @@ theorem measure_Ico (a b : ℝ) : f.Measure (ico a b) = ofReal (leftLim f b - le
 #align stieltjes_function.measure_Ico StieltjesFunction.measure_Ico
 
 instance : IsLocallyFiniteMeasure f.Measure :=
-  ⟨fun x => ⟨ioo (x - 1) (x + 1), Ioo_mem_nhds (by linarith) (by linarith), by simp⟩⟩
+  ⟨fun x => ⟨Ioo (x - 1) (x + 1), Ioo_mem_nhds (by linarith) (by linarith), by simp⟩⟩
 
 end StieltjesFunction
 

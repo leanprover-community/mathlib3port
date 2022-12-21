@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.subset_properties
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -638,7 +638,7 @@ def coclosedCompact (α : Type _) [TopologicalSpace α] : Filter α :=
 
 theorem has_basis_coclosed_compact :
     (Filter.coclosedCompact α).HasBasis (fun s => IsClosed s ∧ IsCompact s) compl := by
-  simp only [Filter.coclosedCompact, infi_and']
+  simp only [Filter.coclosedCompact, infᵢ_and']
   refine' has_basis_binfi_principal' _ ⟨∅, is_closed_empty, is_compact_empty⟩
   rintro s ⟨hs₁, hs₂⟩ t ⟨ht₁, ht₂⟩
   exact
@@ -656,7 +656,7 @@ theorem mem_coclosed_compact' : s ∈ coclosedCompact α ↔ ∃ t, IsClosed t �
 #align filter.mem_coclosed_compact' Filter.mem_coclosed_compact'
 
 theorem cocompact_le_coclosed_compact : cocompact α ≤ coclosedCompact α :=
-  infi_mono fun s => le_infi fun _ => le_rfl
+  infᵢ_mono fun s => le_infᵢ fun _ => le_rfl
 #align filter.cocompact_le_coclosed_compact Filter.cocompact_le_coclosed_compact
 
 theorem IsCompact.compl_mem_coclosed_compact_of_is_closed (hs : IsCompact s) (hs' : IsClosed s) :
@@ -833,14 +833,14 @@ theorem Filter.cocompact_eq_bot [CompactSpace α] : Filter.cocompact α = ⊥ :=
 #align filter.cocompact_eq_bot Filter.cocompact_eq_bot
 
 instance [NoncompactSpace α] : NeBot (Filter.coclosedCompact α) :=
-  neBotOfLe Filter.cocompact_le_coclosed_compact
+  ne_bot_of_le Filter.cocompact_le_coclosed_compact
 
 theorem noncompact_space_of_ne_bot (h : NeBot (Filter.cocompact α)) : NoncompactSpace α :=
   ⟨fun h' => (Filter.nonempty_of_mem h'.compl_mem_cocompact).ne_empty compl_univ⟩
 #align noncompact_space_of_ne_bot noncompact_space_of_ne_bot
 
 theorem Filter.cocompact_ne_bot_iff : NeBot (Filter.cocompact α) ↔ NoncompactSpace α :=
-  ⟨noncompact_space_of_ne_bot, @Filter.cocompact.Filter.neBot _ _⟩
+  ⟨noncompact_space_of_ne_bot, @Filter.cocompact.Filter.ne_bot _ _⟩
 #align filter.cocompact_ne_bot_iff Filter.cocompact_ne_bot_iff
 
 theorem not_compact_space_iff : ¬CompactSpace α ↔ NoncompactSpace α :=
@@ -848,7 +848,7 @@ theorem not_compact_space_iff : ¬CompactSpace α ↔ NoncompactSpace α :=
 #align not_compact_space_iff not_compact_space_iff
 
 instance : NoncompactSpace ℤ :=
-  noncompact_space_of_ne_bot <| by simp only [Filter.cocompact_eq_cofinite, Filter.cofiniteNeBot]
+  noncompact_space_of_ne_bot <| by simp only [Filter.cocompact_eq_cofinite, Filter.cofinite_ne_bot]
 
 -- Note: We can't make this into an instance because it loops with `finite.compact_space`.
 /-- A compact discrete space is finite. -/
@@ -1124,7 +1124,7 @@ variable [∀ i, TopologicalSpace (π i)]
 theorem is_compact_pi_infinite {s : ∀ i, Set (π i)} :
     (∀ i, IsCompact (s i)) → IsCompact { x : ∀ i, π i | ∀ i, x i ∈ s i } := by
   simp only [is_compact_iff_ultrafilter_le_nhds, nhds_pi, Filter.pi, exists_prop, mem_set_of_eq,
-    le_infi_iff, le_principal_iff]
+    le_infᵢ_iff, le_principal_iff]
   intro h f hfs
   have : ∀ i : ι, ∃ a, a ∈ s i ∧ tendsto (fun x : ∀ i : ι, π i => x i) f (𝓝 a) := by
     refine' fun i => h i (f.map _) (mem_map.2 _)
@@ -1150,7 +1150,7 @@ instance Pi.compact_space [∀ i, CompactSpace (π i)] : CompactSpace (∀ i, π
 type `Π d, κ d` the `filter.Coprod` of filters `filter.cocompact` on `κ d`. -/
 theorem Filter.Coprod_cocompact {δ : Type _} {κ : δ → Type _} [∀ d, TopologicalSpace (κ d)] :
     (Filter.coprod fun d => Filter.cocompact (κ d)) = Filter.cocompact (∀ d, κ d) := by
-  refine' le_antisymm (supr_le fun i => Filter.comap_cocompact_le (continuous_apply i)) _
+  refine' le_antisymm (supᵢ_le fun i => Filter.comap_cocompact_le (continuous_apply i)) _
   refine' compl_surjective.forall.2 fun s H => _
   simp only [compl_mem_Coprod, Filter.mem_cocompact, compl_subset_compl, image_subset_iff] at H⊢
   choose K hKc htK using H

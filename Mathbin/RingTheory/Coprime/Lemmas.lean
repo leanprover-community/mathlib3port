@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Ken Lee, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.coprime.lemmas
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,23 +51,23 @@ theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.C
 alias Nat.is_coprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.Coprime.is_coprime
 
 theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (∏ i in t, s i) x :=
-  (Finset.induction_on t fun _ => is_coprime_one_left) fun b t hbt ih H => by
+  (Finset.induction_on t fun _ => isCoprime_one_left) fun b t hbt ih H => by
     rw [Finset.prod_insert hbt]
     rw [Finset.forall_mem_insert] at H
     exact H.1.mul_left (ih H.2)
 #align is_coprime.prod_left IsCoprime.prod_left
 
 theorem IsCoprime.prod_right : (∀ i ∈ t, IsCoprime x (s i)) → IsCoprime x (∏ i in t, s i) := by
-  simpa only [is_coprime_comm] using IsCoprime.prod_left
+  simpa only [isCoprime_comm] using IsCoprime.prod_left
 #align is_coprime.prod_right IsCoprime.prod_right
 
 theorem IsCoprime.prod_left_iff : IsCoprime (∏ i in t, s i) x ↔ ∀ i ∈ t, IsCoprime (s i) x :=
-  (Finset.induction_on t ((iff_of_true is_coprime_one_left) fun _ => False.elim)) fun b t hbt ih =>
+  (Finset.induction_on t ((iff_of_true isCoprime_one_left) fun _ => False.elim)) fun b t hbt ih =>
     by rw [Finset.prod_insert hbt, IsCoprime.mul_left_iff, ih, Finset.forall_mem_insert]
 #align is_coprime.prod_left_iff IsCoprime.prod_left_iff
 
 theorem IsCoprime.prod_right_iff : IsCoprime x (∏ i in t, s i) ↔ ∀ i ∈ t, IsCoprime x (s i) := by
-  simpa only [is_coprime_comm] using IsCoprime.prod_left_iff
+  simpa only [isCoprime_comm] using IsCoprime.prod_left_iff
 #align is_coprime.prod_right_iff IsCoprime.prod_right_iff
 
 theorem IsCoprime.of_prod_left (H1 : IsCoprime (∏ i in t, s i) x) (i : I) (hit : i ∈ t) :
@@ -202,7 +202,7 @@ theorem IsCoprime.pow_left_iff (hm : 0 < m) : IsCoprime (x ^ m) y ↔ IsCoprime 
 #align is_coprime.pow_left_iff IsCoprime.pow_left_iff
 
 theorem IsCoprime.pow_right_iff (hm : 0 < m) : IsCoprime x (y ^ m) ↔ IsCoprime x y :=
-  is_coprime_comm.trans <| (IsCoprime.pow_left_iff hm).trans <| is_coprime_comm
+  isCoprime_comm.trans <| (IsCoprime.pow_left_iff hm).trans <| isCoprime_comm
 #align is_coprime.pow_right_iff IsCoprime.pow_right_iff
 
 theorem IsCoprime.pow_iff (hm : 0 < m) (hn : 0 < n) : IsCoprime (x ^ m) (y ^ n) ↔ IsCoprime x y :=

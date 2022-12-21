@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.dfinsupp.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1935,13 +1935,13 @@ theorem dfinsupp_sum_add_hom_mem [∀ i, AddZeroClass (β i)] [AddCommMonoid γ]
 `dfinsupp.sum_add_hom`; that is, every element in the `supr` can be produced from taking a finite
 number of non-zero elements of `S i`, coercing them to `γ`, and summing them. -/
 theorem AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom [AddCommMonoid γ]
-    (S : ι → AddSubmonoid γ) : supr S = (Dfinsupp.sumAddHom fun i => (S i).Subtype).mrange := by
+    (S : ι → AddSubmonoid γ) : supᵢ S = (Dfinsupp.sumAddHom fun i => (S i).Subtype).mrange := by
   apply le_antisymm
-  · apply supr_le _
+  · apply supᵢ_le _
     intro i y hy
     exact ⟨Dfinsupp.single i ⟨y, hy⟩, Dfinsupp.sum_add_hom_single _ _ _⟩
   · rintro x ⟨v, rfl⟩
-    exact dfinsupp_sum_add_hom_mem _ v _ fun i _ => (le_supr S i : S i ≤ _) (v i).Prop
+    exact dfinsupp_sum_add_hom_mem _ v _ fun i _ => (le_supᵢ S i : S i ≤ _) (v i).Prop
 #align
   add_submonoid.supr_eq_mrange_dfinsupp_sum_add_hom AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom
 
@@ -1955,7 +1955,7 @@ theorem AddSubmonoid.bsupr_eq_mrange_dfinsupp_sum_add_hom (p : ι → Prop) [Dec
       ((sumAddHom fun i => (S i).Subtype).comp (filterAddMonoidHom _ p)).mrange :=
   by 
   apply le_antisymm
-  · refine' supr₂_le fun i hi y hy => ⟨Dfinsupp.single i ⟨y, hy⟩, _⟩
+  · refine' supᵢ₂_le fun i hi y hy => ⟨Dfinsupp.single i ⟨y, hy⟩, _⟩
     rw [AddMonoidHom.comp_apply, filter_add_monoid_hom_apply, filter_single_pos _ _ hi]
     exact sum_add_hom_single _ _ _
   · rintro x ⟨v, rfl⟩
@@ -1968,14 +1968,14 @@ theorem AddSubmonoid.bsupr_eq_mrange_dfinsupp_sum_add_hom (p : ι → Prop) [Dec
   add_submonoid.bsupr_eq_mrange_dfinsupp_sum_add_hom AddSubmonoid.bsupr_eq_mrange_dfinsupp_sum_add_hom
 
 theorem AddSubmonoid.mem_supr_iff_exists_dfinsupp [AddCommMonoid γ] (S : ι → AddSubmonoid γ)
-    (x : γ) : x ∈ supr S ↔ ∃ f : Π₀ i, S i, Dfinsupp.sumAddHom (fun i => (S i).Subtype) f = x :=
+    (x : γ) : x ∈ supᵢ S ↔ ∃ f : Π₀ i, S i, Dfinsupp.sumAddHom (fun i => (S i).Subtype) f = x :=
   SetLike.ext_iff.mp (AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom S) x
 #align add_submonoid.mem_supr_iff_exists_dfinsupp AddSubmonoid.mem_supr_iff_exists_dfinsupp
 
 /-- A variant of `add_submonoid.mem_supr_iff_exists_dfinsupp` with the RHS fully unfolded. -/
 theorem AddSubmonoid.mem_supr_iff_exists_dfinsupp' [AddCommMonoid γ] (S : ι → AddSubmonoid γ)
     [∀ (i) (x : S i), Decidable (x ≠ 0)] (x : γ) :
-    x ∈ supr S ↔ ∃ f : Π₀ i, S i, (f.Sum fun i xi => ↑xi) = x := by
+    x ∈ supᵢ S ↔ ∃ f : Π₀ i, S i, (f.Sum fun i xi => ↑xi) = x := by
   rw [AddSubmonoid.mem_supr_iff_exists_dfinsupp]
   simp_rw [sum_add_hom_apply]
   congr

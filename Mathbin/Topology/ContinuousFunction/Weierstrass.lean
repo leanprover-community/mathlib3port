@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.weierstrass
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,17 +55,17 @@ our proof of that relies on the fact that `abs` is in the closure of polynomials
 so we may as well get this done first.)
 -/
 theorem polynomial_functions_closure_eq_top (a b : ℝ) :
-    (polynomialFunctions (Set.icc a b)).topologicalClosure = ⊤ := by
+    (polynomialFunctions (Set.Icc a b)).topologicalClosure = ⊤ := by
   by_cases h : a < b
   -- (Otherwise it's easy; we'll deal with that later.)
   · -- We can pullback continuous functions on `[a,b]` to continuous functions on `[0,1]`,
     -- by precomposing with an affine map.
-    let W : C(Set.icc a b, ℝ) →ₐ[ℝ] C(I, ℝ) :=
+    let W : C(Set.Icc a b, ℝ) →ₐ[ℝ] C(I, ℝ) :=
       comp_right_alg_hom ℝ ℝ (iccHomeoI a b h).symm.toContinuousMap
     -- This operation is itself a homeomorphism
     -- (with respect to the norm topologies on continuous functions).
-    let W' : C(Set.icc a b, ℝ) ≃ₜ C(I, ℝ) := comp_right_homeomorph ℝ (iccHomeoI a b h).symm
-    have w : (W : C(Set.icc a b, ℝ) → C(I, ℝ)) = W' := rfl
+    let W' : C(Set.Icc a b, ℝ) ≃ₜ C(I, ℝ) := comp_right_homeomorph ℝ (iccHomeoI a b h).symm
+    have w : (W : C(Set.Icc a b, ℝ) → C(I, ℝ)) = W' := rfl
     -- Thus we take the statement of the Weierstrass approximation theorem for `[0,1]`,
     have p := polynomial_functions_closure_eq_top'
     -- and pullback both sides, obtaining an equation between subalgebras of `C([a,b], ℝ)`.
@@ -79,7 +79,7 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) :
     exact p
   · -- Otherwise, `b ≤ a`, and the interval is a subsingleton,
     -- so all subalgebras are the same anyway.
-    haveI : Subsingleton (Set.icc a b) :=
+    haveI : Subsingleton (Set.Icc a b) :=
       ⟨fun x y =>
         le_antisymm ((x.2.2.trans (not_lt.mp h)).trans y.2.1)
           ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
@@ -90,8 +90,8 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) :
 
 Every real-valued continuous function on `[a,b]` is a uniform limit of polynomials.
 -/
-theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.icc a b, ℝ)) :
-    f ∈ (polynomialFunctions (Set.icc a b)).topologicalClosure := by
+theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.Icc a b, ℝ)) :
+    f ∈ (polynomialFunctions (Set.Icc a b)).topologicalClosure := by
   rw [polynomial_functions_closure_eq_top _ _]
   simp
 #align
@@ -104,7 +104,7 @@ for those who like their epsilons.
 
 Every real-valued continuous function on `[a,b]` is within any `ε > 0` of some polynomial.
 -/
-theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.icc a b, ℝ)) (ε : ℝ)
+theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.Icc a b, ℝ)) (ε : ℝ)
     (pos : 0 < ε) : ∃ p : ℝ[X], ‖p.toContinuousMapOn _ - f‖ < ε := by
   have w := mem_closure_iff_frequently.mp (continuous_map_mem_polynomial_functions_closure _ _ f)
   rw [metric.nhds_basis_ball.frequently_iff] at w
@@ -120,9 +120,9 @@ Every real-valued function `ℝ → ℝ` which is continuous on `[a,b]`
 can be approximated to within any `ε > 0` on `[a,b]` by some polynomial.
 -/
 theorem exists_polynomial_near_of_continuous_on (a b : ℝ) (f : ℝ → ℝ)
-    (c : ContinuousOn f (Set.icc a b)) (ε : ℝ) (pos : 0 < ε) :
-    ∃ p : ℝ[X], ∀ x ∈ Set.icc a b, |p.eval x - f x| < ε := by
-  let f' : C(Set.icc a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
+    (c : ContinuousOn f (Set.Icc a b)) (ε : ℝ) (pos : 0 < ε) :
+    ∃ p : ℝ[X], ∀ x ∈ Set.Icc a b, |p.eval x - f x| < ε := by
+  let f' : C(Set.Icc a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
   obtain ⟨p, b⟩ := exists_polynomial_near_continuous_map a b f' ε Pos
   use p
   rw [norm_lt_iff _ Pos] at b

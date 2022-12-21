@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.locally_ringed_space.has_colimits
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,7 +242,7 @@ instance coequalizer_π_stalk_is_local_ring_hom (x : Y) :
   erw [←
     (coequalizer f.val g.val).Presheaf.germ_res_apply (hom_of_le VleU)
       ⟨_, @Set.mem_image_of_mem _ _ (coequalizer.π f.val g.val).base x V.1 hxV⟩ s]
-  apply RingHom.is_unit_map
+  apply RingHom.isUnit_map
   rw [← is_unit_map_iff ((coequalizer.π f.val g.val : _).c.app _), ← comp_apply,
     nat_trans.naturality, comp_apply, TopCat.Presheaf.pushforward_obj_map, ←
     is_unit_map_iff (Y.presheaf.map (eq_to_hom hV').op), ← comp_apply, ← functor.map_comp]

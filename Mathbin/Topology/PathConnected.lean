@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.path_connected
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,7 +211,7 @@ theorem continuous_uncurry_iff {Y} [TopologicalSpace Y] {g : Y → Path x y} :
 
 /-- A continuous map extending a path to `ℝ`, constant before `0` and after `1`. -/
 def extend : ℝ → X :=
-  iccExtend zero_le_one γ
+  IccExtend zero_le_one γ
 #align path.extend Path.extend
 
 /-- See Note [continuity lemma statement]. -/
@@ -236,13 +236,13 @@ theorem Filter.Tendsto.path_extend {X Y : Type _} [TopologicalSpace X] [Topologi
 theorem ContinuousAt.path_extend {g : Y → ℝ} {l r : Y → X} (γ : ∀ y, Path (l y) (r y)) {y : Y}
     (hγ : ContinuousAt (↿γ) (y, projIcc 0 1 zero_le_one (g y))) (hg : ContinuousAt g y) :
     ContinuousAt (fun i => (γ i).extend (g i)) y :=
-  hγ.iccExtend (fun x => γ x) hg
+  hγ.IccExtend (fun x => γ x) hg
 #align continuous_at.path_extend ContinuousAt.path_extend
 
 @[simp]
 theorem extend_extends {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t : ℝ}
-    (ht : t ∈ (icc 0 1 : Set ℝ)) : γ.extend t = γ ⟨t, ht⟩ :=
-  Icc_extend_of_mem _ γ ht
+    (ht : t ∈ (Icc 0 1 : Set ℝ)) : γ.extend t = γ ⟨t, ht⟩ :=
+  IccExtend_of_mem _ γ ht
 #align path.extend_extends Path.extend_extends
 
 theorem extend_zero : γ.extend 0 = x := by simp
@@ -253,24 +253,24 @@ theorem extend_one : γ.extend 1 = y := by simp
 
 @[simp]
 theorem extend_extends' {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b)
-    (t : (icc 0 1 : Set ℝ)) : γ.extend t = γ t :=
+    (t : (Icc 0 1 : Set ℝ)) : γ.extend t = γ t :=
   Icc_extend_coe _ γ t
 #align path.extend_extends' Path.extend_extends'
 
 @[simp]
 theorem extend_range {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) :
     range γ.extend = range γ :=
-  Icc_extend_range _ γ
+  IccExtend_range _ γ
 #align path.extend_range Path.extend_range
 
 theorem extend_of_le_zero {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t : ℝ}
     (ht : t ≤ 0) : γ.extend t = a :=
-  (Icc_extend_of_le_left _ _ ht).trans γ.source
+  (IccExtend_of_le_left _ _ ht).trans γ.source
 #align path.extend_of_le_zero Path.extend_of_le_zero
 
 theorem extend_of_one_le {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t : ℝ}
     (ht : 1 ≤ t) : γ.extend t = b :=
-  (Icc_extend_of_right_le _ _ ht).trans γ.target
+  (IccExtend_of_right_le _ _ ht).trans γ.target
 #align path.extend_of_one_le Path.extend_of_one_le
 
 @[simp]

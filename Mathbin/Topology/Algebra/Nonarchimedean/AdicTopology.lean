@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.adic_topology
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ theorem has_basis_nhds_adic (I : Ideal R) (x : R) :
 
 variable (I : Ideal R) (M : Type _) [AddCommGroup M] [Module R M]
 
-theorem adic_module_basis :
+theorem adicModuleBasis :
     I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
   { inter := fun i j =>
       ⟨max i j,
@@ -125,13 +125,13 @@ theorem adic_module_basis :
       ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩, fun a a_in => by
         replace a_in : a ∈ I ^ i := by simpa [(I ^ i).mul_top] using a_in
         exact smul_mem_smul a_in mem_top⟩ }
-#align ideal.adic_module_basis Ideal.adic_module_basis
+#align ideal.adic_module_basis Ideal.adicModuleBasis
 
 /-- The topology on a `R`-module `M` associated to an ideal `M`. Submodules $I^n M$,
 written `I^n • ⊤` form a basis of neighborhoods of zero. -/
 def adicModuleTopology : TopologicalSpace M :=
   @ModuleFilterBasis.topology R M _ I.adicBasis.topology _ _
-    (I.RingFilterBasis.ModuleFilterBasis (I.adic_module_basis M))
+    (I.RingFilterBasis.ModuleFilterBasis (I.adicModuleBasis M))
 #align ideal.adic_module_topology Ideal.adicModuleTopology
 
 /-- The elements of the basis of neighborhoods of zero for the `I`-adic topology

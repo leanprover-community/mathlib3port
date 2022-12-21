@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.mul_action
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,9 +170,9 @@ variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [HasSmul M X]
 
 @[to_additive]
 theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)}
-    (h : ∀ t ∈ ts, @HasContinuousSmul M X _ _ t) : @HasContinuousSmul M X _ _ (inf ts) :=
+    (h : ∀ t ∈ ts, @HasContinuousSmul M X _ _ t) : @HasContinuousSmul M X _ _ (infₛ ts) :=
   { continuous_smul := by 
-      rw [← @Inf_singleton _ _ ‹TopologicalSpace M›]
+      rw [← @infₛ_singleton _ _ ‹TopologicalSpace M›]
       exact
         continuous_Inf_rng.2 fun t ht =>
           continuous_Inf_dom₂ (Eq.refl _) ht
@@ -188,7 +188,7 @@ theorem has_continuous_smul_infi {ts' : ι → TopologicalSpace X}
 @[to_additive]
 theorem has_continuous_smul_inf {t₁ t₂ : TopologicalSpace X} [@HasContinuousSmul M X _ _ t₁]
     [@HasContinuousSmul M X _ _ t₂] : @HasContinuousSmul M X _ _ (t₁ ⊓ t₂) := by
-  rw [inf_eq_infi]
+  rw [inf_eq_infᵢ]
   refine' has_continuous_smul_infi fun b => _
   cases b <;> assumption
 #align has_continuous_smul_inf has_continuous_smul_inf

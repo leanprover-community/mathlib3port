@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.is_adjoin_root
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -715,7 +715,7 @@ theorem minpoly_eq [IsDomain R] [IsDomain S] [NoZeroSmulDivisors R S] [Normalize
     eq_of_monic_of_associated h.Monic (minpoly.monic h.is_integral_root) <| by
       convert
           Associated.mul_left (minpoly R h.root) <|
-            associated_one_iff_is_unit.2 <|
+            associated_one_iff_isUnit.2 <|
               (hirr.is_unit_or_is_unit hq).resolve_left <| minpoly.not_is_unit R h.root <;>
         rw [mul_one]
 #align is_adjoin_root_monic.minpoly_eq IsAdjoinRootMonic.minpoly_eq

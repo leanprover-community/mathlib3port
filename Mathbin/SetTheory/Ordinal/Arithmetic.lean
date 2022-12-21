@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.arithmetic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ instance add_contravariant_class_le : ContravariantClass Ordinal.{u} Ordinal.{u}
       (induction_on b) fun β₁ s₁ hs₁ =>
         (induction_on c) fun β₂ s₂ hs₂ ⟨f⟩ =>
           ⟨have fl : ∀ a, f (Sum.inl a) = Sum.inl a := fun a => by
-              simpa only [InitialSeg.trans_apply, InitialSeg.le_add_apply] using
+              simpa only [InitialSeg.trans_apply, InitialSeg.leAdd_apply] using
                 @InitialSeg.eq _ _ _ _ (@Sum.Lex.is_well_order _ _ _ _ hr hs₂)
                   ((InitialSeg.leAdd r s₁).trans f) (InitialSeg.leAdd r s₂) a
             have : ∀ b, { b' // f (Sum.inr b) = Sum.inr b' } := by
@@ -527,7 +527,7 @@ theorem sub_nonempty {a b : Ordinal} : { o | a ≤ b + o }.Nonempty :=
 
 /-- `a - b` is the unique ordinal satisfying `b + (a - b) = a` when `b ≤ a`. -/
 instance : Sub Ordinal :=
-  ⟨fun a b => inf { o | a ≤ b + o }⟩
+  ⟨fun a b => infₛ { o | a ≤ b + o }⟩
 
 theorem le_add_sub (a b : Ordinal) : a ≤ b + (a - b) :=
   Inf_mem sub_nonempty
@@ -859,14 +859,14 @@ theorem div_nonempty {a b : Ordinal} (h : b ≠ 0) : { o | a < b * succ o }.None
 
 /-- `a / b` is the unique ordinal `o` satisfying `a = b * o + o'` with `o' < b`. -/
 instance : Div Ordinal :=
-  ⟨fun a b => if h : b = 0 then 0 else inf { o | a < b * succ o }⟩
+  ⟨fun a b => if h : b = 0 then 0 else infₛ { o | a < b * succ o }⟩
 
 @[simp]
 theorem div_zero (a : Ordinal) : a / 0 = 0 :=
   dif_pos rfl
 #align ordinal.div_zero Ordinal.div_zero
 
-theorem div_def (a) {b : Ordinal} (h : b ≠ 0) : a / b = inf { o | a < b * succ o } :=
+theorem div_def (a) {b : Ordinal} (h : b ≠ 0) : a / b = infₛ { o | a < b * succ o } :=
   dif_neg h
 #align ordinal.div_def Ordinal.div_def
 
@@ -1199,18 +1199,18 @@ theorem comp_family_of_bfamily {o} (f : ∀ a < o, α) (g : α → β) :
 
 /-- The supremum of a family of ordinals -/
 def sup {ι : Type u} (f : ι → Ordinal.{max u v}) : Ordinal.{max u v} :=
-  supr f
+  supᵢ f
 #align ordinal.sup Ordinal.sup
 
 @[simp]
-theorem Sup_eq_sup {ι : Type u} (f : ι → Ordinal.{max u v}) : sup (Set.range f) = sup f :=
+theorem Sup_eq_sup {ι : Type u} (f : ι → Ordinal.{max u v}) : supₛ (Set.range f) = sup f :=
   rfl
 #align ordinal.Sup_eq_sup Ordinal.Sup_eq_sup
 
 /-- The range of an indexed ordinal function, whose outputs live in a higher universe than the
     inputs, is always bounded above. See `ordinal.lsub` for an explicit bound. -/
 theorem bdd_above_range {ι : Type u} (f : ι → Ordinal.{max u v}) : BddAbove (Set.range f) :=
-  ⟨(supr (succ ∘ card ∘ f)).ord, by 
+  ⟨(supᵢ (succ ∘ card ∘ f)).ord, by 
     rintro a ⟨i, rfl⟩
     exact le_of_lt (Cardinal.lt_ord.2 ((lt_succ _).trans_le (le_csupr (bdd_above_range _) _)))⟩
 #align ordinal.bdd_above_range Ordinal.bdd_above_range
@@ -1314,8 +1314,8 @@ theorem le_sup_shrink_equiv {s : Set Ordinal.{u}} (hs : Small.{u} s) (a) (ha : a
   rw [symm_apply_apply]
 #align ordinal.le_sup_shrink_equiv Ordinal.le_sup_shrink_equiv
 
-instance small_Iio (o : Ordinal.{u}) : Small.{u} (Set.iio o) :=
-  let f : o.out.α → Set.iio o := fun x => ⟨typein (· < ·) x, typein_lt_self x⟩
+instance small_Iio (o : Ordinal.{u}) : Small.{u} (Set.Iio o) :=
+  let f : o.out.α → Set.Iio o := fun x => ⟨typein (· < ·) x, typein_lt_self x⟩
   let hf : Surjective f := fun b =>
     ⟨enum (· < ·) b.val
         (by 
@@ -1325,13 +1325,13 @@ instance small_Iio (o : Ordinal.{u}) : Small.{u} (Set.iio o) :=
   small_of_surjective hf
 #align ordinal.small_Iio Ordinal.small_Iio
 
-instance small_Iic (o : Ordinal.{u}) : Small.{u} (Set.iic o) := by
+instance small_Iic (o : Ordinal.{u}) : Small.{u} (Set.Iic o) := by
   rw [← Iio_succ]
   infer_instance
 #align ordinal.small_Iic Ordinal.small_Iic
 
 theorem bdd_above_iff_small {s : Set Ordinal.{u}} : BddAbove s ↔ Small.{u} s :=
-  ⟨fun ⟨a, h⟩ => small_subset <| show s ⊆ iic a from fun x hx => h hx, fun h =>
+  ⟨fun ⟨a, h⟩ => small_subset <| show s ⊆ Iic a from fun x hx => h hx, fun h =>
     ⟨sup.{u, u} fun x => ((@equivShrink s h).symm x).val, le_sup_shrink_equiv h⟩⟩
 #align ordinal.bdd_above_iff_small Ordinal.bdd_above_iff_small
 
@@ -1340,13 +1340,13 @@ theorem bdd_above_of_small (s : Set Ordinal.{u}) [h : Small.{u} s] : BddAbove s 
 #align ordinal.bdd_above_of_small Ordinal.bdd_above_of_small
 
 theorem sup_eq_Sup {s : Set Ordinal.{u}} (hs : Small.{u} s) :
-    (sup.{u, u} fun x => (@equivShrink s hs).symm x) = sup s :=
+    (sup.{u, u} fun x => (@equivShrink s hs).symm x) = supₛ s :=
   let hs' := bdd_above_iff_small.2 hs
   ((cSup_le_iff' hs').2 (le_sup_shrink_equiv hs)).antisymm'
     (sup_le fun x => le_cSup hs' (Subtype.mem _))
 #align ordinal.sup_eq_Sup Ordinal.sup_eq_Sup
 
-theorem Sup_ord {s : Set Cardinal.{u}} (hs : BddAbove s) : (sup s).ord = sup (ord '' s) :=
+theorem Sup_ord {s : Set Cardinal.{u}} (hs : BddAbove s) : (supₛ s).ord = supₛ (ord '' s) :=
   eq_of_forall_ge_iff fun a => by
     rw [cSup_le_iff'
         (bdd_above_iff_small.2 (@small_image _ _ _ s (Cardinal.bdd_above_iff_small.1 hs))),
@@ -1354,9 +1354,9 @@ theorem Sup_ord {s : Set Cardinal.{u}} (hs : BddAbove s) : (sup s).ord = sup (or
     simp [ord_le]
 #align ordinal.Sup_ord Ordinal.Sup_ord
 
-theorem supr_ord {ι} {f : ι → Cardinal} (hf : BddAbove (range f)) : (supr f).ord = ⨆ i, (f i).ord :=
+theorem supr_ord {ι} {f : ι → Cardinal} (hf : BddAbove (range f)) : (supᵢ f).ord = ⨆ i, (f i).ord :=
   by 
-  unfold supr
+  unfold supᵢ
   convert Sup_ord hf
   rw [range_comp]
 #align ordinal.supr_ord Ordinal.supr_ord
@@ -1401,7 +1401,7 @@ theorem sup_eq_bsup' {o ι} (r : ι → ι → Prop) [IsWellOrder ι r] (ho : ty
 #align ordinal.sup_eq_bsup' Ordinal.sup_eq_bsup'
 
 @[simp]
-theorem Sup_eq_bsup {o} (f : ∀ a < o, Ordinal) : sup (brange o f) = bsup o f := by
+theorem Sup_eq_bsup {o} (f : ∀ a < o, Ordinal) : supₛ (brange o f) = bsup o f := by
   congr
   rw [range_family_of_bfamily]
 #align ordinal.Sup_eq_bsup Ordinal.Sup_eq_bsup
@@ -1928,7 +1928,7 @@ theorem IsNormal.eq_iff_zero_and_succ {f g : Ordinal.{u} → Ordinal.{u}} (hf : 
 
 /-- The minimum excluded ordinal in a family of ordinals. -/
 def mex {ι : Type u} (f : ι → Ordinal.{max u v}) : Ordinal :=
-  inf (Set.range fᶜ)
+  infₛ (Set.range fᶜ)
 #align ordinal.mex Ordinal.mex
 
 theorem mex_not_mem_range {ι : Type u} (f : ι → Ordinal.{max u v}) : mex f ∉ Set.range f :=
@@ -2053,7 +2053,7 @@ section
 
 /-- Enumerator function for an unbounded set of ordinals. -/
 def enumOrd (S : Set Ordinal.{u}) : Ordinal → Ordinal :=
-  lt_wf.fix fun o f => inf (S ∩ Set.ici (blsub.{u, u} o f))
+  lt_wf.fix fun o f => infₛ (S ∩ Set.Ici (blsub.{u, u} o f))
 #align ordinal.enum_ord Ordinal.enumOrd
 
 variable {S : Set Ordinal.{u}}
@@ -2061,18 +2061,18 @@ variable {S : Set Ordinal.{u}}
 /-- The equation that characterizes `enum_ord` definitionally. This isn't the nicest expression to
     work with, so consider using `enum_ord_def` instead. -/
 theorem enum_ord_def' (o) :
-    enumOrd S o = inf (S ∩ Set.ici (blsub.{u, u} o fun a _ => enumOrd S a)) :=
+    enumOrd S o = infₛ (S ∩ Set.Ici (blsub.{u, u} o fun a _ => enumOrd S a)) :=
   lt_wf.fix_eq _ _
 #align ordinal.enum_ord_def' Ordinal.enum_ord_def'
 
 /-- The set in `enum_ord_def'` is nonempty. -/
-theorem enum_ord_def'_nonempty (hS : Unbounded (· < ·) S) (a) : (S ∩ Set.ici a).Nonempty :=
+theorem enum_ord_def'_nonempty (hS : Unbounded (· < ·) S) (a) : (S ∩ Set.Ici a).Nonempty :=
   let ⟨b, hb, hb'⟩ := hS a
   ⟨b, hb, le_of_not_gt hb'⟩
 #align ordinal.enum_ord_def'_nonempty Ordinal.enum_ord_def'_nonempty
 
 private theorem enum_ord_mem_aux (hS : Unbounded (· < ·) S) (o) :
-    enumOrd S o ∈ S ∩ Set.ici (blsub.{u, u} o fun c _ => enumOrd S c) := by
+    enumOrd S o ∈ S ∩ Set.Ici (blsub.{u, u} o fun c _ => enumOrd S c) := by
   rw [enum_ord_def']
   exact Inf_mem (enum_ord_def'_nonempty hS _)
 #align ordinal.enum_ord_mem_aux ordinal.enum_ord_mem_aux
@@ -2091,7 +2091,7 @@ theorem enum_ord_strict_mono (hS : Unbounded (· < ·) S) : StrictMono (enumOrd 
 #align ordinal.enum_ord_strict_mono Ordinal.enum_ord_strict_mono
 
 /-- A more workable definition for `enum_ord`. -/
-theorem enum_ord_def (o) : enumOrd S o = inf (S ∩ { b | ∀ c, c < o → enumOrd S c < b }) := by
+theorem enum_ord_def (o) : enumOrd S o = infₛ (S ∩ { b | ∀ c, c < o → enumOrd S c < b }) := by
   rw [enum_ord_def']
   congr ; ext
   exact ⟨fun h a hao => (lt_blsub.{u, u} _ _ hao).trans_le h, blsub_le⟩
@@ -2127,7 +2127,7 @@ theorem enum_ord_univ : enumOrd Set.univ = id := by
 #align ordinal.enum_ord_univ Ordinal.enum_ord_univ
 
 @[simp]
-theorem enum_ord_zero : enumOrd S 0 = inf S := by
+theorem enum_ord_zero : enumOrd S 0 = infₛ S := by
   rw [enum_ord_def]
   simp [Ordinal.not_lt_zero]
 #align ordinal.enum_ord_zero Ordinal.enum_ord_zero
@@ -2149,7 +2149,7 @@ theorem enum_ord_le_of_subset {S T : Set Ordinal} (hS : Unbounded (· < ·) S) (
 
 theorem enum_ord_surjective (hS : Unbounded (· < ·) S) : ∀ s ∈ S, ∃ a, enumOrd S a = s :=
   fun s hs =>
-  ⟨sup { a | enumOrd S a ≤ s }, by 
+  ⟨supₛ { a | enumOrd S a ≤ s }, by 
     apply le_antisymm
     · rw [enum_ord_def]
       refine' cInf_le' ⟨hs, fun a ha => _⟩
@@ -2417,7 +2417,7 @@ theorem opow_mul (a b c : Ordinal) : (a^b * c) = ((a^b)^c) := by
     `w < b ^ u`. -/
 @[pp_nodot]
 def log (b : Ordinal) (x : Ordinal) : Ordinal :=
-  if h : 1 < b then pred (inf { o | x < (b^o) }) else 0
+  if h : 1 < b then pred (infₛ { o | x < (b^o) }) else 0
 #align ordinal.log Ordinal.log
 
 /-- The set in the definition of `log` is nonempty. -/
@@ -2425,7 +2425,7 @@ theorem log_nonempty {b x : Ordinal} (h : 1 < b) : { o | x < (b^o) }.Nonempty :=
   ⟨_, succ_le_iff.1 (right_le_opow _ h)⟩
 #align ordinal.log_nonempty Ordinal.log_nonempty
 
-theorem log_def {b : Ordinal} (h : 1 < b) (x : Ordinal) : log b x = pred (inf { o | x < (b^o) }) :=
+theorem log_def {b : Ordinal} (h : 1 < b) (x : Ordinal) : log b x = pred (infₛ { o | x < (b^o) }) :=
   by simp only [log, dif_pos h]
 #align ordinal.log_def Ordinal.log_def
 
@@ -2459,7 +2459,7 @@ theorem log_one_left : ∀ b, log 1 b = 0 :=
 #align ordinal.log_one_left Ordinal.log_one_left
 
 theorem succ_log_def {b x : Ordinal} (hb : 1 < b) (hx : x ≠ 0) :
-    succ (log b x) = inf { o | x < (b^o) } := by
+    succ (log b x) = infₛ { o | x < (b^o) } := by
   let t := Inf { o | x < (b^o) }
   have : x < (b^t) := Inf_mem (log_nonempty hb)
   rcases zero_or_succ_or_limit t with (h | h | h)

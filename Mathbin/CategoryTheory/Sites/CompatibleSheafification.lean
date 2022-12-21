@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.compatible_sheafification
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,7 +162,7 @@ variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
 @[simp]
 theorem sheafify_comp_iso_inv_eq_sheafify_lift :
     (J.sheafifyCompIso F P).inv =
-      J.sheafifyLift (whiskerRight (J.toSheafify _) _) ((J.sheafifyIsSheaf _).comp _) :=
+      J.sheafifyLift (whiskerRight (J.toSheafify _) _) ((J.sheafify_is_sheaf _).comp _) :=
   by 
   apply J.sheafify_lift_unique
   rw [iso.comp_inv_eq]

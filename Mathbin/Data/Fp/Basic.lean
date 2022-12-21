@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fp.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ def Float.isFinite : Float → Bool
 def toRat : ∀ f : Float, f.isFinite → ℚ
   | float.finite s e m f, _ =>
     let (n, d) := Int.shift2 m 1 e
-    let r := Rat.mkNat n d
+    let r := mkRat n d
     if s then -r else r
 #align fp.to_rat Fp.toRat
 
@@ -142,7 +142,7 @@ unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
   let e₂ := if n₁ < d₁ then e₁ - 1 else e₁
   let e₃ := max e₂ emin
   cases' h₂ : Int.shift2 d.1 n.1 (e₃ + prec) with d₂ n₂
-  let r := Rat.mkNat n₂ d₂
+  let r := mkRat n₂ d₂
   let m := r.floor
   refine' (float.finite ff e₃ (Int.toNat m) _, r.denom = 1)
   · exact undefined

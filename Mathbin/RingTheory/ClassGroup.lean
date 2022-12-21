@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.class_group
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -304,7 +304,7 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
     refine' ⟨Units.mk0 (algebraMap R _ a) fa_ne_zero, _⟩
     rw [_root_.eq_inv_mul_iff_mul_eq, eq_comm, mul_comm I]
     apply Units.ext
-    simp only [FractionalIdeal.coe_mk0, FractionalIdeal.map_canonical_equiv_mk0, SetLike.coe_mk,
+    simp only [FractionalIdeal.coe_mk0, FractionalIdeal.map_canonical_equiv_mk0, [anonymous],
       Units.val_mk0, coe_to_principal_ideal, coe_coe, Units.val_mul,
       FractionalIdeal.eq_span_singleton_mul]
     constructor

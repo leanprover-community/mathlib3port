@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,12 +128,12 @@ theorem prehaar_nonneg (K₀ : PositiveCompacts G) {U : Set G} (K : Compacts G) 
   For all `U`, we can show that `prehaar K₀ U ∈ haar_product K₀`. -/
 @[to_additive "additive version of `measure_theory.measure.haar.haar_product`"]
 def haarProduct (K₀ : Set G) : Set (Compacts G → ℝ) :=
-  pi univ fun K => icc 0 <| index (K : Set G) K₀
+  pi univ fun K => Icc 0 <| index (K : Set G) K₀
 #align measure_theory.measure.haar.haar_product MeasureTheory.Measure.Haar.haarProduct
 
 @[simp, to_additive]
 theorem mem_prehaar_empty {K₀ : Set G} {f : Compacts G → ℝ} :
-    f ∈ haarProduct K₀ ↔ ∀ K : Compacts G, f K ∈ icc (0 : ℝ) (index (K : Set G) K₀) := by
+    f ∈ haarProduct K₀ ↔ ∀ K : Compacts G, f K ∈ Icc (0 : ℝ) (index (K : Set G) K₀) := by
   simp only [haar_product, pi, forall_prop_of_true, mem_univ, mem_set_of_eq]
 #align measure_theory.measure.haar.mem_prehaar_empty MeasureTheory.Measure.Haar.mem_prehaar_empty
 
@@ -602,7 +602,7 @@ theorem haar_content_outer_measure_self_pos {K₀ : PositiveCompacts G} :
     0 < (haarContent K₀).OuterMeasure K₀ := by
   apply ennreal.zero_lt_one.trans_le
   rw [content.outer_measure_eq_infi]
-  refine' le_infi₂ fun U hU => le_infi fun hK₀ => le_trans _ <| le_supr₂ K₀.to_compacts hK₀
+  refine' le_infᵢ₂ fun U hU => le_infᵢ fun hK₀ => le_trans _ <| le_supᵢ₂ K₀.to_compacts hK₀
   exact haar_content_self.ge
 #align
   measure_theory.measure.haar.haar_content_outer_measure_self_pos MeasureTheory.Measure.Haar.haar_content_outer_measure_self_pos

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.dfinsupp
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -320,13 +320,13 @@ theorem dfinsupp_sum_add_hom_mem {β : ι → Type _} [∀ i, AddZeroClass (β i
 every element in the `supr` can be produced from taking a finite number of non-zero elements
 of `p i`, coercing them to `N`, and summing them. -/
 theorem supr_eq_range_dfinsupp_lsum (p : ι → Submodule R N) :
-    supr p = (Dfinsupp.lsum ℕ fun i => (p i).Subtype).range := by
+    supᵢ p = (Dfinsupp.lsum ℕ fun i => (p i).Subtype).range := by
   apply le_antisymm
-  · apply supr_le _
+  · apply supᵢ_le _
     intro i y hy
     exact ⟨Dfinsupp.single i ⟨y, hy⟩, Dfinsupp.sum_add_hom_single _ _ _⟩
   · rintro x ⟨v, rfl⟩
-    exact dfinsupp_sum_add_hom_mem _ v _ fun i _ => (le_supr p i : p i ≤ _) (v i).Prop
+    exact dfinsupp_sum_add_hom_mem _ v _ fun i _ => (le_supᵢ p i : p i ≤ _) (v i).Prop
 #align submodule.supr_eq_range_dfinsupp_lsum Submodule.supr_eq_range_dfinsupp_lsum
 
 /-- The bounded supremum of a family of commutative additive submonoids is equal to the range of
@@ -338,7 +338,7 @@ theorem bsupr_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι
       ((Dfinsupp.lsum ℕ fun i => (S i).Subtype).comp (Dfinsupp.filterLinearMap R _ p)).range :=
   by 
   apply le_antisymm
-  · refine' supr₂_le fun i hi y hy => ⟨Dfinsupp.single i ⟨y, hy⟩, _⟩
+  · refine' supᵢ₂_le fun i hi y hy => ⟨Dfinsupp.single i ⟨y, hy⟩, _⟩
     rw [LinearMap.comp_apply, filter_linear_map_apply, filter_single_pos _ _ hi]
     exact Dfinsupp.sum_add_hom_single _ _ _
   · rintro x ⟨v, rfl⟩
@@ -350,13 +350,13 @@ theorem bsupr_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι
 #align submodule.bsupr_eq_range_dfinsupp_lsum Submodule.bsupr_eq_range_dfinsupp_lsum
 
 theorem mem_supr_iff_exists_dfinsupp (p : ι → Submodule R N) (x : N) :
-    x ∈ supr p ↔ ∃ f : Π₀ i, p i, Dfinsupp.lsum ℕ (fun i => (p i).Subtype) f = x :=
+    x ∈ supᵢ p ↔ ∃ f : Π₀ i, p i, Dfinsupp.lsum ℕ (fun i => (p i).Subtype) f = x :=
   SetLike.ext_iff.mp (supr_eq_range_dfinsupp_lsum p) x
 #align submodule.mem_supr_iff_exists_dfinsupp Submodule.mem_supr_iff_exists_dfinsupp
 
 /-- A variant of `submodule.mem_supr_iff_exists_dfinsupp` with the RHS fully unfolded. -/
 theorem mem_supr_iff_exists_dfinsupp' (p : ι → Submodule R N) [∀ (i) (x : p i), Decidable (x ≠ 0)]
-    (x : N) : x ∈ supr p ↔ ∃ f : Π₀ i, p i, (f.Sum fun i xi => ↑xi) = x := by
+    (x : N) : x ∈ supᵢ p ↔ ∃ f : Π₀ i, p i, (f.Sum fun i xi => ↑xi) = x := by
   rw [mem_supr_iff_exists_dfinsupp]
   simp_rw [Dfinsupp.lsum_apply_apply, Dfinsupp.sum_add_hom_apply]
   congr
@@ -378,7 +378,7 @@ theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
   classical 
     rw [Submodule.mem_supr_iff_exists_dfinsupp']
     constructor <;> rintro ⟨μ, hμ⟩
-    · use fun i => ⟨μ i, (supr_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
+    · use fun i => ⟨μ i, (supᵢ_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
       rw [← hμ]
       symm
       apply Finset.sum_subset
@@ -390,7 +390,7 @@ theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
         rw [coe_zero, ← mem_bot R]
         convert coe_mem (μ x)
         symm
-        exact supr_neg hx
+        exact supᵢ_neg hx
       · intro x _ hx
         rw [mem_support_iff, not_ne_iff] at hx
         rw [hx]
@@ -398,7 +398,7 @@ theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
     · refine' ⟨Dfinsupp.mk s _, _⟩
       · rintro ⟨i, hi⟩
         refine' ⟨μ i, _⟩
-        rw [supr_pos]
+        rw [supᵢ_pos]
         · exact coe_mem _
         · exact hi
       simp only [Dfinsupp.sum]
@@ -441,7 +441,7 @@ theorem independent_iff_forall_dfinsupp (p : ι → Submodule R N) :
 
 /- If `dfinsupp.lsum` applied with `submodule.subtype` is injective then the submodules are
 independent. -/
-theorem independentOfDfinsuppLsumInjective (p : ι → Submodule R N)
+theorem independent_of_dfinsupp_lsum_injective (p : ι → Submodule R N)
     (h : Function.Injective (lsum ℕ fun i => (p i).Subtype)) : Independent p := by
   rw [independent_iff_forall_dfinsupp]
   intro i x v hv
@@ -451,16 +451,16 @@ theorem independentOfDfinsuppLsumInjective (p : ι → Submodule R N)
   have := dfinsupp.ext_iff.mp (h hv) i
   simpa [eq_comm] using this
 #align
-  complete_lattice.independent_of_dfinsupp_lsum_injective CompleteLattice.independentOfDfinsuppLsumInjective
+  complete_lattice.independent_of_dfinsupp_lsum_injective CompleteLattice.independent_of_dfinsupp_lsum_injective
 
 /- If `dfinsupp.sum_add_hom` applied with `add_submonoid.subtype` is injective then the additive
 submonoids are independent. -/
-theorem independentOfDfinsuppSumAddHomInjective (p : ι → AddSubmonoid N)
+theorem independent_of_dfinsupp_sum_add_hom_injective (p : ι → AddSubmonoid N)
     (h : Function.Injective (sumAddHom fun i => (p i).Subtype)) : Independent p := by
   rw [← independent_map_order_iso_iff (AddSubmonoid.toNatSubmodule : AddSubmonoid N ≃o _)]
   exact independent_of_dfinsupp_lsum_injective _ h
 #align
-  complete_lattice.independent_of_dfinsupp_sum_add_hom_injective CompleteLattice.independentOfDfinsuppSumAddHomInjective
+  complete_lattice.independent_of_dfinsupp_sum_add_hom_injective CompleteLattice.independent_of_dfinsupp_sum_add_hom_injective
 
 /-- Combining `dfinsupp.lsum` with `linear_map.to_span_singleton` is the same as `finsupp.total` -/
 theorem lsum_comp_map_range_to_span_singleton [∀ m : R, Decidable (m ≠ 0)] (p : ι → Submodule R N)
@@ -484,12 +484,12 @@ variable [Ring R] [AddCommGroup N] [Module R N]
 
 /- If `dfinsupp.sum_add_hom` applied with `add_submonoid.subtype` is injective then the additive
 subgroups are independent. -/
-theorem independentOfDfinsuppSumAddHomInjective' (p : ι → AddSubgroup N)
+theorem independent_of_dfinsupp_sum_add_hom_injective' (p : ι → AddSubgroup N)
     (h : Function.Injective (sumAddHom fun i => (p i).Subtype)) : Independent p := by
   rw [← independent_map_order_iso_iff (AddSubgroup.toIntSubmodule : AddSubgroup N ≃o _)]
   exact independent_of_dfinsupp_lsum_injective _ h
 #align
-  complete_lattice.independent_of_dfinsupp_sum_add_hom_injective' CompleteLattice.independentOfDfinsuppSumAddHomInjective'
+  complete_lattice.independent_of_dfinsupp_sum_add_hom_injective' CompleteLattice.independent_of_dfinsupp_sum_add_hom_injective'
 
 /-- The canonical map out of a direct sum of a family of submodules is injective when the submodules
 are `complete_lattice.independent`.
@@ -536,7 +536,7 @@ Note that this is not generally true for `[semiring R]`; see
 `complete_lattice.independent.dfinsupp_lsum_injective` for details. -/
 theorem independent_iff_dfinsupp_lsum_injective (p : ι → Submodule R N) :
     Independent p ↔ Function.Injective (lsum ℕ fun i => (p i).Subtype) :=
-  ⟨Independent.dfinsupp_lsum_injective, independentOfDfinsuppLsumInjective p⟩
+  ⟨Independent.dfinsupp_lsum_injective, independent_of_dfinsupp_lsum_injective p⟩
 #align
   complete_lattice.independent_iff_dfinsupp_lsum_injective CompleteLattice.independent_iff_dfinsupp_lsum_injective
 
@@ -544,7 +544,7 @@ theorem independent_iff_dfinsupp_lsum_injective (p : ι → Submodule R N) :
 `dfinsupp.sum_add_hom` applied with `add_subgroup.subtype` is injective. -/
 theorem independent_iff_dfinsupp_sum_add_hom_injective (p : ι → AddSubgroup N) :
     Independent p ↔ Function.Injective (sumAddHom fun i => (p i).Subtype) :=
-  ⟨Independent.dfinsupp_sum_add_hom_injective, independentOfDfinsuppSumAddHomInjective' p⟩
+  ⟨Independent.dfinsupp_sum_add_hom_injective, independent_of_dfinsupp_sum_add_hom_injective' p⟩
 #align
   complete_lattice.independent_iff_dfinsupp_sum_add_hom_injective CompleteLattice.independent_iff_dfinsupp_sum_add_hom_injective
 
@@ -576,7 +576,7 @@ theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Subm
 theorem independent_iff_linear_independent_of_ne_zero [NoZeroSmulDivisors R N] {v : ι → N}
     (h_ne_zero : ∀ i, v i ≠ 0) : (Independent fun i => R ∙ v i) ↔ LinearIndependent R v :=
   ⟨fun hv => hv.LinearIndependent _ (fun i => Submodule.mem_span_singleton_self <| v i) h_ne_zero,
-    fun hv => hv.independentSpanSingleton⟩
+    fun hv => hv.independent_span_singleton⟩
 #align
   complete_lattice.independent_iff_linear_independent_of_ne_zero CompleteLattice.independent_iff_linear_independent_of_ne_zero
 

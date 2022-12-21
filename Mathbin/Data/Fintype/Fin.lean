@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.fintype.fin
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : V
   induction' v using Vector.inductionOn with n x xs hxs
   · simp
   ·
-    simp_rw [card_filter_univ_succ', Vector.nth_cons_zero, Vector.to_list_cons, Function.comp,
+    simp_rw [card_filter_univ_succ', Vector.nth_cons_zero, Vector.toList_cons, Function.comp,
       Vector.nth_cons_succ, hxs, List.count_cons', add_comm (ite (a = x) 1 0)]
 #align fin.card_filter_univ_eq_vector_nth_eq_count Fin.card_filter_univ_eq_vector_nth_eq_count
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.extend_from
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,8 +26,8 @@ variable {α : Type u} {β : Type v}
 
 theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
     [OrderTopology α] [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {la lb : β}
-    (hab : a ≠ b) (hf : ContinuousOn f (ioo a b)) (ha : Tendsto f (𝓝[>] a) (𝓝 la))
-    (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) : ContinuousOn (extendFrom (ioo a b) f) (icc a b) := by
+    (hab : a ≠ b) (hf : ContinuousOn f (Ioo a b)) (ha : Tendsto f (𝓝[>] a) (𝓝 la))
+    (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) : ContinuousOn (extendFrom (Ioo a b) f) (Icc a b) := by
   apply continuous_on_extend_from
   · rw [closure_Ioo hab]
   · intro x x_in
@@ -39,7 +39,7 @@ theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
 
 theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
     [OrderTopology α] [TopologicalSpace β] [T2Space β] {f : α → β} {a b : α} {la : β} (hab : a < b)
-    (ha : Tendsto f (𝓝[>] a) (𝓝 la)) : extendFrom (ioo a b) f a = la := by
+    (ha : Tendsto f (𝓝[>] a) (𝓝 la)) : extendFrom (Ioo a b) f a = la := by
   apply extend_from_eq
   · rw [closure_Ioo hab.ne]
     simp only [le_of_lt hab, left_mem_Icc, right_mem_Icc]
@@ -48,7 +48,7 @@ theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [D
 
 theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
     [OrderTopology α] [TopologicalSpace β] [T2Space β] {f : α → β} {a b : α} {lb : β} (hab : a < b)
-    (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) : extendFrom (ioo a b) f b = lb := by
+    (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) : extendFrom (Ioo a b) f b = lb := by
   apply extend_from_eq
   · rw [closure_Ioo hab.ne]
     simp only [le_of_lt hab, left_mem_Icc, right_mem_Icc]
@@ -57,8 +57,8 @@ theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [
 
 theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
     [OrderTopology α] [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {la : β}
-    (hab : a < b) (hf : ContinuousOn f (ioo a b)) (ha : Tendsto f (𝓝[>] a) (𝓝 la)) :
-    ContinuousOn (extendFrom (ioo a b) f) (ico a b) := by
+    (hab : a < b) (hf : ContinuousOn f (Ioo a b)) (ha : Tendsto f (𝓝[>] a) (𝓝 la)) :
+    ContinuousOn (extendFrom (Ioo a b) f) (Ico a b) := by
   apply continuous_on_extend_from
   · rw [closure_Ioo hab.ne]
     exact Ico_subset_Icc_self
@@ -71,8 +71,8 @@ theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
 
 theorem continuous_on_Ioc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
     [OrderTopology α] [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {lb : β}
-    (hab : a < b) (hf : ContinuousOn f (ioo a b)) (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) :
-    ContinuousOn (extendFrom (ioo a b) f) (ioc a b) := by
+    (hab : a < b) (hf : ContinuousOn f (Ioo a b)) (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) :
+    ContinuousOn (extendFrom (Ioo a b) f) (Ioc a b) := by
   have := @continuous_on_Ico_extend_from_Ioo αᵒᵈ _ _ _ _ _ _ _ f _ _ _ hab
   erw [dual_Ico, dual_Ioi, dual_Ioo] at this
   exact this hf hb

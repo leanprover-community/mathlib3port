@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.equalizer_products
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ def rightRes : piOpens F U ⟶ piInters.{v'} F U :=
 /-- The morphism `F.obj U ⟶ Π F.obj (U i)` whose components
 are given by the restriction maps from `U j` to `U i ⊓ U j`.
 -/
-def res : F.obj (op (supr U)) ⟶ piOpens.{v'} F U :=
+def res : F.obj (op (supᵢ U)) ⟶ piOpens.{v'} F U :=
   Pi.lift fun i : ι => F.map (TopologicalSpace.Opens.leSupr U i).op
 #align
   Top.presheaf.sheaf_condition_equalizer_products.res TopCat.Presheaf.SheafConditionEqualizerProducts.res
@@ -122,7 +122,7 @@ def fork : Fork.{v} (leftRes F U) (rightRes F U) :=
   Top.presheaf.sheaf_condition_equalizer_products.fork TopCat.Presheaf.SheafConditionEqualizerProducts.fork
 
 @[simp]
-theorem fork_X : (fork F U).x = F.obj (op (supr U)) :=
+theorem fork_X : (fork F U).x = F.obj (op (supᵢ U)) :=
   rfl
 #align
   Top.presheaf.sheaf_condition_equalizer_products.fork_X TopCat.Presheaf.SheafConditionEqualizerProducts.fork_X

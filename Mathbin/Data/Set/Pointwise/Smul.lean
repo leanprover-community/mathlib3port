@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.smul
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -843,7 +843,7 @@ theorem op_smul_inter_ne_empty_iff {s t : Set α} {x : αᵐᵒᵖ} :
 
 @[simp, to_additive]
 theorem Union_inv_smul : (⋃ g : α, g⁻¹ • s) = ⋃ g : α, g • s :=
-  (Function.Surjective.supr_congr _ inv_surjective) fun g => rfl
+  (Function.Surjective.supᵢ_congr _ inv_surjective) fun g => rfl
 #align set.Union_inv_smul Set.Union_inv_smul
 
 @[to_additive]

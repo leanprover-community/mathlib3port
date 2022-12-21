@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.polish
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -453,10 +453,10 @@ theorem IsClosed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set �
     ext x
     by_cases h : x ∈ s
     ·
-      simp only [Equiv.Set.sum_compl_symm_apply_of_mem, h, mem_preimage, Equiv.to_fun_as_coe,
+      simp only [Equiv.Set.sumCompl_symm_apply_of_mem, h, mem_preimage, Equiv.to_fun_as_coe,
         mem_range_self, Equiv.to_homeomorph_of_inducing_apply]
     ·
-      simp only [Equiv.Set.sum_compl_symm_apply_of_not_mem, h, not_false_iff, mem_preimage,
+      simp only [Equiv.Set.sumCompl_symm_apply_of_not_mem, h, not_false_iff, mem_preimage,
         Equiv.to_homeomorph_of_inducing_apply, Equiv.to_fun_as_coe, mem_range, exists_false]
   refine' ⟨t', _, f.polish_space_induced, _, _⟩
   · intro u hu
@@ -466,12 +466,12 @@ theorem IsClosed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set �
     · have : IsOpen ((coe : s → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_coe hu
       have : Sum.inl ⁻¹' (⇑f.symm ⁻¹' u) = (coe : s → α) ⁻¹' u := by
         ext x
-        simp only [Equiv.symm_symm, mem_preimage, Equiv.Set.sum_compl_apply_inl]
+        simp only [Equiv.symm_symm, mem_preimage, Equiv.Set.sumCompl_apply_inl]
       rwa [this]
     · have : IsOpen ((coe : t → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_coe hu
       have : Sum.inr ⁻¹' (⇑f.symm ⁻¹' u) = (coe : t → α) ⁻¹' u := by
         ext x
-        simp only [Equiv.symm_symm, mem_preimage, Equiv.Set.sum_compl_apply_inr]
+        simp only [Equiv.symm_symm, mem_preimage, Equiv.Set.sumCompl_apply_inr]
       rwa [this]
   · have : @IsClosed α t' (g ⁻¹' range (Sum.inl : s → Sum s t)) := by
       apply IsClosed.preimage

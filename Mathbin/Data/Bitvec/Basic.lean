@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.bitvec.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,8 +90,8 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v := b
     simp [Bitvec.ofNat]
   · simp only [← Nat.succ_eq_add_one, List.length] at h
     subst n
-    simp only [Bitvec.ofNat, Vector.to_list_cons, Vector.to_list_nil, List.reverse_cons,
-      Vector.to_list_append, List.foldr]
+    simp only [Bitvec.ofNat, Vector.toList_cons, Vector.toList_nil, List.reverse_cons,
+      Vector.toList_append, List.foldr]
     erw [add_lsb_div_two, to_bool_add_lsb_mod_two]
     congr
     apply ys_ih

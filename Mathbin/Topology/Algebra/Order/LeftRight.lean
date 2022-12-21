@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.order.left_right
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,12 +37,12 @@ section PartialOrder
 variable {α β : Type _} [TopologicalSpace α] [PartialOrder α] [TopologicalSpace β]
 
 theorem continuous_within_at_Ioi_iff_Ici {a : α} {f : α → β} :
-    ContinuousWithinAt f (ioi a) a ↔ ContinuousWithinAt f (ici a) a := by
+    ContinuousWithinAt f (Ioi a) a ↔ ContinuousWithinAt f (Ici a) a := by
   simp only [← Ici_diff_left, continuous_within_at_diff_self]
 #align continuous_within_at_Ioi_iff_Ici continuous_within_at_Ioi_iff_Ici
 
 theorem continuous_within_at_Iio_iff_Iic {a : α} {f : α → β} :
-    ContinuousWithinAt f (iio a) a ↔ ContinuousWithinAt f (iic a) a :=
+    ContinuousWithinAt f (Iio a) a ↔ ContinuousWithinAt f (Iic a) a :=
   @continuous_within_at_Ioi_iff_Ici αᵒᵈ _ ‹TopologicalSpace α› _ _ _ f
 #align continuous_within_at_Iio_iff_Iic continuous_within_at_Iio_iff_Iic
 
@@ -77,12 +77,12 @@ theorem nhds_left'_sup_nhds_right' (a : α) : 𝓝[<] a ⊔ 𝓝[>] a = 𝓝[≠
 #align nhds_left'_sup_nhds_right' nhds_left'_sup_nhds_right'
 
 theorem continuous_at_iff_continuous_left_right {a : α} {f : α → β} :
-    ContinuousAt f a ↔ ContinuousWithinAt f (iic a) a ∧ ContinuousWithinAt f (ici a) a := by
+    ContinuousAt f a ↔ ContinuousWithinAt f (Iic a) a ∧ ContinuousWithinAt f (Ici a) a := by
   simp only [ContinuousWithinAt, ContinuousAt, ← tendsto_sup, nhds_left_sup_nhds_right]
 #align continuous_at_iff_continuous_left_right continuous_at_iff_continuous_left_right
 
 theorem continuous_at_iff_continuous_left'_right' {a : α} {f : α → β} :
-    ContinuousAt f a ↔ ContinuousWithinAt f (iio a) a ∧ ContinuousWithinAt f (ioi a) a := by
+    ContinuousAt f a ↔ ContinuousWithinAt f (Iio a) a ∧ ContinuousWithinAt f (Ioi a) a := by
   rw [continuous_within_at_Ioi_iff_Ici, continuous_within_at_Iio_iff_Iic,
     continuous_at_iff_continuous_left_right]
 #align continuous_at_iff_continuous_left'_right' continuous_at_iff_continuous_left'_right'

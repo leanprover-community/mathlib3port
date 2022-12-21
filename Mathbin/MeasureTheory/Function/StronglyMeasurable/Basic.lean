@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1715,9 +1715,9 @@ theorem ae_strongly_measurable_union_iff [PseudoMetrizableSpace β] {s t : Set �
 
 theorem ae_strongly_measurable_interval_oc_iff [LinearOrder α] [PseudoMetrizableSpace β] {f : α → β}
     {a b : α} :
-    AeStronglyMeasurable f (μ.restrict <| intervalOc a b) ↔
-      AeStronglyMeasurable f (μ.restrict <| ioc a b) ∧
-        AeStronglyMeasurable f (μ.restrict <| ioc b a) :=
+    AeStronglyMeasurable f (μ.restrict <| intervalOC a b) ↔
+      AeStronglyMeasurable f (μ.restrict <| Ioc a b) ∧
+        AeStronglyMeasurable f (μ.restrict <| Ioc b a) :=
   by rw [interval_oc_eq_union, ae_strongly_measurable_union_iff]
 #align
   measure_theory.ae_strongly_measurable.ae_strongly_measurable_interval_oc_iff MeasureTheory.AeStronglyMeasurable.ae_strongly_measurable_interval_oc_iff

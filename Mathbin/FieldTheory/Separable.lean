@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.separable
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ theorem not_separable_zero [Nontrivial R] : ¬Separable (0 : R[X]) := by
 #align polynomial.not_separable_zero Polynomial.not_separable_zero
 
 theorem separable_one : (1 : R[X]).Separable :=
-  is_coprime_one_left
+  isCoprime_one_left
 #align polynomial.separable_one Polynomial.separable_one
 
 @[nontriviality]
@@ -68,16 +68,16 @@ theorem separable_of_subsingleton [Subsingleton R] (f : R[X]) : f.Separable := b
 
 theorem separable_X_add_C (a : R) : (X + c a).Separable := by
   rw [separable_def, derivative_add, derivative_X, derivative_C, add_zero]
-  exact is_coprime_one_right
+  exact isCoprime_one_right
 #align polynomial.separable_X_add_C Polynomial.separable_X_add_C
 
 theorem separable_X : (x : R[X]).Separable := by
   rw [separable_def, derivative_X]
-  exact is_coprime_one_right
+  exact isCoprime_one_right
 #align polynomial.separable_X Polynomial.separable_X
 
 theorem separable_C (r : R) : (c r).Separable ↔ IsUnit r := by
-  rw [separable_def, derivative_C, is_coprime_zero_right, is_unit_C]
+  rw [separable_def, derivative_C, isCoprime_zero_right, is_unit_C]
 #align polynomial.separable_C Polynomial.separable_C
 
 theorem Separable.of_mul_left {f g : R[X]} (h : (f * g).Separable) : f.Separable := by
@@ -116,7 +116,7 @@ theorem Separable.of_pow' {f : R[X]} :
   | 1 => fun h => Or.inr <| Or.inl ⟨pow_one f ▸ h, rfl⟩
   | n + 2 => fun h => by 
     rw [pow_succ, pow_succ] at h
-    exact Or.inl (is_coprime_self.1 h.is_coprime.of_mul_right_left)
+    exact Or.inl (isCoprime_self.1 h.is_coprime.of_mul_right_left)
 #align polynomial.separable.of_pow' Polynomial.Separable.of_pow'
 
 theorem Separable.of_pow {f : R[X]} (hf : ¬IsUnit f) {n : ℕ} (hn : n ≠ 0)
@@ -273,7 +273,7 @@ variable {F : Type u} [Field F] {K : Type v} [Field K]
 
 theorem separable_iff_derivative_ne_zero {f : F[X]} (hf : Irreducible f) :
     f.Separable ↔ f.derivative ≠ 0 :=
-  ⟨fun h1 h2 => hf.not_unit <| is_coprime_zero_right.1 <| h2 ▸ h1, fun h =>
+  ⟨fun h1 h2 => hf.not_unit <| isCoprime_zero_right.1 <| h2 ▸ h1, fun h =>
     (EuclideanDomain.is_coprime_of_dvd (mt And.right h)) fun g hg1 hg2 ⟨p, hg3⟩ hg4 =>
       let ⟨u, hu⟩ := (hf.is_unit_or_is_unit hg3).resolve_left hg1
       have : f ∣ f.derivative := by 
@@ -359,7 +359,7 @@ theorem is_unit_or_eq_zero_of_separable_expand {f : F[X]} (n : ℕ) (hp : 0 < p)
   rintro hn : n ≠ 0
   have hf2 : (expand F (p ^ n) f).derivative = 0 := by
     rw [derivative_expand, Nat.cast_pow, CharP.cast_eq_zero, zero_pow hn.bot_lt, zero_mul, mul_zero]
-  rw [separable_def, hf2, is_coprime_zero_right, is_unit_iff] at hf
+  rw [separable_def, hf2, isCoprime_zero_right, is_unit_iff] at hf
   rcases hf with ⟨r, hr, hrf⟩
   rw [eq_comm, expand_eq_C (pow_pos hp _)] at hrf
   rwa [hrf, is_unit_C]
@@ -405,7 +405,7 @@ theorem X_pow_sub_one_separable_iff {n : ℕ} : (X ^ n - 1 : F[X]).Separable ↔
   rw [separable_def', derivative_sub, derivative_X_pow, derivative_one, sub_zero]
   -- Suppose `(n : F) = 0`, then the derivative is `0`, so `X ^ n - 1` is a unit, contradiction.
   rintro (h : IsCoprime _ _) hn'
-  rw [hn', C_0, zero_mul, is_coprime_zero_right] at h
+  rw [hn', C_0, zero_mul, isCoprime_zero_right] at h
   exact not_is_unit_X_pow_sub_one F n h
 #align polynomial.X_pow_sub_one_separable_iff Polynomial.X_pow_sub_one_separable_iff
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
 
 ! This file was ported from Lean 3 source module category_theory.sites.grothendieck
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,23 +188,23 @@ theorem covering_iff_covers_id (S : Sieve X) : S ∈ J X ↔ J.Covers S (𝟙 X)
   category_theory.grothendieck_topology.covering_iff_covers_id CategoryTheory.GrothendieckTopology.covering_iff_covers_id
 
 /-- The maximality axiom in 'arrow' form: Any arrow `f` in `S` is covered by `S`. -/
-theorem arrowMax (f : Y ⟶ X) (S : Sieve X) (hf : S f) : J.Covers S f := by
+theorem arrow_max (f : Y ⟶ X) (S : Sieve X) (hf : S f) : J.Covers S f := by
   rw [covers, (sieve.pullback_eq_top_iff_mem f).1 hf]
   apply J.top_mem
-#align category_theory.grothendieck_topology.arrow_max CategoryTheory.GrothendieckTopology.arrowMax
+#align category_theory.grothendieck_topology.arrow_max CategoryTheory.GrothendieckTopology.arrow_max
 
 /-- The stability axiom in 'arrow' form: If `S` covers `f` then `S` covers `g ≫ f` for any `g`. -/
-theorem arrowStable (f : Y ⟶ X) (S : Sieve X) (h : J.Covers S f) {Z : C} (g : Z ⟶ Y) :
+theorem arrow_stable (f : Y ⟶ X) (S : Sieve X) (h : J.Covers S f) {Z : C} (g : Z ⟶ Y) :
     J.Covers S (g ≫ f) := by 
   rw [covers_iff] at h⊢
   simp [h, sieve.pullback_comp]
 #align
-  category_theory.grothendieck_topology.arrow_stable CategoryTheory.GrothendieckTopology.arrowStable
+  category_theory.grothendieck_topology.arrow_stable CategoryTheory.GrothendieckTopology.arrow_stable
 
 /-- The transitivity axiom in 'arrow' form: If `S` covers `f` and every arrow in `S` is covered by
 `R`, then `R` covers `f`.
 -/
-theorem arrowTrans (f : Y ⟶ X) (S R : Sieve X) (h : J.Covers S f) :
+theorem arrow_trans (f : Y ⟶ X) (S R : Sieve X) (h : J.Covers S f) :
     (∀ {Z : C} (g : Z ⟶ X), S g → J.Covers R g) → J.Covers R f := by
   intro k
   apply J.transitive h
@@ -212,12 +212,12 @@ theorem arrowTrans (f : Y ⟶ X) (S R : Sieve X) (h : J.Covers S f) :
   rw [← sieve.pullback_comp]
   apply k (g ≫ f) hg
 #align
-  category_theory.grothendieck_topology.arrow_trans CategoryTheory.GrothendieckTopology.arrowTrans
+  category_theory.grothendieck_topology.arrow_trans CategoryTheory.GrothendieckTopology.arrow_trans
 
-theorem arrowIntersect (f : Y ⟶ X) (S R : Sieve X) (hS : J.Covers S f) (hR : J.Covers R f) :
+theorem arrow_intersect (f : Y ⟶ X) (S R : Sieve X) (hS : J.Covers S f) (hR : J.Covers R f) :
     J.Covers (S ⊓ R) f := by simpa [covers_iff] using And.intro hS hR
 #align
-  category_theory.grothendieck_topology.arrow_intersect CategoryTheory.GrothendieckTopology.arrowIntersect
+  category_theory.grothendieck_topology.arrow_intersect CategoryTheory.GrothendieckTopology.arrow_intersect
 
 variable (C)
 
@@ -276,10 +276,10 @@ instance : PartialOrder (GrothendieckTopology C) :=
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
 instance :
-    HasInf
+    InfSet
       (GrothendieckTopology
         C) where inf T :=
-    { sieves := inf (sieves '' T)
+    { sieves := infₛ (sieves '' T)
       top_mem' := by 
         rintro X S ⟨⟨_, J, hJ, rfl⟩, rfl⟩
         simp
@@ -292,8 +292,8 @@ instance :
           J.transitive (hS _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩) _ fun Y f hf => h hf _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩ }
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
-theorem is_glb_Inf (s : Set (GrothendieckTopology C)) : IsGlb s (inf s) := by
-  refine' @IsGlb.of_image _ _ _ _ sieves _ _ _ _
+theorem is_glb_Inf (s : Set (GrothendieckTopology C)) : IsGLB s (infₛ s) := by
+  refine' @IsGLB.of_image _ _ _ _ sieves _ _ _ _
   · intros
     rfl
   · exact is_glb_Inf _
@@ -317,7 +317,7 @@ instance : CompleteLattice (GrothendieckTopology C) :=
         rw [trivial_covering] at hS
         apply covering_of_eq_top _ hS
       · refine' @CompleteLattice.bot_le _ (completeLatticeOfInf _ is_glb_Inf) (trivial C))
-    _ rfl _ rfl _ rfl inf rfl
+    _ rfl _ rfl _ rfl infₛ rfl
 
 instance : Inhabited (GrothendieckTopology C) :=
   ⟨⊤⟩
@@ -352,10 +352,10 @@ theorem bot_covers (S : Sieve X) (f : Y ⟶ X) : (⊥ : GrothendieckTopology C).
   category_theory.grothendieck_topology.bot_covers CategoryTheory.GrothendieckTopology.bot_covers
 
 @[simp]
-theorem topCovers (S : Sieve X) (f : Y ⟶ X) : (⊤ : GrothendieckTopology C).Covers S f := by
+theorem top_covers (S : Sieve X) (f : Y ⟶ X) : (⊤ : GrothendieckTopology C).Covers S f := by
   simp [covers_iff]
 #align
-  category_theory.grothendieck_topology.top_covers CategoryTheory.GrothendieckTopology.topCovers
+  category_theory.grothendieck_topology.top_covers CategoryTheory.GrothendieckTopology.top_covers
 
 /-- The dense Grothendieck topology.
 
@@ -628,31 +628,31 @@ noncomputable def Arrow.fromMiddleHom {X : C} {S : J.cover X} {T : ∀ I : S.arr
 #align
   category_theory.grothendieck_topology.cover.arrow.from_middle_hom CategoryTheory.GrothendieckTopology.Cover.Arrow.fromMiddleHom
 
-theorem Arrow.fromMiddleCondition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
+theorem Arrow.from_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
     (I : (S.bind T).arrow) : S I.fromMiddleHom :=
   I.hf.some_spec.some_spec.some_spec.some
 #align
-  category_theory.grothendieck_topology.cover.arrow.from_middle_condition CategoryTheory.GrothendieckTopology.Cover.Arrow.fromMiddleCondition
+  category_theory.grothendieck_topology.cover.arrow.from_middle_condition CategoryTheory.GrothendieckTopology.Cover.Arrow.from_middle_condition
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `B ⟶ X`, as an arrow. -/
 noncomputable def Arrow.fromMiddle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
     (I : (S.bind T).arrow) : S.arrow :=
-  ⟨_, I.fromMiddleHom, I.fromMiddleCondition⟩
+  ⟨_, I.fromMiddleHom, I.from_middle_condition⟩
 #align
   category_theory.grothendieck_topology.cover.arrow.from_middle CategoryTheory.GrothendieckTopology.Cover.Arrow.fromMiddle
 
-theorem Arrow.toMiddleCondition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
+theorem Arrow.to_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
     (I : (S.bind T).arrow) : (T I.fromMiddle) I.toMiddleHom :=
   I.hf.some_spec.some_spec.some_spec.some_spec.1
 #align
-  category_theory.grothendieck_topology.cover.arrow.to_middle_condition CategoryTheory.GrothendieckTopology.Cover.Arrow.toMiddleCondition
+  category_theory.grothendieck_topology.cover.arrow.to_middle_condition CategoryTheory.GrothendieckTopology.Cover.Arrow.to_middle_condition
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `A ⟶ B`, as an arrow. -/
 noncomputable def Arrow.toMiddle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
     (I : (S.bind T).arrow) : (T I.fromMiddle).arrow :=
-  ⟨_, I.toMiddleHom, I.toMiddleCondition⟩
+  ⟨_, I.toMiddleHom, I.to_middle_condition⟩
 #align
   category_theory.grothendieck_topology.cover.arrow.to_middle CategoryTheory.GrothendieckTopology.Cover.Arrow.toMiddle
 

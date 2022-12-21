@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -840,19 +840,27 @@ protected theorem mul_div_cancel_left' {a b : ℕ} (Hd : a ∣ b) : a * (b / a) 
 #align nat.mul_div_cancel_left' Nat.mul_div_cancel_left'
 -/
 
-#print Nat.mul_div_mul_left /-
+/- warning: nat.mul_div_mul_left -> Nat.mul_div_mul_left is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat) {c : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) c) -> (Eq.{1} Nat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) c a) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) c b)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) a b))
+but is expected to have type
+  forall {a : Nat} (b : Nat) (c : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) -> (Eq.{1} Nat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a c)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) b c))
+Case conversion may be inaccurate. Consider using '#align nat.mul_div_mul_left Nat.mul_div_mul_leftₓ'. -/
 --TODO: Update `nat.mul_div_mul` in the core?
 /-- Alias of `nat.mul_div_mul` -/
 protected theorem mul_div_mul_left (a b : ℕ) {c : ℕ} (hc : 0 < c) : c * a / (c * b) = a / b :=
   Nat.mul_div_mul a b hc
 #align nat.mul_div_mul_left Nat.mul_div_mul_left
--/
 
-#print Nat.mul_div_mul_right /-
+/- warning: nat.mul_div_mul_right -> Nat.mul_div_mul_right is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat) {c : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) c) -> (Eq.{1} Nat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a c) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) b c)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) a b))
+but is expected to have type
+  forall {a : Nat} (b : Nat) (c : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) -> (Eq.{1} Nat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) b a) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) c a)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) b c))
+Case conversion may be inaccurate. Consider using '#align nat.mul_div_mul_right Nat.mul_div_mul_rightₓ'. -/
 protected theorem mul_div_mul_right (a b : ℕ) {c : ℕ} (hc : 0 < c) : a * c / (b * c) = a / b := by
   rw [mul_comm, mul_comm b, a.mul_div_mul_left b hc]
 #align nat.mul_div_mul_right Nat.mul_div_mul_right
--/
 
 #print Nat.lt_div_mul_add /-
 theorem lt_div_mul_add {a b : ℕ} (hb : 0 < b) : a < a / b * b + b := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_circle
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,14 +98,14 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
   intros
   rw [quotient_norm_eq, abs_sub_round_eq_min]
   have h₁ : BddBelow (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }) :=
-    ⟨0, by simp [mem_lower_bounds]⟩
+    ⟨0, by simp [mem_lowerBounds]⟩
   have h₂ : (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }).Nonempty := ⟨|x|, ⟨x, rfl, rfl⟩⟩
   apply le_antisymm
   · simp only [le_min_iff, Real.norm_eq_abs, cInf_le_iff h₁ h₂]
     intro b h
     refine'
-      ⟨mem_lower_bounds.1 h _ ⟨fract x, _, abs_fract⟩,
-        mem_lower_bounds.1 h _ ⟨fract x - 1, _, by rw [abs_sub_comm, abs_one_sub_fract]⟩⟩
+      ⟨mem_lowerBounds.1 h _ ⟨fract x, _, abs_fract⟩,
+        mem_lowerBounds.1 h _ ⟨fract x - 1, _, by rw [abs_sub_comm, abs_one_sub_fract]⟩⟩
     ·
       simp only [mem_set_of_eq, fract, sub_eq_self, QuotientAddGroup.coe_sub,
         QuotientAddGroup.eq_zero_iff, int_cast_mem_zmultiples_one]

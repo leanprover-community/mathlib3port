@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -868,9 +868,9 @@ theorem cyclotomic.irreducible_rat {n : ℕ} (hpos : 0 < n) : Irreducible (cyclo
 theorem cyclotomic.is_coprime_rat {n m : ℕ} (h : n ≠ m) :
     IsCoprime (cyclotomic n ℚ) (cyclotomic m ℚ) := by
   rcases n.eq_zero_or_pos with (rfl | hnzero)
-  · exact is_coprime_one_left
+  · exact isCoprime_one_left
   rcases m.eq_zero_or_pos with (rfl | hmzero)
-  · exact is_coprime_one_right
+  · exact isCoprime_one_right
   rw [Irreducible.coprime_iff_not_dvd <| cyclotomic.irreducible_rat <| hnzero]
   exact fun hdiv =>
     h <|

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.subfield
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -602,9 +602,9 @@ theorem mem_inf {p p' : Subfield K} {x : K} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x �
   Iff.rfl
 #align subfield.mem_inf Subfield.mem_inf
 
-instance : HasInf (Subfield K) :=
+instance : InfSet (Subfield K) :=
   ⟨fun S =>
-    { inf (Subfield.toSubring '' S) with
+    { infₛ (Subfield.toSubring '' S) with
       inv_mem' := by 
         rintro x hx
         apply subring.mem_Inf.mpr
@@ -612,8 +612,8 @@ instance : HasInf (Subfield K) :=
         exact p.inv_mem (subring.mem_Inf.mp hx p.to_subring ⟨p, p_mem, rfl⟩) }⟩
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (Subfield K)) : ((inf S : Subfield K) : Set K) = ⋂ s ∈ S, ↑s :=
-  show ((inf (Subfield.toSubring '' S) : Subring K) : Set K) = ⋂ s ∈ S, ↑s by
+theorem coe_Inf (S : Set (Subfield K)) : ((infₛ S : Subfield K) : Set K) = ⋂ s ∈ S, ↑s :=
+  show ((infₛ (Subfield.toSubring '' S) : Subring K) : Set K) = ⋂ s ∈ S, ↑s by
     ext x
     rw [Subring.coe_Inf, Set.mem_Inter, Set.mem_Inter]
     exact
@@ -622,14 +622,14 @@ theorem coe_Inf (S : Set (Subfield K)) : ((inf S : Subfield K) : Set K) = ⋂ s 
         h s'' _ ⟨s''_mem, by simp [← s_eq, ← s'_eq]⟩⟩
 #align subfield.coe_Inf Subfield.coe_Inf
 
-theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ inf S ↔ ∀ p ∈ S, x ∈ p :=
+theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
   Subring.mem_Inf.trans
     ⟨fun h p hp => h p.toSubring ⟨p, hp, rfl⟩, fun h p ⟨p', hp', p_eq⟩ => p_eq ▸ h p' hp'⟩
 #align subfield.mem_Inf Subfield.mem_Inf
 
 @[simp]
-theorem Inf_to_subring (s : Set (Subfield K)) : (inf s).toSubring = ⨅ t ∈ s, Subfield.toSubring t :=
-  by 
+theorem Inf_to_subring (s : Set (Subfield K)) :
+    (infₛ s).toSubring = ⨅ t ∈ s, Subfield.toSubring t := by
   ext x
   rw [mem_to_subring, mem_Inf]
   erw [Subring.mem_Inf]
@@ -642,8 +642,8 @@ theorem Inf_to_subring (s : Set (Subfield K)) : (inf s).toSubring = ⨅ t ∈ s,
               subring.mem_Inf.mpr fun p' ⟨hp, p'_eq⟩ => p'_eq ▸ hx⟩⟩⟩
 #align subfield.Inf_to_subring Subfield.Inf_to_subring
 
-theorem is_glb_Inf (S : Set (Subfield K)) : IsGlb S (inf S) := by
-  refine' IsGlb.of_image (fun s t => show (s : Set K) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe) _
+theorem is_glb_Inf (S : Set (Subfield K)) : IsGLB S (infₛ S) := by
+  refine' IsGLB.of_image (fun s t => show (s : Set K) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe) _
   convert is_glb_binfi
   exact coe_Inf _
 #align subfield.is_glb_Inf Subfield.is_glb_Inf
@@ -790,7 +790,7 @@ theorem map_sup (s t : Subfield K) (f : K →+* L) : (s ⊔ t).map f = s.map f �
 #align subfield.map_sup Subfield.map_sup
 
 theorem map_supr {ι : Sort _} (f : K →+* L) (s : ι → Subfield K) :
-    (supr s).map f = ⨆ i, (s i).map f :=
+    (supᵢ s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 #align subfield.map_supr Subfield.map_supr
 
@@ -818,7 +818,7 @@ theorem comap_top (f : K →+* L) : (⊤ : Subfield L).comap f = ⊤ :=
   typically not a subfield) -/
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (hS : Directed (· ≤ ·) S)
     {x : K} : (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
-  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supr S i) hi⟩
+  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
   suffices x ∈ closure (⋃ i, (S i : Set K)) → ∃ i, x ∈ S i by simpa only [closure_Union, closure_eq]
   refine' fun hx => closure_induction hx (fun x => set.mem_Union.mp) _ _ _ _ _
   · exact hι.elim fun i => ⟨i, (S i).one_mem⟩
@@ -840,13 +840,13 @@ theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (h
 #align subfield.coe_supr_of_directed Subfield.coe_supr_of_directed
 
 theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S)
-    {x : K} : x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
+    {x : K} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s := by
   haveI : Nonempty S := Sne.to_subtype
-  simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+  simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 #align subfield.mem_Sup_of_directed_on Subfield.mem_Sup_of_directed_on
 
 theorem coe_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.Nonempty)
-    (hS : DirectedOn (· ≤ ·) S) : (↑(sup S) : Set K) = ⋃ s ∈ S, ↑s :=
+    (hS : DirectedOn (· ≤ ·) S) : (↑(supₛ S) : Set K) = ⋃ s ∈ S, ↑s :=
   Set.ext fun x => by simp [mem_Sup_of_directed_on Sne hS]
 #align subfield.coe_Sup_of_directed_on Subfield.coe_Sup_of_directed_on
 

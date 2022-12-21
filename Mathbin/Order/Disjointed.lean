@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.disjointed
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,9 +156,9 @@ theorem supr_disjointed (f : ℕ → α) : (⨆ n, disjointed f n) = ⨆ n, f n 
 theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n ⊓ ⨅ i < n, f iᶜ := by
   cases n
   · rw [disjointed_zero, eq_comm, inf_eq_left]
-    simp_rw [le_infi_iff]
+    simp_rw [le_infᵢ_iff]
     exact fun i hi => (i.not_lt_zero hi).elim
-  simp_rw [disjointed_succ, partial_sups_eq_bsupr, sdiff_eq, compl_supr]
+  simp_rw [disjointed_succ, partial_sups_eq_bsupr, sdiff_eq, compl_supᵢ]
   congr
   ext i
   rw [Nat.lt_succ_iff]

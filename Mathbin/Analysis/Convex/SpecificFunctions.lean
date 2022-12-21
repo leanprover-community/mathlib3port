@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.convex.specific_functions
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem Even.strict_convex_on_pow {n : ℕ} (hn : Even n) (h : n ≠ 0) :
 #align even.strict_convex_on_pow Even.strict_convex_on_pow
 
 /-- `x^n`, `n : ℕ` is convex on `[0, +∞)` for all `n` -/
-theorem convex_on_pow (n : ℕ) : ConvexOn ℝ (ici 0) fun x : ℝ => x ^ n := by
+theorem convex_on_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n := by
   apply
     convex_on_of_deriv2_nonneg (convex_Ici _) (continuous_pow n).ContinuousOn
       (differentiableOnPow n)
@@ -84,7 +84,7 @@ theorem convex_on_pow (n : ℕ) : ConvexOn ℝ (ici 0) fun x : ℝ => x ^ n := b
 #align convex_on_pow convex_on_pow
 
 /-- `x^n`, `n : ℕ` is strictly convex on `[0, +∞)` for all `n` greater than `2`. -/
-theorem strict_convex_on_pow {n : ℕ} (hn : 2 ≤ n) : StrictConvexOn ℝ (ici 0) fun x : ℝ => x ^ n :=
+theorem strict_convex_on_pow {n : ℕ} (hn : 2 ≤ n) : StrictConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n :=
   by 
   apply StrictMonoOn.strict_convex_on_of_deriv (convex_Ici _) (continuous_on_pow _)
   rw [deriv_pow', interior_Ici]
@@ -105,7 +105,7 @@ theorem Real.pow_sum_div_card_le_sum_pow {α : Type _} {s : Finset α} {f : α �
       rwa [← Finset.sum_div, ← Finset.sum_div, div_pow, pow_succ' (s.card : ℝ), ← div_div,
         div_le_iff hs'', div_mul, div_self hs', div_one] at this
     have :=
-      @ConvexOn.map_sum_le ℝ ℝ ℝ α _ _ _ _ _ _ (Set.ici 0) (fun x => x ^ (n + 1)) s
+      @ConvexOn.map_sum_le ℝ ℝ ℝ α _ _ _ _ _ _ (Set.Ici 0) (fun x => x ^ (n + 1)) s
         (fun _ => 1 / s.card) (coe ∘ f) (convex_on_pow (n + 1)) _ _ fun i hi =>
         Set.mem_Ici.2 (hf i hi)
     · simpa only [inv_mul_eq_div, one_div, Algebra.id.smul_eq_mul] using this
@@ -149,7 +149,7 @@ theorem int_prod_range_nonneg (m : ℤ) (n : ℕ) (hn : Even n) : 0 ≤ ∏ k in
   · exact mul_nonneg (sub_nonneg_of_le hmk.le) (sub_nonneg_of_le hmk)
 #align int_prod_range_nonneg int_prod_range_nonneg
 
-theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ ico (0 : ℤ) n) :
+theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ Ico (0 : ℤ) n) :
     0 < ∏ k in Finset.range n, m - k := by
   refine' (int_prod_range_nonneg m n hn).lt_of_ne fun h => hm _
   rw [eq_comm, Finset.prod_eq_zero_iff] at h
@@ -159,7 +159,7 @@ theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ ico (0 
 #align int_prod_range_pos int_prod_range_pos
 
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` -/
-theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (ioi 0) fun x : ℝ => x ^ m := by
+theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := by
   have : ∀ n : ℤ, DifferentiableOn ℝ (fun x => x ^ n) (Ioi (0 : ℝ)) := fun n =>
     differentiableOnZpow _ _ (Or.inl <| lt_irrefl _)
   apply convex_on_of_deriv2_nonneg (convex_Ioi 0) <;> try simp only [interior_Ioi, deriv_zpow']
@@ -174,7 +174,7 @@ theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (ioi 0) fun x : ℝ => x ^ m := 
 
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` except `0` and `1`. -/
 theorem strict_convex_on_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) :
-    StrictConvexOn ℝ (ioi 0) fun x : ℝ => x ^ m := by
+    StrictConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := by
   apply strict_convex_on_of_deriv2_pos' (convex_Ioi 0)
   · exact (continuous_on_zpow₀ m).mono fun x hx => ne_of_gt hx
   intro x hx
@@ -186,7 +186,7 @@ theorem strict_convex_on_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) :
   fin_cases hm <;> cc
 #align strict_convex_on_zpow strict_convex_on_zpow
 
-theorem convex_on_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (ici 0) fun x : ℝ => x ^ p := by
+theorem convex_on_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ p := by
   have A : (deriv fun x : ℝ => x ^ p) = fun x => p * x ^ (p - 1) := by
     ext x
     simp [hp]
@@ -207,7 +207,7 @@ theorem convex_on_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (ici 0) fun x : �
     exact mul_nonneg (sub_nonneg_of_le hp) (rpow_nonneg_of_nonneg hx.le _)
 #align convex_on_rpow convex_on_rpow
 
-theorem strict_convex_on_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (ici 0) fun x : ℝ => x ^ p :=
+theorem strict_convex_on_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (Ici 0) fun x : ℝ => x ^ p :=
   by
   have A : (deriv fun x : ℝ => x ^ p) = fun x => p * x ^ (p - 1) := by
     ext x
@@ -220,7 +220,7 @@ theorem strict_convex_on_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (ici 0
   exact mul_pos (zero_lt_one.trans hp) (mul_pos (sub_pos_of_lt hp) (rpow_pos_of_pos hx _))
 #align strict_convex_on_rpow strict_convex_on_rpow
 
-theorem strict_concave_on_log_Ioi : StrictConcaveOn ℝ (ioi 0) log := by
+theorem strict_concave_on_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log := by
   have h₁ : Ioi 0 ⊆ ({0} : Set ℝ)ᶜ := fun x (hx : 0 < x) (hx' : x = 0) => hx.ne' hx'
   refine'
     strict_concave_on_of_deriv2_neg' (convex_Ioi 0) (continuous_on_log.mono h₁)
@@ -231,7 +231,7 @@ theorem strict_concave_on_log_Ioi : StrictConcaveOn ℝ (ioi 0) log := by
   exact neg_neg_of_pos (inv_pos.2 <| sq_pos_of_ne_zero _ hx.ne')
 #align strict_concave_on_log_Ioi strict_concave_on_log_Ioi
 
-theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (iio 0) log := by
+theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (Iio 0) log := by
   have h₁ : Iio 0 ⊆ ({0} : Set ℝ)ᶜ := fun x (hx : x < 0) (hx' : x = 0) => hx.Ne hx'
   refine'
     strict_concave_on_of_deriv2_neg' (convex_Iio 0) (continuous_on_log.mono h₁)
@@ -285,7 +285,7 @@ theorem deriv2_sqrt_mul_log (x : ℝ) :
 #align deriv2_sqrt_mul_log deriv2_sqrt_mul_log
 
 theorem strict_concave_on_sqrt_mul_log_Ioi :
-    StrictConcaveOn ℝ (Set.ioi 1) fun x => sqrt x * log x := by
+    StrictConcaveOn ℝ (Set.Ioi 1) fun x => sqrt x * log x := by
   apply strict_concave_on_of_deriv2_neg' (convex_Ioi 1) _ fun x hx => _
   ·
     exact
@@ -301,13 +301,13 @@ end SqrtMulLog
 
 open Real
 
-theorem strict_concave_on_sin_Icc : StrictConcaveOn ℝ (icc 0 π) sin := by
+theorem strict_concave_on_sin_Icc : StrictConcaveOn ℝ (Icc 0 π) sin := by
   apply strict_concave_on_of_deriv2_neg (convex_Icc _ _) continuous_on_sin fun x hx => _
   rw [interior_Icc] at hx
   simp [sin_pos_of_mem_Ioo hx]
 #align strict_concave_on_sin_Icc strict_concave_on_sin_Icc
 
-theorem strict_concave_on_cos_Icc : StrictConcaveOn ℝ (icc (-(π / 2)) (π / 2)) cos := by
+theorem strict_concave_on_cos_Icc : StrictConcaveOn ℝ (Icc (-(π / 2)) (π / 2)) cos := by
   apply strict_concave_on_of_deriv2_neg (convex_Icc _ _) continuous_on_cos fun x hx => _
   rw [interior_Icc] at hx
   simp [cos_pos_of_mem_Ioo hx]

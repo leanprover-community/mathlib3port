@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module order.partial_sups
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,20 +147,20 @@ theorem partial_sups_eq_bsupr (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆
   rw [partial_sups_eq_sup_range, Finset.sup_eq_supr]
   congr
   ext a
-  exact supr_congr_Prop (by rw [Finset.mem_range, Nat.lt_succ_iff]) fun _ => rfl
+  exact supᵢ_congr_Prop (by rw [Finset.mem_range, Nat.lt_succ_iff]) fun _ => rfl
 #align partial_sups_eq_bsupr partial_sups_eq_bsupr
 
 @[simp]
 theorem supr_partial_sups_eq (f : ℕ → α) : (⨆ n, partialSups f n) = ⨆ n, f n := by
-  refine' (supr_le fun n => _).antisymm (supr_mono <| le_partial_sups f)
+  refine' (supᵢ_le fun n => _).antisymm (supᵢ_mono <| le_partial_sups f)
   rw [partial_sups_eq_bsupr]
-  exact supr₂_le_supr _ _
+  exact supᵢ₂_le_supᵢ _ _
 #align supr_partial_sups_eq supr_partial_sups_eq
 
 theorem supr_le_supr_of_partial_sups_le_partial_sups {f g : ℕ → α}
     (h : partialSups f ≤ partialSups g) : (⨆ n, f n) ≤ ⨆ n, g n := by
   rw [← supr_partial_sups_eq f, ← supr_partial_sups_eq g]
-  exact supr_mono h
+  exact supᵢ_mono h
 #align supr_le_supr_of_partial_sups_le_partial_sups supr_le_supr_of_partial_sups_le_partial_sups
 
 theorem supr_eq_supr_of_partial_sups_eq_partial_sups {f g : ℕ → α}

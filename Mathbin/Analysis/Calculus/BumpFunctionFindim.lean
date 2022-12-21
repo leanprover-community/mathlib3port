@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.bump_function_findim
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 values in `[0, 1]`, supported in `s` and with `f x = 1`. -/
 theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
     ∃ f : E → ℝ,
-      tsupport f ⊆ s ∧ HasCompactSupport f ∧ ContDiff ℝ ⊤ f ∧ range f ⊆ icc 0 1 ∧ f x = 1 :=
+      tsupport f ⊆ s ∧ HasCompactSupport f ∧ ContDiff ℝ ⊤ f ∧ range f ⊆ Icc 0 1 ∧ f x = 1 :=
   by 
   obtain ⟨d, d_pos, hd⟩ : ∃ (d : ℝ)(hr : 0 < d), Euclidean.closedBall x d ⊆ s
   exact euclidean.nhds_basis_closed_ball.mem_iff.1 hs
@@ -79,7 +79,7 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
 /-- Given an open set `s` in a finite-dimensional real normed vector space, there exists a smooth
 function with values in `[0, 1]` whose support is exactly `s`. -/
 theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
-    ∃ f : E → ℝ, f.support = s ∧ ContDiff ℝ ⊤ f ∧ Set.range f ⊆ Set.icc 0 1 :=
+    ∃ f : E → ℝ, f.support = s ∧ ContDiff ℝ ⊤ f ∧ Set.range f ⊆ Set.Icc 0 1 :=
   by
   /- For any given point `x` in `s`, one can construct a smooth function with support in `s` and
     nonzero at `x`. By second-countability, it follows that we may cover `s` with the supports of

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.subbox_induction
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,12 +91,13 @@ Then `p I` is true. See also `box_integral.box.subbox_induction_on'` for a versi
 theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι)
     (H_ind : ∀ J ≤ I, (∀ J' ∈ splitCenter J, p J') → p J)
     (H_nhds :
-      ∀ z ∈ I.icc,
-        ∃ U ∈ 𝓝[I.icc] z,
+      ∀ z ∈ I.IccCat,
+        ∃ U ∈ 𝓝[I.IccCat] z,
           ∀ J ≤ I,
             ∀ (m : ℕ),
-              z ∈ J.icc →
-                J.icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
+              z ∈ J.IccCat →
+                J.IccCat ⊆ U →
+                  (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I := by
   refine' subbox_induction_on' I (fun J hle hs => (H_ind J hle) fun J' h' => _) H_nhds
   rcases mem_split_center.1 h' with ⟨s, rfl⟩
@@ -113,7 +114,7 @@ theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι)
 This lemma implies that the Henstock filter is nontrivial, hence the Henstock integral is
 well-defined. -/
 theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box ι)
-    (r : (ι → ℝ) → ioi (0 : ℝ)) :
+    (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     ∃ π : TaggedPrepartition I,
       π.IsPartition ∧
         π.IsHenstock ∧
@@ -243,13 +244,13 @@ a function `r : ℝⁿ → (0, ∞)`, returns the union of `π₁` and `π₂.to
 * the distortion of `π` is equal to the maximum of the distortions of `π₁` and `π₂`.
 -/
 def unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
-    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) : TaggedPrepartition I :=
+    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → Ioi (0 : ℝ)) : TaggedPrepartition I :=
   π₁.disjUnion (π₂.toSubordinate r) (((π₂.Union_to_subordinate r).trans hU).symm ▸ disjoint_diff)
 #align
   box_integral.tagged_prepartition.union_compl_to_subordinate BoxIntegral.TaggedPrepartition.unionComplToSubordinate
 
 theorem isPartitionUnionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
-    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     IsPartition (π₁.unionComplToSubordinate π₂ hU r) :=
   Prepartition.isPartitionDisjUnionOfEqDiff ((π₂.Union_to_subordinate r).trans hU)
 #align
@@ -257,7 +258,7 @@ theorem isPartitionUnionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂
 
 @[simp]
 theorem union_compl_to_subordinate_boxes (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
-    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π₁.unionComplToSubordinate π₂ hU r).boxes = π₁.boxes ∪ (π₂.toSubordinate r).boxes :=
   rfl
 #align
@@ -265,7 +266,7 @@ theorem union_compl_to_subordinate_boxes (π₁ : TaggedPrepartition I) (π₂ :
 
 @[simp]
 theorem Union_union_compl_to_subordinate_boxes (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
-    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π₁.unionComplToSubordinate π₂ hU r).union = I :=
   (isPartitionUnionComplToSubordinate _ _ _ _).Union_eq
 #align
@@ -273,7 +274,7 @@ theorem Union_union_compl_to_subordinate_boxes (π₁ : TaggedPrepartition I) (�
 
 @[simp]
 theorem distortion_union_compl_to_subordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
-    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π₁.unionComplToSubordinate π₂ hU r).distortion = max π₁.distortion π₂.distortion := by
   simp [union_compl_to_subordinate]
 #align

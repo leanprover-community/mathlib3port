@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module topology.instances.discrete
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ instance (priority := 100) DiscreteTopology.second_countable_topology_of_encodab
 
 theorem bot_topological_space_eq_generate_from_of_pred_succ_order {α} [PartialOrder α] [PredOrder α]
     [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] :
-    (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = ioi a ∨ s = iio a } := by
+    (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = Ioi a ∨ s = Iio a } := by
   refine' (eq_bot_of_singletons_open fun a => _).symm
   have h_singleton_eq_inter : {a} = Iio (succ a) ∩ Ioi (pred a) := by
     suffices h_singleton_eq_inter' : {a} = Iic a ∩ Ici a
@@ -79,7 +79,7 @@ instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ' [h : Di
 #align discrete_topology.order_topology_of_pred_succ' DiscreteTopology.order_topology_of_pred_succ'
 
 theorem LinearOrder.bot_topological_space_eq_generate_from {α} [LinearOrder α] [PredOrder α]
-    [SuccOrder α] : (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = ioi a ∨ s = iio a } := by
+    [SuccOrder α] : (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = Ioi a ∨ s = Iio a } := by
   refine' (eq_bot_of_singletons_open fun a => _).symm
   have h_singleton_eq_inter : {a} = Iic a ∩ Ici a := by rw [inter_comm, Ici_inter_Iic, Icc_self a]
   by_cases ha_top : IsTop a

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.non_integrable
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ by convex sets, the norm of `f` tends to infinity along `l`, and `f' = O(g)` alo
 is the derivative of `f`, then `g` is not integrable on any interval `a..b` such that
 `[a, b] ∈ l`. -/
 theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f : ℝ → E} {g : ℝ → F}
-    {a b : ℝ} (l : Filter ℝ) [NeBot l] [TendstoIxxClass icc l l] (hl : [a, b] ∈ l)
+    {a b : ℝ} (l : Filter ℝ) [NeBot l] [TendstoIxxClass Icc l l] (hl : [a, b] ∈ l)
     (hd : ∀ᶠ x in l, DifferentiableAt ℝ f x) (hf : Tendsto (fun x => ‖f x‖) l atTop)
     (hfg : deriv f =O[l] g) : ¬IntervalIntegrable g volume a b := by
   intro hgi

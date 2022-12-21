@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,9 +98,9 @@ theorem annihilator_mono (h : N ≤ P) : P.annihilator ≤ N.annihilator := fun 
 
 theorem annihilator_supr (ι : Sort w) (f : ι → Submodule R M) :
     annihilator (⨆ i, f i) = ⨅ i, annihilator (f i) :=
-  le_antisymm (le_infi fun i => annihilator_mono <| le_supr _ _) fun r H =>
+  le_antisymm (le_infᵢ fun i => annihilator_mono <| le_supᵢ _ _) fun r H =>
     mem_annihilator'.2 <|
-      supr_le fun i =>
+      supᵢ_le fun i =>
         have := (mem_infi _).1 H i
         mem_annihilator'.1 this
 #align submodule.annihilator_supr Submodule.annihilator_supr
@@ -224,13 +224,13 @@ theorem smul_inf_le (M₁ M₂ : Submodule R M) : I • (M₁ ⊓ M₂) ≤ I �
   le_inf (Submodule.smul_mono_right inf_le_left) (Submodule.smul_mono_right inf_le_right)
 #align submodule.smul_inf_le Submodule.smul_inf_le
 
-theorem smul_supr {ι : Sort _} {I : Ideal R} {t : ι → Submodule R M} : I • supr t = ⨆ i, I • t i :=
+theorem smul_supr {ι : Sort _} {I : Ideal R} {t : ι → Submodule R M} : I • supᵢ t = ⨆ i, I • t i :=
   map₂_supr_right _ _ _
 #align submodule.smul_supr Submodule.smul_supr
 
 theorem smul_infi_le {ι : Sort _} {I : Ideal R} {t : ι → Submodule R M} :
     I • infi t ≤ ⨅ i, I • t i :=
-  le_infi fun i => smul_mono_right (infi_le _ _)
+  le_infᵢ fun i => smul_mono_right (infᵢ_le _ _)
 #align submodule.smul_infi_le Submodule.smul_infi_le
 
 variable (S : Set R) (T : Set M)
@@ -378,11 +378,11 @@ theorem colon_mono (hn : N₁ ≤ N₂) (hp : P₁ ≤ P₂) : N₁.colon P₂ �
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem infi_colon_supr (ι₁ : Sort w) (f : ι₁ → Submodule R M) (ι₂ : Sort x)
     (g : ι₂ → Submodule R M) : (⨅ i, f i).colon (⨆ j, g j) = ⨅ (i) (j), (f i).colon (g j) :=
-  le_antisymm (le_infi fun i => le_infi fun j => colon_mono (infi_le _ _) (le_supr _ _)) fun r H =>
+  le_antisymm (le_infᵢ fun i => le_infᵢ fun j => colon_mono (infᵢ_le _ _) (le_supᵢ _ _)) fun r H =>
     mem_colon'.2 <|
-      supr_le fun j =>
+      supᵢ_le fun j =>
         map_le_iff_le_comap.1 <|
-          le_infi fun i =>
+          le_infᵢ fun i =>
             map_le_iff_le_comap.2 <|
               mem_colon'.1 <|
                 have := (mem_infi _).1 H i
@@ -888,16 +888,16 @@ theorem IsPrime.radical_le_iff (hJ : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
 #align ideal.is_prime.radical_le_iff Ideal.IsPrime.radical_le_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » m) -/
-theorem radical_eq_Inf (I : Ideal R) : radical I = inf { J : Ideal R | I ≤ J ∧ IsPrime J } :=
-  (le_antisymm (le_Inf fun J hJ => hJ.2.radical_le_iff.2 hJ.1)) fun r hr =>
+theorem radical_eq_Inf (I : Ideal R) : radical I = infₛ { J : Ideal R | I ≤ J ∧ IsPrime J } :=
+  (le_antisymm (le_infₛ fun J hJ => hJ.2.radical_le_iff.2 hJ.1)) fun r hr =>
     by_contradiction fun hri =>
       let ⟨m, (hrm : r ∉ radical m), him, hm⟩ :=
         zorn_nonempty_partial_order₀ { K : Ideal R | r ∉ radical K }
           (fun c hc hcc y hyc =>
-            ⟨sup c, fun ⟨n, hrnc⟩ =>
+            ⟨supₛ c, fun ⟨n, hrnc⟩ =>
               let ⟨y, hyc, hrny⟩ := (Submodule.mem_Sup_of_directed ⟨y, hyc⟩ hcc.DirectedOn).1 hrnc
               hc hyc ⟨n, hrny⟩,
-              fun z => le_Sup⟩)
+              fun z => le_supₛ⟩)
           I hri
       have : ∀ (x) (_ : x ∉ m), r ∈ radical (m ⊔ span {x}) := fun x hxm =>
         by_contradiction fun hrmx =>
@@ -922,7 +922,7 @@ theorem radical_eq_Inf (I : Ideal R) : radical I = inf { J : Ideal R | I ≤ J �
                       m.add_mem (m.mul_mem_right _ hpm)
                         (m.add_mem (m.mul_mem_left _ hfm) (m.mul_mem_left _ hxym))⟩⟩
       hrm <|
-        this.radical.symm ▸ (Inf_le ⟨him, this⟩ : inf { J : Ideal R | I ≤ J ∧ IsPrime J } ≤ m) hr
+        this.radical.symm ▸ (infₛ_le ⟨him, this⟩ : infₛ { J : Ideal R | I ≤ J ∧ IsPrime J } ≤ m) hr
 #align ideal.radical_eq_Inf Ideal.radical_eq_Inf
 
 theorem is_radical_bot_of_no_zero_divisors {R} [CommSemiring R] [NoZeroDivisors R] :
@@ -1421,7 +1421,7 @@ theorem comap_inf : comap f (K ⊓ L) = comap f K ⊓ comap f L :=
 
 variable {ι : Sort _}
 
-theorem map_supr (K : ι → Ideal R) : (supr K).map f = ⨆ i, (K i).map f :=
+theorem map_supr (K : ι → Ideal R) : (supᵢ K).map f = ⨆ i, (K i).map f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supr
 #align ideal.map_supr Ideal.map_supr
 
@@ -1429,16 +1429,16 @@ theorem comap_infi (K : ι → Ideal S) : (infi K).comap f = ⨅ i, (K i).comap 
   (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infi
 #align ideal.comap_infi Ideal.comap_infi
 
-theorem map_Sup (s : Set (Ideal R)) : (sup s).map f = ⨆ I ∈ s, (I : Ideal R).map f :=
+theorem map_Sup (s : Set (Ideal R)) : (supₛ s).map f = ⨆ I ∈ s, (I : Ideal R).map f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).l_Sup
 #align ideal.map_Sup Ideal.map_Sup
 
-theorem comap_Inf (s : Set (Ideal S)) : (inf s).comap f = ⨅ I ∈ s, (I : Ideal S).comap f :=
+theorem comap_Inf (s : Set (Ideal S)) : (infₛ s).comap f = ⨅ I ∈ s, (I : Ideal S).comap f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).u_Inf
 #align ideal.comap_Inf Ideal.comap_Inf
 
-theorem comap_Inf' (s : Set (Ideal S)) : (inf s).comap f = ⨅ I ∈ comap f '' s, I :=
-  trans (comap_Inf f s) (by rw [infi_image])
+theorem comap_Inf' (s : Set (Ideal S)) : (infₛ s).comap f = ⨅ I ∈ comap f '' s, I :=
+  trans (comap_Inf f s) (by rw [infᵢ_image])
 #align ideal.comap_Inf' Ideal.comap_Inf'
 
 theorem comap_is_prime [H : IsPrime K] : IsPrime (comap f K) :=
@@ -1532,7 +1532,7 @@ theorem map_sup_comap_of_surjective (I J : Ideal S) : (I.comap f ⊔ J.comap f).
   (giMapComap f hf).l_sup_u _ _
 #align ideal.map_sup_comap_of_surjective Ideal.map_sup_comap_of_surjective
 
-theorem map_supr_comap_of_surjective (K : ι → Ideal S) : (⨆ i, (K i).comap f).map f = supr K :=
+theorem map_supr_comap_of_surjective (K : ι → Ideal S) : (⨆ i, (K i).comap f).map f = supᵢ K :=
   (giMapComap f hf).l_supr_u _
 #align ideal.map_supr_comap_of_surjective Ideal.map_supr_comap_of_surjective
 
@@ -2171,13 +2171,13 @@ variable [Ring R] [Ring S] [rc : RingHomClass F R S]
 include rc
 
 theorem map_Inf {A : Set (Ideal R)} {f : F} (hf : Function.Surjective f) :
-    (∀ J ∈ A, RingHom.ker f ≤ J) → map f (inf A) = inf (map f '' A) := by
-  refine' fun h => le_antisymm (le_Inf _) _
+    (∀ J ∈ A, RingHom.ker f ≤ J) → map f (infₛ A) = infₛ (map f '' A) := by
+  refine' fun h => le_antisymm (le_infₛ _) _
   · intro j hj y hy
     cases' (mem_map_iff_of_surjective f hf).1 hy with x hx
     cases' (Set.mem_image _ _ _).mp hj with J hJ
     rw [← hJ.right, ← hx.right]
-    exact mem_map_of_mem f (Inf_le_of_le hJ.left (le_of_eq rfl) hx.left)
+    exact mem_map_of_mem f (infₛ_le_of_le hJ.left (le_of_eq rfl) hx.left)
   · intro y hy
     cases' hf y with x hx
     refine' hx ▸ mem_map_of_mem f _

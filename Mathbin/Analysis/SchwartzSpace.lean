@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,7 +167,7 @@ section SeminormAux
 /-- Helper definition for the seminorms of the Schwartz space. -/
 @[protected]
 def seminormAux (k n : ℕ) (f : 𝓢(E, F)) : ℝ :=
-  inf { c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ c }
+  infₛ { c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ c }
 #align schwartz_map.seminorm_aux SchwartzMap.seminormAux
 
 theorem seminorm_aux_nonneg (k n : ℕ) (f : 𝓢(E, F)) : 0 ≤ f.seminormAux k n :=

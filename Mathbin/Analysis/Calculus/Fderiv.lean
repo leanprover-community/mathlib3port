@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1288,7 +1288,7 @@ theorem DifferentiableAt.comp {g : F → G} (hg : DifferentiableAt 𝕜 g (f x))
 
 theorem DifferentiableAt.compDifferentiableWithinAt {g : F → G} (hg : DifferentiableAt 𝕜 g (f x))
     (hf : DifferentiableWithinAt 𝕜 f s x) : DifferentiableWithinAt 𝕜 (g ∘ f) s x :=
-  hg.DifferentiableWithinAt.comp x hf (maps_to_univ _ _)
+  hg.DifferentiableWithinAt.comp x hf (mapsTo_univ _ _)
 #align differentiable_at.comp_differentiable_within_at DifferentiableAt.compDifferentiableWithinAt
 
 theorem fderivWithin.comp {g : F → G} {t : Set F} (hg : DifferentiableWithinAt 𝕜 g t (f x))
@@ -1335,7 +1335,7 @@ theorem Differentiable.comp {g : F → G} (hg : Differentiable 𝕜 g) (hf : Dif
 
 theorem Differentiable.compDifferentiableOn {g : F → G} (hg : Differentiable 𝕜 g)
     (hf : DifferentiableOn 𝕜 f s) : DifferentiableOn 𝕜 (g ∘ f) s :=
-  hg.DifferentiableOn.comp hf (maps_to_univ _ _)
+  hg.DifferentiableOn.comp hf (mapsTo_univ _ _)
 #align differentiable.comp_differentiable_on Differentiable.compDifferentiableOn
 
 /-- The chain rule for derivatives in the sense of strict differentiability. -/

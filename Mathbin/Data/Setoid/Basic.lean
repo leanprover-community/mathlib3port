@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module data.setoid.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ theorem inf_iff_and {r s : Setoid α} {x y} : (r ⊓ s).Rel x y ↔ r.Rel x y �
 #align setoid.inf_iff_and Setoid.inf_iff_and
 
 /-- The infimum of a set of equivalence relations. -/
-instance : HasInf (Setoid α) :=
+instance : InfSet (Setoid α) :=
   ⟨fun S =>
     ⟨fun x y => ∀ r ∈ S, Rel r x y,
       ⟨fun x r hr => r.refl' x, fun _ _ h r hr => r.symm' <| h r hr, fun _ _ _ h1 h2 r hr =>
@@ -162,9 +162,9 @@ instance : HasInf (Setoid α) :=
 
 /-- The underlying binary operation of the infimum of a set of equivalence relations
     is the infimum of the set's image under the map to the underlying binary operation. -/
-theorem Inf_def {s : Set (Setoid α)} : (inf s).Rel = inf (rel '' s) := by
+theorem Inf_def {s : Set (Setoid α)} : (infₛ s).Rel = infₛ (rel '' s) := by
   ext
-  simp only [Inf_image, infi_apply, infi_Prop_eq]
+  simp only [infₛ_image, infᵢ_apply, infᵢ_Prop_eq]
   rfl
 #align setoid.Inf_def Setoid.Inf_def
 
@@ -208,12 +208,12 @@ theorem eq_top_iff {s : Setoid α} : s = (⊤ : Setoid α) ↔ ∀ x y : α, s.R
 /-- The inductively defined equivalence closure of a binary relation r is the infimum
     of the set of all equivalence relations containing r. -/
 theorem eqv_gen_eq (r : α → α → Prop) :
-    EqvGen.Setoid r = inf { s : Setoid α | ∀ ⦃x y⦄, r x y → s.Rel x y } :=
+    EqvGen.Setoid r = infₛ { s : Setoid α | ∀ ⦃x y⦄, r x y → s.Rel x y } :=
   le_antisymm
     (fun _ _ H =>
       EqvGen.ndrec (fun _ _ h _ hs => hs h) (refl' _) (fun _ _ _ => symm' _)
         (fun _ _ _ _ _ => trans' _) H)
-    (Inf_le fun _ _ h => EqvGen.rel _ _ h)
+    (infₛ_le fun _ _ h => EqvGen.rel _ _ h)
 #align setoid.eqv_gen_eq Setoid.eqv_gen_eq
 
 /-- The supremum of two equivalence relations r and s is the equivalence closure of the binary
@@ -234,7 +234,7 @@ theorem sup_def {r s : Setoid α} : r ⊔ s = EqvGen.Setoid (r.Rel ⊔ s.Rel) :=
 /-- The supremum of a set S of equivalence relations is the equivalence closure of the binary
     relation `there exists r ∈ S relating x and y`. -/
 theorem Sup_eq_eqv_gen (S : Set (Setoid α)) :
-    sup S = EqvGen.Setoid fun x y => ∃ r : Setoid α, r ∈ S ∧ r.Rel x y := by
+    supₛ S = EqvGen.Setoid fun x y => ∃ r : Setoid α, r ∈ S ∧ r.Rel x y := by
   rw [eqv_gen_eq]
   apply congr_arg Inf
   simp only [upperBounds, le_def, and_imp, exists_imp]
@@ -244,16 +244,16 @@ theorem Sup_eq_eqv_gen (S : Set (Setoid α)) :
 
 /-- The supremum of a set of equivalence relations is the equivalence closure of the
     supremum of the set's image under the map to the underlying binary operation. -/
-theorem Sup_def {s : Set (Setoid α)} : sup s = EqvGen.Setoid (sup (rel '' s)) := by
-  rw [Sup_eq_eqv_gen, Sup_image]
+theorem Sup_def {s : Set (Setoid α)} : supₛ s = EqvGen.Setoid (supₛ (rel '' s)) := by
+  rw [Sup_eq_eqv_gen, supₛ_image]
   congr with (x y)
-  simp only [supr_apply, supr_Prop_eq, exists_prop]
+  simp only [supᵢ_apply, supᵢ_Prop_eq, exists_prop]
 #align setoid.Sup_def Setoid.Sup_def
 
 /-- The equivalence closure of an equivalence relation r is r. -/
 @[simp]
 theorem eqv_gen_of_setoid (r : Setoid α) : EqvGen.Setoid r.R = r :=
-  le_antisymm (by rw [eqv_gen_eq] <;> exact Inf_le fun _ _ => id) EqvGen.rel
+  le_antisymm (by rw [eqv_gen_eq] <;> exact infₛ_le fun _ _ => id) EqvGen.rel
 #align setoid.eqv_gen_of_setoid Setoid.eqv_gen_of_setoid
 
 /-- Equivalence closure is idempotent. -/
@@ -265,7 +265,7 @@ theorem eqv_gen_idem (r : α → α → Prop) : EqvGen.Setoid (EqvGen.Setoid r).
 /-- The equivalence closure of a binary relation r is contained in any equivalence
     relation containing r. -/
 theorem eqv_gen_le {r : α → α → Prop} {s : Setoid α} (h : ∀ x y, r x y → s.Rel x y) :
-    EqvGen.Setoid r ≤ s := by rw [eqv_gen_eq] <;> exact Inf_le h
+    EqvGen.Setoid r ≤ s := by rw [eqv_gen_eq] <;> exact infₛ_le h
 #align setoid.eqv_gen_le Setoid.eqv_gen_le
 
 /-- Equivalence closure of binary relations is monotone. -/

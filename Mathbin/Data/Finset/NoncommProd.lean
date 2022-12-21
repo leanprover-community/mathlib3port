@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.finset.noncomm_prod
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -367,7 +367,7 @@ variable {M : ι → Type _} [∀ i, Monoid (M i)]
 @[to_additive]
 theorem noncomm_prod_mul_single [Fintype ι] [DecidableEq ι] (x : ∀ i, M i) :
     (univ.noncommProd (fun i => Pi.mulSingle i (x i)) fun i _ j _ _ =>
-        Pi.mul_single_apply_commute x i j) =
+        Pi.mulSingle_apply_commute x i j) =
       x :=
   by 
   ext i

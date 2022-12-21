@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.defs
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -184,18 +184,14 @@ section Take'
 
 variable [Inhabited α]
 
-/- warning: list.take' -> List.takeD is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inhabited.{succ u1} α], Nat -> (List.{u1} α) -> (List.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, Nat -> (List.{u1} α) -> α -> (List.{u1} α)
-Case conversion may be inaccurate. Consider using '#align list.take' List.takeDₓ'. -/
+#print List.takeI /-
 /-- Take `n` elements from a list `l`. If `l` has less than `n` elements, append `n - length l`
 elements `default`. -/
-def takeD : ∀ n, List α → List α
+def takeI : ∀ n, List α → List α
   | 0, l => []
   | n + 1, l => l.head :: take' n l.tail
-#align list.take' List.takeD
+#align list.take' List.takeI
+-/
 
 end Take'
 

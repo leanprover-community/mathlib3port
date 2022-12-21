@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.grading
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,12 +37,12 @@ def evenOdd (i : Zmod 2) : Submodule R (CliffordAlgebra Q) :=
 #align clifford_algebra.even_odd CliffordAlgebra.evenOdd
 
 theorem one_le_even_odd_zero : 1 ≤ evenOdd Q 0 := by
-  refine' le_trans _ (le_supr _ ⟨0, Nat.cast_zero⟩)
+  refine' le_trans _ (le_supᵢ _ ⟨0, Nat.cast_zero⟩)
   exact (pow_zero _).ge
 #align clifford_algebra.one_le_even_odd_zero CliffordAlgebra.one_le_even_odd_zero
 
 theorem range_ι_le_even_odd_one : (ι Q).range ≤ evenOdd Q 1 := by
-  refine' le_trans _ (le_supr _ ⟨1, Nat.cast_one⟩)
+  refine' le_trans _ (le_supᵢ _ ⟨1, Nat.cast_one⟩)
   exact (pow_one _).ge
 #align clifford_algebra.range_ι_le_even_odd_one CliffordAlgebra.range_ι_le_even_odd_one
 
@@ -147,9 +147,9 @@ theorem supr_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ := by
   calc
     (⨆ (i : Zmod 2) (j : { n // ↑n = i }), (ι Q).range ^ ↑j) =
         ⨆ i : Σi : Zmod 2, { n : ℕ // ↑n = i }, (ι Q).range ^ (i.2 : ℕ) :=
-      by rw [supr_sigma]
+      by rw [supᵢ_sigma]
     _ = ⨆ i : ℕ, (ι Q).range ^ i :=
-      Function.Surjective.supr_congr (fun i => i.2) (fun i => ⟨⟨_, i, rfl⟩, rfl⟩) fun _ => rfl
+      Function.Surjective.supᵢ_congr (fun i => i.2) (fun i => ⟨⟨_, i, rfl⟩, rfl⟩) fun _ => rfl
     
 #align clifford_algebra.supr_ι_range_eq_top CliffordAlgebra.supr_ι_range_eq_top
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.exponent
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,7 +266,7 @@ variable [CommMonoid G]
 @[to_additive]
 theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g :=
   by 
-  rw [supr]
+  rw [supᵢ]
   rcases eq_or_ne (exponent G) 0 with (he | he)
   · rw [he, Set.Infinite.Nat.Sup_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
   have hne : (Set.range (orderOf : G → ℕ)).Nonempty := ⟨1, 1, order_of_one⟩
@@ -324,7 +324,7 @@ variable [CancelCommMonoid G]
 @[to_additive]
 theorem exponent_eq_max'_order_of [Fintype G] :
     exponent G = ((@Finset.univ G _).image orderOf).max' ⟨1, by simp⟩ := by
-  rw [← Finset.Nonempty.cSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← supr]
+  rw [← Finset.Nonempty.cSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← supᵢ]
   exact exponent_eq_supr_order_of order_of_pos
 #align monoid.exponent_eq_max'_order_of Monoid.exponent_eq_max'_order_of
 

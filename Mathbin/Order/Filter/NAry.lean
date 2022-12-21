@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.filter.n_ary
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,13 +151,13 @@ theorem NeBot.map₂ (hf : f.ne_bot) (hg : g.ne_bot) : (map₂ m f g).ne_bot :=
   map₂_ne_bot_iff.2 ⟨hf, hg⟩
 #align filter.ne_bot.map₂ Filter.NeBot.map₂
 
-theorem NeBot.ofMap₂Left (h : (map₂ m f g).ne_bot) : f.ne_bot :=
+theorem NeBot.of_map₂_left (h : (map₂ m f g).ne_bot) : f.ne_bot :=
   (map₂_ne_bot_iff.1 h).1
-#align filter.ne_bot.of_map₂_left Filter.NeBot.ofMap₂Left
+#align filter.ne_bot.of_map₂_left Filter.NeBot.of_map₂_left
 
-theorem NeBot.ofMap₂Right (h : (map₂ m f g).ne_bot) : g.ne_bot :=
+theorem NeBot.of_map₂_right (h : (map₂ m f g).ne_bot) : g.ne_bot :=
   (map₂_ne_bot_iff.1 h).2
-#align filter.ne_bot.of_map₂_right Filter.NeBot.ofMap₂Right
+#align filter.ne_bot.of_map₂_right Filter.NeBot.of_map₂_right
 
 theorem map₂_sup_left : map₂ m (f₁ ⊔ f₂) g = map₂ m f₁ g ⊔ map₂ m f₂ g := by
   ext u

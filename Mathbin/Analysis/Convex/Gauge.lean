@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.gauge
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,19 +57,19 @@ variable [AddCommGroup E] [Module ℝ E]
 /-- The Minkowski functional. Given a set `s` in a real vector space, `gauge s` is the functional
 which sends `x : E` to the smallest `r : ℝ` such that `x` is in `s` scaled by `r`. -/
 def gauge (s : Set E) (x : E) : ℝ :=
-  inf { r : ℝ | 0 < r ∧ x ∈ r • s }
+  infₛ { r : ℝ | 0 < r ∧ x ∈ r • s }
 #align gauge gauge
 
 variable {s t : Set E} {a : ℝ} {x : E}
 
-theorem gauge_def : gauge s x = inf ({ r ∈ Set.ioi 0 | x ∈ r • s }) :=
+theorem gauge_def : gauge s x = infₛ ({ r ∈ Set.Ioi 0 | x ∈ r • s }) :=
   rfl
 #align gauge_def gauge_def
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]] -/
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
-theorem gauge_def' : gauge s x = inf ({ r ∈ Set.ioi 0 | r⁻¹ • x ∈ s }) := by
+theorem gauge_def' : gauge s x = infₛ ({ r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s }) := by
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
   exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
@@ -181,7 +181,7 @@ theorem gauge_lt_eq' (absorbs : Absorbent ℝ s) (a : ℝ) :
 #align gauge_lt_eq' gauge_lt_eq'
 
 theorem gauge_lt_eq (absorbs : Absorbent ℝ s) (a : ℝ) :
-    { x | gauge s x < a } = ⋃ r ∈ Set.ioo 0 (a : ℝ), r • s := by
+    { x | gauge s x < a } = ⋃ r ∈ Set.Ioo 0 (a : ℝ), r • s := by
   ext
   simp_rw [mem_set_of_eq, mem_Union, exists_prop, mem_Ioo, and_assoc']
   exact
@@ -431,7 +431,7 @@ protected theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) 
     rw [p.mem_ball_zero, map_smul_eq_mul, Real.norm_eq_abs, abs_of_pos (inv_pos.2 hpx₂),
       inv_mul_lt_iff hpx₂, mul_one]
     exact lt_mul_of_one_lt_left hpx one_lt_two
-  refine' IsGlb.cInf_eq ⟨fun r => _, fun r hr => le_of_forall_pos_le_add fun ε hε => _⟩ hp
+  refine' IsGLB.cInf_eq ⟨fun r => _, fun r hr => le_of_forall_pos_le_add fun ε hε => _⟩ hp
   · rintro ⟨hr, y, hy, rfl⟩
     rw [p.mem_ball_zero] at hy
     rw [map_smul_eq_mul, Real.norm_eq_abs, abs_of_pos hr]

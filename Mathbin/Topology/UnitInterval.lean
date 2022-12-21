@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.unit_interval
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,14 +28,14 @@ noncomputable section
 
 open Classical TopologicalSpace Filter
 
-open Set Int Set.icc
+open Set Int Set.Icc
 
 /-! ### The unit interval -/
 
 
 /-- The unit interval `[0,1]` in ℝ. -/
 abbrev unitInterval : Set ℝ :=
-  Set.icc 0 1
+  Set.Icc 0 1
 #align unit_interval unitInterval
 
 -- mathport name: unit_interval
@@ -164,7 +164,7 @@ theorem le_one' {t : I} : t ≤ 1 :=
   t.2.2
 #align unit_interval.le_one' unitInterval.le_one'
 
-theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.icc (0 : ℝ) (1 / a) := by
+theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.Icc (0 : ℝ) (1 / a) := by
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor
   · exact nonneg_of_mul_nonneg_right h₁ ha
   · rwa [le_div_iff ha, mul_comm]
@@ -172,7 +172,7 @@ theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.icc
   · rwa [le_div_iff ha, mul_comm] at h₂
 #align unit_interval.mul_pos_mem_iff unitInterval.mul_pos_mem_iff
 
-theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.icc (1 / 2 : ℝ) 1 := by
+theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.Icc (1 / 2 : ℝ) 1 := by
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith
 #align unit_interval.two_mul_sub_one_mem_iff unitInterval.two_mul_sub_one_mem_iff
 
@@ -180,12 +180,12 @@ end unitInterval
 
 @[simp]
 theorem proj_Icc_eq_zero {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 0 ↔ x ≤ 0 :=
-  proj_Icc_eq_left zero_lt_one
+  projIcc_eq_left zero_lt_one
 #align proj_Icc_eq_zero proj_Icc_eq_zero
 
 @[simp]
 theorem proj_Icc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 ≤ x :=
-  proj_Icc_eq_right zero_lt_one
+  projIcc_eq_right zero_lt_one
 #align proj_Icc_eq_one proj_Icc_eq_one
 
 namespace Tactic.Interactive
@@ -210,26 +210,26 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Topo
 /-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
 -/
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
-    affineHomeomorph a b h.Ne.symm '' Set.icc 0 1 = Set.icc b (a + b) := by simp [h]
+    affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by simp [h]
 #align affine_homeomorph_image_I affine_homeomorph_image_I
 
 /-- The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
 -/
-def iccHomeoI (a b : 𝕜) (h : a < b) : Set.icc a b ≃ₜ Set.icc (0 : 𝕜) (1 : 𝕜) := by
-  let e := Homeomorph.image (affineHomeomorph (b - a) a (sub_pos.mpr h).Ne.symm) (Set.icc 0 1)
+def iccHomeoI (a b : 𝕜) (h : a < b) : Set.Icc a b ≃ₜ Set.Icc (0 : 𝕜) (1 : 𝕜) := by
+  let e := Homeomorph.image (affineHomeomorph (b - a) a (sub_pos.mpr h).Ne.symm) (Set.Icc 0 1)
   refine' (e.trans _).symm
   apply Homeomorph.setCongr
   simp [sub_pos.mpr h]
 #align Icc_homeo_I iccHomeoI
 
 @[simp]
-theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.icc a b) :
+theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc a b) :
     ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=
   rfl
 #align Icc_homeo_I_apply_coe Icc_homeo_I_apply_coe
 
 @[simp]
-theorem Icc_homeo_I_symm_apply_coe (a b : 𝕜) (h : a < b) (x : Set.icc (0 : 𝕜) (1 : 𝕜)) :
+theorem Icc_homeo_I_symm_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc (0 : 𝕜) (1 : 𝕜)) :
     ((iccHomeoI a b h).symm x : 𝕜) = (b - a) * x + a :=
   rfl
 #align Icc_homeo_I_symm_apply_coe Icc_homeo_I_symm_apply_coe

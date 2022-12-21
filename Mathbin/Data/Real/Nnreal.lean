@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.real.nnreal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -425,14 +425,14 @@ example : NoMaxOrder ℝ≥0 := by infer_instance
 isomorphic to the interval `set.Iic a`. -/
 @[simps apply_coe_coe]
 def orderIsoIccZeroCoe (a : ℝ≥0) :
-    Set.icc (0 : ℝ) a ≃o
-      Set.iic a where 
-  toEquiv := Equiv.Set.sep (Set.ici 0) fun x => x ≤ a
+    Set.Icc (0 : ℝ) a ≃o
+      Set.Iic a where 
+  toEquiv := Equiv.Set.sep (Set.Ici 0) fun x => x ≤ a
   map_rel_iff' x y := Iff.rfl
 #align nnreal.order_iso_Icc_zero_coe Nnreal.orderIsoIccZeroCoe
 
 @[simp]
-theorem order_iso_Icc_zero_coe_symm_apply_coe (a : ℝ≥0) (b : Set.iic a) :
+theorem order_iso_Icc_zero_coe_symm_apply_coe (a : ℝ≥0) (b : Set.Iic a) :
     ((orderIsoIccZeroCoe a).symm b : ℝ) = b :=
   rfl
 #align nnreal.order_iso_Icc_zero_coe_symm_apply_coe Nnreal.order_iso_Icc_zero_coe_symm_apply_coe
@@ -459,26 +459,26 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0 :=
   Nonneg.conditionallyCompleteLinearOrderBot Real.Sup_empty.le
 
 @[norm_cast]
-theorem coe_Sup (s : Set ℝ≥0) : (↑(sup s) : ℝ) = sup ((coe : ℝ≥0 → ℝ) '' s) :=
+theorem coe_Sup (s : Set ℝ≥0) : (↑(supₛ s) : ℝ) = supₛ ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <|
-    @subset_Sup_of_within ℝ (Set.ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
+    @subset_Sup_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
       (Real.Sup_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Sup Nnreal.coe_Sup
 
 @[norm_cast]
 theorem coe_supr {ι : Sort _} (s : ι → ℝ≥0) : (↑(⨆ i, s i) : ℝ) = ⨆ i, s i := by
-  rw [supr, supr, coe_Sup, Set.range_comp]
+  rw [supᵢ, supᵢ, coe_Sup, Set.range_comp]
 #align nnreal.coe_supr Nnreal.coe_supr
 
 @[norm_cast]
-theorem coe_Inf (s : Set ℝ≥0) : (↑(inf s) : ℝ) = inf ((coe : ℝ≥0 → ℝ) '' s) :=
+theorem coe_Inf (s : Set ℝ≥0) : (↑(infₛ s) : ℝ) = infₛ ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <|
-    @subset_Inf_of_within ℝ (Set.ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
+    @subset_Inf_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
       (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Inf Nnreal.coe_Inf
 
 @[simp]
-theorem Inf_empty : inf (∅ : Set ℝ≥0) = 0 := by
+theorem Inf_empty : infₛ (∅ : Set ℝ≥0) = 0 := by
   rw [← Nnreal.coe_eq_zero, coe_Inf, Set.image_empty, Real.Inf_empty]
 #align nnreal.Inf_empty Nnreal.Inf_empty
 
@@ -728,7 +728,7 @@ theorem exists_pow_lt_of_lt_one {a b : ℝ≥0} (ha : 0 < a) (hb : b < 1) : ∃ 
 #align nnreal.exists_pow_lt_of_lt_one Nnreal.exists_pow_lt_of_lt_one
 
 theorem exists_mem_Ico_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 < y) :
-    ∃ n : ℤ, x ∈ Set.ico (y ^ n) (y ^ (n + 1)) := by
+    ∃ n : ℤ, x ∈ Set.Ico (y ^ n) (y ^ (n + 1)) := by
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, (y : ℝ) ^ n ≤ x ∧ (x : ℝ) < y ^ (n + 1) :=
     exists_mem_Ico_zpow (bot_lt_iff_ne_bot.mpr hx) hy
   rw [← Nnreal.coe_zpow] at hn h'n
@@ -736,7 +736,7 @@ theorem exists_mem_Ico_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 <
 #align nnreal.exists_mem_Ico_zpow Nnreal.exists_mem_Ico_zpow
 
 theorem exists_mem_Ioc_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 < y) :
-    ∃ n : ℤ, x ∈ Set.ioc (y ^ n) (y ^ (n + 1)) := by
+    ∃ n : ℤ, x ∈ Set.Ioc (y ^ n) (y ^ (n + 1)) := by
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, (y : ℝ) ^ n < x ∧ (x : ℝ) ≤ y ^ (n + 1) :=
     exists_mem_Ioc_zpow (bot_lt_iff_ne_bot.mpr hx) hy
   rw [← Nnreal.coe_zpow] at hn h'n
@@ -990,7 +990,7 @@ theorem le_to_nnreal_of_coe_le {x : ℝ≥0} {y : ℝ} (h : ↑x ≤ y) : x ≤ 
   (le_to_nnreal_iff_coe_le <| x.2.trans h).2 h
 #align nnreal.le_to_nnreal_of_coe_le Nnreal.le_to_nnreal_of_coe_le
 
-theorem Sup_of_not_bdd_above {s : Set ℝ≥0} (hs : ¬BddAbove s) : HasSup.sup s = 0 := by
+theorem Sup_of_not_bdd_above {s : Set ℝ≥0} (hs : ¬BddAbove s) : SupSet.supₛ s = 0 := by
   rw [← bdd_above_coe] at hs
   rw [← Nnreal.coe_eq, coe_Sup]
   exact Sup_of_not_bdd_above hs
@@ -1041,7 +1041,7 @@ theorem le_mul_infi {a : ℝ≥0} {g : ℝ≥0} {h : ι → ℝ≥0} (H : ∀ j,
   exact le_cinfi H
 #align nnreal.le_mul_infi Nnreal.le_mul_infi
 
-theorem mul_supr_le {a : ℝ≥0} {g : ℝ≥0} {h : ι → ℝ≥0} (H : ∀ j, g * h j ≤ a) : g * supr h ≤ a := by
+theorem mul_supr_le {a : ℝ≥0} {g : ℝ≥0} {h : ι → ℝ≥0} (H : ∀ j, g * h j ≤ a) : g * supᵢ h ≤ a := by
   rw [mul_supr]
   exact csupr_le H
 #align nnreal.mul_supr_le Nnreal.mul_supr_le
@@ -1051,7 +1051,7 @@ theorem le_infi_mul {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i,
   exact le_cinfi H
 #align nnreal.le_infi_mul Nnreal.le_infi_mul
 
-theorem supr_mul_le {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i, g i * h ≤ a) : supr g * h ≤ a := by
+theorem supr_mul_le {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i, g i * h ≤ a) : supᵢ g * h ≤ a := by
   rw [supr_mul]
   exact csupr_le H
 #align nnreal.supr_mul_le Nnreal.supr_mul_le
@@ -1062,7 +1062,7 @@ theorem le_infi_mul_infi {a : ℝ≥0} {g h : ι → ℝ≥0} (H : ∀ i j, a �
 #align nnreal.le_infi_mul_infi Nnreal.le_infi_mul_infi
 
 theorem supr_mul_supr_le {a : ℝ≥0} {g h : ι → ℝ≥0} (H : ∀ i j, g i * h j ≤ a) :
-    supr g * supr h ≤ a :=
+    supᵢ g * supᵢ h ≤ a :=
   supr_mul_le fun i => mul_supr_le <| H _
 #align nnreal.supr_mul_supr_le Nnreal.supr_mul_supr_le
 

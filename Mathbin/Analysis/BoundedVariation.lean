@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ def HasBoundedVariationOn (f : α → E) (s : Set α) :=
 /-- A function has locally bounded variation on a set `s` if, given any interval `[a, b]` with
 endpoints in `s`, then the function has finite variation on `s ∩ [a, b]`. -/
 def HasLocallyBoundedVariationOn (f : α → E) (s : Set α) :=
-  ∀ a b, a ∈ s → b ∈ s → HasBoundedVariationOn f (s ∩ icc a b)
+  ∀ a b, a ∈ s → b ∈ s → HasBoundedVariationOn f (s ∩ Icc a b)
 #align has_locally_bounded_variation_on HasLocallyBoundedVariationOn
 
 /-! ## Basic computations of variation -/
@@ -91,14 +91,14 @@ theorem sum_le (f : α → E) {s : Set α} (n : ℕ) {u : ℕ → α} (hu : Mono
     (∑ i in Finset.range p.1, edist (f ((p.2 : ℕ → α) (i + 1))) (f ((p.2 : ℕ → α) i))) ≤
       evariationOn f s
   exact
-    le_supr
+    le_supᵢ
       (fun p : ℕ × { u : ℕ → α // Monotone u ∧ ∀ i, u i ∈ s } =>
         ∑ i in Finset.range p.1, edist (f ((p.2 : ℕ → α) (i + 1))) (f ((p.2 : ℕ → α) i)))
       _
 #align evariation_on.sum_le evariationOn.sum_le
 
 theorem sum_le_of_monotone_on_Iic (f : α → E) {s : Set α} {n : ℕ} {u : ℕ → α}
-    (hu : MonotoneOn u (iic n)) (us : ∀ i ≤ n, u i ∈ s) :
+    (hu : MonotoneOn u (Iic n)) (us : ∀ i ≤ n, u i ∈ s) :
     (∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) ≤ evariationOn f s := by
   let v i := if i ≤ n then u i else u n
   have vs : ∀ i, v i ∈ s := by 
@@ -127,7 +127,7 @@ theorem sum_le_of_monotone_on_Iic (f : α → E) {s : Set α} {n : ℕ} {u : ℕ
 #align evariation_on.sum_le_of_monotone_on_Iic evariationOn.sum_le_of_monotone_on_Iic
 
 theorem sum_le_of_monotone_on_Icc (f : α → E) {s : Set α} {m n : ℕ} {u : ℕ → α}
-    (hu : MonotoneOn u (icc m n)) (us : ∀ i ∈ icc m n, u i ∈ s) :
+    (hu : MonotoneOn u (Icc m n)) (us : ∀ i ∈ Icc m n, u i ∈ s) :
     (∑ i in Finset.ico m n, edist (f (u (i + 1))) (f (u i))) ≤ evariationOn f s := by
   rcases le_or_lt n m with (hnm | hmn)
   · simp only [Finset.Ico_eq_empty_of_le hnm, Finset.sum_empty, zero_le']
@@ -156,7 +156,7 @@ theorem sum_le_of_monotone_on_Icc (f : α → E) {s : Set α} {m n : ℕ} {u : �
 #align evariation_on.sum_le_of_monotone_on_Icc evariationOn.sum_le_of_monotone_on_Icc
 
 theorem mono (f : α → E) {s t : Set α} (hst : t ⊆ s) : evariationOn f t ≤ evariationOn f s := by
-  apply supr_le _
+  apply supᵢ_le _
   rintro ⟨n, ⟨u, hu, ut⟩⟩
   exact sum_le f n hu fun i => hst (ut i)
 #align evariation_on.mono evariationOn.mono
@@ -176,7 +176,7 @@ theorem HasBoundedVariationOn.hasLocallyBoundedVariationOn {f : α → E} {s : S
 protected theorem subsingleton (f : α → E) {s : Set α} (hs : s.Subsingleton) :
     evariationOn f s = 0 := by 
   apply le_antisymm _ (zero_le _)
-  apply supr_le _
+  apply supᵢ_le _
   rintro ⟨n, ⟨u, hu, ut⟩⟩
   have : ∀ i, u i = u 0 := fun i => hs (ut _) (ut _)
   simp [Subtype.coe_mk, le_zero_iff, Finset.sum_eq_zero_iff, Finset.mem_range, this]
@@ -227,7 +227,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
     ∃ (v : ℕ → α)(m : ℕ),
       Monotone v ∧
         (∀ i, v i ∈ s) ∧
-          x ∈ v '' iio m ∧
+          x ∈ v '' Iio m ∧
             (∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) ≤
               ∑ j in Finset.range m, edist (f (v (j + 1))) (f (v j)) :=
   by 
@@ -476,7 +476,7 @@ theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht :
     evariationOn f (s ∪ t) = evariationOn f s + evariationOn f t := by
   classical 
     apply le_antisymm _ (evariationOn.add_le_union f fun a ha b hb => le_trans (hs.2 ha) (ht.2 hb))
-    apply supr_le _
+    apply supᵢ_le _
     rintro ⟨n, ⟨u, hu, ust⟩⟩
     obtain ⟨v, m, hv, vst, xv, huv⟩ :
       ∃ (v : ℕ → α)(m : ℕ),
@@ -523,7 +523,7 @@ theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht :
 #align evariation_on.union evariationOn.union
 
 theorem Icc_add_Icc (f : α → E) {s : Set α} {a b c : α} (hab : a ≤ b) (hbc : b ≤ c) (hb : b ∈ s) :
-    evariationOn f (s ∩ icc a b) + evariationOn f (s ∩ icc b c) = evariationOn f (s ∩ icc a c) := by
+    evariationOn f (s ∩ Icc a b) + evariationOn f (s ∩ Icc b c) = evariationOn f (s ∩ Icc a c) := by
   have A : IsGreatest (s ∩ Icc a b) b :=
     ⟨⟨hb, hab, le_rfl⟩, (inter_subset_right _ _).trans Icc_subset_Iic_self⟩
   have B : IsLeast (s ∩ Icc b c) b :=
@@ -537,8 +537,8 @@ end evariationOn
 
 
 theorem MonotoneOn.evariation_on_le {f : α → ℝ} {s : Set α} (hf : MonotoneOn f s) {a b : α}
-    (as : a ∈ s) (bs : b ∈ s) : evariationOn f (s ∩ icc a b) ≤ Ennreal.ofReal (f b - f a) := by
-  apply supr_le _
+    (as : a ∈ s) (bs : b ∈ s) : evariationOn f (s ∩ Icc a b) ≤ Ennreal.ofReal (f b - f a) := by
+  apply supᵢ_le _
   rintro ⟨n, ⟨u, hu, us⟩⟩
   calc
     (∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) =
@@ -634,7 +634,7 @@ theorem HasLocallyBoundedVariationOn.exists_monotone_on_sub_monotone_on {f : α 
 theorem LipschitzOnWith.comp_evariation_on_le {f : E → F} {C : ℝ≥0} {t : Set E}
     (h : LipschitzOnWith C f t) {g : α → E} {s : Set α} (hg : MapsTo g s t) :
     evariationOn (f ∘ g) s ≤ C * evariationOn g s := by
-  apply supr_le _
+  apply supᵢ_le _
   rintro ⟨n, ⟨u, hu, us⟩⟩
   calc
     (∑ i in Finset.range n, edist (f (g (u (i + 1)))) (f (g (u i)))) ≤
@@ -663,19 +663,19 @@ theorem LipschitzOnWith.compHasLocallyBoundedVariationOn {f : E → F} {C : ℝ�
 
 theorem LipschitzWith.compHasBoundedVariationOn {f : E → F} {C : ℝ≥0} (hf : LipschitzWith C f)
     {g : α → E} {s : Set α} (h : HasBoundedVariationOn g s) : HasBoundedVariationOn (f ∘ g) s :=
-  (hf.LipschitzOnWith univ).compHasBoundedVariationOn (maps_to_univ _ _) h
+  (hf.LipschitzOnWith univ).compHasBoundedVariationOn (mapsTo_univ _ _) h
 #align lipschitz_with.comp_has_bounded_variation_on LipschitzWith.compHasBoundedVariationOn
 
 theorem LipschitzWith.compHasLocallyBoundedVariationOn {f : E → F} {C : ℝ≥0}
     (hf : LipschitzWith C f) {g : α → E} {s : Set α} (h : HasLocallyBoundedVariationOn g s) :
     HasLocallyBoundedVariationOn (f ∘ g) s :=
-  (hf.LipschitzOnWith univ).compHasLocallyBoundedVariationOn (maps_to_univ _ _) h
+  (hf.LipschitzOnWith univ).compHasLocallyBoundedVariationOn (mapsTo_univ _ _) h
 #align
   lipschitz_with.comp_has_locally_bounded_variation_on LipschitzWith.compHasLocallyBoundedVariationOn
 
 theorem LipschitzOnWith.hasLocallyBoundedVariationOn {f : ℝ → E} {C : ℝ≥0} {s : Set ℝ}
     (hf : LipschitzOnWith C f s) : HasLocallyBoundedVariationOn f s :=
-  hf.compHasLocallyBoundedVariationOn (maps_to_id _)
+  hf.compHasLocallyBoundedVariationOn (mapsTo_id _)
     (@monotoneOn_id ℝ _ s).HasLocallyBoundedVariationOn
 #align
   lipschitz_on_with.has_locally_bounded_variation_on LipschitzOnWith.hasLocallyBoundedVariationOn

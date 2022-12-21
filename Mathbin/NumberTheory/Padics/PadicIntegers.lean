@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_integers
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -713,7 +713,7 @@ instance is_fraction_ring :
     IsFractionRing ℤ_[p]
       ℚ_[p] where 
   map_units := fun ⟨x, hx⟩ => by
-    rwa [SetLike.coe_mk, algebra_map_apply, isUnit_iff_ne_zero, PadicInt.coe_ne_zero, ←
+    rwa [[anonymous], algebra_map_apply, isUnit_iff_ne_zero, PadicInt.coe_ne_zero, ←
       mem_non_zero_divisors_iff_ne_zero]
   surj x := by 
     by_cases hx : ‖x‖ ≤ 1
@@ -737,7 +737,7 @@ instance is_fraction_ring :
       use
         (⟨a, le_of_eq ha_norm⟩,
           ⟨(p ^ n : ℤ_[p]), mem_non_zero_divisors_iff_ne_zero.mpr (NeZero.ne _)⟩)
-      simp only [SetLike.coe_mk, map_pow, map_nat_cast, algebra_map_apply, PadicInt.coe_pow,
+      simp only [[anonymous], map_pow, map_nat_cast, algebra_map_apply, PadicInt.coe_pow,
         PadicInt.coe_nat_cast, Subtype.coe_mk]
   eq_iff_exists x y := by
     rw [algebra_map_apply, algebra_map_apply, Subtype.coe_inj]

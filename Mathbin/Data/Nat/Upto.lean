@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.nat.upto
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,6 +32,7 @@ well founded relation and would then fulfill the same purpose as this file.
 
 namespace Nat
 
+#print Nat.Upto /-
 /-- The subtype of natural numbers `i` which have the property that
 no `j` less than `i` satisfies `p`. This is an initial segment of the
 natural numbers, up to and including the first value satisfying `p`.
@@ -42,19 +43,23 @@ satisfying `p`, because in this case the `>` relation is well-founded.  -/
 def Upto (p : ℕ → Prop) : Type :=
   { i : ℕ // ∀ j < i, ¬p j }
 #align nat.upto Nat.Upto
+-/
 
 namespace Upto
 
 variable {p : ℕ → Prop}
 
+#print Nat.Upto.Gt /-
 /-- Lift the "greater than" relation on natural numbers to `nat.upto`. -/
 protected def Gt (p) (x y : Upto p) : Prop :=
   x.1 > y.1
 #align nat.upto.gt Nat.Upto.Gt
+-/
 
 instance : LT (Upto p) :=
   ⟨fun x y => x.1 < y.1⟩
 
+#print Nat.Upto.wf /-
 /-- The "greater than" relation on `upto p` is well founded if (and only if) there exists a value
 satisfying `p`. -/
 protected theorem wf : (∃ x, p x) → WellFounded (Upto.Gt p)
@@ -67,17 +72,22 @@ protected theorem wf : (∃ x, p x) → WellFounded (Upto.Gt p)
     rw [tsub_lt_tsub_iff_left_of_le]
     exact le_of_not_lt fun h' => ha _ h' h
 #align nat.upto.wf Nat.Upto.wf
+-/
 
+#print Nat.Upto.zero /-
 /-- Zero is always a member of `nat.upto p` because it has no predecessors. -/
 def zero : Nat.Upto p :=
   ⟨0, fun j h => False.elim (Nat.not_lt_zero _ h)⟩
 #align nat.upto.zero Nat.Upto.zero
+-/
 
+#print Nat.Upto.succ /-
 /-- The successor of `n` is in `nat.upto p` provided that `n` doesn't satisfy `p`. -/
 def succ (x : Nat.Upto p) (h : ¬p x.val) : Nat.Upto p :=
   ⟨x.val.succ, fun j h' => by
     rcases Nat.lt_succ_iff_lt_or_eq.1 h' with (h' | rfl) <;> [exact x.2 _ h', exact h]⟩
 #align nat.upto.succ Nat.Upto.succ
+-/
 
 end Upto
 

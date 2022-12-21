@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ theorem of_le (N : Submonoid R) (h₁ : M ≤ N) (h₂ : ∀ r ∈ N, IsUnit (al
         rintro ⟨c, hc⟩
         exact ⟨⟨c, h₁ c.2⟩, hc⟩
       · rintro ⟨c, h⟩
-        simpa only [SetLike.coe_mk, map_mul, (h₂ c c.2).mul_left_inj] using
+        simpa only [[anonymous], map_mul, (h₂ c c.2).mul_left_inj] using
           congr_arg (algebraMap R S) h }
 #align is_localization.of_le IsLocalization.of_le
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.sheafification
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -437,7 +437,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
 variable [ReflectsIsomorphisms (forget D)]
 
 /-- If `P` is separated, then `P⁺` is a sheaf. -/
-theorem isSheafOfSep (P : Cᵒᵖ ⥤ D)
+theorem is_sheaf_of_sep (P : Cᵒᵖ ⥤ D)
     (hsep :
       ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)),
         (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) :
@@ -467,17 +467,17 @@ theorem isSheafOfSep (P : Cᵒᵖ ⥤ D)
     rw [← comp_apply, multiequalizer.lift_ι]
     rfl
 #align
-  category_theory.grothendieck_topology.plus.is_sheaf_of_sep CategoryTheory.GrothendieckTopology.Plus.isSheafOfSep
+  category_theory.grothendieck_topology.plus.is_sheaf_of_sep CategoryTheory.GrothendieckTopology.Plus.is_sheaf_of_sep
 
 variable (J)
 
 /-- `P⁺⁺` is always a sheaf. -/
-theorem isSheafPlusPlus (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.plusObj (J.plusObj P)) := by
+theorem is_sheaf_plus_plus (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.plusObj (J.plusObj P)) := by
   apply is_sheaf_of_sep
   intro X S x y
   apply sep
 #align
-  category_theory.grothendieck_topology.plus.is_sheaf_plus_plus CategoryTheory.GrothendieckTopology.Plus.isSheafPlusPlus
+  category_theory.grothendieck_topology.plus.is_sheaf_plus_plus CategoryTheory.GrothendieckTopology.Plus.is_sheaf_plus_plus
 
 end Plus
 
@@ -646,19 +646,19 @@ variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
   [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
   [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
 
-theorem GrothendieckTopology.sheafifyIsSheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.sheafify P) :=
-  GrothendieckTopology.Plus.isSheafPlusPlus _ _
+theorem GrothendieckTopology.sheafify_is_sheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.sheafify P) :=
+  GrothendieckTopology.Plus.is_sheaf_plus_plus _ _
 #align
-  category_theory.grothendieck_topology.sheafify_is_sheaf CategoryTheory.GrothendieckTopology.sheafifyIsSheaf
+  category_theory.grothendieck_topology.sheafify_is_sheaf CategoryTheory.GrothendieckTopology.sheafify_is_sheaf
 
 variable (D)
 
 /-- The sheafification functor, as a functor taking values in `Sheaf`. -/
 @[simps]
 def presheafToSheaf :
-    (Cᵒᵖ ⥤ D) ⥤ SheafCat J
-        D where 
-  obj P := ⟨J.sheafify P, J.sheafifyIsSheaf P⟩
+    (Cᵒᵖ ⥤ D) ⥤
+      SheafCat J D where 
+  obj P := ⟨J.sheafify P, J.sheafify_is_sheaf P⟩
   map P Q η := ⟨J.sheafifyMap η⟩
   map_id' P := SheafCat.Hom.ext _ _ <| J.sheafify_map_id _
   map_comp' P Q R f g := SheafCat.Hom.ext _ _ <| J.sheafify_map_comp _ _
@@ -726,7 +726,7 @@ def sheafificationIso (P : SheafCat J D) :
 
 instance is_iso_sheafification_adjunction_counit (P : SheafCat J D) :
     IsIso ((sheafificationAdjunction J D).counit.app P) :=
-  is_iso_of_fully_faithful (sheafToPresheaf J D) _
+  isIso_of_fully_faithful (sheafToPresheaf J D) _
 #align
   category_theory.is_iso_sheafification_adjunction_counit CategoryTheory.is_iso_sheafification_adjunction_counit
 

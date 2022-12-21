@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.measure.giry_monad
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,13 +52,13 @@ instance : MeasurableSpace (Measure α) :=
   ⨆ (s : Set α) (hs : MeasurableSet s), (borel ℝ≥0∞).comap fun μ => μ s
 
 theorem measurableCoe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ : Measure α => μ s :=
-  Measurable.ofComapLe <| le_supr_of_le s <| le_supr_of_le hs <| le_rfl
+  Measurable.ofComapLe <| le_supᵢ_of_le s <| le_supᵢ_of_le hs <| le_rfl
 #align measure_theory.measure.measurable_coe MeasureTheory.Measure.measurableCoe
 
 theorem measurableOfMeasurableCoe (f : β → Measure α)
     (h : ∀ (s : Set α) (hs : MeasurableSet s), Measurable fun b => f b s) : Measurable f :=
   Measurable.ofLeMap <|
-    supr₂_le fun s hs =>
+    supᵢ₂_le fun s hs =>
       MeasurableSpace.comap_le_iff_le_map.2 <| by rw [MeasurableSpace.map_comp] <;> exact h s hs
 #align
   measure_theory.measure.measurable_of_measurable_coe MeasureTheory.Measure.measurableOfMeasurableCoe

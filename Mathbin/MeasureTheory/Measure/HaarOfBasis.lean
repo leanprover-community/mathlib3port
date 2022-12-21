@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_basis
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,11 +45,11 @@ variable [AddCommGroup E] [Module ℝ E] [AddCommGroup F] [Module ℝ F]
 
 /-- The closed parallelepiped spanned by a finite family of vectors. -/
 def parallelepiped (v : ι → E) : Set E :=
-  (fun t : ι → ℝ => ∑ i, t i • v i) '' icc 0 1
+  (fun t : ι → ℝ => ∑ i, t i • v i) '' Icc 0 1
 #align parallelepiped parallelepiped
 
 theorem mem_parallelepiped_iff (v : ι → E) (x : E) :
-    x ∈ parallelepiped v ↔ ∃ (t : ι → ℝ)(ht : t ∈ icc (0 : ι → ℝ) 1), x = ∑ i, t i • v i := by
+    x ∈ parallelepiped v ↔ ∃ (t : ι → ℝ)(ht : t ∈ Icc (0 : ι → ℝ) 1), x = ∑ i, t i • v i := by
   simp [parallelepiped, eq_comm]
 #align mem_parallelepiped_iff mem_parallelepiped_iff
 
@@ -85,7 +85,7 @@ theorem parallelepiped_comp_equiv (v : ι → E) (e : ι' ≃ ι) :
 
 -- The parallelepiped associated to an orthonormal basis of `ℝ` is either `[0, 1]` or `[-1, 0]`.
 theorem parallelepiped_orthonormal_basis_one_dim (b : OrthonormalBasis ι ℝ ℝ) :
-    parallelepiped b = icc 0 1 ∨ parallelepiped b = icc (-1) 0 := by
+    parallelepiped b = Icc 0 1 ∨ parallelepiped b = Icc (-1) 0 := by
   have e : ι ≃ Fin 1 := by 
     apply Fintype.equivFinOfCardEq
     simp only [← finrank_eq_card_basis b.to_basis, finrank_self]

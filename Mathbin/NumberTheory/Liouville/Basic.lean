@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,7 +147,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
   -- Since the polynomial `fR` has finitely many roots, there is a closed interval centered at `α`
   -- such that `α` is the only root of `fR` in the interval.
   obtain ⟨ζ, z0, U⟩ : ∃ ζ > 0, closed_ball α ζ ∩ fR.roots.to_finset = {α} :=
-    @exists_closed_ball_inter_eq_singleton_of_discrete _ _ _ discreteOfT1OfFinite _ ar
+    @exists_closed_ball_inter_eq_singleton_of_discrete _ _ _ discrete_of_t1_of_finite _ ar
   -- Since `fR` is continuous, it is bounded on the interval above.
   obtain ⟨xm, -, hM⟩ :
     ∃ (xm : ℝ)(H : xm ∈ Icc (α - ζ) (α + ζ)),

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Markus Himmel
 
 ! This file was ported from Lean 3 source module set_theory.game.nim
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,12 +87,12 @@ theorem move_right_nim_heq (o : Ordinal) :
 #align pgame.move_right_nim_heq Pgame.move_right_nim_heq
 
 /-- Turns an ordinal less than `o` into a left move for `nim o` and viceversa. -/
-noncomputable def toLeftMovesNim {o : Ordinal} : Set.iio o ≃ (nim o).LeftMoves :=
+noncomputable def toLeftMovesNim {o : Ordinal} : Set.Iio o ≃ (nim o).LeftMoves :=
   (enumIsoOut o).toEquiv.trans (Equiv.cast (left_moves_nim o).symm)
 #align pgame.to_left_moves_nim Pgame.toLeftMovesNim
 
 /-- Turns an ordinal less than `o` into a right move for `nim o` and viceversa. -/
-noncomputable def toRightMovesNim {o : Ordinal} : Set.iio o ≃ (nim o).RightMoves :=
+noncomputable def toRightMovesNim {o : Ordinal} : Set.Iio o ≃ (nim o).RightMoves :=
   (enumIsoOut o).toEquiv.trans (Equiv.cast (right_moves_nim o).symm)
 #align pgame.to_right_moves_nim Pgame.toRightMovesNim
 

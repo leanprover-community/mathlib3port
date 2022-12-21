@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cuma Kökmen, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.torus_integral
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ theorem torus_map_zero_radius (c : ℂⁿ) : torusMap c 0 = const ℝⁿ c := by
 /-- A function `f : ℂⁿ → E` is integrable on the generalized torus if the function
 `f ∘ torus_map c R θ` is integrable on `Icc (0 : ℝⁿ) (λ _, 2 * π)`-/
 def TorusIntegrable (f : ℂⁿ → E) (c : ℂⁿ) (R : ℝⁿ) : Prop :=
-  IntegrableOn (fun θ : ℝⁿ => f (torusMap c R θ)) (icc (0 : ℝⁿ) fun _ => 2 * π) volume
+  IntegrableOn (fun θ : ℝⁿ => f (torusMap c R θ)) (Icc (0 : ℝⁿ) fun _ => 2 * π) volume
 #align torus_integrable TorusIntegrable
 
 namespace TorusIntegrable
@@ -163,7 +163,7 @@ theorem torusIntegrableZeroRadius {f : ℂⁿ → E} {c : ℂⁿ} : TorusIntegra
 /-- The function given in the definition of `torus_integral` is integrable. -/
 theorem functionIntegrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
     IntegrableOn (fun θ : ℝⁿ => (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ))
-      (icc (0 : ℝⁿ) fun _ => 2 * π) volume :=
+      (Icc (0 : ℝⁿ) fun _ => 2 * π) volume :=
   by 
   refine' (hf.norm.const_mul (∏ i, |R i|)).mono' _ _
   · refine' (Continuous.aeStronglyMeasurable _).smul hf.1
@@ -182,7 +182,7 @@ variable [NormedSpace ℂ E] [CompleteSpace E] {f g : ℂⁿ → E} {c : ℂⁿ}
 /-- The definition of the integral over a generalized torus with center `c ∈ ℂⁿ` and radius `R ∈ ℝⁿ`
 as the `•`-product of the derivative of `torus_map` and `f (torus_map c R θ)`-/
 def torusIntegral (f : ℂⁿ → E) (c : ℂⁿ) (R : ℝⁿ) :=
-  ∫ θ : ℝⁿ in icc (0 : ℝⁿ) fun _ => 2 * π, (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)
+  ∫ θ : ℝⁿ in Icc (0 : ℝⁿ) fun _ => 2 * π, (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)
 #align torus_integral torusIntegral
 
 -- mathport name: «expr∯ inT( , ), »
@@ -224,7 +224,7 @@ theorem torus_integral_const_mul (a : ℂ) (f : ℂⁿ → ℂ) (c : ℂⁿ) (R 
 theorem norm_torus_integral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ‖f (torusMap c R θ)‖ ≤ C) :
     ‖∯ x in T(c, R), f x‖ ≤ ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C :=
   calc
-    ‖∯ x in T(c, R), f x‖ ≤ (∏ i, |R i|) * C * (volume (icc (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
+    ‖∯ x in T(c, R), f x‖ ≤ (∏ i, |R i|) * C * (volume (Icc (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
       (norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurableSetIcc) fun θ hθ =>
         calc
           ‖(∏ i : Fin n, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)‖ =

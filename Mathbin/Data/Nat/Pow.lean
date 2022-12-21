@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.pow
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,18 +36,25 @@ theorem pow_le_pow_of_le_right {x : ℕ} (H : 0 < x) {i j : ℕ} (h : i ≤ j) :
 #align nat.pow_le_pow_of_le_right Nat.pow_le_pow_of_le_right
 -/
 
+#print Nat.pow_lt_pow_of_lt_left /-
 theorem pow_lt_pow_of_lt_left {x y : ℕ} (H : x < y) {i} (h : 0 < i) : x ^ i < y ^ i :=
   pow_lt_pow_of_lt_left H (zero_le _) h
 #align nat.pow_lt_pow_of_lt_left Nat.pow_lt_pow_of_lt_left
+-/
 
+#print Nat.pow_lt_pow_of_lt_right /-
 theorem pow_lt_pow_of_lt_right {x : ℕ} (H : 1 < x) {i j : ℕ} (h : i < j) : x ^ i < x ^ j :=
   pow_lt_pow H h
 #align nat.pow_lt_pow_of_lt_right Nat.pow_lt_pow_of_lt_right
+-/
 
+#print Nat.pow_lt_pow_succ /-
 theorem pow_lt_pow_succ {p : ℕ} (h : 1 < p) (n : ℕ) : p ^ n < p ^ (n + 1) :=
   pow_lt_pow_of_lt_right h n.lt_succ_self
 #align nat.pow_lt_pow_succ Nat.pow_lt_pow_succ
+-/
 
+#print Nat.lt_pow_self /-
 theorem lt_pow_self {p : ℕ} (h : 1 < p) : ∀ n : ℕ, n < p ^ n
   | 0 => by simp [zero_lt_one]
   | n + 1 =>
@@ -56,33 +63,47 @@ theorem lt_pow_self {p : ℕ} (h : 1 < p) : ∀ n : ℕ, n < p ^ n
       _ ≤ p ^ (n + 1) := pow_lt_pow_succ h _
       
 #align nat.lt_pow_self Nat.lt_pow_self
+-/
 
+#print Nat.lt_two_pow /-
 theorem lt_two_pow (n : ℕ) : n < 2 ^ n :=
   lt_pow_self (by decide) n
 #align nat.lt_two_pow Nat.lt_two_pow
+-/
 
+#print Nat.one_le_pow /-
 theorem one_le_pow (n m : ℕ) (h : 0 < m) : 1 ≤ m ^ n := by
   rw [← one_pow n]
   exact Nat.pow_le_pow_of_le_left h n
 #align nat.one_le_pow Nat.one_le_pow
+-/
 
+#print Nat.one_le_pow' /-
 theorem one_le_pow' (n m : ℕ) : 1 ≤ (m + 1) ^ n :=
   one_le_pow n (m + 1) (succ_pos m)
 #align nat.one_le_pow' Nat.one_le_pow'
+-/
 
+#print Nat.one_le_two_pow /-
 theorem one_le_two_pow (n : ℕ) : 1 ≤ 2 ^ n :=
   one_le_pow n 2 (by decide)
 #align nat.one_le_two_pow Nat.one_le_two_pow
+-/
 
+#print Nat.one_lt_pow /-
 theorem one_lt_pow (n m : ℕ) (h₀ : 0 < n) (h₁ : 1 < m) : 1 < m ^ n := by
   rw [← one_pow n]
   exact pow_lt_pow_of_lt_left h₁ h₀
 #align nat.one_lt_pow Nat.one_lt_pow
+-/
 
+#print Nat.one_lt_pow' /-
 theorem one_lt_pow' (n m : ℕ) : 1 < (m + 2) ^ (n + 1) :=
   one_lt_pow (n + 1) (m + 2) (succ_pos n) (Nat.lt_of_sub_eq_succ rfl)
 #align nat.one_lt_pow' Nat.one_lt_pow'
+-/
 
+#print Nat.one_lt_pow_iff /-
 @[simp]
 theorem one_lt_pow_iff {k n : ℕ} (h : 0 ≠ k) : 1 < n ^ k ↔ 1 < n := by
   cases n
@@ -96,76 +117,106 @@ theorem one_lt_pow_iff {k n : ℕ} (h : 0 ≠ k) : 1 < n ^ k ↔ 1 < n := by
   · simp
   exact one_lt_mul (one_lt_succ_succ _).le (hk (succ_ne_zero k).symm)
 #align nat.one_lt_pow_iff Nat.one_lt_pow_iff
+-/
 
+#print Nat.one_lt_two_pow /-
 theorem one_lt_two_pow (n : ℕ) (h₀ : 0 < n) : 1 < 2 ^ n :=
   one_lt_pow n 2 h₀ (by decide)
 #align nat.one_lt_two_pow Nat.one_lt_two_pow
+-/
 
+#print Nat.one_lt_two_pow' /-
 theorem one_lt_two_pow' (n : ℕ) : 1 < 2 ^ (n + 1) :=
   one_lt_pow (n + 1) 2 (succ_pos n) (by decide)
 #align nat.one_lt_two_pow' Nat.one_lt_two_pow'
+-/
 
-theorem pow_right_strict_mono {x : ℕ} (k : 2 ≤ x) : StrictMono fun n : ℕ => x ^ n := fun _ _ =>
+#print Nat.pow_right_strictMono /-
+theorem pow_right_strictMono {x : ℕ} (k : 2 ≤ x) : StrictMono fun n : ℕ => x ^ n := fun _ _ =>
   pow_lt_pow_of_lt_right k
-#align nat.pow_right_strict_mono Nat.pow_right_strict_mono
+#align nat.pow_right_strict_mono Nat.pow_right_strictMono
+-/
 
+#print Nat.pow_le_iff_le_right /-
 theorem pow_le_iff_le_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m ≤ x ^ n ↔ m ≤ n :=
-  StrictMono.le_iff_le (pow_right_strict_mono k)
+  StrictMono.le_iff_le (pow_right_strictMono k)
 #align nat.pow_le_iff_le_right Nat.pow_le_iff_le_right
+-/
 
+#print Nat.pow_lt_iff_lt_right /-
 theorem pow_lt_iff_lt_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m < x ^ n ↔ m < n :=
-  StrictMono.lt_iff_lt (pow_right_strict_mono k)
+  StrictMono.lt_iff_lt (pow_right_strictMono k)
 #align nat.pow_lt_iff_lt_right Nat.pow_lt_iff_lt_right
+-/
 
+#print Nat.pow_right_injective /-
 theorem pow_right_injective {x : ℕ} (k : 2 ≤ x) : Function.Injective fun n : ℕ => x ^ n :=
-  StrictMono.injective (pow_right_strict_mono k)
+  StrictMono.injective (pow_right_strictMono k)
 #align nat.pow_right_injective Nat.pow_right_injective
+-/
 
-theorem pow_left_strict_mono {m : ℕ} (k : 1 ≤ m) : StrictMono fun x : ℕ => x ^ m := fun _ _ h =>
+#print Nat.pow_left_strictMono /-
+theorem pow_left_strictMono {m : ℕ} (k : 1 ≤ m) : StrictMono fun x : ℕ => x ^ m := fun _ _ h =>
   pow_lt_pow_of_lt_left h k
-#align nat.pow_left_strict_mono Nat.pow_left_strict_mono
+#align nat.pow_left_strict_mono Nat.pow_left_strictMono
+-/
 
+#print Nat.mul_lt_mul_pow_succ /-
 theorem mul_lt_mul_pow_succ {n a q : ℕ} (a0 : 0 < a) (q1 : 1 < q) : n * q < a * q ^ (n + 1) := by
   rw [pow_succ', ← mul_assoc, mul_lt_mul_right (zero_lt_one.trans q1)]
   exact lt_mul_of_one_le_of_lt (nat.succ_le_iff.mpr a0) (Nat.lt_pow_self q1 n)
 #align nat.mul_lt_mul_pow_succ Nat.mul_lt_mul_pow_succ
+-/
 
 end Nat
 
+#print StrictMono.nat_pow /-
 theorem StrictMono.nat_pow {n : ℕ} (hn : 1 ≤ n) {f : ℕ → ℕ} (hf : StrictMono f) :
     StrictMono fun m => f m ^ n :=
-  (Nat.pow_left_strict_mono hn).comp hf
+  (Nat.pow_left_strictMono hn).comp hf
 #align strict_mono.nat_pow StrictMono.nat_pow
+-/
 
 namespace Nat
 
+#print Nat.pow_le_iff_le_left /-
 theorem pow_le_iff_le_left {m x y : ℕ} (k : 1 ≤ m) : x ^ m ≤ y ^ m ↔ x ≤ y :=
-  StrictMono.le_iff_le (pow_left_strict_mono k)
+  StrictMono.le_iff_le (pow_left_strictMono k)
 #align nat.pow_le_iff_le_left Nat.pow_le_iff_le_left
+-/
 
+#print Nat.pow_lt_iff_lt_left /-
 theorem pow_lt_iff_lt_left {m x y : ℕ} (k : 1 ≤ m) : x ^ m < y ^ m ↔ x < y :=
-  StrictMono.lt_iff_lt (pow_left_strict_mono k)
+  StrictMono.lt_iff_lt (pow_left_strictMono k)
 #align nat.pow_lt_iff_lt_left Nat.pow_lt_iff_lt_left
+-/
 
+#print Nat.pow_left_injective /-
 theorem pow_left_injective {m : ℕ} (k : 1 ≤ m) : Function.Injective fun x : ℕ => x ^ m :=
-  StrictMono.injective (pow_left_strict_mono k)
+  StrictMono.injective (pow_left_strictMono k)
 #align nat.pow_left_injective Nat.pow_left_injective
+-/
 
+#print Nat.sq_sub_sq /-
 theorem sq_sub_sq (a b : ℕ) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by
   rw [sq, sq]
   exact Nat.mul_self_sub_mul_self_eq a b
 #align nat.sq_sub_sq Nat.sq_sub_sq
+-/
 
 alias sq_sub_sq ← pow_two_sub_pow_two
 
 /-! ### `pow` and `mod` / `dvd` -/
 
 
+#print Nat.pow_mod /-
 theorem pow_mod (a b n : ℕ) : a ^ b % n = (a % n) ^ b % n := by
   induction' b with b ih
   rfl; simp [pow_succ, Nat.mul_mod, ih]
 #align nat.pow_mod Nat.pow_mod
+-/
 
+#print Nat.mod_pow_succ /-
 theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w) + m % b := by
   by_cases b_h : b = 0
   · simp [b_h, pow_succ]
@@ -196,7 +247,9 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
       exact h₁
     rw [Eq.symm (mod_eq_sub_mod p_b_ge)]
 #align nat.mod_pow_succ Nat.mod_pow_succ
+-/
 
+#print Nat.pow_dvd_pow_iff_pow_le_pow /-
 theorem pow_dvd_pow_iff_pow_le_pow {k l : ℕ} : ∀ {x : ℕ} (w : 0 < x), x ^ k ∣ x ^ l ↔ x ^ k ≤ x ^ l
   | x + 1, w => by 
     constructor
@@ -209,16 +262,22 @@ theorem pow_dvd_pow_iff_pow_le_pow {k l : ℕ} : ∀ {x : ℕ} (w : 0 < x), x ^ 
         use (x + 2) ^ (l - k)
         rw [← pow_add, add_comm k, tsub_add_cancel_of_le le]
 #align nat.pow_dvd_pow_iff_pow_le_pow Nat.pow_dvd_pow_iff_pow_le_pow
+-/
 
+#print Nat.pow_dvd_pow_iff_le_right /-
 /-- If `1 < x`, then `x^k` divides `x^l` if and only if `k` is at most `l`. -/
 theorem pow_dvd_pow_iff_le_right {x k l : ℕ} (w : 1 < x) : x ^ k ∣ x ^ l ↔ k ≤ l := by
   rw [pow_dvd_pow_iff_pow_le_pow (lt_of_succ_lt w), pow_le_iff_le_right w]
 #align nat.pow_dvd_pow_iff_le_right Nat.pow_dvd_pow_iff_le_right
+-/
 
+#print Nat.pow_dvd_pow_iff_le_right' /-
 theorem pow_dvd_pow_iff_le_right' {b k l : ℕ} : (b + 2) ^ k ∣ (b + 2) ^ l ↔ k ≤ l :=
   pow_dvd_pow_iff_le_right (Nat.lt_of_sub_eq_succ rfl)
 #align nat.pow_dvd_pow_iff_le_right' Nat.pow_dvd_pow_iff_le_right'
+-/
 
+#print Nat.not_pos_pow_dvd /-
 theorem not_pos_pow_dvd : ∀ {p k : ℕ} (hp : 1 < p) (hk : 1 < k), ¬p ^ k ∣ p
   | succ p, succ k, hp, hk, h =>
     have : succ p * succ p ^ k ∣ succ p * 1 := by simpa [pow_succ] using h
@@ -230,23 +289,32 @@ theorem not_pos_pow_dvd : ∀ {p k : ℕ} (hp : 1 < p) (hk : 1 < k), ¬p ^ k ∣
     have : 1 < 1 := by rwa [this] at hk
     absurd this (by decide)
 #align nat.not_pos_pow_dvd Nat.not_pos_pow_dvd
+-/
 
+#print Nat.pow_dvd_of_le_of_pow_dvd /-
 theorem pow_dvd_of_le_of_pow_dvd {p m n k : ℕ} (hmn : m ≤ n) (hdiv : p ^ n ∣ k) : p ^ m ∣ k :=
   (pow_dvd_pow _ hmn).trans hdiv
 #align nat.pow_dvd_of_le_of_pow_dvd Nat.pow_dvd_of_le_of_pow_dvd
+-/
 
+#print Nat.dvd_of_pow_dvd /-
 theorem dvd_of_pow_dvd {p k m : ℕ} (hk : 1 ≤ k) (hpk : p ^ k ∣ m) : p ∣ m := by
   rw [← pow_one p] <;> exact pow_dvd_of_le_of_pow_dvd hk hpk
 #align nat.dvd_of_pow_dvd Nat.dvd_of_pow_dvd
+-/
 
+#print Nat.pow_div /-
 theorem pow_div {x m n : ℕ} (h : n ≤ m) (hx : 0 < x) : x ^ m / x ^ n = x ^ (m - n) := by
   rw [Nat.div_eq_iff_eq_mul_left (pow_pos hx n) (pow_dvd_pow _ h), pow_sub_mul_pow _ h]
 #align nat.pow_div Nat.pow_div
+-/
 
+#print Nat.lt_of_pow_dvd_right /-
 theorem lt_of_pow_dvd_right {p i n : ℕ} (hn : n ≠ 0) (hp : 2 ≤ p) (h : p ^ i ∣ n) : i < n := by
   rw [← pow_lt_iff_lt_right hp]
   exact lt_of_le_of_lt (le_of_dvd hn.bot_lt h) (lt_pow_self (succ_le_iff.mp hp) n)
 #align nat.lt_of_pow_dvd_right Nat.lt_of_pow_dvd_right
+-/
 
 end Nat
 

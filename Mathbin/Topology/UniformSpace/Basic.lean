@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -392,11 +392,11 @@ theorem refl_le_uniformity : 𝓟 idRel ≤ 𝓤 α :=
   (@UniformSpace.toCore α _).refl
 #align refl_le_uniformity refl_le_uniformity
 
-instance uniformity.neBot [Nonempty α] : NeBot (𝓤 α) := by
+instance uniformity.ne_bot [Nonempty α] : NeBot (𝓤 α) := by
   inhabit α
   refine' (principal_ne_bot_iff.2 _).mono refl_le_uniformity
   exact ⟨(default, default), rfl⟩
-#align uniformity.ne_bot uniformity.neBot
+#align uniformity.ne_bot uniformity.ne_bot
 
 theorem refl_mem_uniformity {x : α} {s : Set (α × α)} (h : s ∈ 𝓤 α) : (x, x) ∈ s :=
   refl_le_uniformity h rfl
@@ -933,7 +933,7 @@ theorem nhds_le_uniformity (x : α) : 𝓝 (x, x) ≤ 𝓤 α := by
 
 /-- Entourages are neighborhoods of the diagonal. -/
 theorem supr_nhds_le_uniformity : (⨆ x : α, 𝓝 (x, x)) ≤ 𝓤 α :=
-  supr_le nhds_le_uniformity
+  supᵢ_le nhds_le_uniformity
 #align supr_nhds_le_uniformity supr_nhds_le_uniformity
 
 /-- Entourages are neighborhoods of the diagonal. -/
@@ -994,8 +994,8 @@ theorem closure_eq_inter_uniformity {t : Set (α × α)} : closure t = ⋂ d ∈
 
 theorem uniformity_eq_uniformity_interior : 𝓤 α = (𝓤 α).lift' interior :=
   le_antisymm
-    (le_infi fun d =>
-      le_infi fun hd => by
+    (le_infᵢ fun d =>
+      le_infᵢ fun hd => by
         let ⟨s, hs, hs_comp⟩ :=
           (mem_lift'_sets <|
                 monotone_comp_rel monotone_id <| monotone_comp_rel monotone_id monotone_id).mp
@@ -1184,27 +1184,40 @@ instance : PartialOrder
   le_refl t := le_rfl
   le_trans a b c h₁ h₂ := le_trans h₁ h₂
 
-instance : HasInf (UniformSpace α) :=
+instance : InfSet (UniformSpace α) :=
   ⟨fun s =>
     UniformSpace.ofCore
       { uniformity := ⨅ u ∈ s, @uniformity α u
-        refl := le_infi fun u => le_infi fun hu => u.refl
+        refl := le_infᵢ fun u => le_infᵢ fun hu => u.refl
         symm :=
-          le_infi fun u =>
-            le_infi fun hu => le_trans (map_mono <| infi_le_of_le _ <| infi_le _ hu) u.symm
+          le_infᵢ fun u =>
+            le_infᵢ fun hu => le_trans (map_mono <| infᵢ_le_of_le _ <| infᵢ_le _ hu) u.symm
         comp :=
-          le_infi fun u =>
-            le_infi fun hu =>
-              le_trans (lift'_mono (infi_le_of_le _ <| infi_le _ hu) <| le_rfl) u.comp }⟩
+          le_infᵢ fun u =>
+            le_infᵢ fun hu =>
+              le_trans (lift'_mono (infᵢ_le_of_le _ <| infᵢ_le _ hu) <| le_rfl) u.comp }⟩
 
-private theorem Inf_le {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : t ∈ tt) : inf tt ≤ t :=
-  show (⨅ u ∈ tt, @uniformity α u) ≤ t.uniformity from infi_le_of_le t <| infi_le _ h
-#align Inf_le Inf_le
+/- warning: Inf_le -> infₛ_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) s) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s) a)
+Case conversion may be inaccurate. Consider using '#align Inf_le infₛ_leₓ'. -/
+private theorem infₛ_le {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : t ∈ tt) :
+    infₛ tt ≤ t :=
+  show (⨅ u ∈ tt, @uniformity α u) ≤ t.uniformity from infᵢ_le_of_le t <| infᵢ_le _ h
+#align Inf_le infₛ_le
 
-private theorem le_Inf {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' ∈ tt, t ≤ t') :
-    t ≤ inf tt :=
-  show t.uniformity ≤ ⨅ u ∈ tt, @uniformity α u from le_infi fun t' => le_infi fun ht' => h t' ht'
-#align le_Inf le_Inf
+/- warning: le_Inf -> le_infₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s))
+Case conversion may be inaccurate. Consider using '#align le_Inf le_infₛₓ'. -/
+private theorem le_infₛ {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' ∈ tt, t ≤ t') :
+    t ≤ infₛ tt :=
+  show t.uniformity ≤ ⨅ u ∈ tt, @uniformity α u from le_infᵢ fun t' => le_infᵢ fun ht' => h t' ht'
+#align le_Inf le_infₛ
 
 instance : Top (UniformSpace α) :=
   ⟨UniformSpace.ofCore
@@ -1237,10 +1250,10 @@ instance : HasInf (UniformSpace α) :=
 
 instance : CompleteLattice (UniformSpace α) :=
   { UniformSpace.partialOrder with
-    sup := fun a b => inf { x | a ≤ x ∧ b ≤ x }
-    le_sup_left := fun a b => le_Inf fun _ ⟨h, _⟩ => h
-    le_sup_right := fun a b => le_Inf fun _ ⟨_, h⟩ => h
-    sup_le := fun a b c h₁ h₂ => Inf_le ⟨h₁, h₂⟩
+    sup := fun a b => infₛ { x | a ≤ x ∧ b ≤ x }
+    le_sup_left := fun a b => le_infₛ fun _ ⟨h, _⟩ => h
+    le_sup_right := fun a b => le_infₛ fun _ ⟨_, h⟩ => h
+    sup_le := fun a b c h₁ h₂ => infₛ_le ⟨h₁, h₂⟩
     inf := (· ⊓ ·)
     le_inf := fun a b c h₁ h₂ => show a.uniformity ≤ _ from le_inf h₁ h₂
     inf_le_left := fun a b => show _ ≤ a.uniformity from inf_le_left
@@ -1249,18 +1262,18 @@ instance : CompleteLattice (UniformSpace α) :=
     le_top := fun a => show a.uniformity ≤ ⊤ from le_top
     bot := ⊥
     bot_le := fun u => u.refl
-    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t }
-    le_Sup := fun s u h => le_Inf fun u' h' => h' u h
-    Sup_le := fun s u h => Inf_le h
-    inf := inf
-    le_Inf := fun s a hs => le_Inf hs
-    Inf_le := fun s a ha => Inf_le ha }
+    sup := fun tt => infₛ { t | ∀ t' ∈ tt, t' ≤ t }
+    le_Sup := fun s u h => le_infₛ fun u' h' => h' u h
+    Sup_le := fun s u h => infₛ_le h
+    inf := infₛ
+    le_Inf := fun s a hs => le_infₛ hs
+    Inf_le := fun s a ha => infₛ_le ha }
 
 theorem infi_uniformity {ι : Sort _} {u : ι → UniformSpace α} :
     (infi u).uniformity = ⨅ i, (u i).uniformity :=
   show (⨅ (a) (h : ∃ i : ι, u i = a), a.uniformity) = _ from
-    le_antisymm (le_infi fun i => infi_le_of_le (u i) <| infi_le _ ⟨i, rfl⟩)
-      (le_infi fun a => le_infi fun ⟨i, (ha : u i = a)⟩ => ha ▸ infi_le _ _)
+    le_antisymm (le_infᵢ fun i => infᵢ_le_of_le (u i) <| infᵢ_le _ ⟨i, rfl⟩)
+      (le_infᵢ fun a => le_infᵢ fun ⟨i, (ha : u i = a)⟩ => ha ▸ infᵢ_le _ _)
 #align infi_uniformity infi_uniformity
 
 theorem infi_uniformity' {ι : Sort _} {u : ι → UniformSpace α} :
@@ -1418,8 +1431,8 @@ theorem to_topological_space_infi {ι : Sort _} {u : ι → UniformSpace α} :
 #align to_topological_space_infi to_topological_space_infi
 
 theorem to_topological_space_Inf {s : Set (UniformSpace α)} :
-    (inf s).toTopologicalSpace = ⨅ i ∈ s, @UniformSpace.toTopologicalSpace α i := by
-  rw [Inf_eq_infi]
+    (infₛ s).toTopologicalSpace = ⨅ i ∈ s, @UniformSpace.toTopologicalSpace α i := by
+  rw [infₛ_eq_infᵢ]
   simp only [← to_topological_space_infi]
 #align to_topological_space_Inf to_topological_space_Inf
 
@@ -1453,14 +1466,14 @@ theorem uniform_continuous_inf_dom_right {f : α → β} {u₁ u₂ : UniformSpa
 
 theorem uniform_continuous_Inf_dom {f : α → β} {u₁ : Set (UniformSpace α)} {u₂ : UniformSpace β}
     {u : UniformSpace α} (h₁ : u ∈ u₁) (hf : @UniformContinuous u u₂ f) :
-    @UniformContinuous (inf u₁) u₂ f := by
-  rw [UniformContinuous, Inf_eq_infi', infi_uniformity']
+    @UniformContinuous (infₛ u₁) u₂ f := by
+  rw [UniformContinuous, infₛ_eq_infᵢ', infi_uniformity']
   exact tendsto_infi' ⟨u, h₁⟩ hf
 #align uniform_continuous_Inf_dom uniform_continuous_Inf_dom
 
 theorem uniform_continuous_Inf_rng {f : α → β} {u₁ : UniformSpace α} {u₂ : Set (UniformSpace β)}
-    (h : ∀ u ∈ u₂, @UniformContinuous u₁ u f) : @UniformContinuous u₁ (inf u₂) f := by
-  rw [UniformContinuous, Inf_eq_infi', infi_uniformity']
+    (h : ∀ u ∈ u₂, @UniformContinuous u₁ u f) : @UniformContinuous u₁ (infₛ u₂) f := by
+  rw [UniformContinuous, infₛ_eq_infᵢ', infi_uniformity']
   exact tendsto_infi.mpr fun ⟨u, hu⟩ => h u hu
 #align uniform_continuous_Inf_rng uniform_continuous_Inf_rng
 
@@ -1478,10 +1491,10 @@ theorem uniform_continuous_infi_rng {f : α → β} {u₁ : UniformSpace α} {u�
 end UniformContinuousInfi
 
 /-- A uniform space with the discrete uniformity has the discrete topology. -/
-theorem discreteTopologyOfDiscreteUniformity [hα : UniformSpace α] (h : uniformity α = 𝓟 idRel) :
-    DiscreteTopology α :=
+theorem discrete_topology_of_discrete_uniformity [hα : UniformSpace α]
+    (h : uniformity α = 𝓟 idRel) : DiscreteTopology α :=
   ⟨(uniform_space_eq h.symm : ⊥ = hα) ▸ rfl⟩
-#align discrete_topology_of_discrete_uniformity discreteTopologyOfDiscreteUniformity
+#align discrete_topology_of_discrete_uniformity discrete_topology_of_discrete_uniformity
 
 instance : UniformSpace Empty :=
   ⊥

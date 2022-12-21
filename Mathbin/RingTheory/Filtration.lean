@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.filtration
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,16 +96,16 @@ instance : HasSup (I.Filtration M) :=
       (le_of_eq (Submodule.smul_sup _ _ _)).trans <| sup_le_sup (F.smul_le i) (F'.smul_le i)⟩⟩
 
 /-- The `Sup` of a family of `I.filtration`s is an `I.filtration`. -/
-instance : HasSup (I.Filtration M) :=
+instance : SupSet (I.Filtration M) :=
   ⟨fun S =>
-    { n := sup (Ideal.Filtration.n '' S)
+    { n := supₛ (Ideal.Filtration.n '' S)
       mono := fun i => by 
-        apply Sup_le_Sup_of_forall_exists_le _
+        apply supₛ_le_supₛ_of_forall_exists_le _
         rintro _ ⟨⟨_, F, hF, rfl⟩, rfl⟩
         exact ⟨_, ⟨⟨_, F, hF, rfl⟩, rfl⟩, F.mono i⟩
       smul_le := fun i => by
-        rw [Sup_eq_supr', supr_apply, Submodule.smul_supr, supr_apply]
-        apply supr_mono _
+        rw [supₛ_eq_supᵢ', supᵢ_apply, Submodule.smul_supr, supᵢ_apply]
+        apply supᵢ_mono _
         rintro ⟨_, F, hF, rfl⟩
         exact F.smul_le i }⟩
 
@@ -116,17 +116,17 @@ instance : HasInf (I.Filtration M) :=
       (Submodule.smul_inf_le _ _ _).trans <| inf_le_inf (F.smul_le i) (F'.smul_le i)⟩⟩
 
 /-- The `Inf` of a family of `I.filtration`s is an `I.filtration`. -/
-instance : HasInf (I.Filtration M) :=
+instance : InfSet (I.Filtration M) :=
   ⟨fun S =>
-    { n := inf (Ideal.Filtration.n '' S)
+    { n := infₛ (Ideal.Filtration.n '' S)
       mono := fun i => by 
-        apply Inf_le_Inf_of_forall_exists_le _
+        apply infₛ_le_infₛ_of_forall_exists_le _
         rintro _ ⟨⟨_, F, hF, rfl⟩, rfl⟩
         exact ⟨_, ⟨⟨_, F, hF, rfl⟩, rfl⟩, F.mono i⟩
       smul_le := fun i => by 
-        rw [Inf_eq_infi', infi_apply, infi_apply]
+        rw [infₛ_eq_infᵢ', infᵢ_apply, infᵢ_apply]
         refine' submodule.smul_infi_le.trans _
-        apply infi_mono _
+        apply infᵢ_mono _
         rintro ⟨_, F, hF, rfl⟩
         exact F.smul_le i }⟩
 
@@ -142,7 +142,7 @@ theorem sup_N : (F ⊔ F').n = F.n ⊔ F'.n :=
 #align ideal.filtration.sup_N Ideal.Filtration.sup_N
 
 @[simp]
-theorem Sup_N (S : Set (I.Filtration M)) : (sup S).n = sup (Ideal.Filtration.n '' S) :=
+theorem Sup_N (S : Set (I.Filtration M)) : (supₛ S).n = supₛ (Ideal.Filtration.n '' S) :=
   rfl
 #align ideal.filtration.Sup_N Ideal.Filtration.Sup_N
 
@@ -152,7 +152,7 @@ theorem inf_N : (F ⊓ F').n = F.n ⊓ F'.n :=
 #align ideal.filtration.inf_N Ideal.Filtration.inf_N
 
 @[simp]
-theorem Inf_N (S : Set (I.Filtration M)) : (inf S).n = inf (Ideal.Filtration.n '' S) :=
+theorem Inf_N (S : Set (I.Filtration M)) : (infₛ S).n = infₛ (Ideal.Filtration.n '' S) :=
   rfl
 #align ideal.filtration.Inf_N Ideal.Filtration.Inf_N
 
@@ -167,18 +167,18 @@ theorem bot_N : (⊥ : I.Filtration M).n = ⊥ :=
 #align ideal.filtration.bot_N Ideal.Filtration.bot_N
 
 @[simp]
-theorem supr_N {ι : Sort _} (f : ι → I.Filtration M) : (supr f).n = ⨆ i, (f i).n :=
-  congr_arg sup (Set.range_comp _ _).symm
+theorem supr_N {ι : Sort _} (f : ι → I.Filtration M) : (supᵢ f).n = ⨆ i, (f i).n :=
+  congr_arg supₛ (Set.range_comp _ _).symm
 #align ideal.filtration.supr_N Ideal.Filtration.supr_N
 
 @[simp]
 theorem infi_N {ι : Sort _} (f : ι → I.Filtration M) : (infi f).n = ⨅ i, (f i).n :=
-  congr_arg inf (Set.range_comp _ _).symm
+  congr_arg infₛ (Set.range_comp _ _).symm
 #align ideal.filtration.infi_N Ideal.Filtration.infi_N
 
 instance : CompleteLattice (I.Filtration M) :=
   Function.Injective.completeLattice Ideal.Filtration.n Ideal.Filtration.ext sup_N inf_N
-    (fun _ => Sup_image) (fun _ => Inf_image) top_N bot_N
+    (fun _ => supₛ_image) (fun _ => infₛ_image) top_N bot_N
 
 instance : Inhabited (I.Filtration M) :=
   ⟨⊥⟩
@@ -405,7 +405,7 @@ theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.Submodule.Fg ↔ F
         rfl
     · rintro ⟨n, hn⟩
       rw [hn]
-      simp_rw [Submodule.span_Union₂, ← Finset.mem_range_succ_iff, supr_subtype']
+      simp_rw [Submodule.span_Union₂, ← Finset.mem_range_succ_iff, supᵢ_subtype']
       apply Submodule.fg_supr
       rintro ⟨i, hi⟩
       obtain ⟨s, hs⟩ := hF' i
@@ -456,7 +456,7 @@ theorem Ideal.mem_infi_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Fin
   let N := (⨅ i : ℕ, I ^ i • ⊤ : Submodule R M)
   have hN : ∀ k, (I.stable_filtration ⊤ ⊓ I.trivial_filtration N).n k = N := by
     intro k
-    exact inf_eq_right.mpr ((infi_le _ k).trans <| le_of_eq <| by simp)
+    exact inf_eq_right.mpr ((infᵢ_le _ k).trans <| le_of_eq <| by simp)
   constructor
   · haveI := is_noetherian_of_fg_of_noetherian' hM.out
     obtain ⟨r, hr₁, hr₂⟩ :=

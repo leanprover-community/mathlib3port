@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.topology
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -192,7 +192,7 @@ theorem Convex.open_segment_self_interior_subset_interior {s : Set E} (hs : Conv
 /-- If `x ∈ closure s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`.
 -/
 theorem Convex.add_smul_sub_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y : E}
-    (hx : x ∈ closure s) (hy : y ∈ interior s) {t : 𝕜} (ht : t ∈ ioc (0 : 𝕜) 1) :
+    (hx : x ∈ closure s) (hy : y ∈ interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) :
     x + t • (y - x) ∈ interior s := by
   simpa only [sub_smul, smul_sub, one_smul, add_sub, add_comm] using
     hs.combo_interior_closure_mem_interior hy hx ht.1 (sub_nonneg.mpr ht.2)
@@ -201,19 +201,19 @@ theorem Convex.add_smul_sub_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y 
 
 /-- If `x ∈ s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`. -/
 theorem Convex.add_smul_sub_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s)
-    (hy : y ∈ interior s) {t : 𝕜} (ht : t ∈ ioc (0 : 𝕜) 1) : x + t • (y - x) ∈ interior s :=
+    (hy : y ∈ interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • (y - x) ∈ interior s :=
   hs.add_smul_sub_mem_interior' (subset_closure hx) hy ht
 #align convex.add_smul_sub_mem_interior Convex.add_smul_sub_mem_interior
 
 /-- If `x ∈ closure s` and `x + y ∈ interior s`, then `x + t y ∈ interior s` for `t ∈ (0, 1]`. -/
 theorem Convex.add_smul_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ closure s)
-    (hy : x + y ∈ interior s) {t : 𝕜} (ht : t ∈ ioc (0 : 𝕜) 1) : x + t • y ∈ interior s := by
+    (hy : x + y ∈ interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • y ∈ interior s := by
   simpa only [add_sub_cancel'] using hs.add_smul_sub_mem_interior' hx hy ht
 #align convex.add_smul_mem_interior' Convex.add_smul_mem_interior'
 
 /-- If `x ∈ s` and `x + y ∈ interior s`, then `x + t y ∈ interior s` for `t ∈ (0, 1]`. -/
 theorem Convex.add_smul_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s)
-    (hy : x + y ∈ interior s) {t : 𝕜} (ht : t ∈ ioc (0 : 𝕜) 1) : x + t • y ∈ interior s :=
+    (hy : x + y ∈ interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • y ∈ interior s :=
   hs.add_smul_mem_interior' (subset_closure hx) hy ht
 #align convex.add_smul_mem_interior Convex.add_smul_mem_interior
 

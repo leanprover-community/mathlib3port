@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module group_theory.perm.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,6 +28,7 @@ variable {α : Type u} {β : Type v}
 
 namespace Perm
 
+#print Equiv.Perm.permGroup /-
 instance permGroup : Group (Perm
         α) where 
   mul f g := Equiv.trans g f
@@ -38,12 +39,25 @@ instance permGroup : Group (Perm
   mul_one := refl_trans
   mul_left_inv := self_trans_symm
 #align equiv.perm.perm_group Equiv.Perm.permGroup
+-/
 
+/- warning: equiv.perm.default_eq -> Equiv.Perm.default_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inhabited.default.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.inhabited'.{succ u1} α)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}}, Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inhabited.default.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.inhabited'.{succ u1} α)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.default_eq Equiv.Perm.default_eqₓ'. -/
 @[simp]
 theorem default_eq : (default : Perm α) = 1 :=
   rfl
 #align equiv.perm.default_eq Equiv.Perm.default_eq
 
+/- warning: equiv.perm.equiv_units_End -> Equiv.Perm.equivUnitsEnd is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, MulEquiv.{u1, u1} (Equiv.Perm.{succ u1} α) (Units.{u1} (Function.End.{u1} α) (Function.End.monoid.{u1} α)) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasMul.{u1} (Units.{u1} (Function.End.{u1} α) (Function.End.monoid.{u1} α)) (Units.mulOneClass.{u1} (Function.End.{u1} α) (Function.End.monoid.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}}, MulEquiv.{u1, u1} (Equiv.Perm.{succ u1} α) (Units.{u1} (Function.End.{u1} α) (instMonoidEnd.{u1} α)) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toMul.{u1} (Units.{u1} (Function.End.{u1} α) (instMonoidEnd.{u1} α)) (Units.instMulOneClassUnits.{u1} (Function.End.{u1} α) (instMonoidEnd.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.equiv_units_End Equiv.Perm.equivUnitsEndₓ'. -/
 /-- The permutation of a type is equivalent to the units group of the endomorphisms monoid of this
 type. -/
 @[simps]
@@ -60,6 +74,12 @@ def equivUnitsEnd :
   map_mul' e₁ e₂ := rfl
 #align equiv.perm.equiv_units_End Equiv.Perm.equivUnitsEnd
 
+/- warning: monoid_hom.to_hom_perm -> MonoidHom.toHomPerm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {G : Type.{u2}} [_inst_1 : Group.{u2} G], (MonoidHom.{u2, u1} G (Function.End.{u1} α) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} (Function.End.{u1} α) (Function.End.monoid.{u1} α))) -> (MonoidHom.{u2, u1} G (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))
+but is expected to have type
+  forall {α : Type.{u1}} {G : Type.{u2}} [_inst_1 : Group.{u2} G], (MonoidHom.{u2, u1} G (Function.End.{u1} α) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} (Function.End.{u1} α) (instMonoidEnd.{u1} α))) -> (MonoidHom.{u2, u1} G (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))
+Case conversion may be inaccurate. Consider using '#align monoid_hom.to_hom_perm MonoidHom.toHomPermₓ'. -/
 /-- Lift a monoid homomorphism `f : G →* function.End α` to a monoid homomorphism
 `f : G →* equiv.perm α`. -/
 @[simps]
@@ -67,59 +87,96 @@ def MonoidHom.toHomPerm {G : Type _} [Group G] (f : G →* Function.End α) : G 
   equivUnitsEnd.symm.toMonoidHom.comp f.toHomUnits
 #align monoid_hom.to_hom_perm MonoidHom.toHomPerm
 
+#print Equiv.Perm.mul_apply /-
 theorem mul_apply (f g : Perm α) (x) : (f * g) x = f (g x) :=
   Equiv.trans_apply _ _ _
 #align equiv.perm.mul_apply Equiv.Perm.mul_apply
+-/
 
+#print Equiv.Perm.one_apply /-
 theorem one_apply (x) : (1 : Perm α) x = x :=
   rfl
 #align equiv.perm.one_apply Equiv.Perm.one_apply
+-/
 
+#print Equiv.Perm.inv_apply_self /-
 @[simp]
 theorem inv_apply_self (f : Perm α) (x) : f⁻¹ (f x) = x :=
   f.symm_apply_apply x
 #align equiv.perm.inv_apply_self Equiv.Perm.inv_apply_self
+-/
 
+#print Equiv.Perm.apply_inv_self /-
 @[simp]
 theorem apply_inv_self (f : Perm α) (x) : f (f⁻¹ x) = x :=
   f.apply_symm_apply x
 #align equiv.perm.apply_inv_self Equiv.Perm.apply_inv_self
+-/
 
+/- warning: equiv.perm.one_def -> Equiv.Perm.one_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Eq.{succ u1} (Equiv.Perm.{succ u1} α) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (Equiv.refl.{succ u1} α)
+but is expected to have type
+  forall {α : Type.{u1}}, Eq.{succ u1} (Equiv.Perm.{succ u1} α) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) (Equiv.refl.{succ u1} α)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.one_def Equiv.Perm.one_defₓ'. -/
 theorem one_def : (1 : Perm α) = Equiv.refl α :=
   rfl
 #align equiv.perm.one_def Equiv.Perm.one_def
 
+/- warning: equiv.perm.mul_def -> Equiv.Perm.mul_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (f : Equiv.Perm.{succ u1} α) (g : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g) (Equiv.trans.{succ u1, succ u1, succ u1} α α α g f)
+but is expected to have type
+  forall {α : Type.{u1}} (f : Equiv.Perm.{succ u1} α) (g : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g) (Equiv.trans.{succ u1, succ u1, succ u1} α α α g f)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.mul_def Equiv.Perm.mul_defₓ'. -/
 theorem mul_def (f g : Perm α) : f * g = g.trans f :=
   rfl
 #align equiv.perm.mul_def Equiv.Perm.mul_def
 
+/- warning: equiv.perm.inv_def -> Equiv.Perm.inv_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (f : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) (Equiv.symm.{succ u1, succ u1} α α f)
+but is expected to have type
+  forall {α : Type.{u1}} (f : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) (Equiv.symm.{succ u1, succ u1} α α f)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.inv_def Equiv.Perm.inv_defₓ'. -/
 theorem inv_def (f : Perm α) : f⁻¹ = f.symm :=
   rfl
 #align equiv.perm.inv_def Equiv.Perm.inv_def
 
+#print Equiv.Perm.coe_mul /-
 @[simp]
 theorem coe_mul (f g : Perm α) : ⇑(f * g) = f ∘ g :=
   rfl
 #align equiv.perm.coe_mul Equiv.Perm.coe_mul
+-/
 
+#print Equiv.Perm.coe_one /-
 @[simp]
 theorem coe_one : ⇑(1 : Perm α) = id :=
   rfl
 #align equiv.perm.coe_one Equiv.Perm.coe_one
+-/
 
+#print Equiv.Perm.eq_inv_iff_eq /-
 theorem eq_inv_iff_eq {f : Perm α} {x y : α} : x = f⁻¹ y ↔ f x = y :=
   f.eq_symm_apply
 #align equiv.perm.eq_inv_iff_eq Equiv.Perm.eq_inv_iff_eq
+-/
 
+#print Equiv.Perm.inv_eq_iff_eq /-
 theorem inv_eq_iff_eq {f : Perm α} {x y : α} : f⁻¹ x = y ↔ x = f y :=
   f.symm_apply_eq
 #align equiv.perm.inv_eq_iff_eq Equiv.Perm.inv_eq_iff_eq
+-/
 
+#print Equiv.Perm.zpow_apply_comm /-
 theorem zpow_apply_comm {α : Type _} (σ : Perm α) (m n : ℤ) {x : α} :
     (σ ^ m) ((σ ^ n) x) = (σ ^ n) ((σ ^ m) x) := by
   rw [← Equiv.Perm.mul_apply, ← Equiv.Perm.mul_apply, zpow_mul_comm]
 #align equiv.perm.zpow_apply_comm Equiv.Perm.zpow_apply_comm
+-/
 
+#print Equiv.Perm.iterate_eq_pow /-
 @[simp]
 theorem iterate_eq_pow (f : Perm α) : ∀ n, f^[n] = ⇑(f ^ n)
   | 0 => rfl
@@ -127,6 +184,7 @@ theorem iterate_eq_pow (f : Perm α) : ∀ n, f^[n] = ⇑(f ^ n)
     rw [Function.iterate_succ, pow_add, iterate_eq_pow]
     rfl
 #align equiv.perm.iterate_eq_pow Equiv.Perm.iterate_eq_pow
+-/
 
 /-! Lemmas about mixing `perm` with `equiv`. Because we have multiple ways to express
 `equiv.refl`, `equiv.symm`, and `equiv.trans`, we want simp lemmas for every combination.
@@ -134,51 +192,111 @@ The assumption made here is that if you're using the group structure, you want t
 simp. -/
 
 
+/- warning: equiv.perm.trans_one -> Equiv.Perm.trans_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Type.{u2}} (e : Equiv.{u1, succ u2} α β), Eq.{max 1 (max u1 (succ u2)) (imax (succ u2) u1)} (Equiv.{u1, succ u2} α β) (Equiv.trans.{u1, succ u2, succ u2} α β β e (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} β) 1 (OfNat.mk.{u2} (Equiv.Perm.{succ u2} β) 1 (One.one.{u2} (Equiv.Perm.{succ u2} β) (MulOneClass.toHasOne.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))))))) e
+but is expected to have type
+  forall {α : Sort.{u2}} {β : Type.{u1}} (e : Equiv.{u2, succ u1} α β), Eq.{max u2 (succ u1)} (Equiv.{u2, succ u1} α β) (Equiv.trans.{u2, succ u1, succ u1} α β β e (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} β) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} β) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))))) e
+Case conversion may be inaccurate. Consider using '#align equiv.perm.trans_one Equiv.Perm.trans_oneₓ'. -/
 @[simp]
 theorem trans_one {α : Sort _} {β : Type _} (e : α ≃ β) : e.trans (1 : Perm β) = e :=
   Equiv.trans_refl e
 #align equiv.perm.trans_one Equiv.Perm.trans_one
 
+/- warning: equiv.perm.mul_refl -> Equiv.Perm.mul_refl is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) e (Equiv.refl.{succ u1} α)) e
+but is expected to have type
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) e (Equiv.refl.{succ u1} α)) e
+Case conversion may be inaccurate. Consider using '#align equiv.perm.mul_refl Equiv.Perm.mul_reflₓ'. -/
 @[simp]
 theorem mul_refl (e : Perm α) : e * Equiv.refl α = e :=
   Equiv.trans_refl e
 #align equiv.perm.mul_refl Equiv.Perm.mul_refl
 
+/- warning: equiv.perm.one_symm -> Equiv.Perm.one_symm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (Equiv.symm.{succ u1, succ u1} α α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (OfNat.mk.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.one.{u1} (Equiv.{succ u1, succ u1} α α) (MulOneClass.toHasOne.{u1} (Equiv.{succ u1, succ u1} α α) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}}, Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (Equiv.symm.{succ u1, succ u1} α α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.toOfNat1.{u1} (Equiv.{succ u1, succ u1} α α) (InvOneClass.toOne.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivisionMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.one_symm Equiv.Perm.one_symmₓ'. -/
 @[simp]
 theorem one_symm : (1 : Perm α).symm = 1 :=
   Equiv.refl_symm
 #align equiv.perm.one_symm Equiv.Perm.one_symm
 
+/- warning: equiv.perm.refl_inv -> Equiv.Perm.refl_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (Inv.inv.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toHasInv.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.refl.{succ u1} α)) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (OfNat.mk.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.one.{u1} (Equiv.{succ u1, succ u1} α α) (MulOneClass.toHasOne.{u1} (Equiv.{succ u1, succ u1} α α) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}}, Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (Inv.inv.{u1} (Equiv.{succ u1, succ u1} α α) (InvOneClass.toInv.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivisionMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.refl.{succ u1} α)) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.toOfNat1.{u1} (Equiv.{succ u1, succ u1} α α) (InvOneClass.toOne.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivisionMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.refl_inv Equiv.Perm.refl_invₓ'. -/
 @[simp]
 theorem refl_inv : (Equiv.refl α : Perm α)⁻¹ = 1 :=
   Equiv.refl_symm
 #align equiv.perm.refl_inv Equiv.Perm.refl_inv
 
+/- warning: equiv.perm.one_trans -> Equiv.Perm.one_trans is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Sort.{u2}} (e : Equiv.{succ u1, u2} α β), Eq.{max 1 (imax (succ u1) u2) u2 (succ u1)} (Equiv.{succ u1, u2} α β) (Equiv.trans.{succ u1, succ u1, u2} α α β (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) e) e
+but is expected to have type
+  forall {α : Type.{u2}} {β : Sort.{u1}} (e : Equiv.{succ u2, u1} α β), Eq.{max (succ u2) u1} (Equiv.{succ u2, u1} α β) (Equiv.trans.{succ u2, succ u2, u1} α α β (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} α) 1 (One.toOfNat1.{u2} (Equiv.Perm.{succ u2} α) (InvOneClass.toOne.{u2} (Equiv.Perm.{succ u2} α) (DivInvOneMonoid.toInvOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivisionMonoid.toDivInvOneMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivisionMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α))))))) e) e
+Case conversion may be inaccurate. Consider using '#align equiv.perm.one_trans Equiv.Perm.one_transₓ'. -/
 @[simp]
 theorem one_trans {α : Type _} {β : Sort _} (e : α ≃ β) : (1 : Perm α).trans e = e :=
   Equiv.refl_trans e
 #align equiv.perm.one_trans Equiv.Perm.one_trans
 
+/- warning: equiv.perm.refl_mul -> Equiv.Perm.refl_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (HMul.hMul.{u1, u1, u1} (Equiv.{succ u1, succ u1} α α) (Equiv.{succ u1, succ u1} α α) (Equiv.{succ u1, succ u1} α α) (instHMul.{u1} (Equiv.{succ u1, succ u1} α α) (MulOneClass.toHasMul.{u1} (Equiv.{succ u1, succ u1} α α) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.refl.{succ u1} α) e) e
+but is expected to have type
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (HMul.hMul.{u1, u1, u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.{succ u1} α) (Equiv.{succ u1, succ u1} α α) (instHMul.{u1} (Equiv.{succ u1, succ u1} α α) (MulOneClass.toMul.{u1} (Equiv.{succ u1, succ u1} α α) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.refl.{succ u1} α) e) e
+Case conversion may be inaccurate. Consider using '#align equiv.perm.refl_mul Equiv.Perm.refl_mulₓ'. -/
 @[simp]
 theorem refl_mul (e : Perm α) : Equiv.refl α * e = e :=
   Equiv.refl_trans e
 #align equiv.perm.refl_mul Equiv.Perm.refl_mul
 
+/- warning: equiv.perm.inv_trans_self -> Equiv.Perm.inv_trans_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (Equiv.trans.{succ u1, succ u1, succ u1} α α α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) e) e) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (OfNat.mk.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.one.{u1} (Equiv.{succ u1, succ u1} α α) (MulOneClass.toHasOne.{u1} (Equiv.{succ u1, succ u1} α α) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (Equiv.trans.{succ u1, succ u1, succ u1} α α α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) e) e) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.toOfNat1.{u1} (Equiv.{succ u1, succ u1} α α) (InvOneClass.toOne.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivisionMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.inv_trans_self Equiv.Perm.inv_trans_selfₓ'. -/
 @[simp]
 theorem inv_trans_self (e : Perm α) : e⁻¹.trans e = 1 :=
   Equiv.symm_trans_self e
 #align equiv.perm.inv_trans_self Equiv.Perm.inv_trans_self
 
+/- warning: equiv.perm.mul_symm -> Equiv.Perm.mul_symm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) e (Equiv.symm.{succ u1, succ u1} α α e)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) e (Equiv.symm.{succ u1, succ u1} α α e)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.mul_symm Equiv.Perm.mul_symmₓ'. -/
 @[simp]
 theorem mul_symm (e : Perm α) : e * e.symm = 1 :=
   Equiv.symm_trans_self e
 #align equiv.perm.mul_symm Equiv.Perm.mul_symm
 
+/- warning: equiv.perm.self_trans_inv -> Equiv.Perm.self_trans_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (Equiv.trans.{succ u1, succ u1, succ u1} α α α e (Inv.inv.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toHasInv.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α))) e)) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (OfNat.mk.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.one.{u1} (Equiv.{succ u1, succ u1} α α) (MulOneClass.toHasOne.{u1} (Equiv.{succ u1, succ u1} α α) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (Equiv.trans.{succ u1, succ u1, succ u1} α α α e (Inv.inv.{u1} (Equiv.{succ u1, succ u1} α α) (InvOneClass.toInv.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivisionMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α))))) e)) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.toOfNat1.{u1} (Equiv.{succ u1, succ u1} α α) (InvOneClass.toOne.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivisionMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.self_trans_inv Equiv.Perm.self_trans_invₓ'. -/
 @[simp]
 theorem self_trans_inv (e : Perm α) : e.trans e⁻¹ = 1 :=
   Equiv.self_trans_symm e
 #align equiv.perm.self_trans_inv Equiv.Perm.self_trans_inv
 
+/- warning: equiv.perm.symm_mul -> Equiv.Perm.symm_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (HMul.hMul.{u1, u1, u1} (Equiv.{succ u1, succ u1} α α) (Equiv.{succ u1, succ u1} α α) (Equiv.{succ u1, succ u1} α α) (instHMul.{u1} (Equiv.{succ u1, succ u1} α α) (MulOneClass.toHasMul.{u1} (Equiv.{succ u1, succ u1} α α) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.symm.{succ u1, succ u1} α α e) e) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (OfNat.mk.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.one.{u1} (Equiv.{succ u1, succ u1} α α) (MulOneClass.toHasOne.{u1} (Equiv.{succ u1, succ u1} α α) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} (e : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.{succ u1, succ u1} α α) (HMul.hMul.{u1, u1, u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.{succ u1} α) (Equiv.{succ u1, succ u1} α α) (instHMul.{u1} (Equiv.{succ u1, succ u1} α α) (MulOneClass.toMul.{u1} (Equiv.{succ u1, succ u1} α α) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.symm.{succ u1, succ u1} α α e) e) (OfNat.ofNat.{u1} (Equiv.{succ u1, succ u1} α α) 1 (One.toOfNat1.{u1} (Equiv.{succ u1, succ u1} α α) (InvOneClass.toOne.{u1} (Equiv.{succ u1, succ u1} α α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.{succ u1, succ u1} α α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Group.toDivisionMonoid.{u1} (Equiv.{succ u1, succ u1} α α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.symm_mul Equiv.Perm.symm_mulₓ'. -/
 @[simp]
 theorem symm_mul (e : Perm α) : e.symm * e = 1 :=
   Equiv.self_trans_symm e
@@ -187,23 +305,47 @@ theorem symm_mul (e : Perm α) : e.symm * e = 1 :=
 /-! Lemmas about `equiv.perm.sum_congr` re-expressed via the group structure. -/
 
 
+/- warning: equiv.perm.sum_congr_mul -> Equiv.Perm.sumCongr_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.Perm.{succ u1} α) (f : Equiv.Perm.{succ u2} β) (g : Equiv.Perm.{succ u1} α) (h : Equiv.Perm.{succ u2} β), Eq.{succ (max u1 u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (instHMul.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (MulOneClass.toHasMul.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β))))))) (Equiv.Perm.sumCongr.{u1, u2} α β e f) (Equiv.Perm.sumCongr.{u1, u2} α β g h)) (Equiv.Perm.sumCongr.{u1, u2} α β (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) e g) (HMul.hMul.{u2, u2, u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.{succ u2} β) (Equiv.Perm.{succ u2} β) (instHMul.{u2} (Equiv.Perm.{succ u2} β) (MulOneClass.toHasMul.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β)))))) f h))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.Perm.{succ u2} α) (f : Equiv.Perm.{succ u1} β) (g : Equiv.Perm.{succ u2} α) (h : Equiv.Perm.{succ u1} β), Eq.{max (succ u2) (succ u1)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (instHMul.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (MulOneClass.toMul.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β))))))) (Equiv.Perm.sumCongr.{u2, u1} α β e f) (Equiv.Perm.sumCongr.{u2, u1} α β g h)) (Equiv.Perm.sumCongr.{u2, u1} α β (HMul.hMul.{u2, u2, u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u2} α) (instHMul.{u2} (Equiv.Perm.{succ u2} α) (MulOneClass.toMul.{u2} (Equiv.Perm.{succ u2} α) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))))) e g) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.{succ u1} β) (Equiv.Perm.{succ u1} β) (instHMul.{u1} (Equiv.Perm.{succ u1} β) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))) f h))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_mul Equiv.Perm.sumCongr_mulₓ'. -/
 @[simp]
-theorem sum_congr_mul {α β : Type _} (e : Perm α) (f : Perm β) (g : Perm α) (h : Perm β) :
+theorem sumCongr_mul {α β : Type _} (e : Perm α) (f : Perm β) (g : Perm α) (h : Perm β) :
     sumCongr e f * sumCongr g h = sumCongr (e * g) (f * h) :=
   sumCongr_trans g h e f
-#align equiv.perm.sum_congr_mul Equiv.Perm.sum_congr_mul
+#align equiv.perm.sum_congr_mul Equiv.Perm.sumCongr_mul
 
+/- warning: equiv.perm.sum_congr_inv -> Equiv.Perm.sumCongr_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.Perm.{succ u1} α) (f : Equiv.Perm.{succ u2} β), Eq.{succ (max u1 u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Inv.inv.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (DivInvMonoid.toHasInv.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)))) (Equiv.Perm.sumCongr.{u1, u2} α β e f)) (Equiv.Perm.sumCongr.{u1, u2} α β (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) e) (Inv.inv.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toHasInv.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))) f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.Perm.{succ u2} α) (f : Equiv.Perm.{succ u1} β), Eq.{max (succ u2) (succ u1)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Inv.inv.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (InvOneClass.toInv.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivInvOneMonoid.toInvOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivisionMonoid.toDivInvOneMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Group.toDivisionMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)))))) (Equiv.Perm.sumCongr.{u2, u1} α β e f)) (Equiv.Perm.sumCongr.{u2, u1} α β (Inv.inv.{u2} (Equiv.Perm.{succ u2} α) (InvOneClass.toInv.{u2} (Equiv.Perm.{succ u2} α) (DivInvOneMonoid.toInvOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivisionMonoid.toDivInvOneMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivisionMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α))))) e) (Inv.inv.{u1} (Equiv.Perm.{succ u1} β) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} β) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_inv Equiv.Perm.sumCongr_invₓ'. -/
 @[simp]
-theorem sum_congr_inv {α β : Type _} (e : Perm α) (f : Perm β) :
+theorem sumCongr_inv {α β : Type _} (e : Perm α) (f : Perm β) :
     (sumCongr e f)⁻¹ = sumCongr e⁻¹ f⁻¹ :=
   sumCongr_symm e f
-#align equiv.perm.sum_congr_inv Equiv.Perm.sum_congr_inv
+#align equiv.perm.sum_congr_inv Equiv.Perm.sumCongr_inv
 
+/- warning: equiv.perm.sum_congr_one -> Equiv.Perm.sumCongr_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}}, Eq.{max 1 (succ u1) (succ u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.sumCongr.{u1, u2} α β (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} β) 1 (OfNat.mk.{u2} (Equiv.Perm.{succ u2} β) 1 (One.one.{u2} (Equiv.Perm.{succ u2} β) (MulOneClass.toHasOne.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))))))) (OfNat.ofNat.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) 1 (OfNat.mk.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) 1 (One.one.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (MulOneClass.toHasOne.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)))))))))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}}, Eq.{max (succ u2) (succ u1)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.sumCongr.{u2, u1} α β (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} α) 1 (One.toOfNat1.{u2} (Equiv.Perm.{succ u2} α) (InvOneClass.toOne.{u2} (Equiv.Perm.{succ u2} α) (DivInvOneMonoid.toInvOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivisionMonoid.toDivInvOneMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivisionMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α))))))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} β) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} β) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))))) (OfNat.ofNat.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) 1 (One.toOfNat1.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (InvOneClass.toOne.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivInvOneMonoid.toInvOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivisionMonoid.toDivInvOneMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Group.toDivisionMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β))))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_one Equiv.Perm.sumCongr_oneₓ'. -/
 @[simp]
-theorem sum_congr_one {α β : Type _} : sumCongr (1 : Perm α) (1 : Perm β) = 1 :=
+theorem sumCongr_one {α β : Type _} : sumCongr (1 : Perm α) (1 : Perm β) = 1 :=
   sum_congr_refl
-#align equiv.perm.sum_congr_one Equiv.Perm.sum_congr_one
+#align equiv.perm.sum_congr_one Equiv.Perm.sumCongr_one
 
+/- warning: equiv.perm.sum_congr_hom -> Equiv.Perm.sumCongrHom is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) (β : Type.{u2}), MonoidHom.{max u1 u2, max u1 u2} (Prod.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Prod.mulOneClass.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)))))
+but is expected to have type
+  forall (α : Type.{u1}) (β : Type.{u2}), MonoidHom.{max u2 u1, max u1 u2} (Prod.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β)) (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u1, u2} α β)) (Prod.instMulOneClassProd.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u1, u2} α β)) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_hom Equiv.Perm.sumCongrHomₓ'. -/
 /-- `equiv.perm.sum_congr` as a `monoid_hom`, with its two arguments bundled into a single `prod`.
 
 This is particularly useful for its `monoid_hom.range` projection, which is the subgroup of
@@ -213,51 +355,88 @@ def sumCongrHom (α β : Type _) :
     Perm α × Perm β →* Perm
         (Sum α β) where 
   toFun a := sumCongr a.1 a.2
-  map_one' := sum_congr_one
-  map_mul' a b := (sum_congr_mul _ _ _ _).symm
+  map_one' := sumCongr_one
+  map_mul' a b := (sumCongr_mul _ _ _ _).symm
 #align equiv.perm.sum_congr_hom Equiv.Perm.sumCongrHom
 
-theorem sum_congr_hom_injective {α β : Type _} : Function.Injective (sumCongrHom α β) := by
+/- warning: equiv.perm.sum_congr_hom_injective -> Equiv.Perm.sumCongrHom_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}}, Function.Injective.{max (succ u1) (succ u2), max 1 (succ u1) (succ u2)} (Prod.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (MonoidHom.{max u1 u2, max u1 u2} (Prod.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Prod.mulOneClass.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)))))) (fun (_x : MonoidHom.{max u1 u2, max u1 u2} (Prod.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Prod.mulOneClass.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)))))) => (Prod.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β)) -> (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β))) (MonoidHom.hasCoeToFun.{max u1 u2, max u1 u2} (Prod.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Prod.mulOneClass.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)))))) (Equiv.Perm.sumCongrHom.{u1, u2} α β))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (FunLike.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1), max (succ u2) (succ u1)} (MonoidHom.{max u1 u2, max u2 u1} (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Prod.instMulOneClassProd.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)))))) (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (fun (_x : Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) => Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) _x) (MulHomClass.toFunLike.{max u2 u1, max u2 u1, max u2 u1} (MonoidHom.{max u1 u2, max u2 u1} (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Prod.instMulOneClassProd.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)))))) (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (MulOneClass.toMul.{max u2 u1} (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Prod.instMulOneClassProd.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))) (MulOneClass.toMul.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)))))) (MonoidHomClass.toMulHomClass.{max u2 u1, max u2 u1, max u2 u1} (MonoidHom.{max u1 u2, max u2 u1} (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Prod.instMulOneClassProd.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)))))) (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Prod.instMulOneClassProd.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β))))) (MonoidHom.monoidHomClass.{max u2 u1, max u2 u1} (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Prod.instMulOneClassProd.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)))))))) (Equiv.Perm.sumCongrHom.{u2, u1} α β))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_hom_injective Equiv.Perm.sumCongrHom_injectiveₓ'. -/
+theorem sumCongrHom_injective {α β : Type _} : Function.Injective (sumCongrHom α β) := by
   rintro ⟨⟩ ⟨⟩ h
   rw [Prod.mk.inj_iff]
   constructor <;> ext i
   · simpa using Equiv.congr_fun h (Sum.inl i)
   · simpa using Equiv.congr_fun h (Sum.inr i)
-#align equiv.perm.sum_congr_hom_injective Equiv.Perm.sum_congr_hom_injective
+#align equiv.perm.sum_congr_hom_injective Equiv.Perm.sumCongrHom_injective
 
+/- warning: equiv.perm.sum_congr_swap_one -> Equiv.Perm.sumCongr_swap_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] (i : α) (j : α), Eq.{max 1 (succ u1) (succ u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.sumCongr.{u1, u2} α β (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} β) 1 (OfNat.mk.{u2} (Equiv.Perm.{succ u2} β) 1 (One.one.{u2} (Equiv.Perm.{succ u2} β) (MulOneClass.toHasOne.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))))))) (Equiv.swap.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β) (fun (a : Sum.{u1, u2} α β) (b : Sum.{u1, u2} α β) => Sum.decidableEq.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) β (fun (a : β) (b : β) => _inst_2 a b) a b) (Sum.inl.{u1, u2} α β i) (Sum.inl.{u1, u2} α β j))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} β] (i : α) (j : α), Eq.{max (succ u2) (succ u1)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.sumCongr.{u2, u1} α β (Equiv.swap.{succ u2} α (fun (a : α) (b : α) => _inst_1 a b) i j) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} β) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} β) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))))) (Equiv.swap.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β) (fun (a : Sum.{u2, u1} α β) (b : Sum.{u2, u1} α β) => Sum.instDecidableEqSum.{u2, u1} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (Sum.inl.{u2, u1} α β i) (Sum.inl.{u2, u1} α β j))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_swap_one Equiv.Perm.sumCongr_swap_oneₓ'. -/
 @[simp]
-theorem sum_congr_swap_one {α β : Type _} [DecidableEq α] [DecidableEq β] (i j : α) :
+theorem sumCongr_swap_one {α β : Type _} [DecidableEq α] [DecidableEq β] (i j : α) :
     sumCongr (Equiv.swap i j) (1 : Perm β) = Equiv.swap (Sum.inl i) (Sum.inl j) :=
   sumCongr_swap_refl i j
-#align equiv.perm.sum_congr_swap_one Equiv.Perm.sum_congr_swap_one
+#align equiv.perm.sum_congr_swap_one Equiv.Perm.sumCongr_swap_one
 
+/- warning: equiv.perm.sum_congr_one_swap -> Equiv.Perm.sumCongr_one_swap is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] (i : β) (j : β), Eq.{max 1 (succ u1) (succ u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.sumCongr.{u1, u2} α β (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (Equiv.swap.{succ u2} β (fun (a : β) (b : β) => _inst_2 a b) i j)) (Equiv.swap.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β) (fun (a : Sum.{u1, u2} α β) (b : Sum.{u1, u2} α β) => Sum.decidableEq.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) β (fun (a : β) (b : β) => _inst_2 a b) a b) (Sum.inr.{u1, u2} α β i) (Sum.inr.{u1, u2} α β j))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} β] (i : β) (j : β), Eq.{max (succ u2) (succ u1)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.sumCongr.{u2, u1} α β (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} α) 1 (One.toOfNat1.{u2} (Equiv.Perm.{succ u2} α) (InvOneClass.toOne.{u2} (Equiv.Perm.{succ u2} α) (DivInvOneMonoid.toInvOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivisionMonoid.toDivInvOneMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivisionMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α))))))) (Equiv.swap.{succ u1} β (fun (a : β) (b : β) => _inst_2 a b) i j)) (Equiv.swap.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β) (fun (a : Sum.{u2, u1} α β) (b : Sum.{u2, u1} α β) => Sum.instDecidableEqSum.{u2, u1} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (Sum.inr.{u2, u1} α β i) (Sum.inr.{u2, u1} α β j))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_one_swap Equiv.Perm.sumCongr_one_swapₓ'. -/
 @[simp]
-theorem sum_congr_one_swap {α β : Type _} [DecidableEq α] [DecidableEq β] (i j : β) :
+theorem sumCongr_one_swap {α β : Type _} [DecidableEq α] [DecidableEq β] (i j : β) :
     sumCongr (1 : Perm α) (Equiv.swap i j) = Equiv.swap (Sum.inr i) (Sum.inr j) :=
   sum_congr_refl_swap i j
-#align equiv.perm.sum_congr_one_swap Equiv.Perm.sum_congr_one_swap
+#align equiv.perm.sum_congr_one_swap Equiv.Perm.sumCongr_one_swap
 
 /-! Lemmas about `equiv.perm.sigma_congr_right` re-expressed via the group structure. -/
 
 
+/- warning: equiv.perm.sigma_congr_right_mul -> Equiv.Perm.sigmaCongrRight_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} (F : forall (a : α), Equiv.Perm.{succ u2} (β a)) (G : forall (a : α), Equiv.Perm.{succ u2} (β a)), Eq.{succ (max u1 u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (instHMul.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (MulOneClass.toHasMul.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u1 u2} (Sigma.{u1, u2} α (fun (a : α) => β a)))))))) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) F) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) G)) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (forall (a : α), Equiv.Perm.{succ u2} (β a)) (forall (a : α), Equiv.Perm.{succ u2} (β a)) (forall (a : α), Equiv.Perm.{succ u2} (β a)) (instHMul.{max u1 u2} (forall (a : α), Equiv.Perm.{succ u2} (β a)) (Pi.instMul.{u1, u2} α (fun (a : α) => Equiv.Perm.{succ u2} (β a)) (fun (i : α) => MulOneClass.toHasMul.{u2} (Equiv.Perm.{succ u2} (β i)) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} (β i)) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Equiv.Perm.permGroup.{u2} (β i)))))))) F G))
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u1}} (F : forall (a : α), Equiv.Perm.{succ u1} (β a)) (G : forall (a : α), Equiv.Perm.{succ u1} (β a)), Eq.{max (succ u2) (succ u1)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (instHMul.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (MulOneClass.toMul.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => β a)))))))) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) F) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) G)) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (forall (a : α), Equiv.Perm.{succ u1} (β a)) (forall (a : α), Equiv.Perm.{succ u1} (β a)) (forall (a : α), Equiv.Perm.{succ u1} (β a)) (instHMul.{max u2 u1} (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Pi.instMul.{u2, u1} α (fun (a : α) => Equiv.Perm.{succ u1} (β a)) (fun (i : α) => MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} (β i)) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (β i)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Equiv.Perm.permGroup.{u1} (β i)))))))) F G))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr_right_mul Equiv.Perm.sigmaCongrRight_mulₓ'. -/
 @[simp]
-theorem sigma_congr_right_mul {α : Type _} {β : α → Type _} (F : ∀ a, Perm (β a))
+theorem sigmaCongrRight_mul {α : Type _} {β : α → Type _} (F : ∀ a, Perm (β a))
     (G : ∀ a, Perm (β a)) : sigmaCongrRight F * sigmaCongrRight G = sigmaCongrRight (F * G) :=
   sigmaCongrRight_trans G F
-#align equiv.perm.sigma_congr_right_mul Equiv.Perm.sigma_congr_right_mul
+#align equiv.perm.sigma_congr_right_mul Equiv.Perm.sigmaCongrRight_mul
 
+/- warning: equiv.perm.sigma_congr_right_inv -> Equiv.Perm.sigmaCongrRight_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} (F : forall (a : α), Equiv.Perm.{succ u2} (β a)), Eq.{succ (max u1 u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Inv.inv.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (DivInvMonoid.toHasInv.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u1 u2} (Sigma.{u1, u2} α (fun (a : α) => β a))))) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) F)) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) (fun (a : α) => Inv.inv.{u2} (Equiv.Perm.{succ u2} (β a)) (DivInvMonoid.toHasInv.{u2} (Equiv.Perm.{succ u2} (β a)) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} (β a)) (Equiv.Perm.permGroup.{u2} (β a)))) (F a)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u1}} (F : forall (a : α), Equiv.Perm.{succ u1} (β a)), Eq.{max (succ u2) (succ u1)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Inv.inv.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (InvOneClass.toInv.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivInvOneMonoid.toInvOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivisionMonoid.toDivInvOneMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Group.toDivisionMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => β a))))))) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) F)) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) (fun (a : α) => Inv.inv.{u1} (Equiv.Perm.{succ u1} (β a)) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} (β a)) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} (β a)) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} (β a)) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} (β a)) (Equiv.Perm.permGroup.{u1} (β a)))))) (F a)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr_right_inv Equiv.Perm.sigmaCongrRight_invₓ'. -/
 @[simp]
-theorem sigma_congr_right_inv {α : Type _} {β : α → Type _} (F : ∀ a, Perm (β a)) :
+theorem sigmaCongrRight_inv {α : Type _} {β : α → Type _} (F : ∀ a, Perm (β a)) :
     (sigmaCongrRight F)⁻¹ = sigmaCongrRight fun a => (F a)⁻¹ :=
   sigmaCongrRight_symm F
-#align equiv.perm.sigma_congr_right_inv Equiv.Perm.sigma_congr_right_inv
+#align equiv.perm.sigma_congr_right_inv Equiv.Perm.sigmaCongrRight_inv
 
+/- warning: equiv.perm.sigma_congr_right_one -> Equiv.Perm.sigmaCongrRight_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}}, Eq.{max 1 (succ u1) (succ u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) (OfNat.ofNat.{max u1 u2} (forall (a : α), Equiv.Perm.{succ u2} (β a)) 1 (OfNat.mk.{max u1 u2} (forall (a : α), Equiv.Perm.{succ u2} (β a)) 1 (One.one.{max u1 u2} (forall (a : α), Equiv.Perm.{succ u2} (β a)) (Pi.instOne.{u1, u2} α (fun (a : α) => Equiv.Perm.{succ u2} (β a)) (fun (i : α) => MulOneClass.toHasOne.{u2} (Equiv.Perm.{succ u2} (β i)) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} (β i)) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Equiv.Perm.permGroup.{u2} (β i))))))))))) (OfNat.ofNat.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) 1 (OfNat.mk.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) 1 (One.one.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (MulOneClass.toHasOne.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u1 u2} (Sigma.{u1, u2} α (fun (a : α) => β a))))))))))
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u1}}, Eq.{max (succ u2) (succ u1)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) (OfNat.ofNat.{max u2 u1} (forall (a : α), Equiv.Perm.{succ u1} (β a)) 1 (One.toOfNat1.{max u2 u1} (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Pi.instOne.{u2, u1} α (fun (a : α) => Equiv.Perm.{succ u1} (β a)) (fun (i : α) => InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} (β i)) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} (β i)) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Equiv.Perm.permGroup.{u1} (β i)))))))))) (OfNat.ofNat.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) 1 (One.toOfNat1.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (InvOneClass.toOne.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivInvOneMonoid.toInvOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivisionMonoid.toDivInvOneMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Group.toDivisionMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => β a)))))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr_right_one Equiv.Perm.sigmaCongrRight_oneₓ'. -/
 @[simp]
-theorem sigma_congr_right_one {α : Type _} {β : α → Type _} :
+theorem sigmaCongrRight_one {α : Type _} {β : α → Type _} :
     sigmaCongrRight (1 : ∀ a, Equiv.Perm <| β a) = 1 :=
   sigma_congr_right_refl
-#align equiv.perm.sigma_congr_right_one Equiv.Perm.sigma_congr_right_one
+#align equiv.perm.sigma_congr_right_one Equiv.Perm.sigmaCongrRight_one
 
+#print Equiv.Perm.sigmaCongrRightHom /-
 /-- `equiv.perm.sigma_congr_right` as a `monoid_hom`.
 
 This is particularly useful for its `monoid_hom.range` projection, which is the subgroup of
@@ -267,17 +446,30 @@ def sigmaCongrRightHom {α : Type _} (β : α → Type _) :
     (∀ a, Perm (β a)) →* Perm
         (Σa, β a) where 
   toFun := sigmaCongrRight
-  map_one' := sigma_congr_right_one
-  map_mul' a b := (sigma_congr_right_mul _ _).symm
+  map_one' := sigmaCongrRight_one
+  map_mul' a b := (sigmaCongrRight_mul _ _).symm
 #align equiv.perm.sigma_congr_right_hom Equiv.Perm.sigmaCongrRightHom
+-/
 
-theorem sigma_congr_right_hom_injective {α : Type _} {β : α → Type _} :
+/- warning: equiv.perm.sigma_congr_right_hom_injective -> Equiv.Perm.sigmaCongrRightHom_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}}, Function.Injective.{max (succ u1) (succ u2), max 1 (succ u1) (succ u2)} (forall (a : α), Equiv.Perm.{succ u2} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (MonoidHom.{max u1 u2, max u1 u2} (forall (a : α), Equiv.Perm.{succ u2} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Pi.mulOneClass.{u1, u2} α (fun (a : α) => Equiv.Perm.{succ u2} (β a)) (fun (i : α) => Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} (β i)) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Equiv.Perm.permGroup.{u2} (β i)))))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u1 u2} (Sigma.{u1, u2} α (fun (a : α) => β a))))))) (fun (_x : MonoidHom.{max u1 u2, max u1 u2} (forall (a : α), Equiv.Perm.{succ u2} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Pi.mulOneClass.{u1, u2} α (fun (a : α) => Equiv.Perm.{succ u2} (β a)) (fun (i : α) => Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} (β i)) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Equiv.Perm.permGroup.{u2} (β i)))))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u1 u2} (Sigma.{u1, u2} α (fun (a : α) => β a))))))) => (forall (a : α), Equiv.Perm.{succ u2} (β a)) -> (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)))) (MonoidHom.hasCoeToFun.{max u1 u2, max u1 u2} (forall (a : α), Equiv.Perm.{succ u2} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Pi.mulOneClass.{u1, u2} α (fun (a : α) => Equiv.Perm.{succ u2} (β a)) (fun (i : α) => Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} (β i)) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} (β i)) (Equiv.Perm.permGroup.{u2} (β i)))))) (Monoid.toMulOneClass.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u1 u2} (Sigma.{u1, u2} α (fun (a : α) => β a))))))) (Equiv.Perm.sigmaCongrRightHom.{u1, u2} α β))
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u1}}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (FunLike.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1), max (succ u2) (succ u1)} (MonoidHom.{max u2 u1, max u2 u1} (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Pi.mulOneClass.{u2, u1} α (fun (a : α) => Equiv.Perm.{succ u1} (β a)) (fun (i : α) => Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (β i)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Equiv.Perm.permGroup.{u1} (β i)))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => β a))))))) (forall (a : α), Equiv.Perm.{succ u1} (β a)) (fun (_x : forall (a : α), Equiv.Perm.{succ u1} (β a)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : forall (a : α), Equiv.Perm.{succ u1} (β a)) => Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) _x) (MulHomClass.toFunLike.{max u2 u1, max u2 u1, max u2 u1} (MonoidHom.{max u2 u1, max u2 u1} (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Pi.mulOneClass.{u2, u1} α (fun (a : α) => Equiv.Perm.{succ u1} (β a)) (fun (i : α) => Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (β i)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Equiv.Perm.permGroup.{u1} (β i)))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => β a))))))) (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (MulOneClass.toMul.{max u2 u1} (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Pi.mulOneClass.{u2, u1} α (fun (a : α) => Equiv.Perm.{succ u1} (β a)) (fun (a : α) => Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (β a)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (β a)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (β a)) (Equiv.Perm.permGroup.{u1} (β a))))))) (MulOneClass.toMul.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => β a))))))) (MonoidHomClass.toMulHomClass.{max u2 u1, max u2 u1, max u2 u1} (MonoidHom.{max u2 u1, max u2 u1} (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Pi.mulOneClass.{u2, u1} α (fun (a : α) => Equiv.Perm.{succ u1} (β a)) (fun (i : α) => Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (β i)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Equiv.Perm.permGroup.{u1} (β i)))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => β a))))))) (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Pi.mulOneClass.{u2, u1} α (fun (a : α) => Equiv.Perm.{succ u1} (β a)) (fun (i : α) => Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (β i)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Equiv.Perm.permGroup.{u1} (β i)))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => β a)))))) (MonoidHom.monoidHomClass.{max u2 u1, max u2 u1} (forall (a : α), Equiv.Perm.{succ u1} (β a)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Pi.mulOneClass.{u2, u1} α (fun (a : α) => Equiv.Perm.{succ u1} (β a)) (fun (i : α) => Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (β i)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (β i)) (Equiv.Perm.permGroup.{u1} (β i)))))) (Monoid.toMulOneClass.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.permGroup.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => β a))))))))) (Equiv.Perm.sigmaCongrRightHom.{u2, u1} α β))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr_right_hom_injective Equiv.Perm.sigmaCongrRightHom_injectiveₓ'. -/
+theorem sigmaCongrRightHom_injective {α : Type _} {β : α → Type _} :
     Function.Injective (sigmaCongrRightHom β) := by
   intro x y h
   ext (a b)
   simpa using Equiv.congr_fun h ⟨a, b⟩
-#align equiv.perm.sigma_congr_right_hom_injective Equiv.Perm.sigma_congr_right_hom_injective
+#align equiv.perm.sigma_congr_right_hom_injective Equiv.Perm.sigmaCongrRightHom_injective
 
+/- warning: equiv.perm.subtype_congr_hom -> Equiv.Perm.subtypeCongrHom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], MonoidHom.{u1, u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.mulOneClass.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], MonoidHom.{u1, u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.instMulOneClassProd.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.subtype_congr_hom Equiv.Perm.subtypeCongrHomₓ'. -/
 /-- `equiv.perm.subtype_congr` as a `monoid_hom`. -/
 @[simps]
 def subtypeCongrHom (p : α → Prop) [DecidablePred p] :
@@ -288,19 +480,27 @@ def subtypeCongrHom (p : α → Prop) [DecidablePred p] :
   map_mul' _ _ := (Perm.subtypeCongr.trans _ _ _ _).symm
 #align equiv.perm.subtype_congr_hom Equiv.Perm.subtypeCongrHom
 
-theorem subtype_congr_hom_injective (p : α → Prop) [DecidablePred p] :
+/- warning: equiv.perm.subtype_congr_hom_injective -> Equiv.Perm.subtypeCongrHom_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], Function.Injective.{succ u1, succ u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (coeFn.{succ u1, succ u1} (MonoidHom.{u1, u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.mulOneClass.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (fun (_x : MonoidHom.{u1, u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.mulOneClass.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) => (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) -> (Equiv.Perm.{succ u1} α)) (MonoidHom.hasCoeToFun.{u1, u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.mulOneClass.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.Perm.subtypeCongrHom.{u1} α p (fun (a : α) => _inst_1 a)))
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], Function.Injective.{succ u1, succ u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.instMulOneClassProd.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (fun (_x : Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) => Equiv.Perm.{succ u1} α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.instMulOneClassProd.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Prod.instMulOneClassProd.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))))))) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.instMulOneClassProd.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.instMulOneClassProd.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (MonoidHom.monoidHomClass.{u1, u1} (Prod.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a))))) (Equiv.Perm.{succ u1} α) (Prod.instMulOneClassProd.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => p a))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => p a)))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (a : α) => Not (p a)))))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) (Equiv.Perm.subtypeCongrHom.{u1} α p (fun (a : α) => _inst_1 a)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.subtype_congr_hom_injective Equiv.Perm.subtypeCongrHom_injectiveₓ'. -/
+theorem subtypeCongrHom_injective (p : α → Prop) [DecidablePred p] :
     Function.Injective (subtypeCongrHom p) := by
   rintro ⟨⟩ ⟨⟩ h
   rw [Prod.mk.inj_iff]
   constructor <;> ext i <;> simpa using Equiv.congr_fun h i
-#align equiv.perm.subtype_congr_hom_injective Equiv.Perm.subtype_congr_hom_injective
+#align equiv.perm.subtype_congr_hom_injective Equiv.Perm.subtypeCongrHom_injective
 
+#print Equiv.Perm.permCongr_eq_mul /-
 /-- If `e` is also a permutation, we can write `perm_congr`
 completely in terms of the group structure. -/
 @[simp]
-theorem perm_congr_eq_mul (e p : Perm α) : e.permCongr p = e * p * e⁻¹ :=
+theorem permCongr_eq_mul (e p : Perm α) : e.permCongr p = e * p * e⁻¹ :=
   rfl
-#align equiv.perm.perm_congr_eq_mul Equiv.Perm.perm_congr_eq_mul
+#align equiv.perm.perm_congr_eq_mul Equiv.Perm.permCongr_eq_mul
+-/
 
 section ExtendDomain
 
@@ -309,41 +509,73 @@ section ExtendDomain
 
 variable (e : Perm α) {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p)
 
+/- warning: equiv.perm.extend_domain_one -> Equiv.Perm.extendDomain_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)), Eq.{succ u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.extendDomain.{u1, u2} α β (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) p (fun (a : β) => _inst_1 a) f) (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} β) 1 (OfNat.mk.{u2} (Equiv.Perm.{succ u2} β) 1 (One.one.{u2} (Equiv.Perm.{succ u2} β) (MulOneClass.toHasOne.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)), Eq.{succ u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.extendDomain.{u1, u2} α β (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) p (fun (a : β) => _inst_1 a) f) (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} β) 1 (One.toOfNat1.{u2} (Equiv.Perm.{succ u2} β) (InvOneClass.toOne.{u2} (Equiv.Perm.{succ u2} β) (DivInvOneMonoid.toInvOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivisionMonoid.toDivInvOneMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivisionMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.extend_domain_one Equiv.Perm.extendDomain_oneₓ'. -/
 @[simp]
-theorem extend_domain_one : extendDomain 1 f = 1 :=
+theorem extendDomain_one : extendDomain 1 f = 1 :=
   extendDomain_refl f
-#align equiv.perm.extend_domain_one Equiv.Perm.extend_domain_one
+#align equiv.perm.extend_domain_one Equiv.Perm.extendDomain_one
 
+/- warning: equiv.perm.extend_domain_inv -> Equiv.Perm.extendDomain_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.Perm.{succ u1} α) {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)), Eq.{succ u2} (Equiv.Perm.{succ u2} β) (Inv.inv.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toHasInv.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))) (Equiv.Perm.extendDomain.{u1, u2} α β e p (fun (a : β) => _inst_1 a) f)) (Equiv.Perm.extendDomain.{u1, u2} α β (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) e) p (fun (a : β) => _inst_1 a) f)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.Perm.{succ u1} α) {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)), Eq.{succ u2} (Equiv.Perm.{succ u2} β) (Inv.inv.{u2} (Equiv.Perm.{succ u2} β) (InvOneClass.toInv.{u2} (Equiv.Perm.{succ u2} β) (DivInvOneMonoid.toInvOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivisionMonoid.toDivInvOneMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivisionMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.extendDomain.{u1, u2} α β e p (fun (a : β) => _inst_1 a) f)) (Equiv.Perm.extendDomain.{u1, u2} α β (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) e) p (fun (a : β) => _inst_1 a) f)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.extend_domain_inv Equiv.Perm.extendDomain_invₓ'. -/
 @[simp]
-theorem extend_domain_inv : (e.extendDomain f)⁻¹ = e⁻¹.extendDomain f :=
+theorem extendDomain_inv : (e.extendDomain f)⁻¹ = e⁻¹.extendDomain f :=
   rfl
-#align equiv.perm.extend_domain_inv Equiv.Perm.extend_domain_inv
+#align equiv.perm.extend_domain_inv Equiv.Perm.extendDomain_inv
 
+/- warning: equiv.perm.extend_domain_mul -> Equiv.Perm.extendDomain_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (e : Equiv.Perm.{succ u1} α) (e' : Equiv.Perm.{succ u1} α), Eq.{succ u2} (Equiv.Perm.{succ u2} β) (HMul.hMul.{u2, u2, u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.{succ u2} β) (Equiv.Perm.{succ u2} β) (instHMul.{u2} (Equiv.Perm.{succ u2} β) (MulOneClass.toHasMul.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β)))))) (Equiv.Perm.extendDomain.{u1, u2} α β e p (fun (a : β) => _inst_1 a) f) (Equiv.Perm.extendDomain.{u1, u2} α β e' p (fun (a : β) => _inst_1 a) f)) (Equiv.Perm.extendDomain.{u1, u2} α β (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) e e') p (fun (a : β) => _inst_1 a) f)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (e : Equiv.Perm.{succ u1} α) (e' : Equiv.Perm.{succ u1} α), Eq.{succ u2} (Equiv.Perm.{succ u2} β) (HMul.hMul.{u2, u2, u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.{succ u2} β) (Equiv.Perm.{succ u2} β) (instHMul.{u2} (Equiv.Perm.{succ u2} β) (MulOneClass.toMul.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β)))))) (Equiv.Perm.extendDomain.{u1, u2} α β e p (fun (a : β) => _inst_1 a) f) (Equiv.Perm.extendDomain.{u1, u2} α β e' p (fun (a : β) => _inst_1 a) f)) (Equiv.Perm.extendDomain.{u1, u2} α β (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) e e') p (fun (a : β) => _inst_1 a) f)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.extend_domain_mul Equiv.Perm.extendDomain_mulₓ'. -/
 @[simp]
-theorem extend_domain_mul (e e' : Perm α) :
+theorem extendDomain_mul (e e' : Perm α) :
     e.extendDomain f * e'.extendDomain f = (e * e').extendDomain f :=
   extendDomain_trans _ _ _
-#align equiv.perm.extend_domain_mul Equiv.Perm.extend_domain_mul
+#align equiv.perm.extend_domain_mul Equiv.Perm.extendDomain_mul
 
+#print Equiv.Perm.extendDomainHom /-
 /-- `extend_domain` as a group homomorphism -/
 @[simps]
 def extendDomainHom : Perm α →*
       Perm β where 
   toFun e := extendDomain e f
-  map_one' := extend_domain_one f
-  map_mul' e e' := (extend_domain_mul f e e').symm
+  map_one' := extendDomain_one f
+  map_mul' e e' := (extendDomain_mul f e e').symm
 #align equiv.perm.extend_domain_hom Equiv.Perm.extendDomainHom
+-/
 
-theorem extend_domain_hom_injective : Function.Injective (extendDomainHom f) :=
+/- warning: equiv.perm.extend_domain_hom_injective -> Equiv.Perm.extendDomainHom_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)), Function.Injective.{succ u1, succ u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (fun (_x : MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) => (Equiv.Perm.{succ u1} α) -> (Equiv.Perm.{succ u2} β)) (MonoidHom.hasCoeToFun.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.extendDomainHom.{u1, u2} α β p (fun (a : β) => _inst_1 a) f))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)), Function.Injective.{succ u1, succ u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.Perm.{succ u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : Equiv.Perm.{succ u1} α) => Equiv.Perm.{succ u2} β) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toMul.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β)))) (MonoidHom.monoidHomClass.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))))) (Equiv.Perm.extendDomainHom.{u1, u2} α β p (fun (a : β) => _inst_1 a) f))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.extend_domain_hom_injective Equiv.Perm.extendDomainHom_injectiveₓ'. -/
+theorem extendDomainHom_injective : Function.Injective (extendDomainHom f) :=
   (injective_iff_map_eq_one (extendDomainHom f)).mpr fun e he =>
     ext fun x =>
       f.Injective (Subtype.ext ((extendDomain_apply_image e f x).symm.trans (ext_iff.mp he (f x))))
-#align equiv.perm.extend_domain_hom_injective Equiv.Perm.extend_domain_hom_injective
+#align equiv.perm.extend_domain_hom_injective Equiv.Perm.extendDomainHom_injective
 
+/- warning: equiv.perm.extend_domain_eq_one_iff -> Equiv.Perm.extendDomain_eq_one_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] {e : Equiv.Perm.{succ u1} α} {f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)}, Iff (Eq.{succ u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.extendDomain.{u1, u2} α β e p (fun (a : β) => _inst_1 a) f) (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} β) 1 (OfNat.mk.{u2} (Equiv.Perm.{succ u2} β) 1 (One.one.{u2} (Equiv.Perm.{succ u2} β) (MulOneClass.toHasOne.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))))))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) e (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] {e : Equiv.Perm.{succ u1} α} {f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)}, Iff (Eq.{succ u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.extendDomain.{u1, u2} α β e p (fun (a : β) => _inst_1 a) f) (OfNat.ofNat.{u2} (Equiv.Perm.{succ u2} β) 1 (One.toOfNat1.{u2} (Equiv.Perm.{succ u2} β) (InvOneClass.toOne.{u2} (Equiv.Perm.{succ u2} β) (DivInvOneMonoid.toInvOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivisionMonoid.toDivInvOneMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivisionMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β)))))))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) e (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.extend_domain_eq_one_iff Equiv.Perm.extendDomain_eq_one_iffₓ'. -/
 @[simp]
-theorem extend_domain_eq_one_iff {e : Perm α} {f : α ≃ Subtype p} : e.extendDomain f = 1 ↔ e = 1 :=
-  (injective_iff_map_eq_one' (extendDomainHom f)).mp (extend_domain_hom_injective f) e
-#align equiv.perm.extend_domain_eq_one_iff Equiv.Perm.extend_domain_eq_one_iff
+theorem extendDomain_eq_one_iff {e : Perm α} {f : α ≃ Subtype p} : e.extendDomain f = 1 ↔ e = 1 :=
+  (injective_iff_map_eq_one' (extendDomainHom f)).mp (extendDomainHom_injective f) e
+#align equiv.perm.extend_domain_eq_one_iff Equiv.Perm.extendDomain_eq_one_iff
 
 end ExtendDomain
 
@@ -351,6 +583,7 @@ section Subtype
 
 variable {p : α → Prop} {f : Perm α}
 
+#print Equiv.Perm.subtypePerm /-
 /-- If the permutation `f` fixes the subtype `{x // p x}`, then this returns the permutation
   on `{x // p x}` induced by `f`. -/
 def subtypePerm (f : Perm α) (h : ∀ x, p x ↔ p (f x)) : Perm { x // p x } :=
@@ -358,54 +591,71 @@ def subtypePerm (f : Perm α) (h : ∀ x, p x ↔ p (f x)) : Perm { x // p x } :
     simp only [perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk], fun _ => by
     simp only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk]⟩
 #align equiv.perm.subtype_perm Equiv.Perm.subtypePerm
+-/
 
+#print Equiv.Perm.subtypePerm_apply /-
 @[simp]
-theorem subtype_perm_apply (f : Perm α) (h : ∀ x, p x ↔ p (f x)) (x : { x // p x }) :
+theorem subtypePerm_apply (f : Perm α) (h : ∀ x, p x ↔ p (f x)) (x : { x // p x }) :
     subtypePerm f h x = ⟨f x, (h _).1 x.2⟩ :=
   rfl
-#align equiv.perm.subtype_perm_apply Equiv.Perm.subtype_perm_apply
+#align equiv.perm.subtype_perm_apply Equiv.Perm.subtypePerm_apply
+-/
 
+/- warning: equiv.perm.subtype_perm_one -> Equiv.Perm.subtypePerm_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (p : α -> Prop) (h : optParam.{0} (forall (_x : α), Iff (p _x) (p _x)) (fun (_x : α) => Iff.rfl (p _x))), Eq.{succ u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (Equiv.Perm.subtypePerm.{u1} α p (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) h) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) 1 (One.one.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (x : α) => p x))))))))))
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Prop) (h : optParam.{0} (forall (_x : α), Iff (p _x) (p _x)) (fun (_x : α) => Iff.rfl (p _x))), Eq.{succ u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (Equiv.Perm.subtypePerm.{u1} α p (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) h) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)))))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.subtype_perm_one Equiv.Perm.subtypePerm_oneₓ'. -/
 @[simp]
-theorem subtype_perm_one (p : α → Prop) (h := fun _ => Iff.rfl) : @subtypePerm α p 1 h = 1 :=
+theorem subtypePerm_one (p : α → Prop) (h := fun _ => Iff.rfl) : @subtypePerm α p 1 h = 1 :=
   Equiv.ext fun ⟨_, _⟩ => rfl
-#align equiv.perm.subtype_perm_one Equiv.Perm.subtype_perm_one
+#align equiv.perm.subtype_perm_one Equiv.Perm.subtypePerm_one
 
+#print Equiv.Perm.subtypePerm_mul /-
 @[simp]
-theorem subtype_perm_mul (f g : Perm α) (hf hg) :
+theorem subtypePerm_mul (f g : Perm α) (hf hg) :
     (f.subtypePerm hf * g.subtypePerm hg : Perm { x // p x }) =
       (f * g).subtypePerm fun x => (hg _).trans <| hf _ :=
   rfl
-#align equiv.perm.subtype_perm_mul Equiv.Perm.subtype_perm_mul
+#align equiv.perm.subtype_perm_mul Equiv.Perm.subtypePerm_mul
+-/
 
 private theorem inv_aux : (∀ x, p x ↔ p (f x)) ↔ ∀ x, p x ↔ p (f⁻¹ x) :=
   f⁻¹.Surjective.forall.trans <| by simp_rw [f.apply_inv_self, Iff.comm]
 #align equiv.perm.inv_aux equiv.perm.inv_aux
 
+#print Equiv.Perm.subtypePerm_inv /-
 /-- See `equiv.perm.inv_subtype_perm`-/
-theorem subtype_perm_inv (f : Perm α) (hf) :
+theorem subtypePerm_inv (f : Perm α) (hf) :
     f⁻¹.subtypePerm hf = (f.subtypePerm <| inv_aux.2 hf : Perm { x // p x })⁻¹ :=
   rfl
-#align equiv.perm.subtype_perm_inv Equiv.Perm.subtype_perm_inv
+#align equiv.perm.subtype_perm_inv Equiv.Perm.subtypePerm_inv
+-/
 
+#print Equiv.Perm.inv_subtypePerm /-
 /-- See `equiv.perm.subtype_perm_inv`-/
 @[simp]
-theorem inv_subtype_perm (f : Perm α) (hf) :
+theorem inv_subtypePerm (f : Perm α) (hf) :
     (f.subtypePerm hf : Perm { x // p x })⁻¹ = f⁻¹.subtypePerm (inv_aux.1 hf) :=
   rfl
-#align equiv.perm.inv_subtype_perm Equiv.Perm.inv_subtype_perm
+#align equiv.perm.inv_subtype_perm Equiv.Perm.inv_subtypePerm
+-/
 
 private theorem pow_aux (hf : ∀ x, p x ↔ p (f x)) : ∀ {n : ℕ} (x), p x ↔ p ((f ^ n) x)
   | 0, x => Iff.rfl
   | n + 1, x => (pow_aux _).trans (hf _)
 #align equiv.perm.pow_aux equiv.perm.pow_aux
 
+#print Equiv.Perm.subtypePerm_pow /-
 @[simp]
-theorem subtype_perm_pow (f : Perm α) (n : ℕ) (hf) :
+theorem subtypePerm_pow (f : Perm α) (n : ℕ) (hf) :
     (f.subtypePerm hf : Perm { x // p x }) ^ n = (f ^ n).subtypePerm (pow_aux hf) := by
   induction' n with n ih
   · simp
   · simp_rw [pow_succ', ih, subtype_perm_mul]
-#align equiv.perm.subtype_perm_pow Equiv.Perm.subtype_perm_pow
+#align equiv.perm.subtype_perm_pow Equiv.Perm.subtypePerm_pow
+-/
 
 private theorem zpow_aux (hf : ∀ x, p x ↔ p (f x)) : ∀ {n : ℤ} (x), p x ↔ p ((f ^ n) x)
   | Int.ofNat n => pow_aux hf
@@ -414,27 +664,32 @@ private theorem zpow_aux (hf : ∀ x, p x ↔ p (f x)) : ∀ {n : ℤ} (x), p x 
     exact inv_aux.1 (pow_aux hf)
 #align equiv.perm.zpow_aux equiv.perm.zpow_aux
 
+#print Equiv.Perm.subtypePerm_zpow /-
 @[simp]
-theorem subtype_perm_zpow (f : Perm α) (n : ℤ) (hf) :
+theorem subtypePerm_zpow (f : Perm α) (n : ℤ) (hf) :
     (f.subtypePerm hf ^ n : Perm { x // p x }) = (f ^ n).subtypePerm (zpow_aux hf) := by
   induction' n with n ih
   · exact subtype_perm_pow _ _ _
   · simp only [zpow_negSucc, subtype_perm_pow, subtype_perm_inv]
-#align equiv.perm.subtype_perm_zpow Equiv.Perm.subtype_perm_zpow
+#align equiv.perm.subtype_perm_zpow Equiv.Perm.subtypePerm_zpow
+-/
 
 variable [DecidablePred p] {a : α}
 
+#print Equiv.Perm.ofSubtype /-
 /-- The inclusion map of permutations on a subtype of `α` into permutations of `α`,
   fixing the other points. -/
 def ofSubtype :
     Perm (Subtype p) →*
       Perm α where 
   toFun f := extendDomain f (Equiv.refl (Subtype p))
-  map_one' := Equiv.Perm.extend_domain_one _
-  map_mul' f g := (Equiv.Perm.extend_domain_mul _ f g).symm
+  map_one' := Equiv.Perm.extendDomain_one _
+  map_mul' f g := (Equiv.Perm.extendDomain_mul _ f g).symm
 #align equiv.perm.of_subtype Equiv.Perm.ofSubtype
+-/
 
-theorem of_subtype_subtype_perm {f : Perm α} (h₁ : ∀ x, p x ↔ p (f x)) (h₂ : ∀ x, f x ≠ x → p x) :
+#print Equiv.Perm.ofSubtype_subtypePerm /-
+theorem ofSubtype_subtypePerm {f : Perm α} (h₁ : ∀ x, p x ↔ p (f x)) (h₂ : ∀ x, f x ≠ x → p x) :
     ofSubtype (subtypePerm f h₁) = f :=
   Equiv.ext fun x => by 
     by_cases hx : p x
@@ -442,34 +697,50 @@ theorem of_subtype_subtype_perm {f : Perm α} (h₁ : ∀ x, p x ↔ p (f x)) (h
     · rw [of_subtype, MonoidHom.coe_mk, Equiv.Perm.extendDomain_apply_not_subtype]
       · exact not_not.mp fun h => hx (h₂ x (Ne.symm h))
       · exact hx
-#align equiv.perm.of_subtype_subtype_perm Equiv.Perm.of_subtype_subtype_perm
+#align equiv.perm.of_subtype_subtype_perm Equiv.Perm.ofSubtype_subtypePerm
+-/
 
-theorem of_subtype_apply_of_mem (f : Perm (Subtype p)) (ha : p a) : ofSubtype f a = f ⟨a, ha⟩ :=
+#print Equiv.Perm.ofSubtype_apply_of_mem /-
+theorem ofSubtype_apply_of_mem (f : Perm (Subtype p)) (ha : p a) : ofSubtype f a = f ⟨a, ha⟩ :=
   extendDomain_apply_subtype _ _ _
-#align equiv.perm.of_subtype_apply_of_mem Equiv.Perm.of_subtype_apply_of_mem
+#align equiv.perm.of_subtype_apply_of_mem Equiv.Perm.ofSubtype_apply_of_mem
+-/
 
+#print Equiv.Perm.ofSubtype_apply_coe /-
 @[simp]
-theorem of_subtype_apply_coe (f : Perm (Subtype p)) (x : Subtype p) : ofSubtype f x = f x :=
-  (Subtype.casesOn x) fun _ => of_subtype_apply_of_mem f
-#align equiv.perm.of_subtype_apply_coe Equiv.Perm.of_subtype_apply_coe
+theorem ofSubtype_apply_coe (f : Perm (Subtype p)) (x : Subtype p) : ofSubtype f x = f x :=
+  (Subtype.casesOn x) fun _ => ofSubtype_apply_of_mem f
+#align equiv.perm.of_subtype_apply_coe Equiv.Perm.ofSubtype_apply_coe
+-/
 
-theorem of_subtype_apply_of_not_mem (f : Perm (Subtype p)) (ha : ¬p a) : ofSubtype f a = a :=
+#print Equiv.Perm.ofSubtype_apply_of_not_mem /-
+theorem ofSubtype_apply_of_not_mem (f : Perm (Subtype p)) (ha : ¬p a) : ofSubtype f a = a :=
   extendDomain_apply_not_subtype _ _ ha
-#align equiv.perm.of_subtype_apply_of_not_mem Equiv.Perm.of_subtype_apply_of_not_mem
+#align equiv.perm.of_subtype_apply_of_not_mem Equiv.Perm.ofSubtype_apply_of_not_mem
+-/
 
-theorem mem_iff_of_subtype_apply_mem (f : Perm (Subtype p)) (x : α) :
+#print Equiv.Perm.mem_iff_ofSubtype_apply_mem /-
+theorem mem_iff_ofSubtype_apply_mem (f : Perm (Subtype p)) (x : α) :
     p x ↔ p ((ofSubtype f : α → α) x) :=
   if h : p x then by
     simpa only [h, true_iff_iff, MonoidHom.coe_mk, of_subtype_apply_of_mem f h] using (f ⟨x, h⟩).2
   else by simp [h, of_subtype_apply_of_not_mem f h]
-#align equiv.perm.mem_iff_of_subtype_apply_mem Equiv.Perm.mem_iff_of_subtype_apply_mem
+#align equiv.perm.mem_iff_of_subtype_apply_mem Equiv.Perm.mem_iff_ofSubtype_apply_mem
+-/
 
+/- warning: equiv.perm.subtype_perm_of_subtype -> Equiv.Perm.subtypePerm_ofSubtype is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] (f : Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)), Eq.{succ u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (Equiv.Perm.subtypePerm.{u1} α (fun (x : α) => p x) (coeFn.{succ u1, succ u1} (MonoidHom.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α p))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (fun (_x : MonoidHom.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α p))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) => (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) -> (Equiv.Perm.{succ u1} α)) (MonoidHom.hasCoeToFun.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α p))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.Perm.ofSubtype.{u1} α p (fun (a : α) => _inst_1 a)) f) (Equiv.Perm.mem_iff_ofSubtype_apply_mem.{u1} α p (fun (a : α) => _inst_1 a) f)) f
+but is expected to have type
+  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] (f : Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)), Eq.{succ u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x))) (Equiv.Perm.subtypePerm.{u1} α (fun (x : α) => p x) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α p))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (fun (_x : Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) => Equiv.Perm.{succ u1} α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α p))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α p)))))) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α p))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α p))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (MonoidHom.monoidHomClass.{u1, u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} (Subtype.{succ u1} α p)) (Equiv.Perm.permGroup.{u1} (Subtype.{succ u1} α p))))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) (Equiv.Perm.ofSubtype.{u1} α p (fun (a : α) => _inst_1 a)) f) (Equiv.Perm.mem_iff_ofSubtype_apply_mem.{u1} α p (fun (a : α) => _inst_1 a) f)) f
+Case conversion may be inaccurate. Consider using '#align equiv.perm.subtype_perm_of_subtype Equiv.Perm.subtypePerm_ofSubtypeₓ'. -/
 @[simp]
-theorem subtype_perm_of_subtype (f : Perm (Subtype p)) :
-    subtypePerm (ofSubtype f) (mem_iff_of_subtype_apply_mem f) = f :=
-  Equiv.ext fun x => Subtype.coe_injective (of_subtype_apply_coe f x)
-#align equiv.perm.subtype_perm_of_subtype Equiv.Perm.subtype_perm_of_subtype
+theorem subtypePerm_ofSubtype (f : Perm (Subtype p)) :
+    subtypePerm (ofSubtype f) (mem_iff_ofSubtype_apply_mem f) = f :=
+  Equiv.ext fun x => Subtype.coe_injective (ofSubtype_apply_coe f x)
+#align equiv.perm.subtype_perm_of_subtype Equiv.Perm.subtypePerm_ofSubtype
 
+#print Equiv.Perm.subtypeEquivSubtypePerm /-
 /-- Permutations on a subtype are equivalent to permutations on the original type that fix pointwise
 the rest. -/
 @[simps]
@@ -485,22 +756,27 @@ protected def subtypeEquivSubtypePerm (p : α → Prop) [DecidablePred p] :
     (f : Perm α).subtypePerm fun a =>
       ⟨Decidable.not_imp_not.1 fun hfa => f.val.Injective (f.Prop _ hfa) ▸ hfa,
         Decidable.not_imp_not.1 fun ha hfa => ha <| f.Prop a ha ▸ hfa⟩
-  left_inv := Equiv.Perm.subtype_perm_of_subtype
+  left_inv := Equiv.Perm.subtypePerm_ofSubtype
   right_inv f :=
-    Subtype.ext ((Equiv.Perm.of_subtype_subtype_perm _) fun a => Not.decidable_imp_symm <| f.Prop a)
+    Subtype.ext ((Equiv.Perm.ofSubtype_subtypePerm _) fun a => Not.decidable_imp_symm <| f.Prop a)
 #align equiv.perm.subtype_equiv_subtype_perm Equiv.Perm.subtypeEquivSubtypePerm
+-/
 
-theorem subtype_equiv_subtype_perm_apply_of_mem (f : Perm (Subtype p)) (h : p a) :
+#print Equiv.Perm.subtypeEquivSubtypePerm_apply_of_mem /-
+theorem subtypeEquivSubtypePerm_apply_of_mem (f : Perm (Subtype p)) (h : p a) :
     Perm.subtypeEquivSubtypePerm p f a = f ⟨a, h⟩ :=
   f.of_subtype_apply_of_mem h
 #align
-  equiv.perm.subtype_equiv_subtype_perm_apply_of_mem Equiv.Perm.subtype_equiv_subtype_perm_apply_of_mem
+  equiv.perm.subtype_equiv_subtype_perm_apply_of_mem Equiv.Perm.subtypeEquivSubtypePerm_apply_of_mem
+-/
 
-theorem subtype_equiv_subtype_perm_apply_of_not_mem (f : Perm (Subtype p)) (h : ¬p a) :
+#print Equiv.Perm.subtypeEquivSubtypePerm_apply_of_not_mem /-
+theorem subtypeEquivSubtypePerm_apply_of_not_mem (f : Perm (Subtype p)) (h : ¬p a) :
     Perm.subtypeEquivSubtypePerm p f a = a :=
   f.of_subtype_apply_of_not_mem h
 #align
-  equiv.perm.subtype_equiv_subtype_perm_apply_of_not_mem Equiv.Perm.subtype_equiv_subtype_perm_apply_of_not_mem
+  equiv.perm.subtype_equiv_subtype_perm_apply_of_not_mem Equiv.Perm.subtypeEquivSubtypePerm_apply_of_not_mem
+-/
 
 end Subtype
 
@@ -510,16 +786,34 @@ section Swap
 
 variable [DecidableEq α]
 
+/- warning: equiv.swap_inv -> Equiv.swap_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (x : α) (y : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (x : α) (y : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y)
+Case conversion may be inaccurate. Consider using '#align equiv.swap_inv Equiv.swap_invₓ'. -/
 @[simp]
 theorem swap_inv (x y : α) : (swap x y)⁻¹ = swap x y :=
   rfl
 #align equiv.swap_inv Equiv.swap_inv
 
+/- warning: equiv.swap_mul_self -> Equiv.swap_mul_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_self Equiv.swap_mul_selfₓ'. -/
 @[simp]
 theorem swap_mul_self (i j : α) : swap i j * swap i j = 1 :=
   swap_swap i j
 #align equiv.swap_mul_self Equiv.swap_mul_self
 
+/- warning: equiv.swap_mul_eq_mul_swap -> Equiv.swap_mul_eq_mul_swap is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (f : Equiv.Perm.{succ u1} α) (x : α) (y : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) f) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) x) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) y)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (f : Equiv.Perm.{succ u1} α) (x : α) (y : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) f) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x)) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f (Equiv.swap.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x) (fun (a : α) (b : α) => _inst_1 a b) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α α))) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α α))) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) y)))
+Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_eq_mul_swap Equiv.swap_mul_eq_mul_swapₓ'. -/
 theorem swap_mul_eq_mul_swap (f : Perm α) (x y : α) : swap x y * f = f * swap (f⁻¹ x) (f⁻¹ y) :=
   Equiv.ext fun z => by 
     simp only [perm.mul_apply, swap_apply_def]
@@ -527,14 +821,28 @@ theorem swap_mul_eq_mul_swap (f : Perm α) (x y : α) : swap x y * f = f * swap 
       simp_all only [perm.apply_inv_self, perm.eq_inv_iff_eq, eq_self_iff_true, not_true]
 #align equiv.swap_mul_eq_mul_swap Equiv.swap_mul_eq_mul_swap
 
+/- warning: equiv.mul_swap_eq_swap_mul -> Equiv.mul_swap_eq_swap_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (f : Equiv.Perm.{succ u1} α) (x : α) (y : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) f x) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) f y)) f)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (f : Equiv.Perm.{succ u1} α) (x : α) (y : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x)) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x)) (instHMul.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x)) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x)) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x)) (Equiv.Perm.permGroup.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x))))))) (Equiv.swap.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) x) (fun (a : α) (b : α) => _inst_1 a b) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α α))) f x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α α))) f y)) f)
+Case conversion may be inaccurate. Consider using '#align equiv.mul_swap_eq_swap_mul Equiv.mul_swap_eq_swap_mulₓ'. -/
 theorem mul_swap_eq_swap_mul (f : Perm α) (x y : α) : f * swap x y = swap (f x) (f y) * f := by
   rw [swap_mul_eq_mul_swap, perm.inv_apply_self, perm.inv_apply_self]
 #align equiv.mul_swap_eq_swap_mul Equiv.mul_swap_eq_swap_mul
 
+#print Equiv.swap_apply_apply /-
 theorem swap_apply_apply (f : Perm α) (x y : α) : swap (f x) (f y) = f * swap x y * f⁻¹ := by
   rw [mul_swap_eq_swap_mul, mul_inv_cancel_right]
 #align equiv.swap_apply_apply Equiv.swap_apply_apply
+-/
 
+/- warning: equiv.swap_mul_self_mul -> Equiv.swap_mul_self_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α) (σ : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) σ)) σ
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α) (σ : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) σ)) σ
+Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_self_mul Equiv.swap_mul_self_mulₓ'. -/
 /-- Left-multiplying a permutation with `swap i j` twice gives the original permutation.
 
   This specialization of `swap_mul_self` is useful when using cosets of permutations.
@@ -544,6 +852,12 @@ theorem swap_mul_self_mul (i j : α) (σ : Perm α) : Equiv.swap i j * (Equiv.sw
   rw [← mul_assoc, swap_mul_self, one_mul]
 #align equiv.swap_mul_self_mul Equiv.swap_mul_self_mul
 
+/- warning: equiv.mul_swap_mul_self -> Equiv.mul_swap_mul_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α) (σ : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j)) σ
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α) (σ : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j)) σ
+Case conversion may be inaccurate. Consider using '#align equiv.mul_swap_mul_self Equiv.mul_swap_mul_selfₓ'. -/
 /-- Right-multiplying a permutation with `swap i j` twice gives the original permutation.
 
   This specialization of `swap_mul_self` is useful when using cosets of permutations.
@@ -553,23 +867,47 @@ theorem mul_swap_mul_self (i j : α) (σ : Perm α) : σ * Equiv.swap i j * Equi
   rw [mul_assoc, swap_mul_self, mul_one]
 #align equiv.mul_swap_mul_self Equiv.mul_swap_mul_self
 
+/- warning: equiv.swap_mul_involutive -> Equiv.swap_mul_involutive is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α), Function.Involutive.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α), Function.Involutive.{succ u1} (Equiv.Perm.{succ u1} α) ((fun (x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3798 : Equiv.Perm.{succ u1} α) (x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3800 : Equiv.Perm.{succ u1} α) => HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3798 x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3800) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j))
+Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_involutive Equiv.swap_mul_involutiveₓ'. -/
 /-- A stronger version of `mul_right_injective` -/
 @[simp]
 theorem swap_mul_involutive (i j : α) : Function.Involutive ((· * ·) (Equiv.swap i j)) :=
   swap_mul_self_mul i j
 #align equiv.swap_mul_involutive Equiv.swap_mul_involutive
 
+/- warning: equiv.mul_swap_involutive -> Equiv.mul_swap_involutive is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α), Function.Involutive.{succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.Perm.{succ u1} α) => HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) _x (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α), Function.Involutive.{succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.Perm.{succ u1} α) => HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) _x (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j))
+Case conversion may be inaccurate. Consider using '#align equiv.mul_swap_involutive Equiv.mul_swap_involutiveₓ'. -/
 /-- A stronger version of `mul_left_injective` -/
 @[simp]
 theorem mul_swap_involutive (i j : α) : Function.Involutive (· * Equiv.swap i j) :=
   mul_swap_mul_self i j
 #align equiv.mul_swap_involutive Equiv.mul_swap_involutive
 
+/- warning: equiv.swap_eq_one_iff -> Equiv.swap_eq_one_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {i : α} {j : α}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) (Eq.{succ u1} α i j)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {i : α} {j : α}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (Eq.{succ u1} α i j)
+Case conversion may be inaccurate. Consider using '#align equiv.swap_eq_one_iff Equiv.swap_eq_one_iffₓ'. -/
 @[simp]
 theorem swap_eq_one_iff {i j : α} : swap i j = (1 : Perm α) ↔ i = j :=
   swap_eq_refl_iff
 #align equiv.swap_eq_one_iff Equiv.swap_eq_one_iff
 
+/- warning: equiv.swap_mul_eq_iff -> Equiv.swap_mul_eq_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {i : α} {j : α} {σ : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) σ) σ) (Eq.{succ u1} α i j)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {i : α} {j : α} {σ : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j) σ) σ) (Eq.{succ u1} α i j)
+Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_eq_iff Equiv.swap_mul_eq_iffₓ'. -/
 theorem swap_mul_eq_iff {i j : α} {σ : Perm α} : swap i j * σ = σ ↔ i = j :=
   ⟨fun h => by 
     have swap_id : swap i j = 1 := mul_right_cancel (trans h (one_mul σ).symm)
@@ -577,6 +915,12 @@ theorem swap_mul_eq_iff {i j : α} {σ : Perm α} : swap i j * σ = σ ↔ i = j
     rfl, fun h => by erw [h, swap_self, one_mul]⟩
 #align equiv.swap_mul_eq_iff Equiv.swap_mul_eq_iff
 
+/- warning: equiv.mul_swap_eq_iff -> Equiv.mul_swap_eq_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {i : α} {j : α} {σ : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j)) σ) (Eq.{succ u1} α i j)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {i : α} {j : α} {σ : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j)) σ) (Eq.{succ u1} α i j)
+Case conversion may be inaccurate. Consider using '#align equiv.mul_swap_eq_iff Equiv.mul_swap_eq_iffₓ'. -/
 theorem mul_swap_eq_iff {i j : α} {σ : Perm α} : σ * swap i j = σ ↔ i = j :=
   ⟨fun h => by 
     have swap_id : swap i j = 1 := mul_left_cancel (trans h (one_mul σ).symm)
@@ -584,6 +928,12 @@ theorem mul_swap_eq_iff {i j : α} {σ : Perm α} : σ * swap i j = σ ↔ i = j
     rfl, fun h => by erw [h, swap_self, mul_one]⟩
 #align equiv.mul_swap_eq_iff Equiv.mul_swap_eq_iff
 
+/- warning: equiv.swap_mul_swap_mul_swap -> Equiv.swap_mul_swap_mul_swap is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {x : α} {y : α} {z : α}, (Ne.{succ u1} α x y) -> (Ne.{succ u1} α x z) -> (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) y z) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) y z)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) z x))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {x : α} {y : α} {z : α}, (Ne.{succ u1} α x y) -> (Ne.{succ u1} α x z) -> (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) y z) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) y z)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) z x))
+Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_swap_mul_swap Equiv.swap_mul_swap_mul_swapₓ'. -/
 theorem swap_mul_swap_mul_swap {x y z : α} (hwz : x ≠ y) (hxz : x ≠ z) :
     swap y z * swap x y * swap y z = swap z x :=
   Equiv.ext fun n => by 

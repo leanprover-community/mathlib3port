@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed.field.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -674,18 +674,18 @@ theorem exists_norm_lt_one : ∃ x : α, 0 < ‖x‖ ∧ ‖x‖ < 1 :=
 variable {α}
 
 @[instance]
-theorem puncturedNhdsNeBot (x : α) : NeBot (𝓝[≠] x) := by
+theorem punctured_nhds_ne_bot (x : α) : NeBot (𝓝[≠] x) := by
   rw [← mem_closure_iff_nhds_within_ne_bot, Metric.mem_closure_iff]
   rintro ε ε0
   rcases exists_norm_lt α ε0 with ⟨b, hb0, hbε⟩
   refine' ⟨x + b, mt (set.mem_singleton_iff.trans add_right_eq_self).1 <| norm_pos_iff.1 hb0, _⟩
   rwa [dist_comm, dist_eq_norm, add_sub_cancel']
-#align normed_field.punctured_nhds_ne_bot NormedField.puncturedNhdsNeBot
+#align normed_field.punctured_nhds_ne_bot NormedField.punctured_nhds_ne_bot
 
 @[instance]
-theorem nhdsWithinIsUnitNeBot : NeBot (𝓝[{ x : α | IsUnit x }] 0) := by
+theorem nhds_within_is_unit_ne_bot : NeBot (𝓝[{ x : α | IsUnit x }] 0) := by
   simpa only [isUnit_iff_ne_zero] using punctured_nhds_ne_bot (0 : α)
-#align normed_field.nhds_within_is_unit_ne_bot NormedField.nhdsWithinIsUnitNeBot
+#align normed_field.nhds_within_is_unit_ne_bot NormedField.nhds_within_is_unit_ne_bot
 
 end Nontrivially
 
@@ -756,11 +756,11 @@ theorem nnnorm_mul_to_nnreal (x : ℝ) {y : ℝ} (hy : 0 ≤ y) : ‖x‖₊ * y
 
 /-- If `E` is a nontrivial topological module over `ℝ`, then `E` has no isolated points.
 This is a particular case of `module.punctured_nhds_ne_bot`. -/
-instance puncturedNhdsModuleNeBot {E : Type _} [AddCommGroup E] [TopologicalSpace E]
+instance punctured_nhds_module_ne_bot {E : Type _} [AddCommGroup E] [TopologicalSpace E]
     [HasContinuousAdd E] [Nontrivial E] [Module ℝ E] [HasContinuousSmul ℝ E] (x : E) :
     NeBot (𝓝[≠] x) :=
-  Module.puncturedNhdsNeBot ℝ E x
-#align real.punctured_nhds_module_ne_bot Real.puncturedNhdsModuleNeBot
+  Module.punctured_nhds_ne_bot ℝ E x
+#align real.punctured_nhds_module_ne_bot Real.punctured_nhds_module_ne_bot
 
 end Real
 

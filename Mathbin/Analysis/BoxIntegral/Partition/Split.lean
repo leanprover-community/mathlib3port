@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.split
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ theorem split_lower_eq_self : I.splitLower i x = I ↔ I.upper i ≤ x := by
   simp [split_lower, update_eq_iff]
 #align box_integral.box.split_lower_eq_self BoxIntegral.Box.split_lower_eq_self
 
-theorem split_lower_def [DecidableEq ι] {i x} (h : x ∈ ioo (I.lower i) (I.upper i))
+theorem split_lower_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.upper i))
     (h' : ∀ j, I.lower j < update I.upper i x j :=
       (forall_update_iff I.upper fun j y => I.lower j < y).2
         ⟨h.1, fun j hne => I.lower_lt_upper _⟩) :
@@ -130,7 +130,7 @@ theorem split_upper_eq_self : I.splitUpper i x = I ↔ x ≤ I.lower i := by
   simp [split_upper, update_eq_iff]
 #align box_integral.box.split_upper_eq_self BoxIntegral.Box.split_upper_eq_self
 
-theorem split_upper_def [DecidableEq ι] {i x} (h : x ∈ ioo (I.lower i) (I.upper i))
+theorem split_upper_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.upper i))
     (h' : ∀ j, update I.lower i x j < I.upper j :=
       (forall_update_iff I.lower fun j y => y < I.upper j).2
         ⟨h.2, fun j hne => I.lower_lt_upper _⟩) :
@@ -205,7 +205,7 @@ theorem sum_split_boxes {M : Type _} [AddCommMonoid M] (I : Box ι) (i : ι) (x 
 #align box_integral.prepartition.sum_split_boxes BoxIntegral.Prepartition.sum_split_boxes
 
 /-- If `x ∉ (I.lower i, I.upper i)`, then the hyperplane `{y | y i = x}` does not split `I`. -/
-theorem split_of_not_mem_Ioo (h : x ∉ ioo (I.lower i) (I.upper i)) : split I i x = ⊤ := by
+theorem split_of_not_mem_Ioo (h : x ∉ Ioo (I.lower i) (I.upper i)) : split I i x = ⊤ := by
   refine' ((is_partition_top I).eq_of_boxes_subset fun J hJ => _).symm
   rcases mem_top.1 hJ with rfl; clear hJ
   rw [mem_boxes, mem_split_iff]

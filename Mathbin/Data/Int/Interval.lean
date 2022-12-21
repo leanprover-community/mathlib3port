@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.int.interval
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ instance :
   finsetIoo a b :=
     (Finset.range (b - a - 1).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
   finset_mem_Icc a b x := by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
+    simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
@@ -45,7 +45,7 @@ instance :
       rw [to_nat_sub_of_le ha]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
   finset_mem_Ico a b x := by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
+    simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
@@ -55,7 +55,7 @@ instance :
       rw [to_nat_sub_of_le ha]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
   finset_mem_Ioc a b x := by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
+    simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
@@ -66,7 +66,7 @@ instance :
       rw [to_nat_sub_of_le ha, ← add_one_le_iff, sub_add, add_sub_cancel]
       exact ⟨sub_le_sub_right hb _, add_sub_cancel'_right _ _⟩
   finset_mem_Ioo a b x := by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
+    simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
@@ -145,38 +145,38 @@ theorem card_Ioo_of_lt (h : a < b) : ((ioo a b).card : ℤ) = b - a - 1 := by
 #align int.card_Ioo_of_lt Int.card_Ioo_of_lt
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.icc a b) = (b + 1 - a).toNat := by
+theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = (b + 1 - a).toNat := by
   rw [← card_Icc, Fintype.card_of_finset]
 #align int.card_fintype_Icc Int.card_fintype_Icc
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.ico a b) = (b - a).toNat := by
+theorem card_fintype_Ico : Fintype.card (Set.Ico a b) = (b - a).toNat := by
   rw [← card_Ico, Fintype.card_of_finset]
 #align int.card_fintype_Ico Int.card_fintype_Ico
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.ioc a b) = (b - a).toNat := by
+theorem card_fintype_Ioc : Fintype.card (Set.Ioc a b) = (b - a).toNat := by
   rw [← card_Ioc, Fintype.card_of_finset]
 #align int.card_fintype_Ioc Int.card_fintype_Ioc
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.ioo a b) = (b - a - 1).toNat := by
+theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = (b - a - 1).toNat := by
   rw [← card_Ioo, Fintype.card_of_finset]
 #align int.card_fintype_Ioo Int.card_fintype_Ioo
 
-theorem card_fintype_Icc_of_le (h : a ≤ b + 1) : (Fintype.card (Set.icc a b) : ℤ) = b + 1 - a := by
+theorem card_fintype_Icc_of_le (h : a ≤ b + 1) : (Fintype.card (Set.Icc a b) : ℤ) = b + 1 - a := by
   rw [card_fintype_Icc, to_nat_sub_of_le h]
 #align int.card_fintype_Icc_of_le Int.card_fintype_Icc_of_le
 
-theorem card_fintype_Ico_of_le (h : a ≤ b) : (Fintype.card (Set.ico a b) : ℤ) = b - a := by
+theorem card_fintype_Ico_of_le (h : a ≤ b) : (Fintype.card (Set.Ico a b) : ℤ) = b - a := by
   rw [card_fintype_Ico, to_nat_sub_of_le h]
 #align int.card_fintype_Ico_of_le Int.card_fintype_Ico_of_le
 
-theorem card_fintype_Ioc_of_le (h : a ≤ b) : (Fintype.card (Set.ioc a b) : ℤ) = b - a := by
+theorem card_fintype_Ioc_of_le (h : a ≤ b) : (Fintype.card (Set.Ioc a b) : ℤ) = b - a := by
   rw [card_fintype_Ioc, to_nat_sub_of_le h]
 #align int.card_fintype_Ioc_of_le Int.card_fintype_Ioc_of_le
 
-theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintype.card (Set.ioo a b) : ℤ) = b - a - 1 := by
+theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintype.card (Set.Ioo a b) : ℤ) = b - a - 1 := by
   rw [card_fintype_Ioo, sub_sub, to_nat_sub_of_le h]
 #align int.card_fintype_Ioo_of_lt Int.card_fintype_Ioo_of_lt
 

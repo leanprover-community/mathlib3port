@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.locally_finite
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -284,7 +284,7 @@ variable {a}
 /-- A set with upper and lower bounds in a locally finite order is a fintype -/
 def Set.fintypeOfMemBounds {s : Set α} [DecidablePred (· ∈ s)] (ha : a ∈ lowerBounds s)
     (hb : b ∈ upperBounds s) : Fintype s :=
-  (Set.fintypeSubset (Set.icc a b)) fun x hx => ⟨ha hx, hb hx⟩
+  (Set.fintypeSubset (Set.Icc a b)) fun x hx => ⟨ha hx, hb hx⟩
 #align set.fintype_of_mem_bounds Set.fintypeOfMemBounds
 
 theorem BddBelow.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.Finite :=

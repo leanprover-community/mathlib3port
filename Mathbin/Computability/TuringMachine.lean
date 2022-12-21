@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.turing_machine
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1765,7 +1765,7 @@ theorem tr_tape'_move_left (L R) :
           (tape.mk' (list_blank.append l₁ L') (list_blank.append l₂ R')) =
         tape.mk' L' (list_blank.append (Vector.toList (enc a)) R')
     by
-    simpa only [List.length_reverse, Vector.to_list_length] using this (List.reverse_reverse _).symm
+    simpa only [List.length_reverse, Vector.toList_length] using this (List.reverse_reverse _).symm
   intros
   induction' l₁ with b l₁ IH generalizing l₂
   · cases e
@@ -2109,7 +2109,7 @@ parameter (σ : Type _)
   internal state based on the result). `peek` modifies the
   internal state but does not remove an element. -/
 inductive Stmt
-  | Push : ∀ k, (σ → Γ k) → stmt → stmt
+  | push : ∀ k, (σ → Γ k) → stmt → stmt
   | peek : ∀ k, (σ → Option (Γ k) → σ) → stmt → stmt
   | pop : ∀ k, (σ → Option (Γ k) → σ) → stmt → stmt
   | load : (σ → σ) → stmt → stmt
@@ -2142,7 +2142,7 @@ parameter {Γ Λ σ K}
 /-- The step function for the TM2 model. -/
 @[simp]
 def stepAux : stmt → σ → (∀ k, List (Γ k)) → cfg
-  | Push k f q, v, S => step_aux q v (update S k (f v :: S k))
+  | push k f q, v, S => step_aux q v (update S k (f v :: S k))
   | peek k f q, v, S => step_aux q (f v (S k).head') S
   | pop k f q, v, S => step_aux q (f v (S k).head') (update S k (S k).tail)
   | load a q, v, S => step_aux q (a v) S
@@ -2165,7 +2165,7 @@ def Reaches (M : Λ → stmt) : cfg → cfg → Prop :=
 
 /-- Given a set `S` of states, `support_stmt S q` means that `q` only jumps to states in `S`. -/
 def SupportsStmt (S : Finset Λ) : stmt → Prop
-  | Push k f q => supports_stmt q
+  | push k f q => supports_stmt q
   | peek k f q => supports_stmt q
   | pop k f q => supports_stmt q
   | load a q => supports_stmt q
@@ -2178,7 +2178,7 @@ open Classical
 
 /-- The set of subtree statements in a statement. -/
 noncomputable def stmts₁ : stmt → Finset stmt
-  | Q@(Push k f q) => insert Q (stmts₁ q)
+  | Q@(push k f q) => insert Q (stmts₁ q)
   | Q@(peek k f q) => insert Q (stmts₁ q)
   | Q@(pop k f q) => insert Q (stmts₁ q)
   | Q@(load a q) => insert Q (stmts₁ q)
@@ -2403,7 +2403,7 @@ theorem add_bottom_head_fst (L) : (add_bottom L).head.1 = tt := by
 is at the bottom of all the stacks, so we have to hold on to this action while going to the end
 to modify the stack. -/
 inductive StAct (k : K)
-  | Push : (σ → Γ k) → st_act
+  | push : (σ → Γ k) → st_act
   | peek : (σ → Option (Γ k) → σ) → st_act
   | pop : (σ → Option (Γ k) → σ) → st_act
 #align turing.TM2to1.st_act Turing.TM2to1Cat.StAct
@@ -2427,21 +2427,21 @@ Case conversion may be inaccurate. Consider using '#align turing.TM2to1.st_run T
 /-- The TM2 statement corresponding to a stack action. -/
 @[nolint unused_arguments]
 def stRun {k : K} : st_act k → stmt₂ → stmt₂
-  | Push f => TM2Cat.Stmt.push k f
+  | push f => TM2Cat.Stmt.push k f
   | peek f => TM2Cat.Stmt.peek k f
   | pop f => TM2Cat.Stmt.pop k f
 #align turing.TM2to1.st_run Turing.TM2to1Cat.stRun
 
 /-- The effect of a stack action on the local variables, given the value of the stack. -/
 def stVar {k : K} (v : σ) (l : List (Γ k)) : st_act k → σ
-  | Push f => v
+  | push f => v
   | peek f => f v l.head'
   | pop f => f v l.head'
 #align turing.TM2to1.st_var Turing.TM2to1Cat.stVar
 
 /-- The effect of a stack action on the stack. -/
 def stWrite {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
-  | Push f => f v :: l
+  | push f => f v :: l
   | peek f => l
   | pop f => l.tail
 #align turing.TM2to1.st_write Turing.TM2to1Cat.stWrite
@@ -2460,7 +2460,7 @@ def stmtStRec.{l} {C : stmt₂ → Sort l} (H₁ : ∀ (k) (s : st_act k) (q) (I
     (H₂ : ∀ (a q) (IH : C q), C (TM2Cat.Stmt.load a q))
     (H₃ : ∀ (p q₁ q₂) (IH₁ : C q₁) (IH₂ : C q₂), C (TM2Cat.Stmt.branch p q₁ q₂))
     (H₄ : ∀ l, C (TM2Cat.Stmt.goto l)) (H₅ : C TM2Cat.Stmt.halt) : ∀ n, C n
-  | TM2.stmt.push k f q => H₁ _ (Push f) _ (stmt_st_rec q)
+  | TM2.stmt.push k f q => H₁ _ (push f) _ (stmt_st_rec q)
   | TM2.stmt.peek k f q => H₁ _ (peek f) _ (stmt_st_rec q)
   | TM2.stmt.pop k f q => H₁ _ (pop f) _ (stmt_st_rec q)
   | TM2.stmt.load a q => H₂ _ _ (stmt_st_rec q)

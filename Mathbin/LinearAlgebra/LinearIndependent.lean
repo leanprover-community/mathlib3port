@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_independent
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -736,7 +736,7 @@ theorem linear_independent_Union_finite {η : Type _} {ιs : η → Type _} {f :
         apply
           disjoint_def.1 (hd x₁ {y₁} (finite_singleton y₁) fun h => h_cases (eq_of_mem_singleton h))
             (f x₁ x₂) (subset_span (mem_range_self _))
-        rw [supr_singleton]
+        rw [supᵢ_singleton]
         simp only at hxy
         rw [hxy]
         exact subset_span (mem_range_self y₂)
@@ -826,7 +826,7 @@ theorem LinearIndependent.span_repr_eq [Nontrivial R] (x) :
     by 
     apply (LinearIndependent.totalEquiv hv).Injective
     ext
-    simp only [LinearIndependent.total_equiv_apply_coe, Equiv.self_comp_of_injective_symm,
+    simp only [LinearIndependent.total_equiv_apply_coe, Equiv.self_comp_ofInjective_symm,
       LinearIndependent.total_repr, Finsupp.total_equiv_map_domain, Span.finsupp_total_repr]
   ext ⟨_, ⟨i, rfl⟩⟩
   simp [← p]
@@ -856,19 +856,19 @@ theorem linear_independent_iff_not_smul_mem_span :
 #align linear_independent_iff_not_smul_mem_span linear_independent_iff_not_smul_mem_span
 
 /-- See also `complete_lattice.independent_iff_linear_independent_of_ne_zero`. -/
-theorem LinearIndependent.independentSpanSingleton (hv : LinearIndependent R v) :
+theorem LinearIndependent.independent_span_singleton (hv : LinearIndependent R v) :
     CompleteLattice.Independent fun i => R ∙ v i := by
   refine' complete_lattice.independent_def.mp fun i => _
   rw [disjoint_iff_inf_le]
   intro m hm
-  simp only [mem_inf, mem_span_singleton, supr_subtype', ← span_range_eq_supr] at hm
+  simp only [mem_inf, mem_span_singleton, supᵢ_subtype', ← span_range_eq_supr] at hm
   obtain ⟨⟨r, rfl⟩, hm⟩ := hm
   suffices r = 0 by simp [this]
   apply linear_independent_iff_not_smul_mem_span.mp hv i
   convert hm
   ext
   simp
-#align linear_independent.independent_span_singleton LinearIndependent.independentSpanSingleton
+#align linear_independent.independent_span_singleton LinearIndependent.independent_span_singleton
 
 variable (R)
 

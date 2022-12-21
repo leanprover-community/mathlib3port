@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gaussian
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem rpow_mul_exp_neg_mul_sq_is_o_exp_neg {b : ℝ} (hb : 0 < b) (s : ℝ) :
 #align rpow_mul_exp_neg_mul_sq_is_o_exp_neg rpow_mul_exp_neg_mul_sq_is_o_exp_neg
 
 theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
-    IntegrableOn (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) (ioi 0) := by
+    IntegrableOn (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) (Ioi 0) := by
   rw [← Ioc_union_Ioi_eq_Ioi (zero_le_one : (0 : ℝ) ≤ 1), integrable_on_union]
   constructor
   · rw [← integrable_on_Icc_iff_integrable_on_Ioc]
@@ -90,7 +90,7 @@ theorem integrableExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ =>
 #align integrable_exp_neg_mul_sq integrableExpNegMulSq
 
 theorem integrable_on_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
-    IntegrableOn (fun x : ℝ => exp (-b * x ^ 2)) (ioi 0) ↔ 0 < b := by
+    IntegrableOn (fun x : ℝ => exp (-b * x ^ 2)) (Ioi 0) ↔ 0 < b := by
   refine' ⟨fun h => _, fun h => (integrableExpNegMulSq h).IntegrableOn⟩
   by_contra' hb
   have : (∫⁻ x : ℝ in Ioi 0, 1) ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊ := by
@@ -114,7 +114,7 @@ theorem integrableMulExpNegMulSq {b : ℝ} (hb : 0 < b) :
 #align integrable_mul_exp_neg_mul_sq integrableMulExpNegMulSq
 
 theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) :
-    (∫ r in ioi 0, r * exp (-b * r ^ 2)) = (2 * b)⁻¹ := by
+    (∫ r in Ioi 0, r * exp (-b * r ^ 2)) = (2 * b)⁻¹ := by
   have I : integrable fun x => x * exp (-b * x ^ 2) := integrableMulExpNegMulSq hb
   refine'
     tendsto_nhds_unique (interval_integral_tendsto_integral_Ioi _ I.integrable_on Filter.tendsto_id)
@@ -189,7 +189,7 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
 open Interval
 
 -- The Gaussian integral on the half-line, `∫ x in Ioi 0, exp (-b * x^2)`.
-theorem integral_gaussian_Ioi (b : ℝ) : (∫ x in ioi 0, exp (-b * x ^ 2)) = sqrt (π / b) / 2 := by
+theorem integral_gaussian_Ioi (b : ℝ) : (∫ x in Ioi 0, exp (-b * x ^ 2)) = sqrt (π / b) / 2 := by
   rcases le_or_lt b 0 with (hb | hb)
   · rw [integral_undef, sqrt_eq_zero_of_nonpos, zero_div]
     exact div_nonpos_of_nonneg_of_nonpos pi_pos.le hb

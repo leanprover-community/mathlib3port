@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.measure.portmanteau
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -476,7 +476,7 @@ TODO: The proof of the implication is not yet here. Add it.
 variable {Ω : Type _} [PseudoEmetricSpace Ω] [MeasurableSpace Ω] [OpensMeasurableSpace Ω]
 
 theorem exists_null_frontier_thickening (μ : Measure Ω) [SigmaFinite μ] (s : Set Ω) {a b : ℝ}
-    (hab : a < b) : ∃ r ∈ ioo a b, μ (frontier (Metric.thickening r s)) = 0 := by
+    (hab : a < b) : ∃ r ∈ Ioo a b, μ (frontier (Metric.thickening r s)) = 0 := by
   have mbles : ∀ r : ℝ, MeasurableSet (frontier (Metric.thickening r s)) := fun r =>
     is_closed_frontier.MeasurableSet
   have disjs := Metric.frontier_thickening_disjoint s

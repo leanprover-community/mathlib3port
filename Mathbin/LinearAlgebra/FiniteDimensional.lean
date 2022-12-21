@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module linear_algebra.finite_dimensional
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -789,9 +789,9 @@ the submodule is. -/
 instance finite_dimensional_supr_prop {P : Prop} (S : P → Submodule K V)
     [∀ h, FiniteDimensional K (S h)] : FiniteDimensional K ↥(⨆ h, S h) := by
   by_cases hp : P
-  · rw [supr_pos hp]
+  · rw [supᵢ_pos hp]
     infer_instance
-  · rw [supr_neg hp]
+  · rw [supᵢ_neg hp]
     infer_instance
 #align submodule.finite_dimensional_supr_prop Submodule.finite_dimensional_supr_prop
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.monotone.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -362,57 +362,37 @@ theorem Monotone.comp_le_comp_left [Preorder β] {f : β → α} {g h : γ → �
 
 variable [Preorder γ]
 
-/- warning: monotone_lam -> monotone_lam is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u3} γ] {f : α -> β -> γ}, (forall (b : β), Monotone.{u1, u3} α γ _inst_1 _inst_2 (fun (a : α) => f a b)) -> (Monotone.{u1, max u2 u3} α (β -> γ) _inst_1 (Pi.preorder.{u2, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_2)) f)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u3} γ] {f : α -> β -> γ}, (forall (b : β), Monotone.{u1, u3} α γ _inst_1 _inst_2 (fun (a : α) => f a b)) -> (Monotone.{u1, max u2 u3} α (β -> γ) _inst_1 (instPreorderForAll.{u2, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_2)) f)
-Case conversion may be inaccurate. Consider using '#align monotone_lam monotone_lamₓ'. -/
+#print monotone_lam /-
 theorem monotone_lam {f : α → β → γ} (hf : ∀ b, Monotone fun a => f a b) : Monotone f :=
   fun a a' h b => hf b h
 #align monotone_lam monotone_lam
+-/
 
-/- warning: monotone_app -> monotone_app is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u3} γ] (f : β -> α -> γ) (b : β), (Monotone.{u1, max u2 u3} α (β -> γ) _inst_1 (Pi.preorder.{u2, u3} β (fun (b : β) => γ) (fun (i : β) => _inst_2)) (fun (a : α) (b : β) => f b a)) -> (Monotone.{u1, u3} α γ _inst_1 _inst_2 (f b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u3} γ] (f : β -> α -> γ) (b : β), (Monotone.{u1, max u2 u3} α (β -> γ) _inst_1 (instPreorderForAll.{u2, u3} β (fun (b : β) => γ) (fun (i : β) => _inst_2)) (fun (a : α) (b : β) => f b a)) -> (Monotone.{u1, u3} α γ _inst_1 _inst_2 (f b))
-Case conversion may be inaccurate. Consider using '#align monotone_app monotone_appₓ'. -/
+#print monotone_app /-
 theorem monotone_app (f : β → α → γ) (b : β) (hf : Monotone fun a b => f b a) : Monotone (f b) :=
   fun a a' h => hf h b
 #align monotone_app monotone_app
+-/
 
-/- warning: antitone_lam -> antitone_lam is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u3} γ] {f : α -> β -> γ}, (forall (b : β), Antitone.{u1, u3} α γ _inst_1 _inst_2 (fun (a : α) => f a b)) -> (Antitone.{u1, max u2 u3} α (β -> γ) _inst_1 (Pi.preorder.{u2, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_2)) f)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u3} γ] {f : α -> β -> γ}, (forall (b : β), Antitone.{u1, u3} α γ _inst_1 _inst_2 (fun (a : α) => f a b)) -> (Antitone.{u1, max u2 u3} α (β -> γ) _inst_1 (instPreorderForAll.{u2, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_2)) f)
-Case conversion may be inaccurate. Consider using '#align antitone_lam antitone_lamₓ'. -/
+#print antitone_lam /-
 theorem antitone_lam {f : α → β → γ} (hf : ∀ b, Antitone fun a => f a b) : Antitone f :=
   fun a a' h b => hf b h
 #align antitone_lam antitone_lam
+-/
 
-/- warning: antitone_app -> antitone_app is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u3} γ] (f : β -> α -> γ) (b : β), (Antitone.{u1, max u2 u3} α (β -> γ) _inst_1 (Pi.preorder.{u2, u3} β (fun (b : β) => γ) (fun (i : β) => _inst_2)) (fun (a : α) (b : β) => f b a)) -> (Antitone.{u1, u3} α γ _inst_1 _inst_2 (f b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u3} γ] (f : β -> α -> γ) (b : β), (Antitone.{u1, max u2 u3} α (β -> γ) _inst_1 (instPreorderForAll.{u2, u3} β (fun (b : β) => γ) (fun (i : β) => _inst_2)) (fun (a : α) (b : β) => f b a)) -> (Antitone.{u1, u3} α γ _inst_1 _inst_2 (f b))
-Case conversion may be inaccurate. Consider using '#align antitone_app antitone_appₓ'. -/
+#print antitone_app /-
 theorem antitone_app (f : β → α → γ) (b : β) (hf : Antitone fun a b => f b a) : Antitone (f b) :=
   fun a a' h => hf h b
 #align antitone_app antitone_app
+-/
 
 end Preorder
 
-/- warning: function.monotone_eval -> Function.monotone_eval is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] (i : ι), Monotone.{max u1 u2, u2} (forall (x : ι), α x) (α i) (Pi.preorder.{u1, u2} ι (fun (x : ι) => α x) (fun (i : ι) => _inst_1 i)) (_inst_1 i) (Function.eval.{succ u1, succ u2} ι (fun (i : ι) => α i) i)
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] (i : ι), Monotone.{max u1 u2, u2} (forall (x : ι), α x) (α i) (instPreorderForAll.{u1, u2} ι (fun (x : ι) => α x) (fun (i : ι) => _inst_1 i)) (_inst_1 i) (Function.eval.{succ u1, succ u2} ι (fun (i : ι) => α i) i)
-Case conversion may be inaccurate. Consider using '#align function.monotone_eval Function.monotone_evalₓ'. -/
+#print Function.monotone_eval /-
 theorem Function.monotone_eval {ι : Type u} {α : ι → Type v} [∀ i, Preorder (α i)] (i : ι) :
     Monotone (Function.eval i : (∀ i, α i) → α i) := fun f g H => H i
 #align function.monotone_eval Function.monotone_eval
+-/
 
 /-! ### Monotonicity hierarchy -/
 
@@ -1570,24 +1550,16 @@ namespace Function
 
 variable [Preorder α]
 
-/- warning: function.const_mono -> Function.const_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α], Monotone.{u1, max u2 u1} α (β -> α) _inst_1 (Pi.preorder.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)) (Function.const.{succ u1, succ u2} α β)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α], Monotone.{u1, max u1 u2} α (β -> α) _inst_1 (instPreorderForAll.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)) (Function.const.{succ u1, succ u2} α β)
-Case conversion may be inaccurate. Consider using '#align function.const_mono Function.const_monoₓ'. -/
+#print Function.const_mono /-
 theorem const_mono : Monotone (const β : α → β → α) := fun a b h i => h
 #align function.const_mono Function.const_mono
+-/
 
-/- warning: function.const_strict_mono -> Function.const_strictMono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Nonempty.{succ u2} β], StrictMono.{u1, max u2 u1} α (β -> α) _inst_1 (Pi.preorder.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)) (Function.const.{succ u1, succ u2} α β)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Nonempty.{succ u2} β], StrictMono.{u1, max u1 u2} α (β -> α) _inst_1 (instPreorderForAll.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)) (Function.const.{succ u1, succ u2} α β)
-Case conversion may be inaccurate. Consider using '#align function.const_strict_mono Function.const_strictMonoₓ'. -/
+#print Function.const_strictMono /-
 theorem const_strictMono [Nonempty β] : StrictMono (const β : α → β → α) := fun a b =>
   const_lt_const.2
 #align function.const_strict_mono Function.const_strictMono
+-/
 
 end Function
 

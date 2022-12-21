@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Bolton Bailey
 
 ! This file was ported from Lean 3 source module number_theory.bertrand
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
   rw [← div_le_one (rpow_pos_of_pos four_pos x), ← div_div_eq_mul_div, ← rpow_sub four_pos, ←
     mul_div 2 x, mul_div_left_comm, ← mul_one_sub, (by norm_num1 : (1 : ℝ) - 2 / 3 = 1 / 3),
     mul_one_div, ← log_nonpos_iff (hf' x h5), ← hf x h5]
-  have h : ConcaveOn ℝ (Set.ioi 0.5) f := by
+  have h : ConcaveOn ℝ (Set.Ioi 0.5) f := by
     refine'
         ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_Ioi 0.5)).add
               ((strict_concave_on_sqrt_mul_log_Ioi.concave_on.comp_linear_map

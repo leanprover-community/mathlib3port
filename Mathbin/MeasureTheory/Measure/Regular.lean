@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris Van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.regular
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,8 +160,8 @@ variable {α : Type _} {m : MeasurableSpace α} {μ : Measure α} {p q : Set α 
 theorem measure_eq_supr (H : InnerRegular μ p q) (hU : q U) :
     μ U = ⨆ (K) (_ : K ⊆ U) (hK : p K), μ K := by
   refine'
-    le_antisymm (le_of_forall_lt fun r hr => _) (supr₂_le fun K hK => supr_le fun _ => μ.mono hK)
-  simpa only [lt_supr_iff, exists_prop] using H hU r hr
+    le_antisymm (le_of_forall_lt fun r hr => _) (supᵢ₂_le fun K hK => supᵢ_le fun _ => μ.mono hK)
+  simpa only [lt_supᵢ_iff, exists_prop] using H hU r hr
 #align
   measure_theory.measure.inner_regular.measure_eq_supr MeasureTheory.Measure.InnerRegular.measure_eq_supr
 
@@ -191,7 +191,7 @@ theorem map {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} 
 theorem smul (H : InnerRegular μ p q) (c : ℝ≥0∞) : InnerRegular (c • μ) p q := by
   intro U hU r hr
   rw [smul_apply, H.measure_eq_supr hU, smul_eq_mul] at hr
-  simpa only [Ennreal.mul_supr, lt_supr_iff, exists_prop] using hr
+  simpa only [Ennreal.mul_supr, lt_supᵢ_iff, exists_prop] using hr
 #align measure_theory.measure.inner_regular.smul MeasureTheory.Measure.InnerRegular.smul
 
 theorem trans {q' : Set α → Prop} (H : InnerRegular μ p q) (H' : InnerRegular μ q q') :
@@ -265,9 +265,9 @@ theorem Set.exists_is_open_lt_of_lt [OuterRegular μ] (A : Set α) (r : ℝ≥0�
 containing it. -/
 theorem Set.measure_eq_infi_is_open (A : Set α) (μ : Measure α) [OuterRegular μ] :
     μ A = ⨅ (U : Set α) (h : A ⊆ U) (h2 : IsOpen U), μ U := by
-  refine' le_antisymm (le_infi₂ fun s hs => le_infi fun h2s => μ.mono hs) _
+  refine' le_antisymm (le_infᵢ₂ fun s hs => le_infᵢ fun h2s => μ.mono hs) _
   refine' le_of_forall_lt' fun r hr => _
-  simpa only [infi_lt_iff, exists_prop] using A.exists_is_open_lt_of_lt r hr
+  simpa only [infᵢ_lt_iff, exists_prop] using A.exists_is_open_lt_of_lt r hr
 #align set.measure_eq_infi_is_open Set.measure_eq_infi_is_open
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (U «expr ⊇ » A) -/
@@ -314,7 +314,7 @@ protected theorem smul (μ : Measure α) [OuterRegular μ] {x : ℝ≥0∞} (hx 
     exact outer_regular.zero
   · refine' ⟨fun A hA r hr => _⟩
     rw [smul_apply, A.measure_eq_infi_is_open, smul_eq_mul] at hr
-    simpa only [Ennreal.mul_infi_of_ne h0 hx, gt_iff_lt, infi_lt_iff, exists_prop] using hr
+    simpa only [Ennreal.mul_infi_of_ne h0 hx, gt_iff_lt, infᵢ_lt_iff, exists_prop] using hr
 #align measure_theory.measure.outer_regular.smul MeasureTheory.Measure.OuterRegular.smul
 
 end OuterRegular
@@ -478,7 +478,7 @@ theorem ofPseudoEmetricSpace {X : Type _} [PseudoEmetricSpace X] [MeasurableSpac
   intro U hU r hr
   rcases hU.exists_Union_is_closed with ⟨F, F_closed, -, rfl, F_mono⟩
   rw [measure_Union_eq_supr F_mono.directed_le] at hr
-  rcases lt_supr_iff.1 hr with ⟨n, hn⟩
+  rcases lt_supᵢ_iff.1 hr with ⟨n, hn⟩
   exact ⟨F n, subset_Union _ _, F_closed n, hn⟩
 #align
   measure_theory.measure.inner_regular.of_pseudo_emetric_space MeasureTheory.Measure.InnerRegular.ofPseudoEmetricSpace
@@ -494,7 +494,7 @@ theorem isCompactIsClosed {X : Type _} [TopologicalSpace X] [SigmaCompactSpace X
     rw [← measure_Union_eq_supr, hBU]
     exact Monotone.directed_le fun m n h => inter_subset_inter_right _ (compact_covering_subset _ h)
   rw [this] at hr
-  rcases lt_supr_iff.1 hr with ⟨n, hn⟩
+  rcases lt_supᵢ_iff.1 hr with ⟨n, hn⟩
   exact ⟨_, inter_subset_left _ _, hBc n, hn⟩
 #align
   measure_theory.measure.inner_regular.is_compact_is_closed MeasureTheory.Measure.InnerRegular.isCompactIsClosed

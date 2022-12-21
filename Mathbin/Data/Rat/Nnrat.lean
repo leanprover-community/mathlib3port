@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module data.rat.nnrat
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -484,7 +484,7 @@ theorem num_div_denom (q : ℚ≥0) : (q.num : ℚ≥0) / q.denom = q := by
   ext1
   rw [coe_div, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_ofNat,
     Int.natAbs_of_nonneg (Rat.num_nonneg_iff_zero_le.2 q.prop)]
-  exact Rat.num_div_denom q
+  exact Rat.num_div_den q
 #align nnrat.num_div_denom Nnrat.num_div_denom
 
 /-- A recursor for nonnegative rationals in terms of numerators and denominators. -/

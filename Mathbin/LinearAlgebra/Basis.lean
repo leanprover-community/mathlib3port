@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.basis
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -451,7 +451,7 @@ def reindexRange : Basis (range b) R M :=
 theorem reindex_range_self (i : ι) (h := Set.mem_range_self i) : b.reindexRange ⟨b i, h⟩ = b i := by
   by_cases htr : Nontrivial R
   · letI := htr
-    simp [htr, reindex_range, reindex_apply, Equiv.apply_of_injective_symm b.injective,
+    simp [htr, reindex_range, reindex_apply, Equiv.apply_ofInjective_symm b.injective,
       Subtype.coe_mk]
   · letI : Subsingleton R := not_nontrivial_iff_subsingleton.mp htr
     letI := Module.subsingleton R M

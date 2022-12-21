@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.chain
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -373,8 +373,8 @@ instance [DecidableEq α] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· <
   { Subtype.partialOrder _ with 
     le_total := fun a b => s.le_or_le a.2 b.2
     DecidableEq := Subtype.decidableEq
-    decidableLe := Subtype.decidableLe
-    decidableLt := Subtype.decidableLt }
+    decidableLe := Subtype.decidableLE
+    decidableLt := Subtype.decidableLT }
 
 end PartialOrder
 

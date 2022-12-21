@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.prime
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -481,7 +481,7 @@ theorem exists_infinite_primes (n : ℕ) : ∃ p, n ≤ p ∧ Prime p :=
 
 /-- A version of `nat.exists_infinite_primes` using the `bdd_above` predicate. -/
 theorem not_bdd_above_set_of_prime : ¬BddAbove { p | Prime p } := by
-  rw [not_bdd_above_iff]
+  rw [not_bddAbove_iff]
   intro n
   obtain ⟨p, hi, hp⟩ := exists_infinite_primes n.succ
   exact ⟨p, hp, hi⟩
@@ -582,7 +582,7 @@ theorem Prime.pow_not_prime {x n : ℕ} (hn : 2 ≤ n) : ¬(x ^ n).Prime := fun 
     lt_irrefl x <|
       calc
         x = x ^ 1 := (pow_one _).symm
-        _ < x ^ n := Nat.pow_right_strict_mono (hxn.symm ▸ hp.two_le) hn
+        _ < x ^ n := Nat.pow_right_strictMono (hxn.symm ▸ hp.two_le) hn
         _ = x := hxn.symm
         
 #align nat.prime.pow_not_prime Nat.Prime.pow_not_prime

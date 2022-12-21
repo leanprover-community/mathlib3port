@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.quadratic_char
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem quadratic_char_fun_zero : quadraticCharFun F 0 = 0 := by
 
 @[simp]
 theorem quadratic_char_fun_one : quadraticCharFun F 1 = 1 := by
-  simp only [quadraticCharFun, one_ne_zero, is_square_one, if_true, if_false, id.def]
+  simp only [quadraticCharFun, one_ne_zero, isSquare_one, if_true, if_false, id.def]
 #align quadratic_char_fun_one quadratic_char_fun_one
 
 /-- If `ring_char F = 2`, then `quadratic_char_fun F` takes the value `1` on nonzero elements. -/
@@ -162,7 +162,7 @@ theorem quadratic_char_one_iff_is_square {a : F} (ha : a ≠ 0) :
 
 /-- The quadratic character takes the value `1` on nonzero squares. -/
 theorem quadratic_char_sq_one' {a : F} (ha : a ≠ 0) : quadraticChar F (a ^ 2) = 1 := by
-  simp only [quadraticCharFun, ha, pow_eq_zero_iff, Nat.succ_pos', is_square_sq, if_true, if_false,
+  simp only [quadraticCharFun, ha, pow_eq_zero_iff, Nat.succ_pos', IsSquare_sq, if_true, if_false,
     quadratic_char_apply]
 #align quadratic_char_sq_one' quadratic_char_sq_one'
 
@@ -189,7 +189,7 @@ theorem quadratic_char_eq_neg_one_iff_not_one {a : F} (ha : a ≠ 0) :
 theorem quadratic_char_neg_one_iff_not_is_square {a : F} : quadraticChar F a = -1 ↔ ¬IsSquare a :=
   by 
   by_cases ha : a = 0
-  · simp only [ha, is_square_zero, MulChar.map_zero, zero_eq_neg, one_ne_zero, not_true]
+  · simp only [ha, isSquare_zero, MulChar.map_zero, zero_eq_neg, one_ne_zero, not_true]
   · rw [quadratic_char_eq_neg_one_iff_not_one ha, quadratic_char_one_iff_is_square ha]
 #align quadratic_char_neg_one_iff_not_is_square quadratic_char_neg_one_iff_not_is_square
 
@@ -285,7 +285,7 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
       ext x
       simp only [iff_false_iff, Finset.mem_filter, Finset.mem_univ, true_and_iff,
         Finset.not_mem_empty]
-      rw [is_square_iff_exists_sq] at h
+      rw [isSquare_iff_exists_sq] at h
       exact fun h' => h ⟨_, h'.symm⟩
 #align quadratic_char_card_sqrts quadratic_char_card_sqrts
 
@@ -448,7 +448,7 @@ theorem FiniteField.is_square_odd_prime_iff (hF : ringChar F ≠ 2) {p : ℕ} [F
     · rw [show (p : F) = 0 by 
           rw [← hFp]
           exact ringChar.Nat.cast_ring_char]
-      simp only [is_square_zero, Ne.def, true_iff_iff, map_mul]
+      simp only [isSquare_zero, Ne.def, true_iff_iff, map_mul]
       obtain ⟨n, _, hc⟩ := FiniteField.card F (ringChar F)
       have hchar : ringChar F = ringChar (Zmod p) := by
         rw [hFp]

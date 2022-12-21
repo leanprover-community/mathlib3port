@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.liminf_limsup
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem Filter.Tendsto.is_cobounded_under_ge {f : Filter β} {u : β → α} {a 
 
 theorem is_bounded_le_at_bot (α : Type _) [hα : Nonempty α] [Preorder α] :
     (atBot : Filter α).IsBounded (· ≤ ·) :=
-  is_bounded_iff.2 ⟨Set.iic hα.some, mem_at_bot _, hα.some, fun x hx => hx⟩
+  is_bounded_iff.2 ⟨Set.Iic hα.some, mem_at_bot _, hα.some, fun x hx => hx⟩
 #align is_bounded_le_at_bot is_bounded_le_at_bot
 
 theorem Filter.Tendsto.is_bounded_under_le_at_bot {α : Type _} [Nonempty α] [Preorder α]
@@ -259,10 +259,10 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
   apply tendsto_of_le_liminf_of_limsup_le _ le_rfl h h'
   by_contra' hlt
   obtain ⟨a, ⟨⟨la, au⟩, as⟩⟩ : ∃ a, (f.liminf u < a ∧ a < f.limsup u) ∧ a ∈ s :=
-    dense_iff_inter_open.1 hs (Set.ioo (f.liminf u) (f.limsup u)) is_open_Ioo
+    dense_iff_inter_open.1 hs (Set.Ioo (f.liminf u) (f.limsup u)) is_open_Ioo
       (Set.nonempty_Ioo.2 hlt)
   obtain ⟨b, ⟨⟨ab, bu⟩, bs⟩⟩ : ∃ b, (a < b ∧ b < f.limsup u) ∧ b ∈ s :=
-    dense_iff_inter_open.1 hs (Set.ioo a (f.limsup u)) is_open_Ioo (Set.nonempty_Ioo.2 au)
+    dense_iff_inter_open.1 hs (Set.Ioo a (f.limsup u)) is_open_Ioo (Set.nonempty_Ioo.2 au)
   have A : ∃ᶠ n in f, u n < a := frequently_lt_of_liminf_lt (is_bounded.is_cobounded_ge h) la
   have B : ∃ᶠ n in f, b < u n := frequently_lt_of_lt_limsup (is_bounded.is_cobounded_le h') bu
   exact H a as b bs ab ⟨A, B⟩
@@ -288,7 +288,7 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
     rw [Limsup, f_decr.map_Inf_of_continuous_at' f_cont A]
     apply le_of_forall_lt
     intro c hc
-    simp only [liminf, Liminf, lt_Sup_iff, eventually_map, Set.mem_setOf_eq, exists_prop,
+    simp only [liminf, Liminf, lt_supₛ_iff, eventually_map, Set.mem_setOf_eq, exists_prop,
       Set.mem_image, exists_exists_and_eq_and] at hc⊢
     rcases hc with ⟨d, hd, h'd⟩
     refine' ⟨f d, _, h'd⟩
@@ -299,7 +299,7 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
       apply frequently_of_forall
       intro x
       exact f_decr bot_le
-    by_cases h' : ∃ c, c < F.Limsup ∧ Set.ioo c F.Limsup = ∅
+    by_cases h' : ∃ c, c < F.Limsup ∧ Set.Ioo c F.Limsup = ∅
     · rcases h' with ⟨c, c_lt, hc⟩
       have B : ∃ᶠ n in F, F.Limsup ≤ n := by
         apply
@@ -310,14 +310,14 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
               c_lt).mono
         intro x hx
         by_contra'
-        have : (Set.ioo c F.Limsup).Nonempty := ⟨x, ⟨hx, this⟩⟩
+        have : (Set.Ioo c F.Limsup).Nonempty := ⟨x, ⟨hx, this⟩⟩
         simpa [hc]
       apply liminf_le_of_frequently_le
       exact B.mono fun x hx => f_decr hx
     by_contra' H
-    obtain ⟨l, l_lt, h'l⟩ : ∃ l < F.Limsup, Set.ioc l F.Limsup ⊆ { x : R | f x < F.liminf f }
+    obtain ⟨l, l_lt, h'l⟩ : ∃ l < F.Limsup, Set.Ioc l F.Limsup ⊆ { x : R | f x < F.liminf f }
     exact exists_Ioc_subset_of_mem_nhds ((tendsto_order.1 f_cont.tendsto).2 _ H) ⟨⊥, Limsup_ne_bot⟩
-    obtain ⟨m, l_m, m_lt⟩ : (Set.ioo l F.Limsup).Nonempty := by
+    obtain ⟨m, l_m, m_lt⟩ : (Set.Ioo l F.Limsup).Nonempty := by
       contrapose! h'
       refine' ⟨l, l_lt, by rwa [Set.not_nonempty_iff_eq_empty] at h'⟩
     have B : F.liminf f ≤ f m := by 
@@ -396,7 +396,7 @@ variable {ι : Type _} {R : Type _} [CompleteLinearOrder R] [TopologicalSpace R]
 
 theorem infi_eq_of_forall_le_of_tendsto {x : R} {as : ι → R} (x_le : ∀ i, x ≤ as i) {F : Filter ι}
     [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) : (⨅ i, as i) = x := by
-  refine' infi_eq_of_forall_ge_of_forall_gt_exists_lt (fun i => x_le i) _
+  refine' infᵢ_eq_of_forall_ge_of_forall_gt_exists_lt (fun i => x_le i) _
   apply fun w x_lt_w => ‹Filter.NeBot F›.nonempty_of_mem (eventually_lt_of_tendsto_lt x_lt_w as_lim)
 #align infi_eq_of_forall_le_of_tendsto infi_eq_of_forall_le_of_tendsto
 
@@ -407,7 +407,7 @@ theorem supr_eq_of_forall_le_of_tendsto {x : R} {as : ι → R} (le_x : ∀ i, a
 
 theorem Union_Ici_eq_Ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (x_lt : ∀ i, x < as i)
     {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
-    (⋃ i : ι, ici (as i)) = ioi x := by
+    (⋃ i : ι, Ici (as i)) = Ioi x := by
   have obs : x ∉ range as := by 
     intro maybe_x_is
     rcases mem_range.mp maybe_x_is with ⟨i, hi⟩
@@ -418,7 +418,7 @@ theorem Union_Ici_eq_Ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} 
 
 theorem Union_Iic_eq_Iio_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (lt_x : ∀ i, as i < x)
     {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
-    (⋃ i : ι, iic (as i)) = iio x :=
+    (⋃ i : ι, Iic (as i)) = Iio x :=
   @Union_Ici_eq_Ioi_of_lt_of_tendsto (OrderDual R) _ _ _ ι x as lt_x F _ as_lim
 #align Union_Iic_eq_Iio_of_lt_of_tendsto Union_Iic_eq_Iio_of_lt_of_tendsto
 
@@ -446,7 +446,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
             (Finset.range_mono hnm))
         _
     rintro ⟨i, h⟩
-    simp only [mem_upper_bounds, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff'] at h
+    simp only [mem_upperBounds, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff'] at h
     induction' i with k hk
     · obtain ⟨j, hj₁, hj₂⟩ := hω 1
       refine'

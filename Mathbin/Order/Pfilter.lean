@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mathieu Guay-Paquet
 
 ! This file was ported from Lean 3 source module order.pfilter
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ variable [CompleteSemilatticeInf P] {F : Pfilter P}
 
 theorem Inf_gc :
     GaloisConnection (fun x => OrderDual.toDual (principal x)) fun F =>
-      inf (OrderDual.ofDual F : Pfilter P) :=
+      infₛ (OrderDual.ofDual F : Pfilter P) :=
   fun x F => by 
   simp
   rfl
@@ -206,11 +206,12 @@ theorem Inf_gc :
 /-- If a poset `P` admits arbitrary `Inf`s, then `principal` and `Inf` form a Galois coinsertion. -/
 def infGi :
     GaloisCoinsertion (fun x => OrderDual.toDual (principal x)) fun F =>
-      inf (OrderDual.ofDual F :
+      infₛ
+        (OrderDual.ofDual F :
           Pfilter P) where 
-  choice F _ := inf (id F : Pfilter P)
+  choice F _ := infₛ (id F : Pfilter P)
   gc := Inf_gc
-  u_l_le s := Inf_le <| mem_principal.2 <| le_refl s
+  u_l_le s := infₛ_le <| mem_principal.2 <| le_refl s
   choice_eq _ _ := rfl
 #align order.pfilter.Inf_gi Order.Pfilter.infGi
 

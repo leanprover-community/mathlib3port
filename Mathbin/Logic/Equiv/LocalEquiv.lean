@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module logic.equiv.local_equiv
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,8 +153,8 @@ namespace LocalEquiv
 variable (e : LocalEquiv α β) (e' : LocalEquiv β γ)
 
 instance [Inhabited α] [Inhabited β] : Inhabited (LocalEquiv α β) :=
-  ⟨⟨const α default, const β default, ∅, ∅, maps_to_empty _ _, maps_to_empty _ _, eq_on_empty _ _,
-      eq_on_empty _ _⟩⟩
+  ⟨⟨const α default, const β default, ∅, ∅, mapsTo_empty _ _, mapsTo_empty _ _, eqOn_empty _ _,
+      eqOn_empty _ _⟩⟩
 
 /-- The inverse of a local equiv -/
 protected def symm : LocalEquiv β α where 

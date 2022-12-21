@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.bump_function
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,7 +156,7 @@ theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ suppor
 #align
   smooth_bump_function.image_eq_inter_preimage_of_subset_support SmoothBumpFunction.image_eq_inter_preimage_of_subset_support
 
-theorem mem_Icc : f x ∈ icc (0 : ℝ) 1 := by
+theorem mem_Icc : f x ∈ Icc (0 : ℝ) 1 := by
   have : f x = 0 ∨ f x = _ := indicator_eq_zero_or_self _ _ _
   cases this <;> rw [this]
   exacts[left_mem_Icc.2 zero_le_one, ⟨f.to_cont_diff_bump.nonneg, f.to_cont_diff_bump.le_one⟩]
@@ -246,7 +246,7 @@ theorem is_closed_image_of_is_closed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ 
 ball of radius `f.R`), then there exists `0 < r < f.R` such that `s` is a subset of the open ball of
 radius `r`. Formally, `s ⊆ e.source ∩ e ⁻¹' (ball (e c) r)`, where `e = ext_chart_at I c`. -/
 theorem exists_r_pos_lt_subset_ball {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) :
-    ∃ (r : _)(hr : r ∈ ioo 0 f.r),
+    ∃ (r : _)(hr : r ∈ Ioo 0 f.r),
       s ⊆ (chartAt H c).source ∩ extChartAt I c ⁻¹' ball (extChartAt I c c) r :=
   by 
   set e := extChartAt I c
@@ -258,22 +258,22 @@ theorem exists_r_pos_lt_subset_ball {s : Set M} (hsc : IsClosed s) (hs : s ⊆ s
   smooth_bump_function.exists_r_pos_lt_subset_ball SmoothBumpFunction.exists_r_pos_lt_subset_ball
 
 /-- Replace `r` with another value in the interval `(0, f.R)`. -/
-def updateR (r : ℝ) (hr : r ∈ ioo 0 f.r) : SmoothBumpFunction I c :=
+def updateR (r : ℝ) (hr : r ∈ Ioo 0 f.r) : SmoothBumpFunction I c :=
   ⟨⟨⟨r, f.r, hr.1, hr.2⟩⟩, f.closed_ball_subset⟩
 #align smooth_bump_function.update_r SmoothBumpFunction.updateR
 
 @[simp]
-theorem update_r_R {r : ℝ} (hr : r ∈ ioo 0 f.r) : (f.updateR r hr).r = f.r :=
+theorem update_r_R {r : ℝ} (hr : r ∈ Ioo 0 f.r) : (f.updateR r hr).r = f.r :=
   rfl
 #align smooth_bump_function.update_r_R SmoothBumpFunction.update_r_R
 
 @[simp]
-theorem update_r_r {r : ℝ} (hr : r ∈ ioo 0 f.r) : (f.updateR r hr).R = r :=
+theorem update_r_r {r : ℝ} (hr : r ∈ Ioo 0 f.r) : (f.updateR r hr).R = r :=
   rfl
 #align smooth_bump_function.update_r_r SmoothBumpFunction.update_r_r
 
 @[simp]
-theorem support_update_r {r : ℝ} (hr : r ∈ ioo 0 f.r) : support (f.updateR r hr) = support f := by
+theorem support_update_r {r : ℝ} (hr : r ∈ Ioo 0 f.r) : support (f.updateR r hr) = support f := by
   simp only [support_eq_inter_preimage, update_r_R]
 #align smooth_bump_function.support_update_r SmoothBumpFunction.support_update_r
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_embedding
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -267,7 +267,7 @@ theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α 
   let ⟨t, htu, hts, htc⟩ := comp_symm_of_uniformity ht₂u
   have : preimage e { b' | (b, b') ∈ t₂ } ∈ comap e (𝓝 b) :=
     preimage_mem_comap <| mem_nhds_left b ht₂u
-  let ⟨a, (ha : (b, e a) ∈ t₂)⟩ := (he₂.comapNhdsNeBot _).nonempty_of_mem this
+  let ⟨a, (ha : (b, e a) ∈ t₂)⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this
   have :
     ∀ (b') (s' : Set (β × β)),
       (b, b') ∈ t →
@@ -275,7 +275,7 @@ theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α 
     fun b' s' hb' hs' =>
     have : preimage e { b'' | (b', b'') ∈ s' ∩ t } ∈ comap e (𝓝 b') :=
       preimage_mem_comap <| mem_nhds_left b' <| inter_mem hs' htu
-    let ⟨a₂, ha₂s', ha₂t⟩ := (he₂.comapNhdsNeBot _).nonempty_of_mem this
+    let ⟨a₂, ha₂s', ha₂t⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this
     have : (e a, e a₂) ∈ t₁ :=
       ht₂c <| prod_mk_mem_comp_rel (ht₂s ha) <| htc <| prod_mk_mem_comp_rel hb' ha₂t
     have : e a₂ ∈ { b'' : β | (b', b'') ∈ s' } ∩ e '' { a' | (a, a') ∈ s } :=
@@ -380,10 +380,10 @@ theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense
     have mp₀ : Monotone p := fun a b h t s ⟨x, xs, xa⟩ => ⟨x, xs, h xa⟩
     have mp₁ : ∀ {s}, Monotone (p s) := fun s a b h x ⟨y, ya, yxs⟩ => ⟨y, h ya, yxs⟩
     have : f ≤ g :=
-      le_infi fun s =>
-        le_infi fun hs =>
-          le_infi fun t =>
-            le_infi fun ht =>
+      le_infᵢ fun s =>
+        le_infᵢ fun hs =>
+          le_infᵢ fun t =>
+            le_infᵢ fun ht =>
               le_principal_iff.mpr <|
                 (mem_of_superset ht) fun x hx => ⟨x, hx, refl_mem_uniformity hs⟩
     have : NeBot g := hf.left.mono this
@@ -392,7 +392,7 @@ theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense
         let ⟨t', ht', ht_mem⟩ := (mem_lift_sets <| monotone_lift' monotone_const mp₀).mp ht
         let ⟨t'', ht'', ht'_sub⟩ := (mem_lift'_sets mp₁).mp ht_mem
         let ⟨x, (hx : x ∈ t'')⟩ := hf.left.nonempty_of_mem ht''
-        have h₀ : NeBot (𝓝[range m] x) := Dense.nhdsWithinNeBot x
+        have h₀ : NeBot (𝓝[range m] x) := Dense.nhds_within_ne_bot x
         have h₁ : { y | (x, y) ∈ t' } ∈ 𝓝[range m] x :=
           @mem_inf_of_left α (𝓝 x) (𝓟 (range m)) _ <| mem_nhds_left x ht'
         have h₂ : range m ∈ 𝓝[range m] x :=
@@ -478,7 +478,8 @@ local notation "ψ" => (h_e.DenseInducing h_dense).extend f
 theorem uniformly_extend_exists [CompleteSpace γ] (a : α) : ∃ c, Tendsto f (comap e (𝓝 a)) (𝓝 c) :=
   let de := h_e.DenseInducing h_dense
   have : Cauchy (𝓝 a) := cauchy_nhds
-  have : Cauchy (comap e (𝓝 a)) := this.comap' (le_of_eq h_e.comap_uniformity) (de.comapNhdsNeBot _)
+  have : Cauchy (comap e (𝓝 a)) :=
+    this.comap' (le_of_eq h_e.comap_uniformity) (de.comap_nhds_ne_bot _)
   have : Cauchy (map f (comap e (𝓝 a))) := this.map h_f
   CompleteSpace.complete this
 #align uniformly_extend_exists uniformly_extend_exists
@@ -530,7 +531,8 @@ theorem uniform_continuous_uniformly_extend [cγ : CompleteSpace γ] : UniformCo
       (comp_le_uniformity3 hd)
   have h_pnt : ∀ {a m}, m ∈ 𝓝 a → ∃ c, c ∈ f '' preimage e m ∧ (c, ψ a) ∈ s ∧ (ψ a, c) ∈ s :=
     fun a m hm =>
-    have nb : NeBot (map f (comap e (𝓝 a))) := ((h_e.DenseInducing h_dense).comapNhdsNeBot _).map _
+    have nb : NeBot (map f (comap e (𝓝 a))) :=
+      ((h_e.DenseInducing h_dense).comap_nhds_ne_bot _).map _
     have :
       f '' preimage e m ∩ ({ c | (c, ψ a) ∈ s } ∩ { c | (ψ a, c) ∈ s }) ∈ map f (comap e (𝓝 a)) :=
       inter_mem (image_mem_map <| preimage_mem_comap <| hm)

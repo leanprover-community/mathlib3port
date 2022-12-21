@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Oliver Nash
 
 ! This file was ported from Lean 3 source module data.finset.prod
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -462,7 +462,7 @@ theorem diag_inter : (s ∩ t).diag = s.diag ∩ t.diag :=
 theorem off_diag_inter : (s ∩ t).offDiag = s.offDiag ∩ t.offDiag :=
   coe_injective <| by 
     push_cast
-    exact Set.off_diag_inter _ _
+    exact Set.offDiag_inter _ _
 #align finset.off_diag_inter Finset.off_diag_inter
 
 theorem diag_union : (s ∪ t).diag = s.diag ∪ t.diag := by
@@ -478,7 +478,7 @@ theorem off_diag_union (h : Disjoint s t) :
     (s ∪ t).offDiag = s.offDiag ∪ t.offDiag ∪ s ×ˢ t ∪ t ×ˢ s :=
   coe_injective <| by 
     push_cast
-    exact Set.off_diag_union (disjoint_coe.2 h)
+    exact Set.offDiag_union (disjoint_coe.2 h)
 #align finset.off_diag_union Finset.off_diag_union
 
 variable (a : α)

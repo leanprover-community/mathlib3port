@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.basic
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1175,7 +1175,7 @@ theorem union_assoc (a b c : Set α) : a ∪ b ∪ c = a ∪ (b ∪ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.6984 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.6986 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.6984 x._@.Mathlib.Data.Set.Basic._hyg.6986)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.6973 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.6975 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.6973 x._@.Mathlib.Data.Set.Basic._hyg.6975)
 Case conversion may be inaccurate. Consider using '#align set.union_is_assoc Set.union_isAssocₓ'. -/
 instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
   ⟨union_assoc⟩
@@ -1185,7 +1185,7 @@ instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7021 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7023 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7021 x._@.Mathlib.Data.Set.Basic._hyg.7023)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7010 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7012 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7010 x._@.Mathlib.Data.Set.Basic._hyg.7012)
 Case conversion may be inaccurate. Consider using '#align set.union_is_comm Set.union_isCommₓ'. -/
 instance union_isComm : IsCommutative (Set α) (· ∪ ·) :=
   ⟨union_comm⟩
@@ -1528,7 +1528,7 @@ theorem inter_assoc (a b c : Set α) : a ∩ b ∩ c = a ∩ (b ∩ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8422 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8424 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8422 x._@.Mathlib.Data.Set.Basic._hyg.8424)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8411 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8413 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8411 x._@.Mathlib.Data.Set.Basic._hyg.8413)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_assoc Set.inter_isAssocₓ'. -/
 instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
   ⟨inter_assoc⟩
@@ -1538,7 +1538,7 @@ instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8459 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8461 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8459 x._@.Mathlib.Data.Set.Basic._hyg.8461)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8448 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8450 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8448 x._@.Mathlib.Data.Set.Basic._hyg.8450)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_comm Set.inter_isCommₓ'. -/
 instance inter_isComm : IsCommutative (Set α) (· ∩ ·) :=
   ⟨inter_comm⟩

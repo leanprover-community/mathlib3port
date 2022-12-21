@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.filter.pointwise
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,9 +103,9 @@ theorem principal_one : 𝓟 1 = (1 : Filter α) :=
 #align filter.principal_one Filter.principal_one
 
 @[to_additive]
-theorem oneNeBot : (1 : Filter α).ne_bot :=
-  Filter.pureNeBot
-#align filter.one_ne_bot Filter.oneNeBot
+theorem one_ne_bot : (1 : Filter α).ne_bot :=
+  Filter.pure_ne_bot
+#align filter.one_ne_bot Filter.one_ne_bot
 
 @[simp, to_additive]
 protected theorem map_one' (f : α → β) : (1 : Filter α).map f = pure (f 1) :=
@@ -280,14 +280,14 @@ theorem NeBot.mul : NeBot f → NeBot g → NeBot (f * g) :=
 #align filter.ne_bot.mul Filter.NeBot.mul
 
 @[to_additive]
-theorem NeBot.ofMulLeft : (f * g).ne_bot → f.ne_bot :=
+theorem NeBot.of_mul_left : (f * g).ne_bot → f.ne_bot :=
   ne_bot.of_map₂_left
-#align filter.ne_bot.of_mul_left Filter.NeBot.ofMulLeft
+#align filter.ne_bot.of_mul_left Filter.NeBot.of_mul_left
 
 @[to_additive]
-theorem NeBot.ofMulRight : (f * g).ne_bot → g.ne_bot :=
+theorem NeBot.of_mul_right : (f * g).ne_bot → g.ne_bot :=
   ne_bot.of_map₂_right
-#align filter.ne_bot.of_mul_right Filter.NeBot.ofMulRight
+#align filter.ne_bot.of_mul_right Filter.NeBot.of_mul_right
 
 @[simp, to_additive]
 theorem pure_mul : pure a * g = g.map ((· * ·) a) :=
@@ -400,14 +400,14 @@ theorem NeBot.div : NeBot f → NeBot g → NeBot (f / g) :=
 #align filter.ne_bot.div Filter.NeBot.div
 
 @[to_additive]
-theorem NeBot.ofDivLeft : (f / g).ne_bot → f.ne_bot :=
+theorem NeBot.of_div_left : (f / g).ne_bot → f.ne_bot :=
   ne_bot.of_map₂_left
-#align filter.ne_bot.of_div_left Filter.NeBot.ofDivLeft
+#align filter.ne_bot.of_div_left Filter.NeBot.of_div_left
 
 @[to_additive]
-theorem NeBot.ofDivRight : (f / g).ne_bot → g.ne_bot :=
+theorem NeBot.of_div_right : (f / g).ne_bot → g.ne_bot :=
   ne_bot.of_map₂_right
-#align filter.ne_bot.of_div_right Filter.NeBot.ofDivRight
+#align filter.ne_bot.of_div_right Filter.NeBot.of_div_right
 
 @[simp, to_additive]
 theorem pure_div : pure a / g = g.map ((· / ·) a) :=
@@ -884,14 +884,14 @@ theorem NeBot.smul : NeBot f → NeBot g → NeBot (f • g) :=
 #align filter.ne_bot.smul Filter.NeBot.smul
 
 @[to_additive]
-theorem NeBot.ofSmulLeft : (f • g).ne_bot → f.ne_bot :=
+theorem NeBot.of_smul_left : (f • g).ne_bot → f.ne_bot :=
   ne_bot.of_map₂_left
-#align filter.ne_bot.of_smul_left Filter.NeBot.ofSmulLeft
+#align filter.ne_bot.of_smul_left Filter.NeBot.of_smul_left
 
 @[to_additive]
-theorem NeBot.ofSmulRight : (f • g).ne_bot → g.ne_bot :=
+theorem NeBot.of_smul_right : (f • g).ne_bot → g.ne_bot :=
   ne_bot.of_map₂_right
-#align filter.ne_bot.of_smul_right Filter.NeBot.ofSmulRight
+#align filter.ne_bot.of_smul_right Filter.NeBot.of_smul_right
 
 @[simp, to_additive]
 theorem pure_smul : (pure a : Filter α) • g = g.map ((· • ·) a) :=
@@ -990,13 +990,13 @@ theorem NeBot.vsub : NeBot f → NeBot g → NeBot (f -ᵥ g) :=
   ne_bot.map₂
 #align filter.ne_bot.vsub Filter.NeBot.vsub
 
-theorem NeBot.ofVsubLeft : (f -ᵥ g : Filter α).ne_bot → f.ne_bot :=
+theorem NeBot.of_vsub_left : (f -ᵥ g : Filter α).ne_bot → f.ne_bot :=
   ne_bot.of_map₂_left
-#align filter.ne_bot.of_vsub_left Filter.NeBot.ofVsubLeft
+#align filter.ne_bot.of_vsub_left Filter.NeBot.of_vsub_left
 
-theorem NeBot.ofVsubRight : (f -ᵥ g : Filter α).ne_bot → g.ne_bot :=
+theorem NeBot.of_vsub_right : (f -ᵥ g : Filter α).ne_bot → g.ne_bot :=
   ne_bot.of_map₂_right
-#align filter.ne_bot.of_vsub_right Filter.NeBot.ofVsubRight
+#align filter.ne_bot.of_vsub_right Filter.NeBot.of_vsub_right
 
 @[simp]
 theorem pure_vsub : (pure a : Filter β) -ᵥ g = g.map ((· -ᵥ ·) a) :=
@@ -1078,13 +1078,13 @@ theorem smul_filter_ne_bot_iff : (a • f).ne_bot ↔ f.ne_bot :=
 #align filter.smul_filter_ne_bot_iff Filter.smul_filter_ne_bot_iff
 
 @[to_additive]
-theorem NeBot.smulFilter : f.ne_bot → (a • f).ne_bot := fun h => h.map _
-#align filter.ne_bot.smul_filter Filter.NeBot.smulFilter
+theorem NeBot.smul_filter : f.ne_bot → (a • f).ne_bot := fun h => h.map _
+#align filter.ne_bot.smul_filter Filter.NeBot.smul_filter
 
 @[to_additive]
-theorem NeBot.ofSmulFilter : (a • f).ne_bot → f.ne_bot :=
+theorem NeBot.of_smul_filter : (a • f).ne_bot → f.ne_bot :=
   ne_bot.of_map
-#align filter.ne_bot.of_smul_filter Filter.NeBot.ofSmulFilter
+#align filter.ne_bot.of_smul_filter Filter.NeBot.of_smul_filter
 
 @[to_additive]
 theorem smul_filter_le_smul_filter (hf : f₁ ≤ f₂) : a • f₁ ≤ a • f₂ :=

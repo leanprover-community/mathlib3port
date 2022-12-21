@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space_def
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ theorem measure_eq_infi (s : Set α) : μ s = ⨅ (t) (st : s ⊆ t) (ht : Measu
   `nonempty_measurable_superset`. -/
 theorem measure_eq_infi' (μ : Measure α) (s : Set α) :
     μ s = ⨅ t : { t // s ⊆ t ∧ MeasurableSet t }, μ t := by
-  simp_rw [infi_subtype, infi_and, Subtype.coe_mk, ← measure_eq_infi]
+  simp_rw [infᵢ_subtype, infᵢ_and, Subtype.coe_mk, ← measure_eq_infi]
 #align measure_theory.measure_eq_infi' MeasureTheory.measure_eq_infi'
 
 theorem measure_eq_induced_outer_measure :

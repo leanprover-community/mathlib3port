@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.game.ordinal
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ instance is_empty_to_pgame_right_moves (o : Ordinal) : IsEmpty o.toPgame.RightMo
 
 /-- Converts an ordinal less than `o` into a move for the `pgame` corresponding to `o`, and vice
 versa. -/
-noncomputable def toLeftMovesToPgame {o : Ordinal} : Set.iio o ≃ o.toPgame.LeftMoves :=
+noncomputable def toLeftMovesToPgame {o : Ordinal} : Set.Iio o ≃ o.toPgame.LeftMoves :=
   (enumIsoOut o).toEquiv.trans (Equiv.cast (to_pgame_left_moves o).symm)
 #align ordinal.to_left_moves_to_pgame Ordinal.toLeftMovesToPgame
 

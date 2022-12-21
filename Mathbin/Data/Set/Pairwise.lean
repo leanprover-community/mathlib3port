@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.pairwise
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -383,7 +383,7 @@ theorem PairwiseDisjoint.bUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → �
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)
   · exact hg d hd (hcd.subst ha) hb hab
-  · exact (hs hc hd <| ne_of_apply_ne _ hcd).mono (le_supr₂ a ha) (le_supr₂ b hb)
+  · exact (hs hc hd <| ne_of_apply_ne _ hcd).mono (le_supᵢ₂ a ha) (le_supᵢ₂ b hb)
 #align set.pairwise_disjoint.bUnion Set.PairwiseDisjoint.bUnion
 
 end CompleteLattice

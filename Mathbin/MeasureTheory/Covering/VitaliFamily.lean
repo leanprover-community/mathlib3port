@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.vitali_family
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,7 +238,7 @@ include v
 that contain all sets of `v.sets_at x` of a sufficiently small diameter. This filter makes it
 possible to express limiting behavior when sets in `v.sets_at x` shrink to `x`. -/
 def filterAt (x : α) : Filter (Set α) :=
-  ⨅ ε ∈ ioi (0 : ℝ), 𝓟 ({ a ∈ v.setsAt x | a ⊆ closedBall x ε })
+  ⨅ ε ∈ Ioi (0 : ℝ), 𝓟 ({ a ∈ v.setsAt x | a ⊆ closedBall x ε })
 #align vitali_family.filter_at VitaliFamily.filterAt
 
 theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
@@ -256,13 +256,13 @@ theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
   · exact ⟨(1 : ℝ), mem_Ioi.2 zero_lt_one⟩
 #align vitali_family.mem_filter_at_iff VitaliFamily.mem_filter_at_iff
 
-instance filterAtNeBot (x : α) : (v.filterAt x).ne_bot := by
+instance filter_at_ne_bot (x : α) : (v.filterAt x).ne_bot := by
   simp only [ne_bot_iff, ← empty_mem_iff_bot, mem_filter_at_iff, not_exists, exists_prop,
     mem_empty_iff_false, and_true_iff, gt_iff_lt, not_and, Ne.def, not_false_iff, not_forall]
   intro ε εpos
   obtain ⟨w, w_sets, hw⟩ : ∃ w ∈ v.sets_at x, w ⊆ closed_ball x ε := v.nontrivial x ε εpos
   exact ⟨w, w_sets, hw⟩
-#align vitali_family.filter_at_ne_bot VitaliFamily.filterAtNeBot
+#align vitali_family.filter_at_ne_bot VitaliFamily.filter_at_ne_bot
 
 theorem eventually_filter_at_iff {x : α} {P : Set α → Prop} :
     (∀ᶠ a in v.filterAt x, P a) ↔ ∃ ε > (0 : ℝ), ∀ a ∈ v.setsAt x, a ⊆ closedBall x ε → P a :=

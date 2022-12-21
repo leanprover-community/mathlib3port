@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.cover_preserving
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,9 +82,9 @@ structure CoverPreserving (G : C ⥤ D) : Prop where
 #align category_theory.cover_preserving CategoryTheory.CoverPreserving
 
 /-- The identity functor on a site is cover-preserving. -/
-theorem idCoverPreserving : CoverPreserving J J (𝟭 _) :=
+theorem id_cover_preserving : CoverPreserving J J (𝟭 _) :=
   ⟨fun U S hS => by simpa using hS⟩
-#align category_theory.id_cover_preserving CategoryTheory.idCoverPreserving
+#align category_theory.id_cover_preserving CategoryTheory.id_cover_preserving
 
 variable (J) (K)
 
@@ -744,7 +744,7 @@ then `G.op ⋙ _` pulls sheaves back to sheaves.
 
 This result is basically <https://stacks.math.columbia.edu/tag/00WW>.
 -/
-theorem pullbackIsSheafOfCoverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G)
+theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G)
     (hG₂ : CoverPreserving J K G) (ℱ : SheafCat K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) := by
   intro X U S hS x hx
   change family_of_elements (G.op ⋙ ℱ.val ⋙ coyoneda.obj (op X)) _ at x
@@ -766,12 +766,12 @@ theorem pullbackIsSheafOfCoverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreser
     dsimp
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
 #align
-  category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullbackIsSheafOfCoverPreserving
+  category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullback_is_sheaf_of_cover_preserving
 
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/
 def pullbackSheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G)
     (ℱ : SheafCat K A) : SheafCat J A :=
-  ⟨G.op ⋙ ℱ.val, pullbackIsSheafOfCoverPreserving hG₁ hG₂ ℱ⟩
+  ⟨G.op ⋙ ℱ.val, pullback_is_sheaf_of_cover_preserving hG₁ hG₂ ℱ⟩
 #align category_theory.pullback_sheaf CategoryTheory.pullbackSheaf
 
 variable (A)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.pi_nat
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -377,7 +377,7 @@ where the distance is given by `dist x y = (1/2)^n`, where `n` is the smallest i
 `y` differ. Not registered as a global instance by default. -/
 protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, UniformSpace (E n)]
     (h : ∀ n, uniformity (E n) = 𝓟 idRel) : MetricSpace (∀ n, E n) :=
-  haveI : ∀ n, DiscreteTopology (E n) := fun n => discreteTopologyOfDiscreteUniformity (h n)
+  haveI : ∀ n, DiscreteTopology (E n) := fun n => discrete_topology_of_discrete_uniformity (h n)
   { dist_triangle := PiNat.dist_triangle
     dist_comm := PiNat.dist_comm
     dist_self := PiNat.dist_self
@@ -387,7 +387,7 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
       simp [PiCat.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
         PseudoMetricSpace.uniformity_dist, h, idRel]
       apply le_antisymm
-      · simp only [le_infi_iff, le_principal_iff]
+      · simp only [le_infᵢ_iff, le_principal_iff]
         intro ε εpos
         obtain ⟨n, hn⟩ : ∃ n, (1 / 2 : ℝ) ^ n < ε := exists_pow_lt_of_lt_one εpos (by norm_num)
         apply
@@ -400,7 +400,7 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
           apply lt_of_le_of_lt _ hn
           rw [← mem_cylinder_iff_dist_le, mem_cylinder_iff]
           exact hxy
-      · simp only [le_infi_iff, le_principal_iff]
+      · simp only [le_infᵢ_iff, le_principal_iff]
         intro n
         refine' mem_infi_of_mem ((1 / 2) ^ n) _
         refine' mem_infi_of_mem (by positivity) _
@@ -890,7 +890,7 @@ protected def metricSpace :
     simp only [PiCat.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
       PseudoMetricSpace.uniformity_dist]
     apply le_antisymm
-    · simp only [le_infi_iff, le_principal_iff]
+    · simp only [le_infᵢ_iff, le_principal_iff]
       intro ε εpos
       obtain ⟨K, hK⟩ :
         ∃ K : Finset ι, (∑' i : { j // j ∉ K }, (1 / 2 : ℝ) ^ encode (i : ι)) < ε / 2 :=
@@ -933,7 +933,7 @@ protected def metricSpace :
             add_le_add_right (by simpa only [Finset.sum_const, nsmul_eq_mul] using hδ) _
           _ = ε := add_halves _
           
-    · simp only [le_infi_iff, le_principal_iff]
+    · simp only [le_infᵢ_iff, le_principal_iff]
       intro i ε εpos
       refine' mem_infi_of_mem (min ((1 / 2) ^ encode i) ε) _
       have : 0 < min ((1 / 2) ^ encode i) ε := lt_min (by simp) εpos

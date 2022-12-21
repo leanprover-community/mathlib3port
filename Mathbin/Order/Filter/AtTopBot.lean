@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module order.filter.at_top_bot
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ namespace Filter
   (The preorder need not have a top element for this to be well defined,
   and indeed is trivial when a top element exists.) -/
 def atTop [Preorder α] : Filter α :=
-  ⨅ a, 𝓟 (ici a)
+  ⨅ a, 𝓟 (Ici a)
 #align filter.at_top Filter.atTop
 
 /-- `at_bot` is the filter representing the limit `→ -∞` on an ordered set.
@@ -48,18 +48,18 @@ def atTop [Preorder α] : Filter α :=
   (The preorder need not have a bottom element for this to be well defined,
   and indeed is trivial when a bottom element exists.) -/
 def atBot [Preorder α] : Filter α :=
-  ⨅ a, 𝓟 (iic a)
+  ⨅ a, 𝓟 (Iic a)
 #align filter.at_bot Filter.atBot
 
 theorem mem_at_top [Preorder α] (a : α) : { b : α | a ≤ b } ∈ @atTop α _ :=
   mem_infi_of_mem a <| Subset.refl _
 #align filter.mem_at_top Filter.mem_at_top
 
-theorem Ici_mem_at_top [Preorder α] (a : α) : ici a ∈ (atTop : Filter α) :=
+theorem Ici_mem_at_top [Preorder α] (a : α) : Ici a ∈ (atTop : Filter α) :=
   mem_at_top a
 #align filter.Ici_mem_at_top Filter.Ici_mem_at_top
 
-theorem Ioi_mem_at_top [Preorder α] [NoMaxOrder α] (x : α) : ioi x ∈ (atTop : Filter α) :=
+theorem Ioi_mem_at_top [Preorder α] [NoMaxOrder α] (x : α) : Ioi x ∈ (atTop : Filter α) :=
   let ⟨z, hz⟩ := exists_gt x
   (mem_of_superset (mem_at_top z)) fun y h => lt_of_lt_of_le hz h
 #align filter.Ioi_mem_at_top Filter.Ioi_mem_at_top
@@ -68,31 +68,31 @@ theorem mem_at_bot [Preorder α] (a : α) : { b : α | b ≤ a } ∈ @atBot α _
   mem_infi_of_mem a <| Subset.refl _
 #align filter.mem_at_bot Filter.mem_at_bot
 
-theorem Iic_mem_at_bot [Preorder α] (a : α) : iic a ∈ (atBot : Filter α) :=
+theorem Iic_mem_at_bot [Preorder α] (a : α) : Iic a ∈ (atBot : Filter α) :=
   mem_at_bot a
 #align filter.Iic_mem_at_bot Filter.Iic_mem_at_bot
 
-theorem Iio_mem_at_bot [Preorder α] [NoMinOrder α] (x : α) : iio x ∈ (atBot : Filter α) :=
+theorem Iio_mem_at_bot [Preorder α] [NoMinOrder α] (x : α) : Iio x ∈ (atBot : Filter α) :=
   let ⟨z, hz⟩ := exists_lt x
   (mem_of_superset (mem_at_bot z)) fun y h => lt_of_le_of_lt h hz
 #align filter.Iio_mem_at_bot Filter.Iio_mem_at_bot
 
-theorem disjoint_at_bot_principal_Ioi [Preorder α] (x : α) : Disjoint atBot (𝓟 (ioi x)) :=
+theorem disjoint_at_bot_principal_Ioi [Preorder α] (x : α) : Disjoint atBot (𝓟 (Ioi x)) :=
   disjoint_of_disjoint_of_mem (Iic_disjoint_Ioi le_rfl) (Iic_mem_at_bot x) (mem_principal_self _)
 #align filter.disjoint_at_bot_principal_Ioi Filter.disjoint_at_bot_principal_Ioi
 
-theorem disjoint_at_top_principal_Iio [Preorder α] (x : α) : Disjoint atTop (𝓟 (iio x)) :=
+theorem disjoint_at_top_principal_Iio [Preorder α] (x : α) : Disjoint atTop (𝓟 (Iio x)) :=
   @disjoint_at_bot_principal_Ioi αᵒᵈ _ _
 #align filter.disjoint_at_top_principal_Iio Filter.disjoint_at_top_principal_Iio
 
 theorem disjoint_at_top_principal_Iic [Preorder α] [NoMaxOrder α] (x : α) :
-    Disjoint atTop (𝓟 (iic x)) :=
+    Disjoint atTop (𝓟 (Iic x)) :=
   disjoint_of_disjoint_of_mem (Iic_disjoint_Ioi le_rfl).symm (Ioi_mem_at_top x)
     (mem_principal_self _)
 #align filter.disjoint_at_top_principal_Iic Filter.disjoint_at_top_principal_Iic
 
 theorem disjoint_at_bot_principal_Ici [Preorder α] [NoMinOrder α] (x : α) :
-    Disjoint atBot (𝓟 (ici x)) :=
+    Disjoint atBot (𝓟 (Ici x)) :=
   @disjoint_at_top_principal_Iic αᵒᵈ _ _ _
 #align filter.disjoint_at_bot_principal_Ici Filter.disjoint_at_bot_principal_Ici
 
@@ -129,34 +129,34 @@ theorem disjoint_at_top_at_bot [PartialOrder α] [Nontrivial α] :
   disjoint_at_bot_at_top.symm
 #align filter.disjoint_at_top_at_bot Filter.disjoint_at_top_at_bot
 
-theorem at_top_basis [Nonempty α] [SemilatticeSup α] : (@atTop α _).HasBasis (fun _ => True) ici :=
+theorem at_top_basis [Nonempty α] [SemilatticeSup α] : (@atTop α _).HasBasis (fun _ => True) Ici :=
   has_basis_infi_principal (directed_of_sup fun a b => Ici_subset_Ici.2)
 #align filter.at_top_basis Filter.at_top_basis
 
-theorem at_top_basis' [SemilatticeSup α] (a : α) : (@atTop α _).HasBasis (fun x => a ≤ x) ici :=
+theorem at_top_basis' [SemilatticeSup α] (a : α) : (@atTop α _).HasBasis (fun x => a ≤ x) Ici :=
   ⟨fun t =>
     (@at_top_basis α ⟨a⟩ _).mem_iff.trans
       ⟨fun ⟨x, _, hx⟩ => ⟨x ⊔ a, le_sup_right, fun y hy => hx (le_trans le_sup_left hy)⟩,
         fun ⟨x, _, hx⟩ => ⟨x, trivial, hx⟩⟩⟩
 #align filter.at_top_basis' Filter.at_top_basis'
 
-theorem at_bot_basis [Nonempty α] [SemilatticeInf α] : (@atBot α _).HasBasis (fun _ => True) iic :=
+theorem at_bot_basis [Nonempty α] [SemilatticeInf α] : (@atBot α _).HasBasis (fun _ => True) Iic :=
   @at_top_basis αᵒᵈ _ _
 #align filter.at_bot_basis Filter.at_bot_basis
 
-theorem at_bot_basis' [SemilatticeInf α] (a : α) : (@atBot α _).HasBasis (fun x => x ≤ a) iic :=
+theorem at_bot_basis' [SemilatticeInf α] (a : α) : (@atBot α _).HasBasis (fun x => x ≤ a) Iic :=
   @at_top_basis' αᵒᵈ _ _
 #align filter.at_bot_basis' Filter.at_bot_basis'
 
 @[instance]
-theorem atTopNeBot [Nonempty α] [SemilatticeSup α] : NeBot (atTop : Filter α) :=
+theorem at_top_ne_bot [Nonempty α] [SemilatticeSup α] : NeBot (atTop : Filter α) :=
   at_top_basis.ne_bot_iff.2 fun a _ => nonempty_Ici
-#align filter.at_top_ne_bot Filter.atTopNeBot
+#align filter.at_top_ne_bot Filter.at_top_ne_bot
 
 @[instance]
-theorem atBotNeBot [Nonempty α] [SemilatticeInf α] : NeBot (atBot : Filter α) :=
-  @atTopNeBot αᵒᵈ _ _
-#align filter.at_bot_ne_bot Filter.atBotNeBot
+theorem at_bot_ne_bot [Nonempty α] [SemilatticeInf α] : NeBot (atBot : Filter α) :=
+  @at_top_ne_bot αᵒᵈ _ _
+#align filter.at_bot_ne_bot Filter.at_bot_ne_bot
 
 @[simp]
 theorem mem_at_top_sets [Nonempty α] [SemilatticeSup α] {s : Set α} :
@@ -242,18 +242,18 @@ theorem Tendsto.eventually_ne_at_bot [Preorder β] [NoMinOrder β] {f : α → �
 #align filter.tendsto.eventually_ne_at_bot Filter.Tendsto.eventually_ne_at_bot
 
 theorem at_top_basis_Ioi [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] :
-    (@atTop α _).HasBasis (fun _ => True) ioi :=
+    (@atTop α _).HasBasis (fun _ => True) Ioi :=
   (at_top_basis.to_has_basis fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩) fun a ha =>
     (exists_gt a).imp fun b hb => ⟨ha, Ici_subset_Ioi.2 hb⟩
 #align filter.at_top_basis_Ioi Filter.at_top_basis_Ioi
 
 theorem at_top_countable_basis [Nonempty α] [SemilatticeSup α] [Countable α] :
-    HasCountableBasis (atTop : Filter α) (fun _ => True) ici :=
+    HasCountableBasis (atTop : Filter α) (fun _ => True) Ici :=
   { at_top_basis with Countable := to_countable _ }
 #align filter.at_top_countable_basis Filter.at_top_countable_basis
 
 theorem at_bot_countable_basis [Nonempty α] [SemilatticeInf α] [Countable α] :
-    HasCountableBasis (atBot : Filter α) (fun _ => True) iic :=
+    HasCountableBasis (atBot : Filter α) (fun _ => True) Iic :=
   { at_bot_basis with Countable := to_countable _ }
 #align filter.at_bot_countable_basis Filter.at_bot_countable_basis
 
@@ -269,7 +269,7 @@ instance (priority := 200) atBot.is_countably_generated [Preorder α] [Countable
 
 theorem OrderTop.at_top_eq (α) [PartialOrder α] [OrderTop α] : (atTop : Filter α) = pure ⊤ :=
   le_antisymm (le_pure_iff.2 <| (eventually_ge_at_top ⊤).mono fun b => top_unique)
-    (le_infi fun b => le_principal_iff.2 le_top)
+    (le_infᵢ fun b => le_principal_iff.2 le_top)
 #align filter.order_top.at_top_eq Filter.OrderTop.at_top_eq
 
 theorem OrderBot.at_bot_eq (α) [PartialOrder α] [OrderBot α] : (atBot : Filter α) = pure ⊥ :=
@@ -1301,8 +1301,8 @@ alias tendsto_at_bot_at_bot_iff_of_monotone ← _root_.monotone.tendsto_at_bot_a
 theorem comap_embedding_at_top [Preorder β] [Preorder γ] {e : β → γ}
     (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, c ≤ e b) : comap e atTop = at_top :=
   le_antisymm
-    (le_infi fun b =>
-      le_principal_iff.2 <| mem_comap.2 ⟨ici (e b), mem_at_top _, fun x => (hm _ _).1⟩)
+    (le_infᵢ fun b =>
+      le_principal_iff.2 <| mem_comap.2 ⟨Ici (e b), mem_at_top _, fun x => (hm _ _).1⟩)
     (tendsto_at_top_at_top_of_monotone (fun _ _ => (hm _ _).2) hu).le_comap
 #align filter.comap_embedding_at_top Filter.comap_embedding_at_top
 
@@ -1328,10 +1328,10 @@ theorem tendsto_finset_range : Tendsto Finset.range atTop atTop :=
   Finset.range_mono.tendsto_at_top_at_top Finset.exists_nat_subset_range
 #align filter.tendsto_finset_range Filter.tendsto_finset_range
 
-theorem at_top_finset_eq_infi : (atTop : Filter <| Finset α) = ⨅ x : α, 𝓟 (ici {x}) := by
-  refine' le_antisymm (le_infi fun i => le_principal_iff.2 <| mem_at_top {i}) _
+theorem at_top_finset_eq_infi : (atTop : Filter <| Finset α) = ⨅ x : α, 𝓟 (Ici {x}) := by
+  refine' le_antisymm (le_infᵢ fun i => le_principal_iff.2 <| mem_at_top {i}) _
   refine'
-    le_infi fun s =>
+    le_infᵢ fun s =>
       le_principal_iff.2 <| mem_infi_of_Inter s.finite_to_set (fun i => mem_principal_self _) _
   simp only [subset_def, mem_Inter, SetCoe.forall, mem_Ici, Finset.le_iff_subset,
     Finset.mem_singleton, Finset.subset_iff, forall_eq]
@@ -1368,8 +1368,8 @@ theorem prod_at_top_at_top_eq {β₁ β₂ : Type _} [SemilatticeSup β₁] [Sem
     (atTop : Filter β₁) ×ᶠ (atTop : Filter β₂) = (atTop : Filter (β₁ × β₂)) := by
   cases (isEmpty_or_nonempty β₁).symm
   cases (isEmpty_or_nonempty β₂).symm
-  · simp [at_top, prod_infi_left, prod_infi_right, infi_prod]
-    exact infi_comm
+  · simp [at_top, prod_infi_left, prod_infi_right, infᵢ_prod]
+    exact infᵢ_comm
   · simp only [at_top.filter_eq_bot_of_is_empty, prod_bot]
   · simp only [at_top.filter_eq_bot_of_is_empty, bot_prod]
 #align filter.prod_at_top_at_top_eq Filter.prod_at_top_at_top_eq
@@ -1478,7 +1478,7 @@ theorem map_at_top_eq_of_gc [SemilatticeSup α] [SemilatticeSup β] {f : α → 
     le_antisymm
       (hf.tendsto_at_top_at_top fun b => ⟨g (b ⊔ b'), le_sup_left.trans <| hgi _ le_sup_right⟩) _
   rw [@map_at_top_eq _ _ ⟨g b'⟩]
-  refine' le_infi fun a => infi_le_of_le (f a ⊔ b') <| principal_mono.2 fun b hb => _
+  refine' le_infᵢ fun a => infᵢ_le_of_le (f a ⊔ b') <| principal_mono.2 fun b hb => _
   rw [mem_Ici, sup_le_iff] at hb
   exact ⟨g b, (gc _ _ hb.2).1 hb.1, le_antisymm ((gc _ _ hb.2).2 le_rfl) (hgi _ hb.2)⟩
 #align filter.map_at_top_eq_of_gc Filter.map_at_top_eq_of_gc
@@ -1489,7 +1489,7 @@ theorem map_at_bot_eq_of_gc [SemilatticeInf α] [SemilatticeInf β] {f : α → 
   @map_at_top_eq_of_gc αᵒᵈ βᵒᵈ _ _ _ _ _ hf.dual gc hgi
 #align filter.map_at_bot_eq_of_gc Filter.map_at_bot_eq_of_gc
 
-theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h : ici a ⊆ s) :
+theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h : Ici a ⊆ s) :
     map (coe : s → α) atTop = at_top := by
   have : Directed (· ≥ ·) fun x : s => 𝓟 (Ici x) := by
     intro x y
@@ -1497,7 +1497,7 @@ theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (
     simp only [ge_iff_le, principal_mono, Ici_subset_Ici, ← Subtype.coe_le_coe, Subtype.coe_mk]
     exact ⟨le_sup_left.trans le_sup_left, le_sup_right.trans le_sup_left⟩
   haveI : Nonempty s := ⟨⟨a, h le_rfl⟩⟩
-  simp only [le_antisymm_iff, at_top, le_infi_iff, le_principal_iff, mem_map, mem_set_of_eq,
+  simp only [le_antisymm_iff, at_top, le_infᵢ_iff, le_principal_iff, mem_map, mem_set_of_eq,
     map_infi_eq this, map_principal]
   constructor
   · intro x
@@ -1511,21 +1511,21 @@ theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (
 
 /-- The image of the filter `at_top` on `Ici a` under the coercion equals `at_top`. -/
 @[simp]
-theorem map_coe_Ici_at_top [SemilatticeSup α] (a : α) : map (coe : ici a → α) atTop = at_top :=
+theorem map_coe_Ici_at_top [SemilatticeSup α] (a : α) : map (coe : Ici a → α) atTop = at_top :=
   map_coe_at_top_of_Ici_subset (Subset.refl _)
 #align filter.map_coe_Ici_at_top Filter.map_coe_Ici_at_top
 
 /-- The image of the filter `at_top` on `Ioi a` under the coercion equals `at_top`. -/
 @[simp]
 theorem map_coe_Ioi_at_top [SemilatticeSup α] [NoMaxOrder α] (a : α) :
-    map (coe : ioi a → α) atTop = at_top :=
+    map (coe : Ioi a → α) atTop = at_top :=
   let ⟨b, hb⟩ := exists_gt a
   map_coe_at_top_of_Ici_subset <| Ici_subset_Ioi.2 hb
 #align filter.map_coe_Ioi_at_top Filter.map_coe_Ioi_at_top
 
 /-- The `at_top` filter for an open interval `Ioi a` comes from the `at_top` filter in the ambient
 order. -/
-theorem at_top_Ioi_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : ioi a → α) atTop := by
+theorem at_top_Ioi_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : Ioi a → α) atTop := by
   nontriviality
   rcases nontrivial_iff_nonempty.1 ‹_› with ⟨b, hb⟩
   rw [← map_coe_at_top_of_Ici_subset (Ici_subset_Ioi.2 hb), comap_map Subtype.coe_injective]
@@ -1533,7 +1533,7 @@ theorem at_top_Ioi_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : ioi a
 
 /-- The `at_top` filter for an open interval `Ici a` comes from the `at_top` filter in the ambient
 order. -/
-theorem at_top_Ici_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : ici a → α) atTop := by
+theorem at_top_Ici_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : Ici a → α) atTop := by
   rw [← map_coe_Ici_at_top a, comap_map Subtype.coe_injective]
 #align filter.at_top_Ici_eq Filter.at_top_Ici_eq
 
@@ -1541,70 +1541,70 @@ theorem at_top_Ici_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : ici a
 order. -/
 @[simp]
 theorem map_coe_Iio_at_bot [SemilatticeInf α] [NoMinOrder α] (a : α) :
-    map (coe : iio a → α) atBot = at_bot :=
+    map (coe : Iio a → α) atBot = at_bot :=
   @map_coe_Ioi_at_top αᵒᵈ _ _ _
 #align filter.map_coe_Iio_at_bot Filter.map_coe_Iio_at_bot
 
 /-- The `at_bot` filter for an open interval `Iio a` comes from the `at_bot` filter in the ambient
 order. -/
-theorem at_bot_Iio_eq [SemilatticeInf α] (a : α) : at_bot = comap (coe : iio a → α) atBot :=
+theorem at_bot_Iio_eq [SemilatticeInf α] (a : α) : at_bot = comap (coe : Iio a → α) atBot :=
   @at_top_Ioi_eq αᵒᵈ _ _
 #align filter.at_bot_Iio_eq Filter.at_bot_Iio_eq
 
 /-- The `at_bot` filter for an open interval `Iic a` comes from the `at_bot` filter in the ambient
 order. -/
 @[simp]
-theorem map_coe_Iic_at_bot [SemilatticeInf α] (a : α) : map (coe : iic a → α) atBot = at_bot :=
+theorem map_coe_Iic_at_bot [SemilatticeInf α] (a : α) : map (coe : Iic a → α) atBot = at_bot :=
   @map_coe_Ici_at_top αᵒᵈ _ _
 #align filter.map_coe_Iic_at_bot Filter.map_coe_Iic_at_bot
 
 /-- The `at_bot` filter for an open interval `Iic a` comes from the `at_bot` filter in the ambient
 order. -/
-theorem at_bot_Iic_eq [SemilatticeInf α] (a : α) : at_bot = comap (coe : iic a → α) atBot :=
+theorem at_bot_Iic_eq [SemilatticeInf α] (a : α) : at_bot = comap (coe : Iic a → α) atBot :=
   @at_top_Ici_eq αᵒᵈ _ _
 #align filter.at_bot_Iic_eq Filter.at_bot_Iic_eq
 
-theorem tendsto_Ioi_at_top [SemilatticeSup α] {a : α} {f : β → ioi a} {l : Filter β} :
+theorem tendsto_Ioi_at_top [SemilatticeSup α] {a : α} {f : β → Ioi a} {l : Filter β} :
     Tendsto f l atTop ↔ Tendsto (fun x => (f x : α)) l atTop := by
   rw [at_top_Ioi_eq, tendsto_comap_iff]
 #align filter.tendsto_Ioi_at_top Filter.tendsto_Ioi_at_top
 
-theorem tendsto_Iio_at_bot [SemilatticeInf α] {a : α} {f : β → iio a} {l : Filter β} :
+theorem tendsto_Iio_at_bot [SemilatticeInf α] {a : α} {f : β → Iio a} {l : Filter β} :
     Tendsto f l atBot ↔ Tendsto (fun x => (f x : α)) l atBot := by
   rw [at_bot_Iio_eq, tendsto_comap_iff]
 #align filter.tendsto_Iio_at_bot Filter.tendsto_Iio_at_bot
 
-theorem tendsto_Ici_at_top [SemilatticeSup α] {a : α} {f : β → ici a} {l : Filter β} :
+theorem tendsto_Ici_at_top [SemilatticeSup α] {a : α} {f : β → Ici a} {l : Filter β} :
     Tendsto f l atTop ↔ Tendsto (fun x => (f x : α)) l atTop := by
   rw [at_top_Ici_eq, tendsto_comap_iff]
 #align filter.tendsto_Ici_at_top Filter.tendsto_Ici_at_top
 
-theorem tendsto_Iic_at_bot [SemilatticeInf α] {a : α} {f : β → iic a} {l : Filter β} :
+theorem tendsto_Iic_at_bot [SemilatticeInf α] {a : α} {f : β → Iic a} {l : Filter β} :
     Tendsto f l atBot ↔ Tendsto (fun x => (f x : α)) l atBot := by
   rw [at_bot_Iic_eq, tendsto_comap_iff]
 #align filter.tendsto_Iic_at_bot Filter.tendsto_Iic_at_bot
 
 @[simp]
 theorem tendsto_comp_coe_Ioi_at_top [SemilatticeSup α] [NoMaxOrder α] {a : α} {f : α → β}
-    {l : Filter β} : Tendsto (fun x : ioi a => f x) atTop l ↔ Tendsto f atTop l := by
+    {l : Filter β} : Tendsto (fun x : Ioi a => f x) atTop l ↔ Tendsto f atTop l := by
   rw [← map_coe_Ioi_at_top a, tendsto_map'_iff]
 #align filter.tendsto_comp_coe_Ioi_at_top Filter.tendsto_comp_coe_Ioi_at_top
 
 @[simp]
 theorem tendsto_comp_coe_Ici_at_top [SemilatticeSup α] {a : α} {f : α → β} {l : Filter β} :
-    Tendsto (fun x : ici a => f x) atTop l ↔ Tendsto f atTop l := by
+    Tendsto (fun x : Ici a => f x) atTop l ↔ Tendsto f atTop l := by
   rw [← map_coe_Ici_at_top a, tendsto_map'_iff]
 #align filter.tendsto_comp_coe_Ici_at_top Filter.tendsto_comp_coe_Ici_at_top
 
 @[simp]
 theorem tendsto_comp_coe_Iio_at_bot [SemilatticeInf α] [NoMinOrder α] {a : α} {f : α → β}
-    {l : Filter β} : Tendsto (fun x : iio a => f x) atBot l ↔ Tendsto f atBot l := by
+    {l : Filter β} : Tendsto (fun x : Iio a => f x) atBot l ↔ Tendsto f atBot l := by
   rw [← map_coe_Iio_at_bot a, tendsto_map'_iff]
 #align filter.tendsto_comp_coe_Iio_at_bot Filter.tendsto_comp_coe_Iio_at_bot
 
 @[simp]
 theorem tendsto_comp_coe_Iic_at_bot [SemilatticeInf α] {a : α} {f : α → β} {l : Filter β} :
-    Tendsto (fun x : iic a => f x) atBot l ↔ Tendsto f atBot l := by
+    Tendsto (fun x : Iic a => f x) atBot l ↔ Tendsto f atBot l := by
   rw [← map_coe_Iic_at_bot a, tendsto_map'_iff]
 #align filter.tendsto_comp_coe_Iic_at_bot Filter.tendsto_comp_coe_Iic_at_bot
 
@@ -1656,7 +1656,7 @@ theorem tendsto_at_top_at_top_of_monotone' [Preorder ι] [LinearOrder α] {u : �
     (H : ¬BddAbove (range u)) : Tendsto u atTop atTop := by
   apply h.tendsto_at_top_at_top
   intro b
-  rcases not_bdd_above_iff.1 H b with ⟨_, ⟨N, rfl⟩, hN⟩
+  rcases not_bddAbove_iff.1 H b with ⟨_, ⟨N, rfl⟩, hN⟩
   exact ⟨N, le_of_lt hN⟩
 #align filter.tendsto_at_top_at_top_of_monotone' Filter.tendsto_at_top_at_top_of_monotone'
 
@@ -1733,9 +1733,9 @@ theorem map_at_top_finset_prod_le_of_prod_eq [CommMonoid α] {f : β → α} {g 
   by
   rw [map_at_top_eq, map_at_top_eq] <;>
     exact
-      le_infi fun b =>
+      le_infᵢ fun b =>
         let ⟨v, hv⟩ := h_eq b
-        infi_le_of_le v <| by simp [Set.image_subset_iff] <;> exact hv
+        infᵢ_le_of_le v <| by simp [Set.image_subset_iff] <;> exact hv
 #align filter.map_at_top_finset_prod_le_of_prod_eq Filter.map_at_top_finset_prod_le_of_prod_eq
 
 theorem HasAntitoneBasis.eventually_subset [Preorder ι] {l : Filter α} {s : ι → Set α}
@@ -1749,7 +1749,7 @@ protected theorem HasAntitoneBasis.tendsto [Preorder ι] {l : Filter α} {s : ι
   fun t ht => mem_map.2 <| (hl.eventually_subset ht).mono fun i hi => hi (h i)
 #align filter.has_antitone_basis.tendsto Filter.HasAntitoneBasis.tendsto
 
-theorem HasAntitoneBasis.compMono [SemilatticeSup ι] [Nonempty ι] [Preorder ι'] {l : Filter α}
+theorem HasAntitoneBasis.comp_mono [SemilatticeSup ι] [Nonempty ι] [Preorder ι'] {l : Filter α}
     {s : ι' → Set α} (hs : l.HasAntitoneBasis s) {φ : ι → ι'} (φ_mono : Monotone φ)
     (hφ : Tendsto φ atTop atTop) : l.HasAntitoneBasis (s ∘ φ) :=
   ⟨hs.to_has_basis.to_has_basis
@@ -1757,12 +1757,12 @@ theorem HasAntitoneBasis.compMono [SemilatticeSup ι] [Nonempty ι] [Preorder ι
         (hφ.Eventually (eventually_ge_at_top n)).exists.imp fun m hm => ⟨trivial, hs.Antitone hm⟩)
       fun n hn => ⟨φ n, trivial, Subset.rfl⟩,
     hs.Antitone.comp_monotone φ_mono⟩
-#align filter.has_antitone_basis.comp_mono Filter.HasAntitoneBasis.compMono
+#align filter.has_antitone_basis.comp_mono Filter.HasAntitoneBasis.comp_mono
 
-theorem HasAntitoneBasis.compStrictMono {l : Filter α} {s : ℕ → Set α} (hs : l.HasAntitoneBasis s)
+theorem HasAntitoneBasis.comp_strict_mono {l : Filter α} {s : ℕ → Set α} (hs : l.HasAntitoneBasis s)
     {φ : ℕ → ℕ} (hφ : StrictMono φ) : l.HasAntitoneBasis (s ∘ φ) :=
   hs.comp_mono hφ.Monotone hφ.tendsto_at_top
-#align filter.has_antitone_basis.comp_strict_mono Filter.HasAntitoneBasis.compStrictMono
+#align filter.has_antitone_basis.comp_strict_mono Filter.HasAntitoneBasis.comp_strict_mono
 
 /-- Given an antitone basis `s : ℕ → set α` of a filter, extract an antitone subbasis `s ∘ φ`,
 `φ : ℕ → ℕ`, such that `m < n` implies `r (φ m) (φ n)`. This lemma can be used to extract an

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.continuous_on
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -326,7 +326,7 @@ theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, Topologica
     (hI : I.Finite) (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
     𝓝[pi I s] x = ⨅ i, comap (fun x => x i) (𝓝 (x i) ⊓ ⨅ hi : i ∈ I, 𝓟 (s i)) := by
   simp only [nhdsWithin, nhds_pi, Filter.pi, comap_inf, comap_infi, pi_def, comap_principal, ←
-    infi_principal_finite hI, ← infi_inf_eq]
+    infi_principal_finite hI, ← infᵢ_inf_eq]
 #align nhds_within_pi_eq' nhds_within_pi_eq'
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » I) -/
@@ -338,8 +338,8 @@ theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, Topological
   by
   simp only [nhdsWithin, nhds_pi, Filter.pi, pi_def, ← infi_principal_finite hI, comap_inf,
     comap_principal, eval]
-  rw [infi_split _ fun i => i ∈ I, inf_right_comm]
-  simp only [infi_inf_eq]
+  rw [infᵢ_split _ fun i => i ∈ I, inf_right_comm]
+  simp only [infᵢ_inf_eq]
 #align nhds_within_pi_eq nhds_within_pi_eq
 
 theorem nhds_within_pi_univ_eq {ι : Type _} {α : ι → Type _} [Finite ι]
@@ -409,19 +409,19 @@ theorem principal_subtype {α : Type _} (s : Set α) (t : Set { x // x ∈ s }) 
   rw [comap_principal, Set.preimage_image_eq _ Subtype.coe_injective]
 #align principal_subtype principal_subtype
 
-theorem nhdsWithinNeBotOfMem {s : Set α} {x : α} (hx : x ∈ s) : NeBot (𝓝[s] x) :=
+theorem nhds_within_ne_bot_of_mem {s : Set α} {x : α} (hx : x ∈ s) : NeBot (𝓝[s] x) :=
   mem_closure_iff_nhds_within_ne_bot.1 <| subset_closure hx
-#align nhds_within_ne_bot_of_mem nhdsWithinNeBotOfMem
+#align nhds_within_ne_bot_of_mem nhds_within_ne_bot_of_mem
 
 theorem IsClosed.mem_of_nhds_within_ne_bot {s : Set α} (hs : IsClosed s) {x : α}
     (hx : ne_bot <| 𝓝[s] x) : x ∈ s := by
   simpa only [hs.closure_eq] using mem_closure_iff_nhds_within_ne_bot.2 hx
 #align is_closed.mem_of_nhds_within_ne_bot IsClosed.mem_of_nhds_within_ne_bot
 
-theorem DenseRange.nhdsWithinNeBot {ι : Type _} {f : ι → α} (h : DenseRange f) (x : α) :
+theorem DenseRange.nhds_within_ne_bot {ι : Type _} {f : ι → α} (h : DenseRange f) (x : α) :
     NeBot (𝓝[range f] x) :=
   mem_closure_iff_cluster_pt.1 (h x)
-#align dense_range.nhds_within_ne_bot DenseRange.nhdsWithinNeBot
+#align dense_range.nhds_within_ne_bot DenseRange.nhds_within_ne_bot
 
 theorem mem_closure_pi {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι}
     {s : ∀ i, Set (α i)} {x : ∀ i, α i} : x ∈ closure (pi I s) ↔ ∀ i ∈ I, x i ∈ closure (s i) := by
@@ -574,7 +574,7 @@ theorem ContinuousWithinAt.tendsto_nhds_within {f : α → β} {x : α} {s : Set
 
 theorem ContinuousWithinAt.tendsto_nhds_within_image {f : α → β} {x : α} {s : Set α}
     (h : ContinuousWithinAt f s x) : Tendsto f (𝓝[s] x) (𝓝[f '' s] f x) :=
-  h.tendsto_nhds_within (maps_to_image _ _)
+  h.tendsto_nhds_within (mapsTo_image _ _)
 #align continuous_within_at.tendsto_nhds_within_image ContinuousWithinAt.tendsto_nhds_within_image
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -761,7 +761,7 @@ theorem Set.MapsTo.closure_of_continuous_on {f : α → β} {s : Set α} {t : Se
 
 theorem ContinuousWithinAt.image_closure {f : α → β} {s : Set α}
     (hf : ∀ x ∈ closure s, ContinuousWithinAt f s x) : f '' closure s ⊆ closure (f '' s) :=
-  maps_to'.1 <| (maps_to_image f s).closure_of_continuous_within_at hf
+  mapsTo'.1 <| (mapsTo_image f s).closure_of_continuous_within_at hf
 #align continuous_within_at.image_closure ContinuousWithinAt.image_closure
 
 theorem ContinuousOn.image_closure {f : α → β} {s : Set α} (hf : ContinuousOn f (closure s)) :
@@ -897,7 +897,7 @@ theorem ContinuousWithinAt.comp' {g : β → γ} {f : α → β} {s : Set α} {t
 
 theorem ContinuousAt.comp_continuous_within_at {g : β → γ} {f : α → β} {s : Set α} {x : α}
     (hg : ContinuousAt g (f x)) (hf : ContinuousWithinAt f s x) : ContinuousWithinAt (g ∘ f) s x :=
-  hg.ContinuousWithinAt.comp hf (maps_to_univ _ _)
+  hg.ContinuousWithinAt.comp hf (mapsTo_univ _ _)
 #align continuous_at.comp_continuous_within_at ContinuousAt.comp_continuous_within_at
 
 theorem ContinuousOn.comp {g : β → γ} {f : α → β} {s : Set α} {t : Set β} (hg : ContinuousOn g t)
@@ -930,7 +930,7 @@ theorem Continuous.continuous_within_at {f : α → β} {s : Set α} {x : α} (h
 
 theorem Continuous.comp_continuous_on {g : β → γ} {f : α → β} {s : Set α} (hg : Continuous g)
     (hf : ContinuousOn f s) : ContinuousOn (g ∘ f) s :=
-  hg.ContinuousOn.comp hf (maps_to_univ _ _)
+  hg.ContinuousOn.comp hf (mapsTo_univ _ _)
 #align continuous.comp_continuous_on Continuous.comp_continuous_on
 
 theorem ContinuousOn.comp_continuous {g : β → γ} {f : α → β} {s : Set β} (hg : ContinuousOn g s)
@@ -964,7 +964,7 @@ theorem Function.LeftInverse.map_nhds_eq {f : α → β} {g : β → α} {x : β
 
 theorem ContinuousWithinAt.preimage_mem_nhds_within' {f : α → β} {x : α} {s : Set α} {t : Set β}
     (h : ContinuousWithinAt f s x) (ht : t ∈ 𝓝[f '' s] f x) : f ⁻¹' t ∈ 𝓝[s] x :=
-  h.tendsto_nhds_within (maps_to_image _ _) ht
+  h.tendsto_nhds_within (mapsTo_image _ _) ht
 #align continuous_within_at.preimage_mem_nhds_within' ContinuousWithinAt.preimage_mem_nhds_within'
 
 theorem Filter.EventuallyEq.congr_continuous_within_at {f g : α → β} {s : Set α} {x : α}

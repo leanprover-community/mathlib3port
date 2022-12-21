@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.semisimple
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ class IsSemisimple : Prop where
 
 theorem is_semisimple_iff_no_solvable_ideals :
     IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsSolvable R I → I = ⊥ :=
-  ⟨fun h => Sup_eq_bot.mp h.semisimple, fun h => ⟨Sup_eq_bot.mpr h⟩⟩
+  ⟨fun h => supₛ_eq_bot.mp h.semisimple, fun h => ⟨supₛ_eq_bot.mpr h⟩⟩
 #align
   lie_algebra.is_semisimple_iff_no_solvable_ideals LieAlgebra.is_semisimple_iff_no_solvable_ideals
 

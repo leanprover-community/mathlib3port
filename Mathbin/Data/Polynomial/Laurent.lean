@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.polynomial.laurent
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -545,14 +545,13 @@ theorem is_localization : IsLocalization (Submonoid.closure ({x} : Set R[X])) R[
   { map_units := fun t => by 
       cases' t with t ht
       rcases submonoid.mem_closure_singleton.mp ht with ⟨n, rfl⟩
-      simp only [is_unit_T n, SetLike.coe_mk, algebra_map_eq_to_laurent,
-        Polynomial.to_laurent_X_pow]
+      simp only [is_unit_T n, [anonymous], algebra_map_eq_to_laurent, Polynomial.to_laurent_X_pow]
     surj := fun f => by
       induction' f using LaurentPolynomial.induction_on_mul_T with f n
       have := (Submonoid.closure ({X} : Set R[X])).pow_mem Submonoid.mem_closure_singleton_self n
       refine' ⟨(f, ⟨_, this⟩), _⟩
-      simp only [SetLike.coe_mk, algebra_map_eq_to_laurent, Polynomial.to_laurent_X_pow,
-        mul_T_assoc, add_left_neg, T_zero, mul_one]
+      simp only [[anonymous], algebra_map_eq_to_laurent, Polynomial.to_laurent_X_pow, mul_T_assoc,
+        add_left_neg, T_zero, mul_one]
     eq_iff_exists := fun f g => by
       rw [algebra_map_eq_to_laurent, algebra_map_eq_to_laurent, Polynomial.to_laurent_inj]
       refine' ⟨_, _⟩

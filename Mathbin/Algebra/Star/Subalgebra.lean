@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.subalgebra
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -555,7 +555,7 @@ def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a : A, a ∈ s → ∀ b :
     mul_comm := by 
       rintro ⟨x, hx⟩ ⟨y, hy⟩
       ext
-      simp only [SetLike.coe_mk, MulMemClass.mk_mul_mk]
+      simp only [[anonymous], MulMemClass.mk_mul_mk]
       rw [← mem_to_subalgebra, adjoin_to_subalgebra] at hx hy
       letI : CommSemiring (Algebra.adjoin R (s ∪ star s)) :=
         Algebra.adjoinCommSemiringOfComm R
@@ -668,17 +668,17 @@ theorem inf_to_subalgebra (S T : StarSubalgebra R A) :
 #align star_subalgebra.inf_to_subalgebra StarSubalgebra.inf_to_subalgebra
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (StarSubalgebra R A)) : (↑(inf S) : Set A) = ⋂ s ∈ S, ↑s :=
-  Inf_image
+theorem coe_Inf (S : Set (StarSubalgebra R A)) : (↑(infₛ S) : Set A) = ⋂ s ∈ S, ↑s :=
+  infₛ_image
 #align star_subalgebra.coe_Inf StarSubalgebra.coe_Inf
 
-theorem mem_Inf {S : Set (StarSubalgebra R A)} {x : A} : x ∈ inf S ↔ ∀ p ∈ S, x ∈ p := by
+theorem mem_Inf {S : Set (StarSubalgebra R A)} {x : A} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p := by
   simp only [← SetLike.mem_coe, coe_Inf, Set.mem_Inter₂]
 #align star_subalgebra.mem_Inf StarSubalgebra.mem_Inf
 
 @[simp]
 theorem Inf_to_subalgebra (S : Set (StarSubalgebra R A)) :
-    (inf S).toSubalgebra = inf (StarSubalgebra.toSubalgebra '' S) :=
+    (infₛ S).toSubalgebra = infₛ (StarSubalgebra.toSubalgebra '' S) :=
   SetLike.coe_injective <| by simp
 #align star_subalgebra.Inf_to_subalgebra StarSubalgebra.Inf_to_subalgebra
 

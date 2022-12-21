@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.Scheme
-! leanprover-community/mathlib commit 550b58538991c8977703fdeb7c9d51a5aa27df11
+! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -225,7 +225,7 @@ def spec : CommRingCatᵒᵖ ⥤ Scheme where
 def empty.{u} : SchemeCat.{u} where 
   carrier := TopCat.of PEmpty
   Presheaf := (CategoryTheory.Functor.const _).obj (CommRingCat.of PUnit)
-  IsSheaf := Presheaf.isSheafOfIsTerminal _ CommRingCat.punitIsTerminal
+  IsSheaf := Presheaf.is_sheaf_of_is_terminal _ CommRingCat.punitIsTerminal
   LocalRing x := PEmpty.elim x
   local_affine x := PEmpty.elim x
 #align algebraic_geometry.Scheme.empty AlgebraicGeometry.SchemeCat.empty
