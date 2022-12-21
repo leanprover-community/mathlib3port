@@ -1754,6 +1754,7 @@ import Mathbin.FieldTheory.Subfield
 import Mathbin.FieldTheory.Tower
 import Mathbin.Geometry.Euclidean.Angle.Oriented.Affine
 import Mathbin.Geometry.Euclidean.Angle.Oriented.Basic
+import Mathbin.Geometry.Euclidean.Angle.Oriented.RightAngle
 import Mathbin.Geometry.Euclidean.Angle.Sphere
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.Affine
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.Basic

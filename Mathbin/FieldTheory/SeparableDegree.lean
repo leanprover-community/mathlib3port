@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach
 
 ! This file was ported from Lean 3 source module field_theory.separable_degree
-! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
+! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,39 +118,18 @@ theorem Irreducible.has_separable_contraction (q : ℕ) [hF : ExpChar F q] (f : 
     exact ⟨g, hgs, n, hge⟩
 #align irreducible.has_separable_contraction Irreducible.has_separable_contraction
 
-/-- A helper lemma: if two expansions (along the positive characteristic) of two polynomials `g` and
-`g'` agree, and the one with the larger degree is separable, then their degrees are the same. -/
-theorem contraction_degree_eq_aux [hq : Fact q.Prime] [hF : CharP F q] (g g' : F[X]) (m m' : ℕ)
-    (h_expand : expand F (q ^ m) g = expand F (q ^ m') g') (h : m < m') (hg : g.Separable) :
-    g.natDegree = g'.natDegree := by
-  obtain ⟨s, rfl⟩ := Nat.exists_eq_add_of_lt h
-  rw [add_assoc, pow_add, expand_mul] at h_expand
-  let aux := expand_injective (pow_pos hq.1.Pos m) h_expand
-  rw [aux] at hg
-  have :=
-    (is_unit_or_eq_zero_of_separable_expand q (s + 1) hq.out.pos hg).resolve_right s.succ_ne_zero
-  rw [aux, nat_degree_expand, nat_degree_eq_of_degree_eq_some (degree_eq_zero_of_is_unit this),
-    zero_mul]
-#align polynomial.contraction_degree_eq_aux Polynomial.contraction_degree_eq_aux
-
-/-- If two expansions (along the positive characteristic) of two separable polynomials
-`g` and `g'` agree, then they have the same degree. -/
-theorem contraction_degree_eq_or_insep [hq : Fact q.Prime] [CharP F q] (g g' : F[X]) (m m' : ℕ)
+/-- If two expansions (along the positive characteristic) of two separable polynomials `g` and `g'`
+agree, then they have the same degree. -/
+theorem contraction_degree_eq_or_insep [hq : NeZero q] [CharP F q] (g g' : F[X]) (m m' : ℕ)
     (h_expand : expand F (q ^ m) g = expand F (q ^ m') g') (hg : g.Separable) (hg' : g'.Separable) :
-    g.natDegree = g'.natDegree := by 
-  by_cases h : m = m'
-  · -- if `m = m'` then we show `g.nat_degree = g'.nat_degree` by unfolding the definitions
-    rw [h] at h_expand
-    have expand_deg : ((expand F (q ^ m')) g).natDegree = (expand F (q ^ m') g').natDegree := by
-      rw [h_expand]
-    rw [nat_degree_expand (q ^ m') g, nat_degree_expand (q ^ m') g'] at expand_deg
-    apply Nat.eq_of_mul_eq_mul_left (pow_pos hq.1.Pos m')
-    rw [mul_comm] at expand_deg
-    rw [expand_deg]
-    rw [mul_comm]
-  · cases Ne.lt_or_lt h
-    · exact contraction_degree_eq_aux q g g' m m' h_expand h_1 hg
-    · exact (contraction_degree_eq_aux q g' g m' m h_expand.symm h_1 hg').symm
+    g.natDegree = g'.natDegree := by
+  wlog hm : m ≤ m' := le_total m m' using m m' g g', m' m g' g
+  obtain ⟨s, rfl⟩ := exists_add_of_le hm
+  rw [pow_add, expand_mul, expand_inj (pow_pos (NeZero.pos q) m)] at h_expand
+  subst h_expand
+  rcases is_unit_or_eq_zero_of_separable_expand q s (NeZero.pos q) hg with (h | rfl)
+  · rw [nat_degree_expand, nat_degree_eq_zero_of_is_unit h, zero_mul]
+  · rw [nat_degree_expand, pow_zero, mul_one]
 #align polynomial.contraction_degree_eq_or_insep Polynomial.contraction_degree_eq_or_insep
 
 /-- The separable degree equals the degree of any separable contraction, i.e., it is unique. -/
