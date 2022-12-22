@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.hom.complete_lattice
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1236,7 +1236,9 @@ end CompleteLatticeHom
 
 namespace CompleteLatticeHom
 
-/-- `set.preimage` as a complete lattice homomorphism. -/
+/-- `set.preimage` as a complete lattice homomorphism.
+
+See also `Sup_hom.set_image`. -/
 def setPreimage (f : α → β) :
     CompleteLatticeHom (Set β) (Set
         α) where 
@@ -1267,4 +1269,37 @@ theorem set_preimage_comp (g : β → γ) (f : α → β) :
 #align complete_lattice_hom.set_preimage_comp CompleteLatticeHom.set_preimage_comp
 
 end CompleteLatticeHom
+
+theorem Set.image_Sup {f : α → β} (s : Set (Set α)) : f '' supₛ s = supₛ (image f '' s) := by
+  ext b
+  simp only [Sup_eq_sUnion, mem_image, mem_sUnion, exists_prop, sUnion_image, mem_Union]
+  constructor
+  · rintro ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
+    exact ⟨t, ht₁, a, ht₂, rfl⟩
+  · rintro ⟨t, ht₁, a, ht₂, rfl⟩
+    exact ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
+#align set.image_Sup Set.image_Sup
+
+/-- Using `set.image`, a function between types yields a `Sup_hom` between their lattices of
+subsets.
+
+See also `complete_lattice_hom.set_preimage`. -/
+@[simps]
+def SupHom.setImage (f : α → β) :
+    SupHom (Set α) (Set β) where 
+  toFun := image f
+  map_Sup' := Set.image_Sup
+#align Sup_hom.set_image SupHom.setImage
+
+/-- An equivalence of types yields an order isomorphism between their lattices of subsets. -/
+@[simps]
+def Equiv.toOrderIsoSet (e : α ≃ β) :
+    Set α ≃o Set β where 
+  toFun := image e
+  invFun := image e.symm
+  left_inv s := by simp only [← image_comp, Equiv.symm_comp_self, id.def, image_id']
+  right_inv s := by simp only [← image_comp, Equiv.self_comp_symm, id.def, image_id']
+  map_rel_iff' s t :=
+    ⟨fun h => by simpa using @monotone_image _ _ e.symm _ _ h, fun h => monotone_image h⟩
+#align equiv.to_order_iso_set Equiv.toOrderIsoSet
 

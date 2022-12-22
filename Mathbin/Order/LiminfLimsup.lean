@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.liminf_limsup
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -919,19 +919,19 @@ theorem bliminf_antitone (h : ∀ x, p x → q x) : bliminf u f q ≤ bliminf u 
   supₛ_le_supₛ fun a ha => ha.mono <| by tauto
 #align filter.bliminf_antitone Filter.bliminf_antitone
 
-theorem mono_blimsup' (h : ∀ᶠ x in f, u x ≤ v x) : blimsup u f p ≤ blimsup v f p :=
-  infₛ_le_infₛ fun a ha => (ha.And h).mono fun x hx hx' => hx.2.trans (hx.1 hx')
+theorem mono_blimsup' (h : ∀ᶠ x in f, p x → u x ≤ v x) : blimsup u f p ≤ blimsup v f p :=
+  infₛ_le_infₛ fun a ha => (ha.And h).mono fun x hx hx' => (hx.2 hx').trans (hx.1 hx')
 #align filter.mono_blimsup' Filter.mono_blimsup'
 
-theorem mono_blimsup (h : ∀ x, u x ≤ v x) : blimsup u f p ≤ blimsup v f p :=
+theorem mono_blimsup (h : ∀ x, p x → u x ≤ v x) : blimsup u f p ≤ blimsup v f p :=
   mono_blimsup' <| eventually_of_forall h
 #align filter.mono_blimsup Filter.mono_blimsup
 
-theorem mono_bliminf' (h : ∀ᶠ x in f, u x ≤ v x) : bliminf u f p ≤ bliminf v f p :=
-  supₛ_le_supₛ fun a ha => (ha.And h).mono fun x hx hx' => (hx.1 hx').trans hx.2
+theorem mono_bliminf' (h : ∀ᶠ x in f, p x → u x ≤ v x) : bliminf u f p ≤ bliminf v f p :=
+  supₛ_le_supₛ fun a ha => (ha.And h).mono fun x hx hx' => (hx.1 hx').trans (hx.2 hx')
 #align filter.mono_bliminf' Filter.mono_bliminf'
 
-theorem mono_bliminf (h : ∀ x, u x ≤ v x) : bliminf u f p ≤ bliminf v f p :=
+theorem mono_bliminf (h : ∀ x, p x → u x ≤ v x) : bliminf u f p ≤ bliminf v f p :=
   mono_bliminf' <| eventually_of_forall h
 #align filter.mono_bliminf Filter.mono_bliminf
 
@@ -964,6 +964,32 @@ theorem blimsup_sup_le_or : blimsup u f p ⊔ blimsup u f q ≤ blimsup u f fun 
 theorem bliminf_or_le_inf : (bliminf u f fun x => p x ∨ q x) ≤ bliminf u f p ⊓ bliminf u f q :=
   @blimsup_sup_le_or αᵒᵈ β _ f p q u
 #align filter.bliminf_or_le_inf Filter.bliminf_or_le_inf
+
+theorem OrderIso.apply_blimsup [CompleteLattice γ] (e : α ≃o γ) :
+    e (blimsup u f p) = blimsup (e ∘ u) f p := by
+  simp only [blimsup_eq, map_Inf, Function.comp_apply]
+  congr
+  ext c
+  obtain ⟨a, rfl⟩ := e.surjective c
+  simp
+#align filter.order_iso.apply_blimsup Filter.OrderIso.apply_blimsup
+
+theorem OrderIso.apply_bliminf [CompleteLattice γ] (e : α ≃o γ) :
+    e (bliminf u f p) = bliminf (e ∘ u) f p :=
+  @OrderIso.apply_blimsup αᵒᵈ β γᵒᵈ _ f p u _ e.dual
+#align filter.order_iso.apply_bliminf Filter.OrderIso.apply_bliminf
+
+theorem SupHom.apply_blimsup_le [CompleteLattice γ] (g : SupHom α γ) :
+    g (blimsup u f p) ≤ blimsup (g ∘ u) f p := by
+  simp only [blimsup_eq_infi_bsupr]
+  refine' ((OrderHomClass.mono g).map_infi₂_le _).trans _
+  simp only [_root_.map_supr]
+#align filter.Sup_hom.apply_blimsup_le Filter.SupHom.apply_blimsup_le
+
+theorem InfHom.le_apply_bliminf [CompleteLattice γ] (g : InfHom α γ) :
+    bliminf (g ∘ u) f p ≤ g (bliminf u f p) :=
+  @SupHom.apply_blimsup_le αᵒᵈ β γᵒᵈ _ f p u _ g.dual
+#align filter.Inf_hom.le_apply_bliminf Filter.InfHom.le_apply_bliminf
 
 end CompleteLattice
 

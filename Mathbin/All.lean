@@ -1666,6 +1666,7 @@ import Mathbin.Data.Set.Pointwise.BigOperators
 import Mathbin.Data.Set.Pointwise.Finite
 import Mathbin.Data.Set.Pointwise.Interval
 import Mathbin.Data.Set.Pointwise.Iterate
+import Mathbin.Data.Set.Pointwise.ListOfFn
 import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Data.Set.Pointwise.Support
 import Mathbin.Data.Set.Prod
@@ -2384,6 +2385,7 @@ import Mathbin.Probability.Density
 import Mathbin.Probability.IdentDistrib
 import Mathbin.Probability.Independence
 import Mathbin.Probability.Integration
+import Mathbin.Probability.Kernel.Basic
 import Mathbin.Probability.Martingale.Basic
 import Mathbin.Probability.Martingale.BorelCantelli
 import Mathbin.Probability.Martingale.Centering

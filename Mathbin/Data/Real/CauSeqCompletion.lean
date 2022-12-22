@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.real.cau_seq_completion
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,6 +106,39 @@ theorem mk_sub (f g : CauSeq β abv) : mk f - mk g = mk (f - g) :=
   rfl
 #align cau_seq.completion.mk_sub CauSeq.Completion.mk_sub
 
+instance {γ : Type _} [HasSmul γ β] [IsScalarTower γ β β] : HasSmul γ Cauchy :=
+  ⟨fun c => (Quotient.map ((· • ·) c)) fun f₁ g₁ hf => smul_equiv_smul _ hf⟩
+
+@[simp]
+theorem mk_smul {γ : Type _} [HasSmul γ β] [IsScalarTower γ β β] (c : γ) (f : CauSeq β abv) :
+    c • mk f = mk (c • f) :=
+  rfl
+#align cau_seq.completion.mk_smul CauSeq.Completion.mk_smul
+
+instance : Pow Cauchy ℕ :=
+  ⟨fun x n => Quotient.map (· ^ n) (fun f₁ g₁ hf => pow_equiv_pow hf _) x⟩
+
+@[simp]
+theorem mk_pow (n : ℕ) (f : CauSeq β abv) : mk f ^ n = mk (f ^ n) :=
+  rfl
+#align cau_seq.completion.mk_pow CauSeq.Completion.mk_pow
+
+instance : NatCast Cauchy :=
+  ⟨fun n => mk n⟩
+
+instance : IntCast Cauchy :=
+  ⟨fun n => mk n⟩
+
+@[simp]
+theorem of_rat_nat_cast (n : ℕ) : of_rat n = n :=
+  rfl
+#align cau_seq.completion.of_rat_nat_cast CauSeq.Completion.of_rat_nat_cast
+
+@[simp]
+theorem of_rat_int_cast (z : ℤ) : of_rat z = z :=
+  rfl
+#align cau_seq.completion.of_rat_int_cast CauSeq.Completion.of_rat_int_cast
+
 theorem of_rat_add (x y : β) : of_rat (x + y) = of_rat x + of_rat y :=
   congr_arg mk (const_add _ _)
 #align cau_seq.completion.of_rat_add CauSeq.Completion.of_rat_add
@@ -126,51 +159,11 @@ private theorem one_def : 1 = mk 1 :=
   rfl
 #align cau_seq.completion.one_def cau_seq.completion.one_def
 
-instance : AddGroup Cauchy := by
-  refine'
-        { add := (· + ·)
-          zero := (0 : Cauchy)
-          sub := Sub.sub
-          neg := Neg.neg
-          sub_eq_add_neg := _
-          nsmul := nsmulRec
-          zsmul := zsmulRec.. } <;>
-      try intros <;> rfl <;>
-    · repeat' refine' fun a => Quotient.induction_on a fun _ => _
-      simp [zero_def, add_comm, add_left_comm, sub_eq_neg_add]
-
-instance : AddGroupWithOne Cauchy :=
-  { Cauchy.add_group with 
-    natCast := fun n => mk n
-    nat_cast_zero := congr_arg mk Nat.cast_zero
-    nat_cast_succ := fun n => congr_arg mk (Nat.cast_succ n)
-    intCast := fun n => mk n
-    int_cast_of_nat := fun n => congr_arg mk (Int.cast_of_nat n)
-    int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_negSucc n)
-    one := 1 }
-
-@[simp]
-theorem of_rat_nat_cast (n : ℕ) : of_rat n = n :=
-  rfl
-#align cau_seq.completion.of_rat_nat_cast CauSeq.Completion.of_rat_nat_cast
-
-@[simp]
-theorem of_rat_int_cast (z : ℤ) : of_rat z = z :=
-  rfl
-#align cau_seq.completion.of_rat_int_cast CauSeq.Completion.of_rat_int_cast
-
-instance : Ring Cauchy := by
-  refine'
-        { Cauchy.add_group_with_one with 
-          add := (· + ·)
-          zero := (0 : Cauchy)
-          mul := (· * ·)
-          one := 1
-          npow := npowRec.. } <;>
-      try intros <;> rfl <;>
-    · repeat' refine' fun a => Quotient.induction_on a fun _ => _
-      simp [zero_def, one_def, mul_add, add_mul, add_comm, add_left_comm, sub_eq_add_neg, ←
-        mul_assoc]
+instance : Ring Cauchy :=
+  Function.Surjective.ring mk (surjective_quotient_mk _) zero_def.symm one_def.symm
+    (fun _ _ => (mk_add _ _).symm) (fun _ _ => (mk_mul _ _).symm) (fun _ => (mk_neg _).symm)
+    (fun _ _ => (mk_sub _ _).symm) (fun _ _ => (mk_smul _ _).symm) (fun _ _ => (mk_smul _ _).symm)
+    (fun _ _ => (mk_pow _ _).symm) (fun _ => rfl) fun _ => rfl
 
 /-- `cau_seq.completion.of_rat` as a `ring_hom`  -/
 @[simps]
@@ -198,8 +191,10 @@ parameter {β : Type _}[CommRing β]{abv : β → α}[IsAbsoluteValue abv]
 local notation "Cauchy" => @CauchyCat _ _ _ _ abv _
 
 instance : CommRing Cauchy :=
-  { CauchyCat.ring with
-    mul_comm := Quotient.ind₂ fun a b => congr_arg Quotient.mk'' <| mul_comm a b }
+  Function.Surjective.commRing mk (surjective_quotient_mk _) zero_def.symm one_def.symm
+    (fun _ _ => (mk_add _ _).symm) (fun _ _ => (mk_mul _ _).symm) (fun _ => (mk_neg _).symm)
+    (fun _ _ => (mk_sub _ _).symm) (fun _ _ => (mk_smul _ _).symm) (fun _ _ => (mk_smul _ _).symm)
+    (fun _ _ => (mk_pow _ _).symm) (fun _ => rfl) fun _ => rfl
 
 end
 

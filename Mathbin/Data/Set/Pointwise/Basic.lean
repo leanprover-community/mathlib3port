@@ -4,12 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.basic
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Algebra.GroupPower.Basic
+import Mathbin.Algebra.Hom.Equiv.Basic
+import Mathbin.Algebra.Hom.Units
 import Mathbin.Data.Set.Lattice
-import Mathbin.Data.List.OfFn
+import Mathbin.Data.Nat.Order.Basic
 
 /-!
 # Pointwise operations of sets
@@ -805,39 +808,6 @@ theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ 
   · rw [pow_succ]
     exact ih.trans (subset_mul_right _ hs)
 #align set.pow_subset_pow_of_one_mem Set.pow_subset_pow_of_one_mem
-
-@[to_additive]
-theorem mem_prod_list_of_fn {a : α} {s : Fin n → Set α} :
-    a ∈ (List.ofFn s).Prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).Prod = a := by
-  induction' n with n ih generalizing a
-  · simp_rw [List.of_fn_zero, List.prod_nil, Fin.exists_fin_zero_pi, eq_comm, Set.mem_one]
-  ·
-    simp_rw [List.of_fn_succ, List.prod_cons, Fin.exists_fin_succ_pi, Fin.cons_zero, Fin.cons_succ,
-      mem_mul, @ih, exists_and_left, exists_exists_eq_and, SetCoe.exists, Subtype.coe_mk,
-      exists_prop]
-#align set.mem_prod_list_of_fn Set.mem_prod_list_of_fn
-
-@[to_additive]
-theorem mem_list_prod {l : List (Set α)} {a : α} :
-    a ∈ l.Prod ↔
-      ∃ l' : List (Σs : Set α, ↥s),
-        List.prod (l'.map fun x => (Sigma.snd x : α)) = a ∧ l'.map Sigma.fst = l :=
-  by 
-  induction' l using List.ofFnRec with n f
-  simp_rw [List.exists_iff_exists_tuple, List.map_of_fn, List.of_fn_inj', and_left_comm,
-    exists_and_left, exists_eq_left, heq_iff_eq, Function.comp, mem_prod_list_of_fn]
-  constructor
-  · rintro ⟨fi, rfl⟩
-    exact ⟨fun i => ⟨_, fi i⟩, rfl, rfl⟩
-  · rintro ⟨fi, rfl, rfl⟩
-    exact ⟨fun i => _, rfl⟩
-#align set.mem_list_prod Set.mem_list_prod
-
-@[to_additive]
-theorem mem_pow {a : α} {n : ℕ} :
-    a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.ofFn fun i => (f i : α)).Prod = a := by
-  rw [← mem_prod_list_of_fn, List.of_fn_const, List.prod_repeat]
-#align set.mem_pow Set.mem_pow
 
 @[simp, to_additive]
 theorem empty_pow {n : ℕ} (hn : n ≠ 0) : (∅ : Set α) ^ n = ∅ := by

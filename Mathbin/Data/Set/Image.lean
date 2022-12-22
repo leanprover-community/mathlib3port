@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.image
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -490,6 +490,10 @@ theorem image_subset {a b : Set α} (f : α → β) (h : a ⊆ b) : f '' a ⊆ f
   simp only [subset_def, mem_image]
   exact fun x => fun ⟨w, h1, h2⟩ => ⟨w, h h1, h2⟩
 #align set.image_subset Set.image_subset
+
+/-- `set.image` is monotone. See `set.image_subset` for the statement in terms of `⊆`. -/
+theorem monotone_image {f : α → β} : Monotone (image f) := fun s t => image_subset _
+#align set.monotone_image Set.monotone_image
 
 /- warning: set.image_union -> Set.image_union is a dubious translation:
 lean 3 declaration is
@@ -2544,7 +2548,7 @@ namespace Set
 
 open Function
 
-/-! ### Injectivity and sur<jectivity lemmas for image and preimage -/
+/-! ### Injectivity and surjectivity lemmas for image and preimage -/
 
 
 section ImagePreimage
@@ -2605,4 +2609,65 @@ theorem eq_preimage_iff_image_eq {f : α → β} (hf : Bijective f) {s t} : s = 
 end ImagePreimage
 
 end Set
+
+/-! ### Disjoint lemmas for image and preimage -/
+
+
+section Disjoint
+
+variable {α β γ : Type _} {f : α → β} {s t : Set α}
+
+theorem Disjoint.preimage (f : α → β) {s t : Set β} (h : Disjoint s t) :
+    Disjoint (f ⁻¹' s) (f ⁻¹' t) :=
+  disjoint_iff_inf_le.mpr fun x hx => h.le_bot hx
+#align disjoint.preimage Disjoint.preimage
+
+namespace Set
+
+theorem disjoint_image_image {f : β → α} {g : γ → α} {s : Set β} {t : Set γ}
+    (h : ∀ b ∈ s, ∀ c ∈ t, f b ≠ g c) : Disjoint (f '' s) (g '' t) :=
+  disjoint_iff_inf_le.mpr <| by rintro a ⟨⟨b, hb, eq⟩, c, hc, rfl⟩ <;> exact h b hb c hc Eq
+#align set.disjoint_image_image Set.disjoint_image_image
+
+theorem disjoint_image_of_injective {f : α → β} (hf : Injective f) {s t : Set α}
+    (hd : Disjoint s t) : Disjoint (f '' s) (f '' t) :=
+  disjoint_image_image fun x hx y hy => hf.Ne fun H => Set.disjoint_iff.1 hd ⟨hx, H.symm ▸ hy⟩
+#align set.disjoint_image_of_injective Set.disjoint_image_of_injective
+
+theorem Disjoint.of_image (h : Disjoint (f '' s) (f '' t)) : Disjoint s t :=
+  disjoint_iff_inf_le.mpr fun x hx =>
+    disjoint_left.1 h (mem_image_of_mem _ hx.1) (mem_image_of_mem _ hx.2)
+#align disjoint.of_image Disjoint.of_image
+
+theorem disjoint_image_iff (hf : Injective f) : Disjoint (f '' s) (f '' t) ↔ Disjoint s t :=
+  ⟨Disjoint.of_image, disjoint_image_of_injective hf⟩
+#align set.disjoint_image_iff Set.disjoint_image_iff
+
+theorem Disjoint.of_preimage (hf : Surjective f) {s t : Set β} (h : Disjoint (f ⁻¹' s) (f ⁻¹' t)) :
+    Disjoint s t := by
+  rw [disjoint_iff_inter_eq_empty, ← image_preimage_eq (_ ∩ _) hf, preimage_inter, h.inter_eq,
+    image_empty]
+#align disjoint.of_preimage Disjoint.of_preimage
+
+theorem disjoint_preimage_iff (hf : Surjective f) {s t : Set β} :
+    Disjoint (f ⁻¹' s) (f ⁻¹' t) ↔ Disjoint s t :=
+  ⟨Disjoint.of_preimage hf, Disjoint.preimage _⟩
+#align set.disjoint_preimage_iff Set.disjoint_preimage_iff
+
+theorem preimage_eq_empty {f : α → β} {s : Set β} (h : Disjoint s (range f)) : f ⁻¹' s = ∅ := by
+  simpa using h.preimage f
+#align set.preimage_eq_empty Set.preimage_eq_empty
+
+theorem preimage_eq_empty_iff {s : Set β} : f ⁻¹' s = ∅ ↔ Disjoint s (range f) :=
+  ⟨fun h => by
+    simp only [eq_empty_iff_forall_not_mem, disjoint_iff_inter_eq_empty, not_exists, mem_inter_iff,
+      not_and, mem_range, mem_preimage] at h⊢
+    intro y hy x hx
+    rw [← hx] at hy
+    exact h x hy, preimage_eq_empty⟩
+#align set.preimage_eq_empty_iff Set.preimage_eq_empty_iff
+
+end Set
+
+end Disjoint
 

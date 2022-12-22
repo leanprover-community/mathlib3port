@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed.field.basic
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -820,6 +820,10 @@ theorem Int.norm_eq_abs (n : ℤ) : ‖n‖ = |n| :=
   rfl
 #align int.norm_eq_abs Int.norm_eq_abs
 
+@[simp]
+theorem Int.norm_coe_nat (n : ℕ) : ‖(n : ℤ)‖ = n := by simp [Int.norm_eq_abs]
+#align int.norm_coe_nat Int.norm_coe_nat
+
 theorem Nnreal.coe_nat_abs (n : ℤ) : (n.natAbs : ℝ≥0) = ‖n‖₊ :=
   Nnreal.eq <|
     calc
@@ -861,35 +865,20 @@ theorem Int.norm_cast_rat (m : ℤ) : ‖(m : ℚ)‖ = ‖m‖ := by
 #align int.norm_cast_rat Int.norm_cast_rat
 
 -- Now that we've installed the norm on `ℤ`,
--- we can state some lemmas about `nsmul` and `zsmul`.
+-- we can state some lemmas about `zsmul`.
 section
 
-variable [SeminormedAddCommGroup α]
+variable [SeminormedCommGroup α]
 
-theorem norm_nsmul_le (n : ℕ) (a : α) : ‖n • a‖ ≤ n * ‖a‖ := by
-  induction' n with n ih
-  · simp only [norm_zero, Nat.cast_zero, zero_mul, zero_smul]
-  simp only [Nat.succ_eq_add_one, add_smul, add_mul, one_mul, Nat.cast_add, Nat.cast_one, one_nsmul]
-  exact norm_add_le_of_le ih le_rfl
-#align norm_nsmul_le norm_nsmul_le
+@[to_additive norm_zsmul_le]
+theorem norm_zpow_le_mul_norm (n : ℤ) (a : α) : ‖a ^ n‖ ≤ ‖n‖ * ‖a‖ := by
+  rcases n.eq_coe_or_neg with ⟨n, rfl | rfl⟩ <;> simpa using norm_pow_le_mul_norm n a
+#align norm_zpow_le_mul_norm norm_zpow_le_mul_norm
 
-theorem norm_zsmul_le (n : ℤ) (a : α) : ‖n • a‖ ≤ ‖n‖ * ‖a‖ := by
-  induction' n with n n
-  · simp only [Int.ofNat_eq_coe, coe_nat_zsmul]
-    convert norm_nsmul_le n a
-    exact Nat.abs_cast n
-  · simp only [Int.negSucc_coe, neg_smul, norm_neg, coe_nat_zsmul]
-    convert norm_nsmul_le n.succ a
-    exact Nat.abs_cast n.succ
-#align norm_zsmul_le norm_zsmul_le
-
-theorem nnnorm_nsmul_le (n : ℕ) (a : α) : ‖n • a‖₊ ≤ n * ‖a‖₊ := by
-  simpa only [← Nnreal.coe_le_coe, Nnreal.coe_mul, Nnreal.coe_nat_cast] using norm_nsmul_le n a
-#align nnnorm_nsmul_le nnnorm_nsmul_le
-
-theorem nnnorm_zsmul_le (n : ℤ) (a : α) : ‖n • a‖₊ ≤ ‖n‖₊ * ‖a‖₊ := by
-  simpa only [← Nnreal.coe_le_coe, Nnreal.coe_mul] using norm_zsmul_le n a
-#align nnnorm_zsmul_le nnnorm_zsmul_le
+@[to_additive nnnorm_zsmul_le]
+theorem nnnorm_zpow_le_mul_norm (n : ℤ) (a : α) : ‖a ^ n‖₊ ≤ ‖n‖₊ * ‖a‖₊ := by
+  simpa only [← Nnreal.coe_le_coe, Nnreal.coe_mul] using norm_zpow_le_mul_norm n a
+#align nnnorm_zpow_le_mul_norm nnnorm_zpow_le_mul_norm
 
 end
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.measure.giry_monad
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,6 +62,13 @@ theorem measurableOfMeasurableCoe (f : β → Measure α)
       MeasurableSpace.comap_le_iff_le_map.2 <| by rw [MeasurableSpace.map_comp] <;> exact h s hs
 #align
   measure_theory.measure.measurable_of_measurable_coe MeasureTheory.Measure.measurableOfMeasurableCoe
+
+instance {α : Type _} {m : MeasurableSpace α} : HasMeasurableAdd₂ (Measure α) := by
+  refine' ⟨measure.measurable_of_measurable_coe _ fun s hs => _⟩
+  simp_rw [measure.coe_add, Pi.add_apply]
+  refine' Measurable.add _ _
+  · exact (measure.measurable_coe hs).comp measurableFst
+  · exact (measure.measurable_coe hs).comp measurableSnd
 
 theorem measurable_measure {μ : α → Measure β} :
     Measurable μ ↔ ∀ (s : Set β) (hs : MeasurableSet s), Measurable fun b => μ b s :=

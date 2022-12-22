@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.liminf_limsup
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le (p : ℕ → Prop) {s : �
   cases' le_or_lt 1 M with hM' hM'
   · apply HasSubset.Subset.eventually_le
     change _ ≤ _
-    refine' mono_blimsup' (hMr.mono fun i hi => cthickening_mono _ (s i))
+    refine' mono_blimsup' (hMr.mono fun i hi hp => cthickening_mono _ (s i))
     exact (le_mul_of_one_le_left (hRp i) hM').trans hi
   · simp only [← @cthickening_closure _ _ _ (s _)]
     have hs : ∀ i, IsClosed (closure (s i)) := fun i => is_closed_closure

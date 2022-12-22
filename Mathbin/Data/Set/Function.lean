@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Andrew Zipperer, Haitao Zhang, Minchao Wu, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.function
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1026,6 +1026,27 @@ theorem range_restrictPreimage : range (t.restrictPreimage f) = coe ⁻¹' range
 #align set.range_restrict_preimage Set.range_restrictPreimage
 -/
 
+variable {f} {U : ι → Set β}
+
+theorem restrict_preimage_injective (hf : Injective f) : Injective (t.restrictPreimage f) :=
+  fun x y e => Subtype.mk.injArrow e fun e => Subtype.coe_injective (hf e)
+#align set.restrict_preimage_injective Set.restrict_preimage_injective
+
+theorem restrict_preimage_surjective (hf : Surjective f) : Surjective (t.restrictPreimage f) :=
+  fun x =>
+  ⟨⟨_, show f (hf x).some ∈ t from (hf x).some_spec.symm ▸ x.2⟩, Subtype.ext (hf x).some_spec⟩
+#align set.restrict_preimage_surjective Set.restrict_preimage_surjective
+
+theorem restrict_preimage_bijective (hf : Bijective f) : Bijective (t.restrictPreimage f) :=
+  ⟨t.restrict_preimage_injective hf.1, t.restrict_preimage_surjective hf.2⟩
+#align set.restrict_preimage_bijective Set.restrict_preimage_bijective
+
+alias Set.restrict_preimage_injective ← _root_.function.injective.restrict_preimage
+
+alias Set.restrict_preimage_surjective ← _root_.function.surjective.restrict_preimage
+
+alias Set.restrict_preimage_bijective ← _root_.function.bijective.restrict_preimage
+
 end
 
 /-! ### Injectivity on a set -/
@@ -1286,6 +1307,23 @@ theorem InjOn.cancel_left (hg : t.InjOn g) (hf₁ : s.MapsTo f₁ t) (hf₂ : s.
     s.EqOn (g ∘ f₁) (g ∘ f₂) ↔ s.EqOn f₁ f₂ :=
   ⟨fun h => h.cancel_left hg hf₁ hf₂, EqOn.comp_left⟩
 #align set.inj_on.cancel_left Set.InjOn.cancel_left
+
+theorem InjOn.image_inter {s t u : Set α} (hf : u.InjOn f) (hs : s ⊆ u) (ht : t ⊆ u) :
+    f '' (s ∩ t) = f '' s ∩ f '' t := by
+  apply subset.antisymm (image_inter_subset _ _ _)
+  rintro x ⟨⟨y, ys, hy⟩, ⟨z, zt, hz⟩⟩
+  have : y = z := by 
+    apply hf (hs ys) (ht zt)
+    rwa [← hz] at hy
+  rw [← this] at zt
+  exact ⟨y, ⟨ys, zt⟩, hy⟩
+#align set.inj_on.image_inter Set.InjOn.image_inter
+
+theorem Disjoint.image {s t u : Set α} {f : α → β} (h : Disjoint s t) (hf : InjOn f u) (hs : s ⊆ u)
+    (ht : t ⊆ u) : Disjoint (f '' s) (f '' t) := by
+  rw [disjoint_iff_inter_eq_empty] at h⊢
+  rw [← hf.image_inter hs ht, h, image_empty]
+#align disjoint.image Disjoint.image
 
 /-! ### Surjectivity on a set -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.pointwise.interval
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -702,7 +702,7 @@ theorem image_mul_const_interval (a b c : α) : (fun x => x * a) '' [b, c] = [b 
   else
     calc
       (fun x => x * a) '' [b, c] = (fun x => x * a⁻¹) ⁻¹' [b, c] :=
-        (Units.mk0 a ha).mulRight.image_eq_preimage _
+        (Units.mk0 a ha).mul_right.image_eq_preimage _
       _ = (fun x => x / a) ⁻¹' [b, c] := by simp only [div_eq_mul_inv]
       _ = [b * a, c * a] := preimage_div_const_interval ha _ _
       
@@ -720,7 +720,7 @@ theorem image_div_const_interval (a b c : α) : (fun x => x / a) '' [b, c] = [b 
 
 theorem image_mul_right_Icc' (a b : α) {c : α} (h : 0 < c) :
     (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) :=
-  ((Units.mk0 c h.ne').mulRight.image_eq_preimage _).trans (by simp [h, division_def])
+  ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans (by simp [h, division_def])
 #align set.image_mul_right_Icc' Set.image_mul_right_Icc'
 
 theorem image_mul_right_Icc {a b c : α} (hab : a ≤ b) (hc : 0 ≤ c) :
@@ -743,7 +743,7 @@ theorem image_mul_left_Icc {a b c : α} (ha : 0 ≤ a) (hbc : b ≤ c) :
 
 theorem image_mul_right_Ioo (a b : α) {c : α} (h : 0 < c) :
     (fun x => x * c) '' Ioo a b = Ioo (a * c) (b * c) :=
-  ((Units.mk0 c h.ne').mulRight.image_eq_preimage _).trans (by simp [h, division_def])
+  ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans (by simp [h, division_def])
 #align set.image_mul_right_Ioo Set.image_mul_right_Ioo
 
 theorem image_mul_left_Ioo {a : α} (h : 0 < a) (b c : α) :
@@ -766,7 +766,7 @@ theorem inv_Ioi {a : α} (ha : 0 < a) : (Ioi a)⁻¹ = Ioo 0 a⁻¹ := by
 
 theorem image_const_mul_Ioi_zero {k : Type _} [LinearOrderedField k] {x : k} (hx : 0 < x) :
     (fun y => x * y) '' Ioi (0 : k) = Ioi 0 := by
-  erw [(Units.mk0 x hx.ne').mulLeft.image_eq_preimage, preimage_const_mul_Ioi 0 (inv_pos.mpr hx),
+  erw [(Units.mk0 x hx.ne').mul_left.image_eq_preimage, preimage_const_mul_Ioi 0 (inv_pos.mpr hx),
     zero_div]
 #align set.image_const_mul_Ioi_zero Set.image_const_mul_Ioi_zero
 

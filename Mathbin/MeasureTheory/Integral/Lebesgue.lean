@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.integral.lebesgue
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2040,6 +2040,11 @@ theorem lintegral_indicator₀ (f : α → ℝ≥0∞) {s : Set α} (hs : NullMe
     measure.restrict_congr_set hs.to_measurable_ae_eq]
 #align measure_theory.lintegral_indicator₀ MeasureTheory.lintegral_indicator₀
 
+theorem lintegral_indicator_const {s : Set α} (hs : MeasurableSet s) (c : ℝ≥0∞) :
+    (∫⁻ a, s.indicator (fun _ => c) a ∂μ) = c * μ s := by
+  rw [lintegral_indicator _ hs, set_lintegral_const]
+#align measure_theory.lintegral_indicator_const MeasureTheory.lintegral_indicator_const
+
 theorem set_lintegral_eq_const {f : α → ℝ≥0∞} (hf : Measurable f) (r : ℝ≥0∞) :
     (∫⁻ x in { x | f x = r }, f x ∂μ) = r * μ { x | f x = r } := by
   have : ∀ᵐ x ∂μ, x ∈ { x | f x = r } → f x = r := ae_of_all μ fun _ hx => hx
@@ -2553,6 +2558,13 @@ theorem set_lintegral_map [MeasurableSpace β] {f : β → ℝ≥0∞} {g : α �
     (∫⁻ y in s, f y ∂map g μ) = ∫⁻ x in g ⁻¹' s, f (g x) ∂μ := by
   rw [restrict_map hg hs, lintegral_map hf hg]
 #align measure_theory.set_lintegral_map MeasureTheory.set_lintegral_map
+
+theorem lintegral_indicator_const_comp {mβ : MeasurableSpace β} {f : α → β} {s : Set β}
+    (hf : Measurable f) (hs : MeasurableSet s) (c : ℝ≥0∞) :
+    (∫⁻ a, s.indicator (fun _ => c) (f a) ∂μ) = c * μ (f ⁻¹' s) := by
+  rw [lintegral_comp (measurable_const.indicator hs) hf, lintegral_indicator_const hs,
+    measure.map_apply hf hs]
+#align measure_theory.lintegral_indicator_const_comp MeasureTheory.lintegral_indicator_const_comp
 
 /-- If `g : α → β` is a measurable embedding and `f : β → ℝ≥0∞` is any function (not necessarily
 measurable), then `∫⁻ a, f a ∂(map g μ) = ∫⁻ a, f (g a) ∂μ`. Compare with `lintegral_map` wich

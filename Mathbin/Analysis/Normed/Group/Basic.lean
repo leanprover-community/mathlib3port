@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1378,6 +1378,47 @@ theorem preimage_mul_sphere (a b : E) (r : ℝ) : (· * ·) b ⁻¹' sphere a r 
   ext c
   simp only [Set.mem_preimage, mem_sphere_iff_norm', div_div_eq_mul_div, mul_comm]
 #align preimage_mul_sphere preimage_mul_sphere
+
+@[to_additive norm_nsmul_le]
+theorem norm_pow_le_mul_norm (n : ℕ) (a : E) : ‖a ^ n‖ ≤ n * ‖a‖ := by
+  induction' n with n ih; · simp
+  simpa only [pow_succ', Nat.cast_succ, add_mul, one_mul] using norm_mul_le_of_le ih le_rfl
+#align norm_pow_le_mul_norm norm_pow_le_mul_norm
+
+@[to_additive nnnorm_nsmul_le]
+theorem nnnorm_pow_le_mul_norm (n : ℕ) (a : E) : ‖a ^ n‖₊ ≤ n * ‖a‖₊ := by
+  simpa only [← Nnreal.coe_le_coe, Nnreal.coe_mul, Nnreal.coe_nat_cast] using
+    norm_pow_le_mul_norm n a
+#align nnnorm_pow_le_mul_norm nnnorm_pow_le_mul_norm
+
+@[to_additive]
+theorem pow_mem_closed_ball {n : ℕ} (h : a ∈ closedBall b r) : a ^ n ∈ closedBall (b ^ n) (n • r) :=
+  by 
+  simp only [mem_closed_ball, dist_eq_norm_div, ← div_pow] at h⊢
+  refine' (norm_pow_le_mul_norm n (a / b)).trans _
+  simpa only [nsmul_eq_mul] using mul_le_mul_of_nonneg_left h n.cast_nonneg
+#align pow_mem_closed_ball pow_mem_closed_ball
+
+@[to_additive]
+theorem pow_mem_ball {n : ℕ} (hn : 0 < n) (h : a ∈ ball b r) : a ^ n ∈ ball (b ^ n) (n • r) := by
+  simp only [mem_ball, dist_eq_norm_div, ← div_pow] at h⊢
+  refine' lt_of_le_of_lt (norm_pow_le_mul_norm n (a / b)) _
+  replace hn : 0 < (n : ℝ);
+  · norm_cast
+    assumption
+  rw [nsmul_eq_mul]
+  nlinarith
+#align pow_mem_ball pow_mem_ball
+
+@[simp, to_additive]
+theorem mul_mem_closed_ball_mul_iff {c : E} : a * c ∈ closedBall (b * c) r ↔ a ∈ closedBall b r :=
+  by simp only [mem_closed_ball, dist_eq_norm_div, mul_div_mul_right_eq_div]
+#align mul_mem_closed_ball_mul_iff mul_mem_closed_ball_mul_iff
+
+@[simp, to_additive]
+theorem mul_mem_ball_mul_iff {c : E} : a * c ∈ ball (b * c) r ↔ a ∈ ball b r := by
+  simp only [mem_ball, dist_eq_norm_div, mul_div_mul_right_eq_div]
+#align mul_mem_ball_mul_iff mul_mem_ball_mul_iff
 
 namespace Isometric
 

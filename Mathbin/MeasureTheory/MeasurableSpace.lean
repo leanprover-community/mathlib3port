@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1778,17 +1778,33 @@ instance : BooleanAlgebra (Subtype (MeasurableSet : Set α → Prop)) :=
     sdiff_eq := fun a b => Subtype.eq <| sdiff_eq }
 
 @[measurability]
+theorem measurableSetBlimsup {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n, p n → MeasurableSet (s n)) :
+    MeasurableSet <| Filter.blimsup s Filter.atTop p := by
+  simp only [Filter.blimsup_eq_infi_bsupr_of_nat, supr_eq_Union, infi_eq_Inter]
+  exact
+    MeasurableSet.inter fun n => MeasurableSet.union fun m => MeasurableSet.union fun hm => h m hm.1
+#align measurable_set.measurable_set_blimsup MeasurableSet.measurableSetBlimsup
+
+@[measurability]
+theorem measurableSetBliminf {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n, p n → MeasurableSet (s n)) :
+    MeasurableSet <| Filter.bliminf s Filter.atTop p := by
+  simp only [Filter.bliminf_eq_supr_binfi_of_nat, infi_eq_Inter, supr_eq_Union]
+  exact
+    MeasurableSet.union fun n => MeasurableSet.inter fun m => MeasurableSet.inter fun hm => h m hm.1
+#align measurable_set.measurable_set_bliminf MeasurableSet.measurableSetBliminf
+
+@[measurability]
 theorem measurableSetLimsup {s : ℕ → Set α} (hs : ∀ n, MeasurableSet <| s n) :
     MeasurableSet <| Filter.limsup s Filter.atTop := by
-  simp only [Filter.limsup_eq_infi_supr_of_nat', supr_eq_Union, infi_eq_Inter]
-  exact MeasurableSet.inter fun n => MeasurableSet.union fun m => hs <| m + n
+  convert measurable_set_blimsup (fun n h => hs n : ∀ n, True → MeasurableSet (s n))
+  simp
 #align measurable_set.measurable_set_limsup MeasurableSet.measurableSetLimsup
 
 @[measurability]
 theorem measurableSetLiminf {s : ℕ → Set α} (hs : ∀ n, MeasurableSet <| s n) :
     MeasurableSet <| Filter.liminf s Filter.atTop := by
-  simp only [Filter.liminf_eq_supr_infi_of_nat', supr_eq_Union, infi_eq_Inter]
-  exact MeasurableSet.union fun n => MeasurableSet.inter fun m => hs <| m + n
+  convert measurable_set_bliminf (fun n h => hs n : ∀ n, True → MeasurableSet (s n))
+  simp
 #align measurable_set.measurable_set_liminf MeasurableSet.measurableSetLiminf
 
 end MeasurableSet

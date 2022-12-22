@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.totient
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,6 +51,16 @@ theorem totient_one : φ 1 = 1 := by simp [totient]
 theorem totient_eq_card_coprime (n : ℕ) : φ n = ((range n).filter n.Coprime).card :=
   rfl
 #align nat.totient_eq_card_coprime Nat.totient_eq_card_coprime
+
+/-- A characterisation of `nat.totient` that avoids `finset`. -/
+theorem totient_eq_card_lt_and_coprime (n : ℕ) : φ n = Nat.card { m | m < n ∧ n.Coprime m } := by
+  let e : { m | m < n ∧ n.coprime m } ≃ Finset.filter n.coprime (Finset.range n) :=
+    { toFun := fun m => ⟨m, by simpa only [Finset.mem_filter, Finset.mem_range] using m.property⟩
+      invFun := fun m => ⟨m, by simpa only [Finset.mem_filter, Finset.mem_range] using m.property⟩
+      left_inv := fun m => by simp only [Subtype.coe_mk, Subtype.coe_eta]
+      right_inv := fun m => by simp only [Subtype.coe_mk, Subtype.coe_eta] }
+  rw [totient_eq_card_coprime, card_congr e, card_eq_fintype_card, Fintype.card_coe]
+#align nat.totient_eq_card_lt_and_coprime Nat.totient_eq_card_lt_and_coprime
 
 theorem totient_le (n : ℕ) : φ n ≤ n :=
   ((range n).card_filter_le _).trans_eq (card_range n)

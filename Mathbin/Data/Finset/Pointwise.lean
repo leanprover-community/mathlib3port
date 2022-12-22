@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pointwise
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.NAry
 import Mathbin.Data.Finset.Preimage
 import Mathbin.Data.Set.Pointwise.Smul
+import Mathbin.Data.Set.Pointwise.ListOfFn
 
 /-!
 # Pointwise operations of finsets

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2670,6 +2670,12 @@ theorem coe_ker (f : G →* M) : (f.ker : Set G) = (f : G → M) ⁻¹' {1} :=
   rfl
 #align monoid_hom.coe_ker MonoidHom.coe_ker
 
+@[simp, to_additive]
+theorem ker_to_hom_units {M} [Monoid M] (f : G →* M) : f.toHomUnits.ker = f.ker := by
+  ext x
+  simp [mem_ker, Units.ext_iff]
+#align monoid_hom.ker_to_hom_units MonoidHom.ker_to_hom_units
+
 @[to_additive]
 theorem eq_iff (f : G →* M) {x y : G} : f x = f y ↔ y⁻¹ * x ∈ f.ker := by
   constructor <;> intro h
@@ -2712,6 +2718,11 @@ theorem ker_range_restrict (f : G →* N) : ker (rangeRestrict f) = ker f :=
 theorem ker_one : (1 : G →* M).ker = ⊤ :=
   SetLike.ext fun x => eq_self_iff_true _
 #align monoid_hom.ker_one MonoidHom.ker_one
+
+@[simp, to_additive]
+theorem ker_id : (MonoidHom.id G).ker = ⊥ :=
+  rfl
+#align monoid_hom.ker_id MonoidHom.ker_id
 
 @[to_additive]
 theorem ker_eq_bot_iff (f : G →* M) : f.ker = ⊥ ↔ Function.Injective f :=

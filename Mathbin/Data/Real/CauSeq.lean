@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.real.cau_seq
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,8 @@ import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.Order.Group.MinMax
 import Mathbin.Algebra.Order.Field.Basic
+import Mathbin.Algebra.Ring.Pi
+import Mathbin.GroupTheory.GroupAction.Pi
 
 /-!
 # Cauchy sequences
@@ -367,20 +369,14 @@ theorem const_smul (a : G) (x : β) : const (a • x) = a • const x :=
   rfl
 #align cau_seq.const_smul CauSeq.const_smul
 
+instance : IsScalarTower G (CauSeq β abv) (CauSeq β abv) :=
+  ⟨fun a f g => Subtype.ext <| smul_assoc a (⇑f) ⇑g⟩
+
 end HasSmul
 
-instance : AddGroup (CauSeq β abv) := by
-  refine_struct
-            { add := (· + ·)
-              neg := Neg.neg
-              zero := (0 : CauSeq β abv)
-              sub := Sub.sub
-              zsmul := (· • ·)
-              nsmul := (· • ·) } <;>
-          intros <;>
-        try rfl <;>
-      apply ext <;>
-    simp [add_comm, add_left_comm, sub_eq_add_neg, add_mul]
+instance : AddGroup (CauSeq β abv) :=
+  Function.Injective.addGroup _ Subtype.coe_injective rfl coe_add coe_neg coe_sub
+    (fun _ _ => coe_smul _ _) fun _ _ => coe_smul _ _
 
 instance : AddGroupWithOne (CauSeq β abv) :=
   { CauSeq.addGroup with 
@@ -410,18 +406,9 @@ theorem const_pow (x : β) (n : ℕ) : const (x ^ n) = const x ^ n :=
   rfl
 #align cau_seq.const_pow CauSeq.const_pow
 
-instance : Ring (CauSeq β abv) := by
-  refine_struct
-            { CauSeq.addGroupWithOne with 
-              add := (· + ·)
-              zero := (0 : CauSeq β abv)
-              mul := (· * ·)
-              one := 1
-              npow := fun n f => f ^ n } <;>
-          intros <;>
-        try rfl <;>
-      apply ext <;>
-    simp [mul_add, mul_assoc, add_mul, add_comm, add_left_comm, sub_eq_add_neg, pow_succ]
+instance : Ring (CauSeq β abv) :=
+  Function.Injective.ring _ Subtype.coe_injective rfl rfl coe_add coe_mul coe_neg coe_sub
+    (fun _ _ => coe_smul _ _) (fun _ _ => coe_smul _ _) coe_pow (fun _ => rfl) fun _ => rfl
 
 instance {β : Type _} [CommRing β] {abv : β → α} [IsAbsoluteValue abv] : CommRing (CauSeq β abv) :=
   { CauSeq.ring with mul_comm := by intros <;> apply ext <;> simp [mul_left_comm, mul_comm] }
@@ -581,6 +568,17 @@ theorem mul_equiv_mul {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 �
   simpa only [mul_sub, sub_mul, sub_add_sub_cancel] using
     add_lim_zero (mul_lim_zero_left g1 hf) (mul_lim_zero_right f2 hg)
 #align cau_seq.mul_equiv_mul CauSeq.mul_equiv_mul
+
+theorem smul_equiv_smul [HasSmul G β] [IsScalarTower G β β] {f1 f2 : CauSeq β abv} (c : G)
+    (hf : f1 ≈ f2) : c • f1 ≈ c • f2 := by
+  simpa [const_smul, smul_one_mul _ _] using mul_equiv_mul (const_equiv.mpr <| Eq.refl <| c • 1) hf
+#align cau_seq.smul_equiv_smul CauSeq.smul_equiv_smul
+
+theorem pow_equiv_pow {f1 f2 : CauSeq β abv} (hf : f1 ≈ f2) (n : ℕ) : f1 ^ n ≈ f2 ^ n := by
+  induction' n with n ih
+  · simp only [pow_zero, Setoid.refl]
+  · simpa only [pow_succ] using mul_equiv_mul hf ih
+#align cau_seq.pow_equiv_pow CauSeq.pow_equiv_pow
 
 end Ring
 

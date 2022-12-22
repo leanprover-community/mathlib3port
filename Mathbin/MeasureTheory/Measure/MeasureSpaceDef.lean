@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space_def
-! leanprover-community/mathlib commit 0743cc5d9d86bcd1bba10f480e948a257d65056f
+! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -518,6 +518,53 @@ theorem ae_eq_set_union {s' t' : Set α} (h : s =ᵐ[μ] t) (h' : s' =ᵐ[μ] t'
     (s ∪ s' : Set α) =ᵐ[μ] (t ∪ t' : Set α) :=
   h.union h'
 #align measure_theory.ae_eq_set_union MeasureTheory.ae_eq_set_union
+
+theorem union_ae_eq_univ_of_ae_eq_univ_left (h : s =ᵐ[μ] univ) : (s ∪ t : Set α) =ᵐ[μ] univ := by
+  convert ae_eq_set_union h (ae_eq_refl t)
+  rw [univ_union]
+#align
+  measure_theory.union_ae_eq_univ_of_ae_eq_univ_left MeasureTheory.union_ae_eq_univ_of_ae_eq_univ_left
+
+theorem union_ae_eq_univ_of_ae_eq_univ_right (h : t =ᵐ[μ] univ) : (s ∪ t : Set α) =ᵐ[μ] univ := by
+  convert ae_eq_set_union (ae_eq_refl s) h
+  rw [union_univ]
+#align
+  measure_theory.union_ae_eq_univ_of_ae_eq_univ_right MeasureTheory.union_ae_eq_univ_of_ae_eq_univ_right
+
+theorem union_ae_eq_right_of_ae_eq_empty (h : s =ᵐ[μ] (∅ : Set α)) : (s ∪ t : Set α) =ᵐ[μ] t := by
+  convert ae_eq_set_union h (ae_eq_refl t)
+  rw [empty_union]
+#align
+  measure_theory.union_ae_eq_right_of_ae_eq_empty MeasureTheory.union_ae_eq_right_of_ae_eq_empty
+
+theorem union_ae_eq_left_of_ae_eq_empty (h : t =ᵐ[μ] (∅ : Set α)) : (s ∪ t : Set α) =ᵐ[μ] s := by
+  convert ae_eq_set_union (ae_eq_refl s) h
+  rw [union_empty]
+#align measure_theory.union_ae_eq_left_of_ae_eq_empty MeasureTheory.union_ae_eq_left_of_ae_eq_empty
+
+theorem inter_ae_eq_right_of_ae_eq_univ (h : s =ᵐ[μ] univ) : (s ∩ t : Set α) =ᵐ[μ] t := by
+  convert ae_eq_set_inter h (ae_eq_refl t)
+  rw [univ_inter]
+#align measure_theory.inter_ae_eq_right_of_ae_eq_univ MeasureTheory.inter_ae_eq_right_of_ae_eq_univ
+
+theorem inter_ae_eq_left_of_ae_eq_univ (h : t =ᵐ[μ] univ) : (s ∩ t : Set α) =ᵐ[μ] s := by
+  convert ae_eq_set_inter (ae_eq_refl s) h
+  rw [inter_univ]
+#align measure_theory.inter_ae_eq_left_of_ae_eq_univ MeasureTheory.inter_ae_eq_left_of_ae_eq_univ
+
+theorem inter_ae_eq_empty_of_ae_eq_empty_left (h : s =ᵐ[μ] (∅ : Set α)) :
+    (s ∩ t : Set α) =ᵐ[μ] (∅ : Set α) := by
+  convert ae_eq_set_inter h (ae_eq_refl t)
+  rw [empty_inter]
+#align
+  measure_theory.inter_ae_eq_empty_of_ae_eq_empty_left MeasureTheory.inter_ae_eq_empty_of_ae_eq_empty_left
+
+theorem inter_ae_eq_empty_of_ae_eq_empty_right (h : t =ᵐ[μ] (∅ : Set α)) :
+    (s ∩ t : Set α) =ᵐ[μ] (∅ : Set α) := by
+  convert ae_eq_set_inter (ae_eq_refl s) h
+  rw [inter_empty]
+#align
+  measure_theory.inter_ae_eq_empty_of_ae_eq_empty_right MeasureTheory.inter_ae_eq_empty_of_ae_eq_empty_right
 
 @[to_additive]
 theorem Set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α}
