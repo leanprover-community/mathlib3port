@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.basic
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,19 +109,11 @@ protected theorem Nat.nsmul_eq_mul (m n : ℕ) : m • n = m * n :=
 #align nat.nsmul_eq_mul Nat.nsmul_eq_mul
 -/
 
-#print Nat.eq_of_mul_eq_mul_right /-
-theorem Nat.eq_of_mul_eq_mul_right {n m k : ℕ} (Hm : 0 < m) (H : n * m = k * m) : n = k := by
-  rw [mul_comm n m, mul_comm k m] at H <;> exact Nat.eq_of_mul_eq_mul_left Hm H
-#align nat.eq_of_mul_eq_mul_right Nat.eq_of_mul_eq_mul_right
--/
-
 #print Nat.cancelCommMonoidWithZero /-
 instance Nat.cancelCommMonoidWithZero : CancelCommMonoidWithZero ℕ :=
-  { (inferInstance : CommMonoidWithZero ℕ) with
+  { Nat.commSemiring with
     mul_left_cancel_of_ne_zero := fun _ _ _ h1 h2 =>
-      Nat.eq_of_mul_eq_mul_left (Nat.pos_of_ne_zero h1) h2
-    mul_right_cancel_of_ne_zero := fun _ _ _ h1 h2 =>
-      Nat.eq_of_mul_eq_mul_right (Nat.pos_of_ne_zero h1) h2 }
+      Nat.eq_of_mul_eq_mul_left (Nat.pos_of_ne_zero h1) h2 }
 #align nat.cancel_comm_monoid_with_zero Nat.cancelCommMonoidWithZero
 -/
 

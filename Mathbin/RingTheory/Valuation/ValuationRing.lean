@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_ring
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,9 +157,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
         rw [← mul_smul, Algebra.smul_def] at hf
         nth_rw 2 [← one_mul b] at hf
         rw [← (algebraMap A K).map_one] at hf
-        exact
-          IsFractionRing.injective _ _
-            (CancelCommMonoidWithZero.mul_right_cancel_of_ne_zero hb hf).symm
+        exact IsFractionRing.injective _ _ (mul_right_cancel₀ hb hf).symm
       apply Quotient.sound'
       use this.unit, rfl
     le_total := ValuationRing.le_total _ _

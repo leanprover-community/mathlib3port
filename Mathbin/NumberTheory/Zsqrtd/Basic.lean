@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.basic
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -391,9 +391,7 @@ theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b := by
 protected theorem eq_of_smul_eq_smul_left {a : ℤ} {b c : ℤ√d} (ha : a ≠ 0) (h : ↑a * b = a * c) :
     b = c := by 
   rw [ext] at h⊢
-  apply And.imp _ _ h <;>
-    · simp only [smul_re, smul_im]
-      exact Int.eq_of_mul_eq_mul_left ha
+  apply And.imp _ _ h <;> · simpa only [smul_re, smul_im] using mul_left_cancel₀ ha
 #align zsqrtd.eq_of_smul_eq_smul_left Zsqrtd.eq_of_smul_eq_smul_left
 
 section Gcd
@@ -887,7 +885,7 @@ theorem divides_sq_eq_zero {x y} (h : x * x = d * y * y) : x = 0 ∧ y = 0 :=
       let ⟨m, n, co, (hx : x = m * g), (hy : y = n * g)⟩ := Nat.exists_coprime gpos
       rw [hx, hy] at h
       have : m * m = d * (n * n) :=
-        Nat.eq_of_mul_eq_mul_left (mul_pos gpos gpos) (by simpa [mul_comm, mul_left_comm] using h)
+        mul_left_cancel₀ (mul_pos gpos gpos).ne' (by simpa [mul_comm, mul_left_comm] using h)
       have co2 :=
         let co1 := co.mul_right co
         co1.mul co1

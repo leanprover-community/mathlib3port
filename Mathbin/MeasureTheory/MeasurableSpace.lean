@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1541,11 +1541,20 @@ def piEquivPiSubtypeProd (p : δ' → Prop) [DecidablePred p] :
   measurableInvFun := measurablePiEquivPiSubtypeProdSymm π p
 #align measurable_equiv.pi_equiv_pi_subtype_prod MeasurableEquiv.piEquivPiSubtypeProd
 
+/-- If `s` is a measurable set in a measurable space, that space is equivalent
+to the sum of `s` and `sᶜ`.-/
+def sumCompl {s : Set α} [DecidablePred s] (hs : MeasurableSet s) :
+    Sum s (sᶜ : Set α) ≃ᵐ α where 
+  toEquiv := sumCompl s
+  measurableToFun := by apply Measurable.sumElim <;> exact measurableSubtypeCoe
+  measurableInvFun := Measurable.dite measurableInl measurableInr hs
+#align measurable_equiv.sum_compl MeasurableEquiv.sumCompl
+
 end MeasurableEquiv
 
 namespace MeasurableEmbedding
 
-variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α → β}
+variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α → β} {g : β → α}
 
 /-- A set is equivalent to its image under a function `f` as measurable spaces,
   if `f` is a measurable embedding -/
@@ -1575,10 +1584,67 @@ theorem ofMeasurableInverseOnRange {g : range f → α} (hf₁ : Measurable f)
 #align
   measurable_embedding.of_measurable_inverse_on_range MeasurableEmbedding.ofMeasurableInverseOnRange
 
-theorem ofMeasurableInverse {g : β → α} (hf₁ : Measurable f) (hf₂ : MeasurableSet (range f))
-    (hg : Measurable g) (H : LeftInverse g f) : MeasurableEmbedding f :=
+theorem ofMeasurableInverse (hf₁ : Measurable f) (hf₂ : MeasurableSet (range f)) (hg : Measurable g)
+    (H : LeftInverse g f) : MeasurableEmbedding f :=
   ofMeasurableInverseOnRange hf₁ hf₂ (hg.comp measurableSubtypeCoe) H
 #align measurable_embedding.of_measurable_inverse MeasurableEmbedding.ofMeasurableInverse
+
+open Classical
+
+/-- The **`measurable Schröder-Bernstein Theorem**: Given measurable embeddings
+`α → β` and `β → α`, we can find a measurable equivalence `α ≃ᵐ β`.-/
+noncomputable def schroederBernstein {f : α → β} {g : β → α} (hf : MeasurableEmbedding f)
+    (hg : MeasurableEmbedding g) : α ≃ᵐ β := by
+  let F : Set α → Set α := fun A => (g '' (f '' A)ᶜ)ᶜ
+  -- We follow the proof of the usual SB theorem in mathlib,
+  -- the crux of which is finding a fixed point of this F.
+  -- However, we must find this fixed point manually instead of invoking Knaster-Tarski
+  -- in order to make sure it is measurable.
+  suffices Σ'A : Set α, MeasurableSet A ∧ F A = A by
+    rcases this with ⟨A, Ameas, Afp⟩
+    let B := f '' A
+    have Bmeas : MeasurableSet B := hf.measurable_set_image' Ameas
+    refine'
+      (MeasurableEquiv.sumCompl Ameas).symm.trans
+        (MeasurableEquiv.trans _ (MeasurableEquiv.sumCompl Bmeas))
+    apply MeasurableEquiv.sumCongr (hf.equiv_image _)
+    have : Aᶜ = g '' Bᶜ := by 
+      apply compl_injective
+      rw [← Afp]
+      simp
+    rw [this]
+    exact (hg.equiv_image _).symm
+  have Fmono : ∀ {A B}, A ⊆ B → F A ⊆ F B := fun A B hAB =>
+    compl_subset_compl.mpr <| Set.image_subset _ <| compl_subset_compl.mpr <| Set.image_subset _ hAB
+  let X : ℕ → Set α := fun n => (F^[n]) univ
+  refine' ⟨Inter X, _, _⟩
+  · apply MeasurableSet.inter
+    intro n
+    induction' n with n ih
+    · exact MeasurableSet.univ
+    rw [Function.iterate_succ', Function.comp_apply]
+    exact (hg.measurable_set_image' (hf.measurable_set_image' ih).compl).compl
+  apply subset_antisymm
+  · apply subset_Inter
+    intro n
+    cases n
+    · exact subset_univ _
+    rw [Function.iterate_succ', Function.comp_apply]
+    exact Fmono (Inter_subset _ _)
+  rintro x hx ⟨y, hy, rfl⟩
+  rw [mem_Inter] at hx
+  apply hy
+  rw [(inj_on_of_injective hf.injective _).image_Inter_eq]
+  swap
+  · infer_instance
+  rw [mem_Inter]
+  intro n
+  specialize hx n.succ
+  rw [Function.iterate_succ', Function.comp_apply] at hx
+  by_contra h
+  apply hx
+  exact ⟨y, h, rfl⟩
+#align measurable_embedding.schroeder_bernstein MeasurableEmbedding.schroederBernstein
 
 end MeasurableEmbedding
 

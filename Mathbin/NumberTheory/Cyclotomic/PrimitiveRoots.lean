@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Best, Riccardo Brasca, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.primitive_roots
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -390,12 +390,12 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
       PNat.pow_coe, Nat.totient_prime_pow hpri.out (k - s).succ_pos,
       Nat.totient_prime_pow hpri.out k.succ_pos, mul_comm _ (↑p - 1), mul_assoc,
       mul_comm (↑p ^ (k.succ - 1))] at this
-    replace this := Nat.eq_of_mul_eq_mul_left (tsub_pos_iff_lt.2 (Nat.Prime.one_lt hpri.out)) this
+    replace this := mul_left_cancel₀ (tsub_pos_iff_lt.2 hpri.out.one_lt).ne' this
     have Hex : k.succ - 1 = (k - s).succ - 1 + s := by
       simp only [Nat.succ_sub_succ_eq_sub, tsub_zero]
       exact (Nat.sub_add_cancel hs).symm
     rw [Hex, pow_add] at this
-    exact Nat.eq_of_mul_eq_mul_left (pow_pos hpri.out.pos _) this
+    exact mul_left_cancel₀ (pow_ne_zero _ hpri.out.ne_zero) this
   all_goals infer_instance
 #align
   is_primitive_root.pow_sub_one_norm_prime_pow_ne_two IsPrimitiveRoot.pow_sub_one_norm_prime_pow_ne_two

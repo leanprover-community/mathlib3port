@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.regular
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,10 +116,7 @@ section IsDomain
 -- see Note [lower instance priority]
 instance (priority := 100) IsDomain.toCancelMonoidWithZero [Semiring α] [IsDomain α] :
     CancelMonoidWithZero α :=
-  { Semiring.toMonoidWithZero α with
-    mul_left_cancel_of_ne_zero := fun a b c ha h => IsCancelMulZero.mul_left_cancel_of_ne_zero ha h
-    mul_right_cancel_of_ne_zero := fun a b c ha h =>
-      IsCancelMulZero.mul_right_cancel_of_ne_zero ha h }
+  { Semiring.toMonoidWithZero α, ‹IsDomain α› with }
 #align is_domain.to_cancel_monoid_with_zero IsDomain.toCancelMonoidWithZero
 -/
 
@@ -128,9 +125,7 @@ variable [CommSemiring α] [IsDomain α]
 #print IsDomain.toCancelCommMonoidWithZero /-
 -- see Note [lower instance priority]
 instance (priority := 100) IsDomain.toCancelCommMonoidWithZero : CancelCommMonoidWithZero α :=
-  { (inferInstance : CommSemiring α) with
-    mul_left_cancel_of_ne_zero := fun a b c ha H => IsDomain.mul_left_cancel_of_ne_zero ha H
-    mul_right_cancel_of_ne_zero := fun a b c hb H => IsDomain.mul_right_cancel_of_ne_zero hb H }
+  { ‹CommSemiring α›, ‹IsDomain α› with }
 #align is_domain.to_cancel_comm_monoid_with_zero IsDomain.toCancelCommMonoidWithZero
 -/
 

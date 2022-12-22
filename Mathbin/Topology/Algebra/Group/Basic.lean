@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -568,6 +568,16 @@ theorem nhds_one_symm : comap Inv.inv (𝓝 (1 : G)) = 𝓝 (1 : G) :=
   ((Homeomorph.inv G).comap_nhds_eq _).trans (congr_arg nhds inv_one)
 #align nhds_one_symm nhds_one_symm
 
+@[to_additive]
+theorem nhds_one_symm' : map Inv.inv (𝓝 (1 : G)) = 𝓝 (1 : G) :=
+  ((Homeomorph.inv G).map_nhds_eq _).trans (congr_arg nhds inv_one)
+#align nhds_one_symm' nhds_one_symm'
+
+@[to_additive]
+theorem inv_mem_nhds_one {S : Set G} (hS : S ∈ (𝓝 1 : Filter G)) : S⁻¹ ∈ 𝓝 (1 : G) := by
+  rwa [← nhds_one_symm'] at hS
+#align inv_mem_nhds_one inv_mem_nhds_one
+
 /-- The map `(x, y) ↦ (x, xy)` as a homeomorphism. This is a shear mapping. -/
 @[to_additive "The map `(x, y) ↦ (x, x + y)` as a homeomorphism.\nThis is a shear mapping."]
 protected def Homeomorph.shearMulRight : G × G ≃ₜ G × G :=
@@ -725,6 +735,22 @@ theorem map_mul_left_nhds (x y : G) : map ((· * ·) x) (𝓝 y) = 𝓝 (x * y) 
 @[to_additive]
 theorem map_mul_left_nhds_one (x : G) : map ((· * ·) x) (𝓝 1) = 𝓝 x := by simp
 #align map_mul_left_nhds_one map_mul_left_nhds_one
+
+@[to_additive]
+theorem Filter.HasBasis.nhds_of_one {ι : Sort _} {p : ι → Prop} {s : ι → Set G}
+    (hb : HasBasis (𝓝 1 : Filter G) p s) (x : G) : HasBasis (𝓝 x) p fun i => { y | y / x ∈ s i } :=
+  by 
+  rw [← nhds_translation_mul_inv]
+  simp_rw [div_eq_mul_inv]
+  exact hb.comap _
+#align filter.has_basis.nhds_of_one Filter.HasBasis.nhds_of_one
+
+@[to_additive]
+theorem mem_closure_iff_nhds_one {x : G} {s : Set G} :
+    x ∈ closure s ↔ ∀ U ∈ (𝓝 1 : Filter G), ∃ y ∈ s, y / x ∈ U := by
+  rw [mem_closure_iff_nhds_basis ((𝓝 1 : Filter G).basis_sets.nhds_of_one x)]
+  rfl
+#align mem_closure_iff_nhds_one mem_closure_iff_nhds_one
 
 /-- A monoid homomorphism (a bundled morphism of a type that implements `monoid_hom_class`) from a
 topological group to a topological monoid is continuous provided that it is continuous at one. See

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.nat.gcd.basic
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,9 +174,9 @@ theorem gcd_eq_zero_iff {i j : ℕ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 := by
 
 #print Nat.gcd_div /-
 theorem gcd_div {m n k : ℕ} (H1 : k ∣ m) (H2 : k ∣ n) : gcd (m / k) (n / k) = gcd m n / k :=
-  Or.elim (Nat.eq_zero_or_pos k)
+  (Decidable.eq_or_ne k 0).elim
     (fun k0 => by rw [k0, Nat.div_zero, Nat.div_zero, Nat.div_zero, gcd_zero_right]) fun H3 =>
-    Nat.eq_of_mul_eq_mul_right H3 <| by
+    mul_right_cancel₀ H3 <| by
       rw [Nat.div_mul_cancel (dvd_gcd H1 H2), ← gcd_mul_right, Nat.div_mul_cancel H1,
         Nat.div_mul_cancel H2]
 #align nat.gcd_div Nat.gcd_div

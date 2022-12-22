@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.basic
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -906,7 +906,7 @@ theorem cyclotomic_expand_eq_cyclotomic_mul {p n : ℕ} (hp : Nat.Prime p) (hdiv
     rw [Polynomial.map_mul, map_cyclotomic_int, map_cyclotomic_int, map_expand, map_cyclotomic_int]
     refine' IsCoprime.mul_dvd (cyclotomic.is_coprime_rat fun h => _) _ _
     · replace h : n * p = n * 1 := by simp [h]
-      exact Nat.Prime.ne_one hp (Nat.eq_of_mul_eq_mul_left hnpos h)
+      exact Nat.Prime.ne_one hp (mul_left_cancel₀ hnpos.ne' h)
     · have hpos : 0 < n * p := mul_pos hnpos hp.pos
       have hprim := Complex.is_primitive_root_exp _ hpos.ne'
       rw [cyclotomic_eq_minpoly_rat hprim hpos]

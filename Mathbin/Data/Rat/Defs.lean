@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.defs
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -272,8 +272,7 @@ theorem divInt_eq_iff :
       all_goals exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_left _ _)
     intro a c h
     suffices bd : b / a.gcd b = d / c.gcd d
-    · refine' ⟨_, bd⟩
-      apply Nat.eq_of_mul_eq_mul_left hb
+    · refine' ⟨mul_left_cancel₀ hb.ne' _, bd⟩
       rw [← Nat.mul_div_assoc _ (Nat.gcd_dvd_left _ _), mul_comm,
         Nat.mul_div_assoc _ (Nat.gcd_dvd_right _ _), bd, ←
         Nat.mul_div_assoc _ (Nat.gcd_dvd_right _ _), h, mul_comm,

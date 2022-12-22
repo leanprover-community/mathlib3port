@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.normed_space.compact_operator
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,11 +42,6 @@ The two natural options then would be to make it a predicate over linear maps or
 maps. Instead we define it as a predicate over bare functions, although it really only makes sense
 for linear functions, because Lean is really good at finding coercions to bare functions (whereas
 coercing from continuous linear maps to linear maps often needs type ascriptions).
-
-## TODO
-
-Once we have the strong operator topology on spaces of linear maps between two TVSs,
-`is_closed_set_of_is_compact_operator` should be generalized to this setup.
 
 ## References
 
@@ -423,58 +418,61 @@ theorem ContinuousLinearMap.mk_of_is_compact_operator_mem_compact_operator {f : 
 
 end Continuous
 
+/-- The set of compact operators from a normed space to a complete topological vector space is
+closed. -/
 theorem is_closed_set_of_is_compact_operator {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
-    [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} [RingHomIsometric σ₁₂] {M₁ M₂ : Type _}
-    [SeminormedAddCommGroup M₁] [NormedAddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [NormedSpace 𝕜₂ M₂]
-    [CompleteSpace M₂] : IsClosed { f : M₁ →SL[σ₁₂] M₂ | IsCompactOperator f } := by
+    [NormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} {M₁ M₂ : Type _} [SeminormedAddCommGroup M₁]
+    [AddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂] [UniformSpace M₂] [UniformAddGroup M₂]
+    [HasContinuousConstSmul 𝕜₂ M₂] [T2Space M₂] [CompleteSpace M₂] :
+    IsClosed { f : M₁ →SL[σ₁₂] M₂ | IsCompactOperator f } := by
   refine' is_closed_of_closure_subset _
   rintro u hu
-  rw [Metric.mem_closure_iff] at hu
+  rw [mem_closure_iff_nhds_zero] at hu
   suffices TotallyBounded (u '' Metric.closedBall 0 1) by
     change IsCompactOperator (u : M₁ →ₛₗ[σ₁₂] M₂)
     rw [is_compact_operator_iff_is_compact_closure_image_closed_ball (u : M₁ →ₛₗ[σ₁₂] M₂)
         zero_lt_one]
     exact is_compact_of_totally_bounded_is_closed this.closure is_closed_closure
-  rw [Metric.totally_bounded_iff]
-  intro ε hε
-  rcases hu (ε / 2) (by linarith) with ⟨v, hv, huv⟩
-  rcases(hv.is_compact_closure_image_closed_ball 1).finite_cover_balls
-      (show 0 < ε / 2 by linarith) with
-    ⟨T, -, hT, hTv⟩
+  rw [totally_bounded_iff_subset_finite_Union_nhds_zero]
+  intro U hU
+  rcases exists_nhds_zero_half hU with ⟨V, hV, hVU⟩
+  let SV : Set M₁ × Set M₂ := ⟨closed_ball 0 1, -V⟩
+  rcases hu { f | ∀ x ∈ SV.1, f x ∈ SV.2 }
+      (continuous_linear_map.has_basis_nhds_zero.mem_of_mem
+        ⟨NormedSpace.isVonNBoundedClosedBall _ _ _, neg_mem_nhds_zero M₂ hV⟩) with
+    ⟨v, hv, huv⟩
+  rcases totally_bounded_iff_subset_finite_Union_nhds_zero.mp
+      (hv.is_compact_closure_image_closed_ball 1).TotallyBounded V hV with
+    ⟨T, hT, hTv⟩
   have hTv : v '' closed_ball 0 1 ⊆ _ := subset_closure.trans hTv
   refine' ⟨T, hT, _⟩
-  rw [image_subset_iff] at hTv⊢
+  rw [image_subset_iff, preimage_Union₂] at hTv⊢
   intro x hx
   specialize hTv hx
-  rw [mem_preimage, mem_Union₂] at hTv⊢
+  rw [mem_Union₂] at hTv⊢
   rcases hTv with ⟨t, ht, htx⟩
   refine' ⟨t, ht, _⟩
-  suffices dist (u x) (v x) < ε / 2 by 
-    rw [mem_ball] at *
-    linarith [dist_triangle (u x) (v x) t]
-  rw [mem_closed_ball_zero_iff] at hx
-  calc
-    dist (u x) (v x) = ‖u x - v x‖ := dist_eq_norm _ _
-    _ = ‖(u - v) x‖ := by rw [ContinuousLinearMap.sub_apply] <;> rfl
-    _ ≤ ‖u - v‖ := (u - v).unit_le_op_norm x hx
-    _ = dist u v := (dist_eq_norm _ _).symm
-    _ < ε / 2 := huv
-    
+  rw [mem_preimage, mem_vadd_set_iff_neg_vadd_mem, vadd_eq_add, neg_add_eq_sub] at htx⊢
+  convert hVU _ htx _ (huv x hx) using 1
+  rw [ContinuousLinearMap.sub_apply]
+  abel
 #align is_closed_set_of_is_compact_operator is_closed_set_of_is_compact_operator
 
 theorem compact_operator_topological_closure {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
-    [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} [RingHomIsometric σ₁₂] {M₁ M₂ : Type _}
-    [SeminormedAddCommGroup M₁] [NormedAddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [NormedSpace 𝕜₂ M₂]
-    [CompleteSpace M₂] :
+    [NormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} {M₁ M₂ : Type _} [SeminormedAddCommGroup M₁]
+    [AddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂] [UniformSpace M₂] [UniformAddGroup M₂]
+    [HasContinuousConstSmul 𝕜₂ M₂] [T2Space M₂] [CompleteSpace M₂]
+    [HasContinuousSmul 𝕜₂ (M₁ →SL[σ₁₂] M₂)] :
     (compactOperator σ₁₂ M₁ M₂).topologicalClosure = compactOperator σ₁₂ M₁ M₂ :=
   SetLike.ext' is_closed_set_of_is_compact_operator.closure_eq
 #align compact_operator_topological_closure compact_operator_topological_closure
 
 theorem is_compact_operator_of_tendsto {ι 𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
-    [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} [RingHomIsometric σ₁₂] {M₁ M₂ : Type _}
-    [SeminormedAddCommGroup M₁] [NormedAddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [NormedSpace 𝕜₂ M₂]
-    [CompleteSpace M₂] {l : Filter ι} [l.ne_bot] {F : ι → M₁ →SL[σ₁₂] M₂} {f : M₁ →SL[σ₁₂] M₂}
-    (hf : Tendsto F l (𝓝 f)) (hF : ∀ᶠ i in l, IsCompactOperator (F i)) : IsCompactOperator f :=
+    [NormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} {M₁ M₂ : Type _} [SeminormedAddCommGroup M₁]
+    [AddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂] [UniformSpace M₂] [UniformAddGroup M₂]
+    [HasContinuousConstSmul 𝕜₂ M₂] [T2Space M₂] [CompleteSpace M₂] {l : Filter ι} [l.ne_bot]
+    {F : ι → M₁ →SL[σ₁₂] M₂} {f : M₁ →SL[σ₁₂] M₂} (hf : Tendsto F l (𝓝 f))
+    (hF : ∀ᶠ i in l, IsCompactOperator (F i)) : IsCompactOperator f :=
   is_closed_set_of_is_compact_operator.mem_of_tendsto hf hF
 #align is_compact_operator_of_tendsto is_compact_operator_of_tendsto
 

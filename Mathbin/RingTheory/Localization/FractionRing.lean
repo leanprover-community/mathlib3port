@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.fraction_ring
-! leanprover-community/mathlib commit 9116dd6709f303dcf781632e15fdef382b0fc579
+! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ instance Rat.is_fraction_ring :
         rintro rfl
         use 1, _⟩
     rintro ⟨⟨c, hc⟩, h⟩
-    apply Int.eq_of_mul_eq_mul_right _ h
+    apply mul_right_cancel₀ _ h
     rwa [mem_non_zero_divisors_iff_ne_zero] at hc
 #align rat.is_fraction_ring Rat.is_fraction_ring
 
